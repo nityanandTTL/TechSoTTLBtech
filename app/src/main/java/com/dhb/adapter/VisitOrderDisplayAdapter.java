@@ -90,22 +90,27 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     }
 
     private void initData(final FoldingCellViewHolder holder, final int pos) {
-        holder.tvAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge()+" Y | "+orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
-        holder.tvName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
-        holder.tvSrNo.setText(pos+1+"");
-        holder.txtAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge()+" Y | "+orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
-        holder.txtName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
-        holder.txtSrNo.setText(pos+1+"");
-        holder.txtAddress.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress());
-        holder.tvAadharNo.setVisibility(View.GONE);
-        holder.txtAadharNo.setVisibility(View.GONE);
-        if(pos!=0){
-            holder.btnStartNavigation.setVisibility(View.GONE);
-        }
-        if (unfoldedIndexes.contains(pos)) {
-            holder.cell.unfold(true);
-        } else {
-            holder.cell.fold(true);
+        if(orderVisitDetailsModelsArr.size()>pos
+                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size()>0
+                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size()>0
+                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0)!=null) {
+            holder.tvAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
+            holder.tvName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+            holder.tvSrNo.setText(pos + 1 + "");
+            holder.txtAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
+            holder.txtName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+            holder.txtSrNo.setText(pos + 1 + "");
+            holder.txtAddress.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress());
+            holder.tvAadharNo.setVisibility(View.GONE);
+            holder.txtAadharNo.setVisibility(View.GONE);
+            if (pos != 0) {
+                holder.btnStartNavigation.setVisibility(View.GONE);
+            }
+            if (unfoldedIndexes.contains(pos)) {
+                holder.cell.unfold(true);
+            } else {
+                holder.cell.fold(true);
+            }
         }
     }
 

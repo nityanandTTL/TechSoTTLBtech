@@ -149,12 +149,14 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                                 orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
                                 orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
                                 orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
-                                for (BeneficiaryDetailsModel beneficiaryDetailsModel:
-                                        orderDetailsModel.getBenMaster()) {
-                                    beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
-                                    beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                                if(orderDetailsModel.getBenMaster()!=null && orderDetailsModel.getBenMaster().size()>0) {
+                                    for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                                            orderDetailsModel.getBenMaster()) {
+                                        beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                                    }
+                                    orderDetailsDao.insertOrUpdate(orderDetailsModel);
                                 }
-                                orderDetailsDao.insertOrUpdate(orderDetailsModel);
                             }
                         }
                     }
