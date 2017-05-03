@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">BTECH</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="goto_settings">Go to Settings</string>
+    <string name="gps_disabled">GPS is disabled. Please enable it to continue using the application</string>
+    <string name="arrived">Arrived</string>
+    <string name="start">Start</string>
+    <string name="name">Ketatn Kulkarni</string>
+
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCCiIOrolfoPydvFX89njaBOqA8zHbTYME</string>
+    <string name="enable_gps_title">Enable GPS</string>
+    <string name="alert_msg">GPS alert dialogue error_description</string>
+    <string name="alert_settings">Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="arrive">Arrived</string>
+
+
+    <!--API call Progress Dialog Messages-->
+    <string name="progress_message_authenticating_please_wait">Authenticating,\n Please wait ....</string>
+    <string name="progress_message_uploading_selfie_please_wait">Uploading Selfie to server,\n Please wait ....</string>
+    <string name="progress_message_changing_order_status_please_wait">Updating Order Status,\n Please wait ....</string>
+    <string name="progress_message_fetching_order_details_please_wait">Fetching Order Details,\n Please wait ....</string>
+    <string name="progress_message_fetching_slot_details_please_wait">Fetching Slot Details,\n Please wait ....</string>
+    <string name="progress_message_fetching_brand_master_please_wait">Fetching Brand Master,\n Please wait ....</string>
+    <string name="progress_message_fetching_test_master_please_wait">Please wait\n while we update your Tests List</string>
+    <string name="progress_message_fetching_Ledger_details_please_wait">Fetching Ledger Details,\n Please wait ....</string>
+    <string name="progress_message_fetching_Earning_details_please_wait">Fetching Earnings Details,\n Please wait ....</string>
+    <string name="progress_message_fetching_Deposit_details_please_wait">Fetching Deposits Details,\n Please wait ....</string>
+    <string name="progress_message_hub_start_please_wait">Starting for Hub,\n Please wait ....</string>
+    <string name="progress_message_mapping_master_barcode_please_wait">Mapping Master Barcode,\n Please wait ....</string>
+    <string name="progress_message_fetching_dispatch_to_hub_details_please_wait">Fetching Hub Details,\n Please wait ....</string>
+    <string name="progress_message_scan_barcode_check_for_duplicate_please_wait">Scanning Barcode,\n Please wait ....</string>
+    <string name="progress_message_fetching_btech_collections_please_wait">Fetching BTech Collections,\n Please wait ....</string>
+    <string name="progress_message_change_password_please_wait">Changing Password, Please wait ....</string>
+
+    <string name="upload">UPLOAD</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="internet_connetion_error">Check Internet Connection</string>
+    <string name="network_error">Network Error</string>
+    <string name="add_selfie_error">Add Profile photo</string>
+    <string name="my_orders">My Orders</string>
+    <string name="schedule_your_day">Schedule your Day</string>
+    <string name="dispatch">Dispatch</string>
+    <string name="start_pick_up"> Start Pick Up </string>
+    <string name="reset_password">Reset Password</string>
+    <string name="password_changed_successfully">Password Changed Successfully</string>
+    <string name="enter_mobile_number">Enter Mobile Number</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="start_navigation">Start Navigation</string>
+    <string name="estimated_distance">Estimated Distance</string>
+    <string name="dummy_address">106, Riverton Drive, Malibu, California, US</string>
+    <string name="no_allotted_orders_found">No allotted orders found.</string>
+    <string name="selfie">Selfie</string>
+    <string name="close">Close</string>
+    <string name="logout_message_offline">This feature is only available in Online Mode</string>
+    <string name="sync_master_error">Error in Fetching Tests List</string>
+    <string name="sync_done_master_table">Finished updating Tests List</string>
+    <string name="sync_no_data">No Data to Sync</string>
+    <string name="enter_remarks">Please enter remarks</string>
+</resources>

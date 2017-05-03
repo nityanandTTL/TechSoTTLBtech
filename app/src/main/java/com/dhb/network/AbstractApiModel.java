@@ -1,0 +1,218 @@
+package com.dhb.network;
+
+
+import com.dhb.utils.app.AppConstants;
+
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+
+import java.util.HashMap;
+import java.util.List;
+
+public class AbstractApiModel implements AppConstants {
+
+	public static final String FILE_UPLOAD = "file_upload";
+
+    /* Requset urlt_layout of api call */
+    private String requestUrl;
+
+    /* Json string to post/put method */
+    private String postData = "";
+
+    /* Headers to be added as list */
+    private HashMap<String, String> headerMap;
+
+    public int methodType;
+
+    private UrlEncodedFormEntity entity;
+
+    public static String appEnvironment = "DEVELOPMENT";
+    //public static String appEnvironment = "DEMO";
+//	public static String appEnvironment = "PRODUCTION";
+
+
+
+	// New DB changes Amazon Dev
+	public static String SERVER_BASE_API_URL_DEV = "http://apibeta.thyrocare.com";
+
+
+    // New DB changes Demo Amazon
+    public static String SERVER_BASE_API_URL_DEMO = "http://apibeta.thyrocare.com";
+
+    // New DB changes Amazon Production
+
+    public static String SERVER_BASE_API_URL_PROD = "https://api.thyrocare.com";
+
+    public static String SERVER_BASE_API_URL = appEnvironment.equals("DEVELOPMENT") ? SERVER_BASE_API_URL_DEV : appEnvironment.equals("DEMO") ? SERVER_BASE_API_URL_DEMO : appEnvironment.equals("PRODUCTION") ? SERVER_BASE_API_URL_PROD : SERVER_BASE_API_URL_DEV;
+
+
+    /**
+     * RESPECTIVE URLS
+     */
+
+    public static String DEVICE_TYPE = "android";
+
+    public static String APP_NAME = "BTECH";
+
+    // Version Specific Base URL
+
+    public String VERSION_API_URL = "/api";
+
+    public String LOGIN = "/Token";
+
+    public String LOG_OUT = VERSION_API_URL + "/Account/Logout";
+
+	public String CHANGE_PASSWORD = VERSION_API_URL + "/Account/ChangePassword";
+
+	public String SELFIE_UPLOAD = VERSION_API_URL+"/SelfiUpload";
+
+	public String FETCH_ORDER_DETAIL = VERSION_API_URL+"/OrderVisitDetails";
+
+	public String FETCH_SLOT_DETAIL = VERSION_API_URL+"/ServingSlotDetails";
+
+    public String ORDER_STATUS_CHANGE = VERSION_API_URL + "/OrderStatusChange";
+
+    public String FETCH_BRAND_MASTER = VERSION_API_URL + "/BrandMaster";
+
+    public String FETCH_BRAND_WISE_TEST_MASTER = VERSION_API_URL + "/BrandTestRateList";
+
+    public String BTECH_AVAILABILITY = VERSION_API_URL + "/BtechAvaibility";
+
+    public String LOGOUT = VERSION_API_URL + "/Account/Logout";
+
+    public String FETCH_LEDGER_DETAIL=VERSION_API_URL+"/CashRegister";
+
+    public String FETCH_EARNINGREGISTER_DETAIL=VERSION_API_URL+"/EarningRegister";
+
+    public String FETCH_DEPOSITREGISTER_DETAIL=VERSION_API_URL+"/DepositPayments";
+
+    public String BTECH_COLLECTIONS=VERSION_API_URL+"/BtechCollections";
+
+    public String BTECH_HUB_DETAILS_DISPLAY=VERSION_API_URL+"/BtechHubs";
+
+    public String HUBSTART = VERSION_API_URL + "/HubStart";
+
+    public String MASTER_BARCODE_MAPPING = VERSION_API_URL + "/MasterBarcodeMapping";
+
+
+    public static final String X_API_KEY = "x-api-key";
+
+    public static final String AUTHORIZATION = "Authorization";
+
+    public static final String APPLICATION_JSON = "application/json";
+
+    public static final String APPLICATION_X_WWW_FROM_URLENCODED = "application/x-www-form-urlencoded";
+
+    /* Json string to post/put method */
+    private String postJsonString;
+    /* Headers to be added as list */
+    private List<HeaderData> header;
+
+    public String getRequestUrl() {
+        return requestUrl;
+    }
+
+    public void setRequestUrl(String rquestUrl) {
+        this.requestUrl = rquestUrl;
+    }
+
+    public String getPostJsonString() {
+        return postJsonString;
+    }
+
+    public void setPostJsonString(String postJsonString) {
+        this.postJsonString = postJsonString;
+    }
+
+    public List<HeaderData> getHeader() {
+        return header;
+    }
+
+    public void setHeader(List<HeaderData> header) {
+        this.header = header;
+    }
+
+    public void createJson() {
+
+    }
+
+    public void setParam(String key, String value) {
+
+        if (this.requestUrl == null) {
+            return;
+        } else if (!this.requestUrl.contains("?")) {
+            this.requestUrl = this.requestUrl + "?" + key + "=" + value;
+        } else if (key.equals("action")) {
+            this.requestUrl = this.requestUrl + key + "=" + value;
+        } else {
+            this.requestUrl = this.requestUrl + "&" + key + "=" + value;
+        }
+    }
+
+    public void setParam(String key, float value) {
+
+        if (this.requestUrl == null) {
+            return;
+        } else if (!this.requestUrl.contains("?")) {
+            this.requestUrl = this.requestUrl + "?" + key + "=" + (value);
+        } else {
+            this.requestUrl = this.requestUrl + "&" + key + "=" + (value);
+        }
+    }
+
+    public void setParam(String key, int value) {
+
+        if (this.requestUrl == null) {
+            return;
+        } else if (!this.requestUrl.contains("?")) {
+            this.requestUrl = this.requestUrl + "?" + key + "=" + (value);
+        } else {
+            this.requestUrl = this.requestUrl + "&" + key + "=" + (value);
+        }
+    }
+
+    public AbstractApiModel() {
+        super();
+        headerMap = new HashMap<String, String>();
+    }
+
+    public String getRequestUrlt_layout() {
+        return requestUrl;
+    }
+
+    public String getPostData() {
+        return postData;
+    }
+
+    public void setPostData(String postData) {
+        this.postData = postData;
+    }
+
+    public void putHeader(String key, String value) {
+
+        headerMap.put(key, value);
+    }
+
+    public HashMap<String, String> getHeaderMap() {
+        return headerMap;
+    }
+
+    public void setHeaderMap(HashMap<String, String> headerMap) {
+        this.headerMap = headerMap;
+    }
+
+    public int getMethodType() {
+        return methodType;
+    }
+
+    public void setMethodType(int methodType) {
+        this.methodType = methodType;
+    }
+
+    public UrlEncodedFormEntity getEntity() {
+        return entity;
+    }
+
+    public void setEntity(UrlEncodedFormEntity entity) {
+        this.entity = entity;
+    }
+}

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:visibility="gone"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <!-- LEFT TITLE PART -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="155dp"
+            android:layout_weight="3"
+            android:background="@color/bgTitleRight"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:background="@color/colorSecondary"
+                android:layout_width="5dp"
+                android:layout_height="155dp">
+            </RelativeLayout>
+            <TextView
+                android:background="@drawable/bg_circle"
+                android:text="1"
+                android:gravity="center"
+                android:id="@+id/tv_sr_no"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:textColor="@android:color/white"
+                android:textSize="26sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/vseparator"
+                android:textSize="14sp" />
+        </RelativeLayout>
+        <!-- RIGHT TITLE PART -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/bgTitleRight"
+            android:paddingBottom="20dp"
+            android:paddingEnd="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingStart="15dp"
+            android:paddingTop="20dp">
+
+            <ImageView
+                android:id="@+id/title_from_to_dots"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="-8dp"
+                android:src="@drawable/user_profile" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/title_from_to_dots"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="Rehan Khan"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_marginTop="@dimen/dp_5"
+                android:id="@+id/tv_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_name"
+                android:layout_toEndOf="@id/title_from_to_dots"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:singleLine="true"
+                android:text="50 Y | Male"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_below="@+id/tv_age"
+                android:id="@+id/title_aadhar_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="0dp"
+                android:src="@drawable/aadhar_icon" />
+
+            <TextView
+                android:layout_marginTop="@dimen/dp_5"
+                android:id="@+id/tv_aadhar_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_age"
+                android:layout_toEndOf="@+id/title_aadhar_icon"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:paddingTop="5dp"
+                android:singleLine="true"
+                android:text="221115245562"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="16sp" />
+            <!--
+
+                    <ImageView
+                        android:id="@+id/title_distance_icon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/title_aadhar_icon"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/location_track_icon" />
+
+                    <TextView
+                        android:id="@+id/tv_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_aadhar_no"
+                        android:layout_toEndOf="@+id/title_distance_icon"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:paddingTop="15dp"
+                        android:singleLine="true"
+                        android:text="3KM"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/title_svSeparator"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:layout_below="@+id/tv_aadhar_no"
+                        android:layout_toEndOf="@+id/tv_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/vseparator"/>
+
+                    <ImageView
+                        android:layout_below="@+id/title_aadhar_icon"
+                        android:id="@+id/title_kits_icon"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_toEndOf="@+id/title_svSeparator"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/kit_icon" />
+
+                    <TextView
+                        android:id="@+id/tv_kits"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_aadhar_no"
+                        android:layout_toEndOf="@+id/title_kits_icon"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:paddingTop="15dp"
+                        android:singleLine="true"
+                        android:text="BSV Kit"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="18sp" />
+            -->
+
+            <ImageView
+                android:visibility="invisible"
+                android:id="@+id/img_edit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/edit_order_icon" />
+
+            <ImageView
+                android:id="@+id/img_release"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/release_order" />
+
+        </RelativeLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:background="@color/bg_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:background="@color/colorSecondary"
+            android:layout_width="5dp"
+            android:layout_height="@dimen/dp_220">
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/ll_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/location_icon"
+                    android:layout_width="@dimen/dp_30"
+                    android:layout_height="@dimen/dp_30"
+                    android:contentDescription="@string/estimated_distance" />
+                <TextView
+                    android:text="@string/dummy_address"
+                    android:id="@+id/txt_address"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/location_track_icon"
+                    android:layout_width="@dimen/dp_30"
+                    android:layout_height="@dimen/dp_30"
+                    android:contentDescription="@string/estimated_distance" />
+                <TextView
+                    android:text="3 KM"
+                    android:id="@+id/txt_distance"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/kit_icon"
+                    android:layout_width="@dimen/dp_30"
+                    android:layout_height="@dimen/dp_30"
+                    android:contentDescription="@string/estimated_distance" />
+                <TextView
+                    android:text="10 BSV"
+                    android:id="@+id/txt_num_kits"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+        <Button
+            android:layout_marginBottom="10dp"
+            android:id="@+id/btn_start_navigation"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/ll_content"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:text="@string/start_navigation"
+            android:minEms="10"
+            android:background="@drawable/purple_btn_bg"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</LinearLayout>
