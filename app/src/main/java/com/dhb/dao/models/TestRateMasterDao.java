@@ -9,6 +9,7 @@ import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestSampleTypeModel;
 import com.dhb.models.data.TestSkillsModel;
 import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.InputUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -40,6 +41,7 @@ public class TestRateMasterDao {
 	String RATE = "Rate";
 	String DISCOUNT = "Discount";
 	String INCENTIVE = "Incentive";
+	String DESCRIPTION = "Description";
 	String CHILD_TESTS = "chldtests";
 	String TEST_SKILLS = "tstSkills";
 	String CREATED_AT = "createdAt";
@@ -77,6 +79,7 @@ public class TestRateMasterDao {
 		testRateMasterModel.setRate(cursor.getInt(cursor.getColumnIndex(RATE)));
 		testRateMasterModel.setDiscount(cursor.getInt(cursor.getColumnIndex(DISCOUNT)));
 		testRateMasterModel.setIncentive(cursor.getInt(cursor.getColumnIndex(INCENTIVE)));
+		testRateMasterModel.setDescription(cursor.getString(cursor.getColumnIndex(DESCRIPTION)));
 
 		TypeToken<ArrayList<ChildTestsModel>> tokenBarcode = new TypeToken<ArrayList<ChildTestsModel>>(){};
 		ArrayList<ChildTestsModel> ctArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(CHILD_TESTS)),tokenBarcode.getType());
@@ -117,6 +120,7 @@ public class TestRateMasterDao {
 		values.put(RATE, orderDetailsModel.getRate());
 		values.put(DISCOUNT, orderDetailsModel.getDiscount());
 		values.put(INCENTIVE, orderDetailsModel.getIncentive());
+		values.put(DESCRIPTION, orderDetailsModel.getDescription());
 		values.put(FASTING, orderDetailsModel.getFasting());
 		values.put(CREATED_AT, orderDetailsModel.getCreatedAt());
 		values.put(CREATED_BY, orderDetailsModel.getCreatedBy());
@@ -162,6 +166,23 @@ public class TestRateMasterDao {
 			cursor.close();
 		}
 		return orderDetailsModelsArr;
+	}
+
+	public ArrayList<String> getAllTestTypesFromBrandId(String brandId){
+		ArrayList<String> testTypesArr = new ArrayList<>();
+		String query = "SELECT DISTINCT("+TEST_TYPE+") FROM " + TABLE_NAME + " WHERE " + BRAND_ID + "=? AND " + RECORD_STATUS + "=?";
+		String[] whereParams = new String[] {brandId,"A"};
+		Cursor cursor = this.db.rawQuery(query, whereParams);
+		if (cursor != null && (cursor.moveToFirst())){
+			do {
+				String testType = cursor.getString(cursor.getColumnIndex(TEST_TYPE));
+				if(!InputUtils.isNull(testType)){
+					testTypesArr.add(testType);
+				}
+			} while ((cursor.moveToNext()));
+			cursor.close();
+		}
+		return testTypesArr;
 	}
 
 	public TestRateMasterModel getModelFromId(int testId){

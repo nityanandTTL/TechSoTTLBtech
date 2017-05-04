@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.dhb.R;
+import com.dhb.activity.EditTestListActivity;
 import com.dhb.activity.OrderBookingActivity;
 import com.dhb.adapter.DisplayScanBarcodeItemListAdapter;
 import com.dhb.delegate.ScanBarcodeIconClickedDelegate;
@@ -146,7 +147,10 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
         edtTests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tests = beneficiaryDetailsModel.getTests();
+                Intent intentEdit = new Intent(activity, EditTestListActivity.class);
+                intentEdit.putExtra(BundleConstants.BENEFICIARY_TEST_LIST,beneficiaryDetailsModel.getTests());
+                startActivityForResult(intentEdit,BundleConstants.TD_EDIT);
+               /* String tests = beneficiaryDetailsModel.getTests();
                 tests = tests+",Close";
                 final String[] testsList = tests.split(",");
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -162,7 +166,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
                         dialog.dismiss();
                     }
                 });
-                builder.show();
+                builder.show();*/
             }
         });
     }
