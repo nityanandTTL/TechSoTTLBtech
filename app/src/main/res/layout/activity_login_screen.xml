@@ -31,7 +31,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:id="@+id/username_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,17 +47,18 @@
                     android:background="@drawable/username_icon" />
 
                 <EditText
-                    android:padding="5dp"
                     android:id="@+id/username_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Enter User Name"
                     android:minEms="15"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:maxLines="1"
+                    android:nextFocusForward="@+id/password_login"/>
             </LinearLayout>
 
             <LinearLayout
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:id="@+id/password_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,14 +72,14 @@
                     android:background="@drawable/password_icon" />
 
                 <EditText
-                    android:padding="5dp"
                     android:id="@+id/password_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Enter Password"
                     android:inputType="textPassword"
                     android:minEms="15"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:maxLines="1" />
             </LinearLayout>
 
             <TextView
@@ -95,7 +96,7 @@
                 android:textSize="16sp"
                 android:layout_marginTop="10dp"
                 android:minEms="8"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:gravity="center"
                 android:id="@+id/login_button"
                 android:layout_width="wrap_content"
@@ -107,8 +108,8 @@
 
             <TextView
                 android:textSize="15sp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5"
                 android:id="@+id/text_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
