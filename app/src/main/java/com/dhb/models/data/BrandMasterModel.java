@@ -160,4 +160,9 @@ public class BrandMasterModel extends BaseModel implements Parcelable {
             return new BrandMasterModel[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return  BrandName;
+    }
 }
