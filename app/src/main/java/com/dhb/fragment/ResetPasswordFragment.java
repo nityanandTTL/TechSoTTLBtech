@@ -23,10 +23,7 @@ public class ResetPasswordFragment extends AbstractFragment implements View.OnCl
     public static final String TAG_FRAGMENT = ResetPasswordFragment.class.getSimpleName();
     private EditText edt_old_password, edt_new_password, edt_confirm_password;
     private Button btn_reset_password;
-     String regexp ="\t\n" +
-             "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$";
-    //String regexp ="^(?=.*\\d)(?=.*[a-zA-Z]).{8,12}$";
-    // String regexp = " ^.*(?=.{8,12})(?=.*\\d)(?=.*[a-zA-Z]).*$";
+    String regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,12})";
     HomeScreenActivity activity;
 
     public ResetPasswordFragment() {
@@ -65,16 +62,20 @@ public class ResetPasswordFragment extends AbstractFragment implements View.OnCl
 
     private boolean validate() {
         if (!edt_old_password.getText().toString().matches(regexp)) {
-            Toast.makeText(activity, "Old Password Length Should be Minimum 8 Character long", Toast.LENGTH_SHORT).show();
+            edt_old_password.setError(getString(R.string.password_criteria));
+          edt_old_password.requestFocus();
             return false;
         } else if (!edt_new_password.getText().toString().matches(regexp)) {
-            Toast.makeText(activity, "New Password Length Should be Minimum 8 Character long", Toast.LENGTH_SHORT).show();
+            edt_new_password.setError(getString(R.string.password_criteria));
+            edt_new_password.requestFocus();
             return false;
         } else if (!edt_confirm_password.getText().toString().matches(regexp)) {
-            Toast.makeText(activity, "Confirm Password Length Should be Minimum 8 Character long", Toast.LENGTH_SHORT).show();
+          edt_confirm_password.setError(getString(R.string.password_criteria));
+            edt_confirm_password.requestFocus();
             return false;
         } else if (!edt_new_password.getText().toString().equals(edt_confirm_password.getText().toString())) {
-            edt_new_password.setError("New Password and Confirm Password should be same");
+            edt_confirm_password.setError(getString(R.string.password_do_not_match));
+            edt_confirm_password.requestFocus();
             return false;
         }
         return true;
