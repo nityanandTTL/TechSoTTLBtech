@@ -21,11 +21,8 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.customview.RoundedImageView;
 import com.dhb.dao.DhbDao;
-import com.dhb.fragment.DispatchToHubFragment;
-import com.dhb.fragment.LedgerDisplayFragment;
+import com.dhb.fragment.HomeScreenFragment;
 import com.dhb.fragment.ResetPasswordFragment;
-import com.dhb.fragment.ScheduleYourDayFragment;
-import com.dhb.fragment.VisitOrdersDisplayFragment;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -60,7 +57,7 @@ public class HomeScreenActivity extends AbstractActivity
         appPreferenceManager = new AppPreferenceManager(activity);
         initUI();
         initData();
-        pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+        pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
     }
 
     private void initData() {
@@ -68,7 +65,7 @@ public class HomeScreenActivity extends AbstractActivity
             txtUserName.setText(appPreferenceManager.getLoginResponseModel().getUserName());
         if(!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()))
             txtUserId.setText(appPreferenceManager.getLoginResponseModel().getUserID());
-        if(appPreferenceManager.getSelfieResponseModel()!=null&& !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
+        if(appPreferenceManager.getSelfieResponseModel()!=null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
             rivSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
             BitmapDrawable bmpDrawable = new BitmapDrawable(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
             llNavHeader.setBackgroundDrawable(bmpDrawable);
@@ -132,6 +129,7 @@ public class HomeScreenActivity extends AbstractActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
             return true;
         }
 
@@ -144,7 +142,7 @@ public class HomeScreenActivity extends AbstractActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_visit_orders) {
+        /*if (id == R.id.nav_visit_orders) {
             Toast.makeText(getApplicationContext(),"in visit orders",Toast.LENGTH_SHORT).show();
             pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_schedule_your_day) {
@@ -153,6 +151,18 @@ public class HomeScreenActivity extends AbstractActivity
         } else if (id == R.id.nav_ledger) {
             Toast.makeText(getApplicationContext(),"in ledger",Toast.LENGTH_SHORT).show();
             pushFragments(LedgerDisplayFragment.newInstance(),false,false,LedgerDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+        } else if (id == R.id.nav_hub) {
+            Toast.makeText(getApplicationContext(),"in Hub drop",Toast.LENGTH_SHORT).show();
+            pushFragments(DispatchToHubFragment.newInstance(),false,false, DispatchToHubFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+        } else if (id == R.id.nav_materials) {
+
+        }*/
+        if (id == R.id.nav_home) {
+            Toast.makeText(getApplicationContext(),"in home",Toast.LENGTH_SHORT).show();
+            pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+        } else if (id == R.id.nav_change_password) {
+            Toast.makeText(getApplicationContext(),"in change password",Toast.LENGTH_SHORT).show();
+            pushFragments(ResetPasswordFragment.newInstance(),false,false, ResetPasswordFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_logout) {
             ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
             logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
@@ -162,14 +172,6 @@ public class HomeScreenActivity extends AbstractActivity
             else{
                 Toast.makeText(activity,"Logout functionality is only available in Online Mode",Toast.LENGTH_SHORT).show();
             }
-        } else if (id == R.id.nav_hub) {
-            Toast.makeText(getApplicationContext(),"in Hub drop",Toast.LENGTH_SHORT).show();
-            pushFragments(DispatchToHubFragment.newInstance(),false,false, DispatchToHubFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
-        } else if (id == R.id.nav_materials) {
-
-        } else if (id == R.id.nav_change_password) {
-            Toast.makeText(getApplicationContext(),"in change password",Toast.LENGTH_SHORT).show();
-            pushFragments(ResetPasswordFragment.newInstance(),false,false, ResetPasswordFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_feedback) {

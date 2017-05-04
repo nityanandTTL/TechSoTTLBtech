@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/contentDividerLine"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/ll_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/bg_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+            <!-- LEFT TITLE PART -->
+            <RelativeLayout
+                android:id="@+id/benf_number_queue"
+                android:layout_width="match_parent"
+                android:layout_height="145dp"
+                android:layout_weight="3"
+                android:background="@color/bgTitleRight"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="5dp"
+                    android:layout_height="155dp"
+                    android:background="@color/colorSecondary">
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/txt_sr_no"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/bg_circle"
+                    android:gravity="center"
+                    android:text="1.1"
+                    android:textColor="@android:color/white"
+                    android:textSize="26sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/vseparator"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+            <!-- RIGHT TITLE PART -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/bgTitleRight"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <ImageView
+                    android:id="@+id/title_from_to_dots"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="-10dp"
+                    android:layout_marginTop="-3dp"
+                    android:src="@drawable/user_profile" />
+
+                <EditText
+                    android:id="@+id/edt_ben_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/title_from_to_dots"
+                    android:background="@android:drawable/editbox_background"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:hint="Enter Name"
+                    android:inputType="textPersonName|textCapWords"
+                    android:maxLength="40"
+                    android:maxLines="1"
+                    android:minEms="10"
+                    android:singleLine="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_below="@id/edt_ben_name"
+                    android:id="@+id/title_to_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:labelFor="@+id/edt_age"
+                        android:text="Age: "
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/edt_age"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:drawable/editbox_background"
+                        android:digits="0123456789"
+                        android:drawableEnd="@drawable/vseparator_age"
+                        android:fadingEdge="horizontal"
+                        android:hint="50 "
+                        android:inputType="number"
+                        android:singleLine="true"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/img_male"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="25dp"
+                        android:fadingEdge="horizontal"
+                        android:src="@drawable/male" />
+
+                    <ImageView
+                        android:id="@+id/img_vsg"
+                        android:layout_width="30dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="-12dp"
+                        android:layout_marginRight="-12dp"
+                        android:fadingEdge="horizontal"
+                        android:src="@drawable/vseparator_gender" />
+
+                    <ImageView
+                        android:id="@+id/img_female"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:fadingEdge="horizontal"
+                        android:src="@drawable/female" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/title_aadhar_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/title_to_address"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/aadhar_icon" />
+
+                <EditText
+                    android:id="@+id/title_aadhar_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title_to_address"
+                    android:layout_toEndOf="@+id/title_aadhar_icon"
+                    android:background="@android:drawable/editbox_background"
+                    android:drawableEnd="@android:drawable/ic_menu_camera"
+                    android:fadingEdge="horizontal"
+                    android:hint="Enter Aadhar"
+                    android:minEms="10"
+                    android:paddingTop="5dp"
+                    android:maxLines="1"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:src="@color/contentDividerLine" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/bg_content"
+                android:baselineAligned="false">
+
+                <RelativeLayout
+                    android:id="@+id/rl_left_marker"
+                    android:layout_width="5dp"
+                    android:layout_height="350dp"
+                    android:background="@color/colorSecondary">
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_tests"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_toEndOf="@id/rl_left_marker"
+                    android:layout_toRightOf="@id/rl_left_marker"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:minEms="5"
+                        android:padding="10dp"
+                        android:text="Tests:"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:singleLine="true"
+                        android:id="@+id/edt_add_test"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:drawable/edit_text"
+                        android:drawableEnd="@android:drawable/ic_menu_add"
+                        android:drawableRight="@android:drawable/ic_menu_add"
+                        android:editable="false"
+                        android:minEms="10" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_barcodes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_tests"
+                    android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@id/rl_left_marker"
+                    android:layout_toRightOf="@id/rl_left_marker"
+                    android:orientation="horizontal">
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ll_vhc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_barcodes"
+                    android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@+id/rl_left_marker"
+                    android:layout_toRightOf="@+id/rl_left_marker"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_venipuncture"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="50dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="Venipuncture: " />
+
+                    <ImageView
+                        android:id="@+id/img_venipuncture"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/camera_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="Hard Copy: " />
+
+                    <ImageView
+                        android:id="@+id/hard_copy_check"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/tick_icon" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_vhc"
+                    android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@+id/rl_left_marker"
+                    android:layout_toRightOf="@+id/rl_left_marker"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/clinical_history_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:minEms="5"
+                            android:padding="10dp"
+                            android:text="Clinical History:"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:id="@+id/edt_clinical_history"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@android:drawable/edit_text"
+                            android:inputType="textCapSentences|textMultiLine"
+                            android:minEms="10"
+                            android:singleLine="true" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:minEms="5"
+                            android:padding="@dimen/dp_10"
+                            android:text="Sign:"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:id="@+id/edt_customer_sign"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@android:drawable/edit_text"
+                            android:inputType="textCapSentences|textMultiLine"
+                            android:maxLength="2000"
+                            android:maxLines="4"
+                            android:minEms="10" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/dp_2"
+                    android:layout_weight="1"
+                    android:background="@drawable/footer_bg"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_20"
+                        android:layout_height="@dimen/dp_20"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/dp_5"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_marginRight="@dimen/dp_5"
+                        android:layout_marginStart="@dimen/dp_5"
+                        android:src="@drawable/rupee_icon" />
+
+                    <TextView
+                        android:id="@+id/title_est_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:text="Amount Payable\n₹ 1420/-"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_add_beneficiary"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/dp_2"
+                    android:layout_weight="1"
+                    android:background="@drawable/footer_bg"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_20"
+                        android:layout_height="@dimen/dp_20"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/dp_5"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_marginRight="@dimen/dp_5"
+                        android:layout_marginStart="@dimen/dp_5"
+                        android:src="@drawable/plus_icon" />
+
+                    <TextView
+                        android:id="@+id/title_est_earnings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:gravity="center"
+                        android:text="Add Beneficiaries"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/btn_proceed_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/purple_btn_bg"
+                android:gravity="center"
+                android:minEms="8"
+                android:padding="@dimen/dp_10"
+                android:text="Proceed for Payment"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    </ScrollView>
