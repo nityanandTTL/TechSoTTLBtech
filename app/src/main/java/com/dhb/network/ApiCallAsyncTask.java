@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Process;
 import android.view.Window;
-import android.view.WindowManager.BadTokenException;
 
 import com.dhb.utils.api.NetworkUtils;
 import com.dhb.utils.app.AppConstants;
@@ -316,20 +315,6 @@ AppConstants, OnDismissListener {
 
 			}
 
-		} catch (JsonSyntaxException jsonSyntaxException){
-
-			jsonSyntaxException.printStackTrace();
-
-		} catch (IllegalArgumentException illegarArgumentException){
-
-			illegarArgumentException.printStackTrace();
-
-		} catch (BadTokenException badTokenException){
-
-			badTokenException.printStackTrace();
-
-		} catch (IllegalStateException e){
-			e.printStackTrace();
 		} catch (Exception e){
 			e.printStackTrace();
 		}

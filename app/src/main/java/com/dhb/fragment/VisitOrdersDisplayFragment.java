@@ -185,8 +185,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         @Override
         public void onItemRelease(OrderVisitDetailsModel orderVisitDetailsModel) {
             cdd = new ConfirmOrderReleaseDialog(activity, new ConfirmOrderReleaseDialogButtonClickedDelegateResult(),orderVisitDetailsModel);
-            cdd.setCancelable(false);
-            cdd.setCanceledOnTouchOutside(false);
             cdd.show();
         }
 

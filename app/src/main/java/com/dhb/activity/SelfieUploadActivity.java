@@ -202,21 +202,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-      /*  switch (requestCode) {
-            case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if(userChoosenTask.equals("Take Photo"))
-                        cameraIntent();
-
-                } else {
-//code for deny
-                }
-                break;
-        }*/
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
@@ -249,8 +234,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
         encodedProImg = CommonUtils.encodeImage(thumbnail);
         img_user_picture.setImageBitmap(thumbnail);
-
-
     }
 
     private void showImage(Bitmap bm) {
@@ -280,6 +263,9 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     callMasterSync();
                 }
             }
+            else{
+                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
@@ -301,7 +287,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     public boolean isMasterTableSyncServiceIsInProgress() {
         return isServiceRunning(MasterTablesSyncService.class);
-
     }
 
     private void callMasterTableSyncService() {

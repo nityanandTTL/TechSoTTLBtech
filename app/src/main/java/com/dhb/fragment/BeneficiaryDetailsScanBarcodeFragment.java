@@ -55,6 +55,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
     private static final int REQUEST_CAMERA = 100;
     private Bitmap thumbnail;
     private View rootview;
+    private boolean isHC = false;
+    private String userChoosenReleaseTask;
 
     public BeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
@@ -98,6 +100,71 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
                 clickPhoto();
             }
         });
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        imgHC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isHC){
+                    isHC = false;
+                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.tick_icon));
+                }else{
+                    isHC = true;
+                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.check_mark));
+                }
+            }
+        });
+        btnRelease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final CharSequence[] items = {"Order Reschedule",
+                        "Order Cancellation","Close"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle("Select Action");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        if (items[item].equals("Order Reschedule")) {
+                            userChoosenReleaseTask = "Order Reschedule";
+                        } else if (items[item].equals("Order Cancellation")) {
+                            userChoosenReleaseTask = "Order Cancellation";
+                        }
+                    }
+                }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
+            }
+        });
+        edtTests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tests = beneficiaryDetailsModel.getTests();
+                tests = tests+",Close";
+                final String[] testsList = tests.split(",");
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle("Selected Tests List");
+                builder.setItems(testsList, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
+            }
+        });
     }
 
     @Override
@@ -114,10 +181,10 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
         edtCH = (EditText) rootview.findViewById(R.id.clinical_history);
         edtSign = (EditText) rootview.findViewById(R.id.customer_sign);
         llBarcodes = (LinearLayout)rootview.findViewById(R.id.ll_barcodes);
+        btnEdit.setVisibility(View.VISIBLE);
     }
 
     private void initScanBarcodeView() {
-
         View scanBarcodeView = activity.getLayoutInflater().inflate(R.layout.item_list_view,null);
         ListView lv = (ListView) scanBarcodeView.findViewById(R.id.lv_barcodes);
         DisplayScanBarcodeItemListAdapter displayScanBarcodeItemListAdapter = new DisplayScanBarcodeItemListAdapter(activity,beneficiaryDetailsModel.getSampleType(),scannedSampleTypes,beneficiaryDetailsModel.getBarcodedtl(),new ScanBarcodeIconClickedDelegateResult());
@@ -127,10 +194,9 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
     }
 
     private void clickPhoto() {
-        final CharSequence[] items = {"Take Photo",
-                "Cancel"};
+        final CharSequence[] items = {"Take Photo"};
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Add Photo!");
+        builder.setTitle("Choose Action");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {

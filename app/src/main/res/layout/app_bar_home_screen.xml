@@ -19,6 +19,7 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
             <TextView
+                android:visibility="gone"
                 android:id="@+id/txt_header_text"
                 android:textColor="@android:color/white"
                 android:layout_marginStart="@dimen/dp_15"
