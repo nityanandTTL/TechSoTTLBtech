@@ -1,7 +1,9 @@
 package com.dhb.fragment;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +91,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 txtNo.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
                 llSlotsDisplay.setVisibility(View.VISIBLE);
                 isAvailable = true;
+                btnProceed.setVisibility(View.VISIBLE);
                 fetchData();
             }
         });
@@ -98,7 +101,44 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
                 llSlotsDisplay.setVisibility(View.GONE);
+                btnProceed.setVisibility(View.INVISIBLE);
                 isAvailable = false;
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setMessage("Are you sure that you will not be able to work tomorrow ?")
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
+                                setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
+                                setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                String slots = "";
+                                setBtechAvailabilityAPIRequestModel.setSlots(slots);
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
+                                Calendar calendar = Calendar.getInstance();
+
+                                setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
+                                setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
+                                calendar.add(Calendar.DAY_OF_MONTH,1);
+                                setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
+
+                                ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
+                                setBtechAvailabilityAsyncTask.setApiCallAsyncTaskDelegate(new SetBtechAvailabilityAsyncTaskDelegateResult());
+                                if(isNetworkAvailable(activity)){
+                                    setBtechAvailabilityAsyncTask.execute(setBtechAvailabilityAsyncTask);
+                                }
+                                else{
+                                    Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                builder.create().
+                        show();
             }
         });
         btnProceed.setOnClickListener(new View.OnClickListener() {
@@ -157,6 +197,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         txtYes = (TextView) rootView.findViewById(R.id.txt_yes);
         txtNo = (TextView) rootView.findViewById(R.id.txt_no);
         btnProceed = (Button) rootView.findViewById(R.id.btn_proceed);
+        btnProceed.setVisibility(View.INVISIBLE);
         llSlotsDisplay = (LinearLayout) rootView.findViewById(R.id.ll_slots_display);
         gvSlots = (GridView) rootView.findViewById(R.id.gv_slots);
     }

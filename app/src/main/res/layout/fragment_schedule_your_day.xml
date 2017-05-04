@@ -29,6 +29,7 @@
             android:textAlignment="center"
             android:text="No"
             android:textSize="16sp"
+            android:background="@drawable/custom_border"
             android:textColor="@color/colorSecondaryDark"
             android:layout_alignParentStart="true"
             android:layout_marginStart="@dimen/activity_horizontal_margin"/>
@@ -40,6 +41,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:text="Yes"
+            android:background="@drawable/custom_border"
             android:textColor="@color/colorSecondaryDark"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"/>
@@ -49,7 +51,7 @@
         android:id="@+id/ll_slots_display"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_340">
+        android:layout_height="@dimen/dp_320">
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dp"
@@ -96,14 +98,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:layout_marginTop="@dimen/activity_vertical_margin">
+        android:layout_margin="@dimen/activity_vertical_margin">
         <Button
+            android:textSize="16sp"
+            android:padding="@dimen/dp_10"
             android:id="@+id/btn_proceed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:text="Proceed"
             android:textColor="@android:color/white"
-            android:background="@color/colorPrimaryDark"/>
+            android:background="@drawable/purple_btn_bg"/>
     </LinearLayout>
 </LinearLayout>

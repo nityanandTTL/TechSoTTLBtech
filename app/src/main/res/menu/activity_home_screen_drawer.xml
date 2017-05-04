@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item
+        <!--<item
             android:id="@+id/nav_visit_orders"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="My Orders" />
@@ -21,8 +21,11 @@
         <item
             android:id="@+id/nav_materials"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Materials" />
-
+            android:title="Materials" />-->
+        <item
+            android:icon="@drawable/ic_home_black"
+            android:id="@+id/nav_home"
+            android:title="Home" />
         <item
             android:id="@+id/nav_change_password"
             android:icon="@drawable/ic_menu_slideshow"
