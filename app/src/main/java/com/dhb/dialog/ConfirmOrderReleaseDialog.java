@@ -60,12 +60,14 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
         if (v.getId() == R.id.btn_yes) {
             if(!InputUtils.isNull(edt_remark.getText().toString().trim())) {
                 confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel,edt_remark.getText().toString().trim());
+                dismiss();
             }else{
                 Toast.makeText(activity, R.string.enter_remarks,Toast.LENGTH_SHORT).show();
             }
         }
         if(v.getId()==R.id.btn_no){
             confirmOrderReleaseDialogButtonClickedDelegate.onCancelButtonClicked();
+            dismiss();
         }
     }
 }

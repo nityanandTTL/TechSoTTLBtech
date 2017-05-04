@@ -28,7 +28,6 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:scrollbars="vertical" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -57,23 +56,27 @@
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/footer_bg"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/location_icon" />
+                    android:src="@drawable/location_icon"
+                    android:layout_weight="0.75"
+                    android:layout_gravity="center_vertical"/>
 
                 <TextView
                     android:id="@+id/title_est_distance"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:text="Est Distance 30km"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_weight="1.25"/>
 
             </LinearLayout>
 
@@ -83,23 +86,27 @@
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/footer_bg"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/rupee_icon" />
+                    android:src="@drawable/rupee_icon"
+                    android:layout_weight="0.75"
+                    android:layout_gravity="center_vertical"/>
 
                 <TextView
                     android:id="@+id/title_est_earnings"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:text="EST Earnings  RS.1500"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_weight="1.24"/>
 
             </LinearLayout>
 
@@ -108,28 +115,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
+                android:weightSum="2"
                 android:background="@drawable/footer_bg"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.75"
+                    android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content"
                     android:src="@drawable/vial_icon" />
 
                 <TextView
                     android:id="@+id/title_est_call"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:text="Kit Req 10BSU | 05BSV"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_weight="1.25"/>
 
             </LinearLayout>
-
-
         </LinearLayout>
 
         <LinearLayout
@@ -146,8 +155,6 @@
                 android:background="@drawable/purple_btn_bg"
                 android:text="@string/start"
                 android:visibility="invisible" />
-
-
         </LinearLayout>
     </LinearLayout>
 
@@ -176,23 +183,27 @@
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/footer_bg"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <ImageView
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/centrifuge_icon" />
+                    android:layout_width="0dp"
+                    android:src="@drawable/centrifuge_icon"
+                    android:layout_weight="0.5"
+                    android:layout_gravity="center_vertical"/>
 
                 <TextView
                     android:id="@+id/tv_centrifuge"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:text="Centrifuge 10 samples"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_weight="1.5"/>
 
             </LinearLayout>
 
@@ -203,23 +214,27 @@
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/footer_bg"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <ImageView
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/scan_master_barcode" />
+                    android:layout_width="0dp"
+                    android:src="@drawable/scan_master_barcode"
+                    android:layout_weight="0.5"
+                    android:layout_gravity="center_vertical"/>
 
                 <TextView
                     android:id="@+id/tv_scan_barcode"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:text="Scan Master Barcode"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_weight="1.5"/>
 
             </LinearLayout>
 
@@ -272,21 +287,24 @@
                 android:background="@drawable/footer_bg"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:text="hello"
+                <ImageView
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"/>
+                    android:layout_width="0dp"
+                    android:src="@drawable/location_icon"
+                    android:layout_weight="0.5"
+                    android:layout_gravity="center_vertical"/>
 
                 <TextView
                     android:id="@+id/tv_noof_pickup"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:text="No. of Pick up"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_weight="1.5"/>
 
             </LinearLayout>
 
@@ -296,23 +314,27 @@
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/footer_bg"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <ImageView
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/distance_icon_w_bg" />
+                    android:layout_width="0dp"
+                    android:src="@drawable/location_icon"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.5"/>
 
                 <TextView
                     android:id="@+id/tv_est_distance"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:text="EST.Distance 10km"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_weight="1.5"/>
 
             </LinearLayout>
 
@@ -332,7 +354,8 @@
                 android:layout_height="30dp"
                 android:background="@drawable/purple_btn_bg"
                 android:text="@string/start_pick_up"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:padding="@dimen/dp_5"/>
 
 
         </LinearLayout>

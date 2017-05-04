@@ -107,6 +107,9 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
                     switchToActivity(activity,SelfieUploadActivity.class,new Bundle());
                 }
             }
+            else{
+                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
