@@ -63,6 +63,8 @@ public class AbstractApiModel implements AppConstants {
 
 	public String CHANGE_PASSWORD = VERSION_API_URL + "/Account/ChangePassword";
 
+    public String RESET_PASSWORD = VERSION_API_URL + "/Account/ResetPassword";
+
 	public String SELFIE_UPLOAD = VERSION_API_URL+"/SelfiUpload";
 
 	public String FETCH_ORDER_DETAIL = VERSION_API_URL+"/OrderVisitDetails";

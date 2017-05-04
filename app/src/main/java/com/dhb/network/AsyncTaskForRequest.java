@@ -10,6 +10,7 @@ import com.dhb.models.api.request.HubStartRequestModel;
 import com.dhb.models.api.request.LoginRequestModel;
 import com.dhb.models.api.request.MasterBarcodeMappingRequestModel;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
+import com.dhb.models.api.request.ResetPasswordRequestModel;
 import com.dhb.models.api.request.SelfieUploadRequestModel;
 import com.dhb.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.dhb.utils.app.AppPreferenceManager;
@@ -441,6 +442,29 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
                     .getString(R.string.progress_message_change_password_please_wait));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    } /*
+	 * Reset Password Api Integration*/
+
+    public ApiCallAsyncTask getResetPasswordRequestAsyncTask(ResetPasswordRequestModel resetPasswordRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(resetPasswordRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.RESET_PASSWORD);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_reset_password_please_wait));
 
         } catch (Exception e) {
             e.printStackTrace();
