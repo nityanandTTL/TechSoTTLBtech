@@ -249,8 +249,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
         encodedProImg = CommonUtils.encodeImage(thumbnail);
         img_user_picture.setImageBitmap(thumbnail);
-
-
     }
 
     private void showImage(Bitmap bm) {
