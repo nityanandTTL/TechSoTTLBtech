@@ -177,8 +177,6 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 }
             }
         });
-
-        txtNo.callOnClick();
     }
 
     private void fetchData() {
