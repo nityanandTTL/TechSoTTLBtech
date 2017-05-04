@@ -36,6 +36,7 @@
     <string name="progress_message_scan_barcode_check_for_duplicate_please_wait">Scanning Barcode,\n Please wait ....</string>
     <string name="progress_message_fetching_btech_collections_please_wait">Fetching BTech Collections,\n Please wait ....</string>
     <string name="progress_message_change_password_please_wait">Changing Password, Please wait ....</string>
+    <string name="progress_message_reset_password_please_wait">Reseting Password, Please wait ....</string>
 
     <string name="upload">UPLOAD</string>
     <string name="take_photo">Take Photo</string>
@@ -48,7 +49,7 @@
     <string name="start_pick_up"> Start Pick Up </string>
     <string name="reset_password">Reset Password</string>
     <string name="password_changed_successfully">Password Changed Successfully</string>
-    <string name="enter_mobile_number">Enter Mobile Number</string>
+    <string name="enter_mobile_number">Enter User Name</string>
     <string name="old_password">Old Password *</string>
     <string name="new_password">New Password *</string>
     <string name="confirm_password">Confirm Password *</string>
@@ -67,4 +68,6 @@
     <string name="sync_done_master_table">Finished updating Tests List</string>
     <string name="sync_no_data">No Data to Sync</string>
     <string name="enter_remarks">Please enter remarks</string>
+    <string name="password_criteria">Password should be minimum 8 character  and maximum 12 character long and should contain atleat one digit,lower case and upper case and special character</string>
+    <string name="password_do_not_match">New Password and confirm password do not match</string>
 </resources>

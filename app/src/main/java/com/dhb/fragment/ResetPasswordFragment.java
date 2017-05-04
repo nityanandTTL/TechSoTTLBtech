@@ -23,7 +23,9 @@ public class ResetPasswordFragment extends AbstractFragment implements View.OnCl
     public static final String TAG_FRAGMENT = ResetPasswordFragment.class.getSimpleName();
     private EditText edt_old_password, edt_new_password, edt_confirm_password;
     private Button btn_reset_password;
-     String regexp ="^(?=.*\\d)(?=.*[a-zA-Z]).{8,12}$";
+     String regexp ="\t\n" +
+             "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$";
+    //String regexp ="^(?=.*\\d)(?=.*[a-zA-Z]).{8,12}$";
     // String regexp = " ^.*(?=.{8,12})(?=.*\\d)(?=.*[a-zA-Z]).*$";
     HomeScreenActivity activity;
 
