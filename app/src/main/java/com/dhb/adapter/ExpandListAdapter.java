@@ -111,10 +111,10 @@ public class ExpandListAdapter extends BaseExpandableListAdapter {
         }
         else{
             if(testRateMasterModel.getTestType().equalsIgnoreCase("profile")){
-//                holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.p));
+               holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.p));
             }
             else{
-//                holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.o));
+               holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.o));
             }
         }
 //        holder.txt_org_amt.setText(""+testRateMasterModel.getRate());
