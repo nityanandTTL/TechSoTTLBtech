@@ -100,13 +100,13 @@ public class ExpandListAdapter extends BaseExpandableListAdapter {
         }
         TestRateMasterModel testRateMasterModel = testRateMasterModels.get(groupPosition).getTestRateMasterModels().get(childPosition);
         holder.txt_dis_amt.setText(""+testRateMasterModel.getRate());
-        if(testRateMasterModel.getChldtests().size()>0 && !testRateMasterModel.getChldtests().isEmpty() && testRateMasterModel.getChldtests() !=null){
+        if(testRateMasterModel.getChldtests() !=null && testRateMasterModel.getChldtests().size()>0){
             holder.txt_test.setText(testRateMasterModel.getTestCode());
         }
         else{
             holder.txt_test.setText(testRateMasterModel.getDescription());
         }
-        if(testRateMasterModel.getChldtests().size()==0){
+        if(testRateMasterModel.getChldtests() !=null && testRateMasterModel.getChldtests().size()==0){
             holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.t));
         }
         else{
