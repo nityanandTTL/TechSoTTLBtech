@@ -10,6 +10,8 @@ public class BundleConstants {
     public static final int VOMD_ARRIVED = 1005;
     public static final int HMD_START = 1006;
     public static final int HMD_ARRIVED = 1007;
+    public static final int EDIT_TESTS_START = 1008;
+    public static final int EDIT_TESTS_FINISH = 1009;
     public static final int ADD_EDIT_START = 1010;
     public static final int ADD_EDIT_FINISH = 1011;
 
@@ -23,7 +25,6 @@ public class BundleConstants {
 
 
     public static final String BENEFICIARY_TEST_LIST = "beneficiaryTestList";
-    public static final int EDIT_TESTS_START = 1008;
-    public static final int EDIT_TESTS_FINISH = 1009;
+
     public static final String TESTS_LIST = "testsList";
 }

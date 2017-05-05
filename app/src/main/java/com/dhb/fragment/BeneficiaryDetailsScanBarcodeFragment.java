@@ -202,7 +202,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intentEdit = new Intent(activity, EditTestListActivity.class);
                         intentEdit.putExtra(BundleConstants.BENEFICIARY_TEST_LIST,beneficiaryDetailsModel.getTests());
-                        startActivityForResult(intentEdit,BundleConstants.TD_EDIT);
+                        startActivityForResult(intentEdit,BundleConstants.EDIT_TESTS_START);
                     }
                 });
                 builder.show();
