@@ -6,7 +6,8 @@ package com.dhb.models.api.request;
 
 public class OrderStatusChangeRequestModel {
     String Remarks;
-
+    String Id;
+    int Status;
     public String getRemarks() {
         return Remarks;
     }
@@ -31,6 +32,4 @@ public class OrderStatusChangeRequestModel {
         Status = status;
     }
 
-    String Id;
-    int Status;
 }

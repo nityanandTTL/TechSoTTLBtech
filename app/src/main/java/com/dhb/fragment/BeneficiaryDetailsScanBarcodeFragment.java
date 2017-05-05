@@ -17,23 +17,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.EditTestListActivity;
 import com.dhb.activity.AddEditBeneficiaryDetailsActivity;
 import com.dhb.activity.OrderBookingActivity;
 import com.dhb.adapter.DisplayScanBarcodeItemListAdapter;
+import com.dhb.delegate.OrderRescheduleDialogButtonClickedDelegate;
 import com.dhb.delegate.ScanBarcodeIconClickedDelegate;
+import com.dhb.dialog.RescheduleOrderDialog;
+import com.dhb.models.api.request.OrderStatusChangeRequestModel;
 import com.dhb.models.data.BarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.OrderDetailsModel;
+import com.dhb.models.data.OrderVisitDetailsModel;
+import com.dhb.network.ApiCallAsyncTask;
+import com.dhb.network.ApiCallAsyncTaskDelegate;
+import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.DeviceUtils;
 import com.dhb.utils.app.InputUtils;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -66,7 +76,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
     private ArrayList<BarcodeDetailsModel> barcodeDetailsModelsArr;
     private String currentScanSampleType;
     private DisplayScanBarcodeItemListAdapter displayScanBarcodeItemListAdapter;
-
+private RescheduleOrderDialog cdd;
     public BeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
     }
@@ -167,6 +177,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Order Reschedule")) {
                             userChoosenReleaseTask = "Order Reschedule";
+                            cdd = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(),orderDetailsModel);
+                            cdd.show();
                         } else if (items[item].equals("Order Cancellation")) {
                             userChoosenReleaseTask = "Order Cancellation";
                         }
@@ -330,6 +342,50 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
         public void onClicked(String sampleType) {
             currentScanSampleType = sampleType;
             new IntentIntegrator(activity).initiateScan();
+        }
+    }
+
+    private class OrderRescheduleDialogButtonClickedDelegateResult  implements OrderRescheduleDialogButtonClickedDelegate {
+        @Override
+        public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark) {
+            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
+            orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId()+"");
+            orderStatusChangeRequestModel.setRemarks(remark);
+            orderStatusChangeRequestModel.setStatus(11);
+            ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
+            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeApiAsyncTaskDelegateResult(orderDetailsModel));
+            if (isNetworkAvailable(activity)) {
+                orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
+    }
+
+    private class OrderStatusChangeApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        OrderDetailsModel orderDetailsModel;
+        public OrderStatusChangeApiAsyncTaskDelegateResult(OrderDetailsModel orderDetailsModel) {
+            this.orderDetailsModel = orderDetailsModel;
+        }
+
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+          if (statusCode==200){
+              Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
+          }else {
+              Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+          }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
 }
