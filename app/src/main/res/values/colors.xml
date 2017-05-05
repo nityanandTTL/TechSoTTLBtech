@@ -5,6 +5,7 @@
     <color name="colorPrimaryDark">#3e2d70</color>
     <color name="colorSecondaryDark">#5ebade</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorBackground">#E6E6E6</color>
 
     <color name="bgBackSideColor">#f4f0ff</color>
     <color name="bgTitleLeft">#594691</color>
@@ -25,4 +26,6 @@
 
     <color name="colorFAB1">#2196F3</color>
     <color name="colorFAB2">#E040FB</color>
+    <color name="green">#00FF00</color>
+    <color name="red">#FF0000</color>
 </resources>

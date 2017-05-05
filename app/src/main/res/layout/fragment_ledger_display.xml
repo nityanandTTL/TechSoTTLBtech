@@ -37,7 +37,7 @@
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
             android:paddingTop="@dimen/dp_5"
-            android:textColor="#444444"
+            android:textColor="@color/mainTextColor"
             android:textSize="18sp" />
 
         <TextView
@@ -56,7 +56,7 @@
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
             android:paddingTop="@dimen/dp_5"
-            android:textColor="#444444"
+            android:textColor="@color/mainTextColor"
             android:textSize="18sp" />
 
         <Button
@@ -72,7 +72,7 @@
             android:paddingBottom="@dimen/dp_5"
             android:paddingTop="@dimen/dp_5"
             android:text="Filter"
-            android:textColor="#585858"
+            android:textColor="@color/mainTextColor"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -87,7 +87,7 @@
         android:paddingRight="@dimen/dp_2"
         android:paddingTop="@dimen/dp_5"
         android:visibility="visible"
-        android:background="#FFFFFF">
+        android:background="@android:color/white">
 
         <LinearLayout
             android:id="@+id/order_ledger"
@@ -121,7 +121,7 @@
                 android:layout_gravity="end"
                 android:text="Deposit"
                 android:textSize="14sp"
-                android:textColor="#FFFFFF" />
+                android:textColor="@android:color/white" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -144,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text="Deposit"
-                android:textColor="#FFFFFF"
+                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
 
