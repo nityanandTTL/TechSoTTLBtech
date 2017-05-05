@@ -180,7 +180,7 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null && scanningResult.getContents() != null) {
             scanned_barcode = scanningResult.getContents();
-            if (scanned_barcode != "" + barcodeModels.get(current_position).getBarcode()) {
+            if (!scanned_barcode.equals("" + barcodeModels.get(current_position).getBarcode())) {
                 Toast.makeText(activity, "no match! Try again", Toast.LENGTH_SHORT).show();
                 view.setBackgroundColor(Color.RED);
                 isAllScanned = false;

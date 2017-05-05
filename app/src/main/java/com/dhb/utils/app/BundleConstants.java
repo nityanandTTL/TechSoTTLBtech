@@ -10,11 +10,16 @@ public class BundleConstants {
     public static final int VOMD_ARRIVED = 1005;
     public static final int HMD_START = 1006;
     public static final int HMD_ARRIVED = 1007;
+    public static final int ADD_EDIT_START = 1010;
+    public static final int ADD_EDIT_FINISH = 1011;
 
     //Bundle Constants
-    public static final String VISIT_ORDER_DETAILS_MODEL = "visitOrderDetailsModel";
     public static final String ACTIVITY = "activity";
+    public static final String VISIT_ORDER_DETAILS_MODEL = "visitOrderDetailsModel";
     public static final String BENEFICIARY_DETAILS_MODEL = "beneficiaryDetailsModel";
+    public static final String ORDER_DETAILS_MODEL = "orderDetailsModel";
     public static final String HUB_BTECH_MODEL = "hubBtechModel";
+
+
 
 }

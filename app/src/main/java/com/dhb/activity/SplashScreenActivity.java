@@ -17,6 +17,8 @@ import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.InputUtils;
 
+import java.util.Calendar;
+
 
 public class SplashScreenActivity extends AbstractActivity {
 
@@ -119,10 +121,21 @@ public class SplashScreenActivity extends AbstractActivity {
     private class DhbDbDelegate implements CreateOrUpgradeDbTask.DbTaskDelegate {
         @Override
         public void dbTaskCompletedWithResult(Boolean result) {
-            if(InputUtils.isNull(appPreferenceManager.getAPISessionKey()))
-                switchToActivity(activity,LoginScreenActivity.class,new Bundle());
-            else
-                switchToActivity(activity,HomeScreenActivity.class,new Bundle());
+            if(InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
+                switchToActivity(activity, LoginScreenActivity.class, new Bundle());
+            }
+            else {
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.MILLISECOND, 0);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.HOUR_OF_DAY, 0);
+                if(appPreferenceManager.getSelfieResponseModel()!=null && c.getTimeInMillis()<appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+                    switchToActivity(activity, HomeScreenActivity.class, new Bundle());
+                }else{
+                    switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
+                }
+            }
         }
     }
 }

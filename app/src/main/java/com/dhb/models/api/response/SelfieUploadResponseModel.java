@@ -7,6 +7,7 @@ package com.dhb.models.api.response;
 public class SelfieUploadResponseModel {
     private String BtechId;
     private String Pic;
+    private long timeUploaded;
 
     public String getBtechId() {
         return BtechId;
@@ -24,4 +25,11 @@ public class SelfieUploadResponseModel {
         Pic = pic;
     }
 
+    public long getTimeUploaded() {
+        return timeUploaded;
+    }
+
+    public void setTimeUploaded(long timeUploaded) {
+        this.timeUploaded = timeUploaded;
+    }
 }

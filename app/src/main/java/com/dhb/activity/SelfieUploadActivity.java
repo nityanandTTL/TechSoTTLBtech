@@ -45,6 +45,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 
 
 public class SelfieUploadActivity extends AbstractActivity implements View.OnClickListener {
@@ -259,6 +260,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 ResponseParser responseParser = new ResponseParser(activity);
                 SelfieUploadResponseModel selfieUploadResponseModel = responseParser.getSelfieUploadResponseModel(json, statusCode);
                 if (selfieUploadResponseModel != null) {
+                    Calendar c = Calendar.getInstance();
+                    selfieUploadResponseModel.setTimeUploaded(c.getTimeInMillis());
                     appPreferenceManager.setSelfieResponseModel(selfieUploadResponseModel);
                     callMasterSync();
                 }

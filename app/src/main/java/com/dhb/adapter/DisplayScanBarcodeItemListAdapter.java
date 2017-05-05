@@ -12,7 +12,7 @@ import com.dhb.R;
 import com.dhb.activity.OrderBookingActivity;
 import com.dhb.delegate.ScanBarcodeIconClickedDelegate;
 import com.dhb.models.data.BarcodeDetailsModel;
-import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
+import com.dhb.utils.app.InputUtils;
 
 import java.util.ArrayList;
 
@@ -21,29 +21,25 @@ import java.util.ArrayList;
  */
 public class DisplayScanBarcodeItemListAdapter extends BaseAdapter{
     private OrderBookingActivity activity;
-    private ArrayList<BeneficiarySampleTypeDetailsModel> sampleTypesArr;
-    private ArrayList<BeneficiarySampleTypeDetailsModel> scannedSampleTypesArr;
     private ArrayList<BarcodeDetailsModel> barcodeDetailsArr;
     private ScanBarcodeIconClickedDelegate scanBarcodeIconClickedDelegate;
     private LayoutInflater layoutInflater;
 
-    public DisplayScanBarcodeItemListAdapter(OrderBookingActivity activity, ArrayList<BeneficiarySampleTypeDetailsModel> sampleTypesArr, ArrayList<BeneficiarySampleTypeDetailsModel> scannedSampleTypesArr, ArrayList<BarcodeDetailsModel> barcodeDetailsArr, ScanBarcodeIconClickedDelegate scanBarcodeIconClickedDelegate) {
+    public DisplayScanBarcodeItemListAdapter(OrderBookingActivity activity, ArrayList<BarcodeDetailsModel> barcodeDetailsArr, ScanBarcodeIconClickedDelegate scanBarcodeIconClickedDelegate) {
         this.activity = activity;
         this.barcodeDetailsArr = barcodeDetailsArr;
-        this.sampleTypesArr = sampleTypesArr;
-        this.scannedSampleTypesArr = scannedSampleTypesArr;
         this.scanBarcodeIconClickedDelegate = scanBarcodeIconClickedDelegate;
         this.layoutInflater = activity.getLayoutInflater();
     }
 
     @Override
     public int getCount() {
-        return sampleTypesArr.size();
+        return barcodeDetailsArr.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return sampleTypesArr.get(position);
+        return barcodeDetailsArr.get(position);
     }
 
     @Override
@@ -52,7 +48,7 @@ public class DisplayScanBarcodeItemListAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if(convertView==null){
             convertView = layoutInflater.inflate(R.layout.item_scan_barcode,parent,false);
@@ -65,11 +61,16 @@ public class DisplayScanBarcodeItemListAdapter extends BaseAdapter{
         else{
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.txtSampleType.setText(sampleTypesArr.get(position).getSampleType());
+        holder.txtSampleType.setText(barcodeDetailsArr.get(position).getSamplType());
+
+        if(!InputUtils.isNull(barcodeDetailsArr.get(position).getBarcode())){
+            holder.edtBarcodeValue.setText(barcodeDetailsArr.get(position).getBarcode());
+            holder.edtBarcodeValue.setBackground(activity.getResources().getDrawable(R.drawable.custom_border_green));
+        }
         holder.imgBtnScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scanBarcodeIconClickedDelegate.onClicked(barcodeDetailsArr, scannedSampleTypesArr);
+                scanBarcodeIconClickedDelegate.onClicked(barcodeDetailsArr.get(position).getSamplType());
             }
         });
         return convertView;

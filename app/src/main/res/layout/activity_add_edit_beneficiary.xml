@@ -345,85 +345,11 @@
                             android:maxLength="2000"
                             android:maxLines="4"
                             android:minEms="10" />
-
                     </LinearLayout>
-
                 </LinearLayout>
             </RelativeLayout>
-
-            <LinearLayout
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="@dimen/dp_2"
-                    android:layout_weight="1"
-                    android:background="@drawable/footer_bg"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/dp_5"
-                        android:layout_marginLeft="@dimen/dp_5"
-                        android:layout_marginRight="@dimen/dp_5"
-                        android:layout_marginStart="@dimen/dp_5"
-                        android:src="@drawable/rupee_icon" />
-
-                    <TextView
-                        android:id="@+id/title_est_distance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:ellipsize="marquee"
-                        android:fadingEdge="horizontal"
-                        android:text="Amount Payable\n₹ 1420/-"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_add_beneficiary"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="@dimen/dp_2"
-                    android:layout_weight="1"
-                    android:background="@drawable/footer_bg"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="@dimen/dp_20"
-                        android:layout_height="@dimen/dp_20"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/dp_5"
-                        android:layout_marginLeft="@dimen/dp_5"
-                        android:layout_marginRight="@dimen/dp_5"
-                        android:layout_marginStart="@dimen/dp_5"
-                        android:src="@drawable/plus_icon" />
-
-                    <TextView
-                        android:id="@+id/title_est_earnings"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:ellipsize="marquee"
-                        android:fadingEdge="horizontal"
-                        android:gravity="center"
-                        android:text="Add Beneficiaries"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="16sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/btn_proceed_payment"
+            <Button
+                android:id="@+id/btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -433,11 +359,10 @@
                 android:gravity="center"
                 android:minEms="8"
                 android:padding="@dimen/dp_10"
-                android:text="Proceed for Payment"
+                android:text="Save"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
-
-    </ScrollView>
+</ScrollView>

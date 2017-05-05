@@ -85,7 +85,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 beneficiariesArr.add(beneficiaryDetailsModel);
             }
         }
-        beneficiaryScreenSlidePagerAdapter = new BeneficiaryScreenSlidePagerAdapter(getFragmentManager(),activity,beneficiariesArr);
+        beneficiaryScreenSlidePagerAdapter = new BeneficiaryScreenSlidePagerAdapter(getFragmentManager(),activity,beneficiariesArr,orderVisitDetailsModel.getAllOrderdetails());
         vpBeneficiaries.setAdapter(beneficiaryScreenSlidePagerAdapter);
         vpBeneficiaries.setCurrentItem(0);
         vpBeneficiaries.setOnPageChangeListener(new BeneficiaryScreenPageChangeListener());

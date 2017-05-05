@@ -246,6 +246,9 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
                 pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
+            else{
+                Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
