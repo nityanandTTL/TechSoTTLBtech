@@ -149,7 +149,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
             public void onClick(View v) {
                 Intent intentEdit = new Intent(activity, EditTestListActivity.class);
                 intentEdit.putExtra(BundleConstants.BENEFICIARY_TEST_LIST,beneficiaryDetailsModel.getTests());
-                startActivityForResult(intentEdit,BundleConstants.TD_EDIT);
+                startActivityForResult(intentEdit,BundleConstants.EDIT_TESTS_START);
                /* String tests = beneficiaryDetailsModel.getTests();
                 tests = tests+",Close";
                 final String[] testsList = tests.split(",");
@@ -170,6 +170,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
             }
         });
     }
+
+
 
     @Override
     public void initUI() {
@@ -224,6 +226,10 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
             if (requestCode == REQUEST_CAMERA) {
                 onCaptureImageResult(data);
             }
+        }
+        if(requestCode==BundleConstants.EDIT_TESTS_START&& resultCode==BundleConstants.EDIT_TESTS_FINISH){
+            Bundle bundle = data.getExtras();
+
         }
     }
 

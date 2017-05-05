@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -59,6 +61,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
 
@@ -84,7 +87,9 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private TextView txtDistance;
     private TextView txtAddress;
     private AppPreferenceManager appPreferenceManager;
-
+    private Geocoder geocoder;
+    private List<Address> addresses;
+    private String  address,city;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,12 +99,22 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         hubBTechModel = getIntent().getExtras().getParcelable(BundleConstants.HUB_BTECH_MODEL);
         initUI();
         initData();
+       /* try {
+            addresses = geocoder.getFromLocation(19.077100, 72.999000, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        address = addresses.get(0).getAddressLine(0);
+        city = addresses.get(0).getLocality();*/
+      address= getAddress(Double.parseDouble(hubBTechModel.getLatitude()),Double.parseDouble(hubBTechModel.getLongitude()));
         setListeners();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
         // Initializing
         MarkerPoints = new ArrayList<>();
+
     }
 
 
@@ -108,7 +123,22 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         btn_startNav.setOnClickListener(this);
         btn_arrived.setVisibility(View.GONE);
     }
+    private String getAddress(double latitude, double longitude) {
+        StringBuilder result = new StringBuilder();
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0) {
+                Address address = addresses.get(0);
+                result.append(address.getLocality()).append("\n");
+                result.append(address.getCountryName());
+            }
+        } catch (IOException e) {
+            Log.e("tag", e.getMessage());
+        }
 
+        return result.toString();
+    }
     private void initUI() {
         btn_arrived = (Button) findViewById(R.id.btn_arrived);
         btn_startNav = (Button) findViewById(R.id.btn_startNav);
@@ -152,9 +182,25 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                         // for ActivityCompat#requestPermissions for more details.
                         return;
                     }
+                    MarkerPoints.add(currentLocation);
+                    Logger.error("hubBTechModel lat"+hubBTechModel.getLatitude()+"long "+hubBTechModel.getLongitude());
+                    double lat= Double.parseDouble(hubBTechModel.getLatitude());
+                    double longitude= Double.parseDouble(hubBTechModel.getLongitude());
+                    LatLng destTempLocation = new LatLng(lat, longitude);
+                    LatLng dest = destTempLocation;
+                    LatLng origin = currentLocation;
+                    String url = getUrl(origin, dest);
+                    Log.d("onMapClick", url.toString());
+                    FetchUrl FetchUrl = new FetchUrl();
+
+                    // Start downloading json data from Google Directions API
+                    FetchUrl.execute(url);
+                    //move map camera
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
                     Log.e(TAG, "onMapReady: ");
-                    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                   /* mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                         @Override
                         public void onMapClick(LatLng point) {
                             // Already two locations
@@ -205,7 +251,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
 
                         }
 
-                    });
+                    });*/
                 } else {
                     gpsTracker.showSettingsAlert();
                     Toast.makeText(activity, "Check Internet connection and gps settings", Toast.LENGTH_SHORT).show();
@@ -312,7 +358,8 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         } else if (v.getId() == R.id.btn_startNav) {
             callOrderStatusChangeApi(7);
             Intent intent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("google.navigation:q=an+panchavati+nashik"));
+                 //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
+            Uri.parse("google.navigation:q=an+"+address));
             startActivity(intent);
         }
     }
