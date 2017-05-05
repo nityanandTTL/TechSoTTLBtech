@@ -193,7 +193,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
 
-            android:background="#778489">
+            android:background="@color/colorPrimary">
 
             <TextView
                 android:id="@+id/txt_TTL"
@@ -253,7 +253,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:background="#778489">
+            android:background="@color/colorPrimaryDark">
 
             <TextView
                 android:id="@+id/txt_MPL"
@@ -313,7 +313,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:background="#778489">
+            android:background="@color/colorPrimaryDark">
 
             <TextView
                 android:id="@+id/txt_INFEXN"
@@ -373,7 +373,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:background="#778489">
+            android:background="@color/colorPrimaryDark">
 
             <TextView
                 android:id="@+id/txt_DNA"

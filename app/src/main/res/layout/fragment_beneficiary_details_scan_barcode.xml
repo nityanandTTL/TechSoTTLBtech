@@ -148,7 +148,8 @@
                         android:background="@android:drawable/edit_text"
                         android:inputType="textCapSentences|textMultiLine"
                         android:minEms="10"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:paddingRight="@dimen/dp_5"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -175,7 +176,8 @@
                         android:inputType="textCapSentences|textMultiLine"
                         android:maxLength="2000"
                         android:maxLines="4"
-                        android:minEms="10" />
+                        android:minEms="10"
+                        android:paddingRight="@dimen/dp_5"/>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
