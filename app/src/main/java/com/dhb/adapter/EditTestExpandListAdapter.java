@@ -6,13 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dhb.R;
 
+import com.dhb.delegate.EditTestExpandListAdapterCheckboxDelegate;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestTypeWiseTestRateMasterModelsList;
+import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.InputUtils;
 
 import java.util.ArrayList;
 
@@ -20,13 +24,16 @@ import java.util.ArrayList;
  * Created by vendor1 on 5/4/2017.
  */
 
-public class ExpandListAdapter extends BaseExpandableListAdapter {
+public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels;
+    private ArrayList<TestRateMasterModel> selectedTests = new ArrayList<>();
+    private EditTestExpandListAdapterCheckboxDelegate mcallback;
 
-    public ExpandListAdapter(Context context, ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels1) {
+    public EditTestExpandListAdapter(Context context, ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels1, EditTestExpandListAdapterCheckboxDelegate mcallback) {
         this.context = context;
         this.testRateMasterModels = testRateMasterModels1;
+        this.mcallback=mcallback;
     }
 
     @Override
@@ -82,7 +89,7 @@ public class ExpandListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         ViewChildHolder holder = null;
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) context
@@ -92,32 +99,46 @@ public class ExpandListAdapter extends BaseExpandableListAdapter {
 
             holder.txt_test = (TextView) convertView.findViewById(R.id.txt_test);
             holder.txt_dis_amt = (TextView) convertView.findViewById(R.id.txt_dis_amt);
-//            holder.txt_org_amt = (TextView) convertView.findViewById(R.id.txt_org_amt);
             holder.img_test_type = (ImageView) convertView.findViewById(R.id.img_test_type);
+            holder.chk_collected = (CheckBox) convertView.findViewById(R.id.chk_collected);
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewChildHolder) convertView.getTag();
         }
-        TestRateMasterModel testRateMasterModel = testRateMasterModels.get(groupPosition).getTestRateMasterModels().get(childPosition);
-        holder.txt_dis_amt.setText(""+testRateMasterModel.getRate());
-        if(testRateMasterModel.getChldtests() !=null && testRateMasterModel.getChldtests().size()>0){
+        final TestRateMasterModel testRateMasterModel = testRateMasterModels.get(groupPosition).getTestRateMasterModels().get(childPosition);
+        holder.txt_dis_amt.setText("" + testRateMasterModel.getRate());
+        holder.chk_collected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    Logger.error("checked test " + testRateMasterModel.getTestCode());
+                    selectedTests.add(testRateMasterModel);
+                    mcallback.onCheckChange(selectedTests);
+                } else {
+                    selectedTests.remove(testRateMasterModel);
+                    mcallback.onCheckChange(selectedTests);
+                }
+            }
+        });
+        if (testRateMasterModel.getChldtests() != null && testRateMasterModel.getChldtests().size() > 0) {
             holder.txt_test.setText(testRateMasterModel.getTestCode());
+        } else {
+            if (InputUtils.isNull(testRateMasterModel.getDescription())) {
+                holder.txt_test.setText(testRateMasterModel.getTestCode());
+            } else {
+                holder.txt_test.setText(testRateMasterModel.getDescription());
+            }
+
         }
-        else{
-            holder.txt_test.setText(testRateMasterModel.getDescription());
-        }
-        if(testRateMasterModel.getChldtests() !=null && testRateMasterModel.getChldtests().size()==0){
+        if (testRateMasterModel.getChldtests() == null || testRateMasterModel.getChldtests().size() == 0) {
             holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.t));
-        }
-        else{
-            if(testRateMasterModel.getTestType().equalsIgnoreCase("profile")){
-               holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.p));
-            }
-            else{
-               holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.o));
+        } else {
+            if (testRateMasterModel.getTestType().equalsIgnoreCase("profile")) {
+                holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.p));
+            } else {
+                holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.o));
             }
         }
-//        holder.txt_org_amt.setText(""+testRateMasterModel.getRate());
 
         return convertView;
     }
@@ -129,7 +150,7 @@ public class ExpandListAdapter extends BaseExpandableListAdapter {
     private class ViewChildHolder {
         ImageView img_test_type;
         CheckBox chk_collected;
-        TextView txt_org_amt, txt_test, txt_dis_amt;
+        TextView txt_test, txt_dis_amt;
     }
 
     @Override

@@ -194,4 +194,14 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
     public void setDescription(String description) {
         Description = description;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof TestRateMasterModel){
+            if(((TestRateMasterModel) obj).getTestCode().equals(getTestCode())){
+                return true;
+            }
+        }
+        return false;
+    }
 }

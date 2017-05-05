@@ -1,7 +1,7 @@
 package com.dhb.activity;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,25 +10,27 @@ import android.widget.ExpandableListView;
 import android.widget.Spinner;
 
 import com.dhb.R;
-import com.dhb.adapter.ExpandListAdapter;
+import com.dhb.adapter.EditTestExpandListAdapter;
 import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BrandMasterDao;
 import com.dhb.dao.models.TestRateMasterDao;
+import com.dhb.delegate.EditTestExpandListAdapterCheckboxDelegate;
 import com.dhb.models.data.BrandMasterModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestTypeWiseTestRateMasterModelsList;
 import com.dhb.uiutils.AbstractActivity;
 import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.BundleConstants;
 
 import java.util.ArrayList;
 
 
-public class EditTestListActivity extends AbstractActivity {
+public class EditTestListActivity extends AbstractActivity implements EditTestExpandListAdapterCheckboxDelegate {
     Spinner sp_tests;
     DhbDao dhbDao;
     Activity activity;
     ExpandableListView expandList;
-    ExpandListAdapter expAdapter;
+    EditTestExpandListAdapter expAdapter;
     int brandMasterId;
 
     @Override
@@ -65,7 +67,16 @@ public class EditTestListActivity extends AbstractActivity {
                         testTypeWiseTestRateMasterModelsList.setTestRateMasterModels(testTypeWiseTestRateMasterModels);
                         testRateMasterModels.add(testTypeWiseTestRateMasterModelsList);
                     }
-                    expAdapter = new ExpandListAdapter(activity, testRateMasterModels);
+                    expAdapter = new EditTestExpandListAdapter(activity, testRateMasterModels, new EditTestExpandListAdapterCheckboxDelegate() {
+                        @Override
+                        public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
+                            Intent intentFinish = new Intent();
+                            intentFinish.putExtra(BundleConstants.TESTS_LIST,selectedTests);
+                            setResult(BundleConstants.EDIT_TESTS_FINISH,intentFinish);
+                            finish();
+                            Logger.error("check changed ");
+                        }
+                    });
                     expandList.setAdapter(expAdapter);
                 } else {
                     Logger.error("item null");
@@ -103,5 +114,10 @@ public class EditTestListActivity extends AbstractActivity {
         super.initUI();
         sp_tests = (Spinner) findViewById(R.id.sp_tests);
         expandList = (ExpandableListView) findViewById(R.id.exp_list);
+    }
+
+    @Override
+    public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
+        Logger.error(selectedTests.get(0).getBrandName());
     }
 }

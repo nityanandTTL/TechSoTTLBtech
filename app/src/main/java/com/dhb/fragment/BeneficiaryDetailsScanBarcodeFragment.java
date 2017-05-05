@@ -212,6 +212,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
     }
 
 
+
+
     @Override
     public void initUI() {
         imgVenipuncture = (ImageView) rootview.findViewById(R.id.img_venipuncture);
@@ -279,6 +281,10 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
             if (requestCode == REQUEST_CAMERA) {
                 onCaptureImageResult(data);
             }
+        }
+        if(requestCode==BundleConstants.EDIT_TESTS_START&& resultCode==BundleConstants.EDIT_TESTS_FINISH){
+            Bundle bundle = data.getExtras();
+
         }
         if(requestCode==BundleConstants.ADD_EDIT_START && resultCode==BundleConstants.ADD_EDIT_FINISH){
             beneficiaryDetailsModel = data.getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);

@@ -37,10 +37,10 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="left"
                     android:text="HbA1c"
-                    android:textSize="@dimen/dp_8"
                     android:paddingLeft="@dimen/dp_10"
                     android:textStyle="bold" />
                 <LinearLayout
+                    android:paddingLeft="@dimen/dp_10"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:orientation="horizontal"
@@ -52,17 +52,15 @@
                         android:id="@+id/txt_org_amt"
                         android:text="Rs 150"
                         android:gravity="center"
-                        android:textSize="@dimen/dp_8"
+                        android:visibility="gone"
                         android:textColor="@android:color/darker_gray"
                         android:layout_height="wrap_content"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="left"
                         android:visibility="visible"
                         android:id="@+id/txt_dis_amt"
-                        android:textSize="@dimen/dp_8"
                         android:text="Rs. 90 "/>
                 </LinearLayout>
 
@@ -95,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:button="@android:drawable/checkbox_on_background"
+
                 android:gravity="center" />
         </LinearLayout>
 

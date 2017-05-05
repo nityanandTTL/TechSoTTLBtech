@@ -39,7 +39,6 @@ public class DispatchToHubFragment extends AbstractFragment {
     LinearLayout ll_fetch_order_footer, ll_hub_display_footer, ll_olc_picup_footer;
     HomeScreenActivity activity;
     ArrayList<HUBBTechModel> hubbTechModels = new ArrayList<>();
-    ArrayList<DispatchHubDisplayDetailsResponseModel> dispatchHubDisplayDetailsResponseModel = new ArrayList<>();
     DispatchToHubDisplayDetailsAdapter dispatchToHubDisplayDetailsAdapter;
     public static final String TAG_FRAGMENT = DispatchToHubFragment.class.getSimpleName();
 
