@@ -30,7 +30,7 @@ public class BeneficiaryScreenSlidePagerAdapter extends FragmentStatePagerAdapte
         OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
         for (OrderDetailsModel orderDetails:
              orderDetailsModelsArr) {
-            if(orderDetails.getOrderNo().equals(beneficiaryDetailsArr.get(position))){
+            if(orderDetails.getOrderNo().equals(beneficiaryDetailsArr.get(position).getOrderNo())){
                 orderDetailsModel = orderDetails;
                 break;
             }

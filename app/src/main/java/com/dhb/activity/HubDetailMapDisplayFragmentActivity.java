@@ -621,7 +621,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 204 || statusCode == 200) {
                 btn_arrived.setVisibility(View.VISIBLE);
-                btn_startNav.setVisibility(View.INVISIBLE);
+                btn_startNav.setVisibility(View.GONE);
             }
         }
 
