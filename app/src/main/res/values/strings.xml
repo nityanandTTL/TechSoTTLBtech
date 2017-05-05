@@ -37,6 +37,11 @@
     <string name="progress_message_fetching_btech_collections_please_wait">Fetching BTech Collections,\n Please wait ....</string>
     <string name="progress_message_change_password_please_wait">Changing Password, Please wait ....</string>
     <string name="progress_message_reset_password_please_wait">Reseting Password, Please wait ....</string>
+    <string name="progress_message_fetching_Materials_details_please_wait">Fetching Materials  Details, Please wait ....</string>
+    <string name="progress_message_fetching_MaterialsINV_details_please_wait">Fetching MaterialsINV  Details, Please wait ....</string>
+    <string name="progress_message_changing_MaterailsINV_please_wait">Changing MaterialInventory, Please wait ....</string>
+    <!--<string name="do_you_really_want_to_Change order">Fetching MaterialsINV  Details, Please wait ....</string>-->
+
 
     <string name="upload">UPLOAD</string>
     <string name="take_photo">Take Photo</string>

@@ -13,6 +13,7 @@ import com.dhb.models.api.response.ErrorResponseModel;
 import com.dhb.models.api.response.FetchLedgerResponseModel;
 import com.dhb.models.api.response.FetchOrderDetailsResponseModel;
 import com.dhb.models.api.response.LoginResponseModel;
+import com.dhb.models.api.response.MaterialINVResponseModel;
 import com.dhb.models.api.response.MessageModel;
 import com.dhb.models.api.response.SelfieUploadResponseModel;
 import com.dhb.models.api.response.SessionExpireModel;
@@ -20,6 +21,7 @@ import com.dhb.models.data.BrandMasterModel;
 import com.dhb.models.data.BrandTestMasterModel;
 import com.dhb.models.data.DepositRegisterModel;
 import com.dhb.models.data.EarningRegisterModel;
+import com.dhb.models.data.MaterialDetailsModel;
 import com.dhb.models.data.SlotModel;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AlertDialogMessage;
@@ -692,6 +694,26 @@ public class ResponseParser implements AppConstants {
 		btechCollectionsResponseModel = gson.fromJson(json, BtechCollectionsResponseModel.class);
 		//}
 		return btechCollectionsResponseModel;
+	}
+
+
+
+	////Fetch MaterialMAster details Response parse:
+	public ArrayList<MaterialDetailsModel> getMaterialdetailsResponseModel(String json, int statusCode) {
+		ArrayList<MaterialDetailsModel> materialDetailsModels  = null;
+//		if (!parseIntoError(json, statusCode)){
+		TypeToken<ArrayList<MaterialDetailsModel>> token = new TypeToken<ArrayList<MaterialDetailsModel>>(){};
+		materialDetailsModels = gson.fromJson(json,token.getType());
+//		}
+		return materialDetailsModels;
+	}
+	////Fetch Ledger details Response parse:
+	public MaterialINVResponseModel getMaterialINVDetailsResponseModel(String json, int statusCode) {
+		MaterialINVResponseModel materialINVResponseModel = null;
+		if (!parseIntoError(json, statusCode)){
+			materialINVResponseModel = gson.fromJson(json, MaterialINVResponseModel.class);
+		}
+		return materialINVResponseModel;
 	}
 
 }
