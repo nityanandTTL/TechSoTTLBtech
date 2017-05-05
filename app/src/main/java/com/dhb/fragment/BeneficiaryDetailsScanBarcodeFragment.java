@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.dhb.R;
+import com.dhb.activity.EditTestListActivity;
 import com.dhb.activity.AddEditBeneficiaryDetailsActivity;
 import com.dhb.activity.OrderBookingActivity;
 import com.dhb.adapter.DisplayScanBarcodeItemListAdapter;
@@ -199,7 +200,9 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
                 }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        Intent intentEdit = new Intent(activity, EditTestListActivity.class);
+                        intentEdit.putExtra(BundleConstants.BENEFICIARY_TEST_LIST,beneficiaryDetailsModel.getTests());
+                        startActivityForResult(intentEdit,BundleConstants.TD_EDIT);
                     }
                 });
                 builder.show();

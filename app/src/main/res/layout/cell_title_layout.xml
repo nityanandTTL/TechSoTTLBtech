@@ -47,12 +47,12 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@color/bgTitleRight"
-        android:paddingBottom="20dp"
-        android:paddingEnd="20dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingStart="15dp"
-        android:paddingTop="20dp">
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingEnd="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingRight="@dimen/dp_10"
+        android:paddingStart="@dimen/dp_15"
+        android:paddingTop="@dimen/dp_10">
 
         <ImageView
             android:id="@+id/title_from_to_dots"
@@ -78,11 +78,11 @@
             android:textStyle="bold" />
 
         <TextView
-            android:layout_marginTop="@dimen/dp_5"
             android:id="@+id/txt_age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_name"
+            android:layout_marginTop="@dimen/dp_5"
             android:layout_toEndOf="@id/title_from_to_dots"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
@@ -92,21 +92,21 @@
             android:textSize="16sp" />
 
         <ImageView
-            android:layout_below="@+id/txt_age"
             android:id="@+id/title_aadhar_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
+            android:layout_below="@+id/txt_age"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="0dp"
             android:src="@drawable/aadhar_icon" />
 
         <TextView
-            android:layout_marginTop="@dimen/dp_5"
             android:id="@+id/txt_aadhar_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txt_age"
+            android:layout_marginTop="@dimen/dp_5"
             android:layout_toEndOf="@+id/title_aadhar_icon"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
@@ -117,17 +117,16 @@
             android:textSize="16sp" />
 
         <ImageView
-            android:visibility="invisible"
             android:id="@+id/title_distance_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/title_aadhar_icon"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/location_track_icon" />
+            android:src="@drawable/location_track_icon"
+            android:visibility="invisible" />
 
         <TextView
-            android:visibility="invisible"
             android:id="@+id/tv_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -139,31 +138,31 @@
             android:singleLine="true"
             android:text="3KM"
             android:textColor="@android:color/darker_gray"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="invisible" />
 
         <ImageView
-            android:visibility="invisible"
             android:id="@+id/title_svSeparator"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:layout_below="@+id/txt_aadhar_no"
-            android:layout_toEndOf="@+id/tv_distance"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/vseparator"/>
+            android:layout_below="@+id/txt_aadhar_no"
+            android:layout_toEndOf="@+id/tv_distance"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:src="@drawable/vseparator"
+            android:visibility="invisible" />
 
         <ImageView
-            android:visibility="invisible"
-            android:layout_below="@+id/title_aadhar_icon"
             android:id="@+id/title_kits_icon"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_toEndOf="@+id/title_svSeparator"
+            android:layout_below="@+id/title_aadhar_icon"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/kit_icon" />
+            android:layout_toEndOf="@+id/title_svSeparator"
+            android:src="@drawable/kit_icon"
+            android:visibility="invisible" />
 
         <TextView
-            android:visibility="invisible"
             android:id="@+id/tv_kits"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -175,16 +174,17 @@
             android:singleLine="true"
             android:text="BSV Kit"
             android:textColor="@android:color/darker_gray"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="invisible" />
 
         <ImageView
-            android:visibility="invisible"
             android:id="@+id/img_edit"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/edit_order_icon" />
+            android:src="@drawable/edit_order_icon"
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/img_release"

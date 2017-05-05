@@ -22,4 +22,6 @@ public class BundleConstants {
 
 
 
+    public static final String BENEFICIARY_TEST_LIST = "beneficiaryTestList";
+    public static final int TD_EDIT = 1008;
 }
