@@ -122,7 +122,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
                 barcodeDetailsModelsArr.add(barcodeDetailsModel);
             }
         }
-        displayScanBarcodeItemListAdapter.notifyDataSetChanged();
+        initScanBarcodeView();
     }
 
     private void setListeners() {
@@ -274,7 +274,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment{
                         break;
                     }
                 }
-                initScanBarcodeView();
+
+                displayScanBarcodeItemListAdapter.notifyDataSetChanged();
             }
         }
         if (resultCode == Activity.RESULT_OK) {
