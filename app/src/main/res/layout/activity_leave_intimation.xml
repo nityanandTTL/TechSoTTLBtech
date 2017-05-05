@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/title_leave_intmtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Leave Intimation"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="19sp"
+        android:textAlignment="center"
+        android:padding="@dimen/dp_2"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_leave_nature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/dp_5">
+        <TextView
+            android:id="@+id/title_leave_nature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Leave Nature:"
+            android:padding="@dimen/dp_5"
+            />
+        <Spinner
+            android:id="@+id/sp_leave_nature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_5">
+        </Spinner>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_leave_duration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_5"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dp_5"
+        android:paddingLeft="@dimen/dp_2"
+        android:paddingRight="@dimen/dp_2"
+        android:paddingTop="@dimen/dp_5"
+        android:visibility="visible"
+        android:weightSum="4">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Leave Period:"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:layout_margin="@dimen/dp_5"/>
+
+        <TextView
+            android:id="@+id/txt_from_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_weight="1.5"
+            android:background="@drawable/shape_filter_date_button"
+            android:drawableRight="@drawable/calender_icon"
+            android:gravity="center_vertical"
+            android:hint="From"
+            android:paddingBottom="@dimen/dp_5"
+            android:paddingLeft="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_5"
+            android:textColor="#444444"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/txt_to_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_weight="1.5"
+            android:background="@drawable/shape_filter_date_button"
+            android:drawableRight="@drawable/calender_icon"
+            android:gravity="center_vertical"
+            android:hint="To"
+            android:paddingBottom="@dimen/dp_5"
+            android:paddingLeft="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_5"
+            android:textColor="#444444"
+            android:textSize="15sp" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_leave_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/dp_5">
+        <TextView
+            android:id="@+id/title_leave_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Leave Type:"
+            android:padding="@dimen/dp_5"
+            />
+        <EditText
+            android:id="@+id/et_leave_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_5"
+            android:textSize="15sp">
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_leave_days"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/dp_5">
+        <TextView
+            android:id="@+id/title_leave_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Number of Days:"
+            android:padding="@dimen/dp_5" />
+        <EditText
+            android:id="@+id/et_leave_days_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_5"
+            android:textSize="15sp">
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_leave_remark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/dp_5">
+        <TextView
+            android:id="@+id/title_leave_remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remark:"
+            android:padding="@dimen/dp_5"
+            android:gravity="start"
+            android:layout_gravity="start"/>
+        <EditText
+            android:id="@+id/et_leave_days_remark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_5"
+            android:text="Remark for leave"
+            android:minLines="3"
+            android:maxLines="5"
+            android:maxLength="140"
+            android:background="@android:drawable/editbox_background"
+            android:textSize="15sp">
+
+        </EditText>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_leave_apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Submit"
+        android:background="@drawable/purple_btn_bg"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"/>
+</LinearLayout>
