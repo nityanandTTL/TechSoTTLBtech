@@ -21,6 +21,7 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
     private int Rate;
     private int Discount;
     private int Incentive;
+    private String Description;
     private ArrayList<ChildTestsModel> chldtests;
     private ArrayList<TestSkillsModel> tstSkills;
 
@@ -41,6 +42,7 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
         Rate = in.readInt();
         Discount = in.readInt();
         Incentive = in.readInt();
+        Description = in.readString();
         chldtests = in.createTypedArrayList(ChildTestsModel.CREATOR);
         tstSkills = in.createTypedArrayList(TestSkillsModel.CREATOR);
     }
@@ -59,6 +61,7 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
         dest.writeInt(Rate);
         dest.writeInt(Discount);
         dest.writeInt(Incentive);
+        dest.writeString(Description);
         dest.writeTypedList(chldtests);
         dest.writeTypedList(tstSkills);
     }
@@ -182,5 +185,13 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
 
     public void setTstSkills(ArrayList<TestSkillsModel> tstSkills) {
         this.tstSkills = tstSkills;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
     }
 }

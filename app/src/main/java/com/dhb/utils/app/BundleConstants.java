@@ -17,4 +17,6 @@ public class BundleConstants {
     public static final String BENEFICIARY_DETAILS_MODEL = "beneficiaryDetailsModel";
     public static final String HUB_BTECH_MODEL = "hubBtechModel";
 
+    public static final String BENEFICIARY_TEST_LIST = "beneficiaryTestList";
+    public static final int TD_EDIT = 1008;
 }
