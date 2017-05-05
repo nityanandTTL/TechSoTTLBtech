@@ -41,6 +41,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
 
     private OrderRescheduleDialogButtonClickedDelegate orderRescheduleDialogButtonClickedDelegate;
     private OrderDetailsModel orderDetailsModel;
+
     public RescheduleOrderDialog(Activity activity, OrderRescheduleDialogButtonClickedDelegate orderRescheduleDialogButtonClickedDelegate, OrderDetailsModel orderDetailsModel) {
         super(activity);
         this.activity = activity;
@@ -71,22 +72,30 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
         edt_remark = (EditText) findViewById(R.id.edt_remark);
     }
 
+    private boolean valtdate() {
+        if(InputUtils.isNull(edt_remark.getText().toString().trim())){
+            Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(txt_from_date.getText().toString().equals("")){
+            Toast.makeText(activity, "Select date and time", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
-            if(!InputUtils.isNull(edt_remark.getText().toString().trim())) {
-                orderRescheduleDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel,edt_remark.getText().toString().trim());
+            if (valtdate()) {
+                orderRescheduleDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_remark.getText().toString().trim());
                 dismiss();
-            }else{
-                Toast.makeText(activity, R.string.enter_remarks,Toast.LENGTH_SHORT).show();
             }
         }
-        if(v.getId()==R.id.btn_no){
+        if (v.getId() == R.id.btn_no) {
             orderRescheduleDialogButtonClickedDelegate.onCancelButtonClicked();
             dismiss();
         }
-        if(v.getId()==R.id.txt_from_date){
+        if (v.getId() == R.id.txt_from_date) {
             sampleCollectedYear = now.get(Calendar.YEAR);
             sampleCollectedMonth = now.get(Calendar.MONTH);
             sampleCollectedDay = now.get(Calendar.DAY_OF_MONTH);
@@ -99,19 +108,19 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
                     TimePickerDialog timePickerDialog = new TimePickerDialog(activity, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                            String yyyy = sampleCollectedYear+"";
-                            String MM = sampleCollectedMonth<10?"0"+sampleCollectedMonth:sampleCollectedMonth+"";
-                            String dd = sampleCollectedDay<10?"0"+sampleCollectedDay:sampleCollectedDay+"";
-                            String HH = hourOfDay<10?"0"+hourOfDay:hourOfDay+"";
-                            String mm = minute<10?"0"+minute:minute+"";
-                            String sampleCollectedTime = yyyy+"-"+MM+"-"+dd+" "+HH+":"+mm+":00";
+                            String yyyy = sampleCollectedYear + "";
+                            String MM = sampleCollectedMonth < 10 ? "0" + sampleCollectedMonth : sampleCollectedMonth + "";
+                            String dd = sampleCollectedDay < 10 ? "0" + sampleCollectedDay : sampleCollectedDay + "";
+                            String HH = hourOfDay < 10 ? "0" + hourOfDay : hourOfDay + "";
+                            String mm = minute < 10 ? "0" + minute : minute + "";
+                            String sampleCollectedTime = yyyy + "-" + MM + "-" + dd + " " + HH + ":" + mm + ":00";
 
                             txt_from_date.setText(sampleCollectedTime);
                         }
-                    },now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity));
+                    }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity));
                     timePickerDialog.show();
                 }
-            },now.get(Calendar.YEAR),now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+            }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
             datePickerDialog.show();
         }
     }
