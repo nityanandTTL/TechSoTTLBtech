@@ -331,6 +331,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
                 txtCredit.setText(ledgerDetailsModel.getCredit() + "");
                 txtDebit.setText(ledgerDetailsModel.getDebit() + "");
                 txtclosingbal.setText(ledgerDetailsModel.getClosingBal() + "");
+                outstanding.setText(fetchLedgerResponseModel.getOutstandingBalance());
                 tlCR.addView(trCr);
                 outstanding.setVisibility(View.VISIBLE);
                 noledger.setVisibility(View.GONE);

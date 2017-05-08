@@ -1,0 +1,17 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:weightSum="6">
+
+<ScrollView
+    android:id="@+id/sv_materialorder_list"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="5">
+    <TableLayout
+        android:id="@+id/materialordertable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_2">
+    </TableLayout>
+</ScrollView>
+    </LinearLayout>

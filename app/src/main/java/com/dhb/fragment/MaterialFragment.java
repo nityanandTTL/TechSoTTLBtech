@@ -136,10 +136,10 @@ public class MaterialFragment extends AbstractFragment {
         orderstatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*
+
                 Fragment mFragment = new MaterialOrderPlaceFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fl_homeScreen, mFragment ).commit();*/
+                        .replace(R.id.fl_homeScreen, mFragment ).commit();
 
 
             }
@@ -262,7 +262,7 @@ public class MaterialFragment extends AbstractFragment {
                 TableRow trm = (TableRow) LayoutInflater.from(activity).inflate(R.layout.item_material_layout, null);
                 TextView item = (TextView) trm.findViewById(R.id.txt_item);
                 TextView virtualstock = (TextView) trm.findViewById(R.id.txt_virtualstock);
-                EditText actual = (EditText) trm.findViewById(R.id.edit_actual);
+                final EditText actual = (EditText) trm.findViewById(R.id.edit_actual);
 
                 item.setText(btMaterialsModel.getMaterialName() + "");
                 virtualstock.setText(btMaterialsModel.getVirtualStock() + "");
@@ -286,14 +286,20 @@ public class MaterialFragment extends AbstractFragment {
                     @Override
                     public void afterTextChanged(Editable s) {
                         if(!InputUtils.isNull(s.toString())) {
-                            MaterialsStocksModel materialsStocksModel = new MaterialsStocksModel();
-                            materialsStocksModel.setMaterialID(Integer.parseInt(btMaterialsModel.getMaterialID()));
-                            materialsStocksModel.setActualStock(Integer.parseInt(s.toString()));
-                            if (stockModelsArr.contains(materialsStocksModel)) {
-                                stockModelsArr.remove(materialsStocksModel);
-                                stockModelsArr.add(materialsStocksModel);
-                            } else {
-                                stockModelsArr.add(materialsStocksModel);
+                            if(Integer.parseInt(s.toString())<=Integer.parseInt(btMaterialsModel.getVirtualStock())) {
+                                MaterialsStocksModel materialsStocksModel = new MaterialsStocksModel();
+                                materialsStocksModel.setMaterialID(Integer.parseInt(btMaterialsModel.getMaterialID()));
+                                materialsStocksModel.setActualStock(Integer.parseInt(s.toString()));
+                                if (stockModelsArr.contains(materialsStocksModel)) {
+                                    stockModelsArr.remove(materialsStocksModel);
+                                    stockModelsArr.add(materialsStocksModel);
+                                } else {
+                                    stockModelsArr.add(materialsStocksModel);
+                                }
+                            }
+                            else{
+                                actual.setText(btMaterialsModel.getVirtualStock());
+                                Toast.makeText(activity,"Actual Stock cannot be greater than Virtual Stock",Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

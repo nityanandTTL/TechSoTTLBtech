@@ -162,7 +162,7 @@ public class leaveIntimationFragment extends AbstractFragment {
                 applyLeaveRequestModel.setTodate(todate.getText().toString());
                 applyLeaveRequestModel.setRemarks(leaveremark.getText().toString());
 //                applyLeaveRequestModel.setDays(Integer.parseInt(days.getText().toString()));
-                applyLeaveRequestModel.setEnteredBy(8845);
+                applyLeaveRequestModel.setEnteredBy(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
                 applyLeaveRequestModel.setDays(daysdiff);
                 try {
                     long diffTime = toDt.getTimeInMillis()-fromDt.getTimeInMillis();
