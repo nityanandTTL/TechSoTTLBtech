@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.models.api.request.HubStartRequestModel;
+import com.dhb.models.api.request.OlcStartRequestModel;
+import com.dhb.models.data.BtechClientsModel;
 import com.dhb.models.data.HUBBTechModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
@@ -66,10 +68,10 @@ import java.util.Locale;
 import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
 
 
-public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener,View.OnClickListener {
+public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
-    private static final String TAG = HubDetailMapDisplayFragmentActivity.class.getSimpleName();
-    public static final String TAG_FRAGMENT = HubDetailMapDisplayFragmentActivity.class.getSimpleName();
+    private static final String TAG = BtechClientDetailMapDisplayFragmentActivity.class.getSimpleName();
+    public static final String TAG_FRAGMENT = BtechClientDetailMapDisplayFragmentActivity.class.getSimpleName();
     private GoogleMap mMap;
     private ArrayList<LatLng> MarkerPoints;
     private GoogleApiClient mGoogleApiClient;
@@ -80,32 +82,36 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private Button btn_startNav, btn_arrived;
 
     private FragmentActivity activity;
-    private HUBBTechModel hubBTechModel;
+    private BtechClientsModel btechClientsModel;
 
-    private TextView txtName,txtAge,txtSrNo,txtAadharNo;
-    private ImageView imgRelease,imgDistance;
+    private TextView txtName, txtAge, txtSrNo, txtAadharNo;
+    private ImageView imgRelease, imgDistance;
     private TextView txtDistance;
     private TextView txtAddress;
     private AppPreferenceManager appPreferenceManager;
     private Geocoder geocoder;
     private List<Address> addresses;
-    private String  address,city;
+    private String address, city;
+    private ImageView title_aadhar_icon, title_distance_icon;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_map_display);
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
-        hubBTechModel = getIntent().getExtras().getParcelable(BundleConstants.HUB_BTECH_MODEL);
+        btechClientsModel = getIntent().getExtras().getParcelable(BundleConstants.BTECH_CLIENTS_MODEL);
+
         initUI();
         initData();
-
-      address= getAddress(Double.parseDouble(hubBTechModel.getLatitude()),Double.parseDouble(hubBTechModel.getLongitude()));
+        Log.e(TAG, "onCreate: lat "+Double.parseDouble(btechClientsModel.getLatitude())+" long "+Double.parseDouble(btechClientsModel.getLongitude()) );
+        address = getAddress(Double.parseDouble(btechClientsModel.getLatitude()), Double.parseDouble(btechClientsModel.getLongitude()));
+        Log.e(TAG, "onCreate: address "+address );
         setListeners();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
-        // Initializing
+
         MarkerPoints = new ArrayList<>();
 
     }
@@ -116,6 +122,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         btn_startNav.setOnClickListener(this);
         btn_arrived.setVisibility(View.GONE);
     }
+
     private String getAddress(double latitude, double longitude) {
         StringBuilder result = new StringBuilder();
         try {
@@ -132,18 +139,22 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
 
         return result.toString();
     }
+
     private void initUI() {
         btn_arrived = (Button) findViewById(R.id.btn_arrived);
         btn_startNav = (Button) findViewById(R.id.btn_startNav);
         txtName = (TextView) findViewById(R.id.txt_name);
         txtAge = (TextView) findViewById(R.id.txt_age);
+        txtAge.setVisibility(View.INVISIBLE);
         txtAadharNo = (TextView) findViewById(R.id.txt_aadhar_no);
+        txtAadharNo.setVisibility(View.INVISIBLE);
         txtSrNo = (TextView) findViewById(R.id.txt_sr_no);
         txtDistance = (TextView) findViewById(R.id.tv_distance);
         txtAddress = (TextView) findViewById(R.id.title_est_address);
         imgRelease = (ImageView) findViewById(R.id.img_release);
-        imgDistance= (ImageView) findViewById(R.id.title_distance_icon);
-
+        imgDistance = (ImageView) findViewById(R.id.title_distance_icon);
+        title_aadhar_icon = (ImageView) findViewById(R.id.title_aadhar_icon);
+        title_distance_icon = (ImageView) findViewById(R.id.title_distance_icon);
         SupportMapFragment mapFragment = (SupportMapFragment) activity.getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -176,79 +187,26 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                         return;
                     }
                     MarkerPoints.add(currentLocation);
-                    Logger.error("hubBTechModel lat"+hubBTechModel.getLatitude()+"long "+hubBTechModel.getLongitude());
-                    double lat= Double.parseDouble(hubBTechModel.getLatitude());
-                    double longitude= Double.parseDouble(hubBTechModel.getLongitude());
+                    Logger.error("btechClientsModel lat" + btechClientsModel.getLatitude() + "long " + btechClientsModel.getLongitude());
+                    double lat = Double.parseDouble(btechClientsModel.getLatitude());
+                    double longitude = Double.parseDouble(btechClientsModel.getLongitude());
                     LatLng destTempLocation = new LatLng(lat, longitude);
+
+                    String url = getUrl(currentLocation, destTempLocation);
                     MarkerOptions options = new MarkerOptions();
                     options.position(destTempLocation);
                     mMap.addMarker(options);
-                   // mMap.addMarker(new MarkerOptions().position(destTempLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_24dp)));
-                    LatLng dest = destTempLocation;
-                    LatLng origin = currentLocation;
-                    String url = getUrl(origin, dest);
                     Log.d("onMapClick", url.toString());
                     FetchUrl FetchUrl = new FetchUrl();
 
                     // Start downloading json data from Google Directions API
                     FetchUrl.execute(url);
                     //move map camera
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
                     Log.e(TAG, "onMapReady: ");
-                   /* mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                        @Override
-                        public void onMapClick(LatLng point) {
-                            // Already two locations
-                            if (MarkerPoints.size() > 1) {
-                                MarkerPoints.clear();
-                                mMap.clear();
-                            }
-                            //1 to create current
-                            MarkerPoints.add(point);
-                            MarkerOptions options = new MarkerOptions();
-                            options.position(point);
 
-//                            *
-//                             * For the start location, the color of marker is GREEN and
-//                             * for the end location, the color of marker is RED.
-
-                            if (MarkerPoints.size() == 1) {
-                                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                            } else if (MarkerPoints.size() == 2) {
-                                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                            }
-
-
-                            // Add new marker to the Google Map Android API V2
-                            mMap.addMarker(options);
-
-                            // Checks, whether start and end locations are captured
-                            if (MarkerPoints.size() >= 2) {
-                                LatLng origin = currentLocation;
-                                MarkerPoints.get(0);
-
-                                LatLng destTempLocation = new LatLng(19.9975, 73.7898);
-                                LatLng dest = destTempLocation;
-                                MarkerPoints.get(1);
-//                                title_distance.setText("" + distance(MarkerPoints.get(0).latitude, MarkerPoints.get(0).longitude, MarkerPoints.get(1).latitude, MarkerPoints.get(1).longitude));
-                                Log.e(TAG, "onMapClick: distance " + "" + distance(MarkerPoints.get(0).latitude, MarkerPoints.get(0).longitude, MarkerPoints.get(1).latitude, MarkerPoints.get(1).longitude));
-                                // Getting URL to the Google Directions API
-                                String url = getUrl(origin, dest);
-                                Log.d("onMapClick", url.toString());
-                                FetchUrl FetchUrl = new FetchUrl();
-
-                                // Start downloading json data from Google Directions API
-                                FetchUrl.execute(url);
-                                //move map camera
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
-                                mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-                            }
-
-                        }
-
-                    });*/
                 } else {
                     gpsTracker.showSettingsAlert();
                     Toast.makeText(activity, "Check Internet connection and gps settings", Toast.LENGTH_SHORT).show();
@@ -355,60 +313,43 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         } else if (v.getId() == R.id.btn_startNav) {
             callOrderStatusChangeApi(7);
             Intent intent = new Intent(Intent.ACTION_VIEW,
-                 //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
-            Uri.parse("google.navigation:q=an+"+address));
+                    //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
+                    Uri.parse("google.navigation:q=an+" + address));
             startActivity(intent);
         }
     }
 
     private void callOrderStatusChangeApi(int status) {
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        HubStartRequestModel hubStartRequestModel = new HubStartRequestModel();
-        hubStartRequestModel.setHubId("" + hubBTechModel.getHubId());
-        hubStartRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
-        hubStartRequestModel.setType(status);
-        ApiCallAsyncTask HubStartApiAsyncTask = asyncTaskForRequest.getHubStartRequestAsyncTask(hubStartRequestModel);
+        OlcStartRequestModel olcStartRequestModel = new OlcStartRequestModel();
+        olcStartRequestModel.setClientId("" + btechClientsModel.getClientId());
+        olcStartRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
+        olcStartRequestModel.setType(status);
+        ApiCallAsyncTask OlcStartApiAsyncTask = asyncTaskForRequest.getOlcStartRequestAsyncTask(olcStartRequestModel);
         if (status == 3) {
-            HubStartApiAsyncTask.setApiCallAsyncTaskDelegate(new HubArrivedApiAsyncTaskDelegateResult());
+            OlcStartApiAsyncTask.setApiCallAsyncTaskDelegate(new OlcArrivedApiAsyncTaskDelegateResult());
         } else {
-            HubStartApiAsyncTask.setApiCallAsyncTaskDelegate(new HubStartApiAsyncTaskDelegateResult());
+            OlcStartApiAsyncTask.setApiCallAsyncTaskDelegate(new OlcStartApiAsyncTaskDelegateResult());
         }
 
         if (isNetworkAvailable(activity)) {
-            HubStartApiAsyncTask.execute(HubStartApiAsyncTask);
+            OlcStartApiAsyncTask.execute(OlcStartApiAsyncTask);
         } else {
             Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void initData() {
-        txtAge.setText(hubBTechModel.getCutOffTime());
-        txtName.setText(hubBTechModel.getIncharge());
-//        txtDistance.setText(hubBTechModel);
-        txtAddress.setText(hubBTechModel.getAddress()+" "+hubBTechModel.getPincode());
+        //  txtAge.setText(hubBTechModel.getCutOffTime());
+        txtName.setText(btechClientsModel.getName());
+        txtDistance.setText("" + btechClientsModel.getDistance() + " Km");
+        txtAddress.setText(btechClientsModel.getAddress() + " " + btechClientsModel.getPincode());
         imgRelease.setVisibility(View.INVISIBLE);
+        txtDistance.setVisibility(View.VISIBLE);
+        title_aadhar_icon.setVisibility(View.INVISIBLE);
+        title_distance_icon.setVisibility(View.VISIBLE);
     }
 
-    private class HubArrivedApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
-        @Override
-        public void apiCallResult(String json, int statusCode) throws JSONException {
-            Logger.error(json);
-            if (statusCode == 204 || statusCode == 200) {
-                Toast.makeText(activity, "Order arrived Successfully", Toast.LENGTH_SHORT).show();
-                Intent intentResult = new Intent();
-                intentResult.putExtra(BundleConstants.HUB_BTECH_MODEL,hubBTechModel);
-                setResult(BundleConstants.HMD_ARRIVED,intentResult);
-                finish();
-            } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onApiCancelled() {
-            Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     // Fetches data from url passed
     private class FetchUrl extends AsyncTask<String, Void, String> {
@@ -613,18 +554,42 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         return (rad * 180.0 / Math.PI);
     }
 
-    private class HubStartApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+
+    private class OlcArrivedApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode == 204 || statusCode == 200) {
-                btn_arrived.setVisibility(View.VISIBLE);
-                btn_startNav.setVisibility(View.GONE);
+            if (statusCode == 200) {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                Intent intentResult = new Intent();
+                intentResult.putExtra(BundleConstants.BTECH_CLIENTS_MODEL, btechClientsModel);
+                setResult(BundleConstants.BMD_ARRIVED, intentResult);
+                finish();
+            } else {
+                Toast.makeText(activity, "error : " + json, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onApiCancelled() {
-            Toast.makeText(activity, "API CANCELLED ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class OlcStartApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if ((statusCode == 200)) {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                btn_arrived.setVisibility(View.VISIBLE);
+                btn_startNav.setVisibility(View.GONE);
+            } else {
+                Toast.makeText(activity, "error " + json, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
 }

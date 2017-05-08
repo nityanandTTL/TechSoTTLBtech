@@ -113,9 +113,12 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ll_scan_master_barcode) {
-            if (validate()) {
+            if(!isAllScanned){
+                Toast.makeText(activity, "Verify all barcode", Toast.LENGTH_SHORT).show();
+            }else if (validate()) {
                 callMasterBarcodeMapApi();
-            } else {
+            }
+             else {
 
             }
         }
@@ -142,9 +145,12 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
     }
 
     private boolean validate() {
-        if(!isAllScanned && master_scanned_barcode.equals("")){
-            Toast.makeText(activity, "Verify all barcode and scan for master barcode first", Toast.LENGTH_SHORT).show();
+        if(/*!isAllScanned &&*/ master_scanned_barcode.equals("")){
+            Toast.makeText(activity, "scan for master barcode first", Toast.LENGTH_SHORT).show();
             return false;
+        }else {
+            scanFromFragment();
+
         }
         return true;
     }
@@ -180,6 +186,7 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null && scanningResult.getContents() != null) {
             scanned_barcode = scanningResult.getContents();
+            master_scanned_barcode=scanningResult.getContents();
             if (!scanned_barcode.equals("" + barcodeModels.get(current_position).getBarcode())) {
                 Toast.makeText(activity, "no match! Try again", Toast.LENGTH_SHORT).show();
                 view.setBackgroundColor(Color.RED);

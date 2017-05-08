@@ -68,7 +68,7 @@ public class HomeScreenFragment extends AbstractFragment {
         imgOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false, VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
         imgHub.setOnClickListener(new View.OnClickListener() {
@@ -95,14 +95,13 @@ public class HomeScreenFragment extends AbstractFragment {
                 pushFragments(MaterialFragment.newInstance(),false,false,MaterialFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
-        /*
-        imgOrders.setOnClickListener(new View.OnClickListener() {
+        imgOLCPickup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(OlcMasterBarcodeFragment.newInstance(),false,false,OlcMasterBarcodeFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
-        imgOrders.setOnClickListener(new View.OnClickListener() {
+         /*  imgOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
@@ -136,5 +135,6 @@ public class HomeScreenFragment extends AbstractFragment {
         imgFeedback= (ImageView) rootView.findViewById(R.id.feedback_icon);
         imgCamp = (ImageView) rootView.findViewById(R.id.camp_icon);
         imgMaterials = (ImageView) rootView.findViewById(R.id.materials_icon);
+        imgOLCPickup=(ImageView)rootView.findViewById(R.id.olc_pickup_icon);
     }
 }

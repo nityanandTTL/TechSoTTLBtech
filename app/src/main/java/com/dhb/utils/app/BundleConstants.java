@@ -14,6 +14,8 @@ public class BundleConstants {
     public static final int EDIT_TESTS_FINISH = 1009;
     public static final int ADD_EDIT_START = 1010;
     public static final int ADD_EDIT_FINISH = 1011;
+    public static final int BMD_START = 1012;
+    public static final int BMD_ARRIVED=1013;
 
     //Bundle Constants
     public static final String ACTIVITY = "activity";
@@ -21,6 +23,7 @@ public class BundleConstants {
     public static final String BENEFICIARY_DETAILS_MODEL = "beneficiaryDetailsModel";
     public static final String ORDER_DETAILS_MODEL = "orderDetailsModel";
     public static final String HUB_BTECH_MODEL = "hubBtechModel";
+    public static final String BTECH_CLIENTS_MODEL = "btechClientsModel";
 
 
 
