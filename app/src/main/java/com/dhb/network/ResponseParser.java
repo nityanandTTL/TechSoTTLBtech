@@ -10,6 +10,7 @@ import com.dhb.models.api.response.BusinessErrorModel;
 import com.dhb.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.dhb.models.api.response.ErrorModel;
 import com.dhb.models.api.response.ErrorResponseModel;
+import com.dhb.models.api.response.FetchLabAlertMasterAPIResponseModel;
 import com.dhb.models.api.response.FetchLedgerResponseModel;
 import com.dhb.models.api.response.FetchOrderDetailsResponseModel;
 import com.dhb.models.api.response.LoginResponseModel;
@@ -692,6 +693,14 @@ public class ResponseParser implements AppConstants {
 		btechCollectionsResponseModel = gson.fromJson(json, BtechCollectionsResponseModel.class);
 		//}
 		return btechCollectionsResponseModel;
+	}
+	//Lab Alert Master Response parse:
+	public FetchLabAlertMasterAPIResponseModel getLabAlertMasterAPIResponseModel(String json, int statusCode) {
+		FetchLabAlertMasterAPIResponseModel fetchLabAlertMasterAPIResponseModel = null;
+		//if (!parseIntoError(json, statusCode)){
+		fetchLabAlertMasterAPIResponseModel = gson.fromJson(json, FetchLabAlertMasterAPIResponseModel.class);
+		//}
+		return fetchLabAlertMasterAPIResponseModel;
 	}
 
 }

@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.dhb.models.data.ChildTestsModel;
+import com.dhb.models.data.TestClinicalHistoryModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestSampleTypeModel;
 import com.dhb.models.data.TestSkillsModel;
@@ -44,6 +45,7 @@ public class TestRateMasterDao {
 	String DESCRIPTION = "Description";
 	String CHILD_TESTS = "chldtests";
 	String TEST_SKILLS = "tstSkills";
+	String TEST_CLINICAL_HISTORY = "tstClinicalHistory";
 	String CREATED_AT = "createdAt";
 	String CREATED_BY = "createdBy";
 	String UPDATED_AT = "updatedAt";
@@ -91,9 +93,13 @@ public class TestRateMasterDao {
 		TypeToken<ArrayList<TestSkillsModel>> tokenTestSkills = new TypeToken<ArrayList<TestSkillsModel>>(){};
 		ArrayList<TestSkillsModel> tsArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(TEST_SKILLS)),tokenTestSkills.getType());
 
+		TypeToken<ArrayList<TestClinicalHistoryModel>> tokenTestClinicalHistory = new TypeToken<ArrayList<TestClinicalHistoryModel>>(){};
+		ArrayList<TestClinicalHistoryModel> tchArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(TEST_CLINICAL_HISTORY)),tokenTestClinicalHistory.getType());
+
 		testRateMasterModel.setChldtests(ctArr);
 		testRateMasterModel.setSampltype(bstArr);
 		testRateMasterModel.setTstSkills(tsArr);
+		testRateMasterModel.setTstClinicalHistory(tchArr);
 
 		testRateMasterModel.setCreatedAt(cursor.getLong(cursor.getColumnIndex(CREATED_AT)));
 		testRateMasterModel.setCreatedBy(cursor.getString(cursor.getColumnIndex(CREATED_BY)));
@@ -116,6 +122,7 @@ public class TestRateMasterDao {
 		values.put(SAMPLE_TYPE, new Gson().toJson(orderDetailsModel.getSampltype()));
 		values.put(CHILD_TESTS, new Gson().toJson(orderDetailsModel.getChldtests()));
 		values.put(TEST_SKILLS, new Gson().toJson(orderDetailsModel.getTstSkills()));
+		values.put(TEST_CLINICAL_HISTORY, new Gson().toJson(orderDetailsModel.getTstClinicalHistory()));
 		values.put(LAST_MEAL_EAT, orderDetailsModel.getLastMealEat());
 		values.put(RATE, orderDetailsModel.getRate());
 		values.put(DISCOUNT, orderDetailsModel.getDiscount());

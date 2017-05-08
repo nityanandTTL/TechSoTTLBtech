@@ -24,6 +24,7 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
     private String Description;
     private ArrayList<ChildTestsModel> chldtests;
     private ArrayList<TestSkillsModel> tstSkills;
+    private ArrayList<TestClinicalHistoryModel> tstClinicalHistory;
 
     public TestRateMasterModel() {
         super();
@@ -193,6 +194,14 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
 
     public void setDescription(String description) {
         Description = description;
+    }
+
+    public ArrayList<TestClinicalHistoryModel> getTstClinicalHistory() {
+        return tstClinicalHistory;
+    }
+
+    public void setTstClinicalHistory(ArrayList<TestClinicalHistoryModel> tstClinicalHistory) {
+        this.tstClinicalHistory = tstClinicalHistory;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.dhb.activity;
 
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -67,8 +66,6 @@ public class HomeScreenActivity extends AbstractActivity
             txtUserId.setText(appPreferenceManager.getLoginResponseModel().getUserID());
         if(appPreferenceManager.getSelfieResponseModel()!=null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
             rivSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
-            BitmapDrawable bmpDrawable = new BitmapDrawable(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
-            llNavHeader.setBackgroundDrawable(bmpDrawable);
         }
     }
 
@@ -101,6 +98,7 @@ public class HomeScreenActivity extends AbstractActivity
         rivSelfie = (RoundedImageView) NavHeaderHomeScreen.findViewById(R.id.img_user_picture);
         txtUserId = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_id);
         txtUserName = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_name);
+        navigationView.addHeaderView(NavHeaderHomeScreen);
     }
 
     @Override

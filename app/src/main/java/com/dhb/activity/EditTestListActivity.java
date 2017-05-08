@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
 
@@ -15,37 +16,52 @@ import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BrandMasterDao;
 import com.dhb.dao.models.TestRateMasterDao;
 import com.dhb.delegate.EditTestExpandListAdapterCheckboxDelegate;
+import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.BrandMasterModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestTypeWiseTestRateMasterModelsList;
 import com.dhb.uiutils.AbstractActivity;
 import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 
 import java.util.ArrayList;
 
 
-public class EditTestListActivity extends AbstractActivity implements EditTestExpandListAdapterCheckboxDelegate {
-    Spinner sp_tests;
-    DhbDao dhbDao;
-    Activity activity;
-    ExpandableListView expandList;
-    EditTestExpandListAdapter expAdapter;
-    int brandMasterId;
-
+public class EditTestListActivity extends AbstractActivity{
+    private Spinner sp_tests;
+    private DhbDao dhbDao;
+    private Activity activity;
+    private ExpandableListView expandList;
+    private EditTestExpandListAdapter expAdapter;
+    private int brandMasterId;
+    private ArrayList<TestRateMasterModel> selectedTestsList;
+    private AppPreferenceManager appPreferenceManager;
+    private Button btnSave;
+    private int totalAmount;
+    private ArrayList<BeneficiarySampleTypeDetailsModel> sampleTypesArr;
+    private boolean isOfferSelected = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_test_list);
         activity = this;
-        initUI();
-
         dhbDao = new DhbDao(activity);
-        BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
-        final ArrayList<BrandMasterModel> brandMasterModels = brandMasterDao.getAllModels();
-        ArrayAdapter<BrandMasterModel> adapter = new ArrayAdapter<BrandMasterModel>(this, android.R.layout.simple_spinner_item, brandMasterModels);
-        sp_tests.setAdapter(adapter);
+        appPreferenceManager = new AppPreferenceManager(activity);
+        if(getIntent().getExtras()!=null){
+            selectedTestsList = getIntent().getExtras().getParcelableArrayList(BundleConstants.SELECTED_TESTS_LIST);
+        }
+        else{
+            selectedTestsList = new ArrayList<>();
+        }
+        totalAmount = 0;
+        sampleTypesArr = new ArrayList<>();
+        initUI();
+        initData();
+        initListener();
+    }
 
+    private void initListener() {
         sp_tests.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -67,14 +83,11 @@ public class EditTestListActivity extends AbstractActivity implements EditTestEx
                         testTypeWiseTestRateMasterModelsList.setTestRateMasterModels(testTypeWiseTestRateMasterModels);
                         testRateMasterModels.add(testTypeWiseTestRateMasterModelsList);
                     }
-                    expAdapter = new EditTestExpandListAdapter(activity, testRateMasterModels, new EditTestExpandListAdapterCheckboxDelegate() {
+                    expAdapter = new EditTestExpandListAdapter(activity, testRateMasterModels, selectedTestsList, new EditTestExpandListAdapterCheckboxDelegate() {
                         @Override
                         public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
-                            Intent intentFinish = new Intent();
-                            intentFinish.putExtra(BundleConstants.TESTS_LIST,selectedTests);
-                            setResult(BundleConstants.EDIT_TESTS_FINISH,intentFinish);
-                            finish();
-                            Logger.error("check changed ");
+                            Logger.error("check changed");
+                            selectedTestsList = selectedTests;
                         }
                     });
                     expandList.setAdapter(expAdapter);
@@ -107,6 +120,22 @@ public class EditTestListActivity extends AbstractActivity implements EditTestEx
                 Logger.error("group expand");
             }
         });
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentFinish = new Intent();
+                intentFinish.putExtra(BundleConstants.TESTS_LIST, selectedTestsList);
+                setResult(BundleConstants.EDIT_TESTS_FINISH,intentFinish);
+                finish();
+            }
+        });
+    }
+
+    private void initData() {
+        BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
+        final ArrayList<BrandMasterModel> brandMasterModels = brandMasterDao.getAllModels();
+        ArrayAdapter<BrandMasterModel> adapter = new ArrayAdapter<BrandMasterModel>(this, android.R.layout.simple_spinner_item, brandMasterModels);
+        sp_tests.setAdapter(adapter);
     }
 
     @Override
@@ -114,10 +143,6 @@ public class EditTestListActivity extends AbstractActivity implements EditTestEx
         super.initUI();
         sp_tests = (Spinner) findViewById(R.id.sp_tests);
         expandList = (ExpandableListView) findViewById(R.id.exp_list);
-    }
-
-    @Override
-    public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
-        Logger.error(selectedTests.get(0).getBrandName());
+        btnSave = (Button) findViewById(R.id.btn_save);
     }
 }

@@ -95,6 +95,8 @@ public class AbstractApiModel implements AppConstants {
 
     public String MASTER_BARCODE_MAPPING = VERSION_API_URL + "/MasterBarcodeMapping";
 
+    public String LAB_ALERT_MASTER = VERSION_API_URL + "/LabAlerts";
+
 
     public static final String X_API_KEY = "x-api-key";
 

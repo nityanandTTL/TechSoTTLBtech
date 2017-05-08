@@ -30,10 +30,11 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
     private ArrayList<TestRateMasterModel> selectedTests = new ArrayList<>();
     private EditTestExpandListAdapterCheckboxDelegate mcallback;
 
-    public EditTestExpandListAdapter(Context context, ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels1, EditTestExpandListAdapterCheckboxDelegate mcallback) {
+    public EditTestExpandListAdapter(Context context, ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels1,ArrayList<TestRateMasterModel> selectedTests,EditTestExpandListAdapterCheckboxDelegate mcallback) {
         this.context = context;
         this.testRateMasterModels = testRateMasterModels1;
         this.mcallback=mcallback;
+        this.selectedTests = selectedTests;
     }
 
     @Override
@@ -139,7 +140,9 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
                 holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.o));
             }
         }
-
+        if(selectedTests.contains(testRateMasterModel)){
+            holder.chk_collected.setChecked(true);
+        }
         return convertView;
     }
 
