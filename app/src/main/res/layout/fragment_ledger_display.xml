@@ -72,11 +72,11 @@
             android:layout_weight="1"
             android:background="@drawable/shape_filter_date_button"
             android:gravity="center"
-            android:paddingBottom="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_2"
+            android:paddingTop="@dimen/dp_2"
             android:text="Filter"
             android:textColor="#585858"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
     </LinearLayout>
 

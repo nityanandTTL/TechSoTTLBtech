@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.dhb.R;
+import com.dhb.models.api.request.ApplyLeaveRequestModel;
 import com.dhb.models.api.request.BtechsRequestModel;
 import com.dhb.models.api.request.ChangePasswordRequestModel;
 import com.dhb.models.api.request.HubStartRequestModel;
@@ -525,6 +526,56 @@ public class AsyncTaskForRequest {
         }
         return apiCallAsyncTask;
     }
+
+     /* Set ApplyLeave Api Integration*/
+
+    public ApiCallAsyncTask getPostApplyLeaveRequestAsyncTask(ApplyLeaveRequestModel setApplyLeaveRequestModel ) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(setApplyLeaveRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.SET_APPLY_LEAVE);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_Applying_Leave_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    /*
+	 * Fetch Leave Details  Api Integration*/
+
+    public ApiCallAsyncTask getLeaveDetailsRequestAsyncTask(){
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getLeaveDetailsRequestAsyncTask: " );
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_LEAVE_NATURE_MASTER);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetching_Leave_details_please_wait));
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
     /*
 	 * Change Password Api Integration*/
 

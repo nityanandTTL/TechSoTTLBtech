@@ -66,7 +66,7 @@
             android:layout_marginLeft="@dimen/dp_5"
             android:layout_weight="1.5"
             android:background="@drawable/shape_filter_date_button"
-            android:drawableRight="@drawable/calender_icon"
+            android:drawableRight="@drawable/calender_icon_click"
             android:gravity="center_vertical"
             android:hint="From"
             android:paddingBottom="@dimen/dp_5"
@@ -85,7 +85,7 @@
             android:layout_marginRight="@dimen/dp_5"
             android:layout_weight="1.5"
             android:background="@drawable/shape_filter_date_button"
-            android:drawableRight="@drawable/calender_icon"
+            android:drawableRight="@drawable/calender_icon_click"
             android:gravity="center_vertical"
             android:hint="To"
             android:paddingBottom="@dimen/dp_5"
@@ -122,21 +122,22 @@
         android:id="@+id/ll_leave_days"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="@dimen/dp_5">
+        android:layout_margin="@dimen/dp_5"
+        android:orientation="horizontal">
+
         <TextView
             android:id="@+id/title_leave_days"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Number of Days:"
-            android:padding="@dimen/dp_5" />
-        <EditText
+            android:padding="@dimen/dp_5"
+            android:text="Number of Days:" />
+
+        <TextView
             android:id="@+id/et_leave_days_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/dp_5"
-            android:textSize="15sp">
-        </EditText>
+            android:textSize="15sp"></TextView>
     </LinearLayout>
 
     <LinearLayout
@@ -158,7 +159,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/dp_5"
-            android:text="Remark for leave"
+            android:hint="Remark for Leave "
             android:minLines="3"
             android:maxLines="5"
             android:maxLength="140"

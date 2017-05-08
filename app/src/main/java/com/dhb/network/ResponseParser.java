@@ -22,6 +22,7 @@ import com.dhb.models.data.BrandMasterModel;
 import com.dhb.models.data.BrandTestMasterModel;
 import com.dhb.models.data.DepositRegisterModel;
 import com.dhb.models.data.EarningRegisterModel;
+import com.dhb.models.data.LeaveNatureMasterModel;
 import com.dhb.models.data.MaterialDetailsModel;
 import com.dhb.models.data.SlotModel;
 import com.dhb.utils.api.Logger;
@@ -724,5 +725,11 @@ public class ResponseParser implements AppConstants {
 		}
 		return materialINVResponseModel;
 	}
-
+	////Fetch Leave  details Response parse:
+	public ArrayList<LeaveNatureMasterModel>  getLeaveNatureMasterResponse (String json, int statusCode) {
+		ArrayList<LeaveNatureMasterModel> leaveNatureMasterModels = null;
+		TypeToken<ArrayList<LeaveNatureMasterModel>> token =new TypeToken<ArrayList<LeaveNatureMasterModel>>(){};
+		leaveNatureMasterModels = gson.fromJson(json,token.getType());
+		return leaveNatureMasterModels;
+	}
 }
