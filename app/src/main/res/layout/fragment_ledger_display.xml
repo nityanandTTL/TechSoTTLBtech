@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_content"
+    android:background="#E6E6E6"
+    android:orientation="vertical"
     android:weightSum="7">
 
     <LinearLayout
         android:id="@+id/ln_lyt_filter"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/top_header_item"
+        android:layout_margin="@dimen/dp_3"
+        android:layout_weight="1"
         android:background="@android:color/white"
         android:orientation="horizontal"
-        android:layout_margin="@dimen/dp_3"
         android:paddingBottom="@dimen/dp_5"
         android:paddingLeft="@dimen/dp_2"
         android:paddingRight="@dimen/dp_2"
         android:paddingTop="@dimen/dp_5"
         android:visibility="visible"
-        android:weightSum="4"
-        android:layout_weight="1">
+        android:weightSum="4">
 
 
         <TextView
@@ -27,17 +30,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dp_5"
+            android:layout_marginLeft="@dimen/dp_5"
             android:layout_weight="1.5"
             android:background="@drawable/shape_filter_date_button"
-            android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+            android:drawableRight="@drawable/calender_icon"
             android:gravity="center_vertical"
             android:hint="From"
             android:paddingBottom="@dimen/dp_5"
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
             android:paddingTop="@dimen/dp_5"
-            android:textColor="@color/mainTextColor"
+            android:textColor="#444444"
             android:textSize="18sp" />
 
         <TextView
@@ -49,14 +52,14 @@
             android:layout_marginRight="@dimen/dp_5"
             android:layout_weight="1.5"
             android:background="@drawable/shape_filter_date_button"
-            android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+            android:drawableRight="@drawable/calender_icon"
             android:gravity="center_vertical"
             android:hint="To"
             android:paddingBottom="@dimen/dp_5"
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
             android:paddingTop="@dimen/dp_5"
-            android:textColor="@color/mainTextColor"
+            android:textColor="#444444"
             android:textSize="18sp" />
 
         <Button
@@ -72,7 +75,7 @@
             android:paddingBottom="@dimen/dp_5"
             android:paddingTop="@dimen/dp_5"
             android:text="Filter"
-            android:textColor="@color/mainTextColor"
+            android:textColor="#585858"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -80,56 +83,119 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
         android:layout_margin="@dimen/dp_3"
+        android:layout_weight="6"
+        android:background="#FFFFFF"
         android:paddingBottom="@dimen/dp_5"
         android:paddingLeft="@dimen/dp_2"
         android:paddingRight="@dimen/dp_2"
         android:paddingTop="@dimen/dp_5"
-        android:visibility="visible"
-        android:background="@android:color/white">
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/order_ledger"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/seven"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Last Seven Days Details "
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cash Register"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
             <TableLayout
                 android:id="@+id/cashRegistertable"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp_2">
+
             </TableLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/outstandig"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Outstanding Balance --"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
 
             <TextView
+                android:id="@+id/balance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Deposits Register"
+                android:text="0"
                 android:textColor="@color/colorPrimaryDark"
-                android:textStyle="bold"
-                android:textSize="14sp"/>
-            <TableLayout
-                android:id="@+id/depositsRegisterTable"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/noledger"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dp_2">
-            </TableLayout>
+                android:text="NO Ledger  RECORDS FOUND"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
             <Button
                 android:id="@+id/deposit_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text="Deposit"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Deposits Register"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="14sp"
-                android:textColor="@android:color/white" />
+                android:textStyle="bold" />
+
+            <TableLayout
+                android:id="@+id/depositsRegisterTable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_2">
+
+            </TableLayout>
+            <TextView
+                android:id="@+id/norecordsdeposit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="NO Deposit Records Found "
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Earnings Register"
                 android:textColor="@color/colorPrimaryDark"
-                android:textStyle="bold"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <TableLayout
 
@@ -137,103 +203,54 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp_2">
+                <TextView
+                    android:id="@+id/norecordsearning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NO Earning Records  Found  "
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="14sp"
+                     />
+
             </TableLayout>
-            <Button
-                android:id="@+id/earnings_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="Deposit"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
 
 
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:layout_weight="1"
-        android:weightSum="2">
 
-        <LinearLayout
-            android:id="@+id/credit_balance"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/dp_2"
-            android:layout_weight="1"
-            android:background="@drawable/footer_bg"
-            android:orientation="horizontal">
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:weightSum="3">-->
 
-            <ImageView
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
-                android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/dp_5"
-                android:layout_marginLeft="@dimen/dp_5"
-                android:layout_marginRight="@dimen/dp_5"
-                android:layout_marginStart="@dimen/dp_5"
-                android:src="@drawable/currency_icon" />
+    <!--<TextView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Closing Balance: "-->
+    <!--android:textColor="@color/colorPrimaryDark"-->
+    <!--android:textStyle="bold"-->
+    <!--android:textSize="14sp"-->
+    <!--android:layout_weight="2.3"-->
+    <!--android:layout_gravity="end"-->
+    <!--android:gravity="end"/>-->
+    <!--<TextView-->
+    <!--android:id="@+id/closing_balance"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Rs. 1,500"-->
+    <!--android:textColor="@color/colorPrimaryDark"-->
+    <!--android:textStyle="bold"-->
+    <!--android:textSize="14sp"-->
+    <!--android:layout_weight="0.7"-->
+    <!--android:layout_gravity="end"-->
+    <!--android:gravity="end"/>-->
+    <!--</LinearLayout>-->
 
-            <TextView
-                android:id="@+id/title_credit_balance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
-                android:text="Credit balance\n₹ 1420/-"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp" />
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/earnings"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/dp_2"
-            android:layout_weight="1"
-            android:background="@drawable/footer_bg"
-            android:orientation="horizontal">
+    <!--android:background="@drawable/circle"-->
 
-            <ImageView
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
-                android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/dp_5"
-                android:layout_marginLeft="@dimen/dp_5"
-                android:layout_marginRight="@dimen/dp_5"
-                android:layout_marginStart="@dimen/dp_5"
-                android:src="@drawable/currency_icon" />
-
-            <TextView
-                android:id="@+id/title_earnings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
-                android:text="Earnings\n₹ 1420/-"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp" />
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:gravity="center">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/purple_btn_bg"
-            android:text="Proceed To Payment"
-            android:padding="@dimen/dp_5"
-            android:textColor="@android:color/white"/>
-    </LinearLayout>
 
 </LinearLayout>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_weight="1"
+        android:id="@+id/tv_title_select_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="Please select the date for next Appointment"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txt_from_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/dp_5"
+        android:background="@drawable/shape_filter_date_button"
+        android:drawableEnd="@drawable/calender_icon"
+        android:gravity="center_vertical"
+        android:hint="Date  "
+        android:paddingBottom="@dimen/dp_5"
+        android:paddingLeft="@dimen/dp_5"
+        android:paddingRight="@dimen/dp_5"
+        android:paddingTop="@dimen/dp_5"
+        android:textColor="@color/mainTextColor"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:layout_weight="1"
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="Do you really want to reschedule this order ?"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:textSize="14sp"
+        android:hint="Please enter reason to release"
+        android:singleLine="true"
+        android:padding="10dp"
+        android:id="@+id/edt_remark"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal" >
+        <Button
+            android:layout_marginEnd="10dp"
+            android:minEms="6"
+            android:id="@+id/btn_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/purple_btn_bg"
+            android:text="No"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+        <Button
+            android:layout_marginStart="10dp"
+            android:minEms="6"
+            android:id="@+id/btn_yes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/purple_btn_bg"
+            android:text="Yes"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>
