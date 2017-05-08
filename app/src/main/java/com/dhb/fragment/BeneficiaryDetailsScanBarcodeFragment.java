@@ -278,7 +278,7 @@ private boolean isCancelRequesGenereted=false;
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (scanningResult != null && scanningResult.getContents() != null) {
+        if ((scanningResult != null) && (scanningResult.getContents() != null)) {
             String scanned_barcode = scanningResult.getContents();
             if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
                 for (BarcodeDetailsModel barcodeDetailsModel :

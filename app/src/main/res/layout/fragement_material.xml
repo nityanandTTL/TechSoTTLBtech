@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:weightSum="6">
+    android:layout_height="match_parent" android:weightSum="6"
+    android:background="@color/colorBackground">
 
     <ScrollView
         android:id="@+id/sv_material_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4">
+        android:layout_weight="4.5">
         <TableLayout
             android:id="@+id/materialtable"
             android:layout_width="match_parent"
@@ -19,17 +20,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         android:layout_gravity="center"
         android:gravity="center"
-        android:layout_marginTop="@dimen/activity_vertical_margin">
+        android:layout_marginTop="@dimen/dp_5">
 
         <Button
             android:id="@+id/updateRecord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/round_button"
-            android:text="Update Stock"
+            android:text="Order Stock"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="12sp" />
@@ -67,7 +68,7 @@
                 android:layout_gravity="center"
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
-                android:text="Order Status"
+                android:text="Order Status - Flow not ready"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -98,7 +99,7 @@
                 android:layout_gravity="center"
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
-                android:text="Order Stock"
+                android:text="Material Order"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
         </LinearLayout>

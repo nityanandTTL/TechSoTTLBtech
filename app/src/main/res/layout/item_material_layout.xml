@@ -3,9 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:background="#E6E6E6"
-    android:padding="@dimen/dp_10"
-    android:weightSum="3">
+    android:background="@color/colorBackground"
+    android:weightSum="3"
+    android:layout_marginLeft="@dimen/dp_5"
+    android:layout_marginRight="@dimen/dp_5">
+    <!--android:padding="@dimen/dp_10"-->
     <TextView
         android:id="@+id/txt_item"
         android:layout_width="0dp"
@@ -13,7 +15,13 @@
         android:layout_weight="1"
         android:text="Item"
         android:textAlignment="center"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        android:textColor="@color/colorPrimaryDark"/>
+    <View
+        android:layout_height="match_parent"
+        android:layout_width="@dimen/dp_2"
+        android:background="@color/colorSecondaryDark">
+    </View>
     <TextView
         android:id="@+id/txt_virtualstock"
         android:layout_width="0dp"
@@ -21,17 +29,22 @@
         android:layout_weight="1"
         android:text="VirtualStock"
         android:textAlignment="center"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        android:textColor="@color/colorPrimaryDark"/>
+    <View
+        android:layout_height="match_parent"
+        android:layout_width="@dimen/dp_2"
+        android:background="@color/colorSecondaryDark">
+    </View>
     <EditText
         android:id="@+id/edit_actual"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="0"
-        android:hint="Actual Data "
+        android:hint="0"
         android:inputType="number"
         android:textAlignment="center"
-        android:textSize="12sp"/>
-
-
+        android:textSize="12sp"
+        android:textColor="@color/colorPrimaryDark"/>
 </TableRow>

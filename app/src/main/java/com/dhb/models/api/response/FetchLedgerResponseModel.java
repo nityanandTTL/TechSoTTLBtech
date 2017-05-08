@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class FetchLedgerResponseModel {
     private int BTechId;
     private String BTechName;
+    private int OutstandingBalance;
     private ArrayList<LedgerDetailsModeler> LedgerDetails;
     public ArrayList<LedgerDetailsModeler> getLedgerDetails() {
         return LedgerDetails;
@@ -35,5 +36,13 @@ public class FetchLedgerResponseModel {
 
     public void setBTechName(String BTechName) {
         this.BTechName = BTechName;
+    }
+
+    public int getOutstandingBalance() {
+        return OutstandingBalance;
+    }
+
+    public void setOutstandingBalance(int outstandingBalance) {
+        OutstandingBalance = outstandingBalance;
     }
 }

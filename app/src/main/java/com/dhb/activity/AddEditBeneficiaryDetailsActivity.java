@@ -56,7 +56,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                setResult(BundleConstants.ADD_EDIT_FINISH);
+                finish();
             }
         });
 

@@ -28,6 +28,6 @@ public class BundleConstants {
 
 
     public static final String BENEFICIARY_TEST_LIST = "beneficiaryTestList";
-
     public static final String TESTS_LIST = "testsList";
+    public static final String SELECTED_TESTS_LIST = "selectedTestsList";
 }
