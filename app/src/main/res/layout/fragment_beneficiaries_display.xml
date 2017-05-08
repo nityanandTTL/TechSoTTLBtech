@@ -120,7 +120,7 @@
             android:background="@drawable/purple_btn_bg"
             android:gravity="center"
             android:minEms="8"
-            android:padding="@dimen/dp_10"
+            android:padding="@dimen/dp_5"
             android:hint="Proceed for Payment"
             android:textColorHint="@android:color/white"
             android:textColor="@android:color/white"

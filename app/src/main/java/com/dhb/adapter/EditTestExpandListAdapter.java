@@ -35,6 +35,9 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
         this.testRateMasterModels = testRateMasterModels1;
         this.mcallback=mcallback;
         this.selectedTests = selectedTests;
+        if(this.selectedTests==null){
+            this.selectedTests = new ArrayList<>();
+        }
     }
 
     @Override
