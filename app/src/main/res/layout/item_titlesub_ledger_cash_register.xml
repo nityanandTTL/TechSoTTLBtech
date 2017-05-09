@@ -17,7 +17,7 @@
         android:textColor="@color/colorPrimaryDark"/>
     <View
         android:layout_height="match_parent"
-        android:layout_width="@dimen/dp_2"
+        android:layout_width="2dp"
         android:background="@color/colorSecondaryDark">
     </View>
     <TextView
@@ -31,7 +31,7 @@
         android:textColor="@color/colorPrimaryDark"/>
     <View
         android:layout_height="match_parent"
-        android:layout_width="@dimen/dp_2"
+        android:layout_width="2dp"
         android:background="@color/colorSecondaryDark">
     </View>
     <TextView
@@ -45,7 +45,7 @@
         android:textColor="@color/colorPrimaryDark" />
     <View
         android:layout_height="match_parent"
-        android:layout_width="@dimen/dp_2"
+        android:layout_width="2dp"
         android:background="@color/colorSecondaryDark">
     </View>
     <TextView
@@ -59,7 +59,7 @@
         android:textColor="@color/colorPrimaryDark"/>
     <View
         android:layout_height="match_parent"
-        android:layout_width="@dimen/dp_2"
+        android:layout_width="2dp"
         android:background="@color/colorSecondaryDark">
     </View>
     <TextView

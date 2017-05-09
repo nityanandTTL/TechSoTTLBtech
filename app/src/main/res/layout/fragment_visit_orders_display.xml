@@ -56,8 +56,8 @@
                 <ImageView
                     android:padding="10dp"
                     android:layout_gravity="center"
-                    android:layout_width="@dimen/dp_50"
-                    android:layout_height="@dimen/dp_50"
+                    android:layout_width="@dimen/dp_25"
+                    android:layout_height="@dimen/dp_25"
                     android:src="@drawable/location_icon" />
 
                 <TextView
@@ -84,8 +84,8 @@
                 <ImageView
                     android:padding="10dp"
                     android:layout_gravity="center"
-                    android:layout_width="@dimen/dp_50"
-                    android:layout_height="@dimen/dp_50"
+                    android:layout_width="@dimen/dp_25"
+                    android:layout_height="@dimen/dp_25"
                     android:src="@drawable/rupee_icon" />
 
                 <TextView
@@ -112,8 +112,8 @@
                 <ImageView
                     android:padding="10dp"
                     android:layout_gravity="center"
-                    android:layout_width="@dimen/dp_50"
-                    android:layout_height="@dimen/dp_50"
+                    android:layout_width="@dimen/dp_25"
+                    android:layout_height="@dimen/dp_25"
                     android:src="@drawable/vial_icon" />
 
                 <TextView

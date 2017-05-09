@@ -21,10 +21,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="@dimen/dp_5"
         android:background="@drawable/shape_filter_date_button"
         android:drawableEnd="@drawable/calender_icon"
-        android:gravity="center_vertical"
+        android:gravity="center_horizontal"
         android:hint="Date  "
         android:paddingBottom="@dimen/dp_5"
         android:paddingLeft="@dimen/dp_5"
@@ -47,7 +46,7 @@
 
     <EditText
         android:textSize="14sp"
-        android:hint="Please enter reason to release"
+        android:hint="Please enter reason to reschedule"
         android:singleLine="true"
         android:padding="10dp"
         android:id="@+id/edt_remark"

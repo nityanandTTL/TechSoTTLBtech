@@ -22,16 +22,17 @@
     <LinearLayout
         android:layout_weight="5"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <LinearLayout
-            android:background="@drawable/shadow_rect"
+            android:background="@android:color/white"
             android:id="@+id/login_block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
-                android:padding="@dimen/dp_5"
+                android:padding="@dimen/dp_3"
                 android:id="@+id/username_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,7 +60,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:padding="@dimen/dp_5"
+                android:padding="@dimen/dp_3"
                 android:id="@+id/password_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -103,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/purple_btn_bg"
+                android:background="@drawable/login_btn_bg"
                 android:text="Login"
                 android:textColor="@android:color/white" />
 
@@ -117,5 +118,12 @@
                 android:layout_gravity="center_horizontal"
                 android:text="Join our Network" />
         </LinearLayout>
+        <ImageView
+            android:layout_marginTop="@dimen/dp_2"
+            android:paddingTop="@dimen/dp_2"
+            android:paddingBottom="@dimen/dp_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/login_shadow"/>
     </LinearLayout>
 </LinearLayout>
