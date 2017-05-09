@@ -48,6 +48,9 @@ public class OrderDetailsDao {
 	String REPORT_HC = "ReportHC";
 	String KITS = "kits";
 	String DISTANCE = "Distance";
+	String LATITUDE = "Latitude";
+	String LONGITUDE = "Longitude";
+	String STATUS = "Status";
 	String IS_TEST_EDIT = "isTestEdit";
 	String IS_ADD_BEN = "isAddBen";
 	String CREATED_AT = "createdAt";
@@ -91,6 +94,9 @@ public class OrderDetailsDao {
 		orderDetailsModel.setDiscount(cursor.getInt(cursor.getColumnIndex(DISCOUNT)));
 		orderDetailsModel.setDistance(cursor.getInt(cursor.getColumnIndex(DISTANCE)));
 		orderDetailsModel.setRefcode(cursor.getString(cursor.getColumnIndex(REFCODE)));
+		orderDetailsModel.setStatus(cursor.getString(cursor.getColumnIndex(STATUS)));
+		orderDetailsModel.setLatitude(cursor.getString(cursor.getColumnIndex(LATITUDE)));
+		orderDetailsModel.setLongitude(cursor.getString(cursor.getColumnIndex(LONGITUDE)));
 		orderDetailsModel.setProjId(cursor.getString(cursor.getColumnIndex(PROJ_ID)));
 		orderDetailsModel.setReportHC(cursor.getInt(cursor.getColumnIndex(REPORT_HC)));
 		orderDetailsModel.setTestEdit(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(IS_TEST_EDIT))));
@@ -134,6 +140,9 @@ public class OrderDetailsDao {
 		values.put(REPORT_HC, orderDetailsModel.getReportHC());
 		values.put(IS_TEST_EDIT, orderDetailsModel.isTestEdit());
 		values.put(IS_ADD_BEN, orderDetailsModel.isAddBen());
+		values.put(STATUS, orderDetailsModel.getStatus());
+		values.put(LATITUDE, orderDetailsModel.getLatitude());
+		values.put(LONGITUDE, orderDetailsModel.getLongitude());
 		values.put(KITS, new Gson().toJson(orderDetailsModel.getKits()));
 		values.put(CREATED_AT, orderDetailsModel.getCreatedAt());
 		values.put(CREATED_BY, orderDetailsModel.getCreatedBy());

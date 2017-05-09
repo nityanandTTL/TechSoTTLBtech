@@ -66,6 +66,10 @@ public class CommonUtils {
 		return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 	}
 
+	public static byte[] decodedImageBytes(String encodedImage) {
+		return Base64.decode(encodedImage, Base64.DEFAULT);
+	}
+
 	public static float dpTopx(float dp, Context context) {
 		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
 		                                     context.getResources().getDisplayMetrics());

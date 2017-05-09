@@ -33,6 +33,10 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private String Response;
     private int SlotId;
     private int Distance;
+    private String Latitude;
+    private String Longitude;
+    private String Status;
+
     private ArrayList<KitsCountModel> kits;
 
     public String getLatitude() {
@@ -78,6 +82,9 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         Response = in.readString();
         SlotId = in.readInt();
         Distance = in.readInt();
+        Latitude = in.readString();
+        Longitude = in.readString();
+        Status = in.readString();
         kits = in.createTypedArrayList(KitsCountModel.CREATOR);
     }
 
@@ -105,6 +112,9 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeString(Response);
         dest.writeInt(SlotId);
         dest.writeInt(Distance);
+        dest.writeString(Latitude);
+        dest.writeString(Longitude);
+        dest.writeString(Status);
         dest.writeTypedList(kits);
     }
 
@@ -299,5 +309,29 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setDistance(int distance) {
         Distance = distance;
+    }
+
+    public String getLatitude() {
+        return Latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        Latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return Longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        Longitude = longitude;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
     }
 }

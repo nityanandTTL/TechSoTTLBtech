@@ -16,11 +16,12 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
     private int Age;
     private String Gender;
     private String tests;
+    private String testsCode;
     private String Fasting;
     private byte[] Venepuncture;
     private ArrayList<BarcodeDetailsModel> barcodedtl;
     private ArrayList<BeneficiarySampleTypeDetailsModel> sampleType;
-
+    private ArrayList<TestRateMasterModel> testsList;
     public BeneficiaryDetailsModel() {
         super();
     }
@@ -33,10 +34,12 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
         Age = in.readInt();
         Gender = in.readString();
         tests = in.readString();
+        testsCode = in.readString();
         Fasting = in.readString();
         Venepuncture = in.createByteArray();
         barcodedtl = in.createTypedArrayList(BarcodeDetailsModel.CREATOR);
         sampleType = in.createTypedArrayList(BeneficiarySampleTypeDetailsModel.CREATOR);
+        testsList = in.createTypedArrayList(TestRateMasterModel.CREATOR);
     }
 
     @Override
@@ -48,10 +51,12 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
         dest.writeInt(Age);
         dest.writeString(Gender);
         dest.writeString(tests);
+        dest.writeString(testsCode);
         dest.writeString(Fasting);
         dest.writeByteArray(Venepuncture);
         dest.writeTypedList(barcodedtl);
         dest.writeTypedList(sampleType);
+        dest.writeTypedList(testsList);
     }
 
     @Override
@@ -149,5 +154,21 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
 
     public void setSampleType(ArrayList<BeneficiarySampleTypeDetailsModel> sampleType) {
         this.sampleType = sampleType;
+    }
+
+    public String getTestsCode() {
+        return testsCode;
+    }
+
+    public void setTestsCode(String testsCode) {
+        this.testsCode = testsCode;
+    }
+
+    public ArrayList<TestRateMasterModel> getTestsList() {
+        return testsList;
+    }
+
+    public void setTestsList(ArrayList<TestRateMasterModel> testsList) {
+        this.testsList = testsList;
     }
 }
