@@ -132,9 +132,9 @@ public class HomeScreenFragment extends AbstractFragment {
         imgSchedule = (ImageView) rootView.findViewById(R.id.schedule_icon);
         imgHub = (ImageView) rootView.findViewById(R.id.hub_icon);
         imgOLCPickup = (ImageView) rootView.findViewById(R.id.olc_pickup_icon);
-        imgCommunication = (ImageView) rootView.findViewById(R.id.communication_icon);
-        imgFeedback= (ImageView) rootView.findViewById(R.id.feedback_icon);
-        imgCamp = (ImageView) rootView.findViewById(R.id.camp_icon);
+//        imgCommunication = (ImageView) rootView.findViewById(R.id.communication_icon);
+//        imgFeedback= (ImageView) rootView.findViewById(R.id.feedback_icon);
+//        imgCamp = (ImageView) rootView.findViewById(R.id.camp_icon);
         imgMaterials = (ImageView) rootView.findViewById(R.id.materials_icon);
     }
 }
