@@ -18,6 +18,7 @@ import com.dhb.dao.models.TestRateMasterDao;
 import com.dhb.delegate.EditTestExpandListAdapterCheckboxDelegate;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.BrandMasterModel;
+import com.dhb.models.data.ChildTestsModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestTypeWiseTestRateMasterModelsList;
 import com.dhb.uiutils.AbstractActivity;
@@ -41,6 +42,10 @@ public class EditTestListActivity extends AbstractActivity{
     private int totalAmount;
     private ArrayList<BeneficiarySampleTypeDetailsModel> sampleTypesArr;
     private boolean isOfferSelected = false;
+    private long selectedTestsCost;
+    private long selectedTestsTotalCost;
+    private ArrayList<TestRateMasterModel> restOfTestList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +53,11 @@ public class EditTestListActivity extends AbstractActivity{
         activity = this;
         dhbDao = new DhbDao(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
+        selectedTestsList = new ArrayList<>();
+        restOfTestList = new ArrayList<>();
         if(getIntent().getExtras()!=null){
             selectedTestsList = getIntent().getExtras().getParcelableArrayList(BundleConstants.SELECTED_TESTS_LIST);
-        }
-        else{
-            selectedTestsList = new ArrayList<>();
+            restOfTestList = getIntent().getExtras().getParcelableArrayList(BundleConstants.REST_BEN_TESTS_LIST);
         }
         totalAmount = 0;
         sampleTypesArr = new ArrayList<>();
@@ -123,12 +128,78 @@ public class EditTestListActivity extends AbstractActivity{
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                trimSelectedTestsListforDuplicates(selectedTestsList);
+                selectedTestsCost = calculateCost(selectedTestsList);
+                long restBenTestCost = calculateCost(restOfTestList);
+                selectedTestsTotalCost = restBenTestCost+selectedTestsCost;
                 Intent intentFinish = new Intent();
-                intentFinish.putExtra(BundleConstants.TESTS_LIST, selectedTestsList);
+                intentFinish.putExtra(BundleConstants.SELECTED_TESTS_LIST, selectedTestsList);
+                intentFinish.putExtra(BundleConstants.SELECTED_TESTS_COST,selectedTestsCost);
+                intentFinish.putExtra(BundleConstants.SELECTED_TESTS_TOTAL_COST,selectedTestsTotalCost);
                 setResult(BundleConstants.EDIT_TESTS_FINISH,intentFinish);
                 finish();
             }
         });
+    }
+
+    private long calculateCost(ArrayList<TestRateMasterModel> selTests) {
+        //TODO  calculate the total price
+        long totalCost = 0;
+        for (TestRateMasterModel tt : selTests){
+            if (tt.getRate() != 0){
+                totalCost = totalCost + tt.getRate();
+            }
+        }
+        return totalCost;
+    }
+
+    private boolean trimSelectedTestsListforDuplicates(ArrayList<TestRateMasterModel> selTests){
+        boolean wasTrimmed = false;
+        int k = 0;
+        if(selTests.size()>0){
+            for(int i = 0;i<selTests.size();i++){
+                String duplicateString;
+                duplicateString = selTests.get(i).getTestCode();
+                for(int j=0;j<selTests.size();j++){
+                    if(j!=i){
+                        if(duplicateString.equalsIgnoreCase(selTests.get(j).getTestCode())){
+                            selectedTestsList.remove(selTests.get(j));
+                            k++;
+                        }
+                    }
+                }
+            }
+            for(int i =0;i<selTests.size();i++){
+                TestRateMasterModel tt = new TestRateMasterModel();
+                tt = selTests.get(i);
+                if(tt!=null){
+                    String ttCode = tt.getTestCode();
+                    for(int j=0;j<selTests.size();j++){
+                        if(j!=i){
+                            TestRateMasterModel tt2 = new TestRateMasterModel();
+                            tt2 = selTests.get(j);
+                            if(tt2!=null && !tt2.getTestType().equalsIgnoreCase("TEST") && tt2.getChldtests().size()>0){
+                                for (ChildTestsModel c:
+                                     tt2.getChldtests()) {
+                                    if(c.getChildTestCode().equalsIgnoreCase(ttCode)){
+                                        selectedTestsList.remove(tt);
+                                        k++;
+                                    }
+                                }
+                                if(tt.checkIfChildsMatch(tt2)){
+                                    selectedTestsList.remove(tt2);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(k!=0)
+        {
+            wasTrimmed=true;
+        }
+        return wasTrimmed;
     }
 
     private void initData() {

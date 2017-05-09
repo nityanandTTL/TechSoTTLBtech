@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,25 +19,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
-import com.dhb.activity.EditTestListActivity;
 import com.dhb.activity.AddEditBeneficiaryDetailsActivity;
+import com.dhb.activity.EditTestListActivity;
 import com.dhb.activity.OrderBookingActivity;
 import com.dhb.adapter.DisplayScanBarcodeItemListAdapter;
+import com.dhb.dao.DhbDao;
+import com.dhb.dao.models.TestRateMasterDao;
 import com.dhb.delegate.OrderCancelDialogButtonClickedDelegate;
 import com.dhb.delegate.OrderRescheduleDialogButtonClickedDelegate;
 import com.dhb.delegate.ScanBarcodeIconClickedDelegate;
+import com.dhb.delegate.SelectClinicalHistoryCheckboxDelegate;
 import com.dhb.dialog.CancelOrderDialog;
+import com.dhb.dialog.ClinicalHistorySelectorDialog;
 import com.dhb.dialog.RescheduleOrderDialog;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
 import com.dhb.models.data.BarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.OrderDetailsModel;
-import com.dhb.models.data.OrderVisitDetailsModel;
+import com.dhb.models.data.TestRateMasterModel;
+import com.dhb.models.data.TestWiseBeneficiaryClinicalHistoryModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.uiutils.AbstractFragment;
+import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.DeviceUtils;
 import com.dhb.utils.app.InputUtils;
@@ -52,6 +57,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static com.dhb.utils.app.CommonUtils.encodeImage;
 
 
 public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
@@ -80,7 +87,10 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private DisplayScanBarcodeItemListAdapter displayScanBarcodeItemListAdapter;
     private RescheduleOrderDialog cdd;
     private CancelOrderDialog cod;
-private boolean isCancelRequesGenereted=false;
+    private boolean isCancelRequesGenereted=false;
+    private ArrayList<TestRateMasterModel> restOfTestsList;
+    private DhbDao dhbDao;
+    private ArrayList<TestWiseBeneficiaryClinicalHistoryModel> benCHArr;
     public BeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
     }
@@ -97,6 +107,9 @@ private boolean isCancelRequesGenereted=false;
                              Bundle savedInstanceState) {
         rootview = inflater.inflate(R.layout.fragment_beneficiary_details_scan_barcode, container, false);
         activity = (OrderBookingActivity) getActivity();
+        dhbDao = new DhbDao(activity);
+        appPreferenceManager = new AppPreferenceManager(activity);
+        benCHArr = new ArrayList<>();
         Bundle bundle = getArguments();
         beneficiaryDetailsModel = bundle.getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
         orderDetailsModel = bundle.getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
@@ -110,7 +123,7 @@ private boolean isCancelRequesGenereted=false;
         txtName.setText(beneficiaryDetailsModel.getName());
         txtAge.setText(beneficiaryDetailsModel.getAge() + " | " + beneficiaryDetailsModel.getGender());
         txtAadharNo.setVisibility(View.GONE);
-        edtTests.setText(beneficiaryDetailsModel.getTests());
+        edtTests.setText(beneficiaryDetailsModel.getTestsCode());
         txtSrNo.setText(beneficiaryDetailsModel.getBenId() + "");
         if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
             imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
@@ -132,6 +145,14 @@ private boolean isCancelRequesGenereted=false;
                 barcodeDetailsModel.setSamplType(sampleTypes.getSampleType());
                 barcodeDetailsModel.setOrderNo(beneficiaryDetailsModel.getOrderNo());
                 barcodeDetailsModelsArr.add(barcodeDetailsModel);
+            }
+        }
+        restOfTestsList = new ArrayList<>();
+        TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
+        for (BeneficiaryDetailsModel beneficiaryModel:
+                orderDetailsModel.getBenMaster()) {
+            if(beneficiaryDetailsModel.getBenId()!=beneficiaryModel.getBenId()){
+                restOfTestsList.addAll(testRateMasterDao.getModelsFromTestCodes(beneficiaryModel.getTestsCode()));
             }
         }
         initScanBarcodeView();
@@ -199,7 +220,7 @@ private boolean isCancelRequesGenereted=false;
         edtTests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tests = beneficiaryDetailsModel.getTests();
+                String tests = beneficiaryDetailsModel.getTestsCode();
                 final String[] testsList = tests.split(",");
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Tests List");
@@ -217,14 +238,27 @@ private boolean isCancelRequesGenereted=false;
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intentEdit = new Intent(activity, EditTestListActivity.class);
-                        intentEdit.putExtra(BundleConstants.BENEFICIARY_TEST_LIST, beneficiaryDetailsModel.getTests());
+                        intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST,restOfTestsList);
+                        intentEdit.putExtra(BundleConstants.BENEFICIARY_TEST_LIST, beneficiaryDetailsModel.getTestsCode());
+                        intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
                         startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
                     }
                 });
                 builder.show();
             }
         });
-
+        edtCH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClinicalHistorySelectorDialog clinicalHistorySelectorDialog = new ClinicalHistorySelectorDialog(activity, beneficiaryDetailsModel.getTestsList(), benCHArr, beneficiaryDetailsModel.getBenId(), new SelectClinicalHistoryCheckboxDelegate() {
+                    @Override
+                    public void onCheckChange(ArrayList<TestWiseBeneficiaryClinicalHistoryModel> chArr) {
+                        benCHArr = chArr;
+                    }
+                });
+                clinicalHistorySelectorDialog.show();
+            }
+        });
     }
 
 
@@ -288,7 +322,6 @@ private boolean isCancelRequesGenereted=false;
                         break;
                     }
                 }
-
                 displayScanBarcodeItemListAdapter.notifyDataSetChanged();
             }
         }
@@ -298,8 +331,22 @@ private boolean isCancelRequesGenereted=false;
             }
         }
         if (requestCode == BundleConstants.EDIT_TESTS_START && resultCode == BundleConstants.EDIT_TESTS_FINISH) {
-            Bundle bundle = data.getExtras();
-
+            String testsCode = "";
+            ArrayList<TestRateMasterModel> selectedTests = new ArrayList<>();
+            selectedTests = data.getExtras().getParcelableArrayList(BundleConstants.SELECTED_TESTS_LIST);
+            if(selectedTests!=null) {
+                for (TestRateMasterModel testRateMasterModel :
+                        selectedTests) {
+                    if (InputUtils.isNull(testsCode)) {
+                        testsCode = testRateMasterModel.getTestCode();
+                    } else {
+                        testsCode = testsCode + "," + testRateMasterModel.getTestCode();
+                    }
+                }
+            }
+            beneficiaryDetailsModel.setTestsCode(testsCode);
+            beneficiaryDetailsModel.setTests(testsCode);
+            edtTests.setText(testsCode);
         }
         if (requestCode == BundleConstants.ADD_EDIT_START && resultCode == BundleConstants.ADD_EDIT_FINISH) {
             beneficiaryDetailsModel = data.getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
@@ -324,13 +371,6 @@ private boolean isCancelRequesGenereted=false;
             e.printStackTrace();
         }
         encodedVanipunctureImg = encodeImage(thumbnail);
-    }
-
-    private String encodeImage(Bitmap bm) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] b = baos.toByteArray();
-        return Base64.encodeToString(b, Base64.DEFAULT);
     }
 
     private void cameraIntent() {

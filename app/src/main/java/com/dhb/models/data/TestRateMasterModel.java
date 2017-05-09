@@ -28,6 +28,10 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
 
     public TestRateMasterModel() {
         super();
+        sampltype = new ArrayList<>();
+        chldtests = new ArrayList<>();
+        tstSkills = new ArrayList<>();
+        tstClinicalHistory = new ArrayList<>();
     }
 
     protected TestRateMasterModel(Parcel in) {
@@ -212,5 +216,24 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
             }
         }
         return false;
+    }
+
+    public boolean checkIfChildsMatch(TestRateMasterModel tt){
+        boolean isChilds = false;
+        if(getChldtests()!=null && getChldtests().size()>0) {
+            int ttChildSize = tt.getChldtests().size();
+            int commonChildsSize = 0;
+            for (ChildTestsModel tc : tt.getChldtests()) {
+                for (ChildTestsModel tChild : getChldtests()) {
+                    if (tc.getChildTestCode().equalsIgnoreCase(tChild.getChildTestCode())) {
+                        commonChildsSize++;
+                    }
+                }
+            }
+            if (commonChildsSize == ttChildSize) {
+                isChilds = true;
+            }
+        }
+        return isChilds;
     }
 }
