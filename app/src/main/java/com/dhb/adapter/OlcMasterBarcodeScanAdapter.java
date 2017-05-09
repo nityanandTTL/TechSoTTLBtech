@@ -4,7 +4,6 @@ package com.dhb.adapter;
  * Created by vendor1 on 4/21/2017.
  */
 
-import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.dhb.R;
-import com.dhb.activity.HomeScreenActivity;
 import com.dhb.activity.OlcPickupActivity;
 import com.dhb.delegate.OlcMasterBarcodeScanAdapterDelegate;
 import com.dhb.utils.api.Logger;
