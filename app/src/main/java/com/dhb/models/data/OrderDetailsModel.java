@@ -28,8 +28,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private ArrayList<BeneficiaryDetailsModel> benMaster;
     private String VisitId;
     private String Slot;
-    private String Latitude;
-    private String Longitude;
+
     private String Response;
     private int SlotId;
     private int Distance;
@@ -39,21 +38,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     private ArrayList<KitsCountModel> kits;
 
-    public String getLatitude() {
-        return Latitude;
-    }
 
-    public void setLatitude(String latitude) {
-        Latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return Longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        Longitude = longitude;
-    }
 
     public OrderDetailsModel() {
         super();
