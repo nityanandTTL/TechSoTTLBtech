@@ -1,7 +1,6 @@
 package com.dhb.fragment;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,12 +16,11 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.activity.BtechClientDetailMapDisplayFragmentActivity;
 import com.dhb.activity.HomeScreenActivity;
+import com.dhb.activity.OlcPickupActivity;
 import com.dhb.adapter.BtechClientDetailsAdapter;
 import com.dhb.delegate.BtechClientDetailsAdapterOnItemClickDelegate;
-import com.dhb.dialog.CancelOrderDialog;
 import com.dhb.dialog.ConfirmCallDialog;
 import com.dhb.models.api.response.BtechClientsResponseModel;
-import com.dhb.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.dhb.models.data.BtechClientsModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
@@ -97,7 +95,7 @@ public class BtechClientsListFragment extends AbstractFragment {
 
                 Intent intentMapDisplay = new Intent(activity, BtechClientDetailMapDisplayFragmentActivity.class);
                 intentMapDisplay.putExtra(BundleConstants.BTECH_CLIENTS_MODEL,btechClientsModel);
-                startActivityForResult(intentMapDisplay,BundleConstants.BMD_START);
+                startActivityForResult(intentMapDisplay,BundleConstants.BCMD_START);
 
             }
 
@@ -152,9 +150,12 @@ public class BtechClientsListFragment extends AbstractFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==BundleConstants.BMD_START&&resultCode==BundleConstants.BMD_ARRIVED){
-
+        if(requestCode==BundleConstants.BCMD_START && resultCode==BundleConstants.BCMD_ARRIVED){
+            BtechClientsModel btechClientsModel = data.getExtras().getParcelable(BundleConstants.BTECH_CLIENTS_MODEL);
+            Intent intentOrderBooking = new Intent(activity, OlcPickupActivity.class);
+            intentOrderBooking.putExtra(BundleConstants.BTECH_CLIENTS_MODEL,btechClientsModel);
+            startActivity(intentOrderBooking);
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

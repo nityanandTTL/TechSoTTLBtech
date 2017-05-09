@@ -182,6 +182,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                     LatLng destTempLocation = new LatLng(lat, longitude);
                     MarkerOptions options = new MarkerOptions();
                     options.position(destTempLocation);
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                     mMap.addMarker(options);
                    // mMap.addMarker(new MarkerOptions().position(destTempLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_24dp)));
                     LatLng dest = destTempLocation;
@@ -194,61 +195,10 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                     FetchUrl.execute(url);
                     //move map camera
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
                     Log.e(TAG, "onMapReady: ");
-                   /* mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                        @Override
-                        public void onMapClick(LatLng point) {
-                            // Already two locations
-                            if (MarkerPoints.size() > 1) {
-                                MarkerPoints.clear();
-                                mMap.clear();
-                            }
-                            //1 to create current
-                            MarkerPoints.add(point);
-                            MarkerOptions options = new MarkerOptions();
-                            options.position(point);
 
-//                            *
-//                             * For the start location, the color of marker is GREEN and
-//                             * for the end location, the color of marker is RED.
-
-                            if (MarkerPoints.size() == 1) {
-                                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                            } else if (MarkerPoints.size() == 2) {
-                                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                            }
-
-
-                            // Add new marker to the Google Map Android API V2
-                            mMap.addMarker(options);
-
-                            // Checks, whether start and end locations are captured
-                            if (MarkerPoints.size() >= 2) {
-                                LatLng origin = currentLocation;
-                                MarkerPoints.get(0);
-
-                                LatLng destTempLocation = new LatLng(19.9975, 73.7898);
-                                LatLng dest = destTempLocation;
-                                MarkerPoints.get(1);
-//                                title_distance.setText("" + distance(MarkerPoints.get(0).latitude, MarkerPoints.get(0).longitude, MarkerPoints.get(1).latitude, MarkerPoints.get(1).longitude));
-                                Log.e(TAG, "onMapClick: distance " + "" + distance(MarkerPoints.get(0).latitude, MarkerPoints.get(0).longitude, MarkerPoints.get(1).latitude, MarkerPoints.get(1).longitude));
-                                // Getting URL to the Google Directions API
-                                String url = getUrl(origin, dest);
-                                Log.d("onMapClick", url.toString());
-                                FetchUrl FetchUrl = new FetchUrl();
-
-                                // Start downloading json data from Google Directions API
-                                FetchUrl.execute(url);
-                                //move map camera
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
-                                mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-                            }
-
-                        }
-
-                    });*/
                 } else {
                     gpsTracker.showSettingsAlert();
                     Toast.makeText(activity, "Check Internet connection and gps settings", Toast.LENGTH_SHORT).show();
@@ -334,12 +284,12 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
         //stop location updates
         if (mGoogleApiClient != null) {

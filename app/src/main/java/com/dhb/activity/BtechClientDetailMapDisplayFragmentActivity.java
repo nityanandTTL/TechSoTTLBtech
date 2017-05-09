@@ -14,7 +14,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -24,10 +27,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
-import com.dhb.models.api.request.HubStartRequestModel;
 import com.dhb.models.api.request.OlcStartRequestModel;
 import com.dhb.models.data.BtechClientsModel;
-import com.dhb.models.data.HUBBTechModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -195,6 +196,7 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
                     String url = getUrl(currentLocation, destTempLocation);
                     MarkerOptions options = new MarkerOptions();
                     options.position(destTempLocation);
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                     mMap.addMarker(options);
                     Log.d("onMapClick", url.toString());
                     FetchUrl FetchUrl = new FetchUrl();
@@ -292,12 +294,12 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
         //stop location updates
         if (mGoogleApiClient != null) {
@@ -559,10 +561,16 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show();
+            /*    Bundle bundle = new Bundle();
+                bundle.putParcelable(BundleConstants.BTECH_CLIENTS_MODEL, btechClientsModel);
+                OlcMasterBarcodeFragment olcMasterBarcodeFragment = new OlcMasterBarcodeFragment();
+                olcMasterBarcodeFragment.setArguments(bundle);
+                pushFragments(OlcMasterBarcodeFragment.newInstance(),false,false,OlcMasterBarcodeFragment.TAG_FRAGMENT,R.id.content_home_screen,TAG_FRAGMENT);*/
                 Intent intentResult = new Intent();
                 intentResult.putExtra(BundleConstants.BTECH_CLIENTS_MODEL, btechClientsModel);
-                setResult(BundleConstants.BMD_ARRIVED, intentResult);
+                setResult(BundleConstants.BCMD_ARRIVED, intentResult);
+               // startActivity(intentResult);
                 finish();
             } else {
                 Toast.makeText(activity, "error : " + json, Toast.LENGTH_SHORT).show();
@@ -591,5 +599,52 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
         public void onApiCancelled() {
             Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
+    }
+    public void pushFragments(Fragment fragment, boolean shouldAnimate,
+                              boolean shouldAdd, String destinationFragmetTag, int frameLayoutContainerId, String CurrentFragmentTag) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        if (shouldAnimate){
+            // ft.setCustomAnimations(R.animator.fragment_slide_left_enter,
+            // R.animator.fragment_slide_left_exit,
+            // R.animator.fragment_slide_right_enter,
+            // R.animator.fragment_slide_right_exit);
+        }
+
+        ft.replace(frameLayoutContainerId, fragment, CurrentFragmentTag);
+
+        //ft.add(R.id.fr_layout_container, fragment, TAG_FRAGMENT);
+
+        if (shouldAdd){
+			/*
+			 * here you can create named backstack for realize another logic.
+			   <<<<<<< HEAD
+			                                                                                                                                                                                                                                                                                                                                                                                                   <<<<<<< HEAD
+			                                                                                                                                                                                                                                                                                                                                                                                                           /*
+			 * here you can create named backstack for realize another logic.
+			                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> bf799f243c1bd10ee4fb953d6481aa806925783f
+			                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> 7054f2ddd15b92e9724794839f298ccd266af5f2
+			   =======
+			                                                                                                                                                                                                                                                                                                                                                                                                                                                   <<<<<<< HEAD
+			                                                                                                                                                                                                                                                                                                                                                                                                                                                           /*
+			 * here you can create named backstack for realize another logic.
+			                                                                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> bf799f243c1bd10ee4fb953d6481aa806925783f
+			                                                                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> 7054f2ddd15b92e9724794839f298ccd266af5f2
+			   >>>>>>> 596a4e066e37214dd935f8db9f0f637d7af457c3
+			 * ft.addToBackStack("name of your backstack");
+			 */
+            ft.addToBackStack(destinationFragmetTag);
+        } else {
+			/*
+			 * and remove named backstack:
+			 * manager.popBackStack("name of your backstack",
+			 * FragmentManager.POP_BACK_STACK_INCLUSIVE); or remove whole:
+			 * manager.popBackStack(null,
+			 * FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			 */
+            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+
+        ft.commit();
     }
 }

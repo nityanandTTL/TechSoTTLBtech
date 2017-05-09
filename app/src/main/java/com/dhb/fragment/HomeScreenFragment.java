@@ -98,7 +98,7 @@ public class HomeScreenFragment extends AbstractFragment {
         imgOLCPickup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(OlcMasterBarcodeFragment.newInstance(),false,false,OlcMasterBarcodeFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(BtechClientsListFragment.newInstance(),false,false,BtechClientsListFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
          /*  imgOrders.setOnClickListener(new View.OnClickListener() {

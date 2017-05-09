@@ -25,7 +25,6 @@
         </RelativeLayout>
         <TextView
             android:background="@drawable/call_icon"
-
             android:gravity="center"
             android:id="@+id/txt_call"
             android:layout_width="40dp"

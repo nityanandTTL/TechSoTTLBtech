@@ -75,6 +75,9 @@
         <activity android:name=".activity.AddEditBeneficiaryDetailsActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activity.OlcPickupActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

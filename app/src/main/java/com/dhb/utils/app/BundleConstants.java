@@ -14,8 +14,8 @@ public class BundleConstants {
     public static final int EDIT_TESTS_FINISH = 1009;
     public static final int ADD_EDIT_START = 1010;
     public static final int ADD_EDIT_FINISH = 1011;
-    public static final int BMD_START = 1012;
-    public static final int BMD_ARRIVED=1013;
+    public static final int BCMD_START = 1012;
+    public static final int BCMD_ARRIVED =1013;
 
     //Bundle Constants
     public static final String ACTIVITY = "activity";
