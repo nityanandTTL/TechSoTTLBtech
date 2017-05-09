@@ -11,10 +11,12 @@ import com.dhb.models.api.request.ChangePasswordRequestModel;
 import com.dhb.models.api.request.HubStartRequestModel;
 import com.dhb.models.api.request.LoginRequestModel;
 import com.dhb.models.api.request.MasterBarcodeMappingRequestModel;
+import com.dhb.models.api.request.OlcStartRequestModel;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
 import com.dhb.models.api.request.ResetPasswordRequestModel;
 import com.dhb.models.api.request.SelfieUploadRequestModel;
 import com.dhb.models.api.request.SetBtechAvailabilityAPIRequestModel;
+import com.dhb.models.data.BtechClientsModel;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.google.gson.Gson;
 
@@ -481,6 +483,29 @@ public class AsyncTaskForRequest {
             e.printStackTrace();
         }
         return apiCallAsyncTask;
+    }  /*
+	 * OLC Start Api Integration*/
+
+    public ApiCallAsyncTask getOlcStartRequestAsyncTask(OlcStartRequestModel olcStartRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(olcStartRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.OLCSTART);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_olc_start_please_wait));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
     }
     /*
 	 * Fetch btech collection list Api Integration*/
@@ -515,6 +540,27 @@ public class AsyncTaskForRequest {
             Log.e(AsyncTaskForRequest.class.getSimpleName(), "getFetchOrderDetailsRequestAsyncTask: " );
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BTECH_HUB_DETAILS_DISPLAY+"/"+appPreferenceManager.getLoginResponseModel().getUserID());
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetching_dispatch_to_hub_details_please_wait));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    } /*
+	 * Btech Clients List (OLC) Display Detail Api Integration*/
+
+    public ApiCallAsyncTask getBtechClientsListDetailsDisplayRequestAsyncTask() {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getBtechClientsListDetailsDisplayRequestAsyncTask: " );
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BTECH_CLIENTS_DETAILS_DISPLAY+"/"+appPreferenceManager.getLoginResponseModel().getUserID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
