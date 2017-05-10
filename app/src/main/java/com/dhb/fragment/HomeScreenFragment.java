@@ -101,13 +101,13 @@ public class HomeScreenFragment extends AbstractFragment {
                 pushFragments(BtechClientsListFragment.newInstance(),false,false,BtechClientsListFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
-         /*  imgOrders.setOnClickListener(new View.OnClickListener() {
+         imgCamp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(CampListDisplayFragment.newInstance(),false,false,CampListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
-        imgOrders.setOnClickListener(new View.OnClickListener() {
+        /*  imgOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
