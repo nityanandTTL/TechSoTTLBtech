@@ -16,6 +16,7 @@
     <color name="contentBadgeTitle">#a9a9a9</color>
     <color name="titleBadgeTitle">#adafb1</color>
     <color name="titleBadgeText">#adafb1</color>
+    <color name="calender_text">#444444</color>
     <color name="mainTextColor">#343d43</color>
     <color name="btnRequest">#ffbf12</color>
     <color name="sample_type_edta">#CC66CC</color>
