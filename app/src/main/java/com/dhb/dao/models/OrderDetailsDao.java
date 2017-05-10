@@ -288,6 +288,8 @@ public class OrderDetailsDao {
 		String query = "DELETE FROM " + TABLE_NAME + " WHERE " + ORDER_NO + " = ?";
 		Logger.debug("Query - " + query);
 		String[] whereParams = new String[]{orderNo};
+		BeneficiaryDetailsDao dao = new BeneficiaryDetailsDao(db);
+		dao.deleteByOrderNo(orderNo);
 		Cursor cursor = this.db.rawQuery(query, whereParams);
 		if (cursor != null && !cursor.isClosed()){
 			cursor.close();
@@ -305,7 +307,17 @@ public class OrderDetailsDao {
 				if(!InputUtils.isNull(visitId)) {
 					ArrayList<OrderDetailsModel> orderDetailsModelsArr = new ArrayList<>();
 					orderDetailsModelsArr = getModelsFromVisitId(visitId);
-					if (orderDetailsModelsArr != null && orderDetailsModelsArr.size() > 0) {
+					ArrayList<OrderDetailsModel> orderDetailsModels = orderDetailsModelsArr;
+					for (OrderDetailsModel orderDetailsModel :
+							orderDetailsModels) {
+						if (orderDetailsModel.getStatus().equalsIgnoreCase("RESCHEDULED")
+								||orderDetailsModel.getStatus().equalsIgnoreCase("RELEASED")
+								|| orderDetailsModel.getStatus().equalsIgnoreCase("CANCELLED")) {
+							orderDetailsModelsArr.remove(orderDetailsModel);
+							deleteByOrderNo(orderDetailsModel.getOrderNo());
+						}
+					}
+					if (orderDetailsModelsArr.size() > 0) {
 						OrderVisitDetailsModel orderVisitDetailsModel = new OrderVisitDetailsModel();
 						orderVisitDetailsModel.setResponse(orderDetailsModelsArr.get(0).getResponse());
 						orderVisitDetailsModel.setSlot(orderDetailsModelsArr.get(0).getSlot());

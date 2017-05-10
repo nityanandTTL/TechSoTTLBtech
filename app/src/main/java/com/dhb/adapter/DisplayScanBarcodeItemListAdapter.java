@@ -1,5 +1,6 @@
 package com.dhb.adapter;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dhb.R;
-import com.dhb.activity.OrderBookingActivity;
 import com.dhb.delegate.ScanBarcodeIconClickedDelegate;
 import com.dhb.models.data.BarcodeDetailsModel;
 import com.dhb.utils.app.InputUtils;
@@ -20,12 +20,12 @@ import java.util.ArrayList;
  * Created by ISRO on 5/2/2017.
  */
 public class DisplayScanBarcodeItemListAdapter extends BaseAdapter{
-    private OrderBookingActivity activity;
+    private Activity activity;
     private ArrayList<BarcodeDetailsModel> barcodeDetailsArr;
     private ScanBarcodeIconClickedDelegate scanBarcodeIconClickedDelegate;
     private LayoutInflater layoutInflater;
 
-    public DisplayScanBarcodeItemListAdapter(OrderBookingActivity activity, ArrayList<BarcodeDetailsModel> barcodeDetailsArr, ScanBarcodeIconClickedDelegate scanBarcodeIconClickedDelegate) {
+    public DisplayScanBarcodeItemListAdapter(Activity activity, ArrayList<BarcodeDetailsModel> barcodeDetailsArr, ScanBarcodeIconClickedDelegate scanBarcodeIconClickedDelegate) {
         this.activity = activity;
         this.barcodeDetailsArr = barcodeDetailsArr;
         this.scanBarcodeIconClickedDelegate = scanBarcodeIconClickedDelegate;

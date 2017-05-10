@@ -93,6 +93,7 @@ public class EditTestListActivity extends AbstractActivity{
                         public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
                             Logger.error("check changed");
                             selectedTestsList = selectedTests;
+                            expAdapter.notifyDataSetChanged();
                         }
                     });
                     expandList.setAdapter(expAdapter);
@@ -178,10 +179,10 @@ public class EditTestListActivity extends AbstractActivity{
                         if(j!=i){
                             TestRateMasterModel tt2 = new TestRateMasterModel();
                             tt2 = selTests.get(j);
-                            if(tt2!=null && !tt2.getTestType().equalsIgnoreCase("TEST") && tt2.getChldtests().size()>0){
+                            if(tt2!=null && !tt2.getTestType().equalsIgnoreCase("TEST") && tt2.getChldtests()!=null && tt2.getChldtests().size()>0){
                                 for (ChildTestsModel c:
                                      tt2.getChldtests()) {
-                                    if(c.getChildTestCode().equalsIgnoreCase(ttCode)){
+                                    if(c.getChildTestCode()!=null && c.getChildTestCode().equalsIgnoreCase(ttCode)){
                                         selectedTestsList.remove(tt);
                                         k++;
                                     }

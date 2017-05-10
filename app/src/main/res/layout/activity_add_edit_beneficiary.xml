@@ -183,7 +183,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
             <RelativeLayout
+                android:layout_marginBottom="20dp"
+                android:id="@+id/order_details_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -194,7 +197,7 @@
                 <RelativeLayout
                     android:id="@+id/rl_left_marker"
                     android:layout_width="5dp"
-                    android:layout_height="350dp"
+                    android:layout_height="385dp"
                     android:background="@color/colorSecondary">
 
                 </RelativeLayout>
@@ -204,51 +207,56 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_toEndOf="@id/rl_left_marker"
-                    android:layout_toRightOf="@id/rl_left_marker"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:gravity="center"
+                        android:gravity="start"
                         android:minEms="5"
-                        android:padding="10dp"
+                        android:padding="@dimen/dp_10"
                         android:text="Tests:"
                         android:textSize="18sp" />
 
-                    <EditText
+                    <TextView
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:ellipsize="marquee"
+                        android:scrollHorizontally="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:freezesText="true"
+                        android:hint="Click to view tests list"
                         android:singleLine="true"
-                        android:id="@+id/edt_add_test"
+                        android:id="@+id/edt_test"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:background="@android:drawable/edit_text"
-                        android:drawableEnd="@android:drawable/ic_menu_add"
-                        android:drawableRight="@android:drawable/ic_menu_add"
-                        android:editable="false"
-                        android:minEms="10" />
+                        android:drawableEnd="@android:drawable/arrow_down_float"
+                        android:minEms="14" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/ll_barcodes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_tests"
                     android:layout_marginTop="10dp"
-                    android:layout_toEndOf="@id/rl_left_marker"
-                    android:layout_toRightOf="@id/rl_left_marker"
                     android:orientation="horizontal">
+
                 </LinearLayout>
+
                 <LinearLayout
+                    android:gravity="start"
                     android:id="@+id/ll_vhc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_barcodes"
                     android:layout_marginTop="10dp"
-                    android:layout_toEndOf="@+id/rl_left_marker"
-                    android:layout_toRightOf="@+id/rl_left_marker"
                     android:orientation="horizontal">
 
                     <TextView
@@ -256,12 +264,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="50dp"
-                        android:gravity="center"
-                        android:padding="5dp"
+                        android:gravity="start"
+                        android:padding="@dimen/dp_10"
                         android:text="Venipuncture: " />
 
                     <ImageView
+                        android:layout_gravity="center"
                         android:id="@+id/img_venipuncture"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
@@ -271,12 +279,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="Hard Copy: " />
 
                     <ImageView
+                        android:layout_gravity="center"
                         android:id="@+id/hard_copy_check"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
@@ -287,16 +296,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_vhc"
-                    android:layout_marginTop="10dp"
                     android:layout_toEndOf="@+id/rl_left_marker"
                     android:layout_toRightOf="@+id/rl_left_marker"
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:layout_marginTop="@dimen/dp_10"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="10dp">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/clinical_history_text"
@@ -304,24 +312,74 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:minEms="5"
-                            android:padding="10dp"
+                            android:padding="@dimen/dp_10"
                             android:text="Clinical History:"
                             android:textSize="16sp" />
 
-                        <EditText
-                            android:editable="false"
+                        <TextView
+                            android:drawableEnd="@android:drawable/arrow_down_float"
+                            android:hint="Select Clinical History"
                             android:id="@+id/edt_clinical_history"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:background="@android:drawable/edit_text"
-                            android:inputType="textCapSentences|textMultiLine"
+                            android:ellipsize="marquee"
+                            android:scrollHorizontally="true"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:freezesText="true"
+                            android:textSize="14sp"
+                            android:gravity="center"
                             android:minEms="10"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:paddingRight="@dimen/dp_5"/>
                     </LinearLayout>
 
                     <LinearLayout
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+
+                        <TextView
+                            android:id="@+id/lab_alerts_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:minEms="5"
+                            android:padding="@dimen/dp_10"
+                            android:text="Lab Alerts:"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:drawableEnd="@android:drawable/arrow_down_float"
+                            android:hint="Select Lab Alerts"
+                            android:editable="false"
+                            android:id="@+id/edt_lab_alerts"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@android:drawable/edit_text"
+                            android:ellipsize="marquee"
+                            android:scrollHorizontally="true"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:freezesText="true"
+                            android:textSize="14sp"
+                            android:gravity="center"
+                            android:minEms="13"
+                            android:singleLine="true"
+                            android:paddingRight="@dimen/dp_5"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_marginBottom="@dimen/dp_10"
+                        android:layout_marginTop="@dimen/dp_10"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -333,10 +391,11 @@
                             android:gravity="center"
                             android:minEms="5"
                             android:padding="@dimen/dp_10"
-                            android:text="Sign:"
+                            android:text="Remarks:"
                             android:textSize="16sp" />
 
                         <EditText
+                            android:hint="Enter Remarks"
                             android:id="@+id/edt_customer_sign"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -345,7 +404,9 @@
                             android:inputType="textCapSentences|textMultiLine"
                             android:maxLength="2000"
                             android:maxLines="4"
-                            android:minEms="10" />
+                            android:minLines="2"
+                            android:minEms="11"
+                            android:paddingRight="@dimen/dp_5"/>
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>

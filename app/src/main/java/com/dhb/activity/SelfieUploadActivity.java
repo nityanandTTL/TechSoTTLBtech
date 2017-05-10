@@ -262,8 +262,10 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 if (selfieUploadResponseModel != null) {
                     Calendar c = Calendar.getInstance();
                     selfieUploadResponseModel.setTimeUploaded(c.getTimeInMillis());
+                    selfieUploadResponseModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
+                    selfieUploadResponseModel.setPic(encodedProImg);
                     appPreferenceManager.setSelfieResponseModel(selfieUploadResponseModel);
-                    Toast.makeText(getApplicationContext(),+selfieUploadResponseModel.getFlag()+"",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),+selfieUploadResponseModel.getFlag()+"",Toast.LENGTH_SHORT).show();
                     leaveFlag = selfieUploadResponseModel.getFlag();
                     callMasterSync();
                 }
@@ -449,7 +451,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         if (syncBarProgressDialog == null) {
             syncBarProgressDialog = new ProgressDialog(activity);
             syncBarProgressDialog.setTitle("Please wait");
-            syncBarProgressDialog.setMessage("Updating Test Menu\n\nThis may take few minutes for first time");
+            syncBarProgressDialog.setMessage(getResources().getString(R.string.progress_message_fetching_brand_master_please_wait));
             syncBarProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             syncBarProgressDialog.setProgress(0);
 //			syncBarProgressDialog.setMax(100);
@@ -460,7 +462,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     public void setSyncProgressDialogTypeToHorizontalOrSpinner(boolean isHorizontalMode) {
         if (isHorizontalMode) {
             syncBarProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            syncBarProgressDialog.setMessage("Updating Test Menu \n\nThis may take few minutes for first time");
+            syncBarProgressDialog.setMessage(getResources().getString(R.string.progress_message_fetching_test_master_please_wait));
         } else {
             syncBarProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }

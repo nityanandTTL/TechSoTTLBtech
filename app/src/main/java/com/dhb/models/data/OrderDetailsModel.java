@@ -319,4 +319,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     public void setStatus(String status) {
         Status = status;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof OrderDetailsModel){
+            if(((OrderDetailsModel) obj).getOrderNo().equals(getOrderNo())){
+                return true;
+            }
+        }
+        return false;
+    }
 }

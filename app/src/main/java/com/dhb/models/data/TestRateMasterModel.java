@@ -225,7 +225,7 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
             int commonChildsSize = 0;
             for (ChildTestsModel tc : tt.getChldtests()) {
                 for (ChildTestsModel tChild : getChldtests()) {
-                    if (tc.getChildTestCode().equalsIgnoreCase(tChild.getChildTestCode())) {
+                    if (tc.getChildTestCode()!=null && tc.getChildTestCode().equalsIgnoreCase(tChild.getChildTestCode())) {
                         commonChildsSize++;
                     }
                 }
