@@ -21,6 +21,7 @@ import com.dhb.models.api.response.SelfieUploadResponseModel;
 import com.dhb.models.api.response.SessionExpireModel;
 import com.dhb.models.data.BrandMasterModel;
 import com.dhb.models.data.BrandTestMasterModel;
+import com.dhb.models.data.CampListDisplayResponseModel;
 import com.dhb.models.data.DepositRegisterModel;
 import com.dhb.models.data.EarningRegisterModel;
 import com.dhb.models.data.LeaveNatureMasterModel;
@@ -696,6 +697,13 @@ public class ResponseParser implements AppConstants {
 		btechClientsResponseModel = gson.fromJson(json, BtechClientsResponseModel.class);
 		//}
 		return btechClientsResponseModel;
+	}//Camp details Response parse:
+	public CampListDisplayResponseModel getCampDetailResponseModel(String json, int statusCode) {
+		CampListDisplayResponseModel campDetailsResponseModel = null;
+		//if (!parseIntoError(json, statusCode)){
+		campDetailsResponseModel = gson.fromJson(json, CampListDisplayResponseModel.class);
+		//}
+		return campDetailsResponseModel;
 	}
 	//btech collections  details Response parse:
 	public BtechCollectionsResponseModel getBtechCollectionsDetailsResponseModel(String json, int statusCode) {

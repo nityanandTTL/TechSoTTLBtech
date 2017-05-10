@@ -22,7 +22,7 @@
             <RelativeLayout
                 android:id="@+id/benf_number_queue"
                 android:layout_width="match_parent"
-                android:layout_height="145dp"
+                android:layout_height="100dp"
                 android:layout_weight="3"
                 android:background="@color/bgTitleRight"
                 android:gravity="center_horizontal"
@@ -113,7 +113,8 @@
                         android:inputType="number"
                         android:singleLine="true"
                         android:textColor="@android:color/darker_gray"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:maxLength="3"/>
 
                     <ImageView
                         android:id="@+id/img_male"
@@ -151,7 +152,8 @@
                     android:layout_below="@+id/title_to_address"
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="5dp"
-                    android:src="@drawable/aadhar_icon" />
+                    android:src="@drawable/aadhar_icon"
+                    android:visibility="gone"/>
 
                 <EditText
                     android:id="@+id/title_aadhar_no"
@@ -167,7 +169,8 @@
                     android:paddingTop="5dp"
                     android:maxLines="1"
                     android:textColor="@android:color/darker_gray"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:visibility="gone"/>
             </RelativeLayout>
         </LinearLayout>
 
@@ -415,12 +418,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_5"
                 android:layout_marginTop="@dimen/dp_5"
                 android:background="@drawable/purple_btn_bg"
                 android:gravity="center"
                 android:minEms="8"
-                android:padding="@dimen/dp_10"
+                android:padding="@dimen/dp_5"
                 android:text="Save"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
