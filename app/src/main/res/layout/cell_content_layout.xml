@@ -222,8 +222,8 @@
                 android:layout_height="wrap_content">
                 <ImageView
                     android:src="@drawable/location_icon"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
                     android:contentDescription="@string/estimated_distance" />
                 <TextView
                     android:text="@string/dummy_address"
@@ -241,8 +241,8 @@
                 android:layout_height="wrap_content">
                 <ImageView
                     android:src="@drawable/location_track_icon"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
                     android:contentDescription="@string/estimated_distance" />
                 <TextView
                     android:text="3 KM"
@@ -260,8 +260,8 @@
                 android:layout_height="wrap_content">
                 <ImageView
                     android:src="@drawable/kit_icon"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
                     android:contentDescription="@string/estimated_distance" />
                 <TextView
                     android:text="10 BSV"

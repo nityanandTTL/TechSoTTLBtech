@@ -106,7 +106,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 isAvailable = false;
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setMessage("Are you sure that you are not available tomorrow ?")
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
                                 SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
@@ -136,7 +136,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                                 }
                             }
                         })
-                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();

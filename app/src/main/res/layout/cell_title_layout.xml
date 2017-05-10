@@ -76,13 +76,18 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/title_from_to_dots"
             android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
             android:fadingEdge="horizontal"
             android:gravity="center"
             android:singleLine="true"
             android:text="Rehan Khan"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:freezesText="true"/>
 
         <TextView
             android:id="@+id/txt_age"
