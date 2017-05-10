@@ -8,6 +8,33 @@ public class SelfieUploadResponseModel {
     private String BtechId;
     private String Pic;
     private long timeUploaded;
+    private int Flag;
+    private String FromDate;
+    private String ToDate;
+
+    public int getFlag() {
+        return Flag;
+    }
+
+    public void setFlag(int flag) {
+        Flag = flag;
+    }
+
+    public String getFromDate() {
+        return FromDate;
+    }
+
+    public void setFromDate(String fromDate) {
+        FromDate = fromDate;
+    }
+
+    public String getToDate() {
+        return ToDate;
+    }
+
+    public void setToDate(String toDate) {
+        ToDate = toDate;
+    }
 
     public String getBtechId() {
         return BtechId;

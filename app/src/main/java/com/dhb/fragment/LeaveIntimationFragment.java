@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,20 +31,24 @@ import com.dhb.utils.app.AppPreferenceManager;
 
 import org.json.JSONException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class leaveIntimationFragment extends AbstractFragment {
+public class LeaveIntimationFragment extends AbstractFragment {
 
     public static final String TAG_FRAGMENT = "LEAVE_INTIMATION_FRAGMENT";
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
     TextView fromdate, todate, leavetype, leaveremark, days;
     int daysdiff;
-
+    String defdate;
     Button Applyleave;
+    RadioButton one,more;
+    RadioGroup group;
 
     private int mYear, mMonth, mDay;
     private View rootView;
@@ -51,12 +57,12 @@ public class leaveIntimationFragment extends AbstractFragment {
     private LeaveNatureMasterModel leaveNatureModel;
     private ArrayList<String> Nature;
 
-    public leaveIntimationFragment() {
+    public LeaveIntimationFragment() {
         // Required empty public constructor
     }
 
-    public static leaveIntimationFragment newInstance() {
-        leaveIntimationFragment fragment = new leaveIntimationFragment();
+    public static LeaveIntimationFragment newInstance() {
+        LeaveIntimationFragment fragment = new LeaveIntimationFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -67,9 +73,7 @@ public class leaveIntimationFragment extends AbstractFragment {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
         appPreferenceManager = new AppPreferenceManager(activity);
-        if (getArguments() != null) {
 
-        }
     }
 
     @Override
@@ -79,8 +83,12 @@ public class leaveIntimationFragment extends AbstractFragment {
         rootView = inflater.inflate(R.layout.activity_leave_intimation, container, false);
         fromDt = Calendar.getInstance();
         toDt = Calendar.getInstance();
+
         initUI();
         setListners();
+        defdate = getCalculatedDate("yyyy-MM-dd", 1);
+        fromdate.setText(defdate);
+        todate.setText(defdate);
         fetchLeaveDetails();
 
         return rootView;
@@ -88,6 +96,10 @@ public class leaveIntimationFragment extends AbstractFragment {
 
 
     private void setListners() {
+
+
+
+
 
         fromdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +121,7 @@ public class leaveIntimationFragment extends AbstractFragment {
 
                                 fromdate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                                 fromDt.set(year,monthOfYear,dayOfMonth,0,0,0);
-                                }
+                            }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
 
@@ -151,7 +163,7 @@ public class leaveIntimationFragment extends AbstractFragment {
         Applyleave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              long diff;
+                long diff;
 
 
                 ApplyLeaveRequestModel applyLeaveRequestModel = new ApplyLeaveRequestModel();
@@ -180,7 +192,7 @@ public class leaveIntimationFragment extends AbstractFragment {
 
                 AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
                 ApiCallAsyncTask setApplyLeaveDetailApiAsyncTask = asyncTaskForRequest.getPostApplyLeaveRequestAsyncTask(applyLeaveRequestModel);
-                setApplyLeaveDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new setApplyLeaveDetailsApiAsyncTaskDelegateResult());
+                setApplyLeaveDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new LeaveIntimationFragment.setApplyLeaveDetailsApiAsyncTaskDelegateResult());
                 if (isNetworkAvailable(activity)) {
                     setApplyLeaveDetailApiAsyncTask.execute(setApplyLeaveDetailApiAsyncTask);
                 } else {
@@ -195,7 +207,7 @@ public class leaveIntimationFragment extends AbstractFragment {
         Logger.error(TAG_FRAGMENT + "--fetchData: ");
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         ApiCallAsyncTask fetchLeaveDetailApiAsyncTask = asyncTaskForRequest.getLeaveDetailsRequestAsyncTask();
-        fetchLeaveDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchLeaveDetailsApiAsyncTaskDelegateResult());
+        fetchLeaveDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new LeaveIntimationFragment.FetchLeaveDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
             fetchLeaveDetailApiAsyncTask.execute(fetchLeaveDetailApiAsyncTask);
         } else {
@@ -289,7 +301,34 @@ public class leaveIntimationFragment extends AbstractFragment {
             }
         });
 
+        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                RadioButton checkedRadioButton = (RadioButton) rootView.findViewById(checkedId);
+                String text  = checkedRadioButton.getText().toString();
+
+                if (more.isChecked()){
+
+                    todate.setVisibility(View.VISIBLE);
+                    Toast.makeText(getActivity(),text,LENGTH_SHORT).show();
+                }
+                else
+                {
+                    todate.setVisibility(View.INVISIBLE);
+                }
+
+
+            }
+        });
+    }
+    public static String getCalculatedDate(String dateFormat, int days) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat s = new SimpleDateFormat(dateFormat);
+        cal.add(Calendar.DAY_OF_YEAR, days);
+        String previous_date = s.format(new Date(cal.getTimeInMillis()));
+        return previous_date;
 
     }
 
@@ -301,7 +340,12 @@ public class leaveIntimationFragment extends AbstractFragment {
         Applyleave = (Button) rootView.findViewById(R.id.btn_leave_apply);
         leavetype = (EditText) rootView.findViewById(R.id.et_leave_type);
         leaveremark = (EditText) rootView.findViewById(R.id.et_leave_days_remark);
-        days = (TextView) rootView.findViewById(R.id.et_leave_days_value);
+        one=(RadioButton) rootView.findViewById(R.id.radio_pirates);
+        more=(RadioButton) rootView.findViewById(R.id.radio_ninjas);
+        group=(RadioGroup) rootView.findViewById(R.id.group);
+
+        /*String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String defdate = (today).toString();*/
 
 
     }

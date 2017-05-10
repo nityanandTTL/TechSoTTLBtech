@@ -2,16 +2,40 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent" android:weightSum="6">
 
-<ScrollView
-    android:id="@+id/sv_materialorder_list"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="5">
-    <TableLayout
-        android:id="@+id/materialordertable"
+    <ScrollView
+        android:id="@+id/sv_materialorder_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5">
+        <TableLayout
+            android:id="@+id/materialordertable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_2">
+
+
+        </TableLayout>
+
+
+    </ScrollView>
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dp_2">
-    </TableLayout>
-</ScrollView>
+        android:weightSum="5">
+        <EditText
+            android:id="@+id/searchbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:hint="Search"
+            android:visibility="invisible"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btnFloatingAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_weight="1"></android.support.design.widget.FloatingActionButton>
     </LinearLayout>
+</LinearLayout>
