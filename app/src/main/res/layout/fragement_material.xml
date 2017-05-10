@@ -29,11 +29,12 @@
             android:id="@+id/updateRecord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_button"
+            android:background="@drawable/purple_btn_bg"
             android:text="Update Stock"
             android:textAlignment="center"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:minEms="8"/>
     </LinearLayout>
 
     <LinearLayout

@@ -28,6 +28,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private ArrayList<BeneficiaryDetailsModel> benMaster;
     private String VisitId;
     private String Slot;
+
     private String Response;
     private int SlotId;
     private int Distance;
@@ -36,6 +37,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private String Status;
 
     private ArrayList<KitsCountModel> kits;
+
+
 
     public OrderDetailsModel() {
         super();

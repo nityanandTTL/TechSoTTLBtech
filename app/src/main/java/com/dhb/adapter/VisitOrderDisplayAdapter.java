@@ -87,6 +87,16 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             initData(holder,pos);
             }
         });
+        if(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")){
+            holder.imgCBAccept.setVisibility(View.VISIBLE);
+            holder.imgCBAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    visitOrderDisplayRecyclerViewAdapterDelegate.onOrderAccepted(orderVisitDetailsModelsArr.get(pos));
+                }
+            });
+        }
+
     }
 
     private void initData(final FoldingCellViewHolder holder, final int pos) {
@@ -116,6 +126,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
     private class FoldingCellViewHolder{
         TextView tvSrNo, tvName, tvAge, tvAadharNo,txtAddress,txtDistance,txtKits;
+        ImageView imgCBAccept;
         TextView txtSrNo, txtName,txtAge,txtAadharNo;
         ImageView imgRelease;
         Button btnStartNavigation;
@@ -140,6 +151,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             txtKits = (TextView) itemView.findViewById(R.id.txt_num_kits);
             imgRelease = (ImageView) itemView.findViewById(R.id.img_release);
             btnStartNavigation = (Button) itemView.findViewById(R.id.btn_start_navigation);
+            imgCBAccept = (ImageView) itemView.findViewById(R.id.img_oas);
         }
     }
 

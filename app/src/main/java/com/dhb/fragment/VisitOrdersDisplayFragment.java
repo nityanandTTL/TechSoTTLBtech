@@ -194,6 +194,22 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             intentNavigate.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL,orderVisitDetailsModel);
             startActivityForResult(intentNavigate,BundleConstants.VOMD_START);
         }
+
+        @Override
+        public void onOrderAccepted(OrderVisitDetailsModel orderVisitDetailsModel) {
+            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
+            orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId()+"");
+            orderStatusChangeRequestModel.setRemarks("");
+            orderStatusChangeRequestModel.setStatus(8);
+            ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
+            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeConfirmedApiAsyncTaskDelegateResult(orderVisitDetailsModel));
+            if (isNetworkAvailable(activity)) {
+                orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
@@ -241,6 +257,34 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 Toast.makeText(activity, "Order Released Successfully", Toast.LENGTH_SHORT).show();
                 OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
                 orderDetailsDao.deleteByVisitId(orderVisitDetailsModel.getVisitId());
+                initData();
+            }else {
+                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class OrderStatusChangeConfirmedApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        OrderVisitDetailsModel orderVisitDetailsModel;
+        public OrderStatusChangeConfirmedApiAsyncTaskDelegateResult(OrderVisitDetailsModel orderVisitDetailsModel) {
+            this.orderVisitDetailsModel = orderVisitDetailsModel;
+        }
+
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 204||statusCode==200) {
+                Toast.makeText(activity, "Order Accepted Successfully", Toast.LENGTH_SHORT).show();
+                OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
+                for (OrderDetailsModel orderDetailsModel :
+                        orderVisitDetailsModel.getAllOrderdetails()) {
+                    orderDetailsModel.setStatus("CONFIRMED");
+                    orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                }
                 initData();
             }else {
                 Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();

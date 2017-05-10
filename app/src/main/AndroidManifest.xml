@@ -56,6 +56,10 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
+            android:name=".activity.BtechClientDetailMapDisplayFragmentActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
             android:name=".activity.OrderBookingActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"/>
@@ -69,6 +73,9 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".activity.AddEditBeneficiaryDetailsActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activity.OlcPickupActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"/>
 
