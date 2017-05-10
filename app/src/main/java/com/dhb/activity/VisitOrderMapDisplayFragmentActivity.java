@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -58,6 +60,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
 
@@ -79,7 +82,7 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
     private ImageView imgRelease,imgDistance;
     private TextView txtDistance;
     private TextView txtAddress;
-
+    private String  address;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +93,7 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         orderVisitDetailsModel = bundle.getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
         initUI();
         initData();
+        address= getAddress(Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()),Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude()));
         setListeners();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -161,11 +165,32 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
                         // for ActivityCompat#requestPermissions for more details.
                         return;
                     }
+                    MarkerPoints.add(currentLocation);
+                    Logger.error("orderVisitDetailsModel lat"+orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()+"long "+orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude());
+                    double lat= Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
+                    double longitude= Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude());
+                    LatLng destTempLocation = new LatLng(lat, longitude);
+                    MarkerOptions options = new MarkerOptions();
+                    options.position(destTempLocation);
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    mMap.addMarker(options);
+                    // mMap.addMarker(new MarkerOptions().position(destTempLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_24dp)));
+                    LatLng dest = destTempLocation;
+                    LatLng origin = currentLocation;
+                    String url = getUrl(origin, dest);
+                    Log.d("onMapClick", url.toString());
+                    FetchUrl FetchUrl = new FetchUrl();
+
+                    // Start downloading json data from Google Directions API
+                    FetchUrl.execute(url);
+                    //move map camera
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
                     Log.e(TAG_FRAGMENT, "onMapReady: ");
                     //    moveToCurrentLocation(currentLocation);
                     //=====================
-                    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                /*    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                         @Override
                         public void onMapClick(LatLng point) {
                             // Already two locations
@@ -178,9 +203,9 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
                             MarkerOptions options = new MarkerOptions();
                             options.position(point);
 
-                            /**
+                            *//**
                              * For the start location, the color of marker is GREEN and
-                             * for the end location, the color of marker is RED.*/
+                             * for the end location, the color of marker is RED.*//*
 
                             if (MarkerPoints.size() == 1) {
                                 options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
@@ -214,7 +239,7 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
 
                         }
 
-                    });
+                    });*/
                 } else {
                     gpsTracker.showSettingsAlert();
                     Toast.makeText(activity, "Check Internet connection and gps settings", Toast.LENGTH_SHORT).show();
@@ -223,7 +248,22 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         });
         btn_arrived.setVisibility(View.GONE);
     }
+    private String getAddress(double latitude, double longitude) {
+        StringBuilder result = new StringBuilder();
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0) {
+                Address address = addresses.get(0);
+                result.append(address.getLocality()).append("\n");
+                result.append(address.getCountryName());
+            }
+        } catch (IOException e) {
+            Log.e("tag", e.getMessage());
+        }
 
+        return result.toString();
+    }
     private String getUrl(LatLng origin, LatLng dest) {
         // Origin of route
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
@@ -313,12 +353,12 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
         //stop location updates
         if (mGoogleApiClient != null) {
@@ -370,8 +410,7 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
                 intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL,orderVisitDetailsModel);
                 setResult(BundleConstants.VOMD_ARRIVED,intent);
                 finish();
-//                pushFragments(BeneficiaryFragment.newInstance(orderVisitDetailsModel),false,false,BeneficiaryFragment.TAG_FRAGMENT, R.id.fl_homeScreen,TAG);
-                
+
             } else {
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }

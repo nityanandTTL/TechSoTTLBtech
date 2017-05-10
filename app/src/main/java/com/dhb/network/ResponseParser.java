@@ -5,6 +5,7 @@ import android.content.Context;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dhb.models.api.response.BtechClientsResponseModel;
 import com.dhb.models.api.response.BtechCollectionsResponseModel;
 import com.dhb.models.api.response.BusinessErrorModel;
 import com.dhb.models.api.response.DispatchHubDisplayDetailsResponseModel;
@@ -688,6 +689,13 @@ public class ResponseParser implements AppConstants {
 		dispatchHubDisplayDetailsResponseModel = gson.fromJson(json, DispatchHubDisplayDetailsResponseModel.class);
 		//}
 		return dispatchHubDisplayDetailsResponseModel;
+	}//Btech Clients  details Response parse:
+	public BtechClientsResponseModel getBtechClientsResponseModel(String json, int statusCode) {
+		BtechClientsResponseModel btechClientsResponseModel = null;
+		//if (!parseIntoError(json, statusCode)){
+		btechClientsResponseModel = gson.fromJson(json, BtechClientsResponseModel.class);
+		//}
+		return btechClientsResponseModel;
 	}
 	//btech collections  details Response parse:
 	public BtechCollectionsResponseModel getBtechCollectionsDetailsResponseModel(String json, int statusCode) {

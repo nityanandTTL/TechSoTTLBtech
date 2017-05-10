@@ -15,7 +15,8 @@
             tools:context=".activity.VisitOrderMapDisplayFragmentActivity" />
     </RelativeLayout>
 
-    <include layout="@layout/cell_title_layout" />
+    <include
+        android:id="@+id/il_cell_title" layout="@layout/cell_title_layout" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,8 +43,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="@dimen/dp_40"
-                    android:layout_height="@dimen/dp_40"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
                     android:layout_gravity="center"
                     android:src="@drawable/call_w_bg" />
 
@@ -68,8 +69,9 @@
                 android:background="@drawable/footer_bg">
 
                 <ImageView
-                    android:layout_width="@dimen/dp_40"
-                    android:layout_height="@dimen/dp_40"
+                    android:id="@+id/imageView"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
                     android:layout_gravity="center"
                     android:src="@drawable/home_w_bg" />
 
@@ -91,21 +93,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:gravity="right"
+            android:gravity="center"
             android:orientation="horizontal"
             android:padding="@dimen/dp_10">
 
             <Button
                 android:id="@+id/btn_arrived"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_75"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
-                android:layout_alignParentRight="true"
-
                 android:background="@drawable/purple_btn_bg"
                 android:text="@string/arrive"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:visibility="gone"
+                />
 
             <Button
                 android:id="@+id/btn_startNav"
@@ -114,10 +118,11 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/purple_btn_bg"
-                android:layout_alignParentRight="true"
                 android:text="@string/start"
-
-                android:textColor="@android:color/white" />
+                android:visibility="visible"
+                android:textColor="@android:color/white"
+                android:layout_gravity="center"
+                android:gravity="center"/>
         </LinearLayout>
     </LinearLayout>
 

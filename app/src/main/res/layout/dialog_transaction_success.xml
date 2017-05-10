@@ -15,7 +15,7 @@
         android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_145"
+            android:layout_height="145dp"
             android:layout_weight="3"
             android:background="@color/bgTitleRight"
             android:gravity="center_horizontal"
@@ -49,7 +49,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/bgTitleRight"
-            android:paddingBottom="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_5"
             android:paddingEnd="@dimen/dp_10"
             android:paddingLeft="@dimen/dp_15"
             android:paddingRight="@dimen/dp_10"
@@ -222,8 +222,8 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="@dimen/dp_150"
-            android:layout_height="@dimen/dp_150"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_100"
             android:src="@drawable/transaction_fail"
             android:layout_gravity="center_vertical|center_horizontal"/>
         <TextView
