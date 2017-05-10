@@ -2,7 +2,6 @@ package com.dhb.fragment;
 
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -124,7 +123,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
 
-                                Fragment mfrFragment = new leaveIntimationFragment();
+                                Fragment mfrFragment = new LeaveIntimationFragment();
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fl_homeScreen,mfrFragment).commit();
 
                                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);

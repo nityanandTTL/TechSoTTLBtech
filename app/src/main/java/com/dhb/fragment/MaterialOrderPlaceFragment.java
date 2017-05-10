@@ -1,12 +1,14 @@
 package com.dhb.fragment;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -15,7 +17,6 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.models.api.response.MaterialINVResponseModel;
-import com.dhb.models.api.response.MaterialResponseModel;
 import com.dhb.models.data.BTMaterialsModel;
 import com.dhb.models.data.FinalMaterialModel;
 import com.dhb.models.data.MaterialDetailsModel;
@@ -31,6 +32,7 @@ import com.dhb.utils.app.InputUtils;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by E4904 on 5/3/2017.
@@ -41,11 +43,15 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
     private View rootView;
+    FloatingActionButton btnFab;
     private ArrayList<MaterialDetailsModel> materialDetailsModels;
     private MaterialINVResponseModel materialINVResponseModel;
     TableLayout materialordertable;
     private ArrayList<FinalMaterialModel> finalMaterialModelsArr;
+    private ArrayList<FinalMaterialModel> Filterarraylst ;
+    private ArrayList<FinalMaterialModel> templst;
     Integer temprate,total =0;
+    EditText searchbar;
 
     public MaterialOrderPlaceFragment() {
         // Required empty public constructor
@@ -83,19 +89,57 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
     public void initUI() {
         super.initUI();
         materialordertable = (TableLayout) rootView.findViewById(R.id.materialordertable);
+        btnFab = (FloatingActionButton) rootView.findViewById(R.id.btnFloatingAction);
+        searchbar=(EditText) rootView.findViewById(R.id.searchbar);
+
     }
 
 
     private void setListners() {
+        btnFab.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // searchbar.setVisibility(View.VISIBLE);
+                searchbar.setVisibility((searchbar.getVisibility() == View.VISIBLE)
+                        ? View.INVISIBLE: View.VISIBLE);
+
+
+            }
+        });
+
+        searchbar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                performFiltering(s.toString());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
+
+
+            }
+        });
 
     }
+
+
 
 
     private void fetchMaterialsDetails2() {
         Logger.error(TAG_FRAGMENT + "--fetchData: ");
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         ApiCallAsyncTask fetchMaterialDetailApiAsyncTask = asyncTaskForRequest.getMaterialsDetailsRequestAsyncTask();
-        fetchMaterialDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchMaterialsDetailsApiAsyncTaskDelegateResult2());
+        fetchMaterialDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new MaterialOrderPlaceFragment.FetchMaterialsDetailsApiAsyncTaskDelegateResult2());
         if (isNetworkAvailable(activity)) {
             fetchMaterialDetailApiAsyncTask.execute(fetchMaterialDetailApiAsyncTask);
         } else {
@@ -107,7 +151,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
         Logger.error(TAG_FRAGMENT + "--fetchData: ");
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         ApiCallAsyncTask fetchMaterialINVApiAsyncTask = asyncTaskForRequest.getMaterialINVDetailsRequestAsyncTask();
-        fetchMaterialINVApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchMaterialsINVApiAsyncTaskDelegateResult2());
+        fetchMaterialINVApiAsyncTask.setApiCallAsyncTaskDelegate(new MaterialOrderPlaceFragment.FetchMaterialsINVApiAsyncTaskDelegateResult2());
         if (isNetworkAvailable(activity)) {
             fetchMaterialINVApiAsyncTask.execute(fetchMaterialINVApiAsyncTask);
         } else {
@@ -158,7 +202,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
 
                 materialINVDetailsResponseModel = responseParser.getMaterialINVDetailsResponseModel(json, statusCode);
                 materialINVResponseModel = materialINVDetailsResponseModel;
-                initData();
+                fetchData();
             }
 
         }
@@ -171,10 +215,10 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
 
     }
 
-    private void initData() {
-
+    private void fetchData(){
         ArrayList<Integer> insertedMaterialIDs = new ArrayList<>();
         finalMaterialModelsArr = new ArrayList<>();
+        Filterarraylst = new ArrayList<>();
         for (MaterialDetailsModel materialDetailsModel :
                 materialDetailsModels) {
             for (BTMaterialsModel btMaterialsModel :
@@ -198,14 +242,17 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                 finalMaterialModelsArr.add(finalMaterialModel);
             }
         }
+        Filterarraylst = finalMaterialModelsArr;
+        initData();
+    }
 
-
-        if (finalMaterialModelsArr != null) {
+    private void initData() {
+        if (Filterarraylst != null) {
             TableRow trmH = (TableRow)  LayoutInflater.from(activity).inflate(R.layout.item_title_materials2, null);
             materialordertable.addView(trmH);
 
             for (final FinalMaterialModel finalMaterialModels :
-                    finalMaterialModelsArr) {
+                    Filterarraylst) {
 
 
                 EditText Quantity;
@@ -237,18 +284,37 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                     @Override
                     public void afterTextChanged(Editable s) {
                         if (!InputUtils.isNull(s.toString())) {
-                          Integer temprate= Integer.parseInt (finalMaterialModels.getMaterialDetailsModel().getUnitCost().toString());
-                           //Toast.makeText(getActivity(),finalMaterialModels.getMaterialDetailsModel().getMaterialName()+"",Toast.LENGTH_SHORT).show();
+                            Integer temprate= Integer.parseInt (finalMaterialModels.getMaterialDetailsModel().getUnitCost().toString());
+                            //Toast.makeText(getActivity(),finalMaterialModels.getMaterialDetailsModel().getMaterialName()+"",Toast.LENGTH_SHORT).show();
                             Integer total = ((temprate) * (Integer.parseInt((s).toString())));
                             Total.setText(total+"");
-                           /* Toast.makeText(getActivity(),s+"",Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getActivity(),total+"",Toast.LENGTH_SHORT).show();*/
+
                         }
                     }
                 });
-
                 materialordertable.addView(trm);
             }
         }
+    }
+
+    private void performFiltering(String constraint) {
+        String filterString = constraint.toUpperCase();
+
+        ArrayList<FinalMaterialModel> list = finalMaterialModelsArr;
+
+        int count = list.size();
+        ArrayList<FinalMaterialModel> nlist = new ArrayList<FinalMaterialModel>(count);
+
+        String filterableString;
+
+        for (int i = 0; i < count; i++){
+            filterableString = list.get(i).getMaterialDetailsModel().getMaterialName();
+            if (filterableString.toUpperCase().contains(filterString)|| InputUtils.isNull(filterString)){
+                nlist.add(list.get(i));
+            }
+        }
+        Filterarraylst = nlist;
+        materialordertable.removeAllViews();
+        initData();
     }
 }

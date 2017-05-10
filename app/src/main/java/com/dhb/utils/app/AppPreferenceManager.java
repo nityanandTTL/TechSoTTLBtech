@@ -31,6 +31,9 @@ public class AppPreferenceManager {
 	private String loginResponse="loginResponse";
 	private String btechAvailabilityResponseModel = "btechAvailabilityResponseModel";
 	private String selectedSlotsArr = "selectedSlotsArr";
+	private String leaveFlag = "leaveFlag";
+	private String leaveFromDate = "leaveFromDate";
+	private String leaveToDate = "leaveToDate";
 
 	public AppPreferenceManager(Activity activity) {
 		super();
@@ -132,6 +135,31 @@ public class AppPreferenceManager {
 	public void setTotalKits(String totalKits) {
 		appPreference.putString(this.totalKits,totalKits);
 	}
+
+
+
+	public String getLeaveFromDate() {
+		return appPreference.getString(leaveFromDate,"");
+	}
+
+	public void setLeaveFromDate(String leaveFromDate) {
+		appPreference.putString(this.leaveFromDate,leaveFromDate);
+	}
+	public String getLeaveToDate() {
+		return appPreference.getString(leaveToDate,"");
+	}
+
+	public void setLeaveToDate(String leaveToDate) {
+		appPreference.putString(this.leaveToDate,leaveToDate);
+	}
+	public int getLeaveFlag() {
+		return appPreference.getInt(leaveFlag,0);
+	}
+
+	public void setLeaveFlag(int leaveFlag) {
+		appPreference.putInt(this.leaveFlag,leaveFlag);
+	}
+
 
 	public void clearAllPreferences() {
 		boolean termsAndConditionsAccepted = appPreference.getBoolean(this.are_terms_and_conditions_accepted, false);

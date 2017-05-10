@@ -33,7 +33,14 @@
             android:layout_centerInParent="true"
             android:textColor="@android:color/white"
             android:textSize="26sp" />
-
+        <ImageView
+            android:visibility="invisible"
+            android:id="@+id/img_oas"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:src="@drawable/tick_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
