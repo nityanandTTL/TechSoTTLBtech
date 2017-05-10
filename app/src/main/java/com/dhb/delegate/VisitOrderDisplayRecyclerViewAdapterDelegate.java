@@ -8,4 +8,5 @@ import com.dhb.models.data.OrderVisitDetailsModel;
 public interface VisitOrderDisplayRecyclerViewAdapterDelegate {
     void onItemRelease(OrderVisitDetailsModel orderVisitDetailsModel);
     void onNavigationStart(OrderVisitDetailsModel orderVisitDetailsModel);
+    void onOrderAccepted(OrderVisitDetailsModel orderVisitDetailsModel);
 }
