@@ -161,8 +161,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text="Deposit"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp" />
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:background="@drawable/purple_btn_bg"
+                android:minEms="8"/>
 
             <TextView
                 android:layout_width="match_parent"

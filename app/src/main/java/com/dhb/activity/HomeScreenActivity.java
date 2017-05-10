@@ -22,6 +22,8 @@ import com.dhb.customview.RoundedImageView;
 import com.dhb.dao.DhbDao;
 import com.dhb.fragment.HomeScreenFragment;
 import com.dhb.fragment.ResetPasswordFragment;
+import com.dhb.fragment.VisitOrdersDisplayFragment;
+import com.dhb.fragment.LeaveIntimationFragment;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -55,8 +57,14 @@ public class HomeScreenActivity extends AbstractActivity
         dhbDao = new DhbDao(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
         initUI();
+        if(appPreferenceManager.getLeaveFlag()!=0){
+            pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+        }
+        else {
+            pushFragments(HomeScreenFragment.newInstance(), false, false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        }
         initData();
-        pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+       // pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
     }
 
     private void initData() {

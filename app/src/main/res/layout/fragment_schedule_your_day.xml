@@ -52,7 +52,7 @@
         android:id="@+id/ll_slots_display"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_320">
+        android:layout_height="@dimen/dp_250">
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dp"
@@ -102,7 +102,7 @@
         android:layout_margin="@dimen/activity_vertical_margin">
         <Button
             android:textSize="16sp"
-            android:padding="@dimen/dp_10"
+            android:padding="@dimen/dp_5"
             android:id="@+id/btn_proceed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

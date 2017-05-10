@@ -63,6 +63,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private ProgressDialog syncBarProgressDialog;
     private boolean isAfterMasterSyncDone;
     SyncStatusReceiver syncStatusReceiver;
+    private int leaveFlag = 0;
 
     @Override
     protected void onStart() {
@@ -93,7 +94,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     @Override
     protected void onStop() {
         super.onStop();
-        if (syncStatusReceiver != null){
+        if (syncStatusReceiver != null) {
             unregisterReceiver(syncStatusReceiver);
             syncStatusReceiver = null;
         }
@@ -102,11 +103,11 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (syncStatusReceiver != null){
+        if (syncStatusReceiver != null) {
             unregisterReceiver(syncStatusReceiver);
             syncStatusReceiver = null;
         }
-        if (dhbDao != null){
+        if (dhbDao != null) {
             dhbDao.closeDatabase();
         }
     }
@@ -152,10 +153,10 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             if (validate()) {
                 AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
                 SelfieUploadRequestModel selfieUploadRequestModel = new SelfieUploadRequestModel();
-                Log.e(TAG, "onClick: btechId : "+ appPreferenceManager.getLoginResponseModel().getUserID());
-                Log.e(TAG, "onClick: encodedProImg "+encodedProImg );
+                Log.e(TAG, "onClick: btechId : " + appPreferenceManager.getLoginResponseModel().getUserID());
+                Log.e(TAG, "onClick: encodedProImg " + encodedProImg);
                 selfieUploadRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
-                selfieUploadRequestModel.setPic(""+encodedProImg);
+                selfieUploadRequestModel.setPic("" + encodedProImg);
                 ApiCallAsyncTask selfieUploadApiAsyncTask = asyncTaskForRequest.getSelfieUploadRequestAsyncTask(selfieUploadRequestModel);
                 selfieUploadApiAsyncTask.setApiCallAsyncTaskDelegate(new SelfieApiAsyncTaskDelegateResult());
                 if (isNetworkAvailable(activity)) {
@@ -163,7 +164,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 } else {
                     Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
                 }
-            }else {
+            } else {
                 Toast.makeText(activity, R.string.add_selfie_error, Toast.LENGTH_SHORT).show();
             }
         }
@@ -221,14 +222,13 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         FileOutputStream fo;
         try {
             boolean isFileCreated = destination.createNewFile();
-            if(isFileCreated) {
+            if (isFileCreated) {
                 fo = new FileOutputStream(destination);
                 fo.write(bytes.toByteArray());
 
                 fo.close();
-            }
-            else{
-                Toast.makeText(activity,"Failed to create file",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "Failed to create file", Toast.LENGTH_SHORT).show();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -256,18 +256,19 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private class SelfieApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode == 200 || statusCode==201) {
+            if (statusCode == 200 || statusCode == 201) {
                 ResponseParser responseParser = new ResponseParser(activity);
                 SelfieUploadResponseModel selfieUploadResponseModel = responseParser.getSelfieUploadResponseModel(json, statusCode);
                 if (selfieUploadResponseModel != null) {
                     Calendar c = Calendar.getInstance();
                     selfieUploadResponseModel.setTimeUploaded(c.getTimeInMillis());
                     appPreferenceManager.setSelfieResponseModel(selfieUploadResponseModel);
+                    Toast.makeText(getApplicationContext(),+selfieUploadResponseModel.getFlag()+"",Toast.LENGTH_SHORT).show();
+                    leaveFlag = selfieUploadResponseModel.getFlag();
                     callMasterSync();
                 }
-            }
-            else{
-                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -280,8 +281,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     private boolean isServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if (serviceClass.getName().equals(service.service.getClassName())){
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
                 return true;
             }
         }
@@ -299,14 +300,14 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     public void stopMasterTableSyncService() {
-        stopService(new Intent(activity, MasterTablesSyncService.class ));
+        stopService(new Intent(activity, MasterTablesSyncService.class));
         releaseWakeLock();
     }
 
 
     public void callMasterSync() {
-        if (NetworkUtils.isNetworkAvailable(activity)){
-            if (isMasterTableSyncServiceIsInProgress()){
+        if (NetworkUtils.isNetworkAvailable(activity)) {
+            if (isMasterTableSyncServiceIsInProgress()) {
                 Toast.makeText(activity, getString(R.string.progress_message_fetching_test_master_please_wait), Toast.LENGTH_LONG).show();
             } else {
                 callMasterTableSyncService();
@@ -314,11 +315,11 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         } else {
             Toast.makeText(activity, getString(R.string.logout_message_offline), Toast.LENGTH_LONG).show();
 
-            if (appPreferenceManager != null){
+            if (appPreferenceManager != null) {
                 appPreferenceManager.clearAllPreferences();
             }
 
-            if (dhbDao == null){
+            if (dhbDao == null) {
                 dhbDao = new DhbDao(activity);
             }
             dhbDao.deleteTablesonLogout();
@@ -330,25 +331,25 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if (intent != null && intent.getAction() != null){
+            if (intent != null && intent.getAction() != null) {
 
                 if (intent.getAction().equals(AppConstants.OFFLINE_STATUS_ACTION_IN_PROGRESS)
-                        || intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_IN_PROGRESS)){
+                        || intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_IN_PROGRESS)) {
 
                     int totalUploadCount = 0, uploadedCount = 0;
 
-                    if (intent.getExtras() != null){
-                        if (intent.getExtras().containsKey(AppConstants.MASTER_TABLE_UPDATE_TOTAL_COUNT)){
+                    if (intent.getExtras() != null) {
+                        if (intent.getExtras().containsKey(AppConstants.MASTER_TABLE_UPDATE_TOTAL_COUNT)) {
                             totalUploadCount = intent.getExtras().getInt(AppConstants.MASTER_TABLE_UPDATE_TOTAL_COUNT);
                         }
-                        if (intent.getExtras().containsKey(AppConstants.MASTER_TABLE_UPDATE_COMPLETED_COUNT)){
+                        if (intent.getExtras().containsKey(AppConstants.MASTER_TABLE_UPDATE_COMPLETED_COUNT)) {
                             uploadedCount = intent.getExtras().getInt(AppConstants.MASTER_TABLE_UPDATE_COMPLETED_COUNT);
                         }
                     }
 
                     initSyncProgressBarDialog();
 
-                    if (totalUploadCount == 0 && uploadedCount == 0){
+                    if (totalUploadCount == 0 && uploadedCount == 0) {
                         setSyncProgressDialogTypeToHorizontalOrSpinner(false);
                         showSyncProgressBarDialog();
                     } else {
@@ -356,7 +357,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
                         syncBarProgressDialog.setMax(totalUploadCount);
 
-                        if (uploadedCount <= totalUploadCount){
+                        if (uploadedCount <= totalUploadCount) {
                             syncBarProgressDialog.setProgress(uploadedCount);
                             showSyncProgressBarDialog();
                         } else {
@@ -370,27 +371,27 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                         }
                     }
 
-                } else if (intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_DONE)){
+                } else if (intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_DONE)) {
 
-                    if (intent.getExtras() != null){
+                    if (intent.getExtras() != null) {
                         boolean isIssueFoundInSync = false;
-                        if (intent.getExtras().containsKey(AppConstants.MASTER_TABLE_UPDATE_ISSUE_FOUND)){
+                        if (intent.getExtras().containsKey(AppConstants.MASTER_TABLE_UPDATE_ISSUE_FOUND)) {
                             isIssueFoundInSync = intent.getExtras().getBoolean(AppConstants.MASTER_TABLE_UPDATE_ISSUE_FOUND);
                         }
 
-                        if (isMasterTableSyncServiceIsInProgress()){
+                        if (isMasterTableSyncServiceIsInProgress()) {
                             stopMasterTableSyncService();
                         }
 
-                        if (isIssueFoundInSync){
+                        if (isIssueFoundInSync) {
                             Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
 
-                            if (appPreferenceManager != null){
+                            if (appPreferenceManager != null) {
                                 appPreferenceManager.clearAllPreferences();
                             }
 
                             //appPreferenceManager.setIsAfterLogin(false);
-                            if (dhbDao == null){
+                            if (dhbDao == null) {
                                 dhbDao = new DhbDao(activity);
                             }
                             dhbDao.deleteTablesonLogout();
@@ -402,6 +403,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
                             appPreferenceManager.setIsAfterLogin(true);
                             isAfterMasterSyncDone = true;
+                            appPreferenceManager.setLeaveFlag(leaveFlag);
                             switchToActivity(activity, HomeScreenActivity.class, new Bundle());
                         }
 
@@ -410,7 +412,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     }
 
                 } else if (intent.getAction().equals(AppConstants.OFFLINE_STATUS_ACTION_NO_DATA)
-                        || intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_NO_DATA)){
+                        || intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_NO_DATA)) {
 
                     Toast.makeText(activity, getResources().getString(R.string.sync_no_data), Toast.LENGTH_SHORT).show();
 
@@ -432,19 +434,19 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     public void showSyncProgressBarDialog() {
-        if (!syncBarProgressDialog.isShowing()){
+        if (!syncBarProgressDialog.isShowing()) {
             syncBarProgressDialog.show();
         }
     }
 
     public void hideSyncProgressBarDialog() {
-        if (syncBarProgressDialog != null && syncBarProgressDialog.isShowing()){
+        if (syncBarProgressDialog != null && syncBarProgressDialog.isShowing()) {
             syncBarProgressDialog.dismiss();
         }
     }
 
     public void initSyncProgressBarDialog() {
-        if (syncBarProgressDialog == null){
+        if (syncBarProgressDialog == null) {
             syncBarProgressDialog = new ProgressDialog(activity);
             syncBarProgressDialog.setTitle("Please wait");
             syncBarProgressDialog.setMessage("Updating Test Menu\n\nThis may take few minutes for first time");
@@ -456,7 +458,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     public void setSyncProgressDialogTypeToHorizontalOrSpinner(boolean isHorizontalMode) {
-        if (isHorizontalMode){
+        if (isHorizontalMode) {
             syncBarProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             syncBarProgressDialog.setMessage("Updating Test Menu \n\nThis may take few minutes for first time");
         } else {
