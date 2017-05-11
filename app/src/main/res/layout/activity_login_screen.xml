@@ -24,22 +24,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
-            android:background="@android:color/white"
             android:id="@+id/login_block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/loginbg"
             android:orientation="vertical">
 
             <LinearLayout
-                android:padding="@dimen/dp_3"
                 android:id="@+id/username_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/dp_1"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/dp_3">
 
                 <ImageView
                     android:id="@+id/username_icon"
@@ -52,21 +53,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="Enter User Name"
-                    android:minEms="15"
-                    android:textSize="15sp"
                     android:maxLines="1"
+                    android:minEms="15"
+                    android:nextFocusForward="@+id/password_login"
                     android:singleLine="true"
-                    android:nextFocusForward="@+id/password_login" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <LinearLayout
-                android:padding="@dimen/dp_3"
                 android:id="@+id/password_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp_1"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/dp_3">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -79,9 +80,9 @@
                     android:layout_height="wrap_content"
                     android:hint="Enter Password"
                     android:inputType="textPassword"
+                    android:maxLines="1"
                     android:minEms="15"
-                    android:textSize="15sp"
-                    android:maxLines="1" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <TextView
@@ -95,29 +96,30 @@
                 android:textSize="15sp" />
 
             <Button
-                android:textSize="14sp"
-                android:layout_marginTop="10dp"
-                android:minEms="8"
-                android:padding="@dimen/dp_2"
-                android:gravity="center"
                 android:id="@+id/login_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/login_btn_bg"
+                android:gravity="center"
+                android:minEms="8"
+                android:padding="@dimen/dp_2"
                 android:text="Login"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
 
             <TextView
-                android:textSize="15sp"
-                android:layout_marginTop="@dimen/dp_5"
-                android:layout_marginBottom="@dimen/dp_5"
                 android:id="@+id/text_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Join our Network" />
+                android:layout_marginBottom="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_5"
+                android:text="Join our Network"
+                android:textSize="15sp" />
         </LinearLayout>
+
         <ImageView
             android:layout_marginTop="0dp"
             android:paddingTop="@dimen/dp_2"

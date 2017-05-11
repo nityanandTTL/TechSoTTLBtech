@@ -18,7 +18,7 @@
         />
     <View
         android:layout_height="match_parent"
-        android:layout_width="2dp"
+        android:layout_width="1dp"
         android:background="@color/colorSecondaryDark">
     </View>
     <TextView
@@ -32,7 +32,7 @@
         android:textColor="@color/colorPrimaryDark"/>
     <View
         android:layout_height="match_parent"
-        android:layout_width="2dp"
+        android:layout_width="1dp"
         android:background="@color/colorSecondaryDark">
     </View>
     <TextView

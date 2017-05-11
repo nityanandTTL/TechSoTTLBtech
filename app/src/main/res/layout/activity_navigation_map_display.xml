@@ -27,7 +27,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_70"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="1"
             android:gravity="bottom"
@@ -36,7 +36,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="2dp"
                 android:layout_weight="3"
                 android:background="@drawable/footer_bg"
@@ -115,14 +115,14 @@
                 android:id="@+id/btn_startNav"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/purple_btn_bg"
+                android:gravity="center"
                 android:text="@string/start"
-                android:visibility="visible"
                 android:textColor="@android:color/white"
-                android:layout_gravity="center"
-                android:gravity="center"/>
+                android:visibility="visible" />
         </LinearLayout>
     </LinearLayout>
 
