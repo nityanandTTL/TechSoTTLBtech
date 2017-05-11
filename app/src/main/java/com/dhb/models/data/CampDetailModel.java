@@ -9,26 +9,19 @@ import java.util.ArrayList;
  * Created by vendor1 on 5/10/2017.
  */
 
-public class CampListDisplayResponseModel implements Parcelable{
+public class CampDetailModel implements Parcelable {
     private int Id, Amount, ExpectedCrowd, ExpectedBtech, Leader, LeaderContactNo;
     private String CampId, VisitId, CampDate, Location, Status;
     private boolean InventoryAssign;
-    private String CampDateTime, BookedBy, Product, QRCode,Response;
+    private String CampDateTime, BookedBy, Product, QRCode;
     private ArrayList<CampBtechModel> btechs;
     private ExecutionTrack executionTrack;
 
-    public String getResponse() {
-        return Response;
+    public CampDetailModel() {
+
     }
 
-    public void setResponse(String response) {
-        Response = response;
-    }
-
-    public CampListDisplayResponseModel() {
-    }
-
-    protected CampListDisplayResponseModel(Parcel in) {
+    protected CampDetailModel(Parcel in) {
         Id = in.readInt();
         Amount = in.readInt();
         ExpectedCrowd = in.readInt();
@@ -74,15 +67,15 @@ public class CampListDisplayResponseModel implements Parcelable{
         return 0;
     }
 
-    public static final Creator<CampListDisplayResponseModel> CREATOR = new Creator<CampListDisplayResponseModel>() {
+    public static final Creator<CampDetailModel> CREATOR = new Creator<CampDetailModel>() {
         @Override
-        public CampListDisplayResponseModel createFromParcel(Parcel in) {
-            return new CampListDisplayResponseModel(in);
+        public CampDetailModel createFromParcel(Parcel in) {
+            return new CampDetailModel(in);
         }
 
         @Override
-        public CampListDisplayResponseModel[] newArray(int size) {
-            return new CampListDisplayResponseModel[size];
+        public CampDetailModel[] newArray(int size) {
+            return new CampDetailModel[size];
         }
     };
 
@@ -213,7 +206,6 @@ public class CampListDisplayResponseModel implements Parcelable{
     public void setStatus(String status) {
         Status = status;
     }
-
 
 
     public ExecutionTrack getExecutionTrack() {
