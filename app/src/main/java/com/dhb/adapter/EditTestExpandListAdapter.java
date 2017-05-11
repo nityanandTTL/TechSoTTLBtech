@@ -1,6 +1,8 @@
 package com.dhb.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,8 +112,31 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
         holder.imgCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedTests.add(testRateMasterModel);
-                mcallback.onCheckChange(selectedTests);
+                if(testRateMasterModel.getTestType().equals("OFFER")&&checkIfOfferExists(selectedTests)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Confirm Action")
+                            .setMessage("Selecting an OFFER will replace previously selected OFFER. Do you still wish to proceed?")
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    mcallback.onCheckChange(selectedTests);
+                                }
+                            })
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    selectedTests = replaceOffer(selectedTests,testRateMasterModel);
+                                    mcallback.onCheckChange(selectedTests);
+                                }
+                            })
+                            .show();
+
+                }
+                else {
+                    selectedTests.add(testRateMasterModel);
+                    mcallback.onCheckChange(selectedTests);
+                }
             }
         });
         holder.imgChecked.setOnClickListener(new View.OnClickListener() {
@@ -156,9 +181,30 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
         ImageView imgCheck, imgChecked;
         TextView txt_test, txt_dis_amt;
     }
+    private boolean checkIfOfferExists(ArrayList<TestRateMasterModel> selTests){
+        for (TestRateMasterModel trmm:
+             selTests) {
+            if(trmm.getTestType().equals("OFFER")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private ArrayList<TestRateMasterModel> replaceOffer(ArrayList<TestRateMasterModel> selTests,TestRateMasterModel newOffer){
+        for (int i=0;i<selTests.size();i++) {
+            if(selTests.get(i).getTestType().equals("OFFER")){
+                selTests.remove(i);
+                break;
+            }
+        }
+        selTests.add(newOffer);
+        return selTests;
+    }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
 }
