@@ -23,8 +23,9 @@
     <color name="sample_type_serum">#F7DE4E</color>
     <color name="black_overlay">#66000000</color>
     <color name="selfie_background">#59e1e7</color>
-    <color name="dialog_btn">#FF48BCC1</color>
+    <color name="dialog_btn">#51cdd2</color>
     <color name="separator">#efeded</color>
+    <color name="loginbg">#FFFFFF</color>
 
     <!--gradients-->
     <color name="home_bg_start_grd">#57EAE8</color>

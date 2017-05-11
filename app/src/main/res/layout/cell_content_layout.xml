@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:visibility="gone"
+    android:visibility="visible"
     android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
@@ -95,7 +95,7 @@
                 android:textColor="@android:color/darker_gray"
                 android:textSize="16sp" />
 
-            <ImageView
+           <!-- <ImageView
                 android:layout_below="@+id/tv_age"
                 android:id="@+id/title_aadhar_icon"
                 android:layout_width="40dp"
@@ -119,7 +119,7 @@
                 android:text="221115245562"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="16sp" />
-            <!--
+
 
                     <ImageView
                         android:id="@+id/title_distance_icon"
