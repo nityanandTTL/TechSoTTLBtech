@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -14,7 +13,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,17 +22,17 @@ import com.dhb.R;
 import com.dhb.activity.AddEditBeneficiaryDetailsActivity;
 import com.dhb.activity.EditTestListActivity;
 import com.dhb.activity.OrderBookingActivity;
-import com.dhb.adapter.DisplayScanBarcodeItemListAdapter;
 import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BeneficiaryDetailsDao;
 import com.dhb.dao.models.LabAlertMasterDao;
 import com.dhb.dao.models.OrderDetailsDao;
 import com.dhb.dao.models.TestRateMasterDao;
+import com.dhb.delegate.AddSampleBarcodeDialogDelegate;
 import com.dhb.delegate.OrderCancelDialogButtonClickedDelegate;
 import com.dhb.delegate.OrderRescheduleDialogButtonClickedDelegate;
-import com.dhb.delegate.ScanBarcodeIconClickedDelegate;
 import com.dhb.delegate.SelectClinicalHistoryCheckboxDelegate;
 import com.dhb.delegate.SelectLabAlertsCheckboxDelegate;
+import com.dhb.dialog.AddSampleBarcodeDialog;
 import com.dhb.dialog.CancelOrderDialog;
 import com.dhb.dialog.ClinicalHistorySelectorDialog;
 import com.dhb.dialog.LabAlertSelectorDialog;
@@ -61,9 +61,6 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.dhb.utils.app.CommonUtils.decodedImageBytes;
@@ -93,7 +90,6 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private String userChoosenReleaseTask;
     private OrderDetailsModel orderDetailsModel;
     private String currentScanSampleType;
-    private DisplayScanBarcodeItemListAdapter displayScanBarcodeItemListAdapter;
     private RescheduleOrderDialog cdd;
     private CancelOrderDialog cod;
     private boolean isCancelRequesGenereted=false;
@@ -105,6 +101,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
     private OrderDetailsDao orderDetailsDao;
     private LabAlertMasterDao labAlertMasterDao;
+    private TableLayout tlBarcodes;
+    private IntentIntegrator intentIntegrator;
 
     public BeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
@@ -115,7 +113,6 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         fragment.setArguments(bundle);
         return fragment;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -148,6 +145,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         benCHArr = beneficiaryDetailsModel.getClHistory();
         benLAArr = beneficiaryDetailsModel.getLabAlert();
 
+        encodedVanipunctureImg = encodeImage(beneficiaryDetailsModel.getVenepuncture());
         String chS = "";
         if(benCHArr!=null && benCHArr.size()>0) {
             for (TestWiseBeneficiaryClinicalHistoryModel chm :
@@ -193,6 +191,9 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         } else {
             if(beneficiaryDetailsModel.getBarcodedtl()==null){
                 beneficiaryDetailsModel.setBarcodedtl(new ArrayList<BarcodeDetailsModel>());
+            }
+            else{
+                beneficiaryDetailsModel.getBarcodedtl().clear();
             }
             for (BeneficiarySampleTypeDetailsModel sampleTypes :
                     beneficiaryDetailsModel.getSampleType()) {
@@ -251,7 +252,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
                 final CharSequence[] items = {"Order Reschedule",
-                        "Order Cancellation"};
+                        "Order Cancellation","Remove Beneficiary"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Select Action");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -265,6 +266,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                             userChoosenReleaseTask = "Order Cancellation";
                             cod = new CancelOrderDialog(activity, new OrderCancelDialogButtonClickedDelegateResult(), orderDetailsModel);
                             cod.show();
+                        } else if (items[item].equals("Remove Beneficiary")) {
+                            userChoosenReleaseTask = "Remove Beneficiary";
                         }
                     }
                 }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -298,8 +301,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intentEdit = new Intent(activity, EditTestListActivity.class);
                         intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST,restOfTestsList);
-                        intentEdit.putExtra(BundleConstants.BENEFICIARY_TEST_LIST, beneficiaryDetailsModel.getTestsCode());
                         intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
+                        intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
                         startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
                     }
                 });
@@ -372,16 +375,66 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         edtLA = (TextView) rootview.findViewById(R.id.edt_lab_alerts);
         edtRemarks = (EditText) rootview.findViewById(R.id.customer_sign);
         llBarcodes = (LinearLayout) rootview.findViewById(R.id.ll_barcodes);
+        tlBarcodes = (TableLayout) rootview.findViewById(R.id.tl_barcodes);
         btnEdit.setVisibility(View.VISIBLE);
     }
 
     private void initScanBarcodeView() {
-        View scanBarcodeView = activity.getLayoutInflater().inflate(R.layout.item_list_view, null);
-        ListView lv = (ListView) scanBarcodeView.findViewById(R.id.lv_barcodes);
-        displayScanBarcodeItemListAdapter = new DisplayScanBarcodeItemListAdapter(activity, beneficiaryDetailsModel.getBarcodedtl(), new ScanBarcodeIconClickedDelegateResult());
-        lv.setAdapter(displayScanBarcodeItemListAdapter);
-        llBarcodes.addView(scanBarcodeView);
-        llBarcodes.setVisibility(View.VISIBLE);
+//        View scanBarcodeView = activity.getLayoutInflater().inflate(R.layout.item_list_view, null);
+//        ListView lv = (ListView) scanBarcodeView.findViewById(R.id.lv_barcodes);
+//        displayScanBarcodeItemListAdapter = new DisplayScanBarcodeItemListAdapter(activity, beneficiaryDetailsModel.getBarcodedtl(), new ScanBarcodeIconClickedDelegateResult());
+//        lv.setAdapter(displayScanBarcodeItemListAdapter);
+        if(beneficiaryDetailsModel!=null
+                && beneficiaryDetailsModel.getBarcodedtl()!=null
+                && beneficiaryDetailsModel.getBarcodedtl().size()>0) {
+            tlBarcodes.removeAllViews();
+            for (final BarcodeDetailsModel barcodeDetailsModel :
+                    beneficiaryDetailsModel.getBarcodedtl()) {
+                TableRow tr = (TableRow) activity.getLayoutInflater().inflate(R.layout.item_scan_barcode,null);
+                TextView txtSampleType = (TextView)tr.findViewById(R.id.txt_sample_type);
+                TextView edtBarcode = (TextView)tr.findViewById(R.id.edt_barcode);
+                ImageView imgScan = (ImageView) tr.findViewById(R.id.scan_barcode_button);
+                txtSampleType.setText(barcodeDetailsModel.getSamplType());
+                edtBarcode.setText(barcodeDetailsModel.getBarcode());
+                imgScan.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        currentScanSampleType = barcodeDetailsModel.getSamplType();
+                        intentIntegrator = new IntentIntegrator(activity){
+                            @Override
+                            protected void startActivityForResult(Intent intent, int code) {
+                                BeneficiaryDetailsScanBarcodeFragment.this.startActivityForResult(intent,BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+                            }
+                        };
+                        intentIntegrator.initiateScan();
+                    }
+                });
+                edtBarcode.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        currentScanSampleType = barcodeDetailsModel.getSamplType();
+                        AddSampleBarcodeDialog sampleBarcodeDialog = new AddSampleBarcodeDialog(activity, new AddSampleBarcodeDialogDelegate() {
+                            @Override
+                            public void onSampleBarcodeAdded(String scanned_barcode) {
+                                if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                                    for(int i=0;i<beneficiaryDetailsModel.getBarcodedtl().size();i++){
+                                        if(currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())){
+                                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                                            break;
+                                        }
+                                    }
+                                    initData();
+                                }
+                            }
+                        });
+                        sampleBarcodeDialog.show();
+                    }
+                });
+                tlBarcodes.addView(tr);
+            }
+            llBarcodes.setVisibility(View.VISIBLE);
+        }
     }
 
     private void clickPhoto() {
@@ -406,29 +459,39 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if ((scanningResult != null) && (scanningResult.getContents() != null)) {
-            String scanned_barcode = scanningResult.getContents();
-            if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                for(int i=0;i<beneficiaryDetailsModel.getBarcodedtl().size();i++){
-                    if(currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())){
-                        beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
-                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                        break;
+        if(requestCode==BundleConstants.START_BARCODE_SCAN) {
+            IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if ((scanningResult != null) && (scanningResult.getContents() != null)) {
+                String scanned_barcode = scanningResult.getContents();
+                if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                    for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                        if (currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
+                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                            break;
+                        }
                     }
+                    initData();
                 }
-                displayScanBarcodeItemListAdapter.notifyDataSetChanged();
             }
         }
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CAMERA) {
-                onCaptureImageResult(data);
-            }
+        if (requestCode==REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
+            onCaptureImageResult(data);
         }
         if (requestCode == BundleConstants.EDIT_TESTS_START && resultCode == BundleConstants.EDIT_TESTS_FINISH) {
             String testsCode = "";
             ArrayList<TestRateMasterModel> selectedTests = new ArrayList<>();
             selectedTests = data.getExtras().getParcelableArrayList(BundleConstants.SELECTED_TESTS_LIST);
+
+            int selectedTestsTotalCost = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_TOTAL_COST);
+            int selectedTestsDiscount = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_DISCOUNT);
+            int selectedTestsIncentive = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_INCENTIVE);
+
+            orderDetailsModel.setAmountDue(selectedTestsTotalCost);
+            orderDetailsModel.setDiscount(selectedTestsDiscount);
+            orderDetailsModel.setMargin(selectedTestsIncentive);
+            orderDetailsDao.insertOrUpdate(orderDetailsModel);
+
             if(selectedTests!=null) {
                 for (TestRateMasterModel testRateMasterModel :
                         selectedTests) {
@@ -473,7 +536,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File destination = new File(Environment.getExternalStorageDirectory(),
+        /*File destination = new File(Environment.getExternalStorageDirectory(),
                 System.currentTimeMillis() + ".jpg");
         FileOutputStream fo;
         try {
@@ -483,7 +546,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             fo.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         encodedVanipunctureImg = encodeImage(thumbnail);
         beneficiaryDetailsModel.setVenepuncture(decodedImageBytes(encodedVanipunctureImg));
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
@@ -492,15 +555,6 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
-    }
-
-    private class ScanBarcodeIconClickedDelegateResult implements ScanBarcodeIconClickedDelegate {
-
-        @Override
-        public void onClicked(String sampleType) {
-            currentScanSampleType = sampleType;
-            new IntentIntegrator(activity).initiateScan();
-        }
     }
 
     private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {

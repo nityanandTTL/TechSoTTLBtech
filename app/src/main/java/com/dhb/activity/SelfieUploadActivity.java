@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -42,9 +41,6 @@ import com.dhb.utils.app.DeviceUtils;
 import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Calendar;
 
 
@@ -217,7 +213,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File destination = new File(Environment.getExternalStorageDirectory(),
+        /*File destination = new File(Environment.getExternalStorageDirectory(),
                 System.currentTimeMillis() + ".jpg");
         FileOutputStream fo;
         try {
@@ -232,7 +228,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         encodedProImg = CommonUtils.encodeImage(thumbnail);
         img_user_picture.setImageBitmap(thumbnail);
     }

@@ -79,4 +79,9 @@
     <string name="password_do_not_match">New Password and confirm password do not match</string>
     <string name="progress_message_Applying_Leave_please_wait">Applying Leave, Please wait ....</string>
     <string name="progress_message_fetching_Leave_details_please_wait">Fetching Leave  Details, Please wait ....</string>
+    <string name="add_sample_barcode">Enter Barcode Value</string>
+    <string name="barcode_value">Barcode:</string>
+    <string name="barcode_value_confirm">Confirm Barcode:</string>
+    <string name="alert_invalid_barcode_value">Please enter a Valid Barcode value</string>
+    <string name="alert_unmatched_barcode_values">Barcode and Confirm Barcode does not match</string>
 </resources>

@@ -10,18 +10,18 @@ import java.util.ArrayList;
  */
 
 public class OrderDetailsModel extends BaseModel implements Parcelable {
-    private int BrandId;
-    private String OrderNo;
+    private int BrandId;//
+    private String OrderNo;//
     private String Address;
     private String Pincode;
     private String Mobile;
     private String Email;
-    private String PayType;
-    private int AmountDue;
-    private int Margin;
-    private int Discount;
+    private String PayType;//
+    private int AmountDue;//
+    private int Margin;//
+    private int Discount;//
     private String Refcode;
-    private String ProjId;
+    private String ProjId;//
     private int ReportHC;
     private boolean isTestEdit;
     private boolean isAddBen;

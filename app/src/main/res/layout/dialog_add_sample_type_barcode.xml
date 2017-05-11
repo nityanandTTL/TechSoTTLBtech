@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/add_sample_barcode"
+        android:textColor="@android:color/white"
+        android:background="@color/colorPrimaryDark"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/txt_barcode_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_title"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:text="@string/barcode_value"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/et_barcode_value"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textSize="20sp"
+        android:inputType="textPassword"
+        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        android:hint="please enter barcode"
+        android:background="@android:drawable/edit_text"
+        android:layout_below="@+id/txt_barcode_value"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/txt_confirm_barcode_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_below="@+id/et_barcode_value"
+        android:layout_marginTop="10dp"
+        android:text="@string/barcode_value_confirm"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/et_confirm_barcode_value"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:inputType="textPassword"
+        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        android:hint="enter confirm barcode"
+        android:background="@android:drawable/edit_text"
+        android:layout_margin="10dp"
+        android:layout_below="@+id/txt_confirm_barcode_value"
+        android:layout_marginTop="20dp" />
+
+
+    <Button
+        android:id="@+id/btn_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_confirm_barcode_value"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/purple_btn_bg"
+        android:text="Save"
+        android:minEms="5"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="22sp" />
+
+
+</RelativeLayout>

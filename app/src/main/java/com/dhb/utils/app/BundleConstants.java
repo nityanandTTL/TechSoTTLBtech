@@ -16,6 +16,7 @@ public class BundleConstants {
     public static final int ADD_EDIT_FINISH = 1011;
     public static final int BCMD_START = 1012;
     public static final int BCMD_ARRIVED =1013;
+    public static final int START_BARCODE_SCAN = 0x0000c0de;
 
     //Bundle Constants
     public static final String ACTIVITY = "activity";
@@ -34,4 +35,6 @@ public class BundleConstants {
     public static final String SELECTED_TESTS_COST = "selectedTestsCost";
     public static final String SELECTED_TESTS_TOTAL_COST = "selectedTestsTotalCost";
     public static final String REST_BEN_TESTS_LIST = "restBeneficiaryTestList";
+    public static final String SELECTED_TESTS_DISCOUNT = "selectedTestsDiscount";
+    public static final String SELECTED_TESTS_INCENTIVE = "selectedTestsIncentive";
 }
