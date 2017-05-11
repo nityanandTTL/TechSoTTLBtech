@@ -2,6 +2,7 @@ package com.dhb.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -21,9 +22,9 @@ import com.dhb.R;
 import com.dhb.customview.RoundedImageView;
 import com.dhb.dao.DhbDao;
 import com.dhb.fragment.HomeScreenFragment;
+import com.dhb.fragment.LeaveIntimationFragment;
 import com.dhb.fragment.ResetPasswordFragment;
 import com.dhb.fragment.VisitOrdersDisplayFragment;
-import com.dhb.fragment.LeaveIntimationFragment;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -49,6 +50,8 @@ public class HomeScreenActivity extends AbstractActivity
     private HomeScreenActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private DhbDao dhbDao;
+    private boolean doubleBackToExitPressedOnce = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +64,7 @@ public class HomeScreenActivity extends AbstractActivity
             pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         }
         else {
-            pushFragments(HomeScreenFragment.newInstance(), false, false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            pushFragments(HomeScreenFragment.newInstance(), false,false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         }
         initData();
        // pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
@@ -111,12 +114,24 @@ public class HomeScreenActivity extends AbstractActivity
 
     @Override
     public void onBackPressed() {
+
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        }else{
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
         }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 
     @Override
@@ -213,4 +228,5 @@ public class HomeScreenActivity extends AbstractActivity
 
         }
     }
+
 }

@@ -250,7 +250,12 @@
                     android:layout_below="@+id/ll_tests"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
+                    <TableLayout
+                        android:id="@+id/tl_barcodes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
+                    </TableLayout>
                 </LinearLayout>
 
                 <LinearLayout

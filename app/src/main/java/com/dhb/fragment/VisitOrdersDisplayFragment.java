@@ -140,6 +140,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = new FetchOrderDetailsResponseModel();
                 fetchOrderDetailsResponseModel = responseParser.getFetchOrderDetailsResponseModel(json, statusCode);
                 if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
+                    beneficiaryDetailsDao.deleteAll();
+                    orderDetailsDao.deleteAll();
                     for (OrderVisitDetailsModel orderVisitDetailsModel :
                             fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
                         if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
@@ -296,4 +298,5 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

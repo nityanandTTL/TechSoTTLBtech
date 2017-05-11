@@ -15,12 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
-import com.dhb.activity.HomeScreenActivity;
 import com.dhb.activity.OlcPickupActivity;
 import com.dhb.adapter.OlcMasterBarcodeScanAdapter;
 import com.dhb.delegate.OlcMasterBarcodeScanAdapterDelegate;
 import com.dhb.models.data.BtechClientsModel;
-import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.BundleConstants;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -94,11 +92,10 @@ public class OlcMasterBarcodeFragment extends Fragment {
             public void onScanClick(int position) {
                 Logger.error("item clicked");
                 currentPosition = position;
-               // intentIntegrator.initiateScan();
-               /* IntentIntegrator*/ integrator = new IntentIntegrator(getActivity()) {
+               integrator = new IntentIntegrator(getActivity()) {
                     @Override
                     protected void startActivityForResult(Intent intent, int code) {
-                        OlcMasterBarcodeFragment.this.startActivityForResult(intent, 312); // REQUEST_CODE override
+                        OlcMasterBarcodeFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
 
                     }
                 };
