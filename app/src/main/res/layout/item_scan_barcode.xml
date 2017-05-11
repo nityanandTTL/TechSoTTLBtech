@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
         <TextView
+            android:layout_weight="1"
             android:id="@+id/txt_sample_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -12,27 +13,29 @@
             android:layout_marginRight="@dimen/dp_5"
             android:background="@drawable/bg_sample_type_edta"
             android:gravity="center"
-            android:padding="@dimen/dp_10"
+            android:padding="@dimen/dp_5"
             android:text="EDTA"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 
-        <EditText
+        <TextView
+            android:gravity="center"
+            android:layout_weight="1.5"
             android:id="@+id/edt_barcode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@android:drawable/edit_text"
-            android:inputType="text"
             android:hint="Enter Barcode"
             android:maxLength="8"
             android:minEms="5"
-            android:padding="@dimen/dp_2"/>
+            android:padding="@dimen/dp_5"/>
 
         <ImageView
+            android:layout_weight="0.5"
             android:id="@+id/scan_barcode_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@android:drawable/ic_menu_camera"/>
-</LinearLayout>
+</TableRow>

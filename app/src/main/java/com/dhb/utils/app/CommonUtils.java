@@ -60,6 +60,9 @@ public class CommonUtils {
 
 		return Base64.encodeToString(b, Base64.DEFAULT);
 	}
+	public static String encodeImage(byte[] b) {
+		return Base64.encodeToString(b, Base64.DEFAULT);
+	}
 
 	public static Bitmap decodeImage(String encodedImage) {
 		byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);

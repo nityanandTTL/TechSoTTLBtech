@@ -60,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:text="One-Day"
                 android:textSize="12sp"
+                android:checked="true"
                 />
             <RadioButton android:id="@+id/radio_ninjas"
                 android:layout_width="wrap_content"
@@ -67,10 +68,6 @@
                 android:text="More than 1 day"
                 android:textSize="12sp"></RadioButton>
         </RadioGroup>
-
-
-
-
     </LinearLayout>
     <LinearLayout
         android:id="@+id/ll_leave_duration"
@@ -111,7 +108,7 @@
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
             android:paddingTop="@dimen/dp_5"
-            android:textColor="#444444"
+            android:textColor="@color/calender_text"
             android:textSize="15sp" />
 
         <TextView
@@ -130,7 +127,7 @@
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
             android:paddingTop="@dimen/dp_5"
-            android:textColor="#444444"
+            android:textColor="@color/calender_text"
             android:textSize="15sp"
             />
     </LinearLayout>
@@ -199,10 +196,11 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/dp_5"
             android:hint="Reason For Leave "
-            android:textAlignment="viewStart"
+            android:layout_gravity="start"
+            android:gravity="start"
             android:minLines="3"
             android:maxLines="5"
-            android:maxLength="140"
+            android:maxLength="250"
             android:background="@android:drawable/editbox_background"
             android:textSize="15sp">
 

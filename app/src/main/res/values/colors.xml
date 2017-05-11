@@ -16,12 +16,16 @@
     <color name="contentBadgeTitle">#a9a9a9</color>
     <color name="titleBadgeTitle">#adafb1</color>
     <color name="titleBadgeText">#adafb1</color>
+    <color name="calender_text">#444444</color>
     <color name="mainTextColor">#343d43</color>
     <color name="btnRequest">#ffbf12</color>
     <color name="sample_type_edta">#CC66CC</color>
     <color name="sample_type_serum">#F7DE4E</color>
     <color name="black_overlay">#66000000</color>
     <color name="selfie_background">#59e1e7</color>
+    <color name="dialog_btn">#51cdd2</color>
+    <color name="separator">#efeded</color>
+    <color name="loginbg">#FFFFFF</color>
 
     <!--gradients-->
     <color name="home_bg_start_grd">#57EAE8</color>

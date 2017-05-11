@@ -40,7 +40,7 @@
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
             android:paddingTop="@dimen/dp_5"
-            android:textColor="#444444"
+            android:textColor="@color/calender_text"
             android:textSize="18sp" />
 
         <TextView
@@ -59,7 +59,7 @@
             android:paddingLeft="@dimen/dp_5"
             android:paddingRight="@dimen/dp_5"
             android:paddingTop="@dimen/dp_5"
-            android:textColor="#444444"
+            android:textColor="@color/calender_text"
             android:textSize="18sp" />
 
         <Button
@@ -75,7 +75,7 @@
             android:paddingBottom="@dimen/dp_2"
             android:paddingTop="@dimen/dp_2"
             android:text="Filter"
-            android:textColor="#585858"
+            android:textColor="@color/calender_text"
             android:textSize="15sp" />
 
     </LinearLayout>
