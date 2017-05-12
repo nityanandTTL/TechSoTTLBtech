@@ -692,6 +692,32 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
 
+
+     /*
+	 * Fetch VersionControl Details  Api Integration*/
+
+    public ApiCallAsyncTask getVersionControlDetailsRequestAsyncTask(){
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getVersionControlDetailsRequestAsyncTask: " );
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_VERSION_CONTROL_DETAIL);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetching_Version_details_please_wait));
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+
     /*
 	 * Change Password Api Integration*/
 

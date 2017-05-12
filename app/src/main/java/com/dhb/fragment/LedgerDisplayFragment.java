@@ -2,7 +2,6 @@ package com.dhb.fragment;
 
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
-import com.dhb.models.api.response.EraningRegisterResponseModel;
 import com.dhb.models.api.response.FetchLedgerResponseModel;
 import com.dhb.models.data.DepositRegisterModel;
 import com.dhb.models.data.EarningRegisterModel;
@@ -89,7 +87,11 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
         //previous 7  days
         fromdate = getCalculatedDate("yyyy-MM-dd", -7);
+
         initUI();
+        txtToDate.setText(todate);
+        txtFromDate.setText(fromdate);
+
         fetchLedgerDetails();
         setListners();
         return rootView;
@@ -190,7 +192,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
         Logger.error(TAG_FRAGMENT + "--fetchData: ");
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         ApiCallAsyncTask fetchLedgerDetailApiAsyncTask = asyncTaskForRequest.getFetchLedgerDetailsRequestAsyncTask(fromdate, todate);
-        fetchLedgerDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchLedgerDetailsApiAsyncTaskDelegateResult());
+        fetchLedgerDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new LedgerDisplayFragment.FetchLedgerDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
             fetchLedgerDetailApiAsyncTask.execute(fetchLedgerDetailApiAsyncTask);
         } else {
@@ -214,7 +216,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
         Logger.error(TAG_FRAGMENT + "--fetchData: ");
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         ApiCallAsyncTask fetchDepositDetailApiAsyncTask = asyncTaskForRequest.getFetchDepositDetailsRequestAsyncTask(fromdate, todate);
-        fetchDepositDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchDepositDetailsApiAsyncTaskDelegateResult());
+        fetchDepositDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new LedgerDisplayFragment.FetchDepositDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
             fetchDepositDetailApiAsyncTask.execute(fetchDepositDetailApiAsyncTask);
         } else {
@@ -314,7 +316,6 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
                     TableRow trCrH = (TableRow) LayoutInflater.from(activity).inflate(R.layout.item_title_ledger_cash_register, null);
             tlCR.addView(trCrH);
-
             for (LedgerDetailsModeler ledgerDetailsModel :
                     fetchLedgerResponseModel.getLedgerDetails()) {
                         /*ledgerDetailsModel.setBTechId(ledgerDetailsModel.getBTechId());
@@ -331,8 +332,10 @@ public class LedgerDisplayFragment extends AbstractFragment {
                 txtCredit.setText(ledgerDetailsModel.getCredit() + "");
                 txtDebit.setText(ledgerDetailsModel.getDebit() + "");
                 txtclosingbal.setText(ledgerDetailsModel.getClosingBal() + "");
-                outstanding.setText(fetchLedgerResponseModel.getOutstandingBalance());
+
                 tlCR.addView(trCr);
+                //balance.setText(fetchLedgerResponseModel.getOutstandingBalance()+"");
+                Toast.makeText(getActivity(),fetchLedgerResponseModel.getOutstandingBalance()+"",Toast.LENGTH_SHORT).show();
                 outstanding.setVisibility(View.VISIBLE);
                 noledger.setVisibility(View.GONE);
                 depositbuttn.setVisibility(View.VISIBLE);

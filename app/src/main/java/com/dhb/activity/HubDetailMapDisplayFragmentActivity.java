@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.models.api.request.HubStartRequestModel;
 import com.dhb.models.data.HUBBTechModel;
+import com.dhb.models.data.MaterialDetailsModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -64,6 +65,13 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
+import static java.lang.Math.PI;
+import static java.lang.Math.asin;
+import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.toDegrees;
+import static java.lang.Math.toRadians;
 
 
 public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener,View.OnClickListener {
@@ -75,6 +83,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private Marker mCurrLocationMarker;
+    private ArrayList<HUBBTechModel> hubbTechModels;
     private LocationRequest mLocationRequest;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private Button btn_startNav, btn_arrived;
@@ -90,6 +99,8 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private Geocoder geocoder;
     private List<Address> addresses;
     private String  address,city;
+    private double destlat,destlong,currentlat,currentlong;
+    private int Integertotaldiff;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +125,11 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private void setListeners() {
         btn_arrived.setOnClickListener(this);
         btn_startNav.setOnClickListener(this);
+       double totaldist = distFrom(19.061745,73.0254561,19.0771,72.999);
+
+        Integertotaldiff = (int) totaldist;
+        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
+
         btn_arrived.setVisibility(View.GONE);
     }
     private String getAddress(double latitude, double longitude) {
@@ -122,9 +138,11 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0) {
+             //   Toast.makeText(getApplicationContext(),"Address:"+addresses+"",Toast.LENGTH_SHORT).show();
                 Address address = addresses.get(0);
                 result.append(address.getLocality()).append("\n");
                 result.append(address.getCountryName());
+
             }
         } catch (IOException e) {
             Log.e("tag", e.getMessage());
@@ -177,9 +195,11 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                     }
                     MarkerPoints.add(currentLocation);
                     Logger.error("hubBTechModel lat"+hubBTechModel.getLatitude()+"long "+hubBTechModel.getLongitude());
-                    double lat= Double.parseDouble(hubBTechModel.getLatitude());
-                    double longitude= Double.parseDouble(hubBTechModel.getLongitude());
-                    LatLng destTempLocation = new LatLng(lat, longitude);
+                    destlat= Double.parseDouble(hubBTechModel.getLatitude());
+                     destlong= Double.parseDouble(hubBTechModel.getLongitude());
+                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
+                    LatLng destTempLocation = new LatLng(destlat, destlong);
                     MarkerOptions options = new MarkerOptions();
                     options.position(destTempLocation);
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
@@ -287,6 +307,12 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
+         currentlat=location.getLatitude();
+        currentlong=location.getLongitude();
+
+        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),currentlong+"", Toast.LENGTH_SHORT).show();
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
@@ -298,6 +324,24 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Integertotaldiff > 100)
+        {
+            btn_arrived.setVisibility(View.INVISIBLE);
+            btn_startNav.setVisibility(View.VISIBLE);
+        }
+        else {
+            btn_arrived.setVisibility(View.VISIBLE);
+            btn_startNav.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    /*@Override
+        public void onBackPressed() {
+}*/
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_arrived) {
@@ -334,6 +378,10 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private void initData() {
         txtAge.setText(hubBTechModel.getCutOffTime());
         txtName.setText(hubBTechModel.getIncharge());
+        String destlat= hubBTechModel.getLatitude();
+        String Destlong=hubBTechModel.getLongitude();
+
+        //destlat = Double.parseDouble(destlat);
 //        txtDistance.setText(hubBTechModel);
         txtAddress.setText(hubBTechModel.getAddress()+" "+hubBTechModel.getPincode());
         imgRelease.setVisibility(View.INVISIBLE);
@@ -542,7 +590,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         }
     }
 
-    private double distance(double lat1, double lon1, double lat2, double lon2) {
+  /*  private double distance(double lat1, double lon1, double lat2, double lon2) {
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1))
                 * Math.sin(deg2rad(lat2))
@@ -552,6 +600,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         dist = Math.acos(dist);
         dist = rad2deg(dist);
         dist = dist * 60 * 1.1515;
+        dist = dist * 1.609344;
         return (dist);
     }
 
@@ -562,13 +611,55 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private double rad2deg(double rad) {
         return (rad * 180.0 / Math.PI);
     }
+*/
 
+
+    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        float dist = (float) (earthRadius * c);
+
+        return dist;
+    }
+
+
+
+/*     public double movePoint(double latitude, double longitude, double distanceInMetres, double bearing) {
+        double brngRad = toRadians(bearing);
+        double latRad = toRadians(latitude);
+        double lonRad = toRadians(longitude);
+        int earthRadiusInMetres = 6371000;
+        double distFrac = distanceInMetres / earthRadiusInMetres;
+
+        double latitudeResult = asin(sin(latRad) * cos(distFrac) + cos(latRad) * sin(distFrac) * cos(brngRad));
+        double a = atan2(sin(brngRad) * sin(distFrac) * cos(latRad), cos(distFrac) - sin(latRad) * sin(latitudeResult));
+        double longitudeResult = (lonRad + a + 3 * PI) % (2 * PI) - PI;
+         double result= toDegrees(longitudeResult);
+
+        System.out.println("latitude: " + toDegrees(latitudeResult) + ", longitude: " + toDegrees(longitudeResult));
+    return result; }*/
     private class HubStartApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode == 204 || statusCode == 200) {
-                btn_arrived.setVisibility(View.VISIBLE);
-                btn_startNav.setVisibility(View.GONE);
+            if (statusCode == 204 || statusCode == 200 ) {
+               if (Integertotaldiff > 100)
+               {
+                   btn_arrived.setVisibility(View.INVISIBLE);
+                   btn_startNav.setVisibility(View.VISIBLE);
+               }
+               else {
+                   btn_arrived.setVisibility(View.VISIBLE);
+                   btn_startNav.setVisibility(View.INVISIBLE);
+               }
+
+
+
+
             }
         }
 

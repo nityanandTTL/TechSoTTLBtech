@@ -84,4 +84,5 @@
     <string name="barcode_value_confirm">Confirm Barcode:</string>
     <string name="alert_invalid_barcode_value">Please enter a Valid Barcode value</string>
     <string name="alert_unmatched_barcode_values">Barcode and Confirm Barcode does not match</string>
+    <string name="progress_message_fetching_Version_details_please_wait">Fetching Version  Details, Please wait ....</string>
 </resources>

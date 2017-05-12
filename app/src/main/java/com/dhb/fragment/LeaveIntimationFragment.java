@@ -3,6 +3,7 @@ package com.dhb.fragment;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,13 +44,12 @@ public class LeaveIntimationFragment extends AbstractFragment {
     public static final String TAG_FRAGMENT = "LEAVE_INTIMATION_FRAGMENT";
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
-    TextView fromdate, todate, leavetype, leaveremark, days;
+    TextView fromdate, todate, leavetype, leaveremark, days,textcalender;
     int daysdiff;
     String defdate;
     Button Applyleave;
     RadioButton one,more;
     RadioGroup group;
-
     private int mYear, mMonth, mDay;
     private View rootView;
     private ArrayList<LeaveNatureMasterModel> leaveNatureMasterModels;
@@ -152,7 +152,20 @@ public class LeaveIntimationFragment extends AbstractFragment {
                                 toDt.add(Calendar.HOUR,24);
                             }
                         }, mYear, mMonth, mDay);
+                try {
+
+                    // applyLeaveRequestModel.setDays(daysdiff);
+
+
+
+
+
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
                 datePickerDialog.show();
+
 
 
             }
@@ -163,29 +176,22 @@ public class LeaveIntimationFragment extends AbstractFragment {
         Applyleave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long diff;
+                long diff=5;
+                long diffTime = toDt.getTimeInMillis()-fromDt.getTimeInMillis();
+                daysdiff = (int) (diffTime/ (1000*60*60*24));
+                Toast.makeText(getActivity(), "Days:"+daysdiff, LENGTH_SHORT).show();
 
 
                 ApplyLeaveRequestModel applyLeaveRequestModel = new ApplyLeaveRequestModel();
                 applyLeaveRequestModel.setNature(leaveNatureModel.getId());
                 applyLeaveRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-                applyLeaveRequestModel.setLeaveType(leavetype.getText().toString());
+                applyLeaveRequestModel.setLeaveType("Not Applicable");//As Per Ganesh Sir Remarks
                 applyLeaveRequestModel.setFromdate(fromdate.getText().toString());
                 applyLeaveRequestModel.setTodate(todate.getText().toString());
                 applyLeaveRequestModel.setRemarks(leaveremark.getText().toString());
-//                applyLeaveRequestModel.setDays(Integer.parseInt(days.getText().toString()));
-                applyLeaveRequestModel.setEnteredBy(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-                applyLeaveRequestModel.setDays(daysdiff);
-                try {
-                    long diffTime = toDt.getTimeInMillis()-fromDt.getTimeInMillis();
-                    daysdiff = (int) (diffTime/ (1000*60*60*24));
-                    Toast.makeText(getActivity(), "Days:"+daysdiff, LENGTH_SHORT).show();
-                    applyLeaveRequestModel.setDays(daysdiff);
+                applyLeaveRequestModel.setDays(diff);
+                applyLeaveRequestModel.setEnteredBy(12345678);
 
-                }
-                catch(Exception e){
-                    e.printStackTrace();
-                }
 
 
 
@@ -253,6 +259,10 @@ public class LeaveIntimationFragment extends AbstractFragment {
             if (statusCode == 200) {
                 Toast.makeText(getActivity(), "Success", LENGTH_SHORT).show();
 
+
+                Fragment mFragment = new HomeScreenFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fl_homeScreen, mFragment ).commit();
             }
         }
 
@@ -261,6 +271,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
             Logger.error(TAG_FRAGMENT + "onApiCancelled: ");
             Toast.makeText(activity, R.string.network_error, LENGTH_SHORT).show();
         }
+
 
 
     }
@@ -312,11 +323,14 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 if (more.isChecked()){
 
                     todate.setVisibility(View.VISIBLE);
+                    textcalender.setText("Leave From:");
                     Toast.makeText(getActivity(),text,LENGTH_SHORT).show();
                 }
                 else
                 {
                     todate.setVisibility(View.INVISIBLE);
+                    textcalender.setText("Leave On:");
+
                 }
 
 
@@ -338,11 +352,13 @@ public class LeaveIntimationFragment extends AbstractFragment {
         fromdate = (TextView) rootView.findViewById(R.id.txt_from_date);
         todate = (TextView) rootView.findViewById(R.id.txt_to_date);
         Applyleave = (Button) rootView.findViewById(R.id.btn_leave_apply);
-        leavetype = (EditText) rootView.findViewById(R.id.et_leave_type);
+        /*leavetype = (EditText) rootView.findViewById(R.id.et_leave_type);*/
         leaveremark = (EditText) rootView.findViewById(R.id.et_leave_days_remark);
         one=(RadioButton) rootView.findViewById(R.id.radio_pirates);
         more=(RadioButton) rootView.findViewById(R.id.radio_ninjas);
         group=(RadioGroup) rootView.findViewById(R.id.group);
+        textcalender=(TextView) rootView.findViewById(R.id.Calendertextview);
+        days=(TextView)rootView.findViewById(R.id.et_leave_days_value);
 
         /*String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String defdate = (today).toString();*/
