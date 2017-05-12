@@ -60,12 +60,14 @@
                 android:layout_height="wrap_content"
                 android:text="One-Day"
                 android:textSize="12sp"
+                android:checked="true"
                 />
             <RadioButton android:id="@+id/radio_ninjas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="More than 1 day"
-                android:textSize="12sp"></RadioButton>
+                android:textSize="12sp"
+                ></RadioButton>
         </RadioGroup>
 
 
@@ -87,14 +89,14 @@
         android:weightSum="4">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/Calendertextview"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/dp_5"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="Leave Period:" />
+            android:text="Leave On:" />
 
         <TextView
             android:id="@+id/txt_from_date"
@@ -132,15 +134,18 @@
             android:paddingTop="@dimen/dp_5"
             android:textColor="#444444"
             android:textSize="15sp"
+            android:visibility="gone"
             />
     </LinearLayout>
 
-    <LinearLayout
+    <!--AS Per the Ganesh Sir ReQ-->
+    <!--<LinearLayout
         android:id="@+id/ll_leave_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="@dimen/dp_5">
+        android:layout_margin="@dimen/dp_5"
+        android:visibility="gone">
         <TextView
             android:id="@+id/title_leave_type"
             android:layout_width="wrap_content"
@@ -155,7 +160,7 @@
             android:padding="@dimen/dp_5"
             android:textSize="15sp">
         </EditText>
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/ll_leave_days"
@@ -176,6 +181,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/dp_5"
+            android:text="1"
             android:textSize="15sp"></TextView>
     </LinearLayout>
 

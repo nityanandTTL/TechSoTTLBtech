@@ -26,6 +26,7 @@ import com.dhb.models.data.EarningRegisterModel;
 import com.dhb.models.data.LeaveNatureMasterModel;
 import com.dhb.models.data.MaterialDetailsModel;
 import com.dhb.models.data.SlotModel;
+import com.dhb.models.data.VersionControlMasterModel;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AlertDialogMessage;
 import com.dhb.utils.app.AppConstants;
@@ -739,5 +740,14 @@ public class ResponseParser implements AppConstants {
 		TypeToken<ArrayList<LeaveNatureMasterModel>> token =new TypeToken<ArrayList<LeaveNatureMasterModel>>(){};
 		leaveNatureMasterModels = gson.fromJson(json,token.getType());
 		return leaveNatureMasterModels;
+	}
+
+	////Fetch VersionControl  details Response parse:
+	public VersionControlMasterModel  getVersionControlMasterResponse (String json, int statusCode) {
+	VersionControlMasterModel  versionControlMasterModels = null;
+		if (!parseIntoError(json, statusCode)){
+			versionControlMasterModels = gson.fromJson(json, VersionControlMasterModel.class);
+		}
+		return versionControlMasterModels;
 	}
 }

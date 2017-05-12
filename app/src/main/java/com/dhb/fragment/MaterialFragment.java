@@ -58,6 +58,7 @@ public class MaterialFragment extends AbstractFragment {
     ArrayList<MaterialsStocksModel> stockModelsArr;
 
 
+
     public MaterialFragment() {
         // Required empty public constructor
     }

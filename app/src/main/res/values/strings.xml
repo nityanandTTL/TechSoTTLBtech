@@ -78,4 +78,5 @@
     <string name="password_do_not_match">New Password and confirm password do not match</string>
     <string name="progress_message_Applying_Leave_please_wait">Applying Leave, Please wait ....</string>
     <string name="progress_message_fetching_Leave_details_please_wait">Fetching Leave  Details, Please wait ....</string>
+    <string name="progress_message_fetching_Version_details_please_wait">Fetching Version  Details, Please wait ....</string>
 </resources>

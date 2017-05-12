@@ -90,6 +90,8 @@ public class AbstractApiModel implements AppConstants {
 
     public String FETCH_DEPOSITREGISTER_DETAIL=VERSION_API_URL+"/DepositPayments";
 
+    public String FETCH_VERSION_CONTROL_DETAIL=VERSION_API_URL+"/VersionControl";
+
     public String FETCH_MATERIALMASTER_DETAIL=VERSION_API_URL+"/MaterialMaster";
 
     public String FETCH_MATERIALINV_DETAIL=VERSION_API_URL+"/BTechMaterialINV";
