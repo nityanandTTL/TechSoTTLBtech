@@ -7,6 +7,6 @@ import com.dhb.models.data.CampDetailModel;
  * Created by ISRO on 4/27/2017.
  */
 public interface CampListDisplayRecyclerViewAdapterDelegate {
-    void onItemClick(CampDetailModel campDetailModel);
+    void onItemClick(CampDetailModel campDetailModel,int status,int pos);
     void onNavigationStart(CampDetailModel campListDisplayResponseModel);
 }

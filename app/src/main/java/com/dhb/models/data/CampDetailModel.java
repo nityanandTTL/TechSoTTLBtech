@@ -12,14 +12,11 @@ import java.util.ArrayList;
 public class CampDetailModel implements Parcelable {
     private int Id, Amount, ExpectedCrowd, ExpectedBtech, Leader, LeaderContactNo;
     private String CampId, VisitId, CampDate, Location, Status;
-    private boolean InventoryAssign;
+    private boolean InventoryAssign, isStarted;
     private String CampDateTime, BookedBy, Product, QRCode;
     private ArrayList<CampBtechModel> btechs;
     private ExecutionTrack executionTrack;
-
-    public CampDetailModel() {
-
-    }
+    private boolean IsAccepted;
 
     protected CampDetailModel(Parcel in) {
         Id = in.readInt();
@@ -34,11 +31,13 @@ public class CampDetailModel implements Parcelable {
         Location = in.readString();
         Status = in.readString();
         InventoryAssign = in.readByte() != 0;
+        isStarted = in.readByte() != 0;
         CampDateTime = in.readString();
         BookedBy = in.readString();
         Product = in.readString();
         QRCode = in.readString();
         executionTrack = in.readParcelable(ExecutionTrack.class.getClassLoader());
+        IsAccepted = in.readByte() != 0;
     }
 
     @Override
@@ -55,11 +54,13 @@ public class CampDetailModel implements Parcelable {
         dest.writeString(Location);
         dest.writeString(Status);
         dest.writeByte((byte) (InventoryAssign ? 1 : 0));
+        dest.writeByte((byte) (isStarted ? 1 : 0));
         dest.writeString(CampDateTime);
         dest.writeString(BookedBy);
         dest.writeString(Product);
         dest.writeString(QRCode);
         dest.writeParcelable(executionTrack, flags);
+        dest.writeByte((byte) (IsAccepted ? 1 : 0));
     }
 
     @Override
@@ -78,6 +79,26 @@ public class CampDetailModel implements Parcelable {
             return new CampDetailModel[size];
         }
     };
+
+    public boolean isAccepted() {
+        return IsAccepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        IsAccepted = accepted;
+    }
+
+    public boolean isStarted() {
+        return isStarted;
+    }
+
+    public void setStarted(boolean started) {
+        isStarted = started;
+    }
+
+    public CampDetailModel() {
+
+    }
 
     public int getAmount() {
         return Amount;

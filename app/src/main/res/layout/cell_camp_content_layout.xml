@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="750dp"
+    android:layout_height="1050dp"
     android:orientation="vertical"
     android:visibility="gone">
 
@@ -368,23 +368,17 @@
             <include
                 android:id="@+id/ll_view_btech"
                 layout="@layout/group_item" />
-
-            <LinearLayout
-                android:id="@+id/ll_btechs"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"></LinearLayout>
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/ll_btechs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <TableLayout
-                android:id="@+id/tbl_btechs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"></TableLayout>
-
-            <ListView
-                android:id="@+id/lv_btech_list"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:visibility="gone"></ListView>
+                </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
 
         <Button
@@ -398,7 +392,23 @@
             android:background="@drawable/purple_btn_bg"
             android:gravity="center"
             android:minEms="10"
+android:visibility="visible"
             android:text="Start"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/btn_arrived"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/purple_btn_bg"
+            android:gravity="center"
+            android:minEms="10"
+      android:visibility="gone"
+            android:text="Arrived"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
     </RelativeLayout>

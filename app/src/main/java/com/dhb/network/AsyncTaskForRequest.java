@@ -7,6 +7,7 @@ import android.util.Log;
 import com.dhb.R;
 import com.dhb.models.api.request.ApplyLeaveRequestModel;
 import com.dhb.models.api.request.BtechsRequestModel;
+import com.dhb.models.api.request.CampStartedRequestModel;
 import com.dhb.models.api.request.ChangePasswordRequestModel;
 import com.dhb.models.api.request.HubStartRequestModel;
 import com.dhb.models.api.request.LoginRequestModel;
@@ -143,6 +144,30 @@ public class AsyncTaskForRequest {
         }
         return apiCallAsyncTask;
     }
+  /*
+	 *Camp Started Api Integration*/
+
+    public ApiCallAsyncTask getCampStartedRequestAsyncTask(CampStartedRequestModel campStartedRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(campStartedRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.CAMP_STARTED/*+"/"+orderStatusChangeRequestModel.getId()*/);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_changing_order_status_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
 
     /*
 	 * Set Btech Slot Availability Api Integration*/
@@ -182,6 +207,29 @@ public class AsyncTaskForRequest {
           //  abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_ORDER_DETAIL+"/"+appPreferenceManager.getLoginResponseModel().getUserID());
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetching_order_details_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }/*
+	 * Send QR code Api Integration*/
+
+    public ApiCallAsyncTask getSendQRCodeRequestAsyncTask(String qrContent) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getSendQRCodeRequestAsyncTask: " );
+           // String postJson = new Gson().toJson(orderVisitDetailsModel);
+          //  abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_ORDER_DETAIL+"/"+qrContent);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);

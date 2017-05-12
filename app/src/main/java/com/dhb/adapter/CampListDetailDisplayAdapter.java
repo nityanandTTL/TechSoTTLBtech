@@ -23,12 +23,13 @@ import com.dhb.activity.HomeScreenActivity;
 import com.dhb.delegate.CampListDisplayRecyclerViewAdapterDelegate;
 
 import com.dhb.models.api.response.CampListDisplayResponseModel;
-import com.dhb.models.data.CampBtechModel;
 import com.dhb.models.data.CampDetailModel;
 
 import com.ramotion.foldingcell.FoldingCell;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 
 
@@ -86,16 +87,27 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
     }
 
     private void initListeners(final FoldingCellViewHolder holder, final int pos) {
+        holder.imgedit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 8,pos);
+            }
+        });
         holder.img_accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos));
+                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 8,pos);
             }
         });
         holder.btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                campListDisplayRecyclerViewAdapterDelegate.onNavigationStart(campDetailModelList.get(pos));
+                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 7,pos);
+            }
+        }); holder.btn_arrived.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 3,pos);
             }
         });
         holder.cell.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +127,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             holder.tv_leader.setText("Ledger : " + campDetailModelList.get(pos).getLeader());
             holder.tv_date_time.setText("" + campDetailModelList.get(pos).getCampDateTime());
             holder.tv_location.setText(""/* + campDetailModelList.get(pos).getLocation()*/);
-            holder.tv_camp.setText("" + pos + 1);
+            holder.tv_camp.setText(String.valueOf(pos+1));
             holder.tvName.setText("" + campDetailModelList.get(pos).getCampId());
             if (campDetailModelList.get(pos).getProduct().equals("")) {
                 holder.tv_product.setVisibility(View.INVISIBLE);
@@ -132,36 +144,49 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             holder.tv_product.setText("" + campDetailModelList.get(pos).getProduct());
             holder.tv_amount.setText("" + campDetailModelList.get(pos).getAmount());
             holder.tv_expected_crowd.setText("" + campDetailModelList.get(pos).getExpectedCrowd());
-            holder.txt_camp.setText("" + pos + 1);
+            holder.txt_camp.setText(String.valueOf(pos+1));
             holder.txt_name.setText("" + campDetailModelList.get(pos).getCampId());
             holder.txt_ledger.setText("" + campDetailModelList.get(pos).getLeader());
             holder.txt_date_time.setText("" + campDetailModelList.get(pos).getCampDateTime());
             holder.tv_address.setText("" + campDetailModelList.get(pos).getLocation());
             holder.tv_kits.setVisibility(View.GONE);
             holder.txt_kits.setVisibility(View.GONE);
+
+            if (campDetailModelList.get(pos).isAccepted()) {
+                holder.img_accept.setVisibility(View.GONE);
+                holder.imgedit.setVisibility(View.GONE);
+                if (/*isTommorrowOnwards() &&*/ !campDetailModelList.get(pos).isStarted()) {
+                    holder.btn_start.setVisibility(View.VISIBLE);
+                    holder.btn_arrived.setVisibility(View.GONE);
+                } else {
+                    holder.btn_start.setVisibility(View.GONE);
+                    holder.btn_arrived.setVisibility(View.VISIBLE);
+                }
+
+            } else {
+                holder.img_accept.setVisibility(View.VISIBLE);
+                holder.imgedit.setVisibility(View.VISIBLE);
+            }
         }
         if (campDetailModelList.get(pos).getBtechs().size() > 0) {
             Log.e(TAG, "initData: getBtechs " + campDetailModelList.get(pos).getBtechs().size());
-        /*   ArrayAdapter<CampBtechModel> adapter = new ArrayAdapter<CampBtechModel>(activity,
-                   R.layout.item_camp_btechs,R.id.text1, campDetailModelList.get(pos).getBtechs());
-            holder.lv_btech_list.setAdapter(adapter);
-            holder.lv_btech_list.setVisibility(View.VISIBLE);*/
-           /* for (int i = 0; i <campDetailModelList.get(pos).getBtechs().size() ; i++) {
+            holder.ll_btechs.removeAllViews();
+            for (int i = 0; i < campDetailModelList.get(pos).getBtechs().size(); i++) {
                 LayoutInflater vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View v = vi.inflate(R.layout.item_camp_btechs, null);
-                TextView textView = (TextView) v.findViewById(R.id.tv_btech_id1);
-                textView.setText("" + campDetailModelList.get(pos).getBtechs().get(i).getBtechId());
-                holder.insertPoint.addView(v, i, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            }*/
+                TextView tv_btech_id1 = (TextView) v.findViewById(R.id.tv_btech_id1);
+                TextView tv_sr_no = (TextView) v.findViewById(R.id.tv_sr_no);
+                TextView tv_mob = (TextView) v.findViewById(R.id.tv_mob);
+                TextView tv_status = (TextView) v.findViewById(R.id.tv_status);
+                tv_btech_id1.setText("Btech ID: " + campDetailModelList.get(pos).getBtechs().get(i).getBtechId());
+                tv_mob.setText("Mob. No:" + campDetailModelList.get(pos).getBtechs().get(i).getMobile());
+                tv_sr_no.setText(String.valueOf(i+1));
+                tv_status.setText("Status: " + campDetailModelList.get(pos).getBtechs().get(i).getStatus());
+                holder.ll_btechs.addView(v, i, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            }
 
-            LayoutInflater vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View v = vi.inflate(R.layout.item_camp_btechs, null);
-            TextView textView = (TextView) v.findViewById(R.id.tv_btech_id1);
-            textView.setText("" + campDetailModelList.get(pos).getBtechs().get(pos).getBtechId());
-            holder.insertPoint.addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            //createTBL(pos,holder);
         } else {
-            holder.lv_btech_list.setVisibility(View.GONE);
+            holder.ll_btechs.setVisibility(View.GONE);
         }
 
         if (unfoldedIndexes.contains(pos)) {
@@ -172,38 +197,43 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
 
     }
 
-  /*  private void createTBL(int pos,View view) {
-        TableRow table_row = new TableRow(activity);
-        TextView tv_name = new TextView(activity);
-        Button btn_check = new Button(activity);
-        ImageView img_line = new ImageView(activity);
+    private boolean isTommorrowOnwards() {
+        Calendar c = Calendar.getInstance();
 
-        table_row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-        table_row.setBackgroundColor(color_white);
-        table_row.setGravity(Gravity.CENTER_HORIZONTAL);
+        // set the calendar to start of today
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        // and get that as a Date
+        Date today = c.getTime();
+        // or as a timestamp in milliseconds
+        long todayInMillis = c.getTimeInMillis();
+        // user-specified date which you are testing
+        // let's say the components come from a form or something
+        int year = 2011;
+        int month = 5;
+        int dayOfMonth = 20;
 
-        tv_name.setText(campDetailModelList.get(pos).getBtechs().get(pos).getBtechId());
-        tv_name.setTextColor(color_blue);
-        tv_name.setTextSize(16);
-        tv_name.setTypeface(Typeface.DEFAULT_BOLD);
-        tv_name.setWidth(150);
+        // reuse the calendar to set user specified date
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-        btn_check.setLayoutParams(new TableRow.LayoutParams(30, 30));
-        btn_check.setBackgroundResource(R.drawable.call_w_bg);
+        // and get that as a Date
+        Date dateSpecified = c.getTime();
 
-        img_line.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, 2));
-        img_line.setBackgroundResource(R.drawable.separater_line);
+        // test your condition
+        if (dateSpecified.before(today)) {
+            System.err.println("Date specified [" + dateSpecified + "] is before today [" + today + "]");
+            return false;
+        } else {
+            System.err.println("Date specified [" + dateSpecified + "] is NOT before today [" + today + "]");
+            return true;
+        }
 
-        table_row.addView(tv_name);
-        table_row.addView(btn_check);
+    }
 
-        view.tbl.addView(table_row);
-        table.addView(img_line);
-
-        int id = i + CHECK_BUTTON_ID;
-        btn_check.setId(id);
-        ids_check[i] = id;
-    }*/
 
     private class FoldingCellViewHolder {
         TextView tv_camp, tvName, tv_leader, tv_date_time, tv_location, tv_kits, txt_address, tv_product, tv_amount,
@@ -211,12 +241,9 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
         TextView txt_camp, txt_name, txt_ledger, txt_date_time, txt_distance, txt_kits;
         LinearLayout ll_view_btech, ll_leader_detail, ll_btechs;
         ImageView img_accept, imgedit;
-        Button btn_start;
+        Button btn_start, btn_arrived;
         FoldingCell cell;
-        ListView lv_btech_list;
-        ViewGroup insertPoint;
-        TableLayout tableLayout;
-        final int CHECK_BUTTON_ID = 982301;
+
         int ids_check[];
         boolean bool_check[];
 
@@ -236,7 +263,6 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             tv_amount = (TextView) itemView.findViewById(R.id.tv_amount);
             tv_expected_crowd = (TextView) itemView.findViewById(R.id.tv_expected_crowd);
             ll_view_btech = (LinearLayout) itemView.findViewById(R.id.ll_view_btech);
-            lv_btech_list = (ListView) itemView.findViewById(R.id.lv_btech_list);
             btn_start = (Button) itemView.findViewById(R.id.btn_start);
             ll_leader_detail = (LinearLayout) itemView.findViewById(R.id.ll_leader_detail);
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
@@ -250,8 +276,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             imgedit = (ImageView) itemView.findViewById(R.id.imgedit);
             tv_address = (TextView) itemView.findViewById(R.id.tv_address);
             ll_btechs = (LinearLayout) itemView.findViewById(R.id.ll_btechs);
-            insertPoint = (ViewGroup) itemView.findViewById(R.id.ll_btechs);
-            tableLayout = (TableLayout) itemView.findViewById(R.id.tbl_btechs);
+            btn_arrived = (Button) itemView.findViewById(R.id.btn_arrived);
         }
     }
 

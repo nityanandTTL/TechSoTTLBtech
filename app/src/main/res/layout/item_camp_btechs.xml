@@ -6,6 +6,7 @@
 <LinearLayout
     android:layout_width="fill_parent"
     android:id="@+id/ll_item"
+    android:padding="8dp"
     android:background="@android:drawable/dialog_holo_light_frame"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -19,7 +20,7 @@
 
         <TextView
 
-            android:id="@+id/tv_btech_id"
+            android:id="@+id/tv_sr_no"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerInParent="true"
@@ -45,12 +46,14 @@
                 android:text="BtechId : 884543106" />
 
             <TextView
+                android:id="@+id/tv_mob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:text="Mobile Number : 462-7762-7666" />
 
             <TextView
+                android:id="@+id/tv_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
