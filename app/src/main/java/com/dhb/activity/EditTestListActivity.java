@@ -19,6 +19,7 @@ import com.dhb.delegate.EditTestExpandListAdapterCheckboxDelegate;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.BrandMasterModel;
 import com.dhb.models.data.ChildTestsModel;
+import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestTypeWiseTestRateMasterModelsList;
 import com.dhb.uiutils.AbstractActivity;
@@ -45,6 +46,7 @@ public class EditTestListActivity extends AbstractActivity{
     private long selectedTestsCost;
     private long selectedTestsTotalCost;
     private ArrayList<TestRateMasterModel> restOfTestList;
+    private OrderDetailsModel orderDetailsModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +57,11 @@ public class EditTestListActivity extends AbstractActivity{
         appPreferenceManager = new AppPreferenceManager(activity);
         selectedTestsList = new ArrayList<>();
         restOfTestList = new ArrayList<>();
+        orderDetailsModel = new OrderDetailsModel();
         if(getIntent().getExtras()!=null){
             selectedTestsList = getIntent().getExtras().getParcelableArrayList(BundleConstants.SELECTED_TESTS_LIST);
             restOfTestList = getIntent().getExtras().getParcelableArrayList(BundleConstants.REST_BEN_TESTS_LIST);
+            orderDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
         }
         totalAmount = 0;
         sampleTypesArr = new ArrayList<>();
@@ -93,6 +97,7 @@ public class EditTestListActivity extends AbstractActivity{
                         public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
                             Logger.error("check changed");
                             selectedTestsList = selectedTests;
+                            expAdapter.notifyDataSetChanged();
                         }
                     });
                     expandList.setAdapter(expAdapter);
@@ -131,10 +136,19 @@ public class EditTestListActivity extends AbstractActivity{
                 trimSelectedTestsListforDuplicates(selectedTestsList);
                 selectedTestsCost = calculateCost(selectedTestsList);
                 long restBenTestCost = calculateCost(restOfTestList);
+
+                long selectedTestsDiscount = calculateDiscount(selectedTestsList);
+                long restTestsDiscount = calculateDiscount(restOfTestList);
+
+                long selectedTestsIncentive = calculateIncentive(selectedTestsList);
+                long restTestsIncentive = calculateIncentive(restOfTestList);
+
                 selectedTestsTotalCost = restBenTestCost+selectedTestsCost;
                 Intent intentFinish = new Intent();
                 intentFinish.putExtra(BundleConstants.SELECTED_TESTS_LIST, selectedTestsList);
                 intentFinish.putExtra(BundleConstants.SELECTED_TESTS_COST,selectedTestsCost);
+                intentFinish.putExtra(BundleConstants.SELECTED_TESTS_DISCOUNT,selectedTestsDiscount+restTestsDiscount);
+                intentFinish.putExtra(BundleConstants.SELECTED_TESTS_INCENTIVE,selectedTestsIncentive+restTestsIncentive);
                 intentFinish.putExtra(BundleConstants.SELECTED_TESTS_TOTAL_COST,selectedTestsTotalCost);
                 setResult(BundleConstants.EDIT_TESTS_FINISH,intentFinish);
                 finish();
@@ -143,11 +157,31 @@ public class EditTestListActivity extends AbstractActivity{
     }
 
     private long calculateCost(ArrayList<TestRateMasterModel> selTests) {
-        //TODO  calculate the total price
+        //TODO  calculate the total price order wise
         long totalCost = 0;
         for (TestRateMasterModel tt : selTests){
             if (tt.getRate() != 0){
                 totalCost = totalCost + tt.getRate();
+            }
+        }
+        return totalCost;
+    }
+    private long calculateDiscount(ArrayList<TestRateMasterModel> selTests) {
+        //TODO  calculate the total Discount order wise
+        long totalCost = 0;
+        for (TestRateMasterModel tt : selTests){
+            if (tt.getRate() != 0){
+                totalCost = totalCost + tt.getDiscount();
+            }
+        }
+        return totalCost;
+    }
+    private long calculateIncentive(ArrayList<TestRateMasterModel> selTests) {
+        //TODO  calculate the total incentive order wise
+        long totalCost = 0;
+        for (TestRateMasterModel tt : selTests){
+            if (tt.getRate() != 0){
+                totalCost = totalCost + tt.getIncentive();
             }
         }
         return totalCost;
@@ -178,10 +212,10 @@ public class EditTestListActivity extends AbstractActivity{
                         if(j!=i){
                             TestRateMasterModel tt2 = new TestRateMasterModel();
                             tt2 = selTests.get(j);
-                            if(tt2!=null && !tt2.getTestType().equalsIgnoreCase("TEST") && tt2.getChldtests().size()>0){
+                            if(tt2!=null && !tt2.getTestType().equalsIgnoreCase("TEST") && tt2.getChldtests()!=null && tt2.getChldtests().size()>0){
                                 for (ChildTestsModel c:
                                      tt2.getChldtests()) {
-                                    if(c.getChildTestCode().equalsIgnoreCase(ttCode)){
+                                    if(c.getChildTestCode()!=null && c.getChildTestCode().equalsIgnoreCase(ttCode)){
                                         selectedTestsList.remove(tt);
                                         k++;
                                     }
@@ -207,6 +241,15 @@ public class EditTestListActivity extends AbstractActivity{
         final ArrayList<BrandMasterModel> brandMasterModels = brandMasterDao.getAllModels();
         ArrayAdapter<BrandMasterModel> adapter = new ArrayAdapter<BrandMasterModel>(this, android.R.layout.simple_spinner_item, brandMasterModels);
         sp_tests.setAdapter(adapter);
+        if(orderDetailsModel!=null && !orderDetailsModel.isAddBen()){
+            for(int i=0;i<brandMasterModels.size();i++){
+                if(orderDetailsModel.getBrandId()==brandMasterModels.get(i).getBrandId()){
+                    sp_tests.setSelection(i);
+                    break;
+                }
+            }
+            sp_tests.setEnabled(false);
+        }
     }
 
     @Override

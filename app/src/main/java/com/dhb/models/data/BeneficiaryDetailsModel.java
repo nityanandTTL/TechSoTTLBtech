@@ -22,6 +22,9 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
     private ArrayList<BarcodeDetailsModel> barcodedtl;
     private ArrayList<BeneficiarySampleTypeDetailsModel> sampleType;
     private ArrayList<TestRateMasterModel> testsList;
+    private ArrayList<TestWiseBeneficiaryClinicalHistoryModel> clHistory;
+    private ArrayList<BeneficiaryLabAlertsModel> labAlert;
+
     public BeneficiaryDetailsModel() {
         super();
     }
@@ -170,5 +173,20 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
 
     public void setTestsList(ArrayList<TestRateMasterModel> testsList) {
         this.testsList = testsList;
+    }
+    public ArrayList<TestWiseBeneficiaryClinicalHistoryModel> getClHistory() {
+        return clHistory;
+    }
+
+    public void setClHistory(ArrayList<TestWiseBeneficiaryClinicalHistoryModel> clHistory) {
+        this.clHistory = clHistory;
+    }
+
+    public ArrayList<BeneficiaryLabAlertsModel> getLabAlert() {
+        return labAlert;
+    }
+
+    public void setLabAlert(ArrayList<BeneficiaryLabAlertsModel> labAlert) {
+        this.labAlert = labAlert;
     }
 }

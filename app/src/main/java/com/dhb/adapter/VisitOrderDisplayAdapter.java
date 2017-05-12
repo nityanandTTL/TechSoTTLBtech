@@ -7,6 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
@@ -82,9 +83,14 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         holder.cell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            registerToggle(pos);
-            holder.cell.toggle(false);
-            initData(holder,pos);
+                if(pos==0) {
+                    registerToggle(pos);
+                    holder.cell.toggle(false);
+                    initData(holder, pos);
+                }
+                else{
+                    Toast.makeText(activity,"Please service the earlier orders first",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         if(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")){
@@ -106,9 +112,11 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0)!=null) {
             holder.tvAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
             holder.tvName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+            holder.tvName.setSelected(true);
             holder.tvSrNo.setText(pos + 1 + "");
             holder.txtAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
             holder.txtName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+            holder.txtName.setSelected(true);
             holder.txtSrNo.setText(pos + 1 + "");
             holder.txtAddress.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress());
             holder.tvAadharNo.setVisibility(View.GONE);

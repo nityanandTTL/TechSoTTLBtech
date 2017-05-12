@@ -1,8 +1,11 @@
 package com.dhb.fragment;
 
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +15,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dhb.R;
+import com.dhb.activity.AddEditBeneficiaryDetailsActivity;
 import com.dhb.activity.OrderBookingActivity;
 import com.dhb.adapter.BeneficiaryScreenSlidePagerAdapter;
+import com.dhb.dao.DhbDao;
+import com.dhb.dao.models.BeneficiaryDetailsDao;
+import com.dhb.dao.models.OrderDetailsDao;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
+import com.dhb.utils.app.DeviceUtils;
 
 import java.util.ArrayList;
 
@@ -38,7 +46,11 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private ImageView[] dots;
     private BeneficiaryScreenSlidePagerAdapter beneficiaryScreenSlidePagerAdapter;
     private LinearLayout pagerIndicator;
-
+    private BeneficiaryDetailsModel beneficiaryDetailsModel = new BeneficiaryDetailsModel();
+    private OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
+    private DhbDao dhbDao;
+    private OrderDetailsDao orderDetailsDao;
+    private BeneficiaryDetailsDao beneficiaryDetailsDao;
     public BeneficiariesDisplayFragment() {
         // Required empty public constructor
     }
@@ -55,6 +67,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (OrderBookingActivity) getActivity();
+        dhbDao = new DhbDao(activity);
+        orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
+        beneficiaryDetailsDao = new BeneficiaryDetailsDao(dhbDao.getDb());
         appPreferenceManager = new AppPreferenceManager(activity);
         if (getArguments() != null) {
             this.orderVisitDetailsModel = getArguments().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
@@ -68,7 +83,46 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         rootView = inflater.inflate(R.layout.fragment_beneficiaries_display, container, false);
         initUI();
         initData();
+        initListeners();
         return rootView;
+    }
+
+    private void initListeners() {
+        txtAddBeneficiary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle("Confirm Action")
+                        .setMessage("Do you really want to add to new beneficiary?")
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        orderDetailsModel.setOrderNo(DeviceUtils.randomString(8));
+                        ArrayList<BeneficiaryDetailsModel> beneficiaries = new ArrayList<BeneficiaryDetailsModel>();
+
+                        beneficiaryDetailsModel = new BeneficiaryDetailsModel();
+                        beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                        beneficiaryDetailsModel.setBenId((int)(Math.random()*999));
+                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+
+                        beneficiaries.add(beneficiaryDetailsModel);
+
+                        orderDetailsModel.setBenMaster(beneficiaries);
+                        orderDetailsDao.insertOrUpdate(orderDetailsModel);
+
+                        Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
+                        intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
+                        intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                        startActivityForResult(intentEdit, BundleConstants.ADD_EDIT_START);
+                    }
+                }).show();
+            }
+        });
     }
 
     private void initData() {
@@ -76,6 +130,19 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 orderVisitDetailsModel.getAllOrderdetails()) {
             totalAmount = totalAmount + orderDetailsModel.getAmountDue();
         }
+        if(orderVisitDetailsModel.getAllOrderdetails().size()>0){
+            orderDetailsModel = orderVisitDetailsModel.getAllOrderdetails().get(0);
+        }
+        orderDetailsModel.setAmountDue(0);
+        orderDetailsModel.setBrandId(0);
+        orderDetailsModel.setAddBen(true);
+        orderDetailsModel.setOrderNo("");
+        orderDetailsModel.setTestEdit(false);
+        orderDetailsModel.setMargin(0);
+        orderDetailsModel.setDiscount(0);
+        orderDetailsModel.setBenMaster(new ArrayList<BeneficiaryDetailsModel>());
+        orderDetailsModel.setProjId("");
+
         txtAmtPayable.setText(totalAmount+"");
         ArrayList<BeneficiaryDetailsModel> beneficiariesArr = new ArrayList<>();
         for (OrderDetailsModel orderDetailsModel :
@@ -142,5 +209,13 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         public void onPageScrollStateChanged(int state) {
 
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == BundleConstants.ADD_EDIT_START && resultCode == BundleConstants.ADD_EDIT_FINISH) {
+            initData();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

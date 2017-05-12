@@ -6,8 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.dhb.models.data.BarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
+import com.dhb.models.data.BeneficiaryLabAlertsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.TestRateMasterModel;
+import com.dhb.models.data.TestWiseBeneficiaryClinicalHistoryModel;
 import com.dhb.utils.api.Logger;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -40,6 +42,8 @@ public class BeneficiaryDetailsDao {
 	String FASTING = "Fasting";
 	String VENEPUNCTURE = "Venepuncture";
 	String BARCODE_DTL = "barcodedtl";
+	String CLINICAL_HISTORY = "clHistory";
+	String LAB_ALERT = "labAlert";
 	String SAMPLE_TYPE = "sampleType";
 	String CREATED_AT = "createdAt";
 	String CREATED_BY = "createdBy";
@@ -85,9 +89,17 @@ public class BeneficiaryDetailsDao {
 		TypeToken<ArrayList<TestRateMasterModel>> tokenTestsList = new TypeToken<ArrayList<TestRateMasterModel>>(){};
 		ArrayList<TestRateMasterModel> tstArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(TESTS_LIST)),tokenTestsList.getType());
 
+		TypeToken<ArrayList<TestWiseBeneficiaryClinicalHistoryModel>> tokenCH = new TypeToken<ArrayList<TestWiseBeneficiaryClinicalHistoryModel>>(){};
+		ArrayList<TestWiseBeneficiaryClinicalHistoryModel> tCHArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(CLINICAL_HISTORY)),tokenCH.getType());
+
+		TypeToken<ArrayList<BeneficiaryLabAlertsModel>> tokenLA = new TypeToken<ArrayList<BeneficiaryLabAlertsModel>>(){};
+		ArrayList<BeneficiaryLabAlertsModel> tLAArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(LAB_ALERT)),tokenLA.getType());
+
 		beneficiaryDetailsModel.setBarcodedtl(bmArr);
 		beneficiaryDetailsModel.setSampleType(bstArr);
 		beneficiaryDetailsModel.setTestsList(tstArr);
+		beneficiaryDetailsModel.setClHistory(tCHArr);
+		beneficiaryDetailsModel.setLabAlert(tLAArr);
 
 		beneficiaryDetailsModel.setCreatedAt(cursor.getLong(cursor.getColumnIndex(CREATED_AT)));
 		beneficiaryDetailsModel.setCreatedBy(cursor.getString(cursor.getColumnIndex(CREATED_BY)));
@@ -115,6 +127,8 @@ public class BeneficiaryDetailsDao {
 		values.put(BARCODE_DTL, new Gson().toJson(orderDetailsModel.getBarcodedtl()));
 		values.put(SAMPLE_TYPE, new Gson().toJson(orderDetailsModel.getSampleType()));
 		values.put(TESTS_LIST, new Gson().toJson(orderDetailsModel.getTestsList()));
+		values.put(CLINICAL_HISTORY, new Gson().toJson(orderDetailsModel.getClHistory()));
+		values.put(LAB_ALERT, new Gson().toJson(orderDetailsModel.getLabAlert()));
 		values.put(CREATED_AT, orderDetailsModel.getCreatedAt());
 		values.put(CREATED_BY, orderDetailsModel.getCreatedBy());
 		values.put(UPDATED_AT, orderDetailsModel.getUpdatedAt());

@@ -49,6 +49,7 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
     View view;
     boolean isAllScanned=false;
     HUBBTechModel hubbTechModel;
+    private IntentIntegrator intentIntegrator;
 
     public BtechCollectionsListFragment() {
     }
@@ -186,7 +187,7 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null && scanningResult.getContents() != null) {
             scanned_barcode = scanningResult.getContents();
-            master_scanned_barcode=scanningResult.getContents();
+            master_scanned_barcode = scanningResult.getContents();
             if (!scanned_barcode.equals("" + barcodeModels.get(current_position).getBarcode())) {
                 Toast.makeText(activity, "no match! Try again", Toast.LENGTH_SHORT).show();
                 view.setBackgroundColor(Color.RED);
@@ -196,16 +197,21 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
                 view.setBackgroundColor(Color.GREEN);
                 isAllScanned = true;
             }
-        }
-        else{
+        } else {
             Logger.error("Cancelled from fragment");
-            isAllScanned=false;
+            isAllScanned = false;
         }
     }
 
 
     public void scanFromFragment() {
-        new IntentIntegrator(activity).initiateScan();
+        intentIntegrator = new IntentIntegrator(activity){
+            @Override
+            protected void startActivityForResult(Intent intent, int code) {
+                BtechCollectionsListFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+            }
+        };
+        intentIntegrator.initiateScan();
     }
 
     private void prepareRecyclerView() {

@@ -79,7 +79,7 @@ public class LabAlertMasterDao {
 
 	public LabAlertMasterModel getModelFromId(String id) {
 
-		LabAlertMasterModel labAlertMasterModel = new LabAlertMasterModel();
+		LabAlertMasterModel labAlertMasterModel = null;
 		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + LAB_ALERT_ID + "=? AND " + RECORD_STATUS + "=?";
 		String[] whereParams = new String[] {id,"A"};
 		Cursor cursor = this.db.rawQuery(query, whereParams);

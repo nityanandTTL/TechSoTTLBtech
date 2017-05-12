@@ -5,8 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dhb.R;
@@ -97,7 +96,8 @@ public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableLi
             holder = new ViewChildHolder();
 
             holder.txt_test = (TextView) convertView.findViewById(R.id.txt_test);
-            holder.chk_collected = (CheckBox) convertView.findViewById(R.id.chk_collected);
+            holder.imgCheck = (ImageView) convertView.findViewById(R.id.img_check);
+            holder.imgChecked = (ImageView) convertView.findViewById(R.id.img_checked);
             convertView.setTag(holder);
         } else {
             holder = (ViewChildHolder) convertView.getTag();
@@ -108,21 +108,34 @@ public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableLi
         testWiseBeneficiaryClinicalHistoryModel.setBenId(BenId);
         testWiseBeneficiaryClinicalHistoryModel.setTest(testsList.get(groupPosition).getTestCode());
         testWiseBeneficiaryClinicalHistoryModel.setClinicalHistoryId(testClinicalHistoryModel.getClinicalHtrId());
-        holder.chk_collected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        if(chArr!=null) {
+            if (chArr.contains(testWiseBeneficiaryClinicalHistoryModel)) {
+                holder.imgCheck.setVisibility(View.GONE);
+                holder.imgChecked.setVisibility(View.VISIBLE);
+            } else {
+                holder.imgCheck.setVisibility(View.VISIBLE);
+                holder.imgChecked.setVisibility(View.GONE);
+            }
+        }
+        else{
+            chArr = new ArrayList<>();
+        }
+        holder.imgCheck.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    chArr.add(testWiseBeneficiaryClinicalHistoryModel);
-                } else {
-                    chArr.remove(testWiseBeneficiaryClinicalHistoryModel);
-                }
+            public void onClick(View v) {
+                chArr.add(testWiseBeneficiaryClinicalHistoryModel);
+                selectClinicalHistoryCheckboxDelegate.onCheckChange(chArr);
+            }
+        });
+        holder.imgChecked.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chArr.remove(testWiseBeneficiaryClinicalHistoryModel);
                 selectClinicalHistoryCheckboxDelegate.onCheckChange(chArr);
             }
         });
         holder.txt_test.setText(testClinicalHistoryModel.getClinicalHistory());
-        if(chArr.contains(testWiseBeneficiaryClinicalHistoryModel)){
-            holder.chk_collected.setChecked(true);
-        }
+
         return convertView;
     }
 
@@ -131,7 +144,7 @@ public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableLi
     }
 
     private class ViewChildHolder {
-        CheckBox chk_collected;
+        ImageView imgCheck,imgChecked;
         TextView txt_test;
     }
 

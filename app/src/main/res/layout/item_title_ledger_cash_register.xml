@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:id="@+id/tr_itlcrh"
-    android:background="#E6E6E6"
-    android:padding="@dimen/dp_10"
+    android:background="@color/colorBackground"
     android:weightSum="5">
     <TextView
         android:layout_width="0dp"
@@ -13,45 +12,63 @@
         android:layout_weight="1"
         android:text="Date"
         android:textStyle="bold"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorPrimaryDark"
         android:textAlignment="center"
         android:textSize="12sp"/>
+    <View
+        android:layout_height="match_parent"
+        android:layout_width="1dp"
+        android:background="@color/colorSecondaryDark">
+    </View>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1.5"
         android:text="OpeningBalance"
         android:textStyle="bold"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorPrimaryDark"
         android:textAlignment="center"
         android:textSize="12sp"/>
+    <View
+        android:layout_height="match_parent"
+        android:layout_width="1dp"
+        android:background="@color/colorSecondaryDark">
+    </View>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.75"
         android:text="Credit"
         android:textStyle="bold"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorPrimaryDark"
         android:textAlignment="center"
         android:textSize="12sp"/>
-
+    <View
+        android:layout_height="match_parent"
+        android:layout_width="1dp"
+        android:background="@color/colorSecondaryDark">
+    </View>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.75"
         android:text="Debit"
         android:textStyle="bold"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorPrimaryDark"
         android:textAlignment="center"
         android:textSize="12sp" />
-
+    <View
+        android:layout_height="match_parent"
+        android:layout_width="1dp"
+        android:background="@color/colorSecondaryDark">
+    </View>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.75"
         android:text="Closing Balance"
         android:textStyle="bold"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorPrimaryDark"
         android:textAlignment="center"
         android:textSize="12sp"/>
 </TableRow>

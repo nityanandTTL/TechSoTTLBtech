@@ -104,9 +104,9 @@
                     android:textColor="@color/colorPrimaryDark" />
             </LinearLayout>
             <View
-                android:layout_width="2dp"
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/white">
+                android:background="@color/separator">
             </View>
             <LinearLayout
                 android:id="@+id/ll_schedule_icon"
@@ -134,9 +134,9 @@
                     android:textColor="@color/colorPrimaryDark" />
             </LinearLayout>
             <View
-                android:layout_width="2dp"
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/white">
+                android:background="@color/separator">
             </View>
             <LinearLayout
                 android:id="@+id/ll_orders_icon"
@@ -166,8 +166,8 @@
         </LinearLayout>
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@android:color/white">
+            android:layout_height="1dp"
+            android:background="@color/separator">
         </View>
         <LinearLayout
             android:id="@+id/row_2"
@@ -201,9 +201,9 @@
                     android:textAlignment="center"/>
             </LinearLayout>
             <View
-                android:layout_width="2dp"
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/white">
+                android:background="@color/separator">
             </View>
             <LinearLayout
                 android:id="@+id/ll_olc_icon"
@@ -230,9 +230,9 @@
                     android:textAlignment="center"/>
             </LinearLayout>
             <View
-                android:layout_width="2dp"
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/white">
+                android:background="@color/separator">
             </View>
             <LinearLayout
                 android:id="@+id/ll_hub_icon"
@@ -260,8 +260,8 @@
         </LinearLayout>
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@android:color/white">
+            android:layout_height="1dp"
+            android:background="@color/separator">
         </View>
         <LinearLayout
             android:id="@+id/row_3"
@@ -296,9 +296,9 @@
                     android:textAlignment="center"/>
             </LinearLayout>
             <View
-                android:layout_width="2dp"
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/white">
+                android:background="@color/separator">
             </View>
             <LinearLayout
                 android:id="@+id/ll_communication_icon"
@@ -323,9 +323,9 @@
                     android:textAlignment="center"/>
             </LinearLayout>
             <View
-                android:layout_width="2dp"
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/white">
+                android:background="@color/separator">
             </View>
             <LinearLayout
                 android:id="@+id/ll_feedback_icon"

@@ -1,21 +1,19 @@
 package com.dhb.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dhb.R;
-
 import com.dhb.delegate.EditTestExpandListAdapterCheckboxDelegate;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestTypeWiseTestRateMasterModelsList;
-import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.InputUtils;
 
 import java.util.ArrayList;
@@ -100,39 +98,59 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
                     .getSystemService(context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.item_select_test_list_view, null);
             holder = new ViewChildHolder();
-
             holder.txt_test = (TextView) convertView.findViewById(R.id.txt_test);
             holder.txt_dis_amt = (TextView) convertView.findViewById(R.id.txt_dis_amt);
             holder.img_test_type = (ImageView) convertView.findViewById(R.id.img_test_type);
-            holder.chk_collected = (CheckBox) convertView.findViewById(R.id.chk_collected);
+            holder.imgCheck = (ImageView) convertView.findViewById(R.id.img_check);
+            holder.imgChecked = (ImageView) convertView.findViewById(R.id.img_checked);
             convertView.setTag(holder);
         } else {
             holder = (ViewChildHolder) convertView.getTag();
         }
         final TestRateMasterModel testRateMasterModel = testRateMasterModels.get(groupPosition).getTestRateMasterModels().get(childPosition);
         holder.txt_dis_amt.setText("" + testRateMasterModel.getRate());
-        holder.chk_collected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.imgCheck.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Logger.error("checked test " + testRateMasterModel.getTestCode());
+            public void onClick(View v) {
+                if(testRateMasterModel.getTestType().equals("OFFER")&&checkIfOfferExists(selectedTests)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Confirm Action")
+                            .setMessage("Selecting an OFFER will replace previously selected OFFER. Do you still wish to proceed?")
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    mcallback.onCheckChange(selectedTests);
+                                }
+                            })
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    selectedTests = replaceOffer(selectedTests,testRateMasterModel);
+                                    mcallback.onCheckChange(selectedTests);
+                                }
+                            })
+                            .show();
+
+                }
+                else {
                     selectedTests.add(testRateMasterModel);
-                    mcallback.onCheckChange(selectedTests);
-                } else {
-                    selectedTests.remove(testRateMasterModel);
                     mcallback.onCheckChange(selectedTests);
                 }
             }
         });
-        if (testRateMasterModel.getChldtests() != null && testRateMasterModel.getChldtests().size() > 0) {
-            holder.txt_test.setText(testRateMasterModel.getTestCode());
-        } else {
-            if (InputUtils.isNull(testRateMasterModel.getDescription())) {
-                holder.txt_test.setText(testRateMasterModel.getTestCode());
-            } else {
-                holder.txt_test.setText(testRateMasterModel.getDescription());
+        holder.imgChecked.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedTests.remove(testRateMasterModel);
+                mcallback.onCheckChange(selectedTests);
             }
-
+        });
+        if((testRateMasterModel.getTestType().equals("TEST")||testRateMasterModel.getTestType().equals("OFFER")) && !InputUtils.isNull(testRateMasterModel.getDescription())){
+            holder.txt_test.setText(testRateMasterModel.getDescription());
+        }
+        else{
+            holder.txt_test.setText(testRateMasterModel.getTestCode());
         }
         if (testRateMasterModel.getChldtests() == null || testRateMasterModel.getChldtests().size() == 0) {
             holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.t));
@@ -144,7 +162,12 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
             }
         }
         if(selectedTests.contains(testRateMasterModel)){
-            holder.chk_collected.setChecked(true);
+            holder.imgChecked.setVisibility(View.VISIBLE);
+            holder.imgCheck.setVisibility(View.GONE);
+        }
+        else{
+            holder.imgChecked.setVisibility(View.GONE);
+            holder.imgCheck.setVisibility(View.VISIBLE);
         }
         return convertView;
     }
@@ -155,12 +178,33 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
 
     private class ViewChildHolder {
         ImageView img_test_type;
-        CheckBox chk_collected;
+        ImageView imgCheck, imgChecked;
         TextView txt_test, txt_dis_amt;
+    }
+    private boolean checkIfOfferExists(ArrayList<TestRateMasterModel> selTests){
+        for (TestRateMasterModel trmm:
+             selTests) {
+            if(trmm.getTestType().equals("OFFER")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private ArrayList<TestRateMasterModel> replaceOffer(ArrayList<TestRateMasterModel> selTests,TestRateMasterModel newOffer){
+        for (int i=0;i<selTests.size();i++) {
+            if(selTests.get(i).getTestType().equals("OFFER")){
+                selTests.remove(i);
+                break;
+            }
+        }
+        selTests.add(newOffer);
+        return selTests;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
 }

@@ -75,4 +75,21 @@ public class BeneficiarySampleTypeDetailsModel extends BaseModel implements Parc
         this.sampleType = sampleType;
     }
 
+    public String getTests() {
+        return Tests;
+    }
+
+    public void setTests(String tests) {
+        Tests = tests;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof BeneficiarySampleTypeDetailsModel){
+            if(((BeneficiarySampleTypeDetailsModel) obj).getSampleType().equals(getSampleType())){
+                return true;
+            }
+        }
+        return false;
+    }
 }
