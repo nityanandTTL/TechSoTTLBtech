@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
-import com.dhb.activity.OrderBookingActivity;
 import com.dhb.adapter.CampListDetailDisplayAdapter;
 import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BeneficiaryDetailsDao;
@@ -25,7 +24,6 @@ import com.dhb.models.api.request.CampStartedRequestModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.data.CampBtechModel;
 import com.dhb.models.data.CampDetailModel;
-import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -39,7 +37,11 @@ import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class CampListDisplayFragment extends AbstractFragment {
@@ -95,11 +97,40 @@ public class CampListDisplayFragment extends AbstractFragment {
         initUI();
         activity = (HomeScreenActivity) getActivity();
         appPreferenceManager = new AppPreferenceManager(activity);
+      /*  Date questionDate = stringToDate("5/10/2017");
+        Logger.error(""+questionDate);*/
+      /*  if (removeTime(questionDate).equals(removeTime(questionDate))) {
+            Logger.error(" campDetail if");
+        } else {
+            Logger.error("campDetail else ");
+        }*/
         fetchData();
         setListener();
         return rootView;
     }
+    public Date removeTime(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
 
+    private Date stringToDate(String dtStart) {
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+        try {
+            Date date = format.parse(dtStart);
+
+            System.out.println(date);
+            return date;
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
     private void setListener() {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
