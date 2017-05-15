@@ -14,7 +14,7 @@
             android:background="@drawable/bg_sample_type_edta"
             android:gravity="center"
             android:padding="@dimen/dp_5"
-            android:text="EDTA"
+            android:text="Master Bacode"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 

@@ -16,14 +16,14 @@ import android.widget.TextView;
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.delegate.BtechCollectionsAdapterOnscanBarcodeClickedDelegate;
-import com.dhb.models.data.BarcodeModel;
+import com.dhb.models.data.HubBarcodeModel;
 import com.dhb.utils.api.Logger;
 
 import java.util.List;
 
 public class BtechCollectionsDetailsAdapter extends RecyclerView.Adapter<BtechCollectionsDetailsAdapter.MyViewHolder> {
 
-    private List<BarcodeModel> barcodeModels;
+    private List<HubBarcodeModel> barcodeModels;
     HomeScreenActivity activity;
     BtechCollectionsAdapterOnscanBarcodeClickedDelegate mcallback;
 
@@ -50,7 +50,7 @@ public class BtechCollectionsDetailsAdapter extends RecyclerView.Adapter<BtechCo
     }
 
 
-    public BtechCollectionsDetailsAdapter(List<BarcodeModel> barcodeModels, HomeScreenActivity activity, BtechCollectionsAdapterOnscanBarcodeClickedDelegate mCallback) {
+    public BtechCollectionsDetailsAdapter(List<HubBarcodeModel> barcodeModels, HomeScreenActivity activity, BtechCollectionsAdapterOnscanBarcodeClickedDelegate mCallback) {
         this.mcallback = mCallback;
         this.barcodeModels = barcodeModels;
         this.activity = activity;
@@ -66,7 +66,7 @@ public class BtechCollectionsDetailsAdapter extends RecyclerView.Adapter<BtechCo
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        final BarcodeModel barcodeModel = barcodeModels.get(position);
+        final HubBarcodeModel barcodeModel = barcodeModels.get(position);
 
         final int pos = position;
         if (barcodeModel != null) {
@@ -75,11 +75,12 @@ public class BtechCollectionsDetailsAdapter extends RecyclerView.Adapter<BtechCo
             holder.scan_barcode_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mcallback.onItemClicked(barcodeModel, position, holder.ll_edt_barcode);
-
-                    //    activity.pushFragments(Bte.newInstance(hubbTechModels.get(pos)), false, false, HubDetailMapDisplayFragmentActivity.TAG_FRAGMENT, R.id.cell_content_view, DispatchToHubFragment.TAG_FRAGMENT);
+                    mcallback.onItemClicked(barcodeModel, position);
                 }
             });
+            if(barcodeModel.isScanned()){
+                holder.ll_edt_barcode.setBackgroundColor(activity.getResources().getColor(android.R.color.holo_green_light));
+            }
         } else {
             Logger.error("hubDetailsResponseModel is null ");
         }

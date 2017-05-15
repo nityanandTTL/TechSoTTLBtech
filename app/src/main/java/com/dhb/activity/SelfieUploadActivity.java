@@ -6,14 +6,12 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.MediaStore;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,7 +34,7 @@ import com.dhb.utils.api.NetworkUtils;
 import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.CommonUtils;
-import com.dhb.utils.app.DeviceUtils;
+import com.dhb.utils.app.InputUtils;
 
 import org.json.JSONException;
 
@@ -143,7 +141,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_takePhoto) {
-            clickPhoto();
+            cameraIntent();
         }
         if (v.getId() == R.id.btn_uploadPhoto) {
             if (validate()) {
@@ -171,27 +169,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     private boolean validate() {
         return !encodedProImg.isEmpty();
-    }
-
-    private void clickPhoto() {
-        final CharSequence[] items = {"Take Photo",
-                "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(SelfieUploadActivity.this);
-        builder.setTitle("Add Photo!");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                boolean result = DeviceUtils.checkPermission(SelfieUploadActivity.this);
-                if (items[item].equals("Take Photo")) {
-                    userChoosenTask = "Take Photo";
-                    if (result)
-                        cameraIntent();
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
     }
 
     private void cameraIntent() {
@@ -230,6 +207,14 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             e.printStackTrace();
         }*/
         encodedProImg = CommonUtils.encodeImage(thumbnail);
+        if(!InputUtils.isNull(encodedProImg)){
+            btn_uploadPhoto.setVisibility(View.VISIBLE);
+            btn_takePhoto.setVisibility(View.INVISIBLE);
+        }
+        else{
+            btn_uploadPhoto.setVisibility(View.INVISIBLE);
+            btn_takePhoto.setVisibility(View.VISIBLE);
+        }
         img_user_picture.setImageBitmap(thumbnail);
     }
 

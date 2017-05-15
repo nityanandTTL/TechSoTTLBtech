@@ -1,7 +1,6 @@
 package com.dhb.fragment;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,7 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
@@ -19,8 +20,8 @@ import com.dhb.adapter.BtechCollectionsDetailsAdapter;
 import com.dhb.delegate.BtechCollectionsAdapterOnscanBarcodeClickedDelegate;
 import com.dhb.models.api.request.MasterBarcodeMappingRequestModel;
 import com.dhb.models.api.response.BtechCollectionsResponseModel;
-import com.dhb.models.data.BarcodeModel;
 import com.dhb.models.data.HUBBTechModel;
+import com.dhb.models.data.HubBarcodeModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -38,18 +39,19 @@ import java.util.ArrayList;
 
 public class BtechCollectionsListFragment extends AbstractFragment implements View.OnClickListener {
     public static final String TAG_FRAGMENT = BtechCollectionsListFragment.class.getSimpleName();
-    LinearLayout ll_hub_display_footer, ll_fetch_order_footer, ll_olc_picup_footer, ll_scan_master_barcode;
+    LinearLayout ll_hub_display_footer, ll_scan_master_barcode;
     HomeScreenActivity activity;
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeRefreshLayout;
-    ArrayList<BarcodeModel> barcodeModels = new ArrayList<>();
+    ArrayList<HubBarcodeModel> barcodeModels = new ArrayList<>();
     BtechCollectionsDetailsAdapter btechCollectionsDetailsAdapter;
-    String scanned_barcode = "",master_scanned_barcode="";
+    String master_scanned_barcode="";
     int current_position;
-    View view;
-    boolean isAllScanned=false;
     HUBBTechModel hubbTechModel;
+    boolean isMasterBarcode;
     private IntentIntegrator intentIntegrator;
+    Button btnDispatch;
+    private TextView txtCentrifuge;
 
     public BtechCollectionsListFragment() {
     }
@@ -76,7 +78,7 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(false);
-                prepareRecyclerView();
+                fetchData();
             }
         });
         fetchData();
@@ -85,6 +87,7 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
 
     private void setListeners() {
         ll_scan_master_barcode.setOnClickListener(this);
+        btnDispatch.setOnClickListener(this);
     }
 
     private void fetchData() {
@@ -101,39 +104,55 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
 
     private void initUI(View view) {
         ll_hub_display_footer = (LinearLayout) view.findViewById(R.id.ll_hub_display_footer);
-        ll_fetch_order_footer = (LinearLayout) view.findViewById(R.id.ll_fetch_order_footer);
-        ll_olc_picup_footer = (LinearLayout) view.findViewById(R.id.ll_olc_picup_footer);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         ll_scan_master_barcode = (LinearLayout) view.findViewById(R.id.ll_scan_master_barcode);
         ll_hub_display_footer.setVisibility(View.VISIBLE);
-        ll_fetch_order_footer.setVisibility(View.GONE);
-        ll_olc_picup_footer.setVisibility(View.GONE);
+        btnDispatch = (Button) view.findViewById(R.id.btn_dispatch);
+        txtCentrifuge = (TextView) view.findViewById(R.id.tv_centrifuge);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ll_scan_master_barcode) {
-            if(!isAllScanned){
-                Toast.makeText(activity, "Verify all barcode", Toast.LENGTH_SHORT).show();
-            }else if (validate()) {
-                callMasterBarcodeMapApi();
+            if(!validateAllScanned()){
+                Toast.makeText(activity, "Scan all barcodes first", Toast.LENGTH_SHORT).show();
             }
-             else {
-
+            else {
+                isMasterBarcode = true;
+                scanFromFragment();
+            }
+        }
+        else if(v.getId()==R.id.btn_dispatch){
+            if(validate()) {
+                callMasterBarcodeMapApi();
             }
         }
     }
 
+    private boolean validateAllScanned() {
+        try {
+            boolean isAllScanned = true;
+            for (int i = 0; i < barcodeModels.size(); i++) {
+                if(!barcodeModels.get(i).isScanned()){
+                    isAllScanned = false;
+                    break;
+                }
+            }
+            return isAllScanned;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private void callMasterBarcodeMapApi() {
-        Bundle args = new Bundle();
         Logger.error(TAG_FRAGMENT + "--fetchData: ");
         MasterBarcodeMappingRequestModel masterBarcodeMappingRequestModel = new MasterBarcodeMappingRequestModel();
-        hubbTechModel = args.getParcelable(BundleConstants.HUB_BTECH_MODEL);
         masterBarcodeMappingRequestModel.setHubId(hubbTechModel.getHubId());
         masterBarcodeMappingRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
         masterBarcodeMappingRequestModel.setBarcodeModels(barcodeModels);
-        masterBarcodeMappingRequestModel.setMasterBarcode("");
+        masterBarcodeMappingRequestModel.setMasterBarcode(master_scanned_barcode);
 
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         ApiCallAsyncTask postMasterBarcodeMapDetailApiAsyncTask = asyncTaskForRequest.getMasterBarcodeMapRequestAsyncTask(masterBarcodeMappingRequestModel);
@@ -146,12 +165,9 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
     }
 
     private boolean validate() {
-        if(/*!isAllScanned &&*/ master_scanned_barcode.equals("")){
+        if(validateAllScanned() && master_scanned_barcode.equals("")){
             Toast.makeText(activity, "scan for master barcode first", Toast.LENGTH_SHORT).show();
             return false;
-        }else {
-            scanFromFragment();
-
         }
         return true;
     }
@@ -169,6 +185,7 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
 //                    Toast.makeText(activity, "dispatchHubDisplayDetailsResponseModel not null", Toast.LENGTH_SHORT).show();
                     barcodeModels = btechCollectionsResponseModel.getBarcode();
                     Logger.error("hubbTechModels size " + btechCollectionsResponseModel.getBarcode().size());
+                    txtCentrifuge.setText("Centrifuge " +barcodeModels.size()+" Samples");
                     prepareRecyclerView();
                 } else {
                     Logger.error("else " + json);
@@ -186,20 +203,22 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null && scanningResult.getContents() != null) {
-            scanned_barcode = scanningResult.getContents();
-            master_scanned_barcode = scanningResult.getContents();
-            if (!scanned_barcode.equals("" + barcodeModels.get(current_position).getBarcode())) {
-                Toast.makeText(activity, "no match! Try again", Toast.LENGTH_SHORT).show();
-                view.setBackgroundColor(Color.RED);
-                isAllScanned = false;
-            } else {
-                Toast.makeText(activity, "barcode match! ", Toast.LENGTH_SHORT).show();
-                view.setBackgroundColor(Color.GREEN);
-                isAllScanned = true;
+            if(!isMasterBarcode) {
+                String scanned_barcode = scanningResult.getContents();
+                if (!scanned_barcode.equals("" + barcodeModels.get(current_position).getBarcode())) {
+                    Toast.makeText(activity, "no match! Try again", Toast.LENGTH_SHORT).show();
+                    barcodeModels.get(current_position).setScanned(false);
+                } else {
+                    Toast.makeText(activity, "barcode match! ", Toast.LENGTH_SHORT).show();
+                    barcodeModels.get(current_position).setScanned(true);
+                }
+
+            }
+            else{
+                master_scanned_barcode = scanningResult.getContents();
             }
         } else {
             Logger.error("Cancelled from fragment");
-            isAllScanned = false;
         }
     }
 
@@ -217,10 +236,10 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
     private void prepareRecyclerView() {
         btechCollectionsDetailsAdapter = new BtechCollectionsDetailsAdapter(barcodeModels, activity, new BtechCollectionsAdapterOnscanBarcodeClickedDelegate() {
             @Override
-            public void onItemClicked(BarcodeModel barcodeModel, int position, View v) {
+            public void onItemClicked(HubBarcodeModel barcodeModel, int position) {
                 current_position = position;
+                isMasterBarcode = false;
                 scanFromFragment();
-                view = v;
             }
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
@@ -234,7 +253,7 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
-                pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         }
 

@@ -114,6 +114,12 @@ public class AbstractApiModel implements AppConstants {
 
     public String SET_APPLY_LEAVE=VERSION_API_URL+"/ManageBtechLeave/ApplyLeave";
 
+    public String REMOVE_BENEFICIARY=VERSION_API_URL+"/RemoveBeneficiary";
+
+    public String OLC_PICKUP_SUBMIT_SCAN_BARCODE=VERSION_API_URL+"/ScanPickup";
+
+    public String ORDER_BOOKING=VERSION_API_URL+"/OrderBooking";
+
     public static final String X_API_KEY = "x-api-key";
 
     public static final String AUTHORIZATION = "Authorization";

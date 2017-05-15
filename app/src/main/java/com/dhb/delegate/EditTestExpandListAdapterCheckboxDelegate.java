@@ -1,8 +1,5 @@
 package com.dhb.delegate;
 
-import android.view.View;
-
-import com.dhb.models.data.BarcodeModel;
 import com.dhb.models.data.TestRateMasterModel;
 
 import java.util.ArrayList;

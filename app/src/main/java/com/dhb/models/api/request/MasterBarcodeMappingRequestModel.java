@@ -1,6 +1,6 @@
 package com.dhb.models.api.request;
 
-import com.dhb.models.data.BarcodeModel;
+import com.dhb.models.data.HubBarcodeModel;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class MasterBarcodeMappingRequestModel {
     private int BtechId, HubId;
     private String MasterBarcode;
-    private ArrayList<BarcodeModel> barcodeModels;
+    private ArrayList<HubBarcodeModel> barcodeModels;
 
     public int getBtechId() {
         return BtechId;
@@ -37,11 +37,11 @@ public class MasterBarcodeMappingRequestModel {
         MasterBarcode = masterBarcode;
     }
 
-    public ArrayList<BarcodeModel> getBarcodeModels() {
+    public ArrayList<HubBarcodeModel> getBarcodeModels() {
         return barcodeModels;
     }
 
-    public void setBarcodeModels(ArrayList<BarcodeModel> barcodeModels) {
+    public void setBarcodeModels(ArrayList<HubBarcodeModel> barcodeModels) {
         this.barcodeModels = barcodeModels;
     }
 }

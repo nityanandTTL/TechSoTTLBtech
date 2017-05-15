@@ -3,7 +3,7 @@ package com.dhb.models.api.response;
 
 
 
-import com.dhb.models.data.BarcodeModel;
+import com.dhb.models.data.HubBarcodeModel;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class BtechCollectionsResponseModel {
     private int Btech;
-    private ArrayList<BarcodeModel> Barcode;
+    private ArrayList<HubBarcodeModel> Barcode;
 
     public int getBtech() {
         return Btech;
@@ -23,11 +23,11 @@ public class BtechCollectionsResponseModel {
         Btech = btech;
     }
 
-    public ArrayList<BarcodeModel> getBarcode() {
+    public ArrayList<HubBarcodeModel> getBarcode() {
         return Barcode;
     }
 
-    public void setBarcode(ArrayList<BarcodeModel> barcode) {
+    public void setBarcode(ArrayList<HubBarcodeModel> barcode) {
         Barcode = barcode;
     }
 

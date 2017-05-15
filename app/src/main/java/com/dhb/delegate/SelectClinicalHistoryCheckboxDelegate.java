@@ -1,6 +1,6 @@
 package com.dhb.delegate;
 
-import com.dhb.models.data.TestWiseBeneficiaryClinicalHistoryModel;
+import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 
 import java.util.ArrayList;
 
@@ -9,5 +9,5 @@ import java.util.ArrayList;
  */
 
 public interface SelectClinicalHistoryCheckboxDelegate {
-    void onCheckChange(ArrayList<TestWiseBeneficiaryClinicalHistoryModel> chArr);
+    void onCheckChange(ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr);
 }

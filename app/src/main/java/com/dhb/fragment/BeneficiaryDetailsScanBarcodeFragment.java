@@ -30,6 +30,7 @@ import com.dhb.dao.models.TestRateMasterDao;
 import com.dhb.delegate.AddSampleBarcodeDialogDelegate;
 import com.dhb.delegate.OrderCancelDialogButtonClickedDelegate;
 import com.dhb.delegate.OrderRescheduleDialogButtonClickedDelegate;
+import com.dhb.delegate.RefreshBeneficiariesSliderDelegate;
 import com.dhb.delegate.SelectClinicalHistoryCheckboxDelegate;
 import com.dhb.delegate.SelectLabAlertsCheckboxDelegate;
 import com.dhb.dialog.AddSampleBarcodeDialog;
@@ -38,18 +39,21 @@ import com.dhb.dialog.ClinicalHistorySelectorDialog;
 import com.dhb.dialog.LabAlertSelectorDialog;
 import com.dhb.dialog.RescheduleOrderDialog;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
-import com.dhb.models.data.BarcodeDetailsModel;
+import com.dhb.models.api.request.RemoveBeneficiaryAPIRequestModel;
+import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.LabAlertMasterModel;
 import com.dhb.models.data.OrderDetailsModel;
+import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestSampleTypeModel;
-import com.dhb.models.data.TestWiseBeneficiaryClinicalHistoryModel;
+import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
+import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
@@ -95,7 +99,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private boolean isCancelRequesGenereted=false;
     private ArrayList<TestRateMasterModel> restOfTestsList;
     private DhbDao dhbDao;
-    private ArrayList<TestWiseBeneficiaryClinicalHistoryModel> benCHArr;
+    private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr;
     private ArrayList<BeneficiaryLabAlertsModel> benLAArr;
     private ArrayList<LabAlertMasterModel> labAlertsArr;
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
@@ -103,14 +107,16 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private LabAlertMasterDao labAlertMasterDao;
     private TableLayout tlBarcodes;
     private IntentIntegrator intentIntegrator;
+    private static RefreshBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegateResult;
 
     public BeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
     }
 
-    public static BeneficiaryDetailsScanBarcodeFragment newInstance(Bundle bundle) {
+    public static BeneficiaryDetailsScanBarcodeFragment newInstance(Bundle bundle, RefreshBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegate) {
         BeneficiaryDetailsScanBarcodeFragment fragment = new BeneficiaryDetailsScanBarcodeFragment();
         fragment.setArguments(bundle);
+        refreshBeneficiariesSliderDelegateResult = refreshBeneficiariesSliderDelegate;
         return fragment;
     }
 
@@ -144,11 +150,12 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         orderDetailsModel = orderDetailsDao.getModelFromId(orderDetailsModel.getOrderNo());
         benCHArr = beneficiaryDetailsModel.getClHistory();
         benLAArr = beneficiaryDetailsModel.getLabAlert();
-
-        encodedVanipunctureImg = encodeImage(beneficiaryDetailsModel.getVenepuncture());
+        if(beneficiaryDetailsModel.getVenepuncture()!=null) {
+            encodedVanipunctureImg = encodeImage(beneficiaryDetailsModel.getVenepuncture());
+        }
         String chS = "";
         if(benCHArr!=null && benCHArr.size()>0) {
-            for (TestWiseBeneficiaryClinicalHistoryModel chm :
+            for (BeneficiaryTestWiseClinicalHistoryModel chm :
                     benCHArr) {
                 if (InputUtils.isNull(chS))
                     chS = "" + chm.getClinicalHistoryId();
@@ -190,19 +197,19 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
         } else {
             if(beneficiaryDetailsModel.getBarcodedtl()==null){
-                beneficiaryDetailsModel.setBarcodedtl(new ArrayList<BarcodeDetailsModel>());
+                beneficiaryDetailsModel.setBarcodedtl(new ArrayList<BeneficiaryBarcodeDetailsModel>());
             }
             else{
                 beneficiaryDetailsModel.getBarcodedtl().clear();
             }
             for (BeneficiarySampleTypeDetailsModel sampleTypes :
                     beneficiaryDetailsModel.getSampleType()) {
-                BarcodeDetailsModel barcodeDetailsModel = new BarcodeDetailsModel();
-                barcodeDetailsModel.setBenId(sampleTypes.getBenId());
-                barcodeDetailsModel.setId(DeviceUtils.getRandomUUID());
-                barcodeDetailsModel.setSamplType(sampleTypes.getSampleType());
-                barcodeDetailsModel.setOrderNo(beneficiaryDetailsModel.getOrderNo());
-                beneficiaryDetailsModel.getBarcodedtl().add(barcodeDetailsModel);
+                BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
+                beneficiaryBarcodeDetailsModel.setBenId(sampleTypes.getBenId());
+                beneficiaryBarcodeDetailsModel.setId(DeviceUtils.getRandomUUID());
+                beneficiaryBarcodeDetailsModel.setSamplType(sampleTypes.getSampleType());
+                beneficiaryBarcodeDetailsModel.setOrderNo(beneficiaryDetailsModel.getOrderNo());
+                beneficiaryDetailsModel.getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
             }
             beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
         }
@@ -253,7 +260,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             public void onClick(View v) {
                 final CharSequence[] items = {"Order Reschedule",
                         "Order Cancellation","Remove Beneficiary"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Select Action");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -268,6 +275,62 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                             cod.show();
                         } else if (items[item].equals("Remove Beneficiary")) {
                             userChoosenReleaseTask = "Remove Beneficiary";
+                            AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+                            builder1.setTitle("Confirm Action")
+                                    .setMessage("Do you really want to remove beneficiary?")
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(final DialogInterface dialog, int which) {
+                                            RemoveBeneficiaryAPIRequestModel rb = new RemoveBeneficiaryAPIRequestModel();
+                                            rb.setBenId(beneficiaryDetailsModel.getBenId());
+                                            rb.setOrderNo(beneficiaryDetailsModel.getOrderNo());
+                                            ApiCallAsyncTask apiCallAsyncTask = new AsyncTaskForRequest(activity).getRemoveBeneficiaryRequestAsyncTask(rb);
+                                            apiCallAsyncTask.setApiCallAsyncTaskDelegate(new ApiCallAsyncTaskDelegate() {
+                                                @Override
+                                                public void apiCallResult(String json, int statusCode) throws JSONException {
+                                                    if(statusCode==200){
+                                                        ResponseParser responseParser = new ResponseParser(activity);
+                                                        OrderVisitDetailsModel orderVisitDetailsModel = responseParser.getRemoveBeneficiaryAPIResponseModel(json,statusCode);
+                                                        if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+                                                            beneficiaryDetailsDao.deleteByBenId(beneficiaryDetailsModel.getBenId()+"");
+                                                            for (OrderDetailsModel orderDetailsModel :
+                                                                    orderVisitDetailsModel.getAllOrderdetails()) {
+                                                                orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+                                                                orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
+                                                                orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
+                                                                orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
+                                                                if(orderDetailsModel.getBenMaster()!=null && orderDetailsModel.getBenMaster().size()>0) {
+                                                                    for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                                                                            orderDetailsModel.getBenMaster()) {
+                                                                        beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                                                                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                                                                    }
+                                                                    orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                                                                }
+                                                            }
+                                                            Toast.makeText(activity,"Beneficiary Removed Successfully",Toast.LENGTH_SHORT).show();
+                                                            refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderVisitDetailsModel);
+                                                        }
+                                                    }
+                                                    else{
+                                                        Toast.makeText(activity,"Failed to remove beneficiary",Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onApiCancelled() {
+                                                    Toast.makeText(activity,"Failed to remove beneficiary",Toast.LENGTH_SHORT).show();
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                            apiCallAsyncTask.execute(apiCallAsyncTask);
+                                        }
+                                    }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).show();
                         }
                     }
                 }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -324,7 +387,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 if(forCHSelection.size()>0) {
                     ClinicalHistorySelectorDialog clinicalHistorySelectorDialog = new ClinicalHistorySelectorDialog(activity, forCHSelection, benCHArr, beneficiaryDetailsModel.getBenId(), new SelectClinicalHistoryCheckboxDelegate() {
                         @Override
-                        public void onCheckChange(ArrayList<TestWiseBeneficiaryClinicalHistoryModel> chArr) {
+                        public void onCheckChange(ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr) {
                             benCHArr = chArr;
                             beneficiaryDetailsModel.setClHistory(benCHArr);
                             beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
@@ -388,18 +451,18 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 && beneficiaryDetailsModel.getBarcodedtl()!=null
                 && beneficiaryDetailsModel.getBarcodedtl().size()>0) {
             tlBarcodes.removeAllViews();
-            for (final BarcodeDetailsModel barcodeDetailsModel :
+            for (final BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel :
                     beneficiaryDetailsModel.getBarcodedtl()) {
                 TableRow tr = (TableRow) activity.getLayoutInflater().inflate(R.layout.item_scan_barcode,null);
                 TextView txtSampleType = (TextView)tr.findViewById(R.id.txt_sample_type);
                 TextView edtBarcode = (TextView)tr.findViewById(R.id.edt_barcode);
                 ImageView imgScan = (ImageView) tr.findViewById(R.id.scan_barcode_button);
-                txtSampleType.setText(barcodeDetailsModel.getSamplType());
-                edtBarcode.setText(barcodeDetailsModel.getBarcode());
+                txtSampleType.setText(beneficiaryBarcodeDetailsModel.getSamplType());
+                edtBarcode.setText(beneficiaryBarcodeDetailsModel.getBarcode());
                 imgScan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        currentScanSampleType = barcodeDetailsModel.getSamplType();
+                        currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
                         intentIntegrator = new IntentIntegrator(activity){
                             @Override
                             protected void startActivityForResult(Intent intent, int code) {
@@ -412,7 +475,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 edtBarcode.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        currentScanSampleType = barcodeDetailsModel.getSamplType();
+                        currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
                         AddSampleBarcodeDialog sampleBarcodeDialog = new AddSampleBarcodeDialog(activity, new AddSampleBarcodeDialogDelegate() {
                             @Override
                             public void onSampleBarcodeAdded(String scanned_barcode) {

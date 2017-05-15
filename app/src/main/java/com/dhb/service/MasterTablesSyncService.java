@@ -264,23 +264,21 @@ public class MasterTablesSyncService extends Service {
                     }
                     break;
                     case MASTER_TABLE_TESTS: {
-                        ArrayList<BrandTestMasterModel> testMastersArr = new ArrayList<BrandTestMasterModel>();
-                        testMastersArr = responseParser.getTestMaster(json, statusCode);
-                        if (testMastersArr.size() > 0) {
-                            for (BrandTestMasterModel brandTestMasterModel : testMastersArr) {
-                                TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
-                                for (TestRateMasterModel testRateMasterModel :
-                                        brandTestMasterModel.getTstratemaster()) {
-                                    testRateMasterModel.setBrandId(brandTestMasterModel.getBrandId());
-                                    testRateMasterModel.setBrandName(brandTestMasterModel.getBrandName());
-                                    testRateMasterDao.insertOrUpdate(testRateMasterModel);
-                                }
+                        BrandTestMasterModel brandTestMasterModel = new BrandTestMasterModel();
+                        brandTestMasterModel = responseParser.getBrandTestMaster(json, statusCode);
+                        if (brandTestMasterModel!=null && brandTestMasterModel.getTstratemaster()!=null && brandTestMasterModel.getTstratemaster().size() > 0) {
+                            TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
+                            for (TestRateMasterModel testRateMasterModel :
+                                    brandTestMasterModel.getTstratemaster()) {
+                                testRateMasterModel.setBrandId(brandTestMasterModel.getBrandId());
+                                testRateMasterModel.setBrandName(brandTestMasterModel.getBrandName());
+                                testRateMasterDao.insertOrUpdate(testRateMasterModel);
                             }
                             previousBrandCount++;
                             int previousCnt = masterTableUploaded.get(requestType+previousCount);
                             int toBeUploadedCnt = masterTableTotalToBeUploaded.get(requestType+previousCount);
-                            masterTableUploaded.set(requestType+previousCount, testMastersArr.size() + previousCnt);
-                            masterTableTotalToBeUploaded.set(requestType+previousCount,toBeUploadedCnt-testMastersArr.size());
+                            masterTableUploaded.set(requestType+previousCount, brandTestMasterModel.getTstratemaster().size() + previousCnt);
+                            masterTableTotalToBeUploaded.set(requestType+previousCount,toBeUploadedCnt-brandTestMasterModel.getTstratemaster().size());
                         } else {
                             masterTableUploaded.set(requestType+previousCount, masterTableTotalToBeUploaded.get(requestType));
                         }

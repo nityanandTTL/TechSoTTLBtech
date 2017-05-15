@@ -119,7 +119,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             holder.txtName.setSelected(true);
             holder.txtSrNo.setText(pos + 1 + "");
             holder.txtAddress.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress());
-            holder.tvAadharNo.setVisibility(View.GONE);
+//            holder.tvAadharNo.setVisibility(View.GONE);
             holder.txtAadharNo.setVisibility(View.GONE);
             if (pos != 0) {
                 holder.btnStartNavigation.setVisibility(View.GONE);
@@ -133,7 +133,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     }
 
     private class FoldingCellViewHolder{
-        TextView tvSrNo, tvName, tvAge, tvAadharNo,txtAddress,txtDistance,txtKits;
+        TextView tvSrNo, tvName, tvAge, txtAddress,txtDistance,txtKits;//tvAadharNo,
         ImageView imgCBAccept;
         TextView txtSrNo, txtName,txtAge,txtAadharNo;
         ImageView imgRelease;
@@ -153,7 +153,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             txtAadharNo = (TextView) itemView.findViewById(R.id.txt_aadhar_no);
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
             tvAge = (TextView) itemView.findViewById(R.id.tv_age);
-            tvAadharNo = (TextView) itemView.findViewById(R.id.tv_aadhar_no);
+//            tvAadharNo = (TextView) itemView.findViewById(R.id.tv_aadhar_no);
             txtAddress = (TextView) itemView.findViewById(R.id.txt_address);
             txtDistance = (TextView) itemView.findViewById(R.id.txt_distance);
             txtKits = (TextView) itemView.findViewById(R.id.txt_num_kits);
