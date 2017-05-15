@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="1050dp"
     android:orientation="vertical"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,7 +53,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/bgTitleRight"
-            android:paddingBottom="20dp"
+
             android:paddingEnd="20dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
@@ -163,7 +163,8 @@
                 android:layout_below="@+id/title_camp_date"
                 android:layout_marginEnd="10dp"
                 android:layout_toEndOf="@+id/title_svSeparator"
-                android:src="@drawable/kit_icon" />
+                android:src="@drawable/kit_icon"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_kits"
@@ -181,13 +182,13 @@
 
 
             <ImageView
-                android:id="@+id/img_edit"
+                android:id="@+id/img_accept"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/edit_order_icon"
-                android:visibility="invisible" />
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/img_release"
@@ -225,7 +226,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="@dimen/dp_30"
@@ -234,7 +235,7 @@
                     android:src="@drawable/location_icon" />
 
                 <TextView
-                    android:id="@+id/txt_address"
+                    android:id="@+id/tv_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -244,8 +245,10 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_leader_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/custom_border"
                 android:orientation="vertical">
 
@@ -275,7 +278,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="10dp"
-                            android:text="TSH"
+                            android:text=""
                             android:textSize="16sp" />
                     </LinearLayout>
 
@@ -300,7 +303,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="10dp"
-                            android:text="50"
+                            android:text=""
                             android:textSize="16sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -340,8 +343,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
-                        android:visibility="gone"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -365,15 +368,21 @@
             <include
                 android:id="@+id/ll_view_btech"
                 layout="@layout/group_item" />
-
-            <ListView
-                android:id="@+id/lv_btech_list"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="100dp"></ListView>
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/ll_btechs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
 
         <Button
-            android:id="@+id/btn_scan_qrcode"
+            android:id="@+id/btn_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ll_content"
@@ -383,7 +392,23 @@
             android:background="@drawable/purple_btn_bg"
             android:gravity="center"
             android:minEms="10"
-            android:text="Scan QR Code"
+android:visibility="visible"
+            android:text="Start"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/btn_arrived"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/purple_btn_bg"
+            android:gravity="center"
+            android:minEms="10"
+      android:visibility="gone"
+            android:text="Arrived"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
     </RelativeLayout>

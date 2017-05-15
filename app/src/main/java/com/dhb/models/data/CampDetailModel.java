@@ -9,26 +9,16 @@ import java.util.ArrayList;
  * Created by vendor1 on 5/10/2017.
  */
 
-public class CampListDisplayResponseModel implements Parcelable{
+public class CampDetailModel implements Parcelable {
     private int Id, Amount, ExpectedCrowd, ExpectedBtech, Leader, LeaderContactNo;
     private String CampId, VisitId, CampDate, Location, Status;
-    private boolean InventoryAssign;
-    private String CampDateTime, BookedBy, Product, QRCode,Response;
+    private boolean InventoryAssign, isStarted;
+    private String CampDateTime, BookedBy, Product, QRCode;
     private ArrayList<CampBtechModel> btechs;
     private ExecutionTrack executionTrack;
+    private boolean IsAccepted;
 
-    public String getResponse() {
-        return Response;
-    }
-
-    public void setResponse(String response) {
-        Response = response;
-    }
-
-    public CampListDisplayResponseModel() {
-    }
-
-    protected CampListDisplayResponseModel(Parcel in) {
+    protected CampDetailModel(Parcel in) {
         Id = in.readInt();
         Amount = in.readInt();
         ExpectedCrowd = in.readInt();
@@ -41,11 +31,13 @@ public class CampListDisplayResponseModel implements Parcelable{
         Location = in.readString();
         Status = in.readString();
         InventoryAssign = in.readByte() != 0;
+        isStarted = in.readByte() != 0;
         CampDateTime = in.readString();
         BookedBy = in.readString();
         Product = in.readString();
         QRCode = in.readString();
         executionTrack = in.readParcelable(ExecutionTrack.class.getClassLoader());
+        IsAccepted = in.readByte() != 0;
     }
 
     @Override
@@ -62,11 +54,13 @@ public class CampListDisplayResponseModel implements Parcelable{
         dest.writeString(Location);
         dest.writeString(Status);
         dest.writeByte((byte) (InventoryAssign ? 1 : 0));
+        dest.writeByte((byte) (isStarted ? 1 : 0));
         dest.writeString(CampDateTime);
         dest.writeString(BookedBy);
         dest.writeString(Product);
         dest.writeString(QRCode);
         dest.writeParcelable(executionTrack, flags);
+        dest.writeByte((byte) (IsAccepted ? 1 : 0));
     }
 
     @Override
@@ -74,17 +68,37 @@ public class CampListDisplayResponseModel implements Parcelable{
         return 0;
     }
 
-    public static final Creator<CampListDisplayResponseModel> CREATOR = new Creator<CampListDisplayResponseModel>() {
+    public static final Creator<CampDetailModel> CREATOR = new Creator<CampDetailModel>() {
         @Override
-        public CampListDisplayResponseModel createFromParcel(Parcel in) {
-            return new CampListDisplayResponseModel(in);
+        public CampDetailModel createFromParcel(Parcel in) {
+            return new CampDetailModel(in);
         }
 
         @Override
-        public CampListDisplayResponseModel[] newArray(int size) {
-            return new CampListDisplayResponseModel[size];
+        public CampDetailModel[] newArray(int size) {
+            return new CampDetailModel[size];
         }
     };
+
+    public boolean isAccepted() {
+        return IsAccepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        IsAccepted = accepted;
+    }
+
+    public boolean isStarted() {
+        return isStarted;
+    }
+
+    public void setStarted(boolean started) {
+        isStarted = started;
+    }
+
+    public CampDetailModel() {
+
+    }
 
     public int getAmount() {
         return Amount;
@@ -213,7 +227,6 @@ public class CampListDisplayResponseModel implements Parcelable{
     public void setStatus(String status) {
         Status = status;
     }
-
 
 
     public ExecutionTrack getExecutionTrack() {

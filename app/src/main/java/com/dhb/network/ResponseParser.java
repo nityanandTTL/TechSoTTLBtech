@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.dhb.models.api.response.BtechClientsResponseModel;
 import com.dhb.models.api.response.BtechCollectionsResponseModel;
 import com.dhb.models.api.response.BusinessErrorModel;
+import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.dhb.models.api.response.ErrorModel;
 import com.dhb.models.api.response.ErrorResponseModel;
@@ -21,13 +22,14 @@ import com.dhb.models.api.response.SelfieUploadResponseModel;
 import com.dhb.models.api.response.SessionExpireModel;
 import com.dhb.models.data.BrandMasterModel;
 import com.dhb.models.data.BrandTestMasterModel;
-import com.dhb.models.data.CampListDisplayResponseModel;
+import com.dhb.models.data.CampDetailModel;
 import com.dhb.models.data.DepositRegisterModel;
 import com.dhb.models.data.EarningRegisterModel;
 import com.dhb.models.data.LeaveNatureMasterModel;
 import com.dhb.models.data.MaterialDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.models.data.SlotModel;
+import com.dhb.models.data.VersionControlMasterModel;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AlertDialogMessage;
 import com.dhb.utils.app.AppConstants;
@@ -703,11 +705,11 @@ public class ResponseParser implements AppConstants {
 
 	//Camp details Response parse:
 	public CampListDisplayResponseModel getCampDetailResponseModel(String json, int statusCode) {
-		CampListDisplayResponseModel campDetailsResponseModel = null;
+		CampListDisplayResponseModel campListDisplayResponseModel = null;
 		//if (!parseIntoError(json, statusCode)){
-		campDetailsResponseModel = gson.fromJson(json, CampListDisplayResponseModel.class);
+		campListDisplayResponseModel = gson.fromJson(json, CampListDisplayResponseModel.class);
 		//}
-		return campDetailsResponseModel;
+		return campListDisplayResponseModel;
 	}
 
 	//btech collections  details Response parse:
@@ -761,5 +763,14 @@ public class ResponseParser implements AppConstants {
 		TypeToken<ArrayList<LeaveNatureMasterModel>> token =new TypeToken<ArrayList<LeaveNatureMasterModel>>(){};
 		leaveNatureMasterModels = gson.fromJson(json,token.getType());
 		return leaveNatureMasterModels;
+	}
+
+	////Fetch VersionControl  details Response parse:
+	public VersionControlMasterModel  getVersionControlMasterResponse (String json, int statusCode) {
+	VersionControlMasterModel  versionControlMasterModels = null;
+		if (!parseIntoError(json, statusCode)){
+			versionControlMasterModels = gson.fromJson(json, VersionControlMasterModel.class);
+		}
+		return versionControlMasterModels;
 	}
 }

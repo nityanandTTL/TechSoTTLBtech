@@ -74,6 +74,8 @@ public class AbstractApiModel implements AppConstants {
 
     public String ORDER_STATUS_CHANGE = VERSION_API_URL + "/OrderStatusChange";
 
+    public String CAMP_STARTED = VERSION_API_URL + "/CampDetails/CampStarted";
+
     public String FETCH_BRAND_MASTER = VERSION_API_URL + "/BrandMaster";
 
     public String FETCH_BRAND_WISE_TEST_MASTER = VERSION_API_URL + "/BrandTestRateList";
@@ -89,6 +91,8 @@ public class AbstractApiModel implements AppConstants {
     public String FETCH_EARNINGREGISTER_DETAIL=VERSION_API_URL+"/EarningRegister";
 
     public String FETCH_DEPOSITREGISTER_DETAIL=VERSION_API_URL+"/DepositPayments";
+
+    public String FETCH_VERSION_CONTROL_DETAIL=VERSION_API_URL+"/VersionControl";
 
     public String FETCH_MATERIALMASTER_DETAIL=VERSION_API_URL+"/MaterialMaster";
 

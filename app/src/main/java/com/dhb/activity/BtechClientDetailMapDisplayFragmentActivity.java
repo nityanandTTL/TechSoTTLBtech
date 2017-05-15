@@ -94,6 +94,8 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
     private List<Address> addresses;
     private String address, city;
     private ImageView title_aadhar_icon, title_distance_icon;
+    private double destlat,destlong,currentlat,currentlong;
+    private int Integertotaldiff;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +123,10 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
     private void setListeners() {
         btn_arrived.setOnClickListener(this);
         btn_startNav.setOnClickListener(this);
+        double totaldist = distFrom(19.061745,73.0254561,19.0771,72.999);
+
+        Integertotaldiff = (int) totaldist;
+        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
         btn_arrived.setVisibility(View.GONE);
     }
 
@@ -176,6 +182,7 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
                 final GPSTracker gpsTracker = new GPSTracker(activity);
                 if (gpsTracker.canGetLocation() && !gpsTracker.isInternetAvailable()) {
                     Log.e(TAG, "onMapReady: location : " + Double.toString(gpsTracker.getLatitude()) + "long " + gpsTracker.getLongitude());
+
                     final LatLng currentLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
                     if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
@@ -189,9 +196,11 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
                     }
                     MarkerPoints.add(currentLocation);
                     Logger.error("btechClientsModel lat" + btechClientsModel.getLatitude() + "long " + btechClientsModel.getLongitude());
-                    double lat = Double.parseDouble(btechClientsModel.getLatitude());
-                    double longitude = Double.parseDouble(btechClientsModel.getLongitude());
-                    LatLng destTempLocation = new LatLng(lat, longitude);
+                    destlat= Double.parseDouble(btechClientsModel.getLatitude());
+                    destlong= Double.parseDouble(btechClientsModel.getLongitude());
+                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
+                    LatLng destTempLocation = new LatLng(destlat, destlong);
 
                     String url = getUrl(currentLocation, destTempLocation);
                     MarkerOptions options = new MarkerOptions();
@@ -257,6 +266,21 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Integertotaldiff > 100)
+        {
+            btn_arrived.setVisibility(View.INVISIBLE);
+            btn_startNav.setVisibility(View.VISIBLE);
+        }
+        else {
+            btn_arrived.setVisibility(View.VISIBLE);
+            btn_startNav.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(activity,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -297,6 +321,12 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
+        currentlat=location.getLatitude();
+        currentlong=location.getLongitude();
+
+        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),currentlong+"", Toast.LENGTH_SHORT).show();
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
@@ -587,13 +617,17 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if ((statusCode == 200)) {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
-                btn_arrived.setVisibility(View.VISIBLE);
-                btn_startNav.setVisibility(View.GONE);
-            } else {
-                Toast.makeText(activity, "error " + json, Toast.LENGTH_SHORT).show();
+                if (Integertotaldiff > 100) {
+                    btn_arrived.setVisibility(View.INVISIBLE);
+                    btn_startNav.setVisibility(View.VISIBLE);
+                } else {
+                    btn_arrived.setVisibility(View.VISIBLE);
+                    btn_startNav.setVisibility(View.INVISIBLE);
+                }
+
             }
         }
+
 
         @Override
         public void onApiCancelled() {
@@ -646,5 +680,17 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
         }
 
         ft.commit();
+    }
+    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        float dist = (float) (earthRadius * c);
+
+        return dist;
     }
 }
