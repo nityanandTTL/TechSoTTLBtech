@@ -118,7 +118,7 @@ public class AbstractApiModel implements AppConstants {
 
     public String LAB_ALERT_MASTER = VERSION_API_URL + "/LabAlerts";
 
-    public String FETCH_LEAVE_NATURE_MASTER=VERSION_API_URL+"/LeaveNatureMaster/L1";
+    public String FETCH_LEAVE_NATURE_MASTER=VERSION_API_URL+"/Masters/LeaveNatureMaster/L1";
 
     public String SET_APPLY_LEAVE=VERSION_API_URL+"/ManageBtechLeave/ApplyLeave";
 
