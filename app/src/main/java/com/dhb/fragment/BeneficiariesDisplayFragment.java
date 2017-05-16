@@ -21,10 +21,12 @@ import com.dhb.adapter.BeneficiaryScreenSlidePagerAdapter;
 import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BeneficiaryDetailsDao;
 import com.dhb.dao.models.OrderDetailsDao;
+import com.dhb.delegate.RefreshBeneficiariesSliderDelegate;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.uiutils.AbstractFragment;
+import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.DeviceUtils;
@@ -46,8 +48,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private ImageView[] dots;
     private BeneficiaryScreenSlidePagerAdapter beneficiaryScreenSlidePagerAdapter;
     private LinearLayout pagerIndicator;
-    private BeneficiaryDetailsModel beneficiaryDetailsModel = new BeneficiaryDetailsModel();
-    private OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
+    private BeneficiaryDetailsModel tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
+    private OrderDetailsModel tempOrderDetailsModel = new OrderDetailsModel();
     private DhbDao dhbDao;
     private OrderDetailsDao orderDetailsDao;
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
@@ -93,7 +95,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Confirm Action")
-                        .setMessage("Do you really want to add to new beneficiary?")
+                        .setMessage("Do you really want to add a new beneficiary?")
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -102,22 +104,22 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 }).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        orderDetailsModel.setOrderNo(DeviceUtils.randomString(8));
+                        tempOrderDetailsModel.setOrderNo(DeviceUtils.randomString(8));
                         ArrayList<BeneficiaryDetailsModel> beneficiaries = new ArrayList<BeneficiaryDetailsModel>();
 
-                        beneficiaryDetailsModel = new BeneficiaryDetailsModel();
-                        beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
-                        beneficiaryDetailsModel.setBenId((int)(Math.random()*999));
-                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                        tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
+                        tempBeneficiaryDetailsModel.setOrderNo(tempOrderDetailsModel.getOrderNo());
+                        tempBeneficiaryDetailsModel.setBenId((int)(Math.random()*999));
+                        beneficiaryDetailsDao.insertOrUpdate(tempBeneficiaryDetailsModel);
 
-                        beneficiaries.add(beneficiaryDetailsModel);
+                        beneficiaries.add(tempBeneficiaryDetailsModel);
 
-                        orderDetailsModel.setBenMaster(beneficiaries);
-                        orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                        tempOrderDetailsModel.setBenMaster(beneficiaries);
+                        orderDetailsDao.insertOrUpdate(tempOrderDetailsModel);
 
                         Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
-                        intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
-                        intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                        intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, tempBeneficiaryDetailsModel);
+                        intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, tempOrderDetailsModel);
                         startActivityForResult(intentEdit, BundleConstants.ADD_EDIT_START);
                     }
                 }).show();
@@ -130,33 +132,34 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 orderVisitDetailsModel.getAllOrderdetails()) {
             totalAmount = totalAmount + orderDetailsModel.getAmountDue();
         }
-        if(orderVisitDetailsModel.getAllOrderdetails().size()>0){
-            orderDetailsModel = orderVisitDetailsModel.getAllOrderdetails().get(0);
-        }
-        orderDetailsModel.setAmountDue(0);
-        orderDetailsModel.setBrandId(0);
-        orderDetailsModel.setAddBen(true);
-        orderDetailsModel.setOrderNo("");
-        orderDetailsModel.setTestEdit(false);
-        orderDetailsModel.setMargin(0);
-        orderDetailsModel.setDiscount(0);
-        orderDetailsModel.setBenMaster(new ArrayList<BeneficiaryDetailsModel>());
-        orderDetailsModel.setProjId("");
 
         txtAmtPayable.setText(totalAmount+"");
         ArrayList<BeneficiaryDetailsModel> beneficiariesArr = new ArrayList<>();
-        for (OrderDetailsModel orderDetailsModel :
-                orderVisitDetailsModel.getAllOrderdetails()) {
-            for (BeneficiaryDetailsModel beneficiaryDetailsModel :
-                    orderDetailsModel.getBenMaster()) {
+        for (OrderDetailsModel orderDetailsModel : orderVisitDetailsModel.getAllOrderdetails()) {
+            Logger.error(orderDetailsModel.getBenMaster().size()+"");
+            for (BeneficiaryDetailsModel beneficiaryDetailsModel :orderDetailsModel.getBenMaster()) {
                 beneficiariesArr.add(beneficiaryDetailsModel);
             }
         }
-        beneficiaryScreenSlidePagerAdapter = new BeneficiaryScreenSlidePagerAdapter(getFragmentManager(),activity,beneficiariesArr,orderVisitDetailsModel.getAllOrderdetails());
+        beneficiaryScreenSlidePagerAdapter = new BeneficiaryScreenSlidePagerAdapter(getFragmentManager(), activity, beneficiariesArr, orderVisitDetailsModel.getAllOrderdetails(), new RefreshBeneficiariesSliderDelegate() {
+            @Override
+            public void onRefreshActionCallbackReceived(OrderVisitDetailsModel orderVisitDetails) {
+                orderVisitDetailsModel = orderVisitDetails;
+                initData();
+            }
+        });
         vpBeneficiaries.setAdapter(beneficiaryScreenSlidePagerAdapter);
         vpBeneficiaries.setCurrentItem(0);
         vpBeneficiaries.setOnPageChangeListener(new BeneficiaryScreenPageChangeListener());
         setUiPageViewController();
+
+        if(orderVisitDetailsModel.getAllOrderdetails().size()>0) {
+            for (OrderDetailsModel orderDetailsModel :
+                    orderVisitDetailsModel.getAllOrderdetails()) {
+                tempOrderDetailsModel = orderDetailsModel;
+                break;
+            }
+        }
     }
 
     @Override
@@ -187,8 +190,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
             pagerIndicator.addView(dots[i], params);
         }
-
-        dots[0].setImageDrawable(activity.getResources().getDrawable(R.drawable.selected_item_dot));
+        if(dots!=null && dots.length>0) {
+            dots[0].setImageDrawable(activity.getResources().getDrawable(R.drawable.selected_item_dot));
+        }
     }
 
     private class BeneficiaryScreenPageChangeListener implements ViewPager.OnPageChangeListener {

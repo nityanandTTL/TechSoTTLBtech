@@ -1,355 +1,378 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="3">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:background="@color/bg_content"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:textStyle="italic"
-            android:gravity="center"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Welcome,"
-            android:textSize="20dp" />
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@android:color/white">
 
-        <TextView
-            android:layout_marginTop="5dp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:id="@+id/txt_username"
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Mr. Ajay Kulkarni"
-            android:textSize="20dp" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/home_nav_bg_gradient">
 
-        <TextView
-            android:visibility="gone"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:id="@+id/tv_user_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tara Apt., vashi, Navi Mumbai" />
-
-        <LinearLayout
-            android:background="@drawable/solid_circle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="8dp">
-
-            <com.dhb.customview.RoundedImageView
-                android:id="@+id/img_user_picture"
-                android:layout_width="@dimen/dp_60"
-                android:layout_height="@dimen/dp_60"
-                android:layout_gravity="center_horizontal"
-                android:padding="5dp"/>
-        </LinearLayout>
-
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/nav_grid_menu"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center_vertical|center_horizontal"
         android:orientation="vertical"
-        android:padding="@dimen/dp_10"
-        android:background="@drawable/home_nav_bg_gradient"
-        android:visibility="visible"
-        android:layout_weight="2"
-        android:weightSum="3">
-
+        android:weightSum="3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <LinearLayout
-            android:id="@+id/row_1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:textStyle="italic"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Welcome,"
+                android:textSize="20dp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:id="@+id/txt_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Mr. Ajay Kulkarni"
+                android:textSize="20dp" />
+
+            <TextView
+                android:visibility="gone"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:id="@+id/tv_user_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tara Apt., vashi, Navi Mumbai" />
+
+            <LinearLayout
+                android:background="@drawable/solid_circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="8dp">
+
+                <com.dhb.customview.RoundedImageView
+                    android:id="@+id/img_user_picture"
+                    android:layout_width="@dimen/dp_60"
+                    android:layout_height="@dimen/dp_60"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="5dp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/nav_grid_menu"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:orientation="vertical"
+            android:padding="@dimen/dp_10"
+            android:visibility="visible"
+            android:layout_weight="2"
             android:weightSum="3">
 
             <LinearLayout
-                android:id="@+id/ll_payment_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:id="@+id/row_1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_1">
+                android:orientation="horizontal"
+                android:weightSum="3">
 
-                <ImageView
-                    android:id="@+id/schedule_icon"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:layout_gravity="center"
-                    android:src="@drawable/schedule_icon" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/ll_payment_icon"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Schedule"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorPrimaryDark" />
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_1">
+
+                    <ImageView
+                        android:id="@+id/schedule_icon"
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="@dimen/dp_30"
+                        android:layout_gravity="center"
+                        android:src="@drawable/schedule_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Schedule"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimaryDark" />
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/separator">
+                </View>
+                <LinearLayout
+                    android:id="@+id/ll_schedule_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_1">
+
+                    <ImageView
+                        android:id="@+id/orders_booked"
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="@dimen/dp_30"
+                        android:layout_gravity="center"
+                        android:src="@drawable/orders_booked_icon" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Orders"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimaryDark" />
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/separator">
+                </View>
+                <LinearLayout
+                    android:id="@+id/ll_orders_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_1">
+
+                    <ImageView
+                        android:id="@+id/payment_icon"
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="@dimen/dp_30"
+                        android:layout_gravity="center"
+                        android:src="@drawable/payment_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Payments"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimaryDark" />
+
+                </LinearLayout>
             </LinearLayout>
             <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:background="@color/separator">
             </View>
             <LinearLayout
-                android:id="@+id/ll_schedule_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:id="@+id/row_2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_toEndOf="@id/row_1"
+                android:orientation="horizontal"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_1">
-
-                <ImageView
-                    android:id="@+id/orders_booked"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:layout_gravity="center"
-                    android:src="@drawable/orders_booked_icon" />
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Orders"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorPrimaryDark" />
-            </LinearLayout>
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/separator">
-            </View>
-            <LinearLayout
-                android:id="@+id/ll_orders_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_1">
-
-                <ImageView
-                    android:id="@+id/payment_icon"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:layout_gravity="center"
-                    android:src="@drawable/payment_icon" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Payments"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorPrimaryDark" />
-
-            </LinearLayout>
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/separator">
-        </View>
-        <LinearLayout
-            android:id="@+id/row_2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_toEndOf="@id/row_1"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:weightSum="3"
-            android:layout_gravity="center">
-            <LinearLayout
-                android:id="@+id/ll_materials_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_1"
-                android:layout_weight="1"
+                android:weightSum="3"
                 android:layout_gravity="center">
-                <ImageView
-                    android:id="@+id/materials_icon"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:src="@drawable/materials_icon"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/ll_materials_icon"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Materials"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_1"
+                    android:layout_weight="1"
+                    android:layout_gravity="center">
+                    <ImageView
+                        android:id="@+id/materials_icon"
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="@dimen/dp_30"
+                        android:src="@drawable/materials_icon"
+                        android:layout_gravity="center"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Materials"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/separator">
+                </View>
+                <LinearLayout
+                    android:id="@+id/ll_olc_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_1"
+                    android:layout_weight="1"
+                    android:layout_gravity="center">
+
+                    <ImageView
+                        android:id="@+id/olc_pickup_icon"
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="@dimen/dp_30"
+                        android:layout_gravity="center"
+                        android:src="@drawable/olc_pickup_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="OLC Pick up"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/separator">
+                </View>
+                <LinearLayout
+                    android:id="@+id/ll_hub_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_1"
                     android:layout_gravity="center"
-                    android:textAlignment="center"/>
+                    android:gravity="end"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:id="@+id/hub_icon"
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="@dimen/dp_30"
+                        android:src="@drawable/hub_icon"
+                        android:layout_gravity="center" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hub"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"/>
+                </LinearLayout>
             </LinearLayout>
             <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:background="@color/separator">
             </View>
             <LinearLayout
-                android:id="@+id/ll_olc_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_1"
+                android:id="@+id/row_3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_toEndOf="@id/row_2"
+                android:orientation="horizontal"
                 android:layout_weight="1"
+                android:weightSum="3"
                 android:layout_gravity="center">
 
-                <ImageView
-                    android:id="@+id/olc_pickup_icon"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:layout_gravity="center"
-                    android:src="@drawable/olc_pickup_icon" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/ll_camp_icon"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="OLC Pick up"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:layout_gravity="center"
-                    android:textAlignment="center"/>
-            </LinearLayout>
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/separator">
-            </View>
-            <LinearLayout
-                android:id="@+id/ll_hub_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_1"
-                android:layout_gravity="center"
-                android:gravity="end"
-                android:layout_weight="1">
-                <ImageView
-                    android:id="@+id/hub_icon"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:src="@drawable/hub_icon"
-                    android:layout_gravity="center" />
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_1"
+                    android:layout_weight="1"
+                    android:layout_gravity="center">
+                    <ImageView
+                        android:id="@+id/camp_icon"
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="@dimen/dp_30"
+                        android:src="@drawable/camp_icon"
+                        android:layout_gravity="center"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Camp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/separator">
+                </View>
+                <LinearLayout
+                    android:id="@+id/ll_communication_icon"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Hub"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:layout_gravity="center"
-                    android:textAlignment="center"/>
-            </LinearLayout>
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/separator">
-        </View>
-        <LinearLayout
-            android:id="@+id/row_3"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_toEndOf="@id/row_2"
-            android:orientation="horizontal"
-            android:layout_weight="1"
-            android:weightSum="3"
-            android:layout_gravity="center">
-
-            <LinearLayout
-                android:id="@+id/ll_camp_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_1"
-                android:layout_weight="1"
-                android:layout_gravity="center">
-                <ImageView
-                    android:id="@+id/camp_icon"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:src="@drawable/camp_icon"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_1"
+                    android:layout_weight="1"
+                    android:layout_gravity="center">
+                    <ImageView
+                        android:id="@+id/communication_icon"
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="@dimen/dp_30"
+                        android:src="@drawable/communication_icon"
+                        android:layout_gravity="center"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Communication"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/separator">
+                </View>
+                <LinearLayout
+                    android:id="@+id/ll_feedback_icon"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Camp"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:layout_gravity="center"
-                    android:textAlignment="center"/>
-            </LinearLayout>
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/separator">
-            </View>
-            <LinearLayout
-                android:id="@+id/ll_communication_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_1"
-                android:layout_weight="1"
-                android:layout_gravity="center">
-                <ImageView
-                    android:id="@+id/communication_icon"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:src="@drawable/communication_icon"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Communication"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:layout_gravity="center"
-                    android:textAlignment="center"/>
-            </LinearLayout>
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/separator">
-            </View>
-            <LinearLayout
-                android:id="@+id/ll_feedback_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_1"
-                android:layout_weight="1"
-                android:layout_gravity="center">
-                <ImageView
-                    android:id="@+id/feedback_icon"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30"
-                    android:src="@drawable/feedback_icon"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Feedback"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:layout_gravity="center"
-                    android:textAlignment="center"/>
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_1"
+                    android:layout_weight="1"
+                    android:layout_gravity="center">
+                    <ImageView
+                        android:id="@+id/feedback_icon"
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="@dimen/dp_30"
+                        android:src="@drawable/feedback_icon"
+                        android:layout_gravity="center"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Feedback"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

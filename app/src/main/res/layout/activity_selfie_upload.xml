@@ -16,7 +16,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2.3"
+            android:layout_weight="2"
             android:background="@android:color/white">
 
         </RelativeLayout>
@@ -24,8 +24,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1.7"
-            android:background="@color/selfie_background">
+            android:layout_weight="1"
+            android:background="@drawable/home_nav_bg_gradient">
 
         </RelativeLayout>
     </LinearLayout>
@@ -33,88 +33,104 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
+        android:weightSum="5"
         android:orientation="vertical">
-
-        <TextView
-            android:textStyle="italic"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Welcome,"
-            android:textSize="20dp" />
-
-        <TextView
-            android:layout_marginTop="5dp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:id="@+id/tv_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Mr. Ajay Kulkarni"
-            android:textSize="20dp" />
-
-        <TextView
-            android:visibility="invisible"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:id="@+id/tv_user_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tara Apt., vashi, Navi Mumbai" />
-
         <LinearLayout
-            android:background="@drawable/solid_circle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp">
+            android:gravity="bottom"
+            android:layout_weight="4"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <com.dhb.customview.RoundedImageView
-                android:id="@+id/img_user_picture"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
+            <TextView
+                android:textStyle="italic"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:padding="5dp"/>
+                android:text="Welcome,"
+                android:textSize="20dp" />
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:id="@+id/tv_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Mr. Ajay Kulkarni"
+                android:textSize="20dp" />
+
+            <TextView
+                android:visibility="invisible"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:id="@+id/tv_user_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tara Apt., vashi, Navi Mumbai" />
+
         </LinearLayout>
-
         <LinearLayout
-            android:weightSum="2"
+            android:layout_weight="1"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:orientation="horizontal">
+            android:layout_height="match_parent">
 
-            <Button
-                android:textStyle="bold"
+            <LinearLayout
+                android:background="@drawable/solid_circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="16sp"
-                android:id="@+id/btn_takePhoto"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp">
+
+                <com.dhb.customview.RoundedImageView
+                    android:id="@+id/img_user_picture"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_gravity="center"
+                    android:padding="5dp"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:weightSum="2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/purple_btn_bg"
-                android:text="@string/take_photo"
-                android:textColor="@android:color/white"
-                android:minEms="8"/>
+                android:layout_marginTop="48dp"
+                android:orientation="horizontal">
 
-            <Button
-                android:textStyle="bold"
-                android:gravity="center"
-                android:textSize="16sp"
-                android:id="@+id/btn_uploadPhoto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/purple_btn_bg"
-                android:text="@string/upload"
-                android:textColor="@android:color/white"
-                android:minEms="8"/>
+                <Button
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:id="@+id/btn_takePhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/purple_btn_bg"
+                    android:text="@string/take_photo"
+                    android:textColor="@android:color/white"
+                    android:minEms="10"/>
+
+                <Button
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:id="@+id/btn_uploadPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/purple_btn_bg"
+                    android:text="@string/upload"
+                    android:textColor="@android:color/white"
+                    android:minEms="8"/>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

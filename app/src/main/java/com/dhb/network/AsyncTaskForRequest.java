@@ -12,12 +12,14 @@ import com.dhb.models.api.request.ChangePasswordRequestModel;
 import com.dhb.models.api.request.HubStartRequestModel;
 import com.dhb.models.api.request.LoginRequestModel;
 import com.dhb.models.api.request.MasterBarcodeMappingRequestModel;
+import com.dhb.models.api.request.OlcScanPickUpRequestModel;
 import com.dhb.models.api.request.OlcStartRequestModel;
+import com.dhb.models.api.request.OrderBookingRequestModel;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
+import com.dhb.models.api.request.RemoveBeneficiaryAPIRequestModel;
 import com.dhb.models.api.request.ResetPasswordRequestModel;
 import com.dhb.models.api.request.SelfieUploadRequestModel;
 import com.dhb.models.api.request.SetBtechAvailabilityAPIRequestModel;
-import com.dhb.models.data.BtechClientsModel;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.google.gson.Gson;
 
@@ -114,6 +116,30 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
                     .getString(R.string.progress_message_uploading_selfie_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+    /*
+	 * Order Booking Api Integration*/
+
+    public ApiCallAsyncTask getOrderBookingRequestAsyncTask(OrderBookingRequestModel orderBookingRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(orderBookingRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.ORDER_BOOKING);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_uploading_order_details_please_wait));
             apiCallAsyncTask.setProgressBarVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -741,7 +767,8 @@ public class AsyncTaskForRequest {
             e.printStackTrace();
         }
         return apiCallAsyncTask;
-    } /*
+    }
+    /*
 	 * Reset Password Api Integration*/
 
     public ApiCallAsyncTask getResetPasswordRequestAsyncTask(ResetPasswordRequestModel resetPasswordRequestModel) {
@@ -759,6 +786,54 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
                     .getString(R.string.progress_message_reset_password_please_wait));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+    /*
+	 * Reset Password Api Integration*/
+
+    public ApiCallAsyncTask getRemoveBeneficiaryRequestAsyncTask(RemoveBeneficiaryAPIRequestModel removeBeneficiaryAPIRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(removeBeneficiaryAPIRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.REMOVE_BENEFICIARY);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_removing_beneficiary_please_wait));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+    /*
+	 * Scan Pickup Api Integration*/
+
+    public ApiCallAsyncTask getScanPickupRequestAsyncTask(OlcScanPickUpRequestModel olcScanPickUpRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(olcScanPickUpRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.OLC_PICKUP_SUBMIT_SCAN_BARCODE);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_updating_scanned_barcode_please_wait));
 
         } catch (Exception e) {
             e.printStackTrace();

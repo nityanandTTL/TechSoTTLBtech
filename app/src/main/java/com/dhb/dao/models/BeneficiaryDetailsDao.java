@@ -4,12 +4,12 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.dhb.models.data.BarcodeDetailsModel;
+import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.TestRateMasterModel;
-import com.dhb.models.data.TestWiseBeneficiaryClinicalHistoryModel;
+import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.dhb.utils.api.Logger;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -80,8 +80,8 @@ public class BeneficiaryDetailsDao {
 		beneficiaryDetailsModel.setFasting(cursor.getString(cursor.getColumnIndex(FASTING)));
 		beneficiaryDetailsModel.setVenepuncture(cursor.getBlob(cursor.getColumnIndex(VENEPUNCTURE)));
 
-		TypeToken<ArrayList<BarcodeDetailsModel>> tokenBarcode = new TypeToken<ArrayList<BarcodeDetailsModel>>(){};
-		ArrayList<BarcodeDetailsModel> bmArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(BARCODE_DTL)),tokenBarcode.getType());
+		TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>> tokenBarcode = new TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>>(){};
+		ArrayList<BeneficiaryBarcodeDetailsModel> bmArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(BARCODE_DTL)),tokenBarcode.getType());
 
 		TypeToken<ArrayList<BeneficiarySampleTypeDetailsModel>> tokenSampleTypes = new TypeToken<ArrayList<BeneficiarySampleTypeDetailsModel>>(){};
 		ArrayList<BeneficiarySampleTypeDetailsModel> bstArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(SAMPLE_TYPE)),tokenSampleTypes.getType());
@@ -89,8 +89,8 @@ public class BeneficiaryDetailsDao {
 		TypeToken<ArrayList<TestRateMasterModel>> tokenTestsList = new TypeToken<ArrayList<TestRateMasterModel>>(){};
 		ArrayList<TestRateMasterModel> tstArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(TESTS_LIST)),tokenTestsList.getType());
 
-		TypeToken<ArrayList<TestWiseBeneficiaryClinicalHistoryModel>> tokenCH = new TypeToken<ArrayList<TestWiseBeneficiaryClinicalHistoryModel>>(){};
-		ArrayList<TestWiseBeneficiaryClinicalHistoryModel> tCHArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(CLINICAL_HISTORY)),tokenCH.getType());
+		TypeToken<ArrayList<BeneficiaryTestWiseClinicalHistoryModel>> tokenCH = new TypeToken<ArrayList<BeneficiaryTestWiseClinicalHistoryModel>>(){};
+		ArrayList<BeneficiaryTestWiseClinicalHistoryModel> tCHArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(CLINICAL_HISTORY)),tokenCH.getType());
 
 		TypeToken<ArrayList<BeneficiaryLabAlertsModel>> tokenLA = new TypeToken<ArrayList<BeneficiaryLabAlertsModel>>(){};
 		ArrayList<BeneficiaryLabAlertsModel> tLAArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(LAB_ALERT)),tokenLA.getType());

@@ -64,10 +64,12 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
         } else if (v.getId() == R.id.login_button) {
             if (validate()) {
                 AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+
                 LoginRequestModel loginRequestModel = new LoginRequestModel();
                 loginRequestModel.setUserName(edt_username_login.getText().toString().trim());
                 loginRequestModel.setPassword(edt_password_login.getText().toString().trim());
                 loginRequestModel.setGrant_type("password");
+
                 ApiCallAsyncTask logiApiAsyncTask = asyncTaskForRequest.getLoginRequestAsyncTask(loginRequestModel);
                 logiApiAsyncTask.setApiCallAsyncTaskDelegate(new LoginApiAsyncTaskDelegateResult());
                 if (isNetworkAvailable(activity)) {

@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by Pratik Ambhore on 4/19/2017.
  */
 
-public class BarcodeDetailsModel extends BaseModel implements Parcelable{
+public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcelable{
 
     private String id;
     private int BenId;
@@ -19,11 +19,11 @@ public class BarcodeDetailsModel extends BaseModel implements Parcelable{
     private String ClinicalHistory;
     private int ProcessAt;
 
-    public BarcodeDetailsModel() {
+    public BeneficiaryBarcodeDetailsModel() {
         super();
     }
 
-    protected BarcodeDetailsModel(Parcel in) {
+    protected BeneficiaryBarcodeDetailsModel(Parcel in) {
         super(in);
         id = in.readString();
         BenId = in.readInt();
@@ -55,15 +55,15 @@ public class BarcodeDetailsModel extends BaseModel implements Parcelable{
         return 0;
     }
 
-    public static final Creator<BarcodeDetailsModel> CREATOR = new Creator<BarcodeDetailsModel>() {
+    public static final Creator<BeneficiaryBarcodeDetailsModel> CREATOR = new Creator<BeneficiaryBarcodeDetailsModel>() {
         @Override
-        public BarcodeDetailsModel createFromParcel(Parcel in) {
-            return new BarcodeDetailsModel(in);
+        public BeneficiaryBarcodeDetailsModel createFromParcel(Parcel in) {
+            return new BeneficiaryBarcodeDetailsModel(in);
         }
 
         @Override
-        public BarcodeDetailsModel[] newArray(int size) {
-            return new BarcodeDetailsModel[size];
+        public BeneficiaryBarcodeDetailsModel[] newArray(int size) {
+            return new BeneficiaryBarcodeDetailsModel[size];
         }
     };
 

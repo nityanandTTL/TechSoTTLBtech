@@ -8,17 +8,6 @@
     <!-- TODO: Update blank fragment layout -->
     <include layout="@layout/item_btech_client" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-       android:padding="22dp">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <include layout="@layout/item_olc_master_barcode"/>
 
 </LinearLayout>

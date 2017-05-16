@@ -31,7 +31,7 @@ import com.dhb.dialog.CancelOrderDialog;
 import com.dhb.dialog.ClinicalHistorySelectorDialog;
 import com.dhb.dialog.LabAlertSelectorDialog;
 import com.dhb.dialog.RescheduleOrderDialog;
-import com.dhb.models.data.BarcodeDetailsModel;
+import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
@@ -39,7 +39,7 @@ import com.dhb.models.data.LabAlertMasterModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestSampleTypeModel;
-import com.dhb.models.data.TestWiseBeneficiaryClinicalHistoryModel;
+import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.dhb.uiutils.AbstractActivity;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
@@ -89,7 +89,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private boolean isCancelRequesGenereted=false;
     private ArrayList<TestRateMasterModel> restOfTestsList;
     private DhbDao dhbDao;
-    private ArrayList<TestWiseBeneficiaryClinicalHistoryModel> benCHArr;
+    private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr;
     private ArrayList<BeneficiaryLabAlertsModel> benLAArr;
     private ArrayList<LabAlertMasterModel> labAlertsArr;
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
@@ -129,18 +129,18 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 && beneficiaryDetailsModel.getBarcodedtl()!=null
                 && beneficiaryDetailsModel.getBarcodedtl().size()>0) {
             tlBarcodes.removeAllViews();
-            for (final BarcodeDetailsModel barcodeDetailsModel :
+            for (final BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel :
                     beneficiaryDetailsModel.getBarcodedtl()) {
                 TableRow tr = (TableRow) activity.getLayoutInflater().inflate(R.layout.item_scan_barcode,null);
                 TextView txtSampleType = (TextView)tr.findViewById(R.id.txt_sample_type);
                 TextView edtBarcode = (TextView)tr.findViewById(R.id.edt_barcode);
                 ImageView imgScan = (ImageView) tr.findViewById(R.id.scan_barcode_button);
-                txtSampleType.setText(barcodeDetailsModel.getSamplType());
-                edtBarcode.setText(barcodeDetailsModel.getBarcode());
+                txtSampleType.setText(beneficiaryBarcodeDetailsModel.getSamplType());
+                edtBarcode.setText(beneficiaryBarcodeDetailsModel.getBarcode());
                 imgScan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        currentScanSampleType = barcodeDetailsModel.getSamplType();
+                        currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
                         intentIntegrator = new IntentIntegrator(activity){
                             @Override
                             protected void startActivityForResult(Intent intent, int code) {
@@ -153,7 +153,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 edtBarcode.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        currentScanSampleType = barcodeDetailsModel.getSamplType();
+                        currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
                         AddSampleBarcodeDialog sampleBarcodeDialog = new AddSampleBarcodeDialog(activity, new AddSampleBarcodeDialogDelegate() {
                             @Override
                             public void onSampleBarcodeAdded(String scanned_barcode) {
@@ -287,7 +287,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 if(forCHSelection.size()>0) {
                     ClinicalHistorySelectorDialog clinicalHistorySelectorDialog = new ClinicalHistorySelectorDialog(activity, forCHSelection, benCHArr, beneficiaryDetailsModel.getBenId(), new SelectClinicalHistoryCheckboxDelegate() {
                         @Override
-                        public void onCheckChange(ArrayList<TestWiseBeneficiaryClinicalHistoryModel> chArr) {
+                        public void onCheckChange(ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr) {
                             benCHArr = chArr;
                             beneficiaryDetailsModel.setClHistory(benCHArr);
                             beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
@@ -387,17 +387,17 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
         } else {
             if(beneficiaryDetailsModel!=null && beneficiaryDetailsModel.getBarcodedtl()==null){
-                beneficiaryDetailsModel.setBarcodedtl(new ArrayList<BarcodeDetailsModel>());
+                beneficiaryDetailsModel.setBarcodedtl(new ArrayList<BeneficiaryBarcodeDetailsModel>());
             }
             if(beneficiaryDetailsModel!=null && beneficiaryDetailsModel.getSampleType()!=null) {
                 for (BeneficiarySampleTypeDetailsModel sampleTypes :
                         beneficiaryDetailsModel.getSampleType()) {
-                    BarcodeDetailsModel barcodeDetailsModel = new BarcodeDetailsModel();
-                    barcodeDetailsModel.setBenId(sampleTypes.getBenId());
-                    barcodeDetailsModel.setId(DeviceUtils.getRandomUUID());
-                    barcodeDetailsModel.setSamplType(sampleTypes.getSampleType());
-                    barcodeDetailsModel.setOrderNo(beneficiaryDetailsModel.getOrderNo());
-                    beneficiaryDetailsModel.getBarcodedtl().add(barcodeDetailsModel);
+                    BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
+                    beneficiaryBarcodeDetailsModel.setBenId(sampleTypes.getBenId());
+                    beneficiaryBarcodeDetailsModel.setId(DeviceUtils.getRandomUUID());
+                    beneficiaryBarcodeDetailsModel.setSamplType(sampleTypes.getSampleType());
+                    beneficiaryBarcodeDetailsModel.setOrderNo(beneficiaryDetailsModel.getOrderNo());
+                    beneficiaryDetailsModel.getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
                 }
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             }
@@ -433,7 +433,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             benLAArr = beneficiaryDetailsModel.getLabAlert();
             String chS = "";
             if(benCHArr!=null && benCHArr.size()>0) {
-                for (TestWiseBeneficiaryClinicalHistoryModel chm :
+                for (BeneficiaryTestWiseClinicalHistoryModel chm :
                         benCHArr) {
                     if (InputUtils.isNull(chS))
                         chS = "" + chm.getClinicalHistoryId();

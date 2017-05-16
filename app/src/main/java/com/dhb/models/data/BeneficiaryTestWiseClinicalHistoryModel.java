@@ -7,15 +7,15 @@ import android.os.Parcelable;
  * Created by ISRO on 5/8/2017.
  */
 
-public class TestWiseBeneficiaryClinicalHistoryModel implements Parcelable{
+public class BeneficiaryTestWiseClinicalHistoryModel implements Parcelable{
     private int BenId;
     private int ClinicalHistoryId;
     private String Test;
 
-    public TestWiseBeneficiaryClinicalHistoryModel() {
+    public BeneficiaryTestWiseClinicalHistoryModel() {
     }
 
-    protected TestWiseBeneficiaryClinicalHistoryModel(Parcel in) {
+    protected BeneficiaryTestWiseClinicalHistoryModel(Parcel in) {
         BenId = in.readInt();
         ClinicalHistoryId = in.readInt();
         Test = in.readString();
@@ -33,15 +33,15 @@ public class TestWiseBeneficiaryClinicalHistoryModel implements Parcelable{
         return 0;
     }
 
-    public static final Creator<TestWiseBeneficiaryClinicalHistoryModel> CREATOR = new Creator<TestWiseBeneficiaryClinicalHistoryModel>() {
+    public static final Creator<BeneficiaryTestWiseClinicalHistoryModel> CREATOR = new Creator<BeneficiaryTestWiseClinicalHistoryModel>() {
         @Override
-        public TestWiseBeneficiaryClinicalHistoryModel createFromParcel(Parcel in) {
-            return new TestWiseBeneficiaryClinicalHistoryModel(in);
+        public BeneficiaryTestWiseClinicalHistoryModel createFromParcel(Parcel in) {
+            return new BeneficiaryTestWiseClinicalHistoryModel(in);
         }
 
         @Override
-        public TestWiseBeneficiaryClinicalHistoryModel[] newArray(int size) {
-            return new TestWiseBeneficiaryClinicalHistoryModel[size];
+        public BeneficiaryTestWiseClinicalHistoryModel[] newArray(int size) {
+            return new BeneficiaryTestWiseClinicalHistoryModel[size];
         }
     };
 
@@ -71,8 +71,8 @@ public class TestWiseBeneficiaryClinicalHistoryModel implements Parcelable{
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof TestWiseBeneficiaryClinicalHistoryModel){
-            if(((TestWiseBeneficiaryClinicalHistoryModel) obj).getClinicalHistoryId()== getClinicalHistoryId() && ((TestWiseBeneficiaryClinicalHistoryModel) obj).getTest().equals(getTest())){
+        if(obj instanceof BeneficiaryTestWiseClinicalHistoryModel){
+            if(((BeneficiaryTestWiseClinicalHistoryModel) obj).getClinicalHistoryId()== getClinicalHistoryId() && ((BeneficiaryTestWiseClinicalHistoryModel) obj).getTest().equals(getTest())){
                 return true;
             }
         }

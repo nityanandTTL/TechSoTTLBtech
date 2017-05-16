@@ -12,7 +12,7 @@ import com.dhb.R;
 import com.dhb.delegate.SelectClinicalHistoryCheckboxDelegate;
 import com.dhb.models.data.TestClinicalHistoryModel;
 import com.dhb.models.data.TestRateMasterModel;
-import com.dhb.models.data.TestWiseBeneficiaryClinicalHistoryModel;
+import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 
 import java.util.ArrayList;
 
@@ -23,10 +23,10 @@ import java.util.ArrayList;
 public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<TestRateMasterModel> testsList = new ArrayList<>();
-    private ArrayList<TestWiseBeneficiaryClinicalHistoryModel> chArr;
+    private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr;
     private int BenId;
     private SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate;
-    public SelectClinicalHistoryExpandableListAdapter(Context context, ArrayList<TestRateMasterModel> testsList,ArrayList<TestWiseBeneficiaryClinicalHistoryModel> chArr,int benId,SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate) {
+    public SelectClinicalHistoryExpandableListAdapter(Context context, ArrayList<TestRateMasterModel> testsList, ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr, int benId, SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate) {
         this.context = context;
         this.testsList = testsList;
         this.BenId = benId;
@@ -104,12 +104,12 @@ public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableLi
         }
         TestClinicalHistoryModel testClinicalHistoryModel = testsList.get(groupPosition).getTstClinicalHistory().get(childPosition);
 
-        final TestWiseBeneficiaryClinicalHistoryModel  testWiseBeneficiaryClinicalHistoryModel = new TestWiseBeneficiaryClinicalHistoryModel();
-        testWiseBeneficiaryClinicalHistoryModel.setBenId(BenId);
-        testWiseBeneficiaryClinicalHistoryModel.setTest(testsList.get(groupPosition).getTestCode());
-        testWiseBeneficiaryClinicalHistoryModel.setClinicalHistoryId(testClinicalHistoryModel.getClinicalHtrId());
+        final BeneficiaryTestWiseClinicalHistoryModel beneficiaryTestWiseClinicalHistoryModel = new BeneficiaryTestWiseClinicalHistoryModel();
+        beneficiaryTestWiseClinicalHistoryModel.setBenId(BenId);
+        beneficiaryTestWiseClinicalHistoryModel.setTest(testsList.get(groupPosition).getTestCode());
+        beneficiaryTestWiseClinicalHistoryModel.setClinicalHistoryId(testClinicalHistoryModel.getClinicalHtrId());
         if(chArr!=null) {
-            if (chArr.contains(testWiseBeneficiaryClinicalHistoryModel)) {
+            if (chArr.contains(beneficiaryTestWiseClinicalHistoryModel)) {
                 holder.imgCheck.setVisibility(View.GONE);
                 holder.imgChecked.setVisibility(View.VISIBLE);
             } else {
@@ -123,14 +123,14 @@ public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableLi
         holder.imgCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chArr.add(testWiseBeneficiaryClinicalHistoryModel);
+                chArr.add(beneficiaryTestWiseClinicalHistoryModel);
                 selectClinicalHistoryCheckboxDelegate.onCheckChange(chArr);
             }
         });
         holder.imgChecked.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chArr.remove(testWiseBeneficiaryClinicalHistoryModel);
+                chArr.remove(beneficiaryTestWiseClinicalHistoryModel);
                 selectClinicalHistoryCheckboxDelegate.onCheckChange(chArr);
             }
         });
