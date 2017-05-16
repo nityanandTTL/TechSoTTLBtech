@@ -11,12 +11,13 @@ import java.util.ArrayList;
 
 public class CampDetailModel implements Parcelable {
     private int Id, Amount, ExpectedCrowd, ExpectedBtech, Leader, LeaderContactNo;
-    private String CampId, VisitId, CampDate, Location, Status;
+    private String CampId, VisitId, CampDate, Location, Status,CampName,LeaderName;
     private boolean InventoryAssign, isStarted;
     private String CampDateTime, BookedBy, Product, QRCode;
     private ArrayList<CampBtechModel> btechs;
     private ExecutionTrack executionTrack;
     private boolean IsAccepted;
+    private ArrayList<CampDetailsKitsModel> kits;
 
     protected CampDetailModel(Parcel in) {
         Id = in.readInt();
@@ -30,6 +31,8 @@ public class CampDetailModel implements Parcelable {
         CampDate = in.readString();
         Location = in.readString();
         Status = in.readString();
+        CampName = in.readString();
+        LeaderName = in.readString();
         InventoryAssign = in.readByte() != 0;
         isStarted = in.readByte() != 0;
         CampDateTime = in.readString();
@@ -53,6 +56,8 @@ public class CampDetailModel implements Parcelable {
         dest.writeString(CampDate);
         dest.writeString(Location);
         dest.writeString(Status);
+        dest.writeString(CampName);
+        dest.writeString(LeaderName);
         dest.writeByte((byte) (InventoryAssign ? 1 : 0));
         dest.writeByte((byte) (isStarted ? 1 : 0));
         dest.writeString(CampDateTime);
@@ -79,6 +84,32 @@ public class CampDetailModel implements Parcelable {
             return new CampDetailModel[size];
         }
     };
+
+    public ArrayList<CampDetailsKitsModel> getKits() {
+        return kits;
+    }
+
+    public void setKits(ArrayList<CampDetailsKitsModel> kits) {
+        this.kits = kits;
+    }
+
+    public String getLeaderName() {
+        return LeaderName;
+    }
+
+    public void setLeaderName(String leaderName) {
+        LeaderName = leaderName;
+    }
+
+    public String getCampName() {
+        return CampName;
+    }
+
+    public void setCampName(String campName) {
+        CampName = campName;
+    }
+
+
 
     public boolean isAccepted() {
         return IsAccepted;

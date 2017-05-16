@@ -6,7 +6,18 @@ package com.dhb.models.data;
 
 public class CampBtechModel {
     private int BtechId;
-    private String Mobile,Status;
+    private String Mobile;
+    private String Status;
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    private String Name;
 
     public int getBtechId() {
         return BtechId;

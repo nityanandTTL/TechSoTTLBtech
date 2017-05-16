@@ -100,8 +100,8 @@ public class BtechClientsListFragment extends AbstractFragment {
             @Override
             public void onItemCallClick(BtechClientsModel btechClientsModel, int position) {
                 Logger.error("call button clicked");
-                cod = new ConfirmCallDialog(activity, btechClientsModel);
-                cod.show();
+               /* cod = new ConfirmCallDialog(activity, btechClientsModel);
+                cod.show();*/
             }
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);

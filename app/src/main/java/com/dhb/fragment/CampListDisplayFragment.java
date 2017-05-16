@@ -2,6 +2,7 @@ package com.dhb.fragment;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -237,6 +238,10 @@ public class CampListDisplayFragment extends AbstractFragment {
         }
         if (i == 3) {
             campStartedApiAsyncTask.setApiCallAsyncTaskDelegate(new CampArrivedAsyncTaskDelegateResult());
+        } if (i == 0) {
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" +campDetailModel.getLeaderContactNo()));
+            activity.startActivity(intent);
         }
 
         if (isNetworkAvailable(activity)) {
@@ -299,14 +304,15 @@ public class CampListDisplayFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                integrator = new IntentIntegrator(getActivity()) {
+                pushFragments(CampManualWOEFragment.newInstance(),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+               /* integrator = new IntentIntegrator(getActivity()) {
                     @Override
                     protected void startActivityForResult(Intent intent, int code) {
                         CampListDisplayFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
 
                     }
                 };
-                integrator.initiateScan();
+                integrator.initiateScan();*/
             }
         }
 

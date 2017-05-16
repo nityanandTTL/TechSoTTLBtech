@@ -14,8 +14,11 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.delegate.OrderCancelDialogButtonClickedDelegate;
 import com.dhb.models.data.BtechClientsModel;
+import com.dhb.models.data.CampDetailModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.utils.app.InputUtils;
+
+import java.util.ArrayList;
 
 /**
  * Created by vendor1 on 4/24/2017.
@@ -25,12 +28,12 @@ public class ConfirmCallDialog extends Dialog implements View.OnClickListener {
     private Activity activity;
     private Dialog d;
     private Button btn_yes, btn_no,btn_send_otp;
-    BtechClientsModel btechClientsModel;
-
-    public ConfirmCallDialog(Activity activity, BtechClientsModel btechClientsModel) {
+   // BtechClientsModel btechClientsModel;
+    ArrayList<CampDetailModel> campDetailModelList;
+    public ConfirmCallDialog(Activity activity, ArrayList<CampDetailModel> btechClientsModel) {
         super(activity);
         this.activity = activity;
-       this.btechClientsModel=btechClientsModel;
+       this.campDetailModelList=btechClientsModel;
 
     }
 
@@ -57,7 +60,7 @@ public class ConfirmCallDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
             Intent intent = new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:" +btechClientsModel.getMobile()));
+            intent.setData(Uri.parse("tel:" +campDetailModelList.get(0).getBtechs().get(0).getMobile()));
             activity.startActivity(intent);
             dismiss();
         }
