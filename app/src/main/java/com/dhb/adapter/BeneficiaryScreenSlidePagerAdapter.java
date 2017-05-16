@@ -6,9 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.dhb.delegate.RefreshBeneficiariesSliderDelegate;
 import com.dhb.fragment.BeneficiaryDetailsScanBarcodeFragment;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.OrderDetailsModel;
+import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.utils.app.BundleConstants;
 
 import java.util.ArrayList;
@@ -17,11 +19,13 @@ public class BeneficiaryScreenSlidePagerAdapter extends FragmentStatePagerAdapte
     private ArrayList<BeneficiaryDetailsModel> beneficiaryDetailsArr;
     private ArrayList<OrderDetailsModel> orderDetailsModelsArr;
     private Context context;
-    public BeneficiaryScreenSlidePagerAdapter(FragmentManager fm, Context context, ArrayList<BeneficiaryDetailsModel> beneficiaryDetailsArr,ArrayList<OrderDetailsModel> orderDetailsModelsArr) {
+    private RefreshBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegate;
+    public BeneficiaryScreenSlidePagerAdapter(FragmentManager fm, Context context, ArrayList<BeneficiaryDetailsModel> beneficiaryDetailsArr,ArrayList<OrderDetailsModel> orderDetailsModelsArr,RefreshBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegate) {
         super(fm);
         this.context = context;
         this.beneficiaryDetailsArr = beneficiaryDetailsArr;
         this.orderDetailsModelsArr = orderDetailsModelsArr;
+        this.refreshBeneficiariesSliderDelegate = refreshBeneficiariesSliderDelegate;
     }
 
     @Override
@@ -37,7 +41,12 @@ public class BeneficiaryScreenSlidePagerAdapter extends FragmentStatePagerAdapte
         }
         bundle.putParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL,beneficiaryDetailsArr.get(position));
         bundle.putParcelable(BundleConstants.ORDER_DETAILS_MODEL,orderDetailsModel);
-        return BeneficiaryDetailsScanBarcodeFragment.newInstance(bundle);
+        return BeneficiaryDetailsScanBarcodeFragment.newInstance(bundle, new RefreshBeneficiariesSliderDelegate() {
+            @Override
+            public void onRefreshActionCallbackReceived(OrderVisitDetailsModel orderVisitDetailsModel) {
+                refreshBeneficiariesSliderDelegate.onRefreshActionCallbackReceived(orderVisitDetailsModel);
+            }
+        });
     }
 
     @Override

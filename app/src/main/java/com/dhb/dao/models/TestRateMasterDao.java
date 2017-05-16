@@ -158,19 +158,21 @@ public class TestRateMasterDao {
 	}
 
 	public ArrayList<TestRateMasterModel> getModelsFromTestCodes(String testCodes) {
-
 		ArrayList<TestRateMasterModel> testRateMasterModels = new ArrayList<>();
-		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TEST_CODE + " IN (?) AND " + RECORD_STATUS + "=?";
-		String[] whereParams = new String[] {testCodes,"A"};
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && (cursor.moveToFirst())){
-			do {
-				TestRateMasterModel orderDetailsModel = getModelFromCursor(cursor);
-				if (orderDetailsModel != null){
-					testRateMasterModels.add(orderDetailsModel);
-				}
-			} while ((cursor.moveToNext()));
-			cursor.close();
+		if(!InputUtils.isNull(testCodes)) {
+			String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TEST_CODE + " IN (?) AND " + RECORD_STATUS + "=?";
+			String[] whereParams = new String[]{testCodes, "A"};
+			Cursor cursor = this.db.rawQuery(query, whereParams);
+			if (cursor != null && (cursor.moveToFirst())) {
+				do {
+					TestRateMasterModel orderDetailsModel = getModelFromCursor(cursor);
+					if (orderDetailsModel != null) {
+						testRateMasterModels.add(orderDetailsModel);
+					}
+				} while ((cursor.moveToNext()));
+				cursor.close();
+			}
+
 		}
 		return testRateMasterModels;
 	}
@@ -178,17 +180,19 @@ public class TestRateMasterDao {
 	public ArrayList<TestRateMasterModel> getModelsFromTestType(String testType) {
 
 		ArrayList<TestRateMasterModel> orderDetailsModelsArr = new ArrayList<>();
-		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TEST_TYPE + "=? AND " + RECORD_STATUS + "=?";
-		String[] whereParams = new String[] {testType,"A"};
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && (cursor.moveToFirst())){
-			do {
-				TestRateMasterModel orderDetailsModel = getModelFromCursor(cursor);
-				if (orderDetailsModel != null){
-					orderDetailsModelsArr.add(orderDetailsModel);
-				}
-			} while ((cursor.moveToNext()));
-			cursor.close();
+		if(!InputUtils.isNull(testType)) {
+			String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TEST_TYPE + "=? AND " + RECORD_STATUS + "=?";
+			String[] whereParams = new String[]{testType, "A"};
+			Cursor cursor = this.db.rawQuery(query, whereParams);
+			if (cursor != null && (cursor.moveToFirst())) {
+				do {
+					TestRateMasterModel orderDetailsModel = getModelFromCursor(cursor);
+					if (orderDetailsModel != null) {
+						orderDetailsModelsArr.add(orderDetailsModel);
+					}
+				} while ((cursor.moveToNext()));
+				cursor.close();
+			}
 		}
 		return orderDetailsModelsArr;
 	}

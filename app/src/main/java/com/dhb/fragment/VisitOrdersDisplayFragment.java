@@ -257,9 +257,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 204||statusCode==200) {
                 Toast.makeText(activity, "Order Released Successfully", Toast.LENGTH_SHORT).show();
-                OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
-                orderDetailsDao.deleteByVisitId(orderVisitDetailsModel.getVisitId());
-                initData();
+                fetchData();
             }else {
                 Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
             }

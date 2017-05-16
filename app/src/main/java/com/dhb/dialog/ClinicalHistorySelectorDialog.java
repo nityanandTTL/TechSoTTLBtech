@@ -11,7 +11,7 @@ import com.dhb.R;
 import com.dhb.adapter.SelectClinicalHistoryExpandableListAdapter;
 import com.dhb.delegate.SelectClinicalHistoryCheckboxDelegate;
 import com.dhb.models.data.TestRateMasterModel;
-import com.dhb.models.data.TestWiseBeneficiaryClinicalHistoryModel;
+import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 
 import java.util.ArrayList;
 
@@ -24,11 +24,11 @@ public class ClinicalHistorySelectorDialog extends Dialog{
     private Button btnSave;
     private ExpandableListView elvClinicalHistory;
     private ArrayList<TestRateMasterModel> testsRateMasterModelsArr;
-    private ArrayList<TestWiseBeneficiaryClinicalHistoryModel> chArr;
+    private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr;
     private int benId;
     private SelectClinicalHistoryExpandableListAdapter sCHELA;
     private SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate;
-    public ClinicalHistorySelectorDialog(Activity activity, ArrayList<TestRateMasterModel> testsRateMasterModelsArr,ArrayList<TestWiseBeneficiaryClinicalHistoryModel> chArr,int benId,SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate) {
+    public ClinicalHistorySelectorDialog(Activity activity, ArrayList<TestRateMasterModel> testsRateMasterModelsArr, ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr, int benId, SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate) {
         super(activity);
         this.activity = activity;
         this.testsRateMasterModelsArr = testsRateMasterModelsArr;
@@ -51,7 +51,7 @@ public class ClinicalHistorySelectorDialog extends Dialog{
     private void initData() {
         sCHELA = new SelectClinicalHistoryExpandableListAdapter(activity, testsRateMasterModelsArr, chArr, benId, new SelectClinicalHistoryCheckboxDelegate() {
             @Override
-            public void onCheckChange(ArrayList<TestWiseBeneficiaryClinicalHistoryModel> chModels) {
+            public void onCheckChange(ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chModels) {
                 chArr = chModels;
                 sCHELA.notifyDataSetChanged();
             }

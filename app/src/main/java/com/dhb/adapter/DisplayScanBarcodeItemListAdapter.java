@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.dhb.R;
 import com.dhb.delegate.ScanBarcodeIconClickedDelegate;
-import com.dhb.models.data.BarcodeDetailsModel;
+import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.utils.app.InputUtils;
 
 import java.util.ArrayList;
@@ -21,11 +21,11 @@ import java.util.ArrayList;
  */
 public class DisplayScanBarcodeItemListAdapter extends BaseAdapter{
     private Activity activity;
-    private ArrayList<BarcodeDetailsModel> barcodeDetailsArr;
+    private ArrayList<BeneficiaryBarcodeDetailsModel> barcodeDetailsArr;
     private ScanBarcodeIconClickedDelegate scanBarcodeIconClickedDelegate;
     private LayoutInflater layoutInflater;
 
-    public DisplayScanBarcodeItemListAdapter(Activity activity, ArrayList<BarcodeDetailsModel> barcodeDetailsArr, ScanBarcodeIconClickedDelegate scanBarcodeIconClickedDelegate) {
+    public DisplayScanBarcodeItemListAdapter(Activity activity, ArrayList<BeneficiaryBarcodeDetailsModel> barcodeDetailsArr, ScanBarcodeIconClickedDelegate scanBarcodeIconClickedDelegate) {
         this.activity = activity;
         this.barcodeDetailsArr = barcodeDetailsArr;
         this.scanBarcodeIconClickedDelegate = scanBarcodeIconClickedDelegate;

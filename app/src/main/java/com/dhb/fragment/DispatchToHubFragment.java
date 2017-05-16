@@ -36,7 +36,7 @@ import java.util.ArrayList;
 public class DispatchToHubFragment extends AbstractFragment {
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recycler_view;
-    LinearLayout ll_fetch_order_footer, ll_hub_display_footer, ll_olc_picup_footer;
+    LinearLayout ll_hub_display_footer;
     HomeScreenActivity activity;
     ArrayList<HUBBTechModel> hubbTechModels = new ArrayList<>();
     DispatchToHubDisplayDetailsAdapter dispatchToHubDisplayDetailsAdapter;
@@ -107,12 +107,8 @@ public class DispatchToHubFragment extends AbstractFragment {
     private void initUI(View rootview) {
         swipeRefreshLayout = (SwipeRefreshLayout) rootview.findViewById(R.id.swipeRefreshLayout);
         recycler_view = (RecyclerView) rootview.findViewById(R.id.recycler_view);
-        ll_fetch_order_footer = (LinearLayout) rootview.findViewById(R.id.ll_fetch_order_footer);
         ll_hub_display_footer = (LinearLayout) rootview.findViewById(R.id.ll_hub_display_footer);
-        ll_olc_picup_footer = (LinearLayout) rootview.findViewById(R.id.ll_olc_picup_footer);
-        ll_fetch_order_footer.setVisibility(View.GONE);
-        ll_hub_display_footer.setVisibility(View.VISIBLE);
-        ll_olc_picup_footer.setVisibility(View.GONE);
+        ll_hub_display_footer.setVisibility(View.GONE);
     }
 
 
@@ -121,12 +117,10 @@ public class DispatchToHubFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             Logger.debug(TAG_FRAGMENT + "--apiCallResult: ");
             if (statusCode == 200) {
-//                Toast.makeText(activity, "response : " + json, Toast.LENGTH_SHORT).show();
                 ResponseParser responseParser = new ResponseParser(activity);
                 DispatchHubDisplayDetailsResponseModel dispatchHubDisplayDetailsResponseModel = new DispatchHubDisplayDetailsResponseModel();
                 dispatchHubDisplayDetailsResponseModel = responseParser.getDispatchTohubDetailsResponseModel(json, statusCode);
                 if (dispatchHubDisplayDetailsResponseModel != null && dispatchHubDisplayDetailsResponseModel.getHubMaster().size() > 0) {
-//                    Toast.makeText(activity, "dispatchHubDisplayDetailsResponseModel not null", Toast.LENGTH_SHORT).show();
                     hubbTechModels = dispatchHubDisplayDetailsResponseModel.getHubMaster();
                     Logger.error("hubbTechModels size " + dispatchHubDisplayDetailsResponseModel.getHubMaster().size());
                     prepareRecyclerView();

@@ -19,10 +19,10 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
     private String testsCode;
     private String Fasting;
     private byte[] Venepuncture;
-    private ArrayList<BarcodeDetailsModel> barcodedtl;
+    private ArrayList<BeneficiaryBarcodeDetailsModel> barcodedtl;
     private ArrayList<BeneficiarySampleTypeDetailsModel> sampleType;
     private ArrayList<TestRateMasterModel> testsList;
-    private ArrayList<TestWiseBeneficiaryClinicalHistoryModel> clHistory;
+    private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> clHistory;
     private ArrayList<BeneficiaryLabAlertsModel> labAlert;
 
     public BeneficiaryDetailsModel() {
@@ -40,9 +40,11 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
         testsCode = in.readString();
         Fasting = in.readString();
         Venepuncture = in.createByteArray();
-        barcodedtl = in.createTypedArrayList(BarcodeDetailsModel.CREATOR);
+        barcodedtl = in.createTypedArrayList(BeneficiaryBarcodeDetailsModel.CREATOR);
         sampleType = in.createTypedArrayList(BeneficiarySampleTypeDetailsModel.CREATOR);
         testsList = in.createTypedArrayList(TestRateMasterModel.CREATOR);
+        clHistory = in.createTypedArrayList(BeneficiaryTestWiseClinicalHistoryModel.CREATOR);
+        labAlert = in.createTypedArrayList(BeneficiaryLabAlertsModel.CREATOR);
     }
 
     @Override
@@ -60,6 +62,8 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
         dest.writeTypedList(barcodedtl);
         dest.writeTypedList(sampleType);
         dest.writeTypedList(testsList);
+        dest.writeTypedList(clHistory);
+        dest.writeTypedList(labAlert);
     }
 
     @Override
@@ -143,11 +147,11 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
         Venepuncture = venepuncture;
     }
 
-    public ArrayList<BarcodeDetailsModel> getBarcodedtl() {
+    public ArrayList<BeneficiaryBarcodeDetailsModel> getBarcodedtl() {
         return barcodedtl;
     }
 
-    public void setBarcodedtl(ArrayList<BarcodeDetailsModel> barcodedtl) {
+    public void setBarcodedtl(ArrayList<BeneficiaryBarcodeDetailsModel> barcodedtl) {
         this.barcodedtl = barcodedtl;
     }
 
@@ -174,11 +178,11 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
     public void setTestsList(ArrayList<TestRateMasterModel> testsList) {
         this.testsList = testsList;
     }
-    public ArrayList<TestWiseBeneficiaryClinicalHistoryModel> getClHistory() {
+    public ArrayList<BeneficiaryTestWiseClinicalHistoryModel> getClHistory() {
         return clHistory;
     }
 
-    public void setClHistory(ArrayList<TestWiseBeneficiaryClinicalHistoryModel> clHistory) {
+    public void setClHistory(ArrayList<BeneficiaryTestWiseClinicalHistoryModel> clHistory) {
         this.clHistory = clHistory;
     }
 

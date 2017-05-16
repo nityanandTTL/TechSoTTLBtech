@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +39,6 @@ public class BtechClientsListFragment extends AbstractFragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recycler_view;
     private TextView tv_noof_pickup, tv_est_distance;
-    private Button btn_olc_start;
     private HomeScreenActivity activity;
     public static final String TAG_FRAGMENT = BtechClientsListFragment.class.getSimpleName();
     ArrayList<BtechClientsModel> btechClientsModels = new ArrayList<>();
@@ -68,7 +66,7 @@ public class BtechClientsListFragment extends AbstractFragment {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(false);
-                prepareRecyclerView();
+                fetchData();
             }
         });
         fetchData();
@@ -117,7 +115,6 @@ public class BtechClientsListFragment extends AbstractFragment {
         recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         tv_est_distance = (TextView) view.findViewById(R.id.tv_est_distance);
         tv_noof_pickup = (TextView) view.findViewById(R.id.tv_noof_pickup);
-        btn_olc_start = (Button) view.findViewById(R.id.btn_olc_start);
     }
 
 
@@ -132,6 +129,13 @@ public class BtechClientsListFragment extends AbstractFragment {
                 if (btechClientsResponseModel != null && btechClientsResponseModel.getBtechClients().size() > 0) {
                     btechClientsModels = btechClientsResponseModel.getBtechClients();
                     Logger.error("btechTechModels size " + btechClientsResponseModel.getBtechClients().size());
+                    tv_noof_pickup.setText(btechClientsResponseModel.getBtechClients().size()+" Pickups");
+                    int dst = 0;
+                    for (BtechClientsModel btechClientsModel :
+                            btechClientsResponseModel.getBtechClients()) {
+                        dst = dst + btechClientsModel.getDistance();
+                    }
+                    tv_est_distance.setText("Est. Distance "+dst+" KM");
                     prepareRecyclerView();
                 } else {
                     Logger.error("else " + json);
@@ -157,5 +161,11 @@ public class BtechClientsListFragment extends AbstractFragment {
             startActivity(intentOrderBooking);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchData();
     }
 }

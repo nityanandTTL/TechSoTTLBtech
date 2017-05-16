@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.dhb.models.api.response.BtechClientsResponseModel;
 import com.dhb.models.api.response.BtechCollectionsResponseModel;
 import com.dhb.models.api.response.BusinessErrorModel;
+import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.dhb.models.api.response.ErrorModel;
 import com.dhb.models.api.response.ErrorResponseModel;
@@ -21,12 +22,14 @@ import com.dhb.models.api.response.SelfieUploadResponseModel;
 import com.dhb.models.api.response.SessionExpireModel;
 import com.dhb.models.data.BrandMasterModel;
 import com.dhb.models.data.BrandTestMasterModel;
-import com.dhb.models.data.CampListDisplayResponseModel;
+import com.dhb.models.data.CampDetailModel;
 import com.dhb.models.data.DepositRegisterModel;
 import com.dhb.models.data.EarningRegisterModel;
 import com.dhb.models.data.LeaveNatureMasterModel;
 import com.dhb.models.data.MaterialDetailsModel;
+import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.models.data.SlotModel;
+import com.dhb.models.data.VersionControlMasterModel;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AlertDialogMessage;
 import com.dhb.utils.app.AppConstants;
@@ -629,13 +632,12 @@ public class ResponseParser implements AppConstants {
 		return brandMasters;
 	}
 
-	public ArrayList<BrandTestMasterModel> getTestMaster(String json, int statusCode) {
-		ArrayList<BrandTestMasterModel> testMasters = null;
-//		if (!parseIntoError(json, statusCode)){
-		TypeToken<ArrayList<BrandTestMasterModel>> token = new TypeToken<ArrayList<BrandTestMasterModel>>(){};
-		testMasters = gson.fromJson(json,token.getType());
-//		}
-		return testMasters;
+	public BrandTestMasterModel getBrandTestMaster(String json, int statusCode) {
+		BrandTestMasterModel brandTestMasterModel = null;
+		if (!parseIntoError(json, statusCode)){
+			brandTestMasterModel = gson.fromJson(json,BrandTestMasterModel.class);
+		}
+		return brandTestMasterModel;
 	}
 
 	//Selfie Response parse:
@@ -690,21 +692,26 @@ public class ResponseParser implements AppConstants {
 		dispatchHubDisplayDetailsResponseModel = gson.fromJson(json, DispatchHubDisplayDetailsResponseModel.class);
 		//}
 		return dispatchHubDisplayDetailsResponseModel;
-	}//Btech Clients  details Response parse:
+	}
+
+	//Btech Clients  details Response parse:
 	public BtechClientsResponseModel getBtechClientsResponseModel(String json, int statusCode) {
 		BtechClientsResponseModel btechClientsResponseModel = null;
 		//if (!parseIntoError(json, statusCode)){
 		btechClientsResponseModel = gson.fromJson(json, BtechClientsResponseModel.class);
 		//}
 		return btechClientsResponseModel;
-	}//Camp details Response parse:
-	public CampListDisplayResponseModel getCampDetailResponseModel(String json, int statusCode) {
-		CampListDisplayResponseModel campDetailsResponseModel = null;
-		//if (!parseIntoError(json, statusCode)){
-		campDetailsResponseModel = gson.fromJson(json, CampListDisplayResponseModel.class);
-		//}
-		return campDetailsResponseModel;
 	}
+
+	//Camp details Response parse:
+	public CampListDisplayResponseModel getCampDetailResponseModel(String json, int statusCode) {
+		CampListDisplayResponseModel campListDisplayResponseModel = null;
+		//if (!parseIntoError(json, statusCode)){
+		campListDisplayResponseModel = gson.fromJson(json, CampListDisplayResponseModel.class);
+		//}
+		return campListDisplayResponseModel;
+	}
+
 	//btech collections  details Response parse:
 	public BtechCollectionsResponseModel getBtechCollectionsDetailsResponseModel(String json, int statusCode) {
 		BtechCollectionsResponseModel btechCollectionsResponseModel = null;
@@ -713,6 +720,7 @@ public class ResponseParser implements AppConstants {
 		//}
 		return btechCollectionsResponseModel;
 	}
+
 	//Lab Alert Master Response parse:
 	public FetchLabAlertMasterAPIResponseModel getLabAlertMasterAPIResponseModel(String json, int statusCode) {
 		FetchLabAlertMasterAPIResponseModel fetchLabAlertMasterAPIResponseModel = null;
@@ -721,8 +729,6 @@ public class ResponseParser implements AppConstants {
 		//}
 		return fetchLabAlertMasterAPIResponseModel;
 	}
-
-
 
 	////Fetch MaterialMAster details Response parse:
 	public ArrayList<MaterialDetailsModel> getMaterialdetailsResponseModel(String json, int statusCode) {
@@ -741,11 +747,30 @@ public class ResponseParser implements AppConstants {
 		}
 		return materialINVResponseModel;
 	}
+
+	////Remove Beneficiary Response parse:
+	public OrderVisitDetailsModel getRemoveBeneficiaryAPIResponseModel(String json, int statusCode) {
+		OrderVisitDetailsModel orderVisitDetailsModel = null;
+		if (!parseIntoError(json, statusCode)){
+			orderVisitDetailsModel = gson.fromJson(json, OrderVisitDetailsModel.class);
+		}
+		return orderVisitDetailsModel;
+	}
+
 	////Fetch Leave  details Response parse:
 	public ArrayList<LeaveNatureMasterModel>  getLeaveNatureMasterResponse (String json, int statusCode) {
 		ArrayList<LeaveNatureMasterModel> leaveNatureMasterModels = null;
 		TypeToken<ArrayList<LeaveNatureMasterModel>> token =new TypeToken<ArrayList<LeaveNatureMasterModel>>(){};
 		leaveNatureMasterModels = gson.fromJson(json,token.getType());
 		return leaveNatureMasterModels;
+	}
+
+	////Fetch VersionControl  details Response parse:
+	public VersionControlMasterModel  getVersionControlMasterResponse (String json, int statusCode) {
+	VersionControlMasterModel  versionControlMasterModels = null;
+		if (!parseIntoError(json, statusCode)){
+			versionControlMasterModels = gson.fromJson(json, VersionControlMasterModel.class);
+		}
+		return versionControlMasterModels;
 	}
 }

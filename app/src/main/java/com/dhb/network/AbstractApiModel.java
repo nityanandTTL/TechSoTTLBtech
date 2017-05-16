@@ -74,6 +74,8 @@ public class AbstractApiModel implements AppConstants {
 
     public String ORDER_STATUS_CHANGE = VERSION_API_URL + "/OrderStatusChange";
 
+    public String CAMP_STARTED = VERSION_API_URL + "/CampDetails/CampStarted";
+
     public String FETCH_BRAND_MASTER = VERSION_API_URL + "/BrandMaster";
 
     public String FETCH_BRAND_WISE_TEST_MASTER = VERSION_API_URL + "/BrandTestRateList";
@@ -89,6 +91,8 @@ public class AbstractApiModel implements AppConstants {
     public String FETCH_EARNINGREGISTER_DETAIL=VERSION_API_URL+"/EarningRegister";
 
     public String FETCH_DEPOSITREGISTER_DETAIL=VERSION_API_URL+"/DepositPayments";
+
+    public String FETCH_VERSION_CONTROL_DETAIL=VERSION_API_URL+"/VersionControl";
 
     public String FETCH_MATERIALMASTER_DETAIL=VERSION_API_URL+"/MaterialMaster";
 
@@ -110,9 +114,15 @@ public class AbstractApiModel implements AppConstants {
 
     public String LAB_ALERT_MASTER = VERSION_API_URL + "/LabAlerts";
 
-    public String FETCH_LEAVE_NATURE_MASTER=VERSION_API_URL+"/LeaveNatureMaster/L1";
+    public String FETCH_LEAVE_NATURE_MASTER=VERSION_API_URL+"/Masters/LeaveNatureMaster/L1";
 
     public String SET_APPLY_LEAVE=VERSION_API_URL+"/ManageBtechLeave/ApplyLeave";
+
+    public String REMOVE_BENEFICIARY=VERSION_API_URL+"/RemoveBeneficiary";
+
+    public String OLC_PICKUP_SUBMIT_SCAN_BARCODE=VERSION_API_URL+"/ScanPickup";
+
+    public String ORDER_BOOKING=VERSION_API_URL+"/OrderBooking";
 
     public static final String X_API_KEY = "x-api-key";
 

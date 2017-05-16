@@ -83,6 +83,8 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
     private TextView txtDistance;
     private TextView txtAddress;
     private String  address;
+    private double destlat,destlong,currentlat,currentlong;
+    private int Integertotaldiff;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +118,10 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
     private void setListeners() {
         btn_arrived.setOnClickListener(this);
         btn_startNav.setOnClickListener(this);
+        double totaldist = distFrom(19.061745,73.0254561,19.0771,72.999);
+
+        Integertotaldiff = (int) totaldist;
+        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
     }
 
     private void initUI() {
@@ -167,9 +173,11 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
                     }
                     MarkerPoints.add(currentLocation);
                     Logger.error("orderVisitDetailsModel lat"+orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()+"long "+orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude());
-                    double lat= Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
-                    double longitude= Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude());
-                    LatLng destTempLocation = new LatLng(lat, longitude);
+                    destlat= Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
+                    destlong= Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
+                    LatLng destTempLocation = new LatLng(destlat, destlong);
+                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
                     MarkerOptions options = new MarkerOptions();
                     options.position(destTempLocation);
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
@@ -355,7 +363,12 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
+        currentlat=location.getLatitude();
+        currentlong=location.getLongitude();
 
+        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),currentlong+"", Toast.LENGTH_SHORT).show();
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
@@ -363,6 +376,20 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         //stop location updates
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Integertotaldiff > 100)
+        {
+            btn_arrived.setVisibility(View.INVISIBLE);
+            btn_startNav.setVisibility(View.VISIBLE);
+        }
+        else {
+            btn_arrived.setVisibility(View.VISIBLE);
+            btn_startNav.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -603,34 +630,32 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
             // You can add here other case statements according to your requirement.
         }
     }
+    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        float dist = (float) (earthRadius * c);
 
-    private double distance(double lat1, double lon1, double lat2, double lon2) {
-        double theta = lon1 - lon2;
-        double dist = Math.sin(deg2rad(lat1))
-                * Math.sin(deg2rad(lat2))
-                + Math.cos(deg2rad(lat1))
-                * Math.cos(deg2rad(lat2))
-                * Math.cos(deg2rad(theta));
-        dist = Math.acos(dist);
-        dist = rad2deg(dist);
-        dist = dist * 60 * 1.1515;
-        return (dist);
-    }
-
-    private double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-
-    private double rad2deg(double rad) {
-        return (rad * 180.0 / Math.PI);
+        return dist;
     }
 
     private class OrderStatusChangetoStartApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if(statusCode==204 || statusCode==200){
-                btn_arrived.setVisibility(View.VISIBLE);
-                btn_startNav.setVisibility(View.INVISIBLE);
+                if (Integertotaldiff > 100)
+                {
+                    btn_arrived.setVisibility(View.INVISIBLE);
+                    btn_startNav.setVisibility(View.VISIBLE);
+                }
+                else {
+                    btn_arrived.setVisibility(View.VISIBLE);
+                    btn_startNav.setVisibility(View.INVISIBLE);
+                }
             }
         }
 

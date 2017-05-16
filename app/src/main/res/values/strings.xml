@@ -22,6 +22,7 @@
     <!--API call Progress Dialog Messages-->
     <string name="progress_message_authenticating_please_wait">Authenticating,\n Please wait ....</string>
     <string name="progress_message_uploading_selfie_please_wait">Uploading Selfie to server,\n Please wait ....</string>
+    <string name="progress_message_uploading_order_details_please_wait">Uploading Order Details to server,\n Please wait ....</string>
     <string name="progress_message_changing_order_status_please_wait">Updating Order Status,\n Please wait ....</string>
     <string name="progress_message_fetching_order_details_please_wait">Fetching Order Details,\n Please wait ....</string>
     <string name="progress_message_fetching_slot_details_please_wait">Fetching Slot Details,\n Please wait ....</string>
@@ -45,8 +46,8 @@
     <!--<string name="do_you_really_want_to_Change order">Fetching MaterialsINV  Details, Please wait ....</string>-->
 
 
-    <string name="upload">UPLOAD</string>
-    <string name="take_photo">Take Photo</string>
+    <string name="upload">Proceed</string>
+    <string name="take_photo">Capture Photo</string>
     <string name="internet_connetion_error">Check Internet Connection</string>
     <string name="network_error">Network Error</string>
     <string name="add_selfie_error">Add Profile photo</string>
@@ -84,4 +85,7 @@
     <string name="barcode_value_confirm">Confirm Barcode:</string>
     <string name="alert_invalid_barcode_value">Please enter a Valid Barcode value</string>
     <string name="alert_unmatched_barcode_values">Barcode and Confirm Barcode does not match</string>
+    <string name="progress_message_fetching_Version_details_please_wait">Fetching Version  Details, Please wait ....</string>
+    <string name="progress_message_removing_beneficiary_please_wait">Removing Beneficiary, Please wait …</string>
+    <string name="progress_message_updating_scanned_barcode_please_wait">Updating Scanned Barcode to System, Please wait …</string>
 </resources>

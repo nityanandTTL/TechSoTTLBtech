@@ -30,135 +30,6 @@
             android:layout_height="wrap_content"
             android:scrollbars="vertical" />
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_fetch_order_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical"
-        android:weightSum="2">
-
-        <LinearLayout
-
-            android:layout_width="match_parent"
-            android:layout_height="65sp"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-
-            android:gravity="bottom"
-            android:orientation="horizontal"
-            android:weightSum="3">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
-                android:layout_weight="1"
-                android:background="@drawable/footer_bg"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_20"
-                    android:src="@drawable/location_icon"
-                    android:layout_weight="0.75"
-                    android:layout_gravity="center_vertical"/>
-
-                <TextView
-                    android:id="@+id/title_est_distance"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:text="Est Distance 30km"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
-                    android:layout_weight="1.25"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
-                android:layout_weight="1"
-                android:background="@drawable/footer_bg"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_20"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.75"
-                    android:src="@drawable/rupee_icon" />
-
-                <TextView
-                    android:id="@+id/title_est_earnings"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1.24"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:text="EST Earnings  RS.1500"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
-                android:layout_weight="1"
-                android:weightSum="2"
-                android:background="@drawable/footer_bg"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="0.75"
-                    android:layout_gravity="center_vertical"
-                    android:layout_height="@dimen/dp_20"
-                    android:src="@drawable/vial_icon" />
-
-                <TextView
-                    android:id="@+id/title_est_call"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:text="Kit Req 10BSU | 05BSV"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
-                    android:layout_weight="1.25"/>
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                style="@style/button_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/purple_btn_bg"
-                android:text="@string/start"
-                android:visibility="invisible"
-                android:minEms="8"/>
-        </LinearLayout>
-    </LinearLayout>
-
     <LinearLayout
         android:id="@+id/ll_hub_display_footer"
         android:layout_width="match_parent"
@@ -168,9 +39,8 @@
         android:weightSum="2">
 
         <LinearLayout
-
             android:layout_width="match_parent"
-            android:layout_height="65sp"
+            android:layout_height="65dp"
             android:layout_gravity="bottom"
             android:layout_weight="1"
             android:gravity="bottom"
@@ -181,7 +51,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/footer_bg"
                 android:orientation="horizontal"
@@ -250,6 +120,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/btn_dispatch"
                 style="@style/button_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -257,112 +128,6 @@
                 android:text="@string/dispatch"
                 android:visibility="visible"
                 android:minEms="9"/>
-
-
         </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_olc_picup_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical"
-        android:weightSum="2">
-
-        <LinearLayout
-
-            android:layout_width="match_parent"
-            android:layout_height="65sp"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:gravity="bottom"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
-                android:layout_weight="1"
-                android:background="@drawable/footer_bg"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_20"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.5"
-                    android:src="@drawable/location_icon" />
-
-                <TextView
-                    android:id="@+id/tv_noof_pickup"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:text="No. of Pick up"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
-                    android:layout_weight="1.5"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
-                android:layout_weight="1"
-                android:background="@drawable/footer_bg"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <ImageView
-                    android:layout_height="@dimen/dp_20"
-                    android:layout_width="0dp"
-                    android:src="@drawable/location_icon"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.5"/>
-
-                <TextView
-                    android:id="@+id/tv_est_distance"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:text="EST.Distance 10km"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
-                    android:layout_weight="1.5"/>
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                style="@style/button_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/purple_btn_bg"
-                android:text="@string/start_pick_up"
-                android:visibility="visible"
-                android:minEms="8"/>
-
-
-        </LinearLayout>
-    </LinearLayout>
-
-
 </LinearLayout>

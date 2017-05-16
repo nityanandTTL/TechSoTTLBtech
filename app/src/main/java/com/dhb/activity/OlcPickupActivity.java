@@ -59,5 +59,7 @@ public class OlcPickupActivity extends AbstractActivity {
         tbOBA = (Toolbar) findViewById(R.id.toolbar);
         txtHeaderText = (TextView) tbOBA.findViewById(R.id.txt_header_text);
         imgBack = (ImageView) tbOBA.findViewById(R.id.img_back);
+
+
     }
 }

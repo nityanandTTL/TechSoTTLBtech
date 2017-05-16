@@ -7,7 +7,7 @@ public interface AppConstants {
 
 	// ------------ CONSTANTS -------------
 
-	public static final String ANDROID_APP_VERSION = "1.2.4";
+	public static final int ANDROID_APP_VERSION = 1;
 
 	//public static final String LOGIN_TYPE = "Reception";
 	//public static final String LOGIN_TYPE = "Doctor";

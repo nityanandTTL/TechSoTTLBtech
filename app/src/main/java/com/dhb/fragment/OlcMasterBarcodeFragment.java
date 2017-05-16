@@ -3,42 +3,40 @@ package com.dhb.fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.OlcPickupActivity;
-import com.dhb.adapter.OlcMasterBarcodeScanAdapter;
-import com.dhb.delegate.OlcMasterBarcodeScanAdapterDelegate;
+import com.dhb.models.api.request.OlcScanPickUpRequestModel;
 import com.dhb.models.data.BtechClientsModel;
+import com.dhb.network.ApiCallAsyncTask;
+import com.dhb.network.ApiCallAsyncTaskDelegate;
+import com.dhb.network.AsyncTaskForRequest;
+import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import java.util.ArrayList;
+import org.json.JSONException;
 
 
-public class OlcMasterBarcodeFragment extends Fragment {
+public class OlcMasterBarcodeFragment extends AbstractFragment {
     public static final String TAG_FRAGMENT = OlcMasterBarcodeFragment.class.getSimpleName();
     private TextView txt_name, tv_distance, txt_call;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView recycler_view;
     private OlcPickupActivity activity;
-    OlcMasterBarcodeScanAdapter mAdapter;
-    ArrayList<String> olcMasterBarcodeList=new ArrayList<>();
     String scanned_barcode;
     BtechClientsModel btechClientsModel;
-    int currentPosition = 0;
     IntentIntegrator integrator;
+    ImageView btnScanBarcode;
+    EditText edtScannedBarcode;
     public OlcMasterBarcodeFragment() {
         // Required empty public constructor
     }
@@ -55,16 +53,23 @@ public class OlcMasterBarcodeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_olc_master_barcode, container, false);
-        initUi(view);
+        View rootView = inflater.inflate(R.layout.fragment_olc_master_barcode, container, false);
         activity = (OlcPickupActivity) getActivity();
-
+        appPreferenceManager = new AppPreferenceManager(activity);
         integrator = new IntentIntegrator(activity);
-      //  btechClientsModel = getArguments().getParcelable(BundleConstants.BTECH_CLIENTS_MODEL);
-        prepareRecyclerView();
-        prepareData();
+        initUI(rootView);
+        initData();
         setListeners();
-        return view;
+        return rootView;
+    }
+
+    public void initUI(View rootView) {
+        super.initUI();
+        txt_name = (TextView) rootView.findViewById(R.id.txt_name);
+        txt_call = (TextView) rootView.findViewById(R.id.txt_call);
+        tv_distance = (TextView) rootView.findViewById(R.id.tv_distance);
+        btnScanBarcode = (ImageView) rootView.findViewById(R.id.scan_barcode_button);
+        edtScannedBarcode = (EditText) rootView.findViewById(R.id.edt_barcode);
     }
 
     private void setListeners() {
@@ -76,43 +81,24 @@ public class OlcMasterBarcodeFragment extends Fragment {
                 startActivity(intent);
             }
         });
-    }
-
-    private void prepareData() {
-        btechClientsModel = getArguments().getParcelable("btechClientsModel");
-        tv_distance.setText(""+btechClientsModel.getDistance());
-        txt_name.setText(""+btechClientsModel.getName());
-        olcMasterBarcodeList.add(0,"");
-        mAdapter.notifyDataSetChanged();
-    }
-
-    private void prepareRecyclerView() {
-        mAdapter = new OlcMasterBarcodeScanAdapter(olcMasterBarcodeList, activity, new OlcMasterBarcodeScanAdapterDelegate() {
+        btnScanBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onScanClick(int position) {
-                Logger.error("item clicked");
-                currentPosition = position;
-               integrator = new IntentIntegrator(getActivity()) {
+            public void onClick(View v) {
+                integrator = new IntentIntegrator(getActivity()) {
                     @Override
                     protected void startActivityForResult(Intent intent, int code) {
                         OlcMasterBarcodeFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
-
                     }
                 };
                 integrator.initiateScan();
             }
-
-            @Override
-            public void onAddClick(int position) {
-                olcMasterBarcodeList.add(position+1,"");
-                mAdapter.notifyDataSetChanged();
-            }
         });
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
-        recycler_view.setLayoutManager(mLayoutManager);
-        recycler_view.setItemAnimator(new DefaultItemAnimator());
-        recycler_view.setAdapter(mAdapter);
+    }
 
+    private void initData() {
+        btechClientsModel = getArguments().getParcelable("btechClientsModel");
+        tv_distance.setText(""+btechClientsModel.getDistance());
+        txt_name.setText(""+btechClientsModel.getName());
     }
 
     @Override
@@ -123,8 +109,22 @@ public class OlcMasterBarcodeFragment extends Fragment {
             scanned_barcode = scanningResult.getContents();
             Logger.error("scanned_barcode "+scanningResult.getContents());
             Toast.makeText(activity, ""+scanningResult, Toast.LENGTH_SHORT).show();
-            olcMasterBarcodeList.set(currentPosition,scanned_barcode);
-            mAdapter.notifyDataSetChanged();
+            edtScannedBarcode.setText(scanned_barcode);
+
+            OlcScanPickUpRequestModel olcScanPickUpRequestModel = new OlcScanPickUpRequestModel();
+            olcScanPickUpRequestModel.setBarcode(scanned_barcode);
+            olcScanPickUpRequestModel.setBarcodeType(btechClientsModel.getBarcodeType());
+            olcScanPickUpRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+            olcScanPickUpRequestModel.setClientId(btechClientsModel.getClientId());
+
+            ApiCallAsyncTask apiCallAsyncTask = new AsyncTaskForRequest(activity).getScanPickupRequestAsyncTask(olcScanPickUpRequestModel);
+            apiCallAsyncTask.setApiCallAsyncTaskDelegate(new OLCScanPickUpAPIResponseDelegateResult());
+            if(isNetworkAvailable(activity)) {
+                apiCallAsyncTask.execute(apiCallAsyncTask);
+            }
+            else{
+                Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+            }
         }else {
             super.onActivityResult(requestCode, resultCode, data);
             Toast.makeText(activity, "no result", Toast.LENGTH_SHORT).show();
@@ -132,13 +132,18 @@ public class OlcMasterBarcodeFragment extends Fragment {
         super.onActivityResult(requestCode,resultCode,data);
     }
 
+    private class OLCScanPickUpAPIResponseDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if(statusCode==200||statusCode==204){
+                Toast.makeText(activity,"Master Barcode Successfully Scanned and Submitted",Toast.LENGTH_SHORT).show();
+                activity.finish();
+            }
+        }
 
-    private void initUi(View view) {
-        txt_name = (TextView) view.findViewById(R.id.txt_name);
-        tv_distance = (TextView) view.findViewById(R.id.tv_distance);
-        txt_call = (TextView) view.findViewById(R.id.txt_call);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
+        @Override
+        public void onApiCancelled() {
+
+        }
     }
-
 }
