@@ -16,11 +16,14 @@ public class BundleConstants {
     public static final int ADD_EDIT_FINISH = 1011;
     public static final int BCMD_START = 1012;
     public static final int BCMD_ARRIVED =1013;
+    public static final int CMD_START =1014;
+    public static final int CMD_ARRIVED =1015;
     public static final int START_BARCODE_SCAN = 0x0000c0de;
 
     //Bundle Constants
     public static final String ACTIVITY = "activity";
     public static final String VISIT_ORDER_DETAILS_MODEL = "visitOrderDetailsModel";
+    public static final String CAMP_ORDER_DETAILS_MODEL = "campOrderDetailsModel";
     public static final String BENEFICIARY_DETAILS_MODEL = "beneficiaryDetailsModel";
     public static final String ORDER_DETAILS_MODEL = "orderDetailsModel";
     public static final String HUB_BTECH_MODEL = "hubBtechModel";

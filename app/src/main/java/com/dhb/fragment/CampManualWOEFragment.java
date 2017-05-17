@@ -14,11 +14,14 @@ import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
-import com.dhb.adapter.CampListDetailDisplayAdapter;
+import com.dhb.models.api.response.CampDetailsOrderDetailsResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
+import com.dhb.models.data.CampAllOrderDetailsModel;
+
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
+import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.BundleConstants;
@@ -26,6 +29,8 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
+
+import java.util.ArrayList;
 
 public class CampManualWOEFragment extends AbstractFragment implements View.OnClickListener {
     public static final String TAG_FRAGMENT = CampManualWOEFragment.class.getSimpleName();
@@ -36,6 +41,8 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     IntentIntegrator integrator;
     private CampListDisplayResponseModel campListDisplayResponseModel;
     private HomeScreenActivity activity;
+    ArrayList<CampAllOrderDetailsModel> campAllOrderDetailsModelslist = new ArrayList<>();
+
     public CampManualWOEFragment() {
         // Required empty public constructor
     }
@@ -82,21 +89,24 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.btn_enter_manually){
+        if (v.getId() == R.id.btn_enter_manually) {
 
-        }if(v.getId()==R.id.btn_next){
+        }
+        if (v.getId() == R.id.btn_next) {
 
-        }if(v.getId()==R.id.btn_scan_qr){
+        }
+        if (v.getId() == R.id.btn_scan_qr) {
             integrator = new IntentIntegrator(getActivity()) {
                 @Override
                 protected void startActivityForResult(Intent intent, int code) {
-                    startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+                    CampManualWOEFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
 
                 }
             };
             integrator.initiateScan();
         }
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -110,10 +120,12 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
 
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+            //callsendQRCodeApi("jhjhj");
             Toast.makeText(activity, "no result", Toast.LENGTH_SHORT).show();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     private void callsendQRCodeApi(String contents) {
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getSendQRCodeRequestAsyncTask(contents);
@@ -122,31 +134,27 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
         } else {
             Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-            initData();
+            // initData();
         }
     }
-    private void initData() {
-        //   orderDetailsResponseModels = orderDetailsDao.getAllModels();
-        prepareRecyclerView();
-    }
 
-    private void prepareRecyclerView() {
-      /*  if (campListDisplayResponseModel != null) {
-            Log.e(TAG_FRAGMENT, "prepareRecyclerView:vtech size " + campDetailModels.size());
-            campListDetailDisplayAdapter = new CampListDetailDisplayAdapter(activity, campDetailModels*//*,campDetailsResponseModel,*//*, new CampListDisplayFragment.CampListDisplayRecyclerViewAdapterDelegateResult());
-            recyclerView.setAdapter(campListDetailDisplayAdapter);
-            txtNoRecord.setVisibility(View.GONE);
-        } else {
-            txtNoRecord.setVisibility(View.VISIBLE);
-        }*/
-    }
     private class SendQRCodeApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
-            }else {
-                Toast.makeText(activity, "error : "+json, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                ResponseParser responseParser = new ResponseParser(activity);
+                CampDetailsOrderDetailsResponseModel campDetailsOrderDetailsResponseModel = new CampDetailsOrderDetailsResponseModel();
+                campDetailsOrderDetailsResponseModel = responseParser.getcampOrderDetailsResponseModel(json, statusCode);
+                if (campDetailsOrderDetailsResponseModel != null && campDetailsOrderDetailsResponseModel.getAllOrderdetails().size() > 0) {
+                    campAllOrderDetailsModelslist = campDetailsOrderDetailsResponseModel.getAllOrderdetails();
+                    Logger.error("camp detail size " + campDetailsOrderDetailsResponseModel.getAllOrderdetails().size());
+                    prepareData();
+
+                }
+
+            } else {
+                Toast.makeText(activity, "error : " + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -155,4 +163,16 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void prepareData() {
+        Logger.error("name " + campAllOrderDetailsModelslist.get(0).getBenMaster().get(0).getName());
+        edt_name.setText("" + campAllOrderDetailsModelslist.get(0).getBenMaster().get(0).getName());
+        edt_email.setText("" + campAllOrderDetailsModelslist.get(0).getEmail());
+        edt_mobile.setText("" + campAllOrderDetailsModelslist.get(0).getMobile());
+        tv_age.setText("" + campAllOrderDetailsModelslist.get(0).getBenMaster().get(0).getAge() + " | Gender " + campAllOrderDetailsModelslist.get(0).getBenMaster().get(0).getGender());
+
+
+    }
+
+
 }

@@ -14,7 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
+import com.dhb.activity.CampOrderBookingActivity;
 import com.dhb.activity.HomeScreenActivity;
+import com.dhb.activity.OrderBookingActivity;
 import com.dhb.adapter.CampListDetailDisplayAdapter;
 import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BeneficiaryDetailsDao;
@@ -22,9 +24,11 @@ import com.dhb.dao.models.OrderDetailsDao;
 import com.dhb.delegate.CampListDisplayRecyclerViewAdapterDelegate;
 import com.dhb.dialog.ConfirmOrderReleaseDialog;
 import com.dhb.models.api.request.CampStartedRequestModel;
+import com.dhb.models.api.response.CampDetailsOrderDetailsResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.data.CampBtechModel;
 import com.dhb.models.data.CampDetailModel;
+import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -252,17 +256,6 @@ public class CampListDisplayFragment extends AbstractFragment {
     }
 
 
-   /* @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == BundleConstants.VOMD_START && resultCode == BundleConstants.VOMD_ARRIVED) {
-            OrderVisitDetailsModel orderVisitDetailsModel = data.getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
-            Intent intentOrderBooking = new Intent(activity, OrderBookingActivity.class);
-            intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
-            startActivity(intentOrderBooking);
-        }
-    }*/
-
 
     private class CampStartedAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
@@ -304,6 +297,11 @@ public class CampListDisplayFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
+
+              /*  Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
+                intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL,campDetailModels);
+                startActivity(intentOrderBooking);
+*/
                 pushFragments(CampManualWOEFragment.newInstance(),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
                /* integrator = new IntentIntegrator(getActivity()) {
                     @Override
@@ -326,6 +324,12 @@ public class CampListDisplayFragment extends AbstractFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         Toast.makeText(activity, "scanned res " + scanningResult, Toast.LENGTH_SHORT).show();
+        if(requestCode==BundleConstants.CMD_START && resultCode==BundleConstants.CMD_ARRIVED){
+            CampDetailsOrderDetailsResponseModel campDetailsOrderDetailsResponseModel = data.getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
+            Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
+            intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL,campDetailsOrderDetailsResponseModel);
+            startActivity(intentOrderBooking);
+        }
         if (scanningResult != null && scanningResult.getContents() != null) {
             //  String scanned_barcode = scanningResult.getContents();
             Logger.error("" + scanningResult);

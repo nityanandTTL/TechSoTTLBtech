@@ -28,151 +28,11 @@
 
             </RelativeLayout>
 
-
-            <LinearLayout
-                android:id="@+id/ll_barcodes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_toEndOf="@id/rl_left_marker"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <TableLayout
-                    android:id="@+id/tl_barcodes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </TableLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_vhc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_barcodes"
-                android:layout_marginTop="10dp"
-                android:gravity="start"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/tv_venipuncture"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="start"
-                    android:padding="@dimen/dp_10"
-                    android:text="Venipuncture: " />
-
-                <ImageView
-                    android:id="@+id/img_venipuncture"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/camera_icon" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="Hard Copy: " />
-
-                <ImageView
-                    android:id="@+id/hard_copy_check"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/tick_icon" />
-            </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ll_vhc"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/clinical_history_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:padding="@dimen/dp_10"
-                        android:text="Clinical History:"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/clinical_history"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@android:drawable/edit_text"
-                        android:drawableEnd="@android:drawable/arrow_down_float"
-                        android:editable="false"
-                        android:ellipsize="marquee"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:freezesText="true"
-                        android:gravity="center"
-                        android:hint="Select Clinical History"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:minEms="13"
-                        android:paddingRight="@dimen/dp_5"
-                        android:scrollHorizontally="true"
-                        android:singleLine="true"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/lab_alerts_txt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:minEms="5"
-                        android:padding="@dimen/dp_10"
-                        android:text="Lab Alerts:"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/edt_lab_alerts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@android:drawable/edit_text"
-                        android:drawableEnd="@android:drawable/arrow_down_float"
-                        android:editable="false"
-                        android:ellipsize="marquee"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:freezesText="true"
-                        android:gravity="center"
-                        android:hint="Select Lab Alerts"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:minEms="13"
-                        android:paddingRight="@dimen/dp_5"
-                        android:scrollHorizontally="true"
-                        android:singleLine="true"
-                        android:textSize="14sp" />
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -280,7 +140,6 @@
                     android:id="@+id/ll_tests"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:orientation="horizontal">
 
                     <TextView
@@ -368,10 +227,10 @@
                         android:layout_weight="1"
                         android:background="@drawable/purple_btn_bg"
                         android:minEms="8"
-                        android:visibility="gone"
                         android:text="Enter Manually "
                         android:textColor="@android:color/white"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="gone" />
 
                     <Button
                         android:id="@+id/btn_scan_qr"
@@ -386,8 +245,7 @@
                         android:minEms="8"
                         android:text="Scan QR Code "
                         android:textColor="@android:color/white"
-                        android:textStyle="bold"
-                         />
+                        android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/btn_next"
