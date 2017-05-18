@@ -88,4 +88,8 @@
     <string name="progress_message_fetching_Version_details_please_wait">Fetching Version  Details, Please wait ....</string>
     <string name="progress_message_removing_beneficiary_please_wait">Removing Beneficiary, Please wait …</string>
     <string name="progress_message_updating_scanned_barcode_please_wait">Updating Scanned Barcode to System, Please wait …</string>
+    <string name="progress_message_fetching_narration_master_please_wait">Fetching Narration Master, Please wait …</string>
+    <string name="progress_message_fetching_payment_modes_please_wait">Fetching Payment Modes, Please wait …</string>
+    <string name="progress_message_start_transaction_please_wait">Sending Transaction Details to Payment Gateway, Please wait …</string>
+    <string name="submit">Submit</string>
 </resources>

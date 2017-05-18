@@ -124,6 +124,14 @@ public class AbstractApiModel implements AppConstants {
 
     public String ORDER_BOOKING=VERSION_API_URL+"/OrderBooking";
 
+    public String PAYMENT_NARRATION_MASTER = "/Masters/NarrationMaster";
+
+    public String PAYMENT_SELECT_MODE = "/PayThyrocare/SelectMode";
+
+    public String PAYMENT_PASS_INPUTS = "/PayThyrocare/PassInputs";
+
+    public String PAYMENT_START_TRANSACTION = "/PayThyrocare/StartTransaction";
+
     public static final String X_API_KEY = "x-api-key";
 
     public static final String AUTHORIZATION = "Authorization";
