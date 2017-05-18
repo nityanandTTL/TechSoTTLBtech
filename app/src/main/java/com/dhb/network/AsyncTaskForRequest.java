@@ -247,6 +247,29 @@ public class AsyncTaskForRequest {
         }
         return apiCallAsyncTask;
     }/*
+	 * get Camp Details Count Api Integration*/
+
+    public ApiCallAsyncTask getCampDetailsCountRequestAsyncTask() {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getCampDetailsCountRequestAsyncTask: " );
+           // String postJson = new Gson().toJson(orderVisitDetailsModel);
+          //  abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.CAMP_COUNT+"/"+appPreferenceManager.getLoginResponseModel().getUserID());
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_camp_count_details_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }/*
 	 * Send QR code Api Integration*/
 
     public ApiCallAsyncTask getSendQRCodeRequestAsyncTask(String qrContent) {
@@ -258,12 +281,12 @@ public class AsyncTaskForRequest {
            // String postJson = new Gson().toJson(orderVisitDetailsModel);
           //  abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_ORDER_DETAIL+"/"+qrContent);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.CAMP_QR_DETAIL+"/"+qrContent);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
-                    .getString(R.string.progress_message_fetching_order_details_please_wait));
+                    .getString(R.string.progress_message_sending_master_barcode_please_wait));
             apiCallAsyncTask.setProgressBarVisible(true);
         } catch (Exception e) {
             e.printStackTrace();

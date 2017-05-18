@@ -94,6 +94,21 @@
                 android:fadingEdge="horizontal"
                 android:singleLine="true"
                 android:text="Ledger : 2"
+
+                android:textColor="@android:color/darker_gray"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/tv_call_leader"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@id/tv_name"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_toEndOf="@id/tv_leader"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:singleLine="true"
+               android:layout_marginLeft="@dimen/dp_4"
+                android:background="@drawable/call_icon"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="16sp" />
 
@@ -226,7 +241,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="@dimen/dp_30"
