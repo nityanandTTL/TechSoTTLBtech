@@ -123,7 +123,7 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
     private void setListeners() {
         btn_arrived.setOnClickListener(this);
         btn_startNav.setOnClickListener(this);
-        double totaldist = distFrom(19.061745,73.0254561,19.0771,72.999);
+        double totaldist = distFrom(currentlat,currentlong,destlat,destlong);
 
         Integertotaldiff = (int) totaldist;
         Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();

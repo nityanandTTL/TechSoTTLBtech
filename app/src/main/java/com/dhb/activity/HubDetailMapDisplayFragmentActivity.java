@@ -26,7 +26,6 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.models.api.request.HubStartRequestModel;
 import com.dhb.models.data.HUBBTechModel;
-import com.dhb.models.data.MaterialDetailsModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -65,13 +64,6 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
-import static java.lang.Math.PI;
-import static java.lang.Math.asin;
-import static java.lang.Math.atan2;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.toDegrees;
-import static java.lang.Math.toRadians;
 
 
 public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener,View.OnClickListener {
@@ -125,7 +117,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private void setListeners() {
         btn_arrived.setOnClickListener(this);
         btn_startNav.setOnClickListener(this);
-       double totaldist = distFrom(19.061745,73.0254561,19.0771,72.999);
+       double totaldist = distFrom(currentlat,currentlong,destlat,destlong);
 
         Integertotaldiff = (int) totaldist;
         Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
@@ -656,10 +648,6 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                    btn_arrived.setVisibility(View.VISIBLE);
                    btn_startNav.setVisibility(View.INVISIBLE);
                }
-
-
-
-
             }
         }
 

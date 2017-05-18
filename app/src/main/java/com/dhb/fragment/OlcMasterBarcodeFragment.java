@@ -108,7 +108,6 @@ public class OlcMasterBarcodeFragment extends AbstractFragment {
         if (scanningResult != null && scanningResult.getContents() != null) {
             scanned_barcode = scanningResult.getContents();
             Logger.error("scanned_barcode "+scanningResult.getContents());
-            Toast.makeText(activity, ""+scanningResult, Toast.LENGTH_SHORT).show();
             edtScannedBarcode.setText(scanned_barcode);
 
             OlcScanPickUpRequestModel olcScanPickUpRequestModel = new OlcScanPickUpRequestModel();

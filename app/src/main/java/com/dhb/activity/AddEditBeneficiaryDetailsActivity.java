@@ -428,7 +428,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     imgMale.setBackgroundColor(activity.getResources().getColor(android.R.color.white));
                 }
             }
-            encodedVanipunctureImg = encodeImage(beneficiaryDetailsModel.getVenepuncture());
+            if(beneficiaryDetailsModel.getVenepuncture()!=null) {
+                encodedVanipunctureImg = encodeImage(beneficiaryDetailsModel.getVenepuncture());
+            }
             benCHArr = beneficiaryDetailsModel.getClHistory();
             benLAArr = beneficiaryDetailsModel.getLabAlert();
             String chS = "";

@@ -205,7 +205,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             for (BeneficiarySampleTypeDetailsModel sampleTypes :
                     beneficiaryDetailsModel.getSampleType()) {
                 BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
-                beneficiaryBarcodeDetailsModel.setBenId(sampleTypes.getBenId());
+                beneficiaryBarcodeDetailsModel.setBenId(beneficiaryDetailsModel.getBenId());
                 beneficiaryBarcodeDetailsModel.setId(DeviceUtils.getRandomUUID());
                 beneficiaryBarcodeDetailsModel.setSamplType(sampleTypes.getSampleType());
                 beneficiaryBarcodeDetailsModel.setOrderNo(beneficiaryDetailsModel.getOrderNo());
@@ -530,6 +530,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
                         if (currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
                             beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
                             beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
                             break;
                         }
