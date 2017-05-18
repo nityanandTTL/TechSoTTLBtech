@@ -70,6 +70,10 @@ public class AbstractApiModel implements AppConstants {
 
 	public String FETCH_ORDER_DETAIL = VERSION_API_URL+"/OrderVisitDetails";
 
+    public String CAMP_COUNT = VERSION_API_URL+"/CampDetails/MyCampCount";
+
+    public String CAMP_QR_DETAIL = VERSION_API_URL+"/CampDetails/OrderDetails";
+
 	public String FETCH_SLOT_DETAIL = VERSION_API_URL+"/ServingSlotDetails";
 
     public String ORDER_STATUS_CHANGE = VERSION_API_URL + "/OrderStatusChange";
@@ -114,7 +118,7 @@ public class AbstractApiModel implements AppConstants {
 
     public String LAB_ALERT_MASTER = VERSION_API_URL + "/LabAlerts";
 
-    public String FETCH_LEAVE_NATURE_MASTER=VERSION_API_URL+"/LeaveNatureMaster/L1";
+    public String FETCH_LEAVE_NATURE_MASTER=VERSION_API_URL+"/Masters/LeaveNatureMaster/L1";
 
     public String SET_APPLY_LEAVE=VERSION_API_URL+"/ManageBtechLeave/ApplyLeave";
 
@@ -123,6 +127,14 @@ public class AbstractApiModel implements AppConstants {
     public String OLC_PICKUP_SUBMIT_SCAN_BARCODE=VERSION_API_URL+"/ScanPickup";
 
     public String ORDER_BOOKING=VERSION_API_URL+"/OrderBooking";
+
+    public String PAYMENT_NARRATION_MASTER = "/Masters/NarrationMaster";
+
+    public String PAYMENT_SELECT_MODE = "/PayThyrocare/SelectMode";
+
+    public String PAYMENT_PASS_INPUTS = "/PayThyrocare/PassInputs";
+
+    public String PAYMENT_START_TRANSACTION = "/PayThyrocare/StartTransaction";
 
     public static final String X_API_KEY = "x-api-key";
 

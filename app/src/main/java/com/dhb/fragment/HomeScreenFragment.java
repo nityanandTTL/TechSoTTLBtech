@@ -7,14 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.customview.RoundedImageView;
+import com.dhb.network.ApiCallAsyncTask;
+import com.dhb.network.ApiCallAsyncTaskDelegate;
+import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.CommonUtils;
 import com.dhb.utils.app.InputUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class HomeScreenFragment extends AbstractFragment {
 
@@ -22,7 +29,7 @@ public class HomeScreenFragment extends AbstractFragment {
     private HomeScreenActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private View rootView;
-    private TextView txtUserName;
+    private TextView txtUserName,txt_no_of_camps;
     private RoundedImageView rvSelfie;
     private ImageView imgPayment, imgOrders,imgSchedule, imgMaterials, imgOLCPickup, imgHub,imgCamp,imgCommunication,imgFeedback;
     public HomeScreenFragment() {
@@ -53,8 +60,21 @@ public class HomeScreenFragment extends AbstractFragment {
         rootView = inflater.inflate(R.layout.fragment_home_screen, container, false);
         initUI();
         initData();
+        getCampDetailCount();
         initListeners();
         return rootView;
+    }
+
+    private void getCampDetailCount() {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask campDetailCountApiAsyncTask = asyncTaskForRequest.getCampDetailsCountRequestAsyncTask();
+        campDetailCountApiAsyncTask.setApiCallAsyncTaskDelegate(new CampDetailsCountApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            campDetailCountApiAsyncTask.execute(campDetailCountApiAsyncTask);
+        } else {
+            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            initData();
+        }
     }
 
     private void initData() {
@@ -136,5 +156,24 @@ public class HomeScreenFragment extends AbstractFragment {
         imgCamp = (ImageView) rootView.findViewById(R.id.camp_icon);
         imgMaterials = (ImageView) rootView.findViewById(R.id.materials_icon);
         imgOLCPickup=(ImageView)rootView.findViewById(R.id.olc_pickup_icon);
+        txt_no_of_camps=(TextView)rootView.findViewById(R.id.txt_no_of_camps);
+    }
+
+    private class CampDetailsCountApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode==200){
+                JSONObject jsonObject=new JSONObject(json);
+                txt_no_of_camps.setText(""+jsonObject.getString("CampCount"));
+            }
+            else {
+                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
     }
 }
