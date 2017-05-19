@@ -40,4 +40,5 @@ public class BundleConstants {
     public static final String REST_BEN_TESTS_LIST = "restBeneficiaryTestList";
     public static final String SELECTED_TESTS_DISCOUNT = "selectedTestsDiscount";
     public static final String SELECTED_TESTS_INCENTIVE = "selectedTestsIncentive";
+    public static final String CAMP_SCAN_OR_RESPONSE_MODEL = "campResponseModel";
 }

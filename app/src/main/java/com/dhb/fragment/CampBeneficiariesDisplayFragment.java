@@ -15,27 +15,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dhb.R;
-import com.dhb.activity.AddEditBeneficiaryDetailsActivity;
 import com.dhb.activity.CampOrderBookingActivity;
-import com.dhb.activity.OrderBookingActivity;
 import com.dhb.adapter.CampBeneficiaryScreenSlidePagerAdapter;
-import com.dhb.dao.DhbDao;
-import com.dhb.dao.models.BeneficiaryDetailsDao;
-import com.dhb.dao.models.OrderDetailsDao;
-import com.dhb.delegate.RefreshBeneficiariesSliderDelegate;
 import com.dhb.delegate.RefreshCampBeneficiariesSliderDelegate;
-import com.dhb.models.api.response.CampDetailsOrderDetailsResponseModel;
+import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
-import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.CampAllOrderDetailsModel;
 import com.dhb.models.data.CampDetailsBenMasterModel;
-import com.dhb.models.data.OrderDetailsModel;
-import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
-import com.dhb.utils.app.DeviceUtils;
 
 import java.util.ArrayList;
 
@@ -48,28 +38,22 @@ public class CampBeneficiariesDisplayFragment extends AbstractFragment {
     private ViewPager vpBeneficiaries;
     private TextView txtAmtPayable, txtAddBeneficiary;
     private Button btnProceedPayment;
-    private OrderVisitDetailsModel orderVisitDetailsModel;
-    private CampDetailsOrderDetailsResponseModel campDetailsOrderDetailsResponseModel;
+    private CampScanQRResponseModel campScanQRResponseModel;
     private CampAllOrderDetailsModel campAllOrderDetailsModel=new CampAllOrderDetailsModel();
     private int totalAmount = 0;
     private int dotsCount;
     private ImageView[] dots;
     private CampBeneficiaryScreenSlidePagerAdapter CampBeneficiaryScreenSlidePagerAdapter;
     private LinearLayout pagerIndicator;
-    private BeneficiaryDetailsModel tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
-    private OrderDetailsModel tempOrderDetailsModel = new OrderDetailsModel();
-    private DhbDao dhbDao;
-    private OrderDetailsDao orderDetailsDao;
-    private BeneficiaryDetailsDao beneficiaryDetailsDao;
 
     public CampBeneficiariesDisplayFragment() {
         // Required empty public constructor
     }
 
-    public static CampBeneficiariesDisplayFragment newInstance(CampDetailsOrderDetailsResponseModel campDetailsOrderDetailsResponseModel) {
+    public static CampBeneficiariesDisplayFragment newInstance(CampScanQRResponseModel campScanQRResponseModel) {
         CampBeneficiariesDisplayFragment fragment = new CampBeneficiariesDisplayFragment();
         Bundle args = new Bundle();
-        args.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailsOrderDetailsResponseModel);
+        args.putParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL, campScanQRResponseModel);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,12 +62,9 @@ public class CampBeneficiariesDisplayFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (CampOrderBookingActivity) getActivity();
-        dhbDao = new DhbDao(activity);
-        orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
-        beneficiaryDetailsDao = new BeneficiaryDetailsDao(dhbDao.getDb());
         appPreferenceManager = new AppPreferenceManager(activity);
         if (getArguments() != null) {
-            campDetailsOrderDetailsResponseModel = getArguments().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
+            campScanQRResponseModel = getArguments().getParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL);
         }
     }
 
@@ -112,7 +93,7 @@ public class CampBeneficiariesDisplayFragment extends AbstractFragment {
                         }).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        tempOrderDetailsModel.setOrderNo(DeviceUtils.randomString(8));
+                        /*tempOrderDetailsModel.setOrderNo(DeviceUtils.randomString(8));
                         ArrayList<BeneficiaryDetailsModel> beneficiaries = new ArrayList<BeneficiaryDetailsModel>();
 
                         tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
@@ -127,7 +108,7 @@ public class CampBeneficiariesDisplayFragment extends AbstractFragment {
                         Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
                         intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, tempBeneficiaryDetailsModel);
                         intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, tempOrderDetailsModel);
-                        startActivityForResult(intentEdit, BundleConstants.ADD_EDIT_START);
+                        startActivityForResult(intentEdit, BundleConstants.ADD_EDIT_START);*/
                     }
                 }).show();
             }
@@ -142,13 +123,13 @@ public class CampBeneficiariesDisplayFragment extends AbstractFragment {
 */
         //  txtAmtPayable.setText(totalAmount + "");
         ArrayList<CampDetailsBenMasterModel> beneficiariesArr = new ArrayList<>();
-        for (CampAllOrderDetailsModel orderDetailsModel : campDetailsOrderDetailsResponseModel.getAllOrderdetails()) {
+        for (CampAllOrderDetailsModel orderDetailsModel : campScanQRResponseModel.getAllOrderdetails()) {
             Logger.error(orderDetailsModel.getBenMaster().size() + "");
             for (CampDetailsBenMasterModel beneficiaryDetailsModel : orderDetailsModel.getBenMaster()) {
                 beneficiariesArr.add(beneficiaryDetailsModel);
             }
         }
-        CampBeneficiaryScreenSlidePagerAdapter = new CampBeneficiaryScreenSlidePagerAdapter(getFragmentManager(), activity, beneficiariesArr, campDetailsOrderDetailsResponseModel.getAllOrderdetails(), new RefreshCampBeneficiariesSliderDelegate() {
+        CampBeneficiaryScreenSlidePagerAdapter = new CampBeneficiaryScreenSlidePagerAdapter(getFragmentManager(), activity, beneficiariesArr, campScanQRResponseModel.getAllOrderdetails(), new RefreshCampBeneficiariesSliderDelegate() {
             @Override
             public void onRefreshActionCallbackReceived(CampListDisplayResponseModel campListDisplayResponseModel) {
 
@@ -160,9 +141,9 @@ public class CampBeneficiariesDisplayFragment extends AbstractFragment {
         vpBeneficiaries.setOnPageChangeListener(new BeneficiaryScreenPageChangeListener());
         setUiPageViewController();
 
-        if (campDetailsOrderDetailsResponseModel.getAllOrderdetails().size() > 0) {
+        if (campScanQRResponseModel.getAllOrderdetails().size() > 0) {
             for (CampAllOrderDetailsModel orderDetailsModel :
-                    campDetailsOrderDetailsResponseModel.getAllOrderdetails()) {
+                    campScanQRResponseModel.getAllOrderdetails()) {
                 campAllOrderDetailsModel = orderDetailsModel;
                 break;
             }

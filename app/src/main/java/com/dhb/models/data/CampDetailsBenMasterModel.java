@@ -14,6 +14,7 @@ public class CampDetailsBenMasterModel implements Parcelable{
     private String Name,Gender,testsCode,Fasting;
     private ArrayList<CampDetailsSampleTypeModel> sampleType;
     private ArrayList<CampDetailsKitsModel> kits;
+    private String OrderNo;
 
     protected CampDetailsBenMasterModel(Parcel in) {
         benId = in.readInt();
@@ -23,6 +24,7 @@ public class CampDetailsBenMasterModel implements Parcelable{
         Gender = in.readString();
         testsCode = in.readString();
         Fasting = in.readString();
+        OrderNo = in.readString();
     }
 
     @Override
@@ -34,6 +36,7 @@ public class CampDetailsBenMasterModel implements Parcelable{
         dest.writeString(Gender);
         dest.writeString(testsCode);
         dest.writeString(Fasting);
+        dest.writeString(OrderNo);
     }
 
     @Override
@@ -123,5 +126,13 @@ public class CampDetailsBenMasterModel implements Parcelable{
 
     public void setKits(ArrayList<CampDetailsKitsModel> kits) {
         this.kits = kits;
+    }
+
+    public String getOrderNo() {
+        return OrderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        OrderNo = orderNo;
     }
 }

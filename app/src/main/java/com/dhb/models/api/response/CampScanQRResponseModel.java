@@ -11,20 +11,21 @@ import java.util.ArrayList;
  * Created by vendor1 on 5/15/2017.
  */
 
-public class CampDetailsOrderDetailsResponseModel implements Parcelable{
+public class CampScanQRResponseModel implements Parcelable{
     private int SlotId, Distance;
     ArrayList<CampAllOrderDetailsModel> allOrderdetails;
     private String VisitId, Slot;
 
-    protected CampDetailsOrderDetailsResponseModel(Parcel in) {
+    public CampScanQRResponseModel() {
+        // Required empty public constructor
+    }
+
+    protected CampScanQRResponseModel(Parcel in) {
         SlotId = in.readInt();
         Distance = in.readInt();
         allOrderdetails = in.createTypedArrayList(CampAllOrderDetailsModel.CREATOR);
         VisitId = in.readString();
         Slot = in.readString();
-    }
-    public CampDetailsOrderDetailsResponseModel() {
-        // Required empty public constructor
     }
 
     @Override
@@ -41,15 +42,15 @@ public class CampDetailsOrderDetailsResponseModel implements Parcelable{
         return 0;
     }
 
-    public static final Creator<CampDetailsOrderDetailsResponseModel> CREATOR = new Creator<CampDetailsOrderDetailsResponseModel>() {
+    public static final Creator<CampScanQRResponseModel> CREATOR = new Creator<CampScanQRResponseModel>() {
         @Override
-        public CampDetailsOrderDetailsResponseModel createFromParcel(Parcel in) {
-            return new CampDetailsOrderDetailsResponseModel(in);
+        public CampScanQRResponseModel createFromParcel(Parcel in) {
+            return new CampScanQRResponseModel(in);
         }
 
         @Override
-        public CampDetailsOrderDetailsResponseModel[] newArray(int size) {
-            return new CampDetailsOrderDetailsResponseModel[size];
+        public CampScanQRResponseModel[] newArray(int size) {
+            return new CampScanQRResponseModel[size];
         }
     };
 

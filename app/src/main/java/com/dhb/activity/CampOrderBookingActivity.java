@@ -8,12 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dhb.R;
-import com.dhb.dao.DhbDao;
-import com.dhb.fragment.BeneficiariesDisplayFragment;
-import com.dhb.fragment.CampBeneficiariesDisplayFragment;
-import com.dhb.models.api.response.CampDetailsOrderDetailsResponseModel;
-import com.dhb.models.data.CampAllOrderDetailsModel;
-import com.dhb.models.data.OrderVisitDetailsModel;
+import com.dhb.fragment.CampManualWOEFragment;
+import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.uiutils.AbstractActivity;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
@@ -28,14 +24,11 @@ public class CampOrderBookingActivity extends AbstractActivity {
     public final static String TAG_ACTIIVTY = CampOrderBookingActivity.class.getSimpleName();
     private CampOrderBookingActivity activity;
     private AppPreferenceManager appPreferenceManager;
-    private DhbDao dhbDao;
     private FrameLayout flOrderBooking;
     private TextView txtHeaderText;
     private ImageView imgBack;
     private Toolbar tbOBA;
-    private OrderVisitDetailsModel orderVisitDetailsModel;
-    private CampAllOrderDetailsModel campAllOrderDetailsModel;
-    private CampDetailsOrderDetailsResponseModel campDetailsOrderDetailsResponseModel;//=new CampDetailsOrderDetailsResponseModel();
+    private CampScanQRResponseModel campScanQRResponseModel;//=new CampScanQRResponseModel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +36,10 @@ public class CampOrderBookingActivity extends AbstractActivity {
         setContentView(R.layout.activity_camp_order_booking);
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
-        dhbDao = new DhbDao(activity);
-        campDetailsOrderDetailsResponseModel = getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
+        campScanQRResponseModel = getIntent().getExtras().getParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL);
         initUI();
         initListeners();
-        pushFragments(CampBeneficiariesDisplayFragment.newInstance(campDetailsOrderDetailsResponseModel),false,false,CampBeneficiariesDisplayFragment.TAG_FRAGMENT,R.id.fl_order_booking,TAG_ACTIVITY);
+        pushFragments(CampManualWOEFragment.newInstance(campScanQRResponseModel),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_camp_order_booking,TAG_ACTIVITY);
     }
 
     private void initListeners() {

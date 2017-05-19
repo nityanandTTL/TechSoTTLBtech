@@ -137,6 +137,7 @@
                 android:id="@+id/title_distance_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:visibility="invisible"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/title_camp_date"
                 android:layout_marginEnd="10dp"

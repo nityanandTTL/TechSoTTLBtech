@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.dhb.models.api.response.BtechClientsResponseModel;
 import com.dhb.models.api.response.BtechCollectionsResponseModel;
 import com.dhb.models.api.response.BusinessErrorModel;
-import com.dhb.models.api.response.CampDetailsOrderDetailsResponseModel;
+import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.dhb.models.api.response.ErrorModel;
@@ -23,7 +23,6 @@ import com.dhb.models.api.response.SelfieUploadResponseModel;
 import com.dhb.models.api.response.SessionExpireModel;
 import com.dhb.models.data.BrandMasterModel;
 import com.dhb.models.data.BrandTestMasterModel;
-import com.dhb.models.data.CampDetailModel;
 import com.dhb.models.data.DepositRegisterModel;
 import com.dhb.models.data.EarningRegisterModel;
 import com.dhb.models.data.LeaveNatureMasterModel;
@@ -695,12 +694,12 @@ public class ResponseParser implements AppConstants {
 		return dispatchHubDisplayDetailsResponseModel;
 	}
 	//Camp Order details Response parse:
-	public CampDetailsOrderDetailsResponseModel getcampOrderDetailsResponseModel(String json, int statusCode) {
-		CampDetailsOrderDetailsResponseModel campDetailsOrderDetailsResponseModel = null;
+	public CampScanQRResponseModel getcampOrderDetailsResponseModel(String json, int statusCode) {
+		CampScanQRResponseModel campScanQRResponseModel = null;
 		//if (!parseIntoError(json, statusCode)){
-		campDetailsOrderDetailsResponseModel = gson.fromJson(json, CampDetailsOrderDetailsResponseModel.class);
+		campScanQRResponseModel = gson.fromJson(json, CampScanQRResponseModel.class);
 		//}
-		return campDetailsOrderDetailsResponseModel;
+		return campScanQRResponseModel;
 	}
 
 	//Btech Clients  details Response parse:

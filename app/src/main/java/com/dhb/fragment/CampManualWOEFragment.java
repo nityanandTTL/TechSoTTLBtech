@@ -2,19 +2,19 @@ package com.dhb.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
-import com.dhb.activity.HomeScreenActivity;
-import com.dhb.models.api.response.CampDetailsOrderDetailsResponseModel;
+import com.dhb.activity.CampOrderBookingActivity;
+import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.data.CampAllOrderDetailsModel;
 
@@ -34,23 +34,28 @@ import java.util.ArrayList;
 
 public class CampManualWOEFragment extends AbstractFragment implements View.OnClickListener {
     public static final String TAG_FRAGMENT = CampManualWOEFragment.class.getSimpleName();
+    private static final String TAG_ACTIVITY = CampManualWOEFragment.class.getSimpleName();
     private EditText edt_name, edt_mobile, edt_email, edt_scan_result;
     private TextView tv_age, tv_gender, edt_test;
     private ImageView scan_barcode_button;
+    private LinearLayout ll_age_gender;
     private Button btn_enter_manually, btn_scan_qr, btn_next;
     IntentIntegrator integrator;
     private CampListDisplayResponseModel campListDisplayResponseModel;
-    private HomeScreenActivity activity;
+    private CampOrderBookingActivity activity;
     ArrayList<CampAllOrderDetailsModel> campAllOrderDetailsModelslist = new ArrayList<>();
+    CampScanQRResponseModel campScanQRResponseModel =new CampScanQRResponseModel();
 
     public CampManualWOEFragment() {
         // Required empty public constructor
     }
 
-    public static CampManualWOEFragment newInstance() {
+    public static CampManualWOEFragment newInstance(CampScanQRResponseModel campScanQRResponseModel) {
         CampManualWOEFragment fragment = new CampManualWOEFragment();
         Bundle args = new Bundle();
+        args.putParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL, campScanQRResponseModel);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -59,7 +64,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_camp_manual_woe_scan_barcode, container, false);
         initUi(view);
-        activity = (HomeScreenActivity) getActivity();
+        activity = (CampOrderBookingActivity) getActivity();
         setListeners();
         return view;
     }
@@ -84,14 +89,14 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         btn_next = (Button) view.findViewById(R.id.btn_enter_manually);
         btn_enter_manually.setVisibility(View.GONE);
         btn_scan_qr.setVisibility(View.VISIBLE);
+        ll_age_gender=(LinearLayout)view.findViewById(R.id.ll_age_gender);
+        ll_age_gender.setVisibility(View.GONE);
     }
 
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_enter_manually) {
 
-        }
         if (v.getId() == R.id.btn_next) {
 
         }
@@ -120,7 +125,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
 
         } else {
             super.onActivityResult(requestCode, resultCode, data);
-            //callsendQRCodeApi("jhjhj");
+            callsendQRCodeApi("jhjhj");
             Toast.makeText(activity, "no result", Toast.LENGTH_SHORT).show();
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -144,11 +149,19 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             if (statusCode == 200) {
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
                 ResponseParser responseParser = new ResponseParser(activity);
-                CampDetailsOrderDetailsResponseModel campDetailsOrderDetailsResponseModel = new CampDetailsOrderDetailsResponseModel();
-                campDetailsOrderDetailsResponseModel = responseParser.getcampOrderDetailsResponseModel(json, statusCode);
-                if (campDetailsOrderDetailsResponseModel != null && campDetailsOrderDetailsResponseModel.getAllOrderdetails().size() > 0) {
-                    campAllOrderDetailsModelslist = campDetailsOrderDetailsResponseModel.getAllOrderdetails();
-                    Logger.error("camp detail size " + campDetailsOrderDetailsResponseModel.getAllOrderdetails().size());
+                campScanQRResponseModel = new CampScanQRResponseModel();
+                campScanQRResponseModel = responseParser.getcampOrderDetailsResponseModel(json, statusCode);
+                if (campScanQRResponseModel != null && campScanQRResponseModel.getAllOrderdetails().size() > 0) {
+
+                    for (int i = 0; i < campScanQRResponseModel.getAllOrderdetails().size() ; i++) {
+                        for (int j = 0; j<
+                                campScanQRResponseModel.getAllOrderdetails().get(i).getBenMaster().size(); j++) {
+                            campScanQRResponseModel.getAllOrderdetails().get(i).getBenMaster().get(j).setOrderNo(campScanQRResponseModel.getAllOrderdetails().get(i).getOrderNo());
+                        }
+                    }
+
+                    campAllOrderDetailsModelslist = campScanQRResponseModel.getAllOrderdetails();
+                    Logger.error("camp detail size " + campScanQRResponseModel.getAllOrderdetails().size());
                     prepareData();
 
                 }
@@ -165,13 +178,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     }
 
     private void prepareData() {
-        Logger.error("name " + campAllOrderDetailsModelslist.get(0).getBenMaster().get(0).getName());
-        edt_name.setText("" + campAllOrderDetailsModelslist.get(0).getBenMaster().get(0).getName());
-        edt_email.setText("" + campAllOrderDetailsModelslist.get(0).getEmail());
-        edt_mobile.setText("" + campAllOrderDetailsModelslist.get(0).getMobile());
-        tv_age.setText("" + campAllOrderDetailsModelslist.get(0).getBenMaster().get(0).getAge() + " | Gender " + campAllOrderDetailsModelslist.get(0).getBenMaster().get(0).getGender());
-
-
+        pushFragments(CampBeneficiariesDisplayFragment.newInstance(campScanQRResponseModel),false,false,CampBeneficiariesDisplayFragment.TAG_FRAGMENT,R.id.fl_camp_order_booking,TAG_ACTIVITY);
     }
 
 

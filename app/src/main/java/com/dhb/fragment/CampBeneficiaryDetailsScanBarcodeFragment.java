@@ -1,6 +1,8 @@
 package com.dhb.fragment;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,9 +12,13 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -20,8 +26,10 @@ import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.AddEditBeneficiaryDetailsActivity;
+import com.dhb.activity.CampOrderBookingActivity;
 import com.dhb.activity.EditTestListActivity;
 import com.dhb.activity.OrderBookingActivity;
+import com.dhb.dao.AbstractDao;
 import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BeneficiaryDetailsDao;
 import com.dhb.dao.models.LabAlertMasterDao;
@@ -46,6 +54,8 @@ import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
+import com.dhb.models.data.CampAllOrderDetailsModel;
+import com.dhb.models.data.CampDetailsBenMasterModel;
 import com.dhb.models.data.LabAlertMasterModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
@@ -56,10 +66,12 @@ import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
+import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.DeviceUtils;
 import com.dhb.utils.app.InputUtils;
+import com.google.android.gms.vision.text.Text;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -72,45 +84,37 @@ import static com.dhb.utils.app.CommonUtils.decodedImageBytes;
 import static com.dhb.utils.app.CommonUtils.encodeImage;
 
 
-public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
+public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment implements View.OnClickListener {
     public static final String TAG_FRAGMENT = CampBeneficiaryDetailsScanBarcodeFragment.class.getSimpleName();
-    private ImageView imgVenipuncture, imgHC;
-    private TextView txtSrNo;
-    private TextView txtName;
-    private TextView txtAge;
-    private TextView txtAadharNo;
-    private ImageView btnRelease, btnEdit;
-    private TextView edtTests;
-    private LinearLayout llBarcodes;
-    private TextView edtCH, edtLA;
-    private EditText edtRemarks;
-    private BeneficiaryDetailsModel beneficiaryDetailsModel;
-    private OrderBookingActivity activity;
-    private String userChoosenTask, encodedVanipunctureImg;
-    private static final int REQUEST_CAMERA = 100;
-    private Bitmap thumbnail;
-    private View rootview;
-    private boolean isHC = false;
 
-    private String userChoosenReleaseTask;
+    private BeneficiaryDetailsModel beneficiaryDetailsModel;
+    private CampOrderBookingActivity activity;
+    private static final int REQUEST_CAMERA = 100;
+    private View rootview;
+    private CampDetailsBenMasterModel beneficiaryDetailsArr;
     private OrderDetailsModel orderDetailsModel;
+    private CampAllOrderDetailsModel campAllOrderDetailsModel;
     private String currentScanSampleType;
     private RescheduleOrderDialog cdd;
     private CancelOrderDialog cod;
     private boolean isCancelRequesGenereted = false;
     private ArrayList<TestRateMasterModel> restOfTestsList;
-    private DhbDao dhbDao;
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr;
     private ArrayList<BeneficiaryLabAlertsModel> benLAArr;
     private ArrayList<LabAlertMasterModel> labAlertsArr;
-    private BeneficiaryDetailsDao beneficiaryDetailsDao;
-    private OrderDetailsDao orderDetailsDao;
-    private LabAlertMasterDao labAlertMasterDao;
-    private TableLayout tlBarcodes;
-    private IntentIntegrator intentIntegrator;
     private static RefreshCampBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegateResult;
     private EditText edt_name, edt_mobile, edt_email;
-
+    private Button btn_scan_qr, btn_enter_manually, btn_next;
+    private TextView tv_age, tv_gender, edt_test_alerts;
+    private LinearLayout ll_tests;
+    private ArrayList<String> tests_iems = new ArrayList<>();
+    private Spinner sp_test;
+    private String test_codes;
+    private String[] test_code_arr;
+    private LinearLayout ll_test_scan;
+    private ArrayList<TestRateMasterModel> testRateMasterModels = new ArrayList<>();
+    private DhbDao dhbDao;
+    IntentIntegrator integrator;
     public CampBeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
     }
@@ -126,587 +130,140 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootview = inflater.inflate(R.layout.fragment_camp_manual_woe_scan_barcode, container, false);
-        activity = (OrderBookingActivity) getActivity();
+        activity = (CampOrderBookingActivity) getActivity();
         appPreferenceManager = new AppPreferenceManager(activity);
-
         dhbDao = new DhbDao(activity);
-        beneficiaryDetailsDao = new BeneficiaryDetailsDao(dhbDao.getDb());
-        orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
-        labAlertMasterDao = new LabAlertMasterDao(dhbDao.getDb());
-
-        labAlertsArr = labAlertMasterDao.getAllModels();
-        benCHArr = new ArrayList<>();
-        benLAArr = new ArrayList<>();
         Bundle bundle = getArguments();
-        beneficiaryDetailsModel = bundle.getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
-        orderDetailsModel = bundle.getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
-
+        beneficiaryDetailsArr = bundle.getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
+        campAllOrderDetailsModel = bundle.getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
         initUI();
-        initData();
         setListeners();
         return rootview;
     }
 
-    private void initData() {
-        beneficiaryDetailsModel = beneficiaryDetailsDao.getModelFromId(beneficiaryDetailsModel.getBenId());
-        orderDetailsModel = orderDetailsDao.getModelFromId(orderDetailsModel.getOrderNo());
-        benCHArr = beneficiaryDetailsModel.getClHistory();
-        benLAArr = beneficiaryDetailsModel.getLabAlert();
-        if (beneficiaryDetailsModel.getVenepuncture() != null) {
-            encodedVanipunctureImg = encodeImage(beneficiaryDetailsModel.getVenepuncture());
-        }
-        String chS = "";
-        if (benCHArr != null && benCHArr.size() > 0) {
-            for (BeneficiaryTestWiseClinicalHistoryModel chm :
-                    benCHArr) {
-                if (InputUtils.isNull(chS))
-                    chS = "" + chm.getClinicalHistoryId();
-                else
-                    chS = chS + ", " + chm.getClinicalHistoryId();
-            }
-        }
-        edtCH.setText(chS);
-
-        String laS = "";
-        if (benLAArr != null && benLAArr.size() > 0) {
-            for (BeneficiaryLabAlertsModel lam :
-                    benLAArr) {
-                LabAlertMasterModel labAlertMasterModel = labAlertMasterDao.getModelFromId(lam.getLabAlertId() + "");
-                if (labAlertMasterModel != null) {
-                    if (InputUtils.isNull(laS))
-                        laS = "" + labAlertMasterModel.getLabAlert();
-                    else
-                        laS = laS + ", " + labAlertMasterModel.getLabAlert();
-                }
-            }
-        }
-        edtLA.setText(laS);
-
-        txtName.setText(beneficiaryDetailsModel.getName());
-        txtAge.setText(beneficiaryDetailsModel.getAge() + " | " + beneficiaryDetailsModel.getGender());
-        txtAadharNo.setVisibility(View.GONE);
-        edtTests.setText(beneficiaryDetailsModel.getTestsCode());
-        txtSrNo.setText(beneficiaryDetailsModel.getBenId() + "");
-        if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
-            imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
-        } else {
-            imgHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
-        }
-        if (beneficiaryDetailsModel != null
-                && beneficiaryDetailsModel.getBarcodedtl() != null
-                && beneficiaryDetailsModel.getSampleType() != null
-                && beneficiaryDetailsModel.getBarcodedtl().size() == beneficiaryDetailsModel.getSampleType().size()) {
-
-        } else {
-            if (beneficiaryDetailsModel.getBarcodedtl() == null) {
-                beneficiaryDetailsModel.setBarcodedtl(new ArrayList<BeneficiaryBarcodeDetailsModel>());
-            } else {
-                beneficiaryDetailsModel.getBarcodedtl().clear();
-            }
-            for (BeneficiarySampleTypeDetailsModel sampleTypes :
-                    beneficiaryDetailsModel.getSampleType()) {
-                BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
-                beneficiaryBarcodeDetailsModel.setBenId(sampleTypes.getBenId());
-                beneficiaryBarcodeDetailsModel.setId(DeviceUtils.getRandomUUID());
-                beneficiaryBarcodeDetailsModel.setSamplType(sampleTypes.getSampleType());
-                beneficiaryBarcodeDetailsModel.setOrderNo(beneficiaryDetailsModel.getOrderNo());
-                beneficiaryDetailsModel.getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
-            }
-            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-        }
-        restOfTestsList = new ArrayList<>();
-        TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
-        for (BeneficiaryDetailsModel beneficiaryModel :
-                orderDetailsModel.getBenMaster()) {
-            if (beneficiaryDetailsModel.getBenId() != beneficiaryModel.getBenId()) {
-                restOfTestsList.addAll(testRateMasterDao.getModelsFromTestCodes(beneficiaryModel.getTestsCode()));
-            }
-        }
-        initScanBarcodeView();
-    }
-
     private void setListeners() {
-        imgVenipuncture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickPhoto();
-            }
-        });
-        btnEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
-                intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
-                intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
-                startActivityForResult(intentEdit, BundleConstants.ADD_EDIT_START);
-            }
-        });
-        imgHC.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isHC) {
-                    isHC = false;
-                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.tick_icon));
-                    orderDetailsModel.setReportHC(0);
-                } else {
-                    isHC = true;
-                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.check_mark));
-                    orderDetailsModel.setReportHC(1);
-                }
-                orderDetailsDao.insertOrUpdate(orderDetailsModel);
-            }
-        });
-      /*  btnRelease.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final CharSequence[] items = {"Order Reschedule",
-                        "Order Cancellation","Remove Beneficiary"};
-                final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setTitle("Select Action");
-                builder.setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int item) {
-                        if (items[item].equals("Order Reschedule")) {
-                            userChoosenReleaseTask = "Order Reschedule";
-                            cdd = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(), orderDetailsModel);
-                            cdd.show();
-                        } else if (items[item].equals("Order Cancellation")) {
-                            userChoosenReleaseTask = "Order Cancellation";
-                            cod = new CancelOrderDialog(activity, new OrderCancelDialogButtonClickedDelegateResult(), orderDetailsModel);
-                            cod.show();
-                        } else if (items[item].equals("Remove Beneficiary")) {
-                            userChoosenReleaseTask = "Remove Beneficiary";
-                            AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
-                            builder1.setTitle("Confirm Action")
-                                    .setMessage("Do you really want to remove beneficiary?")
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(final DialogInterface dialog, int which) {
-                                            RemoveBeneficiaryAPIRequestModel rb = new RemoveBeneficiaryAPIRequestModel();
-                                            rb.setBenId(beneficiaryDetailsModel.getBenId());
-                                            rb.setOrderNo(beneficiaryDetailsModel.getOrderNo());
-                                            ApiCallAsyncTask apiCallAsyncTask = new AsyncTaskForRequest(activity).getRemoveBeneficiaryRequestAsyncTask(rb);
-                                            apiCallAsyncTask.setApiCallAsyncTaskDelegate(new ApiCallAsyncTaskDelegate() {
-                                                @Override
-                                                public void apiCallResult(String json, int statusCode) throws JSONException {
-                                                    if(statusCode==200){
-                                                        ResponseParser responseParser = new ResponseParser(activity);
-                                                        OrderVisitDetailsModel orderVisitDetailsModel = responseParser.getRemoveBeneficiaryAPIResponseModel(json,statusCode);
-                                                        if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
-                                                            beneficiaryDetailsDao.deleteByBenId(beneficiaryDetailsModel.getBenId()+"");
-                                                            for (OrderDetailsModel orderDetailsModel :
-                                                                    orderVisitDetailsModel.getAllOrderdetails()) {
-                                                                orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
-                                                                orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
-                                                                orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
-                                                                orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
-                                                                if(orderDetailsModel.getBenMaster()!=null && orderDetailsModel.getBenMaster().size()>0) {
-                                                                    for (BeneficiaryDetailsModel beneficiaryDetailsModel :
-                                                                            orderDetailsModel.getBenMaster()) {
-                                                                        beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
-                                                                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                                                                    }
-                                                                    orderDetailsDao.insertOrUpdate(orderDetailsModel);
-                                                                }
-                                                            }
-                                                            Toast.makeText(activity,"Beneficiary Removed Successfully",Toast.LENGTH_SHORT).show();
-                                                            refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderVisitDetailsModel);
-                                                        }
-                                                    }
-                                                    else{
-                                                        Toast.makeText(activity,"Failed to remove beneficiary",Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onApiCancelled() {
-                                                    Toast.makeText(activity,"Failed to remove beneficiary",Toast.LENGTH_SHORT).show();
-                                                    dialog.dismiss();
-                                                }
-                                            });
-                                            apiCallAsyncTask.execute(apiCallAsyncTask);
-                                        }
-                                    }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                        }
-                    }
-                }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.show();
-            }
-        });*/
-        edtTests.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String tests = beneficiaryDetailsModel.getTestsCode();
-                final String[] testsList = tests.split(",");
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setTitle("Tests List");
-                builder.setItems(testsList, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                }).setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intentEdit = new Intent(activity, EditTestListActivity.class);
-                        intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST, restOfTestsList);
-                        intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
-                        intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
-                        startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
-                    }
-                });
-                builder.show();
-            }
-        });
-        edtCH.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<TestRateMasterModel> forCHSelection = new ArrayList<>();
-                if (beneficiaryDetailsModel.getTestsList() != null) {
-                    for (TestRateMasterModel testRateMasterModel :
-                            beneficiaryDetailsModel.getTestsList()) {
-                        if (testRateMasterModel.getTstClinicalHistory() != null && testRateMasterModel.getTstClinicalHistory().size() > 0) {
-                            forCHSelection.add(testRateMasterModel);
-                        }
-                    }
-                }
-                if (forCHSelection.size() > 0) {
-                    ClinicalHistorySelectorDialog clinicalHistorySelectorDialog = new ClinicalHistorySelectorDialog(activity, forCHSelection, benCHArr, beneficiaryDetailsModel.getBenId(), new SelectClinicalHistoryCheckboxDelegate() {
-                        @Override
-                        public void onCheckChange(ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr) {
-                            benCHArr = chArr;
-                            beneficiaryDetailsModel.setClHistory(benCHArr);
-                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                            initData();
-                        }
-                    });
-                    clinicalHistorySelectorDialog.show();
-                } else {
-                    Toast.makeText(activity, "Clinical History Not Required", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        edtLA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (labAlertsArr.size() > 0) {
-                    LabAlertSelectorDialog labAlertSelectorDialog = new LabAlertSelectorDialog(activity, labAlertsArr, benLAArr, beneficiaryDetailsModel.getBenId(), new SelectLabAlertsCheckboxDelegate() {
-                        @Override
-                        public void onCheckChange(ArrayList<BeneficiaryLabAlertsModel> chArr) {
-                            benLAArr = chArr;
-                            beneficiaryDetailsModel.setLabAlert(benLAArr);
-                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                            initData();
-                        }
-                    });
-                    labAlertSelectorDialog.show();
-                } else {
-                    Toast.makeText(activity, "Lab Alerts Master Not Available", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        btn_enter_manually.setOnClickListener(this);
+        btn_next.setOnClickListener(this);
     }
 
     @Override
     public void initUI() {
-        /*imgVenipuncture = (ImageView) rootview.findViewById(R.id.img_venipuncture);
-        imgHC = (ImageView) rootview.findViewById(R.id.hard_copy_check);
-        txtName = (TextView) rootview.findViewById(R.id.txt_name);
-        txtAge = (TextView) rootview.findViewById(R.id.txt_age);
-        txtAadharNo = (TextView) rootview.findViewById(R.id.txt_aadhar_no);
-        txtSrNo = (TextView) rootview.findViewById(R.id.txt_sr_no);
-        btnEdit = (ImageView) rootview.findViewById(R.id.img_edit);
-        btnRelease = (ImageView) rootview.findViewById(R.id.img_release);
-        edtTests = (TextView) rootview.findViewById(R.id.edt_test);
-        edtCH = (TextView) rootview.findViewById(R.id.clinical_history);
-        edtLA = (TextView) rootview.findViewById(R.id.edt_lab_alerts);
-        edtRemarks = (EditText) rootview.findViewById(R.id.customer_sign);
-        llBarcodes = (LinearLayout) rootview.findViewById(R.id.ll_barcodes);
-        tlBarcodes = (TableLayout) rootview.findViewById(R.id.tl_barcodes);
-        btnEdit.setVisibility(View.VISIBLE);*/
-        edt_email=(EditText)rootview.findViewById(R.id.edt_email);
-        edt_mobile=(EditText)rootview.findViewById(R.id.edt_mobile);
-        edt_email=(EditText)rootview.findViewById(R.id.edt_email);
-    }
-
-    private void initScanBarcodeView() {
-//        View scanBarcodeView = activity.getLayoutInflater().inflate(R.layout.item_list_view, null);
-//        ListView lv = (ListView) scanBarcodeView.findViewById(R.id.lv_barcodes);
-//        displayScanBarcodeItemListAdapter = new DisplayScanBarcodeItemListAdapter(activity, beneficiaryDetailsModel.getBarcodedtl(), new ScanBarcodeIconClickedDelegateResult());
-//        lv.setAdapter(displayScanBarcodeItemListAdapter);
-        if (beneficiaryDetailsModel != null
-                && beneficiaryDetailsModel.getBarcodedtl() != null
-                && beneficiaryDetailsModel.getBarcodedtl().size() > 0) {
-            tlBarcodes.removeAllViews();
-            for (final BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel :
-                    beneficiaryDetailsModel.getBarcodedtl()) {
-                TableRow tr = (TableRow) activity.getLayoutInflater().inflate(R.layout.item_scan_barcode, null);
-                TextView txtSampleType = (TextView) tr.findViewById(R.id.txt_sample_type);
-                TextView edtBarcode = (TextView) tr.findViewById(R.id.edt_barcode);
-                ImageView imgScan = (ImageView) tr.findViewById(R.id.scan_barcode_button);
-                txtSampleType.setText(beneficiaryBarcodeDetailsModel.getSamplType());
-                edtBarcode.setText(beneficiaryBarcodeDetailsModel.getBarcode());
-                imgScan.setOnClickListener(new View.OnClickListener() {
+        ll_test_scan = (LinearLayout) rootview.findViewById(R.id.ll_test_scan);
+        edt_test_alerts = (TextView) rootview.findViewById(R.id.edt_test_alerts);
+        edt_name = (EditText) rootview.findViewById(R.id.edt_name);
+        edt_mobile = (EditText) rootview.findViewById(R.id.edt_mobile);
+        edt_email = (EditText) rootview.findViewById(R.id.edt_email);
+        edt_name.setText("" + beneficiaryDetailsArr.getName());
+        btn_scan_qr = (Button) rootview.findViewById(R.id.btn_scan_qr);
+        btn_enter_manually = (Button) rootview.findViewById(R.id.btn_enter_manually);
+        btn_next = (Button) rootview.findViewById(R.id.btn_next);
+        btn_scan_qr.setVisibility(View.GONE);
+        btn_enter_manually.setVisibility(View.VISIBLE);
+        ll_tests = (LinearLayout) rootview.findViewById(R.id.ll_tests);
+        tv_age = (TextView) rootview.findViewById(R.id.tv_age);
+        tv_gender = (TextView) rootview.findViewById(R.id.tv_gender);
+        sp_test = (Spinner) rootview.findViewById(R.id.sp_tests);
+        tv_age.setText("Age: " + beneficiaryDetailsArr.getAge());
+        tv_gender.setText("| Gender: " + beneficiaryDetailsArr.getGender());
+        ll_tests.setVisibility(View.GONE);
+        for (int i = 0; i < beneficiaryDetailsArr.getSampleType().size(); i++) {
+            tests_iems.add(beneficiaryDetailsArr.getSampleType().get(i).getSampleType());
+        }
+        test_codes = beneficiaryDetailsArr.getTestsCode();
+        test_code_arr = test_codes.split(",");
+        Logger.error("arr: " + test_code_arr.toString());
+        Logger.error("test code string: " + test_codes);
+        edt_test_alerts.setText(test_code_arr[0]);
+        if (beneficiaryDetailsArr.getSampleType().size() > 0) {
+            for (int i = 0; i < beneficiaryDetailsArr.getSampleType().size(); i++) {
+                LayoutInflater vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v = vi.inflate(R.layout.item_scan_barcode, null);
+                TextView txt_sample_type=(TextView)v.findViewById(R.id.txt_sample_type);
+                TextView edt_barcode=(TextView)v.findViewById(R.id.edt_barcode);
+                ImageView scan_barcode_button=(ImageView)v.findViewById(R.id.scan_barcode_button);
+                scan_barcode_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
-                        intentIntegrator = new IntentIntegrator(activity) {
+                        integrator = new IntentIntegrator(getActivity()) {
                             @Override
                             protected void startActivityForResult(Intent intent, int code) {
-                                CampBeneficiaryDetailsScanBarcodeFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+                                this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+
                             }
                         };
-                        intentIntegrator.initiateScan();
+                        integrator.initiateScan();
                     }
                 });
-                edtBarcode.setOnClickListener(new View.OnClickListener() {
+                ll_test_scan.addView(v, i, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            }
+        }
+
+        edt_test_alerts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflater = activity.getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
+                builder.setView(dialogView);
+                ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
+                Button btn_edit = (Button) dialogView.findViewById(R.id.btn_edit);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_list_item_1, test_code_arr);
+                lv_test_codes.setAdapter(adapter);
+                btn_edit.setVisibility(View.GONE);
+
+            /*    btn_edit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
-                        AddSampleBarcodeDialog sampleBarcodeDialog = new AddSampleBarcodeDialog(activity, new AddSampleBarcodeDialogDelegate() {
-                            @Override
-                            public void onSampleBarcodeAdded(String scanned_barcode) {
-                                if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                                    for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
-                                        if (currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
-                                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
-                                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                                            break;
-                                        }
-                                    }
-                                    initData();
-                                }
-                            }
-                        });
-                        sampleBarcodeDialog.show();
+                        Logger.error("btn click");
+
+                        TestRateMasterDao testRateMasterDao=new TestRateMasterDao(dhbDao.getDb());
+                        for (CampDetailsBenMasterModel campDetailsBenMasterModel:campAllOrderDetailsModel.getBenMaster()
+                             ) {
+                            //if(campAllOrderDetailsModel.getBrandId()!=campDetailsBenMasterModel.getBenId())
+                            testRateMasterModels.addAll(testRateMasterDao.getModelsFromTestCodes(campDetailsBenMasterModel.getTestsCode()));
+                        }
+                        //testRateMasterModels=new TestRateMasterModel();
+                        testRateMasterModels= testRateMasterDao.getModelsFromTestCodes(test_codes);
+                        Logger.error("testRateMasterModels: "+testRateMasterModels.size());
+
                     }
-                });
-                tlBarcodes.addView(tr);
+                });*/
+                builder.show();
             }
-            llBarcodes.setVisibility(View.VISIBLE);
-        }
+
+        });
+
     }
 
-    private void clickPhoto() {
-        final CharSequence[] items = {"Take Photo"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Choose Action");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                boolean result = DeviceUtils.checkPermission(activity);
-                if (items[item].equals("Take Photo")) {
-                    userChoosenTask = "Take Photo";
-                    if (result)
-                        cameraIntent();
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BundleConstants.START_BARCODE_SCAN) {
-            IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-            if ((scanningResult != null) && (scanningResult.getContents() != null)) {
-                String scanned_barcode = scanningResult.getContents();
-                if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                    for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
-                        if (currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
-                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
-                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                            break;
-                        }
-                    }
-                    initData();
-                }
-            }
-        }
-        if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
-            onCaptureImageResult(data);
-        }
-        if (requestCode == BundleConstants.EDIT_TESTS_START && resultCode == BundleConstants.EDIT_TESTS_FINISH) {
-            String testsCode = "";
-            ArrayList<TestRateMasterModel> selectedTests = new ArrayList<>();
-            selectedTests = data.getExtras().getParcelableArrayList(BundleConstants.SELECTED_TESTS_LIST);
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        Toast.makeText(activity, "scanned res " + scanningResult, Toast.LENGTH_SHORT).show();
+        if (scanningResult != null && scanningResult.getContents() != null) {
+            //  String scanned_barcode = scanningResult.getContents();
+            Logger.error("" + scanningResult);
+            Logger.error("scanned_barcode " + scanningResult.getContents());
+            Toast.makeText(activity, "" + scanningResult, Toast.LENGTH_SHORT).show();
+           // callsendQRCodeApi(scanningResult.getContents());
 
-            int selectedTestsTotalCost = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_TOTAL_COST);
-            int selectedTestsDiscount = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_DISCOUNT);
-            int selectedTestsIncentive = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_INCENTIVE);
-
-            orderDetailsModel.setAmountDue(selectedTestsTotalCost);
-            orderDetailsModel.setDiscount(selectedTestsDiscount);
-            orderDetailsModel.setMargin(selectedTestsIncentive);
-            orderDetailsDao.insertOrUpdate(orderDetailsModel);
-
-            if (selectedTests != null) {
-                for (TestRateMasterModel testRateMasterModel :
-                        selectedTests) {
-                    if (InputUtils.isNull(testsCode)) {
-                        testsCode = testRateMasterModel.getTestCode();
-                    } else {
-                        testsCode = testsCode + "," + testRateMasterModel.getTestCode();
-                    }
-                }
-                ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
-                for (TestRateMasterModel trmm :
-                        selectedTests) {
-                    for (TestSampleTypeModel tstm :
-                            trmm.getSampltype()) {
-                        BeneficiarySampleTypeDetailsModel bstdm = new BeneficiarySampleTypeDetailsModel();
-                        bstdm.setBenId(beneficiaryDetailsModel.getBenId());
-                        bstdm.setSampleType(tstm.getSampleType());
-                        bstdm.setId(tstm.getId());
-                        if (!samples.contains(bstdm)) {
-                            samples.add(bstdm);
-                        }
-                    }
-                }
-                beneficiaryDetailsModel.setSampleType(samples);
-            }
-            beneficiaryDetailsModel.setTestsList(selectedTests);
-            beneficiaryDetailsModel.setTestsCode(testsCode);
-            beneficiaryDetailsModel.setTests(testsCode);
-            edtTests.setText(testsCode);
-            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-            initData();
-        }
-        if (requestCode == BundleConstants.ADD_EDIT_START && resultCode == BundleConstants.ADD_EDIT_FINISH) {
-            beneficiaryDetailsModel = data.getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
-            orderDetailsModel = data.getExtras().getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
-            initData();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+           // callsendQRCodeApi("jhjhj");
+            Toast.makeText(activity, "no result", Toast.LENGTH_SHORT).show();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void onCaptureImageResult(Intent data) {
-        thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        /*File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
-        FileOutputStream fo;
-        try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        encodedVanipunctureImg = encodeImage(thumbnail);
-        beneficiaryDetailsModel.setVenepuncture(decodedImageBytes(encodedVanipunctureImg));
-        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-    }
-
-    private void cameraIntent() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_CAMERA);
-    }
-
-    private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
-        @Override
-        public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark) {
-            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
-            orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
-            orderStatusChangeRequestModel.setRemarks(remark);
-            orderStatusChangeRequestModel.setStatus(11);
-            ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
-            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeApiAsyncTaskDelegateResult(orderDetailsModel));
-            if (isNetworkAvailable(activity)) {
-                orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
-            } else {
-                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-            }
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btn_enter_manually) {
+            Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
+            //intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModels);
+            startActivity(intentOrderBooking);
         }
-
-        @Override
-        public void onCancelButtonClicked() {
-
-        }
-    }
-
-    private class OrderStatusChangeApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
-        OrderDetailsModel orderDetailsModel;
-
-        public OrderStatusChangeApiAsyncTaskDelegateResult(OrderDetailsModel orderDetailsModel) {
-            this.orderDetailsModel = orderDetailsModel;
-        }
-
-        @Override
-        public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode == 200) {
-                if (userChoosenReleaseTask.equals("Order Cancellation")) {
-                    if (!isCancelRequesGenereted) {
-                        isCancelRequesGenereted = true;
-                        orderDetailsModel.setStatus("Cancellation Request");
-                        orderDetailsDao.insertOrUpdate(orderDetailsModel);
-                        Toast.makeText(activity, "Order cancellation request generated successfully", Toast.LENGTH_SHORT).show();
-                        CancelOrderDialog.ll_reason_for_cancel.setVisibility(View.GONE);
-                        CancelOrderDialog.ll_enter_otp.setVisibility(View.VISIBLE);
-                        cod.show();
-                    } else {
-                        orderDetailsModel.setStatus("CANCELLED");
-                        orderDetailsDao.insertOrUpdate(orderDetailsModel);
-                        Toast.makeText(activity, "Order cancelled Successfully", Toast.LENGTH_SHORT).show();
-                        activity.finish();
-                    }
-                } else {
-                    orderDetailsModel.setStatus("RESCHEDULED");
-                    orderDetailsDao.insertOrUpdate(orderDetailsModel);
-                    Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
-                    activity.finish();
-                }
-            } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onApiCancelled() {
-            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private class OrderCancelDialogButtonClickedDelegateResult implements OrderCancelDialogButtonClickedDelegate {
-
-        @Override
-        public void onOkButtonClicked(OrderDetailsModel orderVisitDetailsModel, String remark) {
-            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
-            orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
-            orderStatusChangeRequestModel.setRemarks(remark);
-            orderStatusChangeRequestModel.setStatus(12);
-            ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
-            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeApiAsyncTaskDelegateResult(orderDetailsModel));
-            if (isNetworkAvailable(activity)) {
-                orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
-            } else {
-                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onCancelButtonClicked() {
+        if (v.getId() == R.id.btn_next) {
 
         }
     }

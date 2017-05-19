@@ -39,19 +39,14 @@ public class CampBeneficiaryScreenSlidePagerAdapter extends FragmentStatePagerAd
         CampAllOrderDetailsModel campAllOrderDetailsModel = new CampAllOrderDetailsModel();
         for (CampAllOrderDetailsModel orderDetails:
                 allOrderDetailsModels) {
-            if(orderDetails.getOrderNo().equals(beneficiaryDetailsArr.get(position).getName())){
+            if(orderDetails.getOrderNo().equals(beneficiaryDetailsArr.get(position).getOrderNo())){
                 campAllOrderDetailsModel = orderDetails;
                 break;
             }
         }
         bundle.putParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL,beneficiaryDetailsArr.get(position));
-        bundle.putParcelable(BundleConstants.ORDER_DETAILS_MODEL,campAllOrderDetailsModel);
-      /* return CampBeneficiaryDetailsScanBarcodeFragment.newInstance(bundle, new RefreshBeneficiariesSliderDelegate() {
-            @Override
-            public void onRefreshActionCallbackReceived(OrderVisitDetailsModel orderVisitDetailsModel) {
-               //refreshBeneficiariesSliderDelegate.onRefreshActionCallbackReceived(orderVisitDetailsModel);
-            }
-        });*/
+        bundle.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL,campAllOrderDetailsModel);
+
       return  CampBeneficiaryDetailsScanBarcodeFragment.newInstance(bundle, new RefreshCampBeneficiariesSliderDelegate() {
           @Override
           public void onRefreshActionCallbackReceived(CampListDisplayResponseModel campListDisplayResponseModel) {

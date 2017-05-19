@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.activity.CampOrderBookingActivity;
 import com.dhb.activity.HomeScreenActivity;
-import com.dhb.activity.OrderBookingActivity;
 import com.dhb.adapter.CampListDetailDisplayAdapter;
 import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BeneficiaryDetailsDao;
@@ -24,11 +23,11 @@ import com.dhb.dao.models.OrderDetailsDao;
 import com.dhb.delegate.CampListDisplayRecyclerViewAdapterDelegate;
 import com.dhb.dialog.ConfirmOrderReleaseDialog;
 import com.dhb.models.api.request.CampStartedRequestModel;
-import com.dhb.models.api.response.CampDetailsOrderDetailsResponseModel;
+import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
+import com.dhb.models.data.CampAllOrderDetailsModel;
 import com.dhb.models.data.CampBtechModel;
 import com.dhb.models.data.CampDetailModel;
-import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -70,31 +69,16 @@ public class CampListDisplayFragment extends AbstractFragment {
     CampListDetailDisplayAdapter campListDetailDisplayAdapter;
     private int position;
     IntentIntegrator integrator;
+    private ArrayList<CampAllOrderDetailsModel> campAllOrderDetailsModelslist;
 
     public CampListDisplayFragment() {
         // Required empty public constructor
     }
 
     public static CampListDisplayFragment newInstance() {
-        CampListDisplayFragment fragment = new CampListDisplayFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new CampListDisplayFragment();
     }
 
-    /*  @Override
-      public void onCreate(Bundle savedInstanceState) {
-          super.onCreate(savedInstanceState);
-          activity = (HomeScreenActivity) getActivity();
-          appPreferenceManager = new AppPreferenceManager(activity);
-          dhbDao = new DhbDao(activity);
-          orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
-          beneficiaryDetailsDao = new BeneficiaryDetailsDao(dhbDao.getDb());
-          if (getArguments() != null) {
-
-          }
-      }
-  */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -102,17 +86,11 @@ public class CampListDisplayFragment extends AbstractFragment {
         initUI();
         activity = (HomeScreenActivity) getActivity();
         appPreferenceManager = new AppPreferenceManager(activity);
-      /*  Date questionDate = stringToDate("5/10/2017");
-        Logger.error(""+questionDate);*/
-      /*  if (removeTime(questionDate).equals(removeTime(questionDate))) {
-            Logger.error(" campDetail if");
-        } else {
-            Logger.error("campDetail else ");
-        }*/
         fetchData();
         setListener();
         return rootView;
     }
+
     public Date removeTime(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -136,6 +114,7 @@ public class CampListDisplayFragment extends AbstractFragment {
         }
         return null;
     }
+
     private void setListener() {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -242,10 +221,11 @@ public class CampListDisplayFragment extends AbstractFragment {
         }
         if (i == 3) {
             campStartedApiAsyncTask.setApiCallAsyncTaskDelegate(new CampArrivedAsyncTaskDelegateResult());
-        } if (i == 0) {
+        }
+        if (i == 0) {
             Intent intent = new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:" +campDetailModel.getLeaderContactNo()));
-            activity.startActivity(intent);
+            intent.setData(Uri.parse("tel:" + campDetailModel.getLeaderContactNo()));
+            startActivity(intent);
         }
 
         if (isNetworkAvailable(activity)) {
@@ -254,7 +234,6 @@ public class CampListDisplayFragment extends AbstractFragment {
             Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
     private class CampStartedAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -298,11 +277,17 @@ public class CampListDisplayFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
 
-              /*  Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
-                intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL,campDetailModels);
+                Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
+                intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModels);
+             /*   if(campDetailModels!=null){
+                    Logger.error(TAG_FRAGMENT+"campDetailModels not null");
+                }else {
+                    Logger.error(TAG_FRAGMENT+"campDetailModels null");
+                }*/
                 startActivity(intentOrderBooking);
-*/
-                pushFragments(CampManualWOEFragment.newInstance(),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+
+                // pushFragments(CampManualWOEFragment.newInstance(),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+
                /* integrator = new IntentIntegrator(getActivity()) {
                     @Override
                     protected void startActivityForResult(Intent intent, int code) {
@@ -324,11 +309,8 @@ public class CampListDisplayFragment extends AbstractFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         Toast.makeText(activity, "scanned res " + scanningResult, Toast.LENGTH_SHORT).show();
-        if(requestCode==BundleConstants.CMD_START && resultCode==BundleConstants.CMD_ARRIVED){
-            CampDetailsOrderDetailsResponseModel campDetailsOrderDetailsResponseModel = data.getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
-            Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
-            intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL,campDetailsOrderDetailsResponseModel);
-            startActivity(intentOrderBooking);
+        if (requestCode == BundleConstants.CMD_START && resultCode == BundleConstants.CMD_ARRIVED) {
+
         }
         if (scanningResult != null && scanningResult.getContents() != null) {
             //  String scanned_barcode = scanningResult.getContents();
@@ -360,9 +342,24 @@ public class CampListDisplayFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
-            }else {
-                Toast.makeText(activity, "error : "+json, Toast.LENGTH_SHORT).show();
+                ResponseParser responseParser = new ResponseParser(activity);
+                CampScanQRResponseModel campScanQRResponseModel = new CampScanQRResponseModel();
+                campScanQRResponseModel = responseParser.getcampOrderDetailsResponseModel(json, statusCode);
+                if (campScanQRResponseModel != null && campScanQRResponseModel.getAllOrderdetails().size() > 0) {
+                    for (int i = 0; i < campScanQRResponseModel.getAllOrderdetails().size(); i++) {
+                        for (int j = 0; j <
+                                campScanQRResponseModel.getAllOrderdetails().get(i).getBenMaster().size(); j++) {
+                            campScanQRResponseModel.getAllOrderdetails().get(i).getBenMaster().get(j).setOrderNo(campScanQRResponseModel.getAllOrderdetails().get(i).getOrderNo());
+                        }
+                    }
+                    campAllOrderDetailsModelslist = campScanQRResponseModel.getAllOrderdetails();
+                    Logger.error("camp detail size " + campScanQRResponseModel.getAllOrderdetails().size());
+                }
+                Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
+                intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campScanQRResponseModel);
+                startActivity(intentOrderBooking);
+            } else {
+                Toast.makeText(activity, "error : " + json, Toast.LENGTH_SHORT).show();
             }
         }
 
