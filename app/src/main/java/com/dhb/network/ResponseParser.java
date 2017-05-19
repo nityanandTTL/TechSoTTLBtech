@@ -19,6 +19,7 @@ import com.dhb.models.api.response.FetchOrderDetailsResponseModel;
 import com.dhb.models.api.response.LoginResponseModel;
 import com.dhb.models.api.response.MaterialINVResponseModel;
 import com.dhb.models.api.response.MessageModel;
+import com.dhb.models.api.response.PaymentProcessAPIResponseModel;
 import com.dhb.models.api.response.SelfieUploadResponseModel;
 import com.dhb.models.api.response.SessionExpireModel;
 import com.dhb.models.data.BrandMasterModel;
@@ -27,6 +28,7 @@ import com.dhb.models.data.DepositRegisterModel;
 import com.dhb.models.data.EarningRegisterModel;
 import com.dhb.models.data.LeaveNatureMasterModel;
 import com.dhb.models.data.MaterialDetailsModel;
+import com.dhb.models.data.NarrationMasterModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.models.data.SlotModel;
 import com.dhb.models.data.VersionControlMasterModel;
@@ -771,6 +773,31 @@ public class ResponseParser implements AppConstants {
 		TypeToken<ArrayList<LeaveNatureMasterModel>> token =new TypeToken<ArrayList<LeaveNatureMasterModel>>(){};
 		leaveNatureMasterModels = gson.fromJson(json,token.getType());
 		return leaveNatureMasterModels;
+	}
+
+	////Fetch Narration Master Response parse:
+	public ArrayList<NarrationMasterModel>  getNarrationMasterResponse (String json, int statusCode) {
+		ArrayList<NarrationMasterModel> narrationMasterModels = null;
+		TypeToken<ArrayList<NarrationMasterModel>> token =new TypeToken<ArrayList<NarrationMasterModel>>(){};
+		narrationMasterModels = gson.fromJson(json,token.getType());
+		return narrationMasterModels;
+	}
+
+	////Fetch Payment Modes Response parse:
+	public ArrayList<PaymentProcessAPIResponseModel> getPaymentModesResponse(String json, int statusCode) {
+		ArrayList<PaymentProcessAPIResponseModel> paymentModes = null;
+		TypeToken<ArrayList<PaymentProcessAPIResponseModel>> token =new TypeToken<ArrayList<PaymentProcessAPIResponseModel>>(){};
+		paymentModes = gson.fromJson(json,token.getType());
+		return paymentModes;
+	}
+
+	////Fetch Payment Pass Inputs Response parse:
+	public PaymentProcessAPIResponseModel getPaymentPassInputsResponse(String json, int statusCode) {
+		PaymentProcessAPIResponseModel paymentInputs = null;
+		if(!parseIntoError(json,statusCode)) {
+			paymentInputs = gson.fromJson(json, PaymentProcessAPIResponseModel.class);
+		}
+		return paymentInputs;
 	}
 
 	////Fetch VersionControl  details Response parse:
