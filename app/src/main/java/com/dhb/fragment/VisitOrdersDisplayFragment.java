@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.activity.OrderBookingActivity;
-import com.dhb.activity.VisitOrderMapDisplayFragmentActivity;
+import com.dhb.activity.VisitOrderDetailMapDisplayFragmentActivity;
 import com.dhb.adapter.VisitOrderDisplayAdapter;
 import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BeneficiaryDetailsDao;
@@ -96,11 +96,17 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                fetchData();
                 swipeRefreshLayout.setRefreshing(false);
-                prepareRecyclerView();
             }
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        fetchData();
+        super.onResume();
     }
 
     private void fetchData() {
@@ -155,6 +161,10 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                                     for (BeneficiaryDetailsModel beneficiaryDetailsModel :
                                             orderDetailsModel.getBenMaster()) {
                                         beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                                        beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
+                                        for (int i=0;i<beneficiaryDetailsModel.getSampleType().size();i++) {
+                                            beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                        }
                                         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
                                     }
                                     orderDetailsDao.insertOrUpdate(orderDetailsModel);
@@ -192,7 +202,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
         @Override
         public void onNavigationStart(OrderVisitDetailsModel orderVisitDetailsModel) {
-            Intent intentNavigate = new Intent(activity, VisitOrderMapDisplayFragmentActivity.class);
+            Intent intentNavigate = new Intent(activity, VisitOrderDetailMapDisplayFragmentActivity.class);
             intentNavigate.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL,orderVisitDetailsModel);
             startActivityForResult(intentNavigate,BundleConstants.VOMD_START);
         }

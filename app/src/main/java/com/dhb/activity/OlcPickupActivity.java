@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.dhb.R;
 import com.dhb.dao.DhbDao;
-import com.dhb.fragment.OlcMasterBarcodeFragment;
+import com.dhb.fragment.OlcMasterBarcodeScanFragment;
 import com.dhb.models.data.BtechClientsModel;
 import com.dhb.uiutils.AbstractActivity;
 import com.dhb.utils.app.AppPreferenceManager;
@@ -40,7 +40,7 @@ public class OlcPickupActivity extends AbstractActivity {
         btechClientsModel = getIntent().getExtras().getParcelable(BundleConstants.BTECH_CLIENTS_MODEL);
         initUI();
         initListeners();
-        pushFragments(OlcMasterBarcodeFragment.newInstance(btechClientsModel),false,false,OlcMasterBarcodeFragment.TAG_FRAGMENT,R.id.fl_olc_pickup,TAG_ACTIIVTY);
+        pushFragments(OlcMasterBarcodeScanFragment.newInstance(btechClientsModel),false,false, OlcMasterBarcodeScanFragment.TAG_FRAGMENT,R.id.fl_olc_pickup,TAG_ACTIIVTY);
     }
 
     private void initListeners() {

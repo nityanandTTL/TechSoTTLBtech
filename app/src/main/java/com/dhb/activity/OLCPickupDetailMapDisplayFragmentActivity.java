@@ -14,7 +14,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -24,12 +27,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
-import com.dhb.models.api.request.OrderStatusChangeRequestModel;
-import com.dhb.models.data.OrderVisitDetailsModel;
+import com.dhb.models.api.request.OlcStartRequestModel;
+import com.dhb.models.data.BtechClientsModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.GPSTracker;
 import com.dhb.utils.fileutils.DataParser;
@@ -65,9 +69,10 @@ import java.util.Locale;
 import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
 
 
-public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
+public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
-    public static final String TAG_FRAGMENT = VisitOrderMapDisplayFragmentActivity.class.getSimpleName();
+    private static final String TAG = OLCPickupDetailMapDisplayFragmentActivity.class.getSimpleName();
+    public static final String TAG_FRAGMENT = OLCPickupDetailMapDisplayFragmentActivity.class.getSimpleName();
     private GoogleMap mMap;
     private ArrayList<LatLng> MarkerPoints;
     private GoogleApiClient mGoogleApiClient;
@@ -76,52 +81,71 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
     private LocationRequest mLocationRequest;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private Button btn_startNav, btn_arrived;
+
     private FragmentActivity activity;
-    private OrderVisitDetailsModel orderVisitDetailsModel;
-    private TextView txtName,txtAge,txtSrNo,txtAadharNo;
-    private ImageView imgRelease,imgDistance;
+    private BtechClientsModel btechClientsModel;
+
+    private TextView txtName, txtAge, txtSrNo, txtAadharNo;
+    private ImageView imgRelease, imgDistance;
     private TextView txtDistance;
     private TextView txtAddress;
-    private String  address;
+    private AppPreferenceManager appPreferenceManager;
+    private Geocoder geocoder;
+    private List<Address> addresses;
+    private String address, city;
+    private ImageView title_aadhar_icon, title_distance_icon;
     private double destlat,destlong,currentlat,currentlong;
     private int Integertotaldiff;
+    private boolean isStarted = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_map_display);
         activity = this;
-        Bundle bundle= new Bundle();
-        bundle = getIntent().getExtras();
-        orderVisitDetailsModel = bundle.getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
+        appPreferenceManager = new AppPreferenceManager(activity);
+        btechClientsModel = getIntent().getExtras().getParcelable(BundleConstants.BTECH_CLIENTS_MODEL);
+
         initUI();
         initData();
-        address= getAddress(Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()),Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude()));
+        Log.e(TAG, "onCreate: lat "+Double.parseDouble(btechClientsModel.getLatitude())+" long "+Double.parseDouble(btechClientsModel.getLongitude()) );
+        address = getAddress(Double.parseDouble(btechClientsModel.getLatitude()), Double.parseDouble(btechClientsModel.getLongitude()));
+        Log.e(TAG, "onCreate: address "+address );
         setListeners();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
-        // Initializing
+
         MarkerPoints = new ArrayList<>();
+
     }
 
-    private void initData() {
-        txtAge.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getAge()+" Y | "+orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
-        txtName.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
-        txtSrNo.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getBenId()+"");
-        txtDistance.setText(orderVisitDetailsModel.getDistance()+"");
-        txtDistance.setVisibility(View.VISIBLE);
-        imgDistance.setVisibility(View.VISIBLE);
-        imgRelease.setVisibility(View.INVISIBLE);
-        txtAddress.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
-    }
 
     private void setListeners() {
         btn_arrived.setOnClickListener(this);
         btn_startNav.setOnClickListener(this);
-        double totaldist = distFrom(19.061745,73.0254561,19.0771,72.999);
+        double totaldist = distFrom(currentlat,currentlong,destlat,destlong);
 
         Integertotaldiff = (int) totaldist;
-        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
+        btn_arrived.setVisibility(View.GONE);
+    }
+
+    private String getAddress(double latitude, double longitude) {
+        StringBuilder result = new StringBuilder();
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0) {
+                Address address = addresses.get(0);
+                result.append(address.getLocality()).append("\n");
+                result.append(address.getCountryName());
+            }
+        } catch (IOException e) {
+            Log.e("tag", e.getMessage());
+        }
+
+        return result.toString();
     }
 
     private void initUI() {
@@ -129,14 +153,16 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         btn_startNav = (Button) findViewById(R.id.btn_startNav);
         txtName = (TextView) findViewById(R.id.txt_name);
         txtAge = (TextView) findViewById(R.id.txt_age);
+        txtAge.setVisibility(View.INVISIBLE);
         txtAadharNo = (TextView) findViewById(R.id.txt_aadhar_no);
+        txtAadharNo.setVisibility(View.INVISIBLE);
         txtSrNo = (TextView) findViewById(R.id.txt_sr_no);
         txtDistance = (TextView) findViewById(R.id.tv_distance);
         txtAddress = (TextView) findViewById(R.id.title_est_address);
         imgRelease = (ImageView) findViewById(R.id.img_release);
         imgDistance = (ImageView) findViewById(R.id.title_distance_icon);
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        title_aadhar_icon = (ImageView) findViewById(R.id.title_aadhar_icon);
+        title_distance_icon = (ImageView) findViewById(R.id.title_distance_icon);
         SupportMapFragment mapFragment = (SupportMapFragment) activity.getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -154,13 +180,11 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
                     buildGoogleApiClient();
                     mMap.setMyLocationEnabled(true);
                 }
-//===========================
                 final GPSTracker gpsTracker = new GPSTracker(activity);
                 if (gpsTracker.canGetLocation() && !gpsTracker.isInternetAvailable()) {
-                    Log.e(TAG_FRAGMENT, "onMapReady: location : " + Double.toString(gpsTracker.getLatitude()) + "long " + gpsTracker.getLongitude());
+                    Log.e(TAG, "onMapReady: location : " + Double.toString(gpsTracker.getLatitude()) + "long " + gpsTracker.getLongitude());
+
                     final LatLng currentLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
-                    //     mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker in Sydney"));
-                    //    mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
                     if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
                         //    ActivityCompat#requestPermissions
@@ -172,106 +196,37 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
                         return;
                     }
                     MarkerPoints.add(currentLocation);
-                    Logger.error("orderVisitDetailsModel lat"+orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()+"long "+orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude());
-                    destlat= Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
-                    destlong= Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
+                    Logger.error("btechClientsModel lat" + btechClientsModel.getLatitude() + "long " + btechClientsModel.getLongitude());
+                    destlat= Double.parseDouble(btechClientsModel.getLatitude());
+                    destlong= Double.parseDouble(btechClientsModel.getLongitude());
+//                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
                     LatLng destTempLocation = new LatLng(destlat, destlong);
-                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
+
+                    String url = getUrl(currentLocation, destTempLocation);
                     MarkerOptions options = new MarkerOptions();
                     options.position(destTempLocation);
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                     mMap.addMarker(options);
-                    // mMap.addMarker(new MarkerOptions().position(destTempLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_24dp)));
-                    LatLng dest = destTempLocation;
-                    LatLng origin = currentLocation;
-                    String url = getUrl(origin, dest);
                     Log.d("onMapClick", url.toString());
                     FetchUrl FetchUrl = new FetchUrl();
 
                     // Start downloading json data from Google Directions API
                     FetchUrl.execute(url);
                     //move map camera
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
-                    Log.e(TAG_FRAGMENT, "onMapReady: ");
-                    //    moveToCurrentLocation(currentLocation);
-                    //=====================
-                /*    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                        @Override
-                        public void onMapClick(LatLng point) {
-                            // Already two locations
-                            if (MarkerPoints.size() > 1) {
-                                MarkerPoints.clear();
-                                mMap.clear();
-                            }
-                            //1 to create current
-                            MarkerPoints.add(point);
-                            MarkerOptions options = new MarkerOptions();
-                            options.position(point);
+                    Log.e(TAG, "onMapReady: ");
 
-                            *//**
-                             * For the start location, the color of marker is GREEN and
-                             * for the end location, the color of marker is RED.*//*
-
-                            if (MarkerPoints.size() == 1) {
-                                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                            } else if (MarkerPoints.size() == 2) {
-                                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                            }
-
-
-                            // Add new marker to the Google Map Android API V2
-                            mMap.addMarker(options);
-
-                            // Checks, whether start and end locations are captured
-                            if (MarkerPoints.size() >= 2) {
-                                LatLng origin =currentLocation; MarkerPoints.get(0);
-
-                                LatLng destTempLocation = new LatLng(19.9975, 73.7898);
-                                LatLng dest = destTempLocation;MarkerPoints.get(1);
-//                                title_distance.setText("" + distance(MarkerPoints.get(0).latitude, MarkerPoints.get(0).longitude, MarkerPoints.get(1).latitude, MarkerPoints.get(1).longitude));
-                                Log.e(TAG_FRAGMENT, "onMapClick: distance " + "" + distance(MarkerPoints.get(0).latitude, MarkerPoints.get(0).longitude, MarkerPoints.get(1).latitude, MarkerPoints.get(1).longitude));
-                                // Getting URL to the Google Directions API
-                                String url = getUrl(origin, dest);
-                                Log.d("onMapClick", url.toString());
-                                FetchUrl FetchUrl = new FetchUrl();
-
-                                // Start downloading json data from Google Directions API
-                                FetchUrl.execute(url);
-                                //move map camera
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
-                                mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-                            }
-
-                        }
-
-                    });*/
                 } else {
                     gpsTracker.showSettingsAlert();
                     Toast.makeText(activity, "Check Internet connection and gps settings", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        btn_arrived.setVisibility(View.GONE);
     }
-    private String getAddress(double latitude, double longitude) {
-        StringBuilder result = new StringBuilder();
-        try {
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses.size() > 0) {
-                Address address = addresses.get(0);
-                result.append(address.getLocality()).append("\n");
-                result.append(address.getCountryName());
-            }
-        } catch (IOException e) {
-            Log.e("tag", e.getMessage());
-        }
 
-        return result.toString();
-    }
     private String getUrl(LatLng origin, LatLng dest) {
         // Origin of route
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
@@ -288,18 +243,6 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         return url;
     }
 
-    private void movingCurrentLocation(GPSTracker gpsTracker, LatLng currentLocation) {
-
-            /*Marker marker =*/
-        mMap.addMarker(new MarkerOptions()
-                .flat(true)
-                .icon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.ic_menu_camera))
-                .anchor(0.5f, 0.5f)
-                .position(
-                        new LatLng(gpsTracker.getLatitude(), gpsTracker
-                                .getLongitude())));
-    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -321,6 +264,21 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Integertotaldiff > 100 || !isStarted)
+        {
+            btn_arrived.setVisibility(View.INVISIBLE);
+            btn_startNav.setVisibility(View.VISIBLE);
+        }
+        else {
+            btn_arrived.setVisibility(View.VISIBLE);
+            btn_startNav.setVisibility(View.INVISIBLE);
+        }
 
     }
 
@@ -363,12 +321,13 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
+
         currentlat=location.getLatitude();
         currentlong=location.getLongitude();
 
-        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(),currentlong+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),currentlong+"", Toast.LENGTH_SHORT).show();
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
@@ -376,20 +335,6 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         //stop location updates
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        }
-
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (Integertotaldiff > 100)
-        {
-            btn_arrived.setVisibility(View.INVISIBLE);
-            btn_startNav.setVisibility(View.VISIBLE);
-        }
-        else {
-            btn_arrived.setVisibility(View.VISIBLE);
-            btn_startNav.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -401,54 +346,43 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         } else if (v.getId() == R.id.btn_startNav) {
             callOrderStatusChangeApi(7);
             Intent intent = new Intent(Intent.ACTION_VIEW,
-                 //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
-                    Uri.parse("google.navigation:q=an+"+address));
+                    //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
+                    Uri.parse("google.navigation:q=an+" + address));
             startActivity(intent);
         }
     }
 
     private void callOrderStatusChangeApi(int status) {
-
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
-
-        orderStatusChangeRequestModel.setId(""+orderVisitDetailsModel.getSlotId());
-        orderStatusChangeRequestModel.setStatus(status);
-        ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
-        if(status==3){
-            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangetoArrivedApiAsyncTaskDelegateResult());
-        }else {
-            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangetoStartApiAsyncTaskDelegateResult());
+        OlcStartRequestModel olcStartRequestModel = new OlcStartRequestModel();
+        olcStartRequestModel.setClientId("" + btechClientsModel.getClientId());
+        olcStartRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
+        olcStartRequestModel.setType(status);
+        ApiCallAsyncTask OlcStartApiAsyncTask = asyncTaskForRequest.getOlcStartRequestAsyncTask(olcStartRequestModel);
+        if (status == 3) {
+            OlcStartApiAsyncTask.setApiCallAsyncTaskDelegate(new OlcArrivedApiAsyncTaskDelegateResult());
+        } else {
+            OlcStartApiAsyncTask.setApiCallAsyncTaskDelegate(new OlcStartApiAsyncTaskDelegateResult());
         }
-      
+
         if (isNetworkAvailable(activity)) {
-            orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
+            OlcStartApiAsyncTask.execute(OlcStartApiAsyncTask);
         } else {
             Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class OrderStatusChangetoArrivedApiAsyncTaskDelegateResult  implements ApiCallAsyncTaskDelegate {
-        @Override
-        public void apiCallResult(String json, int statusCode) throws JSONException {
-            Logger.error(json);
-            if (statusCode == 204 || statusCode==200) {
-                Toast.makeText(activity, "Arrived Successfully", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent();
-                intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL,orderVisitDetailsModel);
-                setResult(BundleConstants.VOMD_ARRIVED,intent);
-                finish();
-
-            } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onApiCancelled() {
-            Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
-        }
+    private void initData() {
+        //  txtAge.setText(hubBTechModel.getCutOffTime());
+        txtName.setText(btechClientsModel.getName());
+        txtDistance.setText("" + btechClientsModel.getDistance() + " Km");
+        txtAddress.setText(btechClientsModel.getAddress() + " " + btechClientsModel.getPincode());
+        imgRelease.setVisibility(View.INVISIBLE);
+        txtDistance.setVisibility(View.VISIBLE);
+        title_aadhar_icon.setVisibility(View.INVISIBLE);
+        title_distance_icon.setVisibility(View.VISIBLE);
     }
+
 
     // Fetches data from url passed
     private class FetchUrl extends AsyncTask<String, Void, String> {
@@ -631,6 +565,124 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
             // You can add here other case statements according to your requirement.
         }
     }
+
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1))
+                * Math.sin(deg2rad(lat2))
+                + Math.cos(deg2rad(lat1))
+                * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        return (dist);
+    }
+
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
+    }
+
+
+    private class OlcArrivedApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show();
+            /*    Bundle bundle = new Bundle();
+                bundle.putParcelable(BundleConstants.BTECH_CLIENTS_MODEL, btechClientsModel);
+                OlcMasterBarcodeScanFragment olcMasterBarcodeFragment = new OlcMasterBarcodeScanFragment();
+                olcMasterBarcodeFragment.setArguments(bundle);
+                pushFragments(OlcMasterBarcodeScanFragment.newInstance(),false,false,OlcMasterBarcodeScanFragment.TAG_FRAGMENT,R.id.content_home_screen,TAG_FRAGMENT);*/
+                Intent intentResult = new Intent();
+                intentResult.putExtra(BundleConstants.BTECH_CLIENTS_MODEL, btechClientsModel);
+                setResult(BundleConstants.BCMD_ARRIVED, intentResult);
+               // startActivity(intentResult);
+                finish();
+            } else {
+                Toast.makeText(activity, "error : " + json, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class OlcStartApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if ((statusCode == 200)) {
+                if (Integertotaldiff > 100) {
+                    isStarted = true;
+                    btn_arrived.setVisibility(View.INVISIBLE);
+                    btn_startNav.setVisibility(View.VISIBLE);
+                } else {
+                    btn_arrived.setVisibility(View.VISIBLE);
+                    btn_startNav.setVisibility(View.INVISIBLE);
+                }
+
+            }
+        }
+
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void pushFragments(Fragment fragment, boolean shouldAnimate,
+                              boolean shouldAdd, String destinationFragmetTag, int frameLayoutContainerId, String CurrentFragmentTag) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        if (shouldAnimate){
+            // ft.setCustomAnimations(R.animator.fragment_slide_left_enter,
+            // R.animator.fragment_slide_left_exit,
+            // R.animator.fragment_slide_right_enter,
+            // R.animator.fragment_slide_right_exit);
+        }
+
+        ft.replace(frameLayoutContainerId, fragment, CurrentFragmentTag);
+
+        //ft.add(R.id.fr_layout_container, fragment, TAG_FRAGMENT);
+
+        if (shouldAdd){
+			/*
+			 * here you can create named backstack for realize another logic.
+			   <<<<<<< HEAD
+			                                                                                                                                                                                                                                                                                                                                                                                                   <<<<<<< HEAD
+			                                                                                                                                                                                                                                                                                                                                                                                                           /*
+			 * here you can create named backstack for realize another logic.
+			                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> bf799f243c1bd10ee4fb953d6481aa806925783f
+			                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> 7054f2ddd15b92e9724794839f298ccd266af5f2
+			   =======
+			                                                                                                                                                                                                                                                                                                                                                                                                                                                   <<<<<<< HEAD
+			                                                                                                                                                                                                                                                                                                                                                                                                                                                           /*
+			 * here you can create named backstack for realize another logic.
+			                                                                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> bf799f243c1bd10ee4fb953d6481aa806925783f
+			                                                                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> 7054f2ddd15b92e9724794839f298ccd266af5f2
+			   >>>>>>> 596a4e066e37214dd935f8db9f0f637d7af457c3
+			 * ft.addToBackStack("name of your backstack");
+			 */
+            ft.addToBackStack(destinationFragmetTag);
+        } else {
+			/*
+			 * and remove named backstack:
+			 * manager.popBackStack("name of your backstack",
+			 * FragmentManager.POP_BACK_STACK_INCLUSIVE); or remove whole:
+			 * manager.popBackStack(null,
+			 * FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			 */
+            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+
+        ft.commit();
+    }
     public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
         double earthRadius = 6371000; //meters
         double dLat = Math.toRadians(lat2-lat1);
@@ -642,27 +694,5 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         float dist = (float) (earthRadius * c);
 
         return dist;
-    }
-
-    private class OrderStatusChangetoStartApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
-        @Override
-        public void apiCallResult(String json, int statusCode) throws JSONException {
-            if(statusCode==204 || statusCode==200){
-                if (Integertotaldiff > 100)
-                {
-                    btn_arrived.setVisibility(View.INVISIBLE);
-                    btn_startNav.setVisibility(View.VISIBLE);
-                }
-                else {
-                    btn_arrived.setVisibility(View.VISIBLE);
-                    btn_startNav.setVisibility(View.INVISIBLE);
-                }
-            }
-        }
-
-        @Override
-        public void onApiCancelled() {
-
-        }
     }
 }

@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by Vendor3 on 5/16/2017.
  */
 
-public class PaymentCaptureResponseAPIResponseModel implements Parcelable {
+public class PaymentDoCaptureResponseAPIResponseModel implements Parcelable {
     private String ResponseCode;
     private String TransactionId;
     private String OrderNo;
@@ -18,10 +18,10 @@ public class PaymentCaptureResponseAPIResponseModel implements Parcelable {
     private String ResponseMessage;
     private PaymentProcessAPIResponseModel ReqParameters;
 
-    public PaymentCaptureResponseAPIResponseModel() {
+    public PaymentDoCaptureResponseAPIResponseModel() {
     }
 
-    protected PaymentCaptureResponseAPIResponseModel(Parcel in) {
+    protected PaymentDoCaptureResponseAPIResponseModel(Parcel in) {
         ResponseCode = in.readString();
         TransactionId = in.readString();
         OrderNo = in.readString();
@@ -51,15 +51,15 @@ public class PaymentCaptureResponseAPIResponseModel implements Parcelable {
         return 0;
     }
 
-    public static final Creator<PaymentCaptureResponseAPIResponseModel> CREATOR = new Creator<PaymentCaptureResponseAPIResponseModel>() {
+    public static final Creator<PaymentDoCaptureResponseAPIResponseModel> CREATOR = new Creator<PaymentDoCaptureResponseAPIResponseModel>() {
         @Override
-        public PaymentCaptureResponseAPIResponseModel createFromParcel(Parcel in) {
-            return new PaymentCaptureResponseAPIResponseModel(in);
+        public PaymentDoCaptureResponseAPIResponseModel createFromParcel(Parcel in) {
+            return new PaymentDoCaptureResponseAPIResponseModel(in);
         }
 
         @Override
-        public PaymentCaptureResponseAPIResponseModel[] newArray(int size) {
-            return new PaymentCaptureResponseAPIResponseModel[size];
+        public PaymentDoCaptureResponseAPIResponseModel[] newArray(int size) {
+            return new PaymentDoCaptureResponseAPIResponseModel[size];
         }
     };
 

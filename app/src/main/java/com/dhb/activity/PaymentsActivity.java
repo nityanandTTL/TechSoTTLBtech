@@ -1,11 +1,16 @@
 package com.dhb.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -14,7 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
+import com.dhb.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.dhb.models.api.response.PaymentProcessAPIResponseModel;
+import com.dhb.models.api.response.PaymentStartTransactionAPIResponseModel;
 import com.dhb.models.data.NarrationMasterModel;
 import com.dhb.models.data.PaymentNameValueModel;
 import com.dhb.network.ApiCallAsyncTask;
@@ -23,6 +30,7 @@ import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractActivity;
 import com.dhb.utils.app.AppPreferenceManager;
+import com.dhb.utils.app.BundleConstants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +53,20 @@ public class PaymentsActivity extends AbstractActivity {
     private ArrayList<PaymentProcessAPIResponseModel> paymentModesArr;
     private ApiCallAsyncTask fetchPaymentPassInputsAsyncTask;
     private PaymentProcessAPIResponseModel paymentPassInputsModel;
+    private ApiCallAsyncTask startTransactionAsyncTask;
+    private int NarrationId = 2;
+    private String OrderNo = "#TT082938";
+    private int Amount = 100;
+    private int SourceCode = 88453101;
+    private String BillingName;
+    private PaymentStartTransactionAPIResponseModel paymentStartTransactionAPIResponseModel;
+    private PaymentDoCaptureResponseAPIResponseModel paymentDoCaptureResponseAPIResponseModel;
+    private int checkPaymentSuccessResponseRetryCount = 0;
+    private ApiCallAsyncTask doCaptureResponseAsyncTask;
+    private ApiCallAsyncTask recheckResponseAsyncTask;
+
+    //TODO tejas - 7738185400 for airtel money
+    //TODO tejas - tejaspatil92axisbank@axis for UPI
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +76,14 @@ public class PaymentsActivity extends AbstractActivity {
         appPreferenceManager = new AppPreferenceManager(activity);
         asyncTaskForRequest = new AsyncTaskForRequest(activity);
         responseParser = new ResponseParser(activity);
-        fetchNarrationMaster();
+        if(getIntent().getExtras()!=null){
+            NarrationId = getIntent().getExtras().getInt(BundleConstants.PAYMENTS_NARRATION_ID);
+            OrderNo = getIntent().getExtras().getString(BundleConstants.PAYMENTS_ORDER_NO);
+            Amount = getIntent().getExtras().getInt(BundleConstants.PAYMENTS_AMOUNT);
+            SourceCode = getIntent().getExtras().getInt(BundleConstants.PAYMENTS_SOURCE_CODE);
+        }
         initUI();
+        fetchPaymentModes();
     }
 
     @Override
@@ -64,6 +92,7 @@ public class PaymentsActivity extends AbstractActivity {
         flPayments = (FrameLayout) findViewById(R.id.fl_payments);
     }
 
+/*
     private void fetchNarrationMaster() {
         fetchNarrationMasterAsyncTask = asyncTaskForRequest.getNarrationMasterRequestAsyncTask();
         fetchNarrationMasterAsyncTask.setApiCallAsyncTaskDelegate(new FetchNarrationMasterAsyncTaskDelegateResult());
@@ -105,6 +134,9 @@ public class PaymentsActivity extends AbstractActivity {
                 Button btnNarration = new Button(activity);
                 btnNarration.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
                 btnNarration.setText(nmm.getNarration());
+                btnNarration.setTextColor(getResources().getColor(android.R.color.white));
+                btnNarration.setPadding(5,5,5,5);
+                btnNarration.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
                 btnNarration.setOnClickListener(new NarrationsButtonOnClickListener(nmm));
                 btnNarration.setGravity(Gravity.CENTER);
                 llNarrations.addView(btnNarration);
@@ -124,9 +156,10 @@ public class PaymentsActivity extends AbstractActivity {
             fetchPaymentModes(nmm);
         }
     }
+*/
 
-    private void fetchPaymentModes(NarrationMasterModel nmm) {
-        fetchPaymentModesAsyncTask = asyncTaskForRequest.getPaymentModesFromNarrationIdRequestAsyncTask(nmm);
+    private void fetchPaymentModes() {
+        fetchPaymentModesAsyncTask = asyncTaskForRequest.getPaymentModesFromNarrationIdRequestAsyncTask(NarrationId);
         fetchPaymentModesAsyncTask.setApiCallAsyncTaskDelegate(new FetchPaymentModesAsyncTaskDelegateResult());
         if(isNetworkAvailable(activity)){
             fetchPaymentModesAsyncTask.execute(fetchPaymentModesAsyncTask);
@@ -183,30 +216,34 @@ public class PaymentsActivity extends AbstractActivity {
             for (PaymentProcessAPIResponseModel pparm:
                     paymentModesArr) {
                 LinearLayout llPaymentModeDetails = new LinearLayout(activity);
-                llPaymentModes.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-                llPaymentModes.setOrientation(LinearLayout.VERTICAL);
-                llPaymentModes.setGravity(Gravity.CENTER);
+                llPaymentModeDetails.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+                llPaymentModeDetails.setOrientation(LinearLayout.VERTICAL);
+                llPaymentModeDetails.setGravity(Gravity.CENTER);
                 for (PaymentNameValueModel pnvm:
                      pparm.getNameValueCollection()) {
                     if(pnvm.getKey().equals("ModeName")){
-                        TextView txtPaymentMode = new TextView(activity);
+                        Button btnPaymentMode = new Button(activity);
                         LinearLayout.LayoutParams txtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
                         txtParams.setMargins(10,10,10,10);
-                        txtPaymentMode.setLayoutParams(txtParams);
-                        txtPaymentMode.setGravity(Gravity.CENTER);
-                        txtPaymentMode.setMinEms(10);
-                        txtPaymentMode.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_purple_bg_gradient));
-                        txtPaymentMode.setText(pnvm.getValue());
-                        llPaymentModeDetails.setTag(pparm);
-                        llPaymentModeDetails.setOnClickListener(new View.OnClickListener() {
+                        btnPaymentMode.setLayoutParams(txtParams);
+                        btnPaymentMode.setGravity(Gravity.CENTER);
+                        btnPaymentMode.setPadding(5,5,5,5);
+                        btnPaymentMode.setMinEms(10);
+                        btnPaymentMode.setTextColor(getResources().getColor(android.R.color.white));
+                        btnPaymentMode.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
+                        btnPaymentMode.setText(pnvm.getValue());
+                        btnPaymentMode.setTag(pparm);
+                        btnPaymentMode.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 fetchPaymentPassInputs((PaymentProcessAPIResponseModel) v.getTag());
                             }
                         });
-                        llPaymentModeDetails.addView(txtPaymentMode);
+                        llPaymentModeDetails.addView(btnPaymentMode);
+                        llPaymentModeDetails.setTag(pparm);
                     }
                 }
+                llPaymentModes.addView(llPaymentModeDetails);
             }
             flPayments.addView(llPaymentModes);
         }
@@ -244,14 +281,14 @@ public class PaymentsActivity extends AbstractActivity {
             for (int i=0;i<paymentPassInputsModel.getNameValueCollection().size();i++) {
                 final int currentPosition = i;
                 if(paymentPassInputsModel.getNameValueCollection().get(i).getRequired().equals("User")){
-                    EditText edtPaymentInputs = new EditText(activity);
+                    EditText edtPaymentUserInputs = new EditText(activity);
                     LinearLayout.LayoutParams edtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
                     edtParams.setMargins(10,5,5,10);
-                    edtPaymentInputs.setLayoutParams(edtParams);
-                    edtPaymentInputs.setGravity(Gravity.CENTER);
-                    edtPaymentInputs.setMinEms(10);
-                    edtPaymentInputs.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getKey());
-                    edtPaymentInputs.addTextChangedListener(new TextWatcher() {
+                    edtPaymentUserInputs.setLayoutParams(edtParams);
+                    edtPaymentUserInputs.setGravity(Gravity.CENTER);
+                    edtPaymentUserInputs.setMinEms(10);
+                    edtPaymentUserInputs.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getKey()+"*");
+                    edtPaymentUserInputs.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -267,29 +304,288 @@ public class PaymentsActivity extends AbstractActivity {
                             paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
                         }
                     });
-                    llPaymentPassInputs.addView(edtPaymentInputs);
+                    llPaymentPassInputs.addView(edtPaymentUserInputs);
+                }
+                else if(paymentPassInputsModel.getNameValueCollection().get(i).getRequired().equals("System")){
+                    if(paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("NarrationId")){
+                        paymentPassInputsModel.getNameValueCollection().get(i).setValue(NarrationId+"");
+                    }
+                    else if(paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("OrderNo")){
+                        paymentPassInputsModel.getNameValueCollection().get(i).setValue(OrderNo);
+                    }
+                    else if(paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("SourceCode")){
+                        paymentPassInputsModel.getNameValueCollection().get(i).setValue(SourceCode+"");
+                    }
+                    else if(paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("Amount")){
+                        paymentPassInputsModel.getNameValueCollection().get(i).setValue(Amount+"");
+                    }
+
+                    LinearLayout llPaymentPassSystemInputs = new LinearLayout(activity);
+                    LinearLayout.LayoutParams llSystemInputsParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                    llSystemInputsParams.setMargins(10,10,10,10);
+                    llPaymentPassSystemInputs.setLayoutParams(llSystemInputsParams);
+                    llPaymentPassSystemInputs.setOrientation(LinearLayout.VERTICAL);
+                    llPaymentPassSystemInputs.setGravity(Gravity.CENTER);
+
+                    TextView txtPaymentSystemInputsLabel = new TextView(activity);
+                    LinearLayout.LayoutParams txtLabelParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                    txtLabelParams.setMargins(10,5,5,10);
+                    txtPaymentSystemInputsLabel.setLayoutParams(txtLabelParams);
+                    txtPaymentSystemInputsLabel.setGravity(Gravity.START);
+                    txtPaymentSystemInputsLabel.setMinEms(10);
+                    txtPaymentSystemInputsLabel.setText(paymentPassInputsModel.getNameValueCollection().get(i).getKey()+":");
+
+                    TextView txtPaymentSystemInputs = new TextView(activity);
+                    LinearLayout.LayoutParams txtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                    txtParams.setMargins(10,5,5,10);
+                    txtPaymentSystemInputs.setLayoutParams(txtParams);
+                    txtPaymentSystemInputs.setGravity(Gravity.CENTER);
+                    txtPaymentSystemInputs.setMinEms(10);
+                    txtPaymentSystemInputs.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getValue());
+
+                    llPaymentPassSystemInputs.addView(txtPaymentSystemInputsLabel);
+                    llPaymentPassSystemInputs.addView(txtPaymentSystemInputs);
+
+                    llPaymentPassInputs.addView(llPaymentPassSystemInputs);
                 }
             }
-            TextView txtPaymentInputsSubmit = new TextView(activity);
+            Button btnPaymentInputsSubmit = new Button(activity);
             LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
             btnParams.setMargins(10,5,5,10);
-            txtPaymentInputsSubmit.setLayoutParams(btnParams);
-            txtPaymentInputsSubmit.setGravity(Gravity.CENTER);
-            txtPaymentInputsSubmit.setMinEms(10);
-            txtPaymentInputsSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_purple_bg_gradient));
-            txtPaymentInputsSubmit.setText(getResources().getString(R.string.submit));
-            txtPaymentInputsSubmit.setOnClickListener(new View.OnClickListener() {
+            btnPaymentInputsSubmit.setLayoutParams(btnParams);
+            btnPaymentInputsSubmit.setGravity(Gravity.CENTER);
+            btnPaymentInputsSubmit.setMinEms(10);
+            btnPaymentInputsSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
+            btnPaymentInputsSubmit.setText(getResources().getString(R.string.submit));
+            btnPaymentInputsSubmit.setTextColor(getResources().getColor(android.R.color.white));
+            btnPaymentInputsSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    fetchTransactionResponse();
+                    fetchTransactionResponseOnStartTransaction();
                 }
             });
-            llPaymentPassInputs.addView(txtPaymentInputsSubmit);
+            llPaymentPassInputs.addView(btnPaymentInputsSubmit);
             flPayments.addView(llPaymentPassInputs);
         }
     }
 
-    private void fetchTransactionResponse() {
+    private void fetchTransactionResponseOnStartTransaction() {
+        JSONObject jsonRequest = new JSONObject();
+        try {
+            jsonRequest.put("URLId", paymentPassInputsModel.getURLId());
+            for (PaymentNameValueModel pnvm:
+                paymentPassInputsModel.getNameValueCollection()) {
+                if (pnvm.getKey().equals("SourceCode")) {
+                    jsonRequest.put(pnvm.getKey(), appPreferenceManager.getLoginResponseModel().getUserID());
+                } else {
+                    jsonRequest.put(pnvm.getKey(), pnvm.getValue());
+                }
+            }
+            startTransactionAsyncTask = asyncTaskForRequest.getStartTransactionRequestAsyncTask(jsonRequest);
+            startTransactionAsyncTask.setApiCallAsyncTaskDelegate(new FetchTransactionResponseOnStartTransactionAsyncTaskDelegateResult());
+            if (isNetworkAvailable(activity)) {
+                startTransactionAsyncTask.execute(startTransactionAsyncTask);
+            } else {
+                Toast.makeText(activity, getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
+    private class FetchTransactionResponseOnStartTransactionAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if(statusCode==200){
+                paymentStartTransactionAPIResponseModel = responseParser.getPaymentStartTransactionResponse(json,statusCode);
+                initDoCaptureResponseData();
+            }
+            else{
+                Toast.makeText(activity,json+"",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity,"No Response",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void initDoCaptureResponseData() {
+        if(paymentStartTransactionAPIResponseModel!=null
+                && paymentStartTransactionAPIResponseModel.getReqParameters()!=null
+                && paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection()!=null
+                && paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().size()>0){
+            flPayments.removeAllViews();
+            LinearLayout llPaymentStartTransaction = new LinearLayout(activity);
+            LinearLayout.LayoutParams llParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            llParams.setMargins(10,10,10,10);
+            llPaymentStartTransaction.setLayoutParams(llParams);
+            llPaymentStartTransaction.setOrientation(LinearLayout.VERTICAL);
+            llPaymentStartTransaction.setGravity(Gravity.CENTER);
+            for (int i=0;i<paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().size();i++) {
+                final int currentPosition = i;
+                if (paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().get(i).getRequired().equals("User")) {
+                    EditText edtPaymentUserInputs = new EditText(activity);
+                    LinearLayout.LayoutParams edtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    edtParams.setMargins(10, 5, 5, 10);
+                    edtPaymentUserInputs.setLayoutParams(edtParams);
+                    edtPaymentUserInputs.setGravity(Gravity.CENTER);
+                    edtPaymentUserInputs.setMinEms(10);
+                    edtPaymentUserInputs.setHint(paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().get(i).getKey() + "*");
+                    edtPaymentUserInputs.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().get(currentPosition).setValue(s.toString());
+                        }
+                    });
+                    llPaymentStartTransaction.addView(edtPaymentUserInputs);
+                }
+            }
+            for (PaymentNameValueModel paymentNameValueModel:
+                    paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection()) {
+                if(paymentNameValueModel.getKey().equals("ModeId")&&paymentNameValueModel.getValue().equals("3")){
+                    WebView wvQRDisplay = new WebView(activity);
+                    WebSettings settings = wvQRDisplay.getSettings();
+                    settings.setUseWideViewPort(true);
+                    settings.setLoadWithOverviewMode(true);
+                    settings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
+                    wvQRDisplay.setVerticalScrollBarEnabled(false);
+                    wvQRDisplay.setHorizontalScrollBarEnabled(false);
+                    LinearLayout.LayoutParams llwvParams = new LinearLayout.LayoutParams(400,400);
+                    llwvParams.setMargins(20,20,20,20);
+                    wvQRDisplay.setLayoutParams(llwvParams);
+                    wvQRDisplay.setPadding(0, 0, 0, 0);
+                    wvQRDisplay.setInitialScale(getScale());
+                    wvQRDisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
+                    llPaymentStartTransaction.addView(wvQRDisplay);
+                    break;
+                }
+            }
+            Button btnPaymentStartTransactionSubmit = new Button(activity);
+            LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            btnParams.setMargins(10,5,5,10);
+            btnPaymentStartTransactionSubmit.setLayoutParams(btnParams);
+            btnPaymentStartTransactionSubmit.setGravity(Gravity.CENTER);
+            btnPaymentStartTransactionSubmit.setMinEms(10);
+            btnPaymentStartTransactionSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
+            btnPaymentStartTransactionSubmit.setText(getResources().getString(R.string.submit));
+            btnPaymentStartTransactionSubmit.setTextColor(getResources().getColor(android.R.color.white));
+            btnPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fetchDoCaptureResponse();
+                }
+            });
+            llPaymentStartTransaction.addView(btnPaymentStartTransactionSubmit);
+            flPayments.addView(llPaymentStartTransaction);
+        }
+    }
+
+    private void fetchDoCaptureResponse() {
+        JSONObject jsonRequest = new JSONObject();
+        try {
+            jsonRequest.put("URLId", paymentStartTransactionAPIResponseModel.getReqParameters().getURLId());
+            for (PaymentNameValueModel pnvm:
+                    paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection()) {
+                    jsonRequest.put(pnvm.getKey(), pnvm.getValue());
+            }
+            doCaptureResponseAsyncTask = asyncTaskForRequest.getDoCaptureResponseRequestAsyncTask(jsonRequest,paymentStartTransactionAPIResponseModel.getReqParameters().getAPIUrl());
+            doCaptureResponseAsyncTask.setApiCallAsyncTaskDelegate(new DoCaptureResponseAsyncTaskDelegateResult());
+            if (isNetworkAvailable(activity)) {
+                doCaptureResponseAsyncTask.execute(doCaptureResponseAsyncTask);
+            } else {
+                Toast.makeText(activity, getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private class DoCaptureResponseAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if(statusCode==200){
+                paymentDoCaptureResponseAPIResponseModel = responseParser.getPaymentDoCaptureAPIResponse(json,statusCode);
+                if(paymentDoCaptureResponseAPIResponseModel.getStatus().equals("PAYMENT SUCCESS")){
+                    Toast.makeText(activity,paymentDoCaptureResponseAPIResponseModel.getResponseMessage(),Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    intent.putExtra(BundleConstants.PAYMENT_STATUS,true);
+                    setResult(BundleConstants.PAYMENTS_FINISH,intent);
+                    finish();
+                }
+                else if(paymentDoCaptureResponseAPIResponseModel.getStatus().equals("PAYMENT FAILED")){
+                    Toast.makeText(activity,paymentDoCaptureResponseAPIResponseModel.getResponseMessage(),Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    intent.putExtra(BundleConstants.PAYMENT_STATUS,false);
+                    setResult(BundleConstants.PAYMENTS_FINISH,intent);
+                    finish();
+                }
+                else{
+                    checkPaymentSuccessResponseRetryCount++;
+                    if(checkPaymentSuccessResponseRetryCount<=5) {
+                        fetchRecheckResponseData();
+                    }
+                    else{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setTitle("Payment Status")
+                                .setMessage("Failed to Verify Payment Status!")
+                                .setNegativeButton("Recheck", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        fetchRecheckResponseData();
+                                    }
+                                })
+                                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent();
+                                        intent.putExtra(BundleConstants.PAYMENT_STATUS,false);
+                                        setResult(BundleConstants.PAYMENTS_FINISH,intent);
+                                        finish();
+                                    }
+                                }).show();
+                    }
+                }
+            }
+            else{
+                Toast.makeText(activity,json+"",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity,"No Response",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void fetchRecheckResponseData() {
+        JSONObject jsonRequest = new JSONObject();
+        try {
+            jsonRequest.put("URLId", paymentDoCaptureResponseAPIResponseModel.getReqParameters().getURLId());
+            for (PaymentNameValueModel pnvm:
+                    paymentDoCaptureResponseAPIResponseModel.getReqParameters().getNameValueCollection()) {
+                jsonRequest.put(pnvm.getKey(), pnvm.getValue());
+            }
+            recheckResponseAsyncTask = asyncTaskForRequest.getDoCaptureResponseRequestAsyncTask(jsonRequest,paymentDoCaptureResponseAPIResponseModel.getReqParameters().getAPIUrl());
+            recheckResponseAsyncTask.setApiCallAsyncTaskDelegate(new DoCaptureResponseAsyncTaskDelegateResult());
+            if (isNetworkAvailable(activity)) {
+                recheckResponseAsyncTask.execute(recheckResponseAsyncTask);
+            } else {
+                Toast.makeText(activity, getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

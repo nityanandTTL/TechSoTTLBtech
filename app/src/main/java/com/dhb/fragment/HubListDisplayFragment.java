@@ -33,20 +33,20 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 
-public class DispatchToHubFragment extends AbstractFragment {
+public class HubListDisplayFragment extends AbstractFragment {
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recycler_view;
     LinearLayout ll_hub_display_footer;
     HomeScreenActivity activity;
     ArrayList<HUBBTechModel> hubbTechModels = new ArrayList<>();
     DispatchToHubDisplayDetailsAdapter dispatchToHubDisplayDetailsAdapter;
-    public static final String TAG_FRAGMENT = DispatchToHubFragment.class.getSimpleName();
+    public static final String TAG_FRAGMENT = HubListDisplayFragment.class.getSimpleName();
 
-    public DispatchToHubFragment() {
+    public HubListDisplayFragment() {
     }
 
-    public static DispatchToHubFragment newInstance() {
-        return new DispatchToHubFragment();
+    public static HubListDisplayFragment newInstance() {
+        return new HubListDisplayFragment();
     }
 
 
@@ -100,7 +100,7 @@ public class DispatchToHubFragment extends AbstractFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==BundleConstants.HMD_START&&resultCode==BundleConstants.HMD_ARRIVED){
             HUBBTechModel hubbTechModel = data.getExtras().getParcelable(BundleConstants.HUB_BTECH_MODEL);
-            pushFragments(BtechCollectionsListFragment.newInstance(hubbTechModel), false, false, BtechCollectionsListFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+            pushFragments(HubMasterBarcodeScanFragment.newInstance(hubbTechModel), false, false, HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
         }
     }
 

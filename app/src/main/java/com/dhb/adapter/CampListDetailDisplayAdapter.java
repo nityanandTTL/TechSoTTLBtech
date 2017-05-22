@@ -132,13 +132,13 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
         holder.tv_call_leader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 0, pos);
+                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos),0,pos);
             }
         });
         holder.txt_call_leader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 0, pos);
+                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos),0,pos);
             }
         });
     }
@@ -146,7 +146,6 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
     private void initData(FoldingCellViewHolder holder, final int pos) {
         holder.bool_check = new boolean[campDetailModelList.size()];
         holder.ids_check = new int[campDetailModelList.size()];
-        arr = new String[campDetailModelList.size()];
         if (campDetailModelList.size() > pos) {
             holder.tv_leader.setText("Leader Name :" + campDetailModelList.get(pos).getLeaderName());
             holder.tv_date_time.setText("" + campDetailModelList.get(pos).getCampDateTime());
@@ -218,8 +217,15 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
                 tv_sr_no.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        cod = new ConfirmCallDialog(activity, campDetailModelList);
-                        cod.show();
+                        Intent intent = new Intent(Intent.ACTION_CALL);
+                        intent.setData(Uri.parse("tel:" + campDetailModelList.get(pos).getBtechs().get(0).getMobile()));
+                        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(activity,
+                                    new String[]{Manifest.permission.CALL_PHONE},
+                                    AppConstants.APP_PERMISSIONS);
+                            return;
+                        }
+                        activity.startActivity(intent);
                     }
                 });
 
@@ -241,14 +247,14 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
     }
 
     private boolean isTommorrowOnwards(String date) {
-        Date campDate = stringToDate(date);
+        Date campDate=stringToDate(date);
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
-        Date today = new Date();
-        Logger.error("date: " + today);
+        Date today =new Date();
+        Logger.error("date: "+today);
 
       /*  if (campDate.before(today)) {
             System.err.println("Date specified [" + campDate + "] is before today [" + today + "]");
@@ -258,7 +264,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             return true;
         }
 */
-        return true;
+      return true;
     }
 
 

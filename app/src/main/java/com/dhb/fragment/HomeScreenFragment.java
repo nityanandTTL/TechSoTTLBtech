@@ -1,6 +1,7 @@
 package com.dhb.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
+import com.dhb.activity.PaymentsActivity;
 import com.dhb.customview.RoundedImageView;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
@@ -94,7 +96,7 @@ public class HomeScreenFragment extends AbstractFragment {
         imgHub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(DispatchToHubFragment.newInstance(),false,false, DispatchToHubFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(HubListDisplayFragment.newInstance(),false,false, HubListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
         imgPayment.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +120,7 @@ public class HomeScreenFragment extends AbstractFragment {
         imgOLCPickup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(BtechClientsListFragment.newInstance(),false,false,BtechClientsListFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(OLCPickupListDisplayFragment.newInstance(),false,false, OLCPickupListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
          imgCamp.setOnClickListener(new View.OnClickListener() {
@@ -127,13 +129,14 @@ public class HomeScreenFragment extends AbstractFragment {
                 pushFragments(CampListDisplayFragment.newInstance(),false,false,CampListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
-        /*  imgOrders.setOnClickListener(new View.OnClickListener() {
+        imgCommunication.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                Intent intentPaymentsActivity = new Intent(activity, PaymentsActivity.class);
+                startActivity(intentPaymentsActivity);
             }
         });
-        imgOrders.setOnClickListener(new View.OnClickListener() {
+        /*imgOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);

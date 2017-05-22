@@ -20,8 +20,6 @@ import com.dhb.models.api.request.RemoveBeneficiaryAPIRequestModel;
 import com.dhb.models.api.request.ResetPasswordRequestModel;
 import com.dhb.models.api.request.SelfieUploadRequestModel;
 import com.dhb.models.api.request.SetBtechAvailabilityAPIRequestModel;
-import com.dhb.models.api.response.PaymentProcessAPIResponseModel;
-import com.dhb.models.data.NarrationMasterModel;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.google.gson.Gson;
 
@@ -143,6 +141,30 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
                     .getString(R.string.progress_message_uploading_order_details_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+    /*
+	 * Work Order Entry Api Integration*/
+
+    public ApiCallAsyncTask getWorkOrderEntryRequestAsyncTask(OrderBookingRequestModel orderBookingRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(orderBookingRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.WOE);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_performing_work_order_please_wait));
             apiCallAsyncTask.setProgressBarVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -887,13 +909,13 @@ public class AsyncTaskForRequest {
     /*
 	 * Fetch Payment Modes From Narration Id Api Integration*/
 
-    public ApiCallAsyncTask getPaymentModesFromNarrationIdRequestAsyncTask(NarrationMasterModel nmm) {
+    public ApiCallAsyncTask getPaymentModesFromNarrationIdRequestAsyncTask(int narrationId) {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.PAYMENT_SELECT_MODE+"/"+nmm.getNarrationId());
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.PAYMENT_SELECT_MODE+"/"+narrationId);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -944,6 +966,51 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
                     .getString(R.string.progress_message_start_transaction_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    /*
+	 * Do Capture Response Api Integration*/
+
+    public ApiCallAsyncTask getDoCaptureResponseRequestAsyncTask(JSONObject jsonRequest,String URL) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setPostData(jsonRequest.toString());
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(URL);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_payments_otp_verification_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+    /*
+	 * Recheck Payment Response Response Api Integration*/
+
+    public ApiCallAsyncTask getRecheckPaymentResponseRequestAsyncTask(JSONObject jsonRequest,String URL) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setPostData(jsonRequest.toString());
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(URL);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetching_payment_status_please_wait));
             apiCallAsyncTask.setProgressBarVisible(true);
         } catch (Exception e) {
             e.printStackTrace();

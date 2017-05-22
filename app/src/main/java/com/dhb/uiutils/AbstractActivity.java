@@ -2,6 +2,7 @@ package com.dhb.uiutils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -11,8 +12,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.dhb.R;
@@ -33,6 +36,7 @@ public class AbstractActivity extends AppCompatActivity implements ActivityHelpe
 	public Typeface fontArialBold;
 	String screenId = "";
 	private ProgressDialog progressDialog;
+	private double PIC_WIDTH = 1000;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,13 @@ public class AbstractActivity extends AppCompatActivity implements ActivityHelpe
 		super.onCreate(savedInstanceState);
 
 
+	}
+	public int getScale(){
+		Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		int width = display.getWidth();
+		Double val = new Double(width)/new Double(PIC_WIDTH);
+		val = val * 100d;
+		return val.intValue();
 	}
 	@Override
 	protected void onStart() {

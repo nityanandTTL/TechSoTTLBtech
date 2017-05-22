@@ -19,7 +19,9 @@ import com.dhb.models.api.response.FetchOrderDetailsResponseModel;
 import com.dhb.models.api.response.LoginResponseModel;
 import com.dhb.models.api.response.MaterialINVResponseModel;
 import com.dhb.models.api.response.MessageModel;
+import com.dhb.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.dhb.models.api.response.PaymentProcessAPIResponseModel;
+import com.dhb.models.api.response.PaymentStartTransactionAPIResponseModel;
 import com.dhb.models.api.response.SelfieUploadResponseModel;
 import com.dhb.models.api.response.SessionExpireModel;
 import com.dhb.models.data.BrandMasterModel;
@@ -798,6 +800,24 @@ public class ResponseParser implements AppConstants {
 			paymentInputs = gson.fromJson(json, PaymentProcessAPIResponseModel.class);
 		}
 		return paymentInputs;
+	}
+
+	////Fetch Payment Start Transaction Response parse:
+	public PaymentStartTransactionAPIResponseModel getPaymentStartTransactionResponse(String json, int statusCode) {
+		PaymentStartTransactionAPIResponseModel paymentStartTransactionAPIResponseModel = null;
+		if(!parseIntoError(json,statusCode)) {
+			paymentStartTransactionAPIResponseModel = gson.fromJson(json, PaymentStartTransactionAPIResponseModel.class);
+		}
+		return paymentStartTransactionAPIResponseModel;
+	}
+
+	////Fetch Payment Do Capture Response API Response parse:
+	public PaymentDoCaptureResponseAPIResponseModel getPaymentDoCaptureAPIResponse(String json, int statusCode) {
+		PaymentDoCaptureResponseAPIResponseModel paymentDoCaptureResponseAPIResponseModel = null;
+		if(!parseIntoError(json,statusCode)) {
+			paymentDoCaptureResponseAPIResponseModel = gson.fromJson(json, PaymentDoCaptureResponseAPIResponseModel.class);
+		}
+		return paymentDoCaptureResponseAPIResponseModel;
 	}
 
 	////Fetch VersionControl  details Response parse:
