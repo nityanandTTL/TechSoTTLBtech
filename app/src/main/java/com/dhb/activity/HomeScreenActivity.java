@@ -174,7 +174,7 @@ public class HomeScreenActivity extends AbstractActivity
             pushFragments(LedgerDisplayFragment.newInstance(),false,false,LedgerDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_hub) {
             Toast.makeText(getApplicationContext(),"in Hub drop",Toast.LENGTH_SHORT).show();
-            pushFragments(DispatchToHubFragment.newInstance(),false,false, DispatchToHubFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+            pushFragments(HubListDisplayFragment.newInstance(),false,false, HubListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_materials) {
 
         }*/

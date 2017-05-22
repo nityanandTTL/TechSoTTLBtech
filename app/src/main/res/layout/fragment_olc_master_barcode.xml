@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.dhb.fragment.OlcMasterBarcodeFragment">
+    tools:context="com.dhb.fragment.OlcMasterBarcodeScanFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <include layout="@layout/item_btech_client" />

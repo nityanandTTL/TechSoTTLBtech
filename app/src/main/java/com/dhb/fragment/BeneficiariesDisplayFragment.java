@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.activity.AddEditBeneficiaryDetailsActivity;
 import com.dhb.activity.OrderBookingActivity;
+import com.dhb.activity.PaymentsActivity;
 import com.dhb.adapter.BeneficiaryScreenSlidePagerAdapter;
 import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BeneficiaryDetailsDao;
@@ -231,6 +232,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         }
 
         txtAmtPayable.setText(totalAmount+"");
+        if(totalAmount==0){
+            btnProceedPayment.setText("Submit Work Order");
+        }
+        else{
+            btnProceedPayment.setText("Proceed for Payment");
+        }
         ArrayList<BeneficiaryDetailsModel> beneficiariesArr = new ArrayList<>();
         for (OrderDetailsModel orderDetailsModel : orderVisitDetailsModel.getAllOrderdetails()) {
             Logger.error(orderDetailsModel.getBenMaster().size()+"");
@@ -317,6 +324,19 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         if (requestCode == BundleConstants.ADD_EDIT_START && resultCode == BundleConstants.ADD_EDIT_FINISH) {
             initData();
         }
+        if(requestCode==BundleConstants.PAYMENTS_START && resultCode==BundleConstants.PAYMENTS_FINISH){
+            boolean isPaymentSuccess = data.getBooleanExtra(BundleConstants.PAYMENT_STATUS,false);
+            if(isPaymentSuccess) {
+                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+                ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
+                workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
+                if (isNetworkAvailable(activity)) {
+                    workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
+                } else {
+                    Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -324,7 +344,25 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if(statusCode==200){
-                Toast.makeText(activity,"Order Booked Successfully",Toast.LENGTH_SHORT).show();
+                if(btnProceedPayment.getText().equals("Proceed for Payment")) {
+                    Intent intentPayments = new Intent(activity, PaymentsActivity.class);
+                    intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT,totalAmount);
+                    intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,2);
+                    intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderVisitDetailsModel.getVisitId());
+                    intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,appPreferenceManager.getLoginResponseModel().getUserID());
+                    startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                }
+                else if(btnProceedPayment.getText().equals("Submit Work Order")){
+                    OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+                    ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
+                    workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
+                    if(isNetworkAvailable(activity)){
+                        workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
+                    }
+                    else{
+                        Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
             else{
                 Toast.makeText(activity,"Order Booking Failed",Toast.LENGTH_SHORT).show();
@@ -333,7 +371,25 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
         @Override
         public void onApiCancelled() {
+            Toast.makeText(activity,"Order Booking Failed",Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    private class WorkOrderEntryAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if(statusCode==200){
+                Toast.makeText(activity,"Work Order Entry Successful",Toast.LENGTH_SHORT).show();
+                activity.finish();
+            }
+            else{
+                Toast.makeText(activity,"Work Order Entry Failed",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity,"Work Order Entry Failed",Toast.LENGTH_SHORT).show();
         }
     }
 }

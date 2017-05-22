@@ -93,6 +93,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private String  address,city;
     private double destlat,destlong,currentlat,currentlong;
     private int Integertotaldiff;
+    private boolean isStarted = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +121,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
        double totaldist = distFrom(currentlat,currentlong,destlat,destlong);
 
         Integertotaldiff = (int) totaldist;
-        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
 
         btn_arrived.setVisibility(View.GONE);
     }
@@ -189,8 +190,8 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                     Logger.error("hubBTechModel lat"+hubBTechModel.getLatitude()+"long "+hubBTechModel.getLongitude());
                     destlat= Double.parseDouble(hubBTechModel.getLatitude());
                      destlong= Double.parseDouble(hubBTechModel.getLongitude());
-                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
                     LatLng destTempLocation = new LatLng(destlat, destlong);
                     MarkerOptions options = new MarkerOptions();
                     options.position(destTempLocation);
@@ -302,9 +303,9 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
          currentlat=location.getLatitude();
         currentlong=location.getLongitude();
 
-        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(),currentlong+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),currentlong+"", Toast.LENGTH_SHORT).show();
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
@@ -319,7 +320,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     @Override
     protected void onResume() {
         super.onResume();
-        if (Integertotaldiff > 100)
+        if (Integertotaldiff > 100 || !isStarted)
         {
             btn_arrived.setVisibility(View.INVISIBLE);
             btn_startNav.setVisibility(View.VISIBLE);
@@ -384,7 +385,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         public void apiCallResult(String json, int statusCode) throws JSONException {
             Logger.error(json);
             if (statusCode == 204 || statusCode == 200) {
-                Toast.makeText(activity, "Order arrived Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Arrived Successfully", Toast.LENGTH_SHORT).show();
                 Intent intentResult = new Intent();
                 intentResult.putExtra(BundleConstants.HUB_BTECH_MODEL,hubBTechModel);
                 setResult(BundleConstants.HMD_ARRIVED,intentResult);
@@ -641,6 +642,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
             if (statusCode == 204 || statusCode == 200 ) {
                if (Integertotaldiff > 100)
                {
+                   isStarted = true;
                    btn_arrived.setVisibility(View.INVISIBLE);
                    btn_startNav.setVisibility(View.VISIBLE);
                }

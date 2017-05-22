@@ -69,10 +69,10 @@ import java.util.Locale;
 import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
 
 
-public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
+public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
-    private static final String TAG = BtechClientDetailMapDisplayFragmentActivity.class.getSimpleName();
-    public static final String TAG_FRAGMENT = BtechClientDetailMapDisplayFragmentActivity.class.getSimpleName();
+    private static final String TAG = OLCPickupDetailMapDisplayFragmentActivity.class.getSimpleName();
+    public static final String TAG_FRAGMENT = OLCPickupDetailMapDisplayFragmentActivity.class.getSimpleName();
     private GoogleMap mMap;
     private ArrayList<LatLng> MarkerPoints;
     private GoogleApiClient mGoogleApiClient;
@@ -96,6 +96,7 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
     private ImageView title_aadhar_icon, title_distance_icon;
     private double destlat,destlong,currentlat,currentlong;
     private int Integertotaldiff;
+    private boolean isStarted = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,7 +127,7 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
         double totaldist = distFrom(currentlat,currentlong,destlat,destlong);
 
         Integertotaldiff = (int) totaldist;
-        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
         btn_arrived.setVisibility(View.GONE);
     }
 
@@ -198,8 +199,8 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
                     Logger.error("btechClientsModel lat" + btechClientsModel.getLatitude() + "long " + btechClientsModel.getLongitude());
                     destlat= Double.parseDouble(btechClientsModel.getLatitude());
                     destlong= Double.parseDouble(btechClientsModel.getLongitude());
-                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
                     LatLng destTempLocation = new LatLng(destlat, destlong);
 
                     String url = getUrl(currentLocation, destTempLocation);
@@ -269,7 +270,7 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
     @Override
     protected void onResume() {
         super.onResume();
-        if (Integertotaldiff > 100)
+        if (Integertotaldiff > 100 || !isStarted)
         {
             btn_arrived.setVisibility(View.INVISIBLE);
             btn_startNav.setVisibility(View.VISIBLE);
@@ -324,9 +325,9 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
         currentlat=location.getLatitude();
         currentlong=location.getLongitude();
 
-        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(),currentlong+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),currentlong+"", Toast.LENGTH_SHORT).show();
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
@@ -594,9 +595,9 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
                 Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show();
             /*    Bundle bundle = new Bundle();
                 bundle.putParcelable(BundleConstants.BTECH_CLIENTS_MODEL, btechClientsModel);
-                OlcMasterBarcodeFragment olcMasterBarcodeFragment = new OlcMasterBarcodeFragment();
+                OlcMasterBarcodeScanFragment olcMasterBarcodeFragment = new OlcMasterBarcodeScanFragment();
                 olcMasterBarcodeFragment.setArguments(bundle);
-                pushFragments(OlcMasterBarcodeFragment.newInstance(),false,false,OlcMasterBarcodeFragment.TAG_FRAGMENT,R.id.content_home_screen,TAG_FRAGMENT);*/
+                pushFragments(OlcMasterBarcodeScanFragment.newInstance(),false,false,OlcMasterBarcodeScanFragment.TAG_FRAGMENT,R.id.content_home_screen,TAG_FRAGMENT);*/
                 Intent intentResult = new Intent();
                 intentResult.putExtra(BundleConstants.BTECH_CLIENTS_MODEL, btechClientsModel);
                 setResult(BundleConstants.BCMD_ARRIVED, intentResult);
@@ -618,6 +619,7 @@ public class BtechClientDetailMapDisplayFragmentActivity extends FragmentActivit
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if ((statusCode == 200)) {
                 if (Integertotaldiff > 100) {
+                    isStarted = true;
                     btn_arrived.setVisibility(View.INVISIBLE);
                     btn_startNav.setVisibility(View.VISIBLE);
                 } else {

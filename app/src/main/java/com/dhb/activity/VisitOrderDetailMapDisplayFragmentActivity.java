@@ -65,9 +65,9 @@ import java.util.Locale;
 import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
 
 
-public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
+public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
-    public static final String TAG_FRAGMENT = VisitOrderMapDisplayFragmentActivity.class.getSimpleName();
+    public static final String TAG_FRAGMENT = VisitOrderDetailMapDisplayFragmentActivity.class.getSimpleName();
     private GoogleMap mMap;
     private ArrayList<LatLng> MarkerPoints;
     private GoogleApiClient mGoogleApiClient;
@@ -85,6 +85,7 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
     private String  address;
     private double destlat,destlong,currentlat,currentlong;
     private int Integertotaldiff;
+    private boolean isStarted = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,7 +122,7 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         double totaldist = distFrom(currentlat,currentlong,destlat,destlong);
 
         Integertotaldiff = (int) totaldist;
-        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
     }
 
     private void initUI() {
@@ -176,8 +177,8 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
                     destlat= Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
                     destlong= Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
                     LatLng destTempLocation = new LatLng(destlat, destlong);
-                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
                     MarkerOptions options = new MarkerOptions();
                     options.position(destTempLocation);
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
@@ -366,9 +367,9 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         currentlat=location.getLatitude();
         currentlong=location.getLongitude();
 
-        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(),currentlong+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),currentlong+"", Toast.LENGTH_SHORT).show();
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
@@ -382,7 +383,7 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
     @Override
     protected void onResume() {
         super.onResume();
-        if (Integertotaldiff > 100)
+        if (Integertotaldiff > 100 || !isStarted)
         {
             btn_arrived.setVisibility(View.INVISIBLE);
             btn_startNav.setVisibility(View.VISIBLE);
@@ -647,6 +648,7 @@ public class VisitOrderMapDisplayFragmentActivity extends FragmentActivity imple
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if(statusCode==204 || statusCode==200){
+                isStarted = true;
                 if (Integertotaldiff > 100)
                 {
                     btn_arrived.setVisibility(View.INVISIBLE);

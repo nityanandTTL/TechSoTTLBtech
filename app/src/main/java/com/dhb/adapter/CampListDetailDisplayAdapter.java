@@ -1,36 +1,31 @@
 package com.dhb.adapter;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.text.format.DateFormat;
-import android.text.format.DateUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.delegate.CampListDisplayRecyclerViewAdapterDelegate;
 
-import com.dhb.dialog.ConfirmCallDialog;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.data.CampDetailModel;
 
-import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.AppConstants;
 import com.ramotion.foldingcell.FoldingCell;
 
 import java.text.ParseException;
@@ -53,7 +48,6 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
     private CampListDisplayRecyclerViewAdapterDelegate campListDisplayRecyclerViewAdapterDelegate;
     private HashSet<Integer> unfoldedIndexes = new HashSet<>();
     private LayoutInflater layoutInflater;
-    ConfirmCallDialog cod;
 
     public CampListDetailDisplayAdapter(HomeScreenActivity activity,
                                         ArrayList<CampDetailModel> campDetailModelList,
@@ -131,13 +125,13 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
         holder.tv_call_leader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos),0,pos);
+                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 0, pos);
             }
         });
         holder.txt_call_leader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos),0,pos);
+                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 0, pos);
             }
         });
     }
@@ -235,8 +229,15 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
                 tv_sr_no.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        cod = new ConfirmCallDialog(activity, campDetailModelList);
-                        cod.show();
+                        Intent intent = new Intent(Intent.ACTION_CALL);
+                        intent.setData(Uri.parse("tel:" + campDetailModelList.get(pos).getBtechs().get(0).getMobile()));
+                        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(activity,
+                                    new String[]{Manifest.permission.CALL_PHONE},
+                                    AppConstants.APP_PERMISSIONS);
+                            return;
+                        }
+                        activity.startActivity(intent);
                     }
                 });
 
