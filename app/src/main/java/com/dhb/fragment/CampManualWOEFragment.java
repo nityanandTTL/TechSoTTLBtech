@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.CampOrderBookingActivity;
+import com.dhb.adapter.CampListDetailDisplayAdapter;
 import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.data.CampAllOrderDetailsModel;
@@ -47,17 +48,18 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     private String[] test_code_arr;
     ArrayList<CampAllOrderDetailsModel> campAllOrderDetailsModelslist = new ArrayList<>();
     CampScanQRResponseModel campScanQRResponseModel =new CampScanQRResponseModel();
-    CampDetailModel campDetailModel;
+   /* ArrayList<*/CampDetailModel/*> */campDetailModel=new CampDetailModel();
     public CampManualWOEFragment() {
         // Required empty public constructor
     }
 
-    public static CampManualWOEFragment newInstance(CampScanQRResponseModel campScanQRResponseModel,CampListDisplayResponseModel campListDisplayResponseModel,CampDetailModel campDetailModel) {
+    public static CampManualWOEFragment newInstance(CampScanQRResponseModel campScanQRResponseModel,CampDetailModel campDetailModel/*,CampListDisplayResponseModel campListDisplayResponseModel,CampDetailModel campDetailModel*/) {
         CampManualWOEFragment fragment = new CampManualWOEFragment();
         Bundle args = new Bundle();
-        args.putParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL, campScanQRResponseModel);
-        args.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL,campListDisplayResponseModel);
         args.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL,campDetailModel);
+        args.putParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL, campScanQRResponseModel);
+      //  args.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL,campListDisplayResponseModel);
+       // args.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL,campDetailModel);
         fragment.setArguments(args);
 
         return fragment;
@@ -68,9 +70,14 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_camp_manual_woe_scan_barcode, container, false);
         initUi(view);
+        initData();
         activity = (CampOrderBookingActivity) getActivity();
         setListeners();
         return view;
+    }
+
+    private void initData() {
+        campDetailModel=getArguments().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
     }
 
     private void setListeners() {
@@ -96,9 +103,10 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         ll_age_gender=(LinearLayout)view.findViewById(R.id.ll_age_gender);
         ll_age_gender.setVisibility(View.GONE);
         edt_test_alerts=(TextView)view.findViewById(R.id.edt_test_alerts);
-
-        test_code_arr = CampListDisplayFragment.products.split(",");
-        edt_test_alerts.setText(test_code_arr[0]);
+        edt_test_alerts.setText(""+campDetailModel.getProduct());
+       // CampListDetailDisplayAdapter.arr[]
+     /*   test_code_arr = CampListDisplayFragment.products.split(",");
+        edt_test_alerts.setText(test_code_arr[0]);*/
     }
 
 

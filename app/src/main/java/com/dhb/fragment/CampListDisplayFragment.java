@@ -64,7 +64,7 @@ public static String products;
     private ConfirmOrderReleaseDialog cdd;
     private ArrayList<CampBtechModel> btechs;
     private ArrayList<CampDetailModel> campDetailModels;
-    private CampDetailModel campDetailsResponseModel;
+    private CampDetailModel campDetailsResponseModel=new CampDetailModel();
     private CampListDisplayResponseModel campListDisplayResponseModel;
     CampListDetailDisplayAdapter campListDetailDisplayAdapter;
     private int position;
@@ -161,13 +161,10 @@ public static String products;
             if (statusCode == 200) {
                 Logger.error("" + json);
                 ResponseParser responseParser = new ResponseParser(activity);
-                // campDetailsResponseModel = new CampDetailModel();
                 campListDisplayResponseModel = new CampListDisplayResponseModel();
                 campListDisplayResponseModel = responseParser.getCampDetailResponseModel(json, statusCode);
                 if (campListDisplayResponseModel != null/* && campDetailsResponseModel.getBtechs().size() > 0*/) {
                     campDetailModels = campListDisplayResponseModel.getCampDetail();
-                    Logger.error("campDetailModels size " + campListDisplayResponseModel.getCampDetail().size());
-                    products=campDetailsResponseModel.getProduct();
                     prepareRecyclerView();
                 } else {
                     Logger.error("else " + json);
@@ -279,6 +276,7 @@ public static String products;
             if (statusCode == 200) {
 
                 Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
+                Logger.error("campDetailModels after arrived "+campDetailModels.size());
                 intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModels);
              /*   if(campDetailModels!=null){
                     Logger.error(TAG_FRAGMENT+"campDetailModels not null");

@@ -54,6 +54,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
     private HashSet<Integer> unfoldedIndexes = new HashSet<>();
     private LayoutInflater layoutInflater;
     ConfirmCallDialog cod;
+    public static String[] arr;
 
     public CampListDetailDisplayAdapter(HomeScreenActivity activity,
                                         ArrayList<CampDetailModel> campDetailModelList,
@@ -131,13 +132,13 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
         holder.tv_call_leader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos),0,pos);
+                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 0, pos);
             }
         });
         holder.txt_call_leader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos),0,pos);
+                campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 0, pos);
             }
         });
     }
@@ -145,6 +146,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
     private void initData(FoldingCellViewHolder holder, final int pos) {
         holder.bool_check = new boolean[campDetailModelList.size()];
         holder.ids_check = new int[campDetailModelList.size()];
+        arr = new String[campDetailModelList.size()];
         if (campDetailModelList.size() > pos) {
             holder.tv_leader.setText("Leader Name :" + campDetailModelList.get(pos).getLeaderName());
             holder.tv_date_time.setText("" + campDetailModelList.get(pos).getCampDateTime());
@@ -164,6 +166,8 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
                 holder.ll_leader_detail.setVisibility(View.GONE);
             }
             holder.tv_product.setText("" + campDetailModelList.get(pos).getProduct());
+          /*  arr[pos] = "" + campDetailModelList.get(pos).getProduct();
+            Logger.error("arr: "+ arr[pos]);*/
             holder.tv_amount.setText("" + campDetailModelList.get(pos).getAmount());
             holder.tv_expected_crowd.setText("" + campDetailModelList.get(pos).getExpectedCrowd());
             holder.txt_camp.setText(String.valueOf(pos + 1));
@@ -237,14 +241,14 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
     }
 
     private boolean isTommorrowOnwards(String date) {
-        Date campDate=stringToDate(date);
+        Date campDate = stringToDate(date);
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
-        Date today =new Date();
-        Logger.error("date: "+today);
+        Date today = new Date();
+        Logger.error("date: " + today);
 
       /*  if (campDate.before(today)) {
             System.err.println("Date specified [" + campDate + "] is before today [" + today + "]");
@@ -254,7 +258,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             return true;
         }
 */
-      return true;
+        return true;
     }
 
 
@@ -274,9 +278,9 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
 
 
     private class FoldingCellViewHolder {
-        TextView tv_camp, tvName, tv_leader, tv_date_time, tv_location, tv_kits, txt_address, tv_product, tv_amount,tv_call_leader,
+        TextView tv_camp, tvName, tv_leader, tv_date_time, tv_location, tv_kits, txt_address, tv_product, tv_amount, tv_call_leader,
                 tv_expected_crowd, tv_address;
-        TextView txt_camp, txt_name, txt_ledger, txt_date_time, txt_distance, txt_kits,txt_call_leader;
+        TextView txt_camp, txt_name, txt_ledger, txt_date_time, txt_distance, txt_kits, txt_call_leader;
         LinearLayout ll_view_btech, ll_leader_detail, ll_btechs;
         ImageView img_accept, imgedit;
         Button btn_start, btn_arrived;
@@ -315,8 +319,8 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             tv_address = (TextView) itemView.findViewById(R.id.tv_address);
             ll_btechs = (LinearLayout) itemView.findViewById(R.id.ll_btechs);
             btn_arrived = (Button) itemView.findViewById(R.id.btn_arrived);
-            tv_call_leader=(TextView)itemView.findViewById(R.id.tv_call_leader);
-            txt_call_leader=(TextView)itemView.findViewById(R.id.txt_call_leader);
+            tv_call_leader = (TextView) itemView.findViewById(R.id.tv_call_leader);
+            txt_call_leader = (TextView) itemView.findViewById(R.id.txt_call_leader);
         }
     }
 

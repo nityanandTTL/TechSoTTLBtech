@@ -13,8 +13,11 @@ import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.data.CampDetailModel;
 import com.dhb.uiutils.AbstractActivity;
+import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
+
+import java.util.ArrayList;
 
 import static com.dhb.activity.HomeScreenActivity.TAG_ACTIVITY;
 
@@ -32,7 +35,8 @@ public class CampOrderBookingActivity extends AbstractActivity {
     private Toolbar tbOBA;
     private CampScanQRResponseModel campScanQRResponseModel;//=new CampScanQRResponseModel();
     private CampListDisplayResponseModel campListDisplayResponseModel;
-   CampDetailModel campDetailModels;
+   ArrayList<CampDetailModel> campDetailModels;
+    CampDetailModel campDetailModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +45,13 @@ public class CampOrderBookingActivity extends AbstractActivity {
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
         campScanQRResponseModel = getIntent().getExtras().getParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL);
-        campListDisplayResponseModel=getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
-        campDetailModels=getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
+        campDetailModel=getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
+//        Logger.error("camp booking activity campDetailModels "+campDetailModels.size());
+//        campListDisplayResponseModel=getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
+       // campDetailModels=getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
         initUI();
         initListeners();
-        pushFragments(CampManualWOEFragment.newInstance(campScanQRResponseModel,campListDisplayResponseModel,campDetailModels),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_camp_order_booking,TAG_ACTIVITY);
+        pushFragments(CampManualWOEFragment.newInstance(campScanQRResponseModel,campDetailModel/*,campListDisplayResponseModel,campDetailModels*/),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_camp_order_booking,TAG_ACTIVITY);
     }
 
     private void initListeners() {

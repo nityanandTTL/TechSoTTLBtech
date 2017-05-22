@@ -31,9 +31,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -71,8 +71,8 @@
                     android:layout_marginTop="@dimen/dp_10"
                     android:background="@android:drawable/edit_text"
                     android:gravity="center"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/tv_age"
@@ -158,6 +158,58 @@
 
                     <EditText
                         android:id="@+id/edt_mobile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:drawable/edit_text"
+                        android:minEms="11"
+                        android:paddingRight="@dimen/dp_5" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:minEms="5"
+                        android:padding="@dimen/dp_10"
+                        android:text="Brand Names:"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/edt_brand_name"
+                        android:drawableEnd="@android:drawable/arrow_down_float"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:drawable/edit_text"
+                        android:minEms="11"
+                        android:paddingRight="@dimen/dp_5" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:minEms="5"
+                        android:padding="@dimen/dp_10"
+                        android:text="Address:"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/edt_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -311,9 +363,9 @@
 
                 <LinearLayout
                     android:id="@+id/ll_test_scan"
-                    android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:orientation="vertical"></LinearLayout>
 
                 <LinearLayout
