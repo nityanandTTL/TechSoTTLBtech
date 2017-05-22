@@ -103,7 +103,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     private ArrayList<BeneficiaryLabAlertsModel> benLAArr;
     private ArrayList<LabAlertMasterModel> labAlertsArr;
     private static RefreshCampBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegateResult;
-    private EditText edt_name, edt_mobile, edt_email;
+    private EditText edt_name, edt_mobile, edt_email,edt_age;
     private Button btn_scan_qr, btn_enter_manually, btn_next;
     private TextView tv_age, tv_gender, edt_test_alerts;
     private LinearLayout ll_tests;
@@ -153,6 +153,8 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         edt_name = (EditText) rootview.findViewById(R.id.edt_name);
         edt_mobile = (EditText) rootview.findViewById(R.id.edt_mobile);
         edt_email = (EditText) rootview.findViewById(R.id.edt_email);
+        edt_email.setText(""+campAllOrderDetailsModel.getEmail());
+        edt_mobile.setText(""+campAllOrderDetailsModel.getMobile());
         edt_name.setText("" + beneficiaryDetailsArr.getName());
         btn_scan_qr = (Button) rootview.findViewById(R.id.btn_scan_qr);
         btn_enter_manually = (Button) rootview.findViewById(R.id.btn_enter_manually);
@@ -164,6 +166,8 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         tv_gender = (TextView) rootview.findViewById(R.id.tv_gender);
         sp_test = (Spinner) rootview.findViewById(R.id.sp_tests);
         tv_age.setText("Age: " + beneficiaryDetailsArr.getAge());
+        edt_age=(EditText)rootview.findViewById(R.id.edt_age);
+        edt_age.setText(""+beneficiaryDetailsArr.getAge());
         tv_gender.setText("| Gender: " + beneficiaryDetailsArr.getGender());
         ll_tests.setVisibility(View.GONE);
         for (int i = 0; i < beneficiaryDetailsArr.getSampleType().size(); i++) {
@@ -181,13 +185,14 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 TextView txt_sample_type=(TextView)v.findViewById(R.id.txt_sample_type);
                 TextView edt_barcode=(TextView)v.findViewById(R.id.edt_barcode);
                 ImageView scan_barcode_button=(ImageView)v.findViewById(R.id.scan_barcode_button);
+                txt_sample_type.setText(""+beneficiaryDetailsArr.getSampleType().get(i).getSampleType());
                 scan_barcode_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         integrator = new IntentIntegrator(getActivity()) {
                             @Override
                             protected void startActivityForResult(Intent intent, int code) {
-                                this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+                                CampBeneficiaryDetailsScanBarcodeFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
 
                             }
                         };

@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import com.dhb.R;
 import com.dhb.fragment.CampManualWOEFragment;
+import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.api.response.CampScanQRResponseModel;
+import com.dhb.models.data.CampDetailModel;
 import com.dhb.uiutils.AbstractActivity;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
@@ -29,6 +31,8 @@ public class CampOrderBookingActivity extends AbstractActivity {
     private ImageView imgBack;
     private Toolbar tbOBA;
     private CampScanQRResponseModel campScanQRResponseModel;//=new CampScanQRResponseModel();
+    private CampListDisplayResponseModel campListDisplayResponseModel;
+   CampDetailModel campDetailModels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +41,11 @@ public class CampOrderBookingActivity extends AbstractActivity {
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
         campScanQRResponseModel = getIntent().getExtras().getParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL);
+        campListDisplayResponseModel=getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
+        campDetailModels=getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
         initUI();
         initListeners();
-        pushFragments(CampManualWOEFragment.newInstance(campScanQRResponseModel),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_camp_order_booking,TAG_ACTIVITY);
+        pushFragments(CampManualWOEFragment.newInstance(campScanQRResponseModel,campListDisplayResponseModel,campDetailModels),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_camp_order_booking,TAG_ACTIVITY);
     }
 
     private void initListeners() {

@@ -58,7 +58,7 @@ public class CampListDisplayFragment extends AbstractFragment {
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
     private View rootView;
     private ListView recyclerView;
-
+public static String products;
     private TextView txtNoRecord;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConfirmOrderReleaseDialog cdd;
@@ -167,6 +167,7 @@ public class CampListDisplayFragment extends AbstractFragment {
                 if (campListDisplayResponseModel != null/* && campDetailsResponseModel.getBtechs().size() > 0*/) {
                     campDetailModels = campListDisplayResponseModel.getCampDetail();
                     Logger.error("campDetailModels size " + campListDisplayResponseModel.getCampDetail().size());
+                    products=campDetailsResponseModel.getProduct();
                     prepareRecyclerView();
                 } else {
                     Logger.error("else " + json);
@@ -356,7 +357,8 @@ public class CampListDisplayFragment extends AbstractFragment {
                     Logger.error("camp detail size " + campScanQRResponseModel.getAllOrderdetails().size());
                 }
                 Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
-                intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campScanQRResponseModel);
+                intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModels);
+              //  intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campScanQRResponseModel);
                 startActivity(intentOrderBooking);
             } else {
                 Toast.makeText(activity, "error : " + json, Toast.LENGTH_SHORT).show();
