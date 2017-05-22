@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +20,9 @@ import android.widget.TextView;
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.delegate.CampListDisplayRecyclerViewAdapterDelegate;
-
 import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.data.CampDetailModel;
-
+import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppConstants;
 import com.ramotion.foldingcell.FoldingCell;
 
