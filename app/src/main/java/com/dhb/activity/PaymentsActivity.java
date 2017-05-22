@@ -9,6 +9,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -56,6 +58,7 @@ public class PaymentsActivity extends AbstractActivity {
     private String OrderNo = "#TT082938";
     private int Amount = 100;
     private int SourceCode = 88453101;
+    private String BillingName;
     private PaymentStartTransactionAPIResponseModel paymentStartTransactionAPIResponseModel;
     private PaymentDoCaptureResponseAPIResponseModel paymentDoCaptureResponseAPIResponseModel;
     private int checkPaymentSuccessResponseRetryCount = 0;
@@ -352,7 +355,7 @@ public class PaymentsActivity extends AbstractActivity {
             btnPaymentInputsSubmit.setLayoutParams(btnParams);
             btnPaymentInputsSubmit.setGravity(Gravity.CENTER);
             btnPaymentInputsSubmit.setMinEms(10);
-            btnPaymentInputsSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_purple_bg_gradient));
+            btnPaymentInputsSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
             btnPaymentInputsSubmit.setText(getResources().getString(R.string.submit));
             btnPaymentInputsSubmit.setTextColor(getResources().getColor(android.R.color.white));
             btnPaymentInputsSubmit.setOnClickListener(new View.OnClickListener() {
@@ -371,13 +374,11 @@ public class PaymentsActivity extends AbstractActivity {
         try {
             jsonRequest.put("URLId", paymentPassInputsModel.getURLId());
             for (PaymentNameValueModel pnvm:
-                    paymentPassInputsModel.getNameValueCollection()) {
-                if(!pnvm.getRequired().equals("Optional")) {
-                    if (pnvm.getKey().equals("SourceCode")) {
-                        jsonRequest.put(pnvm.getKey(), appPreferenceManager.getLoginResponseModel().getUserID());
-                    } else {
-                        jsonRequest.put(pnvm.getKey(), pnvm.getValue());
-                    }
+                paymentPassInputsModel.getNameValueCollection()) {
+                if (pnvm.getKey().equals("SourceCode")) {
+                    jsonRequest.put(pnvm.getKey(), appPreferenceManager.getLoginResponseModel().getUserID());
+                } else {
+                    jsonRequest.put(pnvm.getKey(), pnvm.getValue());
                 }
             }
             startTransactionAsyncTask = asyncTaskForRequest.getStartTransactionRequestAsyncTask(jsonRequest);
@@ -451,21 +452,42 @@ public class PaymentsActivity extends AbstractActivity {
                     llPaymentStartTransaction.addView(edtPaymentUserInputs);
                 }
             }
-            TextView txtPaymentStartTransactionSubmit = new TextView(activity);
+            for (PaymentNameValueModel paymentNameValueModel:
+                    paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection()) {
+                if(paymentNameValueModel.getKey().equals("ModeId")&&paymentNameValueModel.getValue().equals("3")){
+                    WebView wvQRDisplay = new WebView(activity);
+                    WebSettings settings = wvQRDisplay.getSettings();
+                    settings.setUseWideViewPort(true);
+                    settings.setLoadWithOverviewMode(true);
+                    settings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
+                    wvQRDisplay.setVerticalScrollBarEnabled(false);
+                    wvQRDisplay.setHorizontalScrollBarEnabled(false);
+                    LinearLayout.LayoutParams llwvParams = new LinearLayout.LayoutParams(400,400);
+                    llwvParams.setMargins(20,20,20,20);
+                    wvQRDisplay.setLayoutParams(llwvParams);
+                    wvQRDisplay.setPadding(0, 0, 0, 0);
+                    wvQRDisplay.setInitialScale(getScale());
+                    wvQRDisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
+                    llPaymentStartTransaction.addView(wvQRDisplay);
+                    break;
+                }
+            }
+            Button btnPaymentStartTransactionSubmit = new Button(activity);
             LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
             btnParams.setMargins(10,5,5,10);
-            txtPaymentStartTransactionSubmit.setLayoutParams(btnParams);
-            txtPaymentStartTransactionSubmit.setGravity(Gravity.CENTER);
-            txtPaymentStartTransactionSubmit.setMinEms(10);
-            txtPaymentStartTransactionSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_purple_bg_gradient));
-            txtPaymentStartTransactionSubmit.setText(getResources().getString(R.string.submit));
-            txtPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
+            btnPaymentStartTransactionSubmit.setLayoutParams(btnParams);
+            btnPaymentStartTransactionSubmit.setGravity(Gravity.CENTER);
+            btnPaymentStartTransactionSubmit.setMinEms(10);
+            btnPaymentStartTransactionSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
+            btnPaymentStartTransactionSubmit.setText(getResources().getString(R.string.submit));
+            btnPaymentStartTransactionSubmit.setTextColor(getResources().getColor(android.R.color.white));
+            btnPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     fetchDoCaptureResponse();
                 }
             });
-            llPaymentStartTransaction.addView(txtPaymentStartTransactionSubmit);
+            llPaymentStartTransaction.addView(btnPaymentStartTransactionSubmit);
             flPayments.addView(llPaymentStartTransaction);
         }
     }
