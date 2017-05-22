@@ -167,32 +167,11 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             holder.tv_address.setText("" + campDetailModelList.get(pos).getLocation());
             holder.tv_kits.setVisibility(View.GONE);
             holder.txt_kits.setVisibility(View.GONE);
-            Date questionDate = stringToDate(campDetailModelList.get(pos).getCampDateTime());
-          /*  if (removeTime(questionDate).equals(removeTime(questionDate))) {
-                Logger.error(" campDetail if");
-            } else {
-                Logger.error("campDetail else ");
-            }*/
 
-           /* if(Date.todayDate.after(historyDate) && todayDate.before(futureDate)) {
-                // In between
-            }*/
-          /*  try {
-                String dateString = "" + campDetailModelList.get(pos).getCampDateTime();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                Date date = sdf.parse(dateString);
-
-                long startDate = date.getTime();
-                Logger.error("date func " + startDate);
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }*/
-            //       DateUtils.isToday(pos);
             if (campDetailModelList.get(pos).isAccepted()) {
                 holder.img_accept.setVisibility(View.GONE);
                 holder.imgedit.setVisibility(View.GONE);
-                if (/*isTommorrowOnwards() &&*/ !campDetailModelList.get(pos).isStarted()) {
+                if (/*isTommorrowOnwards(""+campDetailModelList.get(pos).getCampDateTime()) &&*/ !campDetailModelList.get(pos).isStarted()) {
                     holder.btn_start.setVisibility(View.VISIBLE);
                     holder.btn_arrived.setVisibility(View.GONE);
                 } else {
@@ -247,6 +226,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
 
         } else {
             holder.ll_btechs.setVisibility(View.GONE);
+            holder.ll_view_btech.setVisibility(View.GONE);
         }
 
         if (unfoldedIndexes.contains(pos)) {
@@ -257,15 +237,27 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
 
     }
 
-    public Date removeTime(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
+    private boolean isTommorrowOnwards(String date) {
+        Date campDate=stringToDate(date);
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        Date today =new Date();
+        Logger.error("date: "+today);
+
+      /*  if (campDate.before(today)) {
+            System.err.println("Date specified [" + campDate + "] is before today [" + today + "]");
+            return false;
+        } else {
+            System.err.println("Date specified [" + campDate + "] is NOT before today [" + today + "]");
+            return true;
+        }
+*/
+      return true;
     }
+
 
     private Date stringToDate(String dtStart) {
         SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
@@ -326,7 +318,6 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             btn_arrived = (Button) itemView.findViewById(R.id.btn_arrived);
             tv_call_leader=(TextView)itemView.findViewById(R.id.tv_call_leader);
             txt_call_leader=(TextView)itemView.findViewById(R.id.txt_call_leader);
-
         }
     }
 
@@ -346,23 +337,5 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
         unfoldedIndexes.add(position);
     }
 
-    public String getFormattedDate(Context context, long smsTimeInMilis) {
-        Calendar smsTime = Calendar.getInstance();
-        smsTime.setTimeInMillis(smsTimeInMilis);
 
-        Calendar now = Calendar.getInstance();
-
-        final String timeFormatString = "h:mm aa";
-        final String dateTimeFormatString = "EEEE, MMMM d, h:mm aa";
-        final long HOURS = 60 * 60 * 60;
-        if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE)) {
-            return "Today " + DateFormat.format(timeFormatString, smsTime);
-        } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1) {
-            return "Yesterday " + DateFormat.format(timeFormatString, smsTime);
-        } else if (now.get(Calendar.YEAR) == smsTime.get(Calendar.YEAR)) {
-            return DateFormat.format(dateTimeFormatString, smsTime).toString();
-        } else {
-            return DateFormat.format("MMMM dd yyyy, h:mm aa", smsTime).toString();
-        }
-    }
 }

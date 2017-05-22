@@ -303,7 +303,7 @@ public class AsyncTaskForRequest {
            // String postJson = new Gson().toJson(orderVisitDetailsModel);
           //  abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.CAMP_QR_DETAIL+"/"+qrContent);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.CAMP_QR_DETAIL+"/"+"TT000139021"/*qrContent*/);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);

@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.dhb.models.api.response.BtechClientsResponseModel;
 import com.dhb.models.api.response.BtechCollectionsResponseModel;
 import com.dhb.models.api.response.BusinessErrorModel;
+import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.dhb.models.api.response.ErrorModel;
@@ -695,6 +696,14 @@ public class ResponseParser implements AppConstants {
 		dispatchHubDisplayDetailsResponseModel = gson.fromJson(json, DispatchHubDisplayDetailsResponseModel.class);
 		//}
 		return dispatchHubDisplayDetailsResponseModel;
+	}
+	//Camp Order details Response parse:
+	public CampScanQRResponseModel getcampOrderDetailsResponseModel(String json, int statusCode) {
+		CampScanQRResponseModel campScanQRResponseModel = null;
+		//if (!parseIntoError(json, statusCode)){
+		campScanQRResponseModel = gson.fromJson(json, CampScanQRResponseModel.class);
+		//}
+		return campScanQRResponseModel;
 	}
 
 	//Btech Clients  details Response parse:

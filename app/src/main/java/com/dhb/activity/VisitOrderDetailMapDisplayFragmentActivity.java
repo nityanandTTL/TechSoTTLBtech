@@ -402,7 +402,8 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         } else if (v.getId() == R.id.btn_startNav) {
             callOrderStatusChangeApi(7);
             Intent intent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("google.navigation:q=an+panchavati+nashik"));
+                 //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
+                    Uri.parse("google.navigation:q=an+"+address));
             startActivity(intent);
         }
     }
