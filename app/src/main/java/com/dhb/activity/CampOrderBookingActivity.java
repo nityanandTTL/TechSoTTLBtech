@@ -33,9 +33,6 @@ public class CampOrderBookingActivity extends AbstractActivity {
     private TextView txtHeaderText;
     private ImageView imgBack;
     private Toolbar tbOBA;
-    private CampScanQRResponseModel campScanQRResponseModel;//=new CampScanQRResponseModel();
-    private CampListDisplayResponseModel campListDisplayResponseModel;
-   ArrayList<CampDetailModel> campDetailModels;
     CampDetailModel campDetailModel;
 
     @Override
@@ -44,14 +41,10 @@ public class CampOrderBookingActivity extends AbstractActivity {
         setContentView(R.layout.activity_camp_order_booking);
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
-        campScanQRResponseModel = getIntent().getExtras().getParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL);
         campDetailModel=getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
-//        Logger.error("camp booking activity campDetailModels "+campDetailModels.size());
-//        campListDisplayResponseModel=getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
-       // campDetailModels=getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
         initUI();
         initListeners();
-        pushFragments(CampManualWOEFragment.newInstance(campScanQRResponseModel,campDetailModel/*,campListDisplayResponseModel,campDetailModels*/),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_camp_order_booking,TAG_ACTIVITY);
+        pushFragments(CampManualWOEFragment.newInstance(campDetailModel),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_camp_order_booking,TAG_ACTIVITY);
     }
 
     private void initListeners() {

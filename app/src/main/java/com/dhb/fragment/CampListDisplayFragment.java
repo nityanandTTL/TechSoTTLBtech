@@ -58,7 +58,7 @@ public class CampListDisplayFragment extends AbstractFragment {
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
     private View rootView;
     private ListView recyclerView;
-public static String products;
+    public static String products;
     private TextView txtNoRecord;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConfirmOrderReleaseDialog cdd;
@@ -218,7 +218,7 @@ public static String products;
             campStartedApiAsyncTask.setApiCallAsyncTaskDelegate(new CampAcceptedAsyncTaskDelegateResult());
         }
         if (i == 3) {
-            campStartedApiAsyncTask.setApiCallAsyncTaskDelegate(new CampArrivedAsyncTaskDelegateResult());
+            campStartedApiAsyncTask.setApiCallAsyncTaskDelegate(new CampArrivedAsyncTaskDelegateResult(campDetailModel));
         }
         if (i == 0) {
             Intent intent = new Intent(Intent.ACTION_CALL);
@@ -271,30 +271,18 @@ public static String products;
     }
 
     private class CampArrivedAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        private CampDetailModel campDetailModel;
+        public CampArrivedAsyncTaskDelegateResult(CampDetailModel campDetailModel) {
+            this.campDetailModel = campDetailModel;
+        }
+
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-
                 Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
                 Logger.error("campDetailModels after arrived "+campDetailModels.size());
-                intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModels);
-             /*   if(campDetailModels!=null){
-                    Logger.error(TAG_FRAGMENT+"campDetailModels not null");
-                }else {
-                    Logger.error(TAG_FRAGMENT+"campDetailModels null");
-                }*/
+                intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModel);
                 startActivity(intentOrderBooking);
-
-                // pushFragments(CampManualWOEFragment.newInstance(),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
-
-               /* integrator = new IntentIntegrator(getActivity()) {
-                    @Override
-                    protected void startActivityForResult(Intent intent, int code) {
-                        CampListDisplayFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
-
-                    }
-                };
-                integrator.initiateScan();*/
             }
         }
 

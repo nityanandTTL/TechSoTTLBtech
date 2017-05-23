@@ -141,6 +141,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         btnProceedPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
                 ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(orderBookingRequestModel);
                 orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new OrderBookingAPIAsyncTaskDelegateResult());

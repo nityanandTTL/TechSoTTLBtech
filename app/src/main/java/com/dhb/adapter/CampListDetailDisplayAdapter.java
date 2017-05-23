@@ -3,8 +3,10 @@ package com.dhb.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -22,15 +24,16 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.dhb.Manifest;
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.delegate.CampListDisplayRecyclerViewAdapterDelegate;
 
-import com.dhb.dialog.ConfirmCallDialog;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.data.CampDetailModel;
 
 import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.AppConstants;
 import com.ramotion.foldingcell.FoldingCell;
 
 import java.text.ParseException;
@@ -53,7 +56,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
     private CampListDisplayRecyclerViewAdapterDelegate campListDisplayRecyclerViewAdapterDelegate;
     private HashSet<Integer> unfoldedIndexes = new HashSet<>();
     private LayoutInflater layoutInflater;
-    ConfirmCallDialog cod;
+   // ConfirmCallDialog cod;
     public static String[] arr;
 
     public CampListDetailDisplayAdapter(HomeScreenActivity activity,
@@ -217,7 +220,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
                 tv_sr_no.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(Intent.ACTION_CALL);
+                       /* Intent intent = new Intent(Intent.ACTION_CALL);
                         intent.setData(Uri.parse("tel:" + campDetailModelList.get(pos).getBtechs().get(0).getMobile()));
                         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions(activity,
@@ -225,7 +228,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
                                     AppConstants.APP_PERMISSIONS);
                             return;
                         }
-                        activity.startActivity(intent);
+                        activity.startActivity(intent);*/
                     }
                 });
 
