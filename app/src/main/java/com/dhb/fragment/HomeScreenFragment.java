@@ -43,6 +43,10 @@ public class HomeScreenFragment extends AbstractFragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+
+
+
+
     }
 
     @Override
@@ -108,6 +112,7 @@ public class HomeScreenFragment extends AbstractFragment {
         imgSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 pushFragments(ScheduleYourDayFragment.newInstance(),false,false,ScheduleYourDayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });

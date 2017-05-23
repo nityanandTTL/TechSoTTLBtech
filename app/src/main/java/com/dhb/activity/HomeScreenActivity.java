@@ -1,5 +1,6 @@
 package com.dhb.activity;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,7 +38,6 @@ import org.json.JSONException;
 
 public class HomeScreenActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
     public static final String TAG_ACTIVITY = "HOME_SCREEN_ACTIVITY";
     private FloatingActionButton fabBtn;
     private DrawerLayout drawer;
@@ -50,7 +50,9 @@ public class HomeScreenActivity extends AbstractActivity
     private HomeScreenActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private DhbDao dhbDao;
+    private int  camefrom=0;
     private boolean doubleBackToExitPressedOnce = false;
+    ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,9 @@ public class HomeScreenActivity extends AbstractActivity
         initUI();
         if(appPreferenceManager.getLeaveFlag()!=0){
             pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+            appPreferenceManager.setCameFrom(1);
+            toolbarHome.setVisibility(View.GONE);
+
         }
         else {
             pushFragments(HomeScreenFragment.newInstance(), false,false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
@@ -80,6 +85,8 @@ public class HomeScreenActivity extends AbstractActivity
         }
     }
 
+
+
     @Override
     public void initUI() {
         super.initUI();
@@ -96,9 +103,10 @@ public class HomeScreenActivity extends AbstractActivity
         });
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbarHome, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
+        drawer.setEnabled(false);
         toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);

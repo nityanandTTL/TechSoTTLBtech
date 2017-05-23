@@ -58,6 +58,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private boolean isAfterMasterSyncDone;
     SyncStatusReceiver syncStatusReceiver;
     private int leaveFlag = 0;
+    private String fromdateapi,todateapi;
 
     @Override
     protected void onStart() {
@@ -248,6 +249,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     appPreferenceManager.setSelfieResponseModel(selfieUploadResponseModel);
 //                    Toast.makeText(getApplicationContext(),+selfieUploadResponseModel.getFlag()+"",Toast.LENGTH_SHORT).show();
                     leaveFlag = selfieUploadResponseModel.getFlag();
+                    fromdateapi=selfieUploadResponseModel.getFromDate();
+                    todateapi=selfieUploadResponseModel.getToDate();
                     callMasterSync();
                 }
             } else {
@@ -387,6 +390,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                             appPreferenceManager.setIsAfterLogin(true);
                             isAfterMasterSyncDone = true;
                             appPreferenceManager.setLeaveFlag(leaveFlag);
+                            appPreferenceManager.setLeaveFromDate(fromdateapi);
+                            appPreferenceManager.setLeaveToDate(todateapi);
                             switchToActivity(activity, HomeScreenActivity.class, new Bundle());
                         }
 
