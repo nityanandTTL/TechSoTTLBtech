@@ -84,19 +84,19 @@ public class AbstractApiModel implements AppConstants {
 
     public String LOGOUT = VERSION_API_URL + "/Account/Logout";
 
-    public String FETCH_LEDGER_DETAIL=VERSION_API_URL+"/CashRegister";
+    public String FETCH_LEDGER_DETAIL=VERSION_API_URL+"/Ledger/CashRegister";
 
-    public String SET_BTECH_MATERIAL_INV=VERSION_API_URL+"/BTechMaterialINV";
+    public String SET_BTECH_MATERIAL_INV=VERSION_API_URL+"/Inventory/DailyInvUpdate";
 
-    public String FETCH_EARNINGREGISTER_DETAIL=VERSION_API_URL+"/EarningRegister";
+    public String FETCH_EARNINGREGISTER_DETAIL=VERSION_API_URL+"/Ledger/EarningRegister";
 
-    public String FETCH_DEPOSITREGISTER_DETAIL=VERSION_API_URL+"/DepositPayments";
+    public String FETCH_DEPOSITREGISTER_DETAIL=VERSION_API_URL+"/Ledger/DepositPayments";
 
     public String FETCH_VERSION_CONTROL_DETAIL=VERSION_API_URL+"/VersionControl";
 
-    public String FETCH_MATERIALMASTER_DETAIL=VERSION_API_URL+"/MaterialMaster";
+    public String FETCH_MATERIALMASTER_DETAIL=VERSION_API_URL+"/Masters/CategoryWiseMaterialMaster";
 
-    public String FETCH_MATERIALINV_DETAIL=VERSION_API_URL+"/BTechMaterialINV";
+    public String FETCH_MATERIALINV_DETAIL=VERSION_API_URL+"/Inventory/StockInHand";
 
     public String BTECH_COLLECTIONS=VERSION_API_URL+"/BtechCollections";
 

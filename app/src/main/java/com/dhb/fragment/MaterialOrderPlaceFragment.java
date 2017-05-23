@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -34,6 +36,8 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 /**
  * Created by E4904 on 5/3/2017.
  */
@@ -51,7 +55,12 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
     private ArrayList<FinalMaterialModel> Filterarraylst ;
     private ArrayList<FinalMaterialModel> templst;
     Integer temprate,total =0;
+    String PROMOTIONAL="181";
+    String OPERATIONAL="180";
+    String Category="180";
     EditText searchbar;
+    RadioButton Operational_radio,Promotional_radio;
+    RadioGroup group;
 
     public MaterialOrderPlaceFragment() {
         // Required empty public constructor
@@ -78,10 +87,12 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         rootView = inflater.inflate(R.layout.orderplacefragment, container, false);
         initUI();
-        fetchMaterialsDetails2();
+
         setListners();
+        fetchMaterialsDetails2();
         return rootView;
     }
 
@@ -91,11 +102,18 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
         materialordertable = (TableLayout) rootView.findViewById(R.id.materialordertable);
         btnFab = (FloatingActionButton) rootView.findViewById(R.id.btnFloatingAction);
         searchbar=(EditText) rootView.findViewById(R.id.searchbar);
+        Operational_radio=(RadioButton) rootView.findViewById(R.id.operational);
+        Promotional_radio=(RadioButton) rootView.findViewById(R.id.promotional);
+        group=(RadioGroup) rootView.findViewById(R.id.group);
 
     }
 
 
     private void setListners() {
+
+
+
+
         btnFab.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -107,6 +125,38 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
 
             }
         });
+        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                RadioButton checkedRadioButton = (RadioButton) rootView.findViewById(checkedId);
+                String text  = checkedRadioButton.getText().toString();
+
+                if (Promotional_radio.isChecked()){
+
+                    Category="181";
+                    Toast.makeText(getActivity(),text,LENGTH_SHORT).show();
+                    materialordertable.removeAllViews();
+                    fetchMaterialsDetails2();
+                }
+                else
+                {
+                    Category="180";
+                    Toast.makeText(getActivity(),text,LENGTH_SHORT).show();
+                    materialordertable.removeAllViews();
+                    fetchMaterialsDetails2();
+
+                }
+
+
+            }
+        });
+
+
+
+
+
 
         searchbar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -130,7 +180,13 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
             }
         });
 
+
+
+
+
     }
+
+
 
 
 
@@ -138,7 +194,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
     private void fetchMaterialsDetails2() {
         Logger.error(TAG_FRAGMENT + "--fetchData: ");
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchMaterialDetailApiAsyncTask = asyncTaskForRequest.getMaterialsDetailsRequestAsyncTask();
+        ApiCallAsyncTask fetchMaterialDetailApiAsyncTask = asyncTaskForRequest.getMaterialsDetailsRequestAsyncTask(Category);
         fetchMaterialDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new MaterialOrderPlaceFragment.FetchMaterialsDetailsApiAsyncTaskDelegateResult2());
         if (isNetworkAvailable(activity)) {
             fetchMaterialDetailApiAsyncTask.execute(fetchMaterialDetailApiAsyncTask);

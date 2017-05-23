@@ -8,16 +8,16 @@ import java.util.Date;
 
 public class LedgerRequestModel {
 
-    Integer id;
+    Integer BTechId;
     Date FromDate;
     Date ToDate;
 
-    public Integer getId() {
-        return id;
+    public Integer getBTechId() {
+        return BTechId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setBTechId(Integer BTechId) {
+        this.BTechId = BTechId;
     }
 
     public Date getFromDate() {

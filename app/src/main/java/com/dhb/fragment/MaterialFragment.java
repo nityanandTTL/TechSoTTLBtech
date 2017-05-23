@@ -55,6 +55,7 @@ public class MaterialFragment extends AbstractFragment {
     Button update;
     Integer finalstock;
     CustomOKDialog cdd;
+    String Category= "180";
     ArrayList<MaterialsStocksModel> stockModelsArr;
 
 
@@ -87,7 +88,8 @@ public class MaterialFragment extends AbstractFragment {
         rootView = inflater.inflate(R.layout.fragement_material, container, false);
         stockModelsArr = new ArrayList<>();
         initUI();
-        fetchMaterialsDetails();
+      //  fetchMaterialsDetails();
+        fetchMaterialsINV();
         setListners();
         return rootView;
 
@@ -152,7 +154,7 @@ public class MaterialFragment extends AbstractFragment {
     private void fetchMaterialsDetails() {
         Logger.error(TAG_FRAGMENT + "--fetchData: ");
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchMaterialDetailApiAsyncTask = asyncTaskForRequest.getMaterialsDetailsRequestAsyncTask();
+        ApiCallAsyncTask fetchMaterialDetailApiAsyncTask = asyncTaskForRequest.getMaterialsDetailsRequestAsyncTask(Category);
         fetchMaterialDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchMaterialsDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
             fetchMaterialDetailApiAsyncTask.execute(fetchMaterialDetailApiAsyncTask);
@@ -189,7 +191,7 @@ public class MaterialFragment extends AbstractFragment {
 
                 }
 
-                fetchMaterialsINV();
+
 
             }
 
@@ -239,7 +241,8 @@ public class MaterialFragment extends AbstractFragment {
                 Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
                 materialtable.removeAllViews();
 
-                fetchMaterialsDetails();
+               // fetchMaterialsDetails();
+                fetchMaterialsINV();
             }
         }
 

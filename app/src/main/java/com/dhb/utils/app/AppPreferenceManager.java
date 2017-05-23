@@ -34,6 +34,7 @@ public class AppPreferenceManager {
 	private String leaveFlag = "leaveFlag";
 	private String leaveFromDate = "leaveFromDate";
 	private String leaveToDate = "leaveToDate";
+	private String cameFrom = "cameFrom";
 
 	public AppPreferenceManager(Activity activity) {
 		super();
@@ -160,6 +161,13 @@ public class AppPreferenceManager {
 		appPreference.putInt(this.leaveFlag,leaveFlag);
 	}
 
+
+	public int getCameFrom() {
+		return  appPreference.getInt(cameFrom, 0); }
+
+	public void setCameFrom(int cameFrom) {
+		appPreference.putInt(this.cameFrom , cameFrom);
+	}
 
 	public void clearAllPreferences() {
 		boolean termsAndConditionsAccepted = appPreference.getBoolean(this.are_terms_and_conditions_accepted, false);
