@@ -23,8 +23,11 @@
     <string name="progress_message_authenticating_please_wait">Authenticating,\n Please wait ....</string>
     <string name="progress_message_uploading_selfie_please_wait">Uploading Selfie to server,\n Please wait ....</string>
     <string name="progress_message_uploading_order_details_please_wait">Uploading Order Details to server,\n Please wait ....</string>
+    <string name="progress_message_performing_work_order_please_wait">Performing Work Order,\n Please wait ....</string>
     <string name="progress_message_changing_order_status_please_wait">Updating Order Status,\n Please wait ....</string>
     <string name="progress_message_fetching_order_details_please_wait">Fetching Order Details,\n Please wait ....</string>
+    <string name="progress_message_camp_count_details_please_wait">Loading,\n Please wait ....</string>
+    <string name="progress_message_sending_master_barcode_please_wait">Sending Master barcode  Details,\n Please wait ....</string>
     <string name="progress_message_fetching_slot_details_please_wait">Fetching Slot Details,\n Please wait ....</string>
     <string name="progress_message_fetching_brand_master_please_wait">Fetching Brand Master,\n Please wait ....</string>
     <string name="progress_message_fetching_test_master_please_wait">Please wait\n while we update your Tests List</string>
@@ -88,4 +91,10 @@
     <string name="progress_message_fetching_Version_details_please_wait">Fetching Version  Details, Please wait ....</string>
     <string name="progress_message_removing_beneficiary_please_wait">Removing Beneficiary, Please wait …</string>
     <string name="progress_message_updating_scanned_barcode_please_wait">Updating Scanned Barcode to System, Please wait …</string>
+    <string name="progress_message_fetching_narration_master_please_wait">Fetching Narration Master, Please wait …</string>
+    <string name="progress_message_fetching_payment_modes_please_wait">Fetching Payment Modes, Please wait …</string>
+    <string name="progress_message_start_transaction_please_wait">Sending Transaction Details to Payment Gateway, Please wait …</string>
+    <string name="progress_message_payments_otp_verification_please_wait">Verifying Payment Details, Please wait …</string>
+    <string name="progress_message_fetching_payment_status_please_wait">Obtaining Payment Status, Please wait …</string>
+    <string name="submit">Submit</string>
 </resources>

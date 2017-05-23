@@ -13,12 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
-import com.dhb.activity.BtechClientDetailMapDisplayFragmentActivity;
+import com.dhb.activity.OLCPickupDetailMapDisplayFragmentActivity;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.activity.OlcPickupActivity;
 import com.dhb.adapter.BtechClientDetailsAdapter;
 import com.dhb.delegate.BtechClientDetailsAdapterOnItemClickDelegate;
-import com.dhb.dialog.ConfirmCallDialog;
 import com.dhb.models.api.response.BtechClientsResponseModel;
 import com.dhb.models.data.BtechClientsModel;
 import com.dhb.network.ApiCallAsyncTask;
@@ -34,22 +33,21 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 
-public class BtechClientsListFragment extends AbstractFragment {
+public class OLCPickupListDisplayFragment extends AbstractFragment {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recycler_view;
     private TextView tv_noof_pickup, tv_est_distance;
     private HomeScreenActivity activity;
-    public static final String TAG_FRAGMENT = BtechClientsListFragment.class.getSimpleName();
+    public static final String TAG_FRAGMENT = OLCPickupListDisplayFragment.class.getSimpleName();
     ArrayList<BtechClientsModel> btechClientsModels = new ArrayList<>();
     BtechClientDetailsAdapter btechClientDetailsAdapter;
-    ConfirmCallDialog cod;
 
-    public BtechClientsListFragment() {
+    public OLCPickupListDisplayFragment() {
     }
 
-    public static BtechClientsListFragment newInstance() {
-        BtechClientsListFragment fragment = new BtechClientsListFragment();
+    public static OLCPickupListDisplayFragment newInstance() {
+        OLCPickupListDisplayFragment fragment = new OLCPickupListDisplayFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -91,7 +89,7 @@ public class BtechClientsListFragment extends AbstractFragment {
             public void onItemClick(BtechClientsModel btechClientsModel) {
                 Logger.error("item clicked");
 
-                Intent intentMapDisplay = new Intent(activity, BtechClientDetailMapDisplayFragmentActivity.class);
+                Intent intentMapDisplay = new Intent(activity, OLCPickupDetailMapDisplayFragmentActivity.class);
                 intentMapDisplay.putExtra(BundleConstants.BTECH_CLIENTS_MODEL,btechClientsModel);
                 startActivityForResult(intentMapDisplay,BundleConstants.BCMD_START);
 
@@ -100,8 +98,8 @@ public class BtechClientsListFragment extends AbstractFragment {
             @Override
             public void onItemCallClick(BtechClientsModel btechClientsModel, int position) {
                 Logger.error("call button clicked");
-                cod = new ConfirmCallDialog(activity, btechClientsModel);
-                cod.show();
+               /* cod = new ConfirmCallDialog(activity, btechClientsModel);
+                cod.show();*/
             }
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);

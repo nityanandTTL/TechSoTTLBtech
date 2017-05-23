@@ -13,23 +13,36 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.AddEditBeneficiaryDetailsActivity;
 import com.dhb.activity.OrderBookingActivity;
+import com.dhb.activity.PaymentsActivity;
 import com.dhb.adapter.BeneficiaryScreenSlidePagerAdapter;
 import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BeneficiaryDetailsDao;
 import com.dhb.dao.models.OrderDetailsDao;
 import com.dhb.delegate.RefreshBeneficiariesSliderDelegate;
+import com.dhb.models.api.request.OrderBookingRequestModel;
+import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
+import com.dhb.models.data.BeneficiaryLabAlertsModel;
+import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
+import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
+import com.dhb.models.data.OrderBookingDetailsModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
+import com.dhb.network.ApiCallAsyncTask;
+import com.dhb.network.ApiCallAsyncTaskDelegate;
+import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.DeviceUtils;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -125,6 +138,91 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 }).show();
             }
         });
+        btnProceedPayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+                ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(orderBookingRequestModel);
+                orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new OrderBookingAPIAsyncTaskDelegateResult());
+                if(isNetworkAvailable(activity)){
+                    orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
+                }
+                else{
+                    Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private OrderBookingRequestModel generateOrderBookingRequestModel() {
+        OrderBookingRequestModel orderBookingRequestModel = new OrderBookingRequestModel();
+
+        //SET Order Booking Details Model - START
+        OrderBookingDetailsModel orderBookingDetailsModel = new OrderBookingDetailsModel();
+        orderBookingDetailsModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+        orderBookingDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+        orderBookingDetailsModel.setOrddtl(orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId()));
+        orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
+        //SET Order Booking Details Model - END
+
+        //SET Order Details Models Array - START
+        orderBookingRequestModel.setOrddtl(orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId()));
+        //SET Order Details Models Array - END
+
+
+        //SET BENEFICIARY Details Models Array - START
+        ArrayList<BeneficiaryDetailsModel> benArr = new ArrayList<>();
+        for (OrderDetailsModel orderDetailsModel:
+                orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId())) {
+            ArrayList<BeneficiaryDetailsModel> tempBenArr = new ArrayList<>();
+            tempBenArr = beneficiaryDetailsDao.getModelsFromOrderNo(orderDetailsModel.getOrderNo());
+            if(tempBenArr!=null) {
+                benArr.addAll(tempBenArr);
+            }
+        }
+        orderBookingRequestModel.setBendtl(benArr);
+        //SET BENEFICIARY Details Models Array - END
+
+        //SET BENEFICIARY Barcode Details Models Array - START
+        ArrayList<BeneficiaryBarcodeDetailsModel> benBarcodeArr = new ArrayList<>();
+
+        //SET BENEFICIARY Sample Types Details Models Array - START
+        ArrayList<BeneficiarySampleTypeDetailsModel> benSTArr = new ArrayList<>();
+
+        //SET BENEFICIARY Test Wise Clinical History Models Array - START
+        ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr = new ArrayList<>();
+
+        //SET BENEFICIARY Lab Alerts Models Array - START
+        ArrayList<BeneficiaryLabAlertsModel> benLAArr = new ArrayList<>();
+
+        for (BeneficiaryDetailsModel beneficiaryDetailsModel:
+             benArr) {
+            if(beneficiaryDetailsModel.getBarcodedtl()!=null) {
+                benBarcodeArr.addAll(beneficiaryDetailsModel.getBarcodedtl());
+            }
+            if(beneficiaryDetailsModel.getSampleType()!=null) {
+                benSTArr.addAll(beneficiaryDetailsModel.getSampleType());
+            }
+            if(beneficiaryDetailsModel.getClHistory()!=null) {
+                benCHArr.addAll(beneficiaryDetailsModel.getClHistory());
+            }
+            if(beneficiaryDetailsModel.getLabAlert()!=null) {
+                benLAArr.addAll(beneficiaryDetailsModel.getLabAlert());
+            }
+        }
+        orderBookingRequestModel.setBarcodedtl(benBarcodeArr);
+        //SET BENEFICIARY Barcode Details Models Array - END
+
+        orderBookingRequestModel.setSmpldtl(benSTArr);
+        //SET BENEFICIARY Sample Type Details Models Array - END
+
+        orderBookingRequestModel.setClHistory(benCHArr);
+        //SET BENEFICIARY Test Wise Clinical History Models Array - END
+
+        orderBookingRequestModel.setLabAlert(benLAArr);
+        //SET BENEFICIARY Lab Alerts Models Array - END
+
+        return orderBookingRequestModel;
     }
 
     private void initData() {
@@ -134,6 +232,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         }
 
         txtAmtPayable.setText(totalAmount+"");
+        if(totalAmount==0){
+            btnProceedPayment.setText("Submit Work Order");
+        }
+        else{
+            btnProceedPayment.setText("Proceed for Payment");
+        }
         ArrayList<BeneficiaryDetailsModel> beneficiariesArr = new ArrayList<>();
         for (OrderDetailsModel orderDetailsModel : orderVisitDetailsModel.getAllOrderdetails()) {
             Logger.error(orderDetailsModel.getBenMaster().size()+"");
@@ -220,6 +324,72 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         if (requestCode == BundleConstants.ADD_EDIT_START && resultCode == BundleConstants.ADD_EDIT_FINISH) {
             initData();
         }
+        if(requestCode==BundleConstants.PAYMENTS_START && resultCode==BundleConstants.PAYMENTS_FINISH){
+            boolean isPaymentSuccess = data.getBooleanExtra(BundleConstants.PAYMENT_STATUS,false);
+            if(isPaymentSuccess) {
+                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+                ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
+                workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
+                if (isNetworkAvailable(activity)) {
+                    workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
+                } else {
+                    Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private class OrderBookingAPIAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if(statusCode==200){
+                if(btnProceedPayment.getText().equals("Proceed for Payment")) {
+                    Intent intentPayments = new Intent(activity, PaymentsActivity.class);
+                    intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT,totalAmount);
+                    intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,2);
+                    intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderVisitDetailsModel.getVisitId());
+                    intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,appPreferenceManager.getLoginResponseModel().getUserID());
+                    startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                }
+                else if(btnProceedPayment.getText().equals("Submit Work Order")){
+                    OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+                    ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
+                    workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
+                    if(isNetworkAvailable(activity)){
+                        workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
+                    }
+                    else{
+                        Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            else{
+                Toast.makeText(activity,"Order Booking Failed",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity,"Order Booking Failed",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class WorkOrderEntryAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if(statusCode==200){
+                Toast.makeText(activity,"Work Order Entry Successful",Toast.LENGTH_SHORT).show();
+                activity.finish();
+            }
+            else{
+                Toast.makeText(activity,"Work Order Entry Failed",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity,"Work Order Entry Failed",Toast.LENGTH_SHORT).show();
+        }
     }
 }

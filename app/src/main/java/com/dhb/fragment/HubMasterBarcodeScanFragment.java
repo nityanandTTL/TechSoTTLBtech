@@ -37,8 +37,8 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 
-public class BtechCollectionsListFragment extends AbstractFragment implements View.OnClickListener {
-    public static final String TAG_FRAGMENT = BtechCollectionsListFragment.class.getSimpleName();
+public class HubMasterBarcodeScanFragment extends AbstractFragment implements View.OnClickListener {
+    public static final String TAG_FRAGMENT = HubMasterBarcodeScanFragment.class.getSimpleName();
     LinearLayout ll_hub_display_footer, ll_scan_master_barcode;
     HomeScreenActivity activity;
     RecyclerView recyclerView;
@@ -53,12 +53,12 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
     Button btnDispatch;
     private TextView txtCentrifuge;
 
-    public BtechCollectionsListFragment() {
+    public HubMasterBarcodeScanFragment() {
     }
 
 
-    public static BtechCollectionsListFragment newInstance(HUBBTechModel hubbTechModel) {
-        BtechCollectionsListFragment fragment = new BtechCollectionsListFragment();
+    public static HubMasterBarcodeScanFragment newInstance(HUBBTechModel hubbTechModel) {
+        HubMasterBarcodeScanFragment fragment = new HubMasterBarcodeScanFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(BundleConstants.HUB_BTECH_MODEL, hubbTechModel);
         fragment.setArguments(bundle);
@@ -227,7 +227,7 @@ public class BtechCollectionsListFragment extends AbstractFragment implements Vi
         intentIntegrator = new IntentIntegrator(activity){
             @Override
             protected void startActivityForResult(Intent intent, int code) {
-                BtechCollectionsListFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+                HubMasterBarcodeScanFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
             }
         };
         intentIntegrator.initiateScan();

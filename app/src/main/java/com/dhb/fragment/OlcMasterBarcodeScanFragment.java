@@ -28,8 +28,8 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
 
 
-public class OlcMasterBarcodeFragment extends AbstractFragment {
-    public static final String TAG_FRAGMENT = OlcMasterBarcodeFragment.class.getSimpleName();
+public class OlcMasterBarcodeScanFragment extends AbstractFragment {
+    public static final String TAG_FRAGMENT = OlcMasterBarcodeScanFragment.class.getSimpleName();
     private TextView txt_name, tv_distance, txt_call;
     private OlcPickupActivity activity;
     String scanned_barcode;
@@ -37,12 +37,12 @@ public class OlcMasterBarcodeFragment extends AbstractFragment {
     IntentIntegrator integrator;
     ImageView btnScanBarcode;
     EditText edtScannedBarcode;
-    public OlcMasterBarcodeFragment() {
+    public OlcMasterBarcodeScanFragment() {
         // Required empty public constructor
     }
 
-    public static OlcMasterBarcodeFragment newInstance(BtechClientsModel btechClientsModel) {
-        OlcMasterBarcodeFragment fragment = new OlcMasterBarcodeFragment();
+    public static OlcMasterBarcodeScanFragment newInstance(BtechClientsModel btechClientsModel) {
+        OlcMasterBarcodeScanFragment fragment = new OlcMasterBarcodeScanFragment();
         Bundle args = new Bundle();
         args.putParcelable("btechClientsModel",btechClientsModel);
         fragment.setArguments(args);
@@ -87,7 +87,7 @@ public class OlcMasterBarcodeFragment extends AbstractFragment {
                 integrator = new IntentIntegrator(getActivity()) {
                     @Override
                     protected void startActivityForResult(Intent intent, int code) {
-                        OlcMasterBarcodeFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+                        OlcMasterBarcodeScanFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
                     }
                 };
                 integrator.initiateScan();
@@ -104,16 +104,14 @@ public class OlcMasterBarcodeFragment extends AbstractFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        Toast.makeText(activity, "scanned res "+scanningResult, Toast.LENGTH_SHORT).show();
         if (scanningResult != null && scanningResult.getContents() != null) {
             scanned_barcode = scanningResult.getContents();
             Logger.error("scanned_barcode "+scanningResult.getContents());
-            Toast.makeText(activity, ""+scanningResult, Toast.LENGTH_SHORT).show();
             edtScannedBarcode.setText(scanned_barcode);
 
             OlcScanPickUpRequestModel olcScanPickUpRequestModel = new OlcScanPickUpRequestModel();
             olcScanPickUpRequestModel.setBarcode(scanned_barcode);
-            olcScanPickUpRequestModel.setBarcodeType(btechClientsModel.getBarcodeType());
+            olcScanPickUpRequestModel.setBarcodeType("master barcode");
             olcScanPickUpRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
             olcScanPickUpRequestModel.setClientId(btechClientsModel.getClientId());
 

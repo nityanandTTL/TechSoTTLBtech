@@ -86,7 +86,7 @@ public class DispatchToHubDisplayDetailsAdapter extends RecyclerView.Adapter<Dis
                 public void onClick(View v) {
 
                     mcallback.onItemClicked(hubbTechModel);
-                    //activity.pushFragments(HubDetailMapDisplayFragmentActivity.newInstance(hubbTechModels.get(pos)), false, false, HubDetailMapDisplayFragmentActivity.TAG_FRAGMENT, R.id.fl_homeScreen, DispatchToHubFragment.TAG_FRAGMENT);
+                    //activity.pushFragments(HubDetailMapDisplayFragmentActivity.newInstance(hubbTechModels.get(pos)), false, false, HubDetailMapDisplayFragmentActivity.TAG_FRAGMENT, R.id.fl_homeScreen, HubListDisplayFragment.TAG_FRAGMENT);
                 }
             });
         } else {

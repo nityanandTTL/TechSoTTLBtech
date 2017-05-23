@@ -162,7 +162,7 @@ public class TestRateMasterDao {
 		if(!InputUtils.isNull(testCodes)) {
 			String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TEST_CODE + " IN (?) AND " + RECORD_STATUS + "=?";
 			String[] whereParams = new String[]{testCodes, "A"};
-			Cursor cursor = this.db.rawQuery(query, whereParams);
+			Cursor cursor = db.rawQuery(query, whereParams);
 			if (cursor != null && (cursor.moveToFirst())) {
 				do {
 					TestRateMasterModel orderDetailsModel = getModelFromCursor(cursor);

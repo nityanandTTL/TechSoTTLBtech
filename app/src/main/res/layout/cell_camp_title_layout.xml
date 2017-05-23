@@ -92,6 +92,20 @@
                 android:text="Leader: 2"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="16sp" />
+            <TextView
+                android:id="@+id/txt_call_leader"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@id/txt_name"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_toEndOf="@id/txt_ledger"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:singleLine="true"
+                android:layout_marginLeft="@dimen/dp_4"
+                android:background="@drawable/call_icon"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/title_camp_date"
@@ -123,6 +137,7 @@
                 android:id="@+id/title_distance_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:visibility="invisible"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/title_camp_date"
                 android:layout_marginEnd="10dp"

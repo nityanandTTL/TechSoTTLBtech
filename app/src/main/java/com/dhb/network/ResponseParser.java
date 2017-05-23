@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.dhb.models.api.response.BtechClientsResponseModel;
 import com.dhb.models.api.response.BtechCollectionsResponseModel;
 import com.dhb.models.api.response.BusinessErrorModel;
+import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.dhb.models.api.response.ErrorModel;
@@ -18,15 +19,18 @@ import com.dhb.models.api.response.FetchOrderDetailsResponseModel;
 import com.dhb.models.api.response.LoginResponseModel;
 import com.dhb.models.api.response.MaterialINVResponseModel;
 import com.dhb.models.api.response.MessageModel;
+import com.dhb.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
+import com.dhb.models.api.response.PaymentProcessAPIResponseModel;
+import com.dhb.models.api.response.PaymentStartTransactionAPIResponseModel;
 import com.dhb.models.api.response.SelfieUploadResponseModel;
 import com.dhb.models.api.response.SessionExpireModel;
 import com.dhb.models.data.BrandMasterModel;
 import com.dhb.models.data.BrandTestMasterModel;
-import com.dhb.models.data.CampDetailModel;
 import com.dhb.models.data.DepositRegisterModel;
 import com.dhb.models.data.EarningRegisterModel;
 import com.dhb.models.data.LeaveNatureMasterModel;
 import com.dhb.models.data.MaterialDetailsModel;
+import com.dhb.models.data.NarrationMasterModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.models.data.SlotModel;
 import com.dhb.models.data.VersionControlMasterModel;
@@ -693,6 +697,14 @@ public class ResponseParser implements AppConstants {
 		//}
 		return dispatchHubDisplayDetailsResponseModel;
 	}
+	//Camp Order details Response parse:
+	public CampScanQRResponseModel getcampOrderDetailsResponseModel(String json, int statusCode) {
+		CampScanQRResponseModel campScanQRResponseModel = null;
+		//if (!parseIntoError(json, statusCode)){
+		campScanQRResponseModel = gson.fromJson(json, CampScanQRResponseModel.class);
+		//}
+		return campScanQRResponseModel;
+	}
 
 	//Btech Clients  details Response parse:
 	public BtechClientsResponseModel getBtechClientsResponseModel(String json, int statusCode) {
@@ -763,6 +775,49 @@ public class ResponseParser implements AppConstants {
 		TypeToken<ArrayList<LeaveNatureMasterModel>> token =new TypeToken<ArrayList<LeaveNatureMasterModel>>(){};
 		leaveNatureMasterModels = gson.fromJson(json,token.getType());
 		return leaveNatureMasterModels;
+	}
+
+	////Fetch Narration Master Response parse:
+	public ArrayList<NarrationMasterModel>  getNarrationMasterResponse (String json, int statusCode) {
+		ArrayList<NarrationMasterModel> narrationMasterModels = null;
+		TypeToken<ArrayList<NarrationMasterModel>> token =new TypeToken<ArrayList<NarrationMasterModel>>(){};
+		narrationMasterModels = gson.fromJson(json,token.getType());
+		return narrationMasterModels;
+	}
+
+	////Fetch Payment Modes Response parse:
+	public ArrayList<PaymentProcessAPIResponseModel> getPaymentModesResponse(String json, int statusCode) {
+		ArrayList<PaymentProcessAPIResponseModel> paymentModes = null;
+		TypeToken<ArrayList<PaymentProcessAPIResponseModel>> token =new TypeToken<ArrayList<PaymentProcessAPIResponseModel>>(){};
+		paymentModes = gson.fromJson(json,token.getType());
+		return paymentModes;
+	}
+
+	////Fetch Payment Pass Inputs Response parse:
+	public PaymentProcessAPIResponseModel getPaymentPassInputsResponse(String json, int statusCode) {
+		PaymentProcessAPIResponseModel paymentInputs = null;
+		if(!parseIntoError(json,statusCode)) {
+			paymentInputs = gson.fromJson(json, PaymentProcessAPIResponseModel.class);
+		}
+		return paymentInputs;
+	}
+
+	////Fetch Payment Start Transaction Response parse:
+	public PaymentStartTransactionAPIResponseModel getPaymentStartTransactionResponse(String json, int statusCode) {
+		PaymentStartTransactionAPIResponseModel paymentStartTransactionAPIResponseModel = null;
+		if(!parseIntoError(json,statusCode)) {
+			paymentStartTransactionAPIResponseModel = gson.fromJson(json, PaymentStartTransactionAPIResponseModel.class);
+		}
+		return paymentStartTransactionAPIResponseModel;
+	}
+
+	////Fetch Payment Do Capture Response API Response parse:
+	public PaymentDoCaptureResponseAPIResponseModel getPaymentDoCaptureAPIResponse(String json, int statusCode) {
+		PaymentDoCaptureResponseAPIResponseModel paymentDoCaptureResponseAPIResponseModel = null;
+		if(!parseIntoError(json,statusCode)) {
+			paymentDoCaptureResponseAPIResponseModel = gson.fromJson(json, PaymentDoCaptureResponseAPIResponseModel.class);
+		}
+		return paymentDoCaptureResponseAPIResponseModel;
 	}
 
 	////Fetch VersionControl  details Response parse:
