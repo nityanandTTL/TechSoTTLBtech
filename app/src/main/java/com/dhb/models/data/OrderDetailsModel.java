@@ -28,21 +28,15 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private ArrayList<BeneficiaryDetailsModel> benMaster;
     private String VisitId;
     private String Slot;
-
+    private String  CampId;
     private String Response;
     private int SlotId;
     private int Distance;
     private String Latitude;
     private String Longitude;
     private String Status;
-
+    private String Servicetype;
     private ArrayList<KitsCountModel> kits;
-
-
-
-    public OrderDetailsModel() {
-        super();
-    }
 
     protected OrderDetailsModel(Parcel in) {
         super(in);
@@ -64,12 +58,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         benMaster = in.createTypedArrayList(BeneficiaryDetailsModel.CREATOR);
         VisitId = in.readString();
         Slot = in.readString();
+        CampId = in.readString();
         Response = in.readString();
         SlotId = in.readInt();
         Distance = in.readInt();
         Latitude = in.readString();
         Longitude = in.readString();
         Status = in.readString();
+        Servicetype = in.readString();
         kits = in.createTypedArrayList(KitsCountModel.CREATOR);
     }
 
@@ -94,12 +90,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeTypedList(benMaster);
         dest.writeString(VisitId);
         dest.writeString(Slot);
+        dest.writeString(CampId);
         dest.writeString(Response);
         dest.writeInt(SlotId);
         dest.writeInt(Distance);
         dest.writeString(Latitude);
         dest.writeString(Longitude);
         dest.writeString(Status);
+        dest.writeString(Servicetype);
         dest.writeTypedList(kits);
     }
 
@@ -119,6 +117,26 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
             return new OrderDetailsModel[size];
         }
     };
+
+    public String getCampId() {
+        return CampId;
+    }
+
+    public void setCampId(String campId) {
+        CampId = campId;
+    }
+
+    public OrderDetailsModel() {
+        super();
+    }
+
+    public String getServicetype() {
+        return Servicetype;
+    }
+
+    public void setServicetype(String servicetype) {
+        Servicetype = servicetype;
+    }
 
     public String getVisitId() {
         return VisitId;
@@ -322,8 +340,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof OrderDetailsModel){
-            if(((OrderDetailsModel) obj).getOrderNo().equals(getOrderNo())){
+        if (obj instanceof OrderDetailsModel) {
+            if (((OrderDetailsModel) obj).getOrderNo().equals(getOrderNo())) {
                 return true;
             }
         }

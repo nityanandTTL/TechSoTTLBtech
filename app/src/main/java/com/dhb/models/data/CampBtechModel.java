@@ -1,13 +1,51 @@
 package com.dhb.models.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by vendor1 on 5/10/2017.
  */
 
-public class CampBtechModel {
+public class CampBtechModel implements Parcelable{
     private int BtechId;
     private String Mobile;
     private String Status;
+
+    public CampBtechModel() {
+    }
+
+    protected CampBtechModel(Parcel in) {
+        BtechId = in.readInt();
+        Mobile = in.readString();
+        Status = in.readString();
+        Name = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(BtechId);
+        dest.writeString(Mobile);
+        dest.writeString(Status);
+        dest.writeString(Name);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<CampBtechModel> CREATOR = new Creator<CampBtechModel>() {
+        @Override
+        public CampBtechModel createFromParcel(Parcel in) {
+            return new CampBtechModel(in);
+        }
+
+        @Override
+        public CampBtechModel[] newArray(int size) {
+            return new CampBtechModel[size];
+        }
+    };
 
     public String getName() {
         return Name;

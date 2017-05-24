@@ -443,7 +443,7 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
             Log.e(AsyncTaskForRequest.class.getSimpleName(), "getFetchLedgerDetailsRequestAsyncTask: " );
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_LEDGER_DETAIL+"/"+appPreferenceManager.getLoginResponseModel().getUserID()+"/"+"2017-04-15"+"/"+"2017-04-25");
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_LEDGER_DETAIL+"/"+appPreferenceManager.getLoginResponseModel().getUserID()+"/"+fromdate+"/"+todate);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -466,7 +466,7 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_DEPOSITREGISTER_DETAIL+"/"+appPreferenceManager.getLoginResponseModel().getUserID()+"/"+"2017-04-15"+"/"+"2017-04-25");
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_DEPOSITREGISTER_DETAIL+"/"+appPreferenceManager.getLoginResponseModel().getUserID()+"/"+fromdate+"/"+todate);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -489,7 +489,7 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_EARNINGREGISTER_DETAIL+"/"+appPreferenceManager.getLoginResponseModel().getUserID()+"/"+"2017-04-15"+"/"+"2017-04-25");
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_EARNINGREGISTER_DETAIL+"/"+appPreferenceManager.getLoginResponseModel().getUserID()+"/"+fromdate+"/"+todate);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -505,14 +505,14 @@ public class AsyncTaskForRequest {
       /*
 	 * Fetch Material Master Api Integration*/
 
-    public ApiCallAsyncTask getMaterialsDetailsRequestAsyncTask(){
+    public ApiCallAsyncTask getMaterialsDetailsRequestAsyncTask(String Category){
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
 
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_MATERIALMASTER_DETAIL);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_MATERIALMASTER_DETAIL+"/"+Category);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);

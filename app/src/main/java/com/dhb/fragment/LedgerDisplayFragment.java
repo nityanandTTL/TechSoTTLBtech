@@ -310,7 +310,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
 
     private void initData() {
-        if (fetchLedgerResponseModel != null && fetchLedgerResponseModel.getLedgerDetails().size() > 0) {
+        if (fetchLedgerResponseModel != null ) {
 
 
 

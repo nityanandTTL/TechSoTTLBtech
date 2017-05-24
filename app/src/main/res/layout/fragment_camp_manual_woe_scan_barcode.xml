@@ -31,9 +31,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -71,8 +71,8 @@
                     android:layout_marginTop="@dimen/dp_10"
                     android:background="@android:drawable/edit_text"
                     android:gravity="center"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/tv_age"
@@ -116,8 +116,8 @@
                             android:layout_gravity="center"
                             android:background="@android:drawable/edit_text"
                             android:inputType="number"
-                            android:minEms="11"
-                            android:paddingRight="@dimen/dp_5" />
+                            android:maxLength="3"
+                            android:minEms="8" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -132,11 +132,62 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:minEms="5"
-                            android:padding="@dimen/dp_10"
+                            android:paddingLeft="@dimen/dp_10"
                             android:text="Gender:"
                             android:textSize="18sp" />
 
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <ImageView
+
+                                android:id="@+id/img_male"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center"
+                                android:fadingEdge="horizontal"
+                                android:src="@drawable/male" />
+
+                            <View
+                                android:id="@+id/view_male"
+                                android:layout_width="35dp"
+                                android:visibility="gone"
+                                android:layout_height="2dp"
+                                android:background="#c0c0c0" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/img_vsg"
+                            android:layout_width="30dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center"
+                            android:fadingEdge="horizontal"
+                            android:src="@drawable/vseparator_gender"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/img_female"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+
+                                android:layout_gravity="center"
+                                android:fadingEdge="horizontal"
+                                android:src="@drawable/female" />
+
+                            <View
+                                android:id="@+id/view_female"
+                                android:layout_width="35dp"
+                                android:visibility="gone"
+                                android:layout_height="2dp"
+                                android:background="#c0c0c0" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -163,6 +214,60 @@
                         android:layout_gravity="center"
                         android:background="@android:drawable/edit_text"
                         android:minEms="11"
+                        android:inputType="number"
+                        android:maxLength="10"
+                        android:paddingRight="@dimen/dp_5" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:minEms="5"
+                        android:padding="@dimen/dp_10"
+                        android:text="Brand Name:"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/edt_brand_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:focusableInTouchMode="false"
+                        android:minEms="11"
+                        android:paddingRight="@dimen/dp_5" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:minEms="5"
+                        android:padding="@dimen/dp_10"
+                        android:text="Address:"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/edt_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:drawable/edit_text"
+                        android:minEms="11"
                         android:paddingRight="@dimen/dp_5" />
                 </LinearLayout>
 
@@ -184,6 +289,32 @@
 
                     <EditText
                         android:id="@+id/edt_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:drawable/edit_text"
+                        android:minEms="11"
+                        android:paddingRight="@dimen/dp_5" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:minEms="5"
+                        android:padding="@dimen/dp_10"
+                        android:text="Amount Due:"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/edt_amount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -311,9 +442,9 @@
 
                 <LinearLayout
                     android:id="@+id/ll_test_scan"
-                    android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:orientation="vertical"></LinearLayout>
 
                 <LinearLayout

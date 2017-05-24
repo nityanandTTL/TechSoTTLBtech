@@ -4,16 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by vendor1 on 5/15/2017.
+ * Created by vendor1 on 5/23/2017.
  */
 
-public class CampDetailsSampleTypeModel implements Parcelable{
+class SampleTypeModel implements Parcelable {
     private String sampleType,Tests;
 
-    public CampDetailsSampleTypeModel() {
-    }
-
-    protected CampDetailsSampleTypeModel(Parcel in) {
+    protected SampleTypeModel(Parcel in) {
         sampleType = in.readString();
         Tests = in.readString();
     }
@@ -29,15 +26,15 @@ public class CampDetailsSampleTypeModel implements Parcelable{
         return 0;
     }
 
-    public static final Creator<CampDetailsSampleTypeModel> CREATOR = new Creator<CampDetailsSampleTypeModel>() {
+    public static final Creator<SampleTypeModel> CREATOR = new Creator<SampleTypeModel>() {
         @Override
-        public CampDetailsSampleTypeModel createFromParcel(Parcel in) {
-            return new CampDetailsSampleTypeModel(in);
+        public SampleTypeModel createFromParcel(Parcel in) {
+            return new SampleTypeModel(in);
         }
 
         @Override
-        public CampDetailsSampleTypeModel[] newArray(int size) {
-            return new CampDetailsSampleTypeModel[size];
+        public SampleTypeModel[] newArray(int size) {
+            return new SampleTypeModel[size];
         }
     };
 
