@@ -270,6 +270,33 @@
                         android:minEms="11"
                         android:paddingRight="@dimen/dp_5" />
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:minEms="5"
+                        android:padding="@dimen/dp_10"
+                        android:text="Pincode:"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/edt_pincode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:layout_gravity="center"
+                        android:background="@android:drawable/edit_text"
+                        android:minEms="11"
+                        android:maxLength="6"
+                        android:paddingRight="@dimen/dp_5" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -52,7 +52,7 @@ import java.util.Random;
 public class CampManualWOEFragment extends AbstractFragment implements View.OnClickListener {
     public static final String TAG_FRAGMENT = CampManualWOEFragment.class.getSimpleName();
     private static final String TAG_ACTIVITY = CampManualWOEFragment.class.getSimpleName();
-    private EditText edt_name, edt_mobile, edt_email, edt_scan_result, edt_amount;
+    private EditText edt_name, edt_mobile, edt_email, edt_scan_result, edt_amount, edt_pincode;
     private TextView edt_brand_name;
     private TextView tv_age, tv_gender, edt_test, edt_test_alerts, edt_age, edt_address;
     private ImageView scan_barcode_button, img_female, img_male;
@@ -95,9 +95,10 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         activity = (CampOrderBookingActivity) getActivity();
         dhbDao = new DhbDao(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
-        Random r = new Random();
         orderNO = DeviceUtils.randomString(8);
-        benId = r.nextInt(10 - 9) + 10;
+        Random r = new Random();
+
+        benId = DeviceUtils.randomInt(1, 10);
         BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
         brandMasterModel = brandMasterDao.getModelFromId(campDetailModel.getBrandId());
         initUI(view);
@@ -113,6 +114,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             barcodeDetailsArr = new ArrayList<>();
             for (int i = 0; i < campDetailModel.getSampleType().size(); i++) {
                 BeneficiaryBarcodeDetailsModel bbdm = new BeneficiaryBarcodeDetailsModel();
+                campDetailModel.getSampleType().get(i).setBenId(benId);
                 bbdm.setBenId(benId);
                 bbdm.setSamplType(campDetailModel.getSampleType().get(i).getSampleType());
                 bbdm.setOrderNo(orderNO);
@@ -181,6 +183,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         view_male = (View) view.findViewById(R.id.view_male);
         edt_age = (EditText) view.findViewById(R.id.edt_age);
         img_male = (ImageView) view.findViewById(R.id.img_male);
+        edt_pincode = (EditText) view.findViewById(R.id.edt_pincode);
         img_female = (ImageView) view.findViewById(R.id.img_female);
         btn_enter_manually.setVisibility(View.GONE);
         btn_scan_qr.setVisibility(View.VISIBLE);
@@ -193,7 +196,15 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         testsList = tests.split(",");
         edt_test_alerts.setText("" + testsList[0]);
         edt_brand_name = (TextView) view.findViewById(R.id.edt_brand_name);
-        edt_brand_name.setText(brandMasterModel.getBrandName());
+        if (brandMasterModel != null) {
+            if (InputUtils.isNull(brandMasterModel.getBrandName())) {
+                edt_brand_name.setText("" + brandMasterModel.getBrandId());
+            } else {
+                edt_brand_name.setText(brandMasterModel.getBrandName());
+            }
+
+        }
+
     }
 
 
@@ -257,7 +268,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         campAllOrderDetailsModel.setOrderNo(orderNO);
         campAllOrderDetailsModel.setBrandId(campDetailModel.getBrandId());
         campAllOrderDetailsModel.setAddress(edt_address.getText().toString());
-        campAllOrderDetailsModel.setPincode("");
+        campAllOrderDetailsModel.setPincode(edt_pincode.getText().toString());
         campAllOrderDetailsModel.setMobile(edt_mobile.getText().toString());
         campAllOrderDetailsModel.setEmail(edt_email.getText().toString());
         campAllOrderDetailsModel.setPayType("Postpaid");
@@ -268,11 +279,11 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         campAllOrderDetailsModel.setReportHC(0);
         campAllOrderDetailsModel.setTestEdit(false);
         campAllOrderDetailsModel.setServicetype("2");
-        campAllOrderDetailsModel.setCampId(campDetailModel.getCampId());
+        campAllOrderDetailsModel.setCampId(String.valueOf(campDetailModel.getId()));
         ArrayList<OrderDetailsModel> ordrDtl = new ArrayList<>();
         ordrDtl.add(campAllOrderDetailsModel);
-
         orderBookingDetailsModel.setOrddtl(ordrDtl);
+        orderBookingRequestModel.setOrddtl(ordrDtl);
         orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
         BeneficiaryDetailsModel beneficiaryDetailsModel = new BeneficiaryDetailsModel();
         beneficiaryDetailsModel.setBenId(benId);
@@ -312,7 +323,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             edt_age.setError("Enter Age");
             edt_age.requestFocus();
             return false;
-        } else if (Integer.parseInt(edt_age.getText().toString())>135 || Integer.parseInt(edt_age.getText().toString())<1) {
+        } else if (Integer.parseInt(edt_age.getText().toString()) > 135 || Integer.parseInt(edt_age.getText().toString()) < 1) {
             edt_age.setError("Age Should be minimum 1 year and maximum 135 year");
             edt_age.requestFocus();
             return false;
@@ -330,6 +341,14 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         } else if (InputUtils.isNull(edt_address.getText().toString())) {
             edt_address.setError("Enter Address");
             edt_address.requestFocus();
+            return false;
+        } else if (InputUtils.isNull(edt_pincode.getText().toString())) {
+            edt_pincode.setError("Enter Pincode");
+            edt_pincode.requestFocus();
+            return false;
+        } else if (edt_pincode.getText().toString().length() < 6) {
+            edt_pincode.setError("Enter Valid Pincode");
+            edt_pincode.requestFocus();
             return false;
         } else if (InputUtils.isNull(edt_email.getText().toString())) {
             edt_email.setError("Enter Email");
@@ -417,16 +436,44 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     }
 
     private void prepareData() {
-        pushFragments(CampBeneficiariesDisplayFragment.newInstance(campScanQRResponseModel), false, false, CampBeneficiariesDisplayFragment.TAG_FRAGMENT, R.id.fl_camp_order_booking, TAG_ACTIVITY);
+        pushFragments(CampBeneficiariesDisplayFragment.newInstance(campScanQRResponseModel, campDetailModel), false, false, CampBeneficiariesDisplayFragment.TAG_FRAGMENT, R.id.fl_camp_order_booking, TAG_ACTIVITY);
     }
 
     private class OrderBookingAPIAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-
+                callWoeApi();
             } else {
+                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+            }
+        }
 
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void callWoeApi() {
+        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+        ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
+        workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
+        } else {
+            Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class WorkOrderEntryAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode==200){
+                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+
+            }else {
+                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
             }
         }
 

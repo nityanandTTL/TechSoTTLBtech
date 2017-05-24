@@ -112,7 +112,10 @@ public class DeviceUtils {
 		uuid = uuid.replaceAll("-", "");
 		return uuid;
 	}
-
+	public static int randomInt(int low, int high){
+		Random r = new SecureRandom();
+		return r.nextInt(high-low) + low;
+	}
 	public static String randomString(int length) {
 
 		char[] characterSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();

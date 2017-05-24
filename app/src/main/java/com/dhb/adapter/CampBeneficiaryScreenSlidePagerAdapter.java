@@ -13,6 +13,7 @@ import com.dhb.fragment.CampBeneficiaryDetailsScanBarcodeFragment;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.CampAllOrderDetailsModel;
+import com.dhb.models.data.CampDetailModel;
 import com.dhb.models.data.CampDetailsBenMasterModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
@@ -25,9 +26,11 @@ public class CampBeneficiaryScreenSlidePagerAdapter extends FragmentStatePagerAd
     private ArrayList<CampAllOrderDetailsModel> allOrderDetailsModels;
     private Context context;
     private RefreshCampBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegate;
-    public CampBeneficiaryScreenSlidePagerAdapter(FragmentManager fm, Context context, ArrayList<CampDetailsBenMasterModel> beneficiaryDetailsArr, ArrayList<CampAllOrderDetailsModel> orderDetailsModelsArr, RefreshCampBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegate) {
+    private CampDetailModel campDetailModel=new CampDetailModel();
+    public CampBeneficiaryScreenSlidePagerAdapter(FragmentManager fm, Context context,CampDetailModel campDetailModel, ArrayList<CampDetailsBenMasterModel> beneficiaryDetailsArr, ArrayList<CampAllOrderDetailsModel> orderDetailsModelsArr, RefreshCampBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegate) {
         super(fm);
         this.context = context;
+        this.campDetailModel=campDetailModel;
         this.beneficiaryDetailsArr = beneficiaryDetailsArr;
         this.allOrderDetailsModels = orderDetailsModelsArr;
         this.refreshBeneficiariesSliderDelegate = refreshBeneficiariesSliderDelegate;
@@ -45,7 +48,8 @@ public class CampBeneficiaryScreenSlidePagerAdapter extends FragmentStatePagerAd
             }
         }
         bundle.putParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL,beneficiaryDetailsArr.get(position));
-        bundle.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL,campAllOrderDetailsModel);
+        bundle.putParcelable(BundleConstants.CAMP_ALL_ORDER_DETAIL,campAllOrderDetailsModel);
+        bundle.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL,campDetailModel);
 
       return  CampBeneficiaryDetailsScanBarcodeFragment.newInstance(bundle, new RefreshCampBeneficiariesSliderDelegate() {
           @Override

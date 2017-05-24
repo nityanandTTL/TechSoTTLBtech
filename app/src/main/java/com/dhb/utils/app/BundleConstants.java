@@ -49,4 +49,5 @@ public class BundleConstants {
     public static final String PAYMENTS_SOURCE_CODE = "paymentsSourceCode";
     public static final String PAYMENT_STATUS = "PaymentStatus";
 
+    public static final String CAMP_ALL_ORDER_DETAIL = "CampAllOrderDetail";
 }
