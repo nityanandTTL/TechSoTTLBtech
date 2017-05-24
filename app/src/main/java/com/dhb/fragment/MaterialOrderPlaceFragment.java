@@ -2,11 +2,13 @@ package com.dhb.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.RadioButton;
@@ -18,10 +20,12 @@ import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
+import com.dhb.models.api.request.MaterialorderRequestModel;
 import com.dhb.models.api.response.MaterialINVResponseModel;
 import com.dhb.models.data.BTMaterialsModel;
 import com.dhb.models.data.FinalMaterialModel;
 import com.dhb.models.data.MaterialDetailsModel;
+import com.dhb.models.data.MaterialOrderDataModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -49,6 +53,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
     private View rootView;
     FloatingActionButton btnFab;
     private ArrayList<MaterialDetailsModel> materialDetailsModels;
+    private ArrayList<MaterialOrderDataModel> materialsOrderArr = new ArrayList<>();
     private MaterialINVResponseModel materialINVResponseModel;
     TableLayout materialordertable;
     private ArrayList<FinalMaterialModel> finalMaterialModelsArr;
@@ -58,6 +63,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
     String PROMOTIONAL="181";
     String OPERATIONAL="180";
     String Category="180";
+    Button Material_order;
     EditText searchbar;
     RadioButton Operational_radio,Promotional_radio;
     RadioGroup group;
@@ -105,11 +111,40 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
         Operational_radio=(RadioButton) rootView.findViewById(R.id.operational);
         Promotional_radio=(RadioButton) rootView.findViewById(R.id.promotional);
         group=(RadioGroup) rootView.findViewById(R.id.group);
+        Material_order =(Button) rootView.findViewById(R.id.btn_material_order);
 
     }
 
 
     private void setListners() {
+
+        Material_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                MaterialorderRequestModel materialorderRequestModel = new MaterialorderRequestModel();
+                materialorderRequestModel.setBTechId(appPreferenceManager.getLoginResponseModel().getUserID());
+                materialorderRequestModel.setBTTransactionCode("NA");
+                materialorderRequestModel.setOrderId("0");
+                materialorderRequestModel.setFinalStatus("BTECHGENERATE");
+                materialorderRequestModel.setRemarks("NA");
+                materialorderRequestModel.setMaterialDetails(materialsOrderArr);
+
+
+                AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+                ApiCallAsyncTask setMaterialsDetailApiAsyncTask = asyncTaskForRequest.getPostMaterialOrderAsyncTask(materialorderRequestModel);
+                setMaterialsDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new MaterialOrderPlaceFragment.setMaterialOrderDetailsApiAsyncTaskDelegateResult());
+                if (isNetworkAvailable(activity)) {
+                    setMaterialsDetailApiAsyncTask.execute(setMaterialsDetailApiAsyncTask);
+                } else {
+                    Toast.makeText(activity, R.string.internet_connetion_error, LENGTH_SHORT).show();
+                }
+
+
+
+            }
+        });
+
 
 
 
@@ -182,6 +217,30 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
 
 
 
+
+
+    }
+
+    //set Deleagte
+    private class setMaterialOrderDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            Logger.debug(TAG_FRAGMENT + "--apiCallResult: ");
+            if (statusCode == 200) {
+                Toast.makeText(getActivity(), "Success", LENGTH_SHORT).show();
+
+
+                 /*   Fragment mFragment = new HomeScreenFragment();
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fl_homeScreen, mFragment).commit();*/
+            }
+        }
+        @Override
+        public void onApiCancelled() {
+            Logger.error(TAG_FRAGMENT + "onApiCancelled: ");
+            Toast.makeText(activity, R.string.network_error, LENGTH_SHORT).show();
+        }
 
 
     }
@@ -339,17 +398,26 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (!InputUtils.isNull(s.toString())) {
-                            Integer temprate= Integer.parseInt (finalMaterialModels.getMaterialDetailsModel().getUnitCost().toString());
-                            //Toast.makeText(getActivity(),finalMaterialModels.getMaterialDetailsModel().getMaterialName()+"",Toast.LENGTH_SHORT).show();
-                            Integer total = ((temprate) * (Integer.parseInt((s).toString())));
-                            Total.setText(total+"");
 
+                        if (!InputUtils.isNull(s.toString())) {
+                            Float temprate = Float.parseFloat(finalMaterialModels.getMaterialDetailsModel().getUnitCost().toString());
+
+                            //Toast.makeText(getActivity(),finalMaterialModels.getMaterialDetailsModel().getMaterialName()+"",Toast.LENGTH_SHORT).show();
+                            Float total = temprate * (Integer.parseInt(s.toString()));
+                            Total.setText(total + "");
+                            MaterialOrderDataModel materialOrderDataModel = new MaterialOrderDataModel();
+                            materialOrderDataModel.setMaterialId(finalMaterialModels.getMaterialDetailsModel().getMaterialId());
+                            materialOrderDataModel.setOrderQty(Integer.parseInt(s.toString()));
+                            if(materialsOrderArr.contains(materialOrderDataModel)){
+                                materialsOrderArr.remove(materialOrderDataModel);
+                            }
+                            materialsOrderArr.add(materialOrderDataModel);
                         }
                     }
                 });
                 materialordertable.addView(trm);
             }
+
         }
     }
 

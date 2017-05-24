@@ -1,48 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@color/colorBackground"
     android:weightSum="9">
 
     <TextView
         android:id="@+id/txt_Registerdate"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:text="Date"
-        android:textSize="13sp"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimaryDark"
-        />
-    <View
         android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
+        android:layout_margin="4dp"
+        android:layout_weight="3"
+        android:background="@color/light"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text=""
+        android:textColor="@color/colorPrimaryDark"/>
+
     <TextView
         android:id="@+id/txt_Amount"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:text="Amount"
-        android:textSize="13sp"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimaryDark"/>
-    <View
         android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
+        android:layout_margin="4dp"
+        android:layout_weight="3"
+        android:background="@color/light"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text=""
+        android:textColor="@color/colorPrimaryDark"/>
+
     <TextView
         android:id="@+id/txt_Remarks"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
         android:layout_weight="3"
-        android:text="Remarks"
-        android:textSize="13sp"
-        android:textAlignment="center"
+        android:background="@color/light"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text=""
         android:textColor="@color/colorPrimaryDark"/>
+
 
 </TableRow>

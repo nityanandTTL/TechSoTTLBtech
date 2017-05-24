@@ -118,7 +118,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 toDt.add(Calendar.HOUR, 24);
 
 
-                fromdate.setEnabled(false);
+               fromdate.setEnabled(false);
                 fromdate.setClickable(false);
 
                 todate.setEnabled(false);
@@ -126,16 +126,16 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 fromdate1 = sdf.format(date1);
                 todate2 = sdf.format(date2);
 
+                fromdate.setText("" + fromdate1);
+                todate.setText("" + todate2);
+                appPreferenceManager.setCameFrom(3);
+                sp.setEnabled(false);
+                sp.setClickable(false);
+                calNumDays(toDt.getTimeInMillis(),fromDt.getTimeInMillis());
+                days.setText(daysdiff + "");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
-            fromdate.setText("" + fromdate1);
-            todate.setText("" + todate2);
-            appPreferenceManager.setCameFrom(3);
-            sp.setEnabled(false);
-            sp.setClickable(false);
-
         } else {
 
             defdate = getCalculatedDate("yyyy-MM-dd", 1);
@@ -203,6 +203,8 @@ public class LeaveIntimationFragment extends AbstractFragment {
                                 todate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                                 toDt.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
                                 toDt.add(Calendar.HOUR, 24);
+                                calNumDays(toDt.getTimeInMillis(),fromDt.getTimeInMillis());
+                                days.setText(daysdiff+"");
                             }
                         }, mYear, mMonth, mDay);
 
@@ -217,11 +219,10 @@ public class LeaveIntimationFragment extends AbstractFragment {
         Applyleave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long diffTime = toDt.getTimeInMillis() - fromDt.getTimeInMillis();
-                daysdiff = (int) (diffTime / (1000 * 60 * 60 * 24));
+                calNumDays(toDt.getTimeInMillis(),fromDt.getTimeInMillis());
 
                 days.setText(daysdiff + "");
-                Toast.makeText(getActivity(), "Days:" + daysdiff, LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "Days:" + daysdiff, LENGTH_SHORT).show();
 
 
                 ApplyLeaveRequestModel applyLeaveRequestModel = new ApplyLeaveRequestModel();
@@ -246,6 +247,11 @@ public class LeaveIntimationFragment extends AbstractFragment {
 
             }
         });
+    }
+
+    private void calNumDays(long toTime, long fromTime) {
+        long diffTime =  toTime - fromTime;
+        daysdiff = (int) (diffTime / (1000 * 60 * 60 * 24));
     }
 
 

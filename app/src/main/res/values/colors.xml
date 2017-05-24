@@ -38,5 +38,9 @@
     <color name="colorFAB1">#2196F3</color>
     <color name="colorFAB2">#E040FB</color>
     <color name="green">#00FF00</color>
+
+    <color name="navyblue">#a5edf7</color>
+    <color name="violet">#EE82EE</color>
     <color name="red">#FF0000</color>
+    <color name="light">#f5f5f5</color>
 </resources>

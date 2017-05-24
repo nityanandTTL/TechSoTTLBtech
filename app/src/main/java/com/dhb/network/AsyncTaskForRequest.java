@@ -13,6 +13,7 @@ import com.dhb.models.api.request.ChangePasswordRequestModel;
 import com.dhb.models.api.request.HubStartRequestModel;
 import com.dhb.models.api.request.LoginRequestModel;
 import com.dhb.models.api.request.MasterBarcodeMappingRequestModel;
+import com.dhb.models.api.request.MaterialorderRequestModel;
 import com.dhb.models.api.request.OlcScanPickUpRequestModel;
 import com.dhb.models.api.request.OlcStartRequestModel;
 import com.dhb.models.api.request.OrderBookingRequestModel;
@@ -549,6 +550,33 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
 
+
+
+       /*
+* Set MaterialOrder Api Integration*/
+
+    public ApiCallAsyncTask getPostMaterialOrderAsyncTask(MaterialorderRequestModel setmaterialorderRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(setmaterialorderRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.SET_MATERIALORDER_DETAIL);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_changing_MaterailsOrder_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
 
      /*
 * Set MaterialINv Api Integration*/

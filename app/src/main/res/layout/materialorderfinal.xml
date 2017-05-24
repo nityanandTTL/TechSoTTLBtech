@@ -1,75 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@color/colorBackground"
     android:weightSum="5">
 
     <TextView
+        android:layout_weight="1.25"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
         android:id="@+id/txt_finalitem"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.5"
-        android:text="Item"
-        android:textAlignment="center"
-        android:textSize="12sp"
+        android:layout_margin="4dp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@color/light"
         android:textColor="@color/colorPrimaryDark"/>
-    <View
-        android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
     <TextView
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
         android:id="@+id/txt_stock"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.5"
-        android:text="0"
-        android:textAlignment="center"
-        android:textSize="12sp"
+        android:layout_margin="4dp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@color/light"
         android:textColor="@color/colorPrimaryDark"/>
-    <View
-        android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
+
+
     <TextView
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
         android:id="@+id/txt_rate"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.75"
-        android:text="Rate"
-        android:textAlignment="center"
-        android:textSize="12sp"
+        android:layout_margin="4dp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@color/light"
         android:textColor="@color/colorPrimaryDark"/>
-    <View
-        android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
+
+
     <EditText
-        android:id="@+id/edit_quantity"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_weight="0.75"
-        android:text="0"
-        android:inputType="number"
-        android:textAlignment="center"
-        android:textSize="12sp"
-        android:textColor="@color/colorPrimaryDark"/>
-    <View
         android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
-    <TextView
-        android:id="@+id/txt_total"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.50"
-        android:text="0"
-        android:textAlignment="center"
-        android:textSize="12sp"
+        android:id="@+id/edit_quantity"
+        android:layout_margin="4dp"
+        android:padding="5dp"
+        android:inputType="number"
+        android:gravity="center"
+        android:background="@color/light"
         android:textColor="@color/colorPrimaryDark"/>
+
+
+    <TextView
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:id="@+id/txt_total"
+        android:layout_margin="4dp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@color/light"
+        android:textColor="@color/colorPrimaryDark"/>
+
+
+
+
 </TableRow>

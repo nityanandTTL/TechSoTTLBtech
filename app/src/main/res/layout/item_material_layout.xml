@@ -1,50 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@color/colorBackground"
     android:weightSum="3"
     android:layout_marginLeft="@dimen/dp_3"
     android:layout_marginRight="@dimen/dp_3">
-
     <TextView
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:text=""
         android:id="@+id/txt_item"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Item"
-        android:textAlignment="center"
-        android:textSize="12sp"
-        android:textColor="@color/colorPrimaryDark"/>
-    <View
-        android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
-    <TextView
+        android:layout_margin="4dp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@color/light"/>
+
+
+    <TextView android:layout_weight="1"
         android:id="@+id/txt_virtualstock"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="VirtualStock"
-        android:textAlignment="center"
-        android:textSize="12sp"
-        android:textColor="@color/colorPrimaryDark"/>
-    <View
         android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
-    <EditText
-        android:id="@+id/edit_actual"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="0"
-        android:hint="0"
+        android:padding="5dp"
+        android:text=""
+        android:background="@color/light"
+        android:layout_margin="4dp"
+        android:gravity="center"/>
+
+    <EditText android:layout_weight="1"
+        android:id="@+id/edit_actual"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:padding="5dp"
+        android:text=""
         android:inputType="number"
-        android:textAlignment="center"
-        android:textSize="12sp"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:background="@color/light"
+        android:layout_margin="4dp"
+        android:gravity="center"/>
+
+
+
 </TableRow>

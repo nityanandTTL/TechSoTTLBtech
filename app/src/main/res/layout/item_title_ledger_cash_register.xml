@@ -1,74 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
     android:id="@+id/tr_itlcrh"
-    android:background="@color/colorBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:weightSum="5">
+
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
         android:layout_weight="1"
+        android:background="@color/navyblue"
+        android:gravity="center"
         android:text="Date"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
-        android:textAlignment="center"
-        android:textSize="12sp"/>
-    <View
-        android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
+        android:textColor="@color/colorPrimaryDark" />
+
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.5"
-        android:text="OpeningBalance"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:background="@color/navyblue"
+        android:gravity="center"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
-        android:textAlignment="center"
-        android:textSize="12sp"/>
-    <View
-        android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
+        android:text="@string/opening"
+        android:textColor="@color/colorPrimaryDark" />
+
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.75"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:background="@color/navyblue"
+        android:gravity="center"
         android:text="Credit"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
-        android:textAlignment="center"
-        android:textSize="12sp"/>
-    <View
-        android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
+        android:textColor="@color/colorPrimaryDark" />
+
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.75"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:background="@color/navyblue"
+        android:gravity="center"
         android:text="Debit"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
-        android:textAlignment="center"
-        android:textSize="12sp" />
-    <View
-        android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
+        android:textColor="@color/colorPrimaryDark" />
+
     <TextView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.75"
-        android:text="Closing Balance"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
-        android:textAlignment="center"
-        android:textSize="12sp"/>
+        android:background="@color/navyblue"
+        android:gravity="center"
+        android:text="@string/closing"
+        android:textColor="@color/colorPrimaryDark" />
+
+
 </TableRow>

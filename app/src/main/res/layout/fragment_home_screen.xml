@@ -401,7 +401,7 @@
                     android:padding="@dimen/dp_1">
 
                     <ImageView
-                        android:id="@+id/feedback_icon"
+                        android:id="@+id/Ledger_icon"
                         android:layout_width="@dimen/dp_30"
                         android:layout_height="@dimen/dp_30"
                         android:layout_gravity="center"
@@ -411,7 +411,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Feedback"
+                        android:text="Ledger"
                         android:textAlignment="center"
                         android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>

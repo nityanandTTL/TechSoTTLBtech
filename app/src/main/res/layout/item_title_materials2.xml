@@ -1,78 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@color/colorBackground"
     android:weightSum="5">
+
+
     <TextView
-        android:id="@+id/txt_item"
+        android:layout_weight="1.25"
+        android:layout_height="match_parent"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.5"
         android:text="Item"
+        android:background="@color/navyblue"
+        android:layout_margin="4dp"
+        android:padding="15dp"
+        android:textSize="14sp"
+        android:gravity="center"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
-        android:textAlignment="center"
-        android:textSize="12sp"/>
-    <View
-        android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
+        android:textColor="@color/colorPrimaryDark"/>
+
     <TextView
-        android:id="@+id/txt_virtualstock"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.5"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="VirtualStock"
-        android:textAlignment="center"
-        android:textSize="12sp"/>
-    <View
+        android:layout_weight="1"
         android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
-    <TextView
-        android:id="@+id/txt_actual"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.75"
+        android:text="@string/virtual"
+        android:textSize="13sp"
+        android:background="@color/navyblue"
+        android:layout_margin="4dp"
+        android:gravity="center"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
         android:text="Rate"
-        android:textAlignment="center"
-        android:textSize="12sp"/>
-    <View
-        android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
+        android:textSize="14sp"
+        android:background="@color/navyblue"
+        android:layout_margin="4dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"/>
+
     <TextView
-        android:id="@+id/txt_Quantity"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_weight="0.75"
-        android:text="Quantity"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
-        android:textAlignment="center"
-        android:textSize="12sp" />
-    <View
         android:layout_height="match_parent"
-        android:layout_width="1dp"
-        android:background="@color/colorSecondaryDark">
-    </View>
-    <TextView
-        android:id="@+id/txt_price"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.50"
+        android:text="Qty"
+        android:textSize="14sp"
+        android:background="@color/navyblue"
+        android:layout_margin="4dp"
+        android:gravity="center"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
         android:text="Price"
-        android:textAlignment="center"
-        android:textSize="12sp"/>
+        android:background="@color/navyblue"
+        android:layout_margin="4dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/colorPrimaryDark"/>
+
 </TableRow>

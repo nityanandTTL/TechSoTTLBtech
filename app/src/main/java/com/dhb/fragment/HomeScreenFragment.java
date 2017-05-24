@@ -33,7 +33,7 @@ public class HomeScreenFragment extends AbstractFragment {
     private View rootView;
     private TextView txtUserName,txt_no_of_camps;
     private RoundedImageView rvSelfie;
-    private ImageView imgPayment, imgOrders,imgSchedule, imgMaterials, imgOLCPickup, imgHub,imgCamp,imgCommunication,imgFeedback;
+    private ImageView imgPayment, imgOrders,imgSchedule, imgMaterials, imgOLCPickup, imgHub,imgCamp,imgCommunication,imgLedger;
     public HomeScreenFragment() {
         // Required empty public constructor
     }
@@ -107,13 +107,13 @@ public class HomeScreenFragment extends AbstractFragment {
         imgPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(LedgerDisplayFragment.newInstance(),false,false,LedgerDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                Intent intentPaymentsActivity = new Intent(activity, PaymentsActivity.class);
+                startActivity(intentPaymentsActivity);
             }
         });
         imgSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 pushFragments(ScheduleYourDayFragment.newInstance(),false,false,ScheduleYourDayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
@@ -138,16 +138,15 @@ public class HomeScreenFragment extends AbstractFragment {
         imgCommunication.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentPaymentsActivity = new Intent(activity, PaymentsActivity.class);
-                startActivity(intentPaymentsActivity);
+                 Toast.makeText(activity,"Feature coming soon.",Toast.LENGTH_SHORT).show();
             }
         });
-        /*imgOrders.setOnClickListener(new View.OnClickListener() {
+        imgLedger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(LedgerDisplayFragment.newInstance(),false,false,LedgerDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
-        });*/
+        });
     }
 
     @Override
@@ -161,7 +160,7 @@ public class HomeScreenFragment extends AbstractFragment {
         imgHub = (ImageView) rootView.findViewById(R.id.hub_icon);
         imgOLCPickup = (ImageView) rootView.findViewById(R.id.olc_pickup_icon);
         imgCommunication = (ImageView) rootView.findViewById(R.id.communication_icon);
-        imgFeedback= (ImageView) rootView.findViewById(R.id.feedback_icon);
+        imgLedger= (ImageView) rootView.findViewById(R.id.Ledger_icon);
         imgCamp = (ImageView) rootView.findViewById(R.id.camp_icon);
         imgMaterials = (ImageView) rootView.findViewById(R.id.materials_icon);
         imgOLCPickup=(ImageView)rootView.findViewById(R.id.olc_pickup_icon);
@@ -176,7 +175,7 @@ public class HomeScreenFragment extends AbstractFragment {
                 txt_no_of_camps.setText(""+jsonObject.getString("CampCount"));
             }
             else {
-                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Failed to Fetch Camp Count", Toast.LENGTH_SHORT).show();
             }
         }
 

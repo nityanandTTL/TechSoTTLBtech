@@ -70,6 +70,8 @@ public class AbstractApiModel implements AppConstants {
 
 	public String FETCH_ORDER_DETAIL = VERSION_API_URL+"/OrderVisitDetails";
 
+    public String SET_MATERIALORDER_DETAIL = VERSION_API_URL+"/MaterialOrderHome/PostMaterialOrderApprove";
+
     public String CAMP_COUNT = VERSION_API_URL+"/CampDetails/MyCampCount";
 
     public String CAMP_QR_DETAIL = VERSION_API_URL+"/CampDetails/OrderDetails";
