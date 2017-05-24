@@ -106,7 +106,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 btnProceed.setVisibility(View.INVISIBLE);
                 isAvailable = false;
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setMessage("Are you sure that you are not available tomorrow ?")
+                builder.setMessage("Are you sure you are not available tomorrow ?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {

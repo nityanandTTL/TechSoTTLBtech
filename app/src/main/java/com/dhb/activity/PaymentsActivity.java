@@ -307,7 +307,7 @@ public class PaymentsActivity extends AbstractActivity {
                     edtPaymentUserInputs.setLayoutParams(edtParams);
                     edtPaymentUserInputs.setGravity(Gravity.CENTER);
                     edtPaymentUserInputs.setMinEms(10);
-                    edtPaymentUserInputs.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getKey()+"*");
+                    edtPaymentUserInputs.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                     edtPaymentUserInputs.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -368,7 +368,7 @@ public class PaymentsActivity extends AbstractActivity {
                     txtPaymentSystemInputsLabel.setLayoutParams(txtLabelParams);
                     txtPaymentSystemInputsLabel.setGravity(Gravity.START);
                     txtPaymentSystemInputsLabel.setMinEms(10);
-                    txtPaymentSystemInputsLabel.setText(paymentPassInputsModel.getNameValueCollection().get(i).getKey()+":");
+                    txtPaymentSystemInputsLabel.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint()+":");
 
                     TextView txtPaymentSystemInputs = new TextView(activity);
                     LinearLayout.LayoutParams txtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -468,7 +468,7 @@ public class PaymentsActivity extends AbstractActivity {
                     edtPaymentUserInputs.setLayoutParams(edtParams);
                     edtPaymentUserInputs.setGravity(Gravity.CENTER);
                     edtPaymentUserInputs.setMinEms(10);
-                    edtPaymentUserInputs.setHint(paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().get(i).getKey() + "*");
+                    edtPaymentUserInputs.setHint(paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().get(i).getHint());
                     edtPaymentUserInputs.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {

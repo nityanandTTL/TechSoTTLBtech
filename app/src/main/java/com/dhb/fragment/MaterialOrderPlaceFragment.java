@@ -2,7 +2,6 @@ package com.dhb.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Filter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableLayout;
@@ -38,7 +36,6 @@ import com.dhb.utils.app.InputUtils;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -94,7 +91,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        rootView = inflater.inflate(R.layout.orderplacefragment, container, false);
+        rootView = inflater.inflate(R.layout.fragment_place_order, container, false);
         initUI();
 
         setListners();

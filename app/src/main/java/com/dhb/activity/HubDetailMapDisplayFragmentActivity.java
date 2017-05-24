@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.vision.text.Line;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,6 +96,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private double destlat,destlong,currentlat,currentlong;
     private int Integertotaldiff;
     private boolean isStarted = false;
+    private LinearLayout llCall;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,6 +149,8 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private void initUI() {
         btn_arrived = (Button) findViewById(R.id.btn_arrived);
         btn_startNav = (Button) findViewById(R.id.btn_startNav);
+        llCall = (LinearLayout) findViewById(R.id.ll_call);
+        llCall.setVisibility(View.GONE);
         txtName = (TextView) findViewById(R.id.txt_name);
         txtAge = (TextView) findViewById(R.id.txt_age);
         txtAadharNo = (TextView) findViewById(R.id.txt_aadhar_no);

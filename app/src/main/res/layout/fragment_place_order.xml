@@ -5,24 +5,18 @@
     android:layout_height="match_parent"
     android:weightSum="6">
     <LinearLayout
+        android:gravity="center"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="3"
-        android:layout_weight="0.25"
-        >
-
-        <TextView
-            android:layout_width="-0dp"
-            android:layout_height="wrap_content"
-            android:text="Select:"
-            android:padding="5dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.75"
-            android:layout_marginTop="10dp"/>
-        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_weight="0.25">
+        <RadioGroup
             android:layout_width="0dp"
             android:id="@+id/group"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:layout_weight="2.25"
             android:orientation="horizontal">
@@ -31,14 +25,12 @@
                 android:layout_height="wrap_content"
                 android:text="Operational"
                 android:textSize="12sp"
-                android:checked="true"
-                />
+                android:checked="true"/>
             <RadioButton android:id="@+id/promotional"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Promotional"
-                android:textSize="12sp"
-                ></RadioButton>
+                android:textSize="12sp"/>
         </RadioGroup>
     </LinearLayout>
     <ScrollView
@@ -62,20 +54,19 @@
         android:weightSum="2">
         <EditText
             android:id="@+id/searchbar"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1.50"
             android:hint="Search"
+            android:minEms="14"
             android:visibility="invisible" />
-
-
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/btnFloatingAction"
             android:layout_width="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_weight="0.50"></android.support.design.widget.FloatingActionButton>
+            android:layout_gravity="end"
+            android:src="@android:drawable/ic_menu_search"
+            android:layout_height="wrap_content">
+
+        </android.support.design.widget.FloatingActionButton>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/purple_btn_bg"
-            android:hint="Material Order"
+            android:hint="Place Order"
             android:textColorHint="@android:color/white"
            android:layout_gravity="center"/>
     </LinearLayout>

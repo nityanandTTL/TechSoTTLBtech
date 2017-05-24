@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class CampDetailModel implements Parcelable {
     private int Id, Amount, ExpectedCrowd, ExpectedBtech, Leader, LeaderContactNo,BrandId;
-    private String CampId, VisitId, CampDate, Location, Status,CampName,LeaderName;
+    private String CampId, VisitId, CampDate, Location, Status,CampName,LeaderName,PayType;
     private boolean InventoryAssign, isStarted;
     private String CampDateTime, BookedBy, Product, QRCode;
     private ArrayList<CampBtechModel> btechs;
@@ -36,6 +36,7 @@ public class CampDetailModel implements Parcelable {
         Status = in.readString();
         CampName = in.readString();
         LeaderName = in.readString();
+        PayType = in.readString();
         InventoryAssign = in.readByte() != 0;
         isStarted = in.readByte() != 0;
         CampDateTime = in.readString();
@@ -66,6 +67,7 @@ public class CampDetailModel implements Parcelable {
         dest.writeString(Status);
         dest.writeString(CampName);
         dest.writeString(LeaderName);
+        dest.writeString(PayType);
         dest.writeByte((byte) (InventoryAssign ? 1 : 0));
         dest.writeByte((byte) (isStarted ? 1 : 0));
         dest.writeString(CampDateTime);
@@ -96,6 +98,14 @@ public class CampDetailModel implements Parcelable {
             return new CampDetailModel[size];
         }
     };
+
+    public String getPayType() {
+        return PayType;
+    }
+
+    public void setPayType(String payType) {
+        PayType = payType;
+    }
 
     public boolean isFasting() {
         return IsFasting;

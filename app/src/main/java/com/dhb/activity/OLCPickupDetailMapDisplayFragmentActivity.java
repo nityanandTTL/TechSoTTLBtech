@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.vision.text.Line;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,6 +99,7 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
     private double destlat,destlong,currentlat,currentlong;
     private int Integertotaldiff;
     private boolean isStarted = false;
+    private LinearLayout llCall;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -153,6 +156,8 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
         btn_startNav = (Button) findViewById(R.id.btn_startNav);
         txtName = (TextView) findViewById(R.id.txt_name);
         txtAge = (TextView) findViewById(R.id.txt_age);
+        llCall = (LinearLayout) findViewById(R.id.ll_call);
+        llCall.setVisibility(View.GONE);
         txtAge.setVisibility(View.INVISIBLE);
         txtAadharNo = (TextView) findViewById(R.id.txt_aadhar_no);
         txtAadharNo.setVisibility(View.INVISIBLE);
@@ -272,12 +277,12 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
         super.onResume();
         if (Integertotaldiff > 100 || !isStarted)
         {
-            btn_arrived.setVisibility(View.INVISIBLE);
+            btn_arrived.setVisibility(View.GONE);
             btn_startNav.setVisibility(View.VISIBLE);
         }
         else {
             btn_arrived.setVisibility(View.VISIBLE);
-            btn_startNav.setVisibility(View.INVISIBLE);
+            btn_startNav.setVisibility(View.GONE);
         }
 
     }
@@ -620,11 +625,11 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
             if ((statusCode == 200)) {
                 if (Integertotaldiff > 100) {
                     isStarted = true;
-                    btn_arrived.setVisibility(View.INVISIBLE);
+                    btn_arrived.setVisibility(View.GONE);
                     btn_startNav.setVisibility(View.VISIBLE);
                 } else {
                     btn_arrived.setVisibility(View.VISIBLE);
-                    btn_startNav.setVisibility(View.INVISIBLE);
+                    btn_startNav.setVisibility(View.GONE);
                 }
 
             }

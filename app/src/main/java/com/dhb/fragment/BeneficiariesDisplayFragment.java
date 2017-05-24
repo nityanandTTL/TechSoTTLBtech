@@ -25,6 +25,9 @@ import com.dhb.dao.models.BeneficiaryDetailsDao;
 import com.dhb.dao.models.OrderDetailsDao;
 import com.dhb.delegate.RefreshBeneficiariesSliderDelegate;
 import com.dhb.models.api.request.OrderBookingRequestModel;
+import com.dhb.models.api.response.OrderBookingResponseBeneficiaryModel;
+import com.dhb.models.api.response.OrderBookingResponseOrderModel;
+import com.dhb.models.api.response.OrderBookingResponseVisitModel;
 import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
@@ -36,6 +39,7 @@ import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
+import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
@@ -67,6 +71,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private OrderDetailsDao orderDetailsDao;
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
     private int PaymentMode;
+    private OrderBookingResponseVisitModel orderBookingResponseVisitModel = new OrderBookingResponseVisitModel();
+    private ArrayList<OrderBookingResponseBeneficiaryModel> orderBookingResponseBeneficiaryModelArr = new ArrayList<>();
+
     public BeneficiariesDisplayFragment() {
         // Required empty public constructor
     }
@@ -109,7 +116,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Confirm Action")
-                        .setMessage("Do you really want to add a new beneficiary?")
+                        .setMessage("Do you want to add a new beneficiary?")
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -335,6 +342,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             boolean isPaymentSuccess = data.getBooleanExtra(BundleConstants.PAYMENT_STATUS,false);
             if(isPaymentSuccess) {
                 OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+                orderBookingRequestModel = fixForAddBeneficiary(orderBookingRequestModel);
                 ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
                 workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
                 if (isNetworkAvailable(activity)) {
@@ -350,10 +358,85 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private OrderBookingRequestModel fixForAddBeneficiary(OrderBookingRequestModel orderBookingRequestModel) {
+        //Update Visit ID in OrdBooking Model
+        if(orderBookingRequestModel.getOrdbooking().getVisitId().equals(orderBookingResponseVisitModel.getOldVisitId())){
+            orderBookingRequestModel.getOrdbooking().setVisitId(orderBookingResponseVisitModel.getNewVisitId());
+        }
+        //Update Order No and Visit ID in Order Dtl Arr
+        for(int i=0;i<orderBookingRequestModel.getOrddtl().size();i++){
+            if(orderBookingRequestModel.getOrddtl().get(i).getVisitId().equals(orderBookingResponseVisitModel.getOldVisitId())){
+                orderBookingRequestModel.getOrddtl().get(i).setVisitId(orderBookingResponseVisitModel.getNewVisitId());
+            }
+            for (int j=0;j<orderBookingResponseVisitModel.getOrderids().size();j++){
+                if(orderBookingRequestModel.getOrddtl().get(i).getOrderNo().equals(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())){
+                    orderBookingRequestModel.getOrddtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+                }
+            }
+        }
+        //Update Order No and BenId in Bendtl Arr
+        for(int i=0;i<orderBookingRequestModel.getBendtl().size();i++){
+            for (int j=0;j<orderBookingResponseVisitModel.getOrderids().size();j++){
+                if(orderBookingRequestModel.getBendtl().get(i).getOrderNo().equals(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())){
+                    orderBookingRequestModel.getBendtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+                }
+            }
+            for (int j=0;j<orderBookingResponseBeneficiaryModelArr.size();j++){
+                if((orderBookingRequestModel.getBendtl().get(i).getBenId()+"").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())){
+                    orderBookingRequestModel.getBendtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                }
+            }
+        }
+        //Update orderNo and BenId in BarcodeDtl Arr
+        for(int i=0;i<orderBookingRequestModel.getBarcodedtl().size();i++){
+            for (int j=0;j<orderBookingResponseVisitModel.getOrderids().size();j++){
+                if(orderBookingRequestModel.getBarcodedtl().get(i).getOrderNo().equals(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())){
+                    orderBookingRequestModel.getBarcodedtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+                }
+            }
+            for (int j=0;j<orderBookingResponseBeneficiaryModelArr.size();j++){
+                if((orderBookingRequestModel.getBarcodedtl().get(i).getBenId()+"").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())){
+                    orderBookingRequestModel.getBarcodedtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                }
+            }
+        }
+        //Update BenId in SmplDtl Arr
+        for(int i=0;i<orderBookingRequestModel.getSmpldtl().size();i++){
+            for (int j=0;j<orderBookingResponseBeneficiaryModelArr.size();j++){
+                if((orderBookingRequestModel.getSmpldtl().get(i).getBenId()+"").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())){
+                    orderBookingRequestModel.getSmpldtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                }
+            }
+        }
+        //Update BenId in ClHistory Arr
+        for(int i=0;i<orderBookingRequestModel.getClHistory().size();i++){
+            for (int j=0;j<orderBookingResponseBeneficiaryModelArr.size();j++){
+                if((orderBookingRequestModel.getClHistory().get(i).getBenId()+"").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())){
+                    orderBookingRequestModel.getClHistory().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                }
+            }
+        }
+        //Update BenId in LabAlert Arr
+        for(int i=0;i<orderBookingRequestModel.getLabAlert().size();i++){
+            for (int j=0;j<orderBookingResponseBeneficiaryModelArr.size();j++){
+                if((orderBookingRequestModel.getLabAlert().get(i).getBenId()+"").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())){
+                    orderBookingRequestModel.getLabAlert().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                }
+            }
+        }
+        return orderBookingRequestModel;
+    }
+
     private class OrderBookingAPIAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if(statusCode==200){
+                orderBookingResponseVisitModel = new ResponseParser(activity).getOrderBookingAPIResponse(json,statusCode);
+                for (OrderBookingResponseOrderModel obrom:
+                        orderBookingResponseVisitModel.getOrderids()) {
+                    orderBookingResponseBeneficiaryModelArr.addAll(obrom.getBenfids());
+                }
+
                 if(btnProceedPayment.getText().equals("Proceed for Payment")) {
                     final String[] paymentItems = new String[]{"Cash","Digital"};
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
