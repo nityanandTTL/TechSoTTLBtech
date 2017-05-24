@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
+import com.dhb.utils.app.InputUtils;
 
 import org.json.JSONException;
 
@@ -40,6 +42,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
     private View rootView;
+    private LinearLayout sevenlay,noledgerlay,nodepositlay,noearninglay;
     private TextView txtFromDate, txtToDate, seven, outstanding, norecordsearnings, norecordsdeposit, noledger, balance;
     private Button btnFilter,depositbuttn;
     private TableLayout tlCR, t1ER, t1DR;
@@ -180,6 +183,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
                                              t1DR.removeAllViews();
                                              fetchLedgerDetails();
                                              seven.setVisibility(View.GONE);
+                                             sevenlay.setVisibility(View.GONE);
 
 
                                          }
@@ -261,7 +265,6 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
                 earningRegisterModels = responseParser.getEarningRegisterResponseModel(json, statusCode);
                 if (earningRegisterModels != null && earningRegisterModels.size() > 0) {
-                    Toast.makeText(activity, "earningRegisterResponseModel not null", Toast.LENGTH_SHORT).show();
 
                 }
                 fetchDepositLedger();
@@ -290,7 +293,6 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
                 depositRegisterModels = responseParser.getDepositRegisterResponseModel(json, statusCode);
                 if (depositRegisterModels != null && depositRegisterModels.size() > 0) {
-                    Toast.makeText(activity, "DepositRegisterResponseModel not null", Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -309,7 +311,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
 
     private void initData() {
-        if (fetchLedgerResponseModel != null ) {
+        if (fetchLedgerResponseModel != null && fetchLedgerResponseModel.getLedgerDetails().size() > 0) {
 
 
 
@@ -334,16 +336,21 @@ public class LedgerDisplayFragment extends AbstractFragment {
                 txtclosingbal.setText(ledgerDetailsModel.getClosingBal() + "");
 
                 tlCR.addView(trCr);
-                //balance.setText(fetchLedgerResponseModel.getOutstandingBalance()+"");
-                Toast.makeText(getActivity(),fetchLedgerResponseModel.getOutstandingBalance()+"",Toast.LENGTH_SHORT).show();
+
+
                 outstanding.setVisibility(View.VISIBLE);
                 noledger.setVisibility(View.GONE);
+                noledgerlay.setVisibility(View.GONE);
                 depositbuttn.setVisibility(View.VISIBLE);
+
             }
+            balance.setText(fetchLedgerResponseModel.getOutstandingBalance()+"");
         } else {
             depositbuttn.setVisibility(View.GONE);
             noledger.setVisibility(View.VISIBLE);
+            noledgerlay.setVisibility(View.VISIBLE);
             outstanding.setVisibility(View.GONE);
+            balance.setVisibility(View.GONE);
 
         }
         if (earningRegisterModels != null && earningRegisterModels.size() > 0) {
@@ -362,11 +369,14 @@ public class LedgerDisplayFragment extends AbstractFragment {
                 txtAmount.setText(earningRegisterModel.getAmount() + "");
                 txtRemarks.setText(earningRegisterModel.getRemarks() + "");
                 t1ER.addView(trEr);
-                norecordsdeposit.setVisibility(View.GONE);
+
+                norecordsearnings.setVisibility(View.GONE);
+                noearninglay.setVisibility(View.GONE);
             }
 
         } else {
-            norecordsdeposit.setVisibility(View.VISIBLE);
+            norecordsearnings.setVisibility(View.VISIBLE);
+            noearninglay.setVisibility(View.VISIBLE);
 
         }
 
@@ -388,12 +398,14 @@ public class LedgerDisplayFragment extends AbstractFragment {
                 txtRemarks.setText(depositRegisterModel.getRemarks() + "");
 
                 t1DR.addView(trDr);
-                norecordsearnings.setVisibility(View.GONE);
+                norecordsdeposit.setVisibility(View.GONE);
+                nodepositlay.setVisibility(View.GONE);
             }
 
         } else {
+            norecordsdeposit.setVisibility(View.VISIBLE);
+            nodepositlay.setVisibility(View.VISIBLE);
 
-            norecordsearnings.setVisibility(View.VISIBLE);
 
         }
     }
@@ -409,10 +421,14 @@ public class LedgerDisplayFragment extends AbstractFragment {
         t1ER = (TableLayout) rootView.findViewById(R.id.earningsRegisterTable);
         t1DR = (TableLayout) rootView.findViewById(R.id.depositsRegisterTable);
         seven = (TextView) rootView.findViewById((R.id.seven));
+        sevenlay = (LinearLayout) rootView.findViewById((R.id.sevendays_layout));
         outstanding = (TextView) rootView.findViewById(R.id.outstandig);
-        norecordsearnings = (TextView) rootView.findViewById(R.id.norecordsearning);
-        norecordsdeposit = (TextView) rootView.findViewById(R.id.norecordsdeposit);
+        norecordsearnings = (TextView) rootView.findViewById(R.id.norecordearning);
+        norecordsdeposit = (TextView) rootView.findViewById(R.id.nodeposit);
         noledger = (TextView) rootView.findViewById(R.id.noledger);
+        noledgerlay = (LinearLayout) rootView.findViewById((R.id.noleaderlay));
+        nodepositlay = (LinearLayout) rootView.findViewById((R.id.nodepositlay));
+        noearninglay = (LinearLayout) rootView.findViewById((R.id.recordearninglay));
         depositbuttn =(Button) rootView.findViewById(R.id.deposit_button);
          balance =(TextView) rootView.findViewById(R.id.balance);
 

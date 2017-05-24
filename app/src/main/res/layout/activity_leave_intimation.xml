@@ -1,82 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/title_leave_intmtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Apply for Leave"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="19sp"
-        android:textAlignment="center"
         android:padding="@dimen/dp_2"
-        />
+        android:text="Apply for Leave"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="19sp" />
 
     <LinearLayout
         android:id="@+id/ll_leave_nature"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="@dimen/dp_5">
+        android:layout_margin="@dimen/dp_5"
+        android:orientation="horizontal">
+
         <TextView
             android:id="@+id/title_leave_nature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nature:"
             android:padding="@dimen/dp_5"
-            />
+            android:text="Nature:" />
+
         <Spinner
             android:id="@+id/sp_leave_nature"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dp_5">
-        </Spinner>
+            android:padding="@dimen/dp_5"></Spinner>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="3"
-        >
+        android:weightSum="3">
 
         <TextView
             android:layout_width="-0dp"
             android:layout_height="wrap_content"
-            android:text="Duration:"
-            android:padding="5dp"
             android:layout_gravity="center_vertical"
-            android:layout_weight="0.75" />
+            android:layout_weight="0.75"
+            android:padding="5dp"
+            android:text="Duration:" />
+
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="0dp"
             android:id="@+id/group"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2.25"
             android:orientation="horizontal">
-            <RadioButton android:id="@+id/radio_pirates"
+
+            <RadioButton
+                android:id="@+id/radio_pirates"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="One-Day"
-                android:textSize="12sp"
                 android:checked="true"
-                />
-            <RadioButton android:id="@+id/radio_ninjas"
+                android:text="One-Day"
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/radio_ninjas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="More than 1 day"
-                android:textSize="12sp"
-                ></RadioButton>
+                android:textSize="12sp"></RadioButton>
         </RadioGroup>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_leave_duration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_5"
-        android:background="@android:color/white"
+
         android:orientation="horizontal"
         android:paddingBottom="@dimen/dp_5"
         android:paddingLeft="@dimen/dp_2"
@@ -131,8 +134,7 @@
             android:paddingTop="@dimen/dp_5"
             android:textColor="@color/calender_text"
             android:textSize="15sp"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
     </LinearLayout>
 
     <!--AS Per the Ganesh Sir ReQ-->
@@ -186,28 +188,30 @@
         android:id="@+id/ll_leave_remark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="@dimen/dp_5">
+        android:layout_margin="@dimen/dp_5"
+        android:orientation="horizontal">
+
         <TextView
             android:id="@+id/title_leave_remark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Remark:"
-            android:padding="@dimen/dp_5"
+            android:layout_gravity="start"
             android:gravity="start"
-            android:layout_gravity="start"/>
+            android:padding="@dimen/dp_5"
+            android:text="Remark:" />
+
         <EditText
             android:id="@+id/et_leave_days_remark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dp_5"
-            android:hint="Reason For Leave "
             android:layout_gravity="start"
-            android:gravity="start"
-            android:minLines="3"
-            android:maxLines="5"
-            android:maxLength="250"
             android:background="@android:drawable/editbox_background"
+            android:gravity="start"
+            android:hint="Reason For Leave "
+            android:maxLength="250"
+            android:maxLines="5"
+            android:minLines="3"
+            android:padding="@dimen/dp_5"
             android:textSize="15sp">
 
         </EditText>
@@ -218,10 +222,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="@drawable/purple_btn_bg"
         android:gravity="center"
         android:minEms="8"
         android:text="Submit"
-        android:background="@drawable/purple_btn_bg"
         android:textAlignment="center"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white" />
 </LinearLayout>
