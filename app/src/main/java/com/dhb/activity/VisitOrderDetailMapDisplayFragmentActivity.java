@@ -408,11 +408,11 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
     protected void onResume() {
         super.onResume();
         if (Integertotaldiff > 100 || !isStarted) {
-            btn_arrived.setVisibility(View.INVISIBLE);
+            btn_arrived.setVisibility(View.GONE);
             btn_startNav.setVisibility(View.VISIBLE);
         } else {
             btn_arrived.setVisibility(View.VISIBLE);
-            btn_startNav.setVisibility(View.INVISIBLE);
+            btn_startNav.setVisibility(View.GONE);
         }
 
     }
@@ -700,11 +700,11 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
             if (statusCode == 204 || statusCode == 200) {
                 isStarted = true;
                 if (Integertotaldiff > 100) {
-                    btn_arrived.setVisibility(View.INVISIBLE);
+                    btn_arrived.setVisibility(View.GONE);
                     btn_startNav.setVisibility(View.VISIBLE);
                 } else {
                     btn_arrived.setVisibility(View.VISIBLE);
-                    btn_startNav.setVisibility(View.INVISIBLE);
+                    btn_startNav.setVisibility(View.GONE);
                 }
             }
         }

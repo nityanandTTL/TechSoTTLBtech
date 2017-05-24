@@ -11,9 +11,42 @@ public class PaymentNameValueModel implements Parcelable{
     private String Key;
     private String Value;
     private String Required;
+    private String Hint;
 
     public PaymentNameValueModel() {
     }
+
+    protected PaymentNameValueModel(Parcel in) {
+        Key = in.readString();
+        Value = in.readString();
+        Required = in.readString();
+        Hint = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(Key);
+        dest.writeString(Value);
+        dest.writeString(Required);
+        dest.writeString(Hint);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<PaymentNameValueModel> CREATOR = new Creator<PaymentNameValueModel>() {
+        @Override
+        public PaymentNameValueModel createFromParcel(Parcel in) {
+            return new PaymentNameValueModel(in);
+        }
+
+        @Override
+        public PaymentNameValueModel[] newArray(int size) {
+            return new PaymentNameValueModel[size];
+        }
+    };
 
     public String getKey() {
         return Key;
@@ -39,33 +72,11 @@ public class PaymentNameValueModel implements Parcelable{
         Required = required;
     }
 
-    protected PaymentNameValueModel(Parcel in) {
-        Key = in.readString();
-        Value = in.readString();
-        Required = in.readString();
+    public String getHint() {
+        return Hint;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(Key);
-        dest.writeString(Value);
-        dest.writeString(Required);
+    public void setHint(String hint) {
+        Hint = hint;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<PaymentNameValueModel> CREATOR = new Creator<PaymentNameValueModel>() {
-        @Override
-        public PaymentNameValueModel createFromParcel(Parcel in) {
-            return new PaymentNameValueModel(in);
-        }
-
-        @Override
-        public PaymentNameValueModel[] newArray(int size) {
-            return new PaymentNameValueModel[size];
-        }
-    };
 }

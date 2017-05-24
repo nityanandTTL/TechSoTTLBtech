@@ -19,6 +19,7 @@ import com.dhb.models.api.response.FetchOrderDetailsResponseModel;
 import com.dhb.models.api.response.LoginResponseModel;
 import com.dhb.models.api.response.MaterialINVResponseModel;
 import com.dhb.models.api.response.MessageModel;
+import com.dhb.models.api.response.OrderBookingResponseVisitModel;
 import com.dhb.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.dhb.models.api.response.PaymentProcessAPIResponseModel;
 import com.dhb.models.api.response.PaymentStartTransactionAPIResponseModel;
@@ -827,5 +828,13 @@ public class ResponseParser implements AppConstants {
 			versionControlMasterModels = gson.fromJson(json, VersionControlMasterModel.class);
 		}
 		return versionControlMasterModels;
+	}
+	////Order Booking Response parse:
+	public OrderBookingResponseVisitModel getOrderBookingAPIResponse (String json, int statusCode) {
+		OrderBookingResponseVisitModel  orderBookingResponseVisitModel = null;
+		if (!parseIntoError(json, statusCode)){
+			orderBookingResponseVisitModel = gson.fromJson(json, OrderBookingResponseVisitModel.class);
+		}
+		return orderBookingResponseVisitModel;
 	}
 }
