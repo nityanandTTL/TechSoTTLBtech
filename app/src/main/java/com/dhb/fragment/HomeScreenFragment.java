@@ -107,13 +107,13 @@ public class HomeScreenFragment extends AbstractFragment {
         imgPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //pushFragments(LedgerDisplayFragment.newInstance(),false,false,LedgerDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                Intent intentPaymentsActivity = new Intent(activity, PaymentsActivity.class);
+                startActivity(intentPaymentsActivity);
             }
         });
         imgSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 pushFragments(ScheduleYourDayFragment.newInstance(),false,false,ScheduleYourDayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
@@ -138,24 +138,15 @@ public class HomeScreenFragment extends AbstractFragment {
         imgCommunication.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentPaymentsActivity = new Intent(activity, PaymentsActivity.class);
-                startActivity(intentPaymentsActivity);
+                 Toast.makeText(activity,"Feature coming soon.",Toast.LENGTH_SHORT).show();
             }
         });
-
         imgLedger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pushFragments(LedgerDisplayFragment.newInstance(),false,false,LedgerDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
-
-        /*imgOrders.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
-            }
-        });*/
     }
 
     @Override
@@ -184,7 +175,7 @@ public class HomeScreenFragment extends AbstractFragment {
                 txt_no_of_camps.setText(""+jsonObject.getString("CampCount"));
             }
             else {
-                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Failed to Fetch Camp Count", Toast.LENGTH_SHORT).show();
             }
         }
 
