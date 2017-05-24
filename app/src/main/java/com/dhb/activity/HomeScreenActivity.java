@@ -51,7 +51,7 @@ public class HomeScreenActivity extends AbstractActivity
     private AppPreferenceManager appPreferenceManager;
     private DhbDao dhbDao;
     private boolean doubleBackToExitPressedOnce = false;
-
+    public boolean isOnHome = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +64,7 @@ public class HomeScreenActivity extends AbstractActivity
             pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         }
         else {
-            pushFragments(HomeScreenFragment.newInstance(), false,false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            pushFragments(HomeScreenFragment.newInstance(), false,false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         }
         initData();
        // pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
@@ -123,8 +123,13 @@ public class HomeScreenActivity extends AbstractActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }else{
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+            if(isOnHome) {
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                pushFragments(HomeScreenFragment.newInstance(), false,false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            }
         }
         new Handler().postDelayed(new Runnable() {
             @Override

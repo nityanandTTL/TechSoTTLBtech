@@ -138,6 +138,8 @@ public class AbstractApiModel implements AppConstants {
 
     public String PAYMENT_START_TRANSACTION = VERSION_API_URL+"/PayThyrocare/StartTransaction";
 
+    public String PATCH_CALL_REQUEST = VERSION_API_URL+"/CallPatchSrcDest/CallPatchRequest";
+
     public static final String X_API_KEY = "x-api-key";
 
     public static final String AUTHORIZATION = "Authorization";

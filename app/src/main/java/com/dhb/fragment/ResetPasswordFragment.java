@@ -32,7 +32,6 @@ public class ResetPasswordFragment extends AbstractFragment implements View.OnCl
     public static ResetPasswordFragment newInstance() {
         ResetPasswordFragment fragment = new ResetPasswordFragment();
         Bundle args = new Bundle();
-
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,8 +40,9 @@ public class ResetPasswordFragment extends AbstractFragment implements View.OnCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reset_password, container, false);
-        initUi(view);
         activity = (HomeScreenActivity) getActivity();
+        activity.isOnHome = false;
+        initUI(view);
         setListeners();
         return view;
     }
@@ -52,7 +52,7 @@ public class ResetPasswordFragment extends AbstractFragment implements View.OnCl
     }
 
 
-    private void initUi(View view) {
+    private void initUI(View view) {
         edt_old_password = (EditText) view.findViewById(R.id.edt_old_password);
         edt_new_password = (EditText) view.findViewById(R.id.edt_new_password);
         edt_confirm_password = (EditText) view.findViewById(R.id.edt_confirm_password);

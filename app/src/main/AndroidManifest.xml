@@ -21,6 +21,7 @@
     <application
         android:name=".application.ApplicationController"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -90,12 +91,17 @@
             android:name=".activity.OlcPickupActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activity.PaymentsActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activity.CampOrderBookingActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -105,10 +111,10 @@
             android:name=".service.MasterTablesSyncService"
             android:enabled="true"
             android:exported="true" />
-
-        <activity android:name=".activity.CampOrderBookingActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
+        <service
+            android:name=".service.CheckPaymentResponseService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

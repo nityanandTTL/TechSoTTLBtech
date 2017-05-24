@@ -50,6 +50,7 @@ public class HomeScreenFragment extends AbstractFragment {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
         appPreferenceManager = new AppPreferenceManager(activity);
+        activity.isOnHome = true;
         if (getArguments() != null) {
 
         }

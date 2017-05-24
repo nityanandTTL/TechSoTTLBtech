@@ -72,6 +72,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
+        activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
         dhbDao = new DhbDao(activity);
         orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());

@@ -58,7 +58,7 @@ public class CampListDisplayFragment extends AbstractFragment {
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
     private View rootView;
     private ListView recyclerView;
-public static String products;
+    public static String products;
     private TextView txtNoRecord;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConfirmOrderReleaseDialog cdd;
@@ -85,6 +85,7 @@ public static String products;
         rootView = inflater.inflate(R.layout.fragment_camp_list, container, false);
         initUI();
         activity = (HomeScreenActivity) getActivity();
+        activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
         fetchData();
         setListener();

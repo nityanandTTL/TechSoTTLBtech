@@ -66,6 +66,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private DhbDao dhbDao;
     private OrderDetailsDao orderDetailsDao;
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
+    private int PaymentMode;
     public BeneficiariesDisplayFragment() {
         // Required empty public constructor
     }
@@ -159,6 +160,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
         //SET Order Booking Details Model - START
         OrderBookingDetailsModel orderBookingDetailsModel = new OrderBookingDetailsModel();
+        orderBookingDetailsModel.setPaymentMode(PaymentMode);
         orderBookingDetailsModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
         orderBookingDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
         orderBookingDetailsModel.setOrddtl(orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId()));
@@ -244,6 +246,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             for (BeneficiaryDetailsModel beneficiaryDetailsModel :orderDetailsModel.getBenMaster()) {
                 beneficiariesArr.add(beneficiaryDetailsModel);
             }
+        }
+        if(beneficiariesArr.size()==0){
+            Toast.makeText(activity,"No beneficiaries found",Toast.LENGTH_SHORT).show();
+            activity.finish();
         }
         beneficiaryScreenSlidePagerAdapter = new BeneficiaryScreenSlidePagerAdapter(getFragmentManager(), activity, beneficiariesArr, orderVisitDetailsModel.getAllOrderdetails(), new RefreshBeneficiariesSliderDelegate() {
             @Override
@@ -336,6 +342,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                 }
             }
+            else{
+                Toast.makeText(activity, "Payment Failed", Toast.LENGTH_SHORT).show();
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -345,12 +354,42 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if(statusCode==200){
                 if(btnProceedPayment.getText().equals("Proceed for Payment")) {
-                    Intent intentPayments = new Intent(activity, PaymentsActivity.class);
-                    intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT,totalAmount);
-                    intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,2);
-                    intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderVisitDetailsModel.getVisitId());
-                    intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,appPreferenceManager.getLoginResponseModel().getUserID());
-                    startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                    final String[] paymentItems = new String[]{"Cash","Digital"};
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setTitle("Choose Payment Mode")
+                            .setItems(paymentItems, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if(paymentItems[which].equals("Cash")){
+                                        PaymentMode = 1;
+                                        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+                                        ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
+                                        workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
+                                        if(isNetworkAvailable(activity)){
+                                            workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
+                                        }
+                                        else{
+                                            Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    else{
+                                        PaymentMode = 2;
+                                        Intent intentPayments = new Intent(activity, PaymentsActivity.class);
+                                        intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT,totalAmount);
+                                        intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,2);
+                                        intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderVisitDetailsModel.getVisitId());
+                                        intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,appPreferenceManager.getLoginResponseModel().getUserID());
+                                        startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            }).show();
+
                 }
                 else if(btnProceedPayment.getText().equals("Submit Work Order")){
                     OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();

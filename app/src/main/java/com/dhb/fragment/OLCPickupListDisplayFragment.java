@@ -58,8 +58,9 @@ public class OLCPickupListDisplayFragment extends AbstractFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_btech_client_list, container, false);
-        initUi(view);
         activity = (HomeScreenActivity) getActivity();
+        activity.isOnHome = false;
+        initUI(view);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -108,7 +109,7 @@ public class OLCPickupListDisplayFragment extends AbstractFragment {
         recycler_view.setAdapter(btechClientDetailsAdapter);
     }
 
-    private void initUi(View view) {
+    private void initUI(View view) {
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         recycler_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         tv_est_distance = (TextView) view.findViewById(R.id.tv_est_distance);
