@@ -75,18 +75,14 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private Button btnSave;
     private boolean isHC = false;
     private boolean isEdit = false;
-    private String userChoosenTask;
     private static final int REQUEST_CAMERA = 100;
     private Bitmap thumbnail;
     private String encodedVanipunctureImg;
     private boolean isM = false;
     private TableLayout tlBarcodes;
-    private String userChoosenReleaseTask;
     private OrderDetailsModel orderDetailsModel;
     private String currentScanSampleType;
-    private RescheduleOrderDialog cdd;
-    private CancelOrderDialog cod;
-    private boolean isCancelRequesGenereted=false;
+    private boolean isCancelRequestGenereted=false;
     private ArrayList<TestRateMasterModel> restOfTestsList;
     private DhbDao dhbDao;
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr;
@@ -224,7 +220,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         imgVenipuncture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickPhoto();
+                cameraIntent();
             }
         });
         imgHC.setOnClickListener(new View.OnClickListener() {
@@ -246,30 +242,41 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 String tests = beneficiaryDetailsModel.getTestsCode();
-                final String[] testsList = tests.split(",");
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setTitle("Tests List");
-                builder.setItems(testsList, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                String[] testsList = new String[]{};
+                if(InputUtils.isNull(tests)){
+                    Intent intentEdit = new Intent(activity, EditTestListActivity.class);
+                    intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST,restOfTestsList);
+                    intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
+                    intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                    startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
+                }
+                else{
+                    testsList = tests.split(",");
 
-                    }
-                }).setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intentEdit = new Intent(activity, EditTestListActivity.class);
-                        intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST,restOfTestsList);
-                        intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
-                        intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
-                        startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
-                    }
-                });
-                builder.show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setTitle("Tests List");
+                    builder.setItems(testsList, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intentEdit = new Intent(activity, EditTestListActivity.class);
+                            intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST,restOfTestsList);
+                            intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
+                            intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                            startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
+                        }
+                    });
+                    builder.show();
+                }
             }
         });
         edtCH.setOnClickListener(new View.OnClickListener() {
@@ -321,29 +328,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 }
             }
         });
-    }
-
-    private void clickPhoto() {
-        final CharSequence[] items = {"Take Photo"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Choose Action");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                boolean result = DeviceUtils.checkPermission(activity);
-                if (items[item].equals("Take Photo")) {
-                    userChoosenTask = "Take Photo";
-                    if (result)
-                        cameraIntent();
-                }
-            }
-        }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
     }
 
     private void cameraIntent() {
@@ -562,6 +546,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             beneficiaryDetailsModel.setTests(testsCode);
             edtTests.setText(testsCode);
             beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+            initData();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

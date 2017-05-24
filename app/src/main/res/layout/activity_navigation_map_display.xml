@@ -35,6 +35,7 @@
             android:weightSum="4">
 
             <LinearLayout
+                android:id="@+id/ll_call"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="2dp"

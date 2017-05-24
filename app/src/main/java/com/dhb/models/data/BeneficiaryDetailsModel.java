@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by Pratik Ambhore on 4/19/2017.
  */
 
-public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
+public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     private int benId;
     private String OrderNo;
     private String Name;
@@ -24,6 +24,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
     private ArrayList<TestRateMasterModel> testsList;
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> clHistory;
     private ArrayList<BeneficiaryLabAlertsModel> labAlert;
+    private String ProjId;
 
     public BeneficiaryDetailsModel() {
         super();
@@ -45,6 +46,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
         testsList = in.createTypedArrayList(TestRateMasterModel.CREATOR);
         clHistory = in.createTypedArrayList(BeneficiaryTestWiseClinicalHistoryModel.CREATOR);
         labAlert = in.createTypedArrayList(BeneficiaryLabAlertsModel.CREATOR);
+        ProjId = in.readString();
     }
 
     @Override
@@ -64,6 +66,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
         dest.writeTypedList(testsList);
         dest.writeTypedList(clHistory);
         dest.writeTypedList(labAlert);
+        dest.writeString(ProjId);
     }
 
     @Override
@@ -82,6 +85,14 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
             return new BeneficiaryDetailsModel[size];
         }
     };
+
+    public String getProjId() {
+        return ProjId;
+    }
+
+    public void setProjId(String projId) {
+        ProjId = projId;
+    }
 
     public int getBenId() {
         return benId;
@@ -178,6 +189,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable{
     public void setTestsList(ArrayList<TestRateMasterModel> testsList) {
         this.testsList = testsList;
     }
+
     public ArrayList<BeneficiaryTestWiseClinicalHistoryModel> getClHistory() {
         return clHistory;
     }

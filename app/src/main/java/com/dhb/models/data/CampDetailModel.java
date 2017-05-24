@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 
 public class CampDetailModel implements Parcelable {
-    private int Id, Amount, ExpectedCrowd, ExpectedBtech, Leader, LeaderContactNo;
+    private int Id, Amount, ExpectedCrowd, ExpectedBtech, Leader, LeaderContactNo,BrandId;
     private String CampId, VisitId, CampDate, Location, Status,CampName,LeaderName;
     private boolean InventoryAssign, isStarted;
     private String CampDateTime, BookedBy, Product, QRCode;
@@ -18,6 +18,8 @@ public class CampDetailModel implements Parcelable {
     private ExecutionTrack executionTrack;
     private boolean IsAccepted;
     private ArrayList<CampDetailsKitsModel> kits;
+    private ArrayList<BeneficiarySampleTypeDetailsModel> sampleType;
+    private boolean IsFasting;
 
     protected CampDetailModel(Parcel in) {
         Id = in.readInt();
@@ -26,6 +28,7 @@ public class CampDetailModel implements Parcelable {
         ExpectedBtech = in.readInt();
         Leader = in.readInt();
         LeaderContactNo = in.readInt();
+        BrandId = in.readInt();
         CampId = in.readString();
         VisitId = in.readString();
         CampDate = in.readString();
@@ -39,8 +42,12 @@ public class CampDetailModel implements Parcelable {
         BookedBy = in.readString();
         Product = in.readString();
         QRCode = in.readString();
+        btechs = in.createTypedArrayList(CampBtechModel.CREATOR);
         executionTrack = in.readParcelable(ExecutionTrack.class.getClassLoader());
         IsAccepted = in.readByte() != 0;
+        kits = in.createTypedArrayList(CampDetailsKitsModel.CREATOR);
+        sampleType = in.createTypedArrayList(BeneficiarySampleTypeDetailsModel.CREATOR);
+        IsFasting = in.readByte() != 0;
     }
 
     @Override
@@ -51,6 +58,7 @@ public class CampDetailModel implements Parcelable {
         dest.writeInt(ExpectedBtech);
         dest.writeInt(Leader);
         dest.writeInt(LeaderContactNo);
+        dest.writeInt(BrandId);
         dest.writeString(CampId);
         dest.writeString(VisitId);
         dest.writeString(CampDate);
@@ -64,8 +72,12 @@ public class CampDetailModel implements Parcelable {
         dest.writeString(BookedBy);
         dest.writeString(Product);
         dest.writeString(QRCode);
+        dest.writeTypedList(btechs);
         dest.writeParcelable(executionTrack, flags);
         dest.writeByte((byte) (IsAccepted ? 1 : 0));
+        dest.writeTypedList(kits);
+        dest.writeTypedList(sampleType);
+        dest.writeByte((byte) (IsFasting ? 1 : 0));
     }
 
     @Override
@@ -84,6 +96,30 @@ public class CampDetailModel implements Parcelable {
             return new CampDetailModel[size];
         }
     };
+
+    public boolean isFasting() {
+        return IsFasting;
+    }
+
+    public void setFasting(boolean fasting) {
+        IsFasting = fasting;
+    }
+
+    public int getBrandId() {
+        return BrandId;
+    }
+
+    public void setBrandId(int brandId) {
+        BrandId = brandId;
+    }
+
+    public ArrayList<BeneficiarySampleTypeDetailsModel> getSampleType() {
+        return sampleType;
+    }
+
+    public void setSampleType(ArrayList<BeneficiarySampleTypeDetailsModel> sampleType) {
+        this.sampleType = sampleType;
+    }
 
     public ArrayList<CampDetailsKitsModel> getKits() {
         return kits;

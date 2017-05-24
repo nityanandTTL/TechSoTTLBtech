@@ -23,7 +23,7 @@ AppConstants, OnDismissListener {
 
 	private ProgressDialog progressDialog;
 
-	private Activity activity;
+//	private Activity activity;
 
 	private String jsonPostResponse;
 
@@ -58,7 +58,7 @@ AppConstants, OnDismissListener {
 	/**
 	 * Default constructor initializing values
 	 */
-	public ApiCallAsyncTask(Activity activity) {
+	/*public ApiCallAsyncTask(Activity activity) {
 
 		this.activity = activity;
 
@@ -72,7 +72,7 @@ AppConstants, OnDismissListener {
 
 		commonUtils = CommonUtils.getInstance();
 
-	}
+	}*/
 
 	public ApiCallAsyncTask(Context context) {
 
@@ -154,12 +154,12 @@ AppConstants, OnDismissListener {
 
 	}
 
-	public void setActivity(Activity activity) {
+	/*public void setActivity(Activity activity) {
 
 		this.activity = activity;
 
 	}
-
+*/
 	/**
 	 * Sets the progress dialog dismiss listener
 	 */
@@ -182,9 +182,9 @@ AppConstants, OnDismissListener {
 
 		super.onPreExecute();
 
-		if (activity != null && !activity.isFinishing()){
-
-			progressDialog = new ProgressDialog(activity);
+//		if (activity != null && !activity.isFinishing()){
+		if(context!=null){
+			progressDialog = new ProgressDialog(context);
 
 			progressDialog.setTitle(progressBarTitle);
 
@@ -198,7 +198,8 @@ AppConstants, OnDismissListener {
 
 			progressDialog.setCanceledOnTouchOutside(false);
 
-			if (isProgressBarVisible && !activity.isFinishing()){
+			if (isProgressBarVisible){
+//			if (isProgressBarVisible && !activity.isFinishing()){
 
 				try {
 					progressDialog.show();
@@ -287,12 +288,13 @@ AppConstants, OnDismissListener {
 
 		/** Return result to activity using delegate */
 
+
 		try {
 
 			if (progressDialog != null && progressDialog.isShowing()){
-				if (!activity.isFinishing()){
+//				if (!activity.isFinishing()){
 					progressDialog.dismiss();
-				}
+//				}
 			}
 		} catch (Exception e){
 			e.printStackTrace();
@@ -305,11 +307,11 @@ AppConstants, OnDismissListener {
 
 		try {
 
-			if (delegate != null && activity != null && !activity.isFinishing()){
+			/*if (delegate != null && activity != null && !activity.isFinishing()){
 
 				delegate.apiCallResult(jsonPostResponse,statusCode);
 
-			} else if (delegate != null && context != null){
+			} else */if (delegate != null && context != null){
 
 				delegate.apiCallResult(jsonPostResponse,statusCode);
 
@@ -318,7 +320,6 @@ AppConstants, OnDismissListener {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override

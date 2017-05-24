@@ -228,7 +228,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         imgVenipuncture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickPhoto();
+                cameraIntent();
             }
         });
         btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -284,6 +284,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                             RemoveBeneficiaryAPIRequestModel rb = new RemoveBeneficiaryAPIRequestModel();
                                             rb.setBenId(beneficiaryDetailsModel.getBenId());
                                             rb.setOrderNo(beneficiaryDetailsModel.getOrderNo());
+                                            rb.setIsAdded(orderDetailsModel.isAddBen()?"1":"0");
                                             ApiCallAsyncTask apiCallAsyncTask = new AsyncTaskForRequest(activity).getRemoveBeneficiaryRequestAsyncTask(rb);
                                             apiCallAsyncTask.setApiCallAsyncTaskDelegate(new ApiCallAsyncTaskDelegate() {
                                                 @Override
@@ -323,7 +324,12 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                                     dialog.dismiss();
                                                 }
                                             });
-                                            apiCallAsyncTask.execute(apiCallAsyncTask);
+                                            if(orderDetailsModel.getBenMaster().size()==1) {
+                                                apiCallAsyncTask.execute(apiCallAsyncTask);
+                                            }
+                                            else{
+                                                Toast.makeText(activity,"",Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                         @Override
@@ -500,26 +506,6 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         }
     }
 
-    private void clickPhoto() {
-        final CharSequence[] items = {"Take Photo"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle("Choose Action");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                boolean result = DeviceUtils.checkPermission(activity);
-                if (items[item].equals("Take Photo")) {
-                    userChoosenTask = "Take Photo";
-                    if (result)
-                        cameraIntent();
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==BundleConstants.START_BARCODE_SCAN) {
@@ -586,12 +572,12 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             beneficiaryDetailsModel.setTests(testsCode);
             edtTests.setText(testsCode);
             beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-            initData();
+            refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
         }
         if (requestCode == BundleConstants.ADD_EDIT_START && resultCode == BundleConstants.ADD_EDIT_FINISH) {
             beneficiaryDetailsModel = data.getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
             orderDetailsModel = data.getExtras().getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
-            initData();
+            refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -668,7 +654,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         orderDetailsModel.setStatus("CANCELLED");
                         orderDetailsDao.insertOrUpdate(orderDetailsModel);
                         Toast.makeText(activity, "Order cancelled Successfully", Toast.LENGTH_SHORT).show();
-                        activity.finish();
+                        refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
                     }
                 }else {
                     orderDetailsModel.setStatus("RESCHEDULED");

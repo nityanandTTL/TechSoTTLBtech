@@ -1,10 +1,14 @@
 package com.dhb.activity;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -15,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +33,10 @@ import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.network.ResponseParser;
+import com.dhb.service.CheckPaymentResponseService;
+import com.dhb.service.MasterTablesSyncService;
 import com.dhb.uiutils.AbstractActivity;
+import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 
@@ -54,16 +62,21 @@ public class PaymentsActivity extends AbstractActivity {
     private ApiCallAsyncTask fetchPaymentPassInputsAsyncTask;
     private PaymentProcessAPIResponseModel paymentPassInputsModel;
     private ApiCallAsyncTask startTransactionAsyncTask;
-    private int NarrationId = 2;
-    private String OrderNo = "#TT082938";
+    private int NarrationId = 1;
+    private String OrderNo = "TT082938";
     private int Amount = 100;
     private int SourceCode = 88453101;
-    private String BillingName;
+    private String BillingName = "Test Thyrocare";
+    private String BillingAddr = "TTC, Turbhe, Navi Mumbai";
+    private String BillingPin = "400007";
+    private String BillingMob = "7738185400";
+    private String BillingEmail = "tejas.e3565@thyrocare.com";
     private PaymentStartTransactionAPIResponseModel paymentStartTransactionAPIResponseModel;
     private PaymentDoCaptureResponseAPIResponseModel paymentDoCaptureResponseAPIResponseModel;
     private int checkPaymentSuccessResponseRetryCount = 0;
     private ApiCallAsyncTask doCaptureResponseAsyncTask;
     private ApiCallAsyncTask recheckResponseAsyncTask;
+    private PowerManager.WakeLock wakeLock;
 
     //TODO tejas - 7738185400 for airtel money
     //TODO tejas - tejaspatil92axisbank@axis for UPI
@@ -81,9 +94,14 @@ public class PaymentsActivity extends AbstractActivity {
             OrderNo = getIntent().getExtras().getString(BundleConstants.PAYMENTS_ORDER_NO);
             Amount = getIntent().getExtras().getInt(BundleConstants.PAYMENTS_AMOUNT);
             SourceCode = getIntent().getExtras().getInt(BundleConstants.PAYMENTS_SOURCE_CODE);
+            BillingName = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_NAME);
+            BillingAddr = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_ADDRESS);
+            BillingPin = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_PIN);
+            BillingMob = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_MOBILE);
+            BillingEmail = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_EMAIL);
         }
         initUI();
-        fetchPaymentModes();
+        fetchNarrationMaster();
     }
 
     @Override
@@ -92,7 +110,6 @@ public class PaymentsActivity extends AbstractActivity {
         flPayments = (FrameLayout) findViewById(R.id.fl_payments);
     }
 
-/*
     private void fetchNarrationMaster() {
         fetchNarrationMasterAsyncTask = asyncTaskForRequest.getNarrationMasterRequestAsyncTask();
         fetchNarrationMasterAsyncTask.setApiCallAsyncTaskDelegate(new FetchNarrationMasterAsyncTaskDelegateResult());
@@ -156,10 +173,9 @@ public class PaymentsActivity extends AbstractActivity {
             fetchPaymentModes(nmm);
         }
     }
-*/
 
-    private void fetchPaymentModes() {
-        fetchPaymentModesAsyncTask = asyncTaskForRequest.getPaymentModesFromNarrationIdRequestAsyncTask(NarrationId);
+    private void fetchPaymentModes(NarrationMasterModel nmm) {
+        fetchPaymentModesAsyncTask = asyncTaskForRequest.getPaymentModesFromNarrationIdRequestAsyncTask(nmm.getNarrationId());
         fetchPaymentModesAsyncTask.setApiCallAsyncTaskDelegate(new FetchPaymentModesAsyncTaskDelegateResult());
         if(isNetworkAvailable(activity)){
             fetchPaymentModesAsyncTask.execute(fetchPaymentModesAsyncTask);
@@ -272,8 +288,12 @@ public class PaymentsActivity extends AbstractActivity {
                 && paymentPassInputsModel.getNameValueCollection()!=null
                 && paymentPassInputsModel.getNameValueCollection().size()>0){
             flPayments.removeAllViews();
-            LinearLayout llPaymentPassInputs = new LinearLayout(activity);
+            ScrollView svPaymentPassInputs = new ScrollView(activity);
+            ScrollView.LayoutParams svParams = new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT,ScrollView.LayoutParams.MATCH_PARENT);
+            svPaymentPassInputs.setLayoutParams(svParams);
+
             LinearLayout.LayoutParams llParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout llPaymentPassInputs = new LinearLayout(activity);
             llParams.setMargins(10,10,10,10);
             llPaymentPassInputs.setLayoutParams(llParams);
             llPaymentPassInputs.setOrientation(LinearLayout.VERTICAL);
@@ -318,6 +338,21 @@ public class PaymentsActivity extends AbstractActivity {
                     }
                     else if(paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("Amount")){
                         paymentPassInputsModel.getNameValueCollection().get(i).setValue(Amount+"");
+                    }
+                    else if(paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("BillingName")){
+                        paymentPassInputsModel.getNameValueCollection().get(i).setValue(BillingName);
+                    }
+                    else if(paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("BillingPin")){
+                        paymentPassInputsModel.getNameValueCollection().get(i).setValue(BillingPin+"");
+                    }
+                    else if(paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("BillingMob")){
+                        paymentPassInputsModel.getNameValueCollection().get(i).setValue(BillingMob+"");
+                    }
+                    else if(paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("BillingAddr")){
+                        paymentPassInputsModel.getNameValueCollection().get(i).setValue(BillingAddr+"");
+                    }
+                    else if(paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("BillingEmail")){
+                        paymentPassInputsModel.getNameValueCollection().get(i).setValue(BillingEmail+"");
                     }
 
                     LinearLayout llPaymentPassSystemInputs = new LinearLayout(activity);
@@ -365,7 +400,8 @@ public class PaymentsActivity extends AbstractActivity {
                 }
             });
             llPaymentPassInputs.addView(btnPaymentInputsSubmit);
-            flPayments.addView(llPaymentPassInputs);
+            svPaymentPassInputs.addView(llPaymentPassInputs);
+            flPayments.addView(svPaymentPassInputs);
         }
     }
 
@@ -462,13 +498,27 @@ public class PaymentsActivity extends AbstractActivity {
                     settings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
                     wvQRDisplay.setVerticalScrollBarEnabled(false);
                     wvQRDisplay.setHorizontalScrollBarEnabled(false);
-                    LinearLayout.LayoutParams llwvParams = new LinearLayout.LayoutParams(400,400);
+                    LinearLayout.LayoutParams llwvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
                     llwvParams.setMargins(20,20,20,20);
                     wvQRDisplay.setLayoutParams(llwvParams);
                     wvQRDisplay.setPadding(0, 0, 0, 0);
                     wvQRDisplay.setInitialScale(getScale());
                     wvQRDisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
                     llPaymentStartTransaction.addView(wvQRDisplay);
+                    break;
+                }
+                else if(paymentNameValueModel.getKey().equals("ModeId")&&paymentNameValueModel.getValue().equals("1")){
+                    WebView wvCCADisplay = new WebView(activity);
+                    WebSettings settings = wvCCADisplay.getSettings();
+                    settings.setJavaScriptEnabled(true);
+                    settings.setBuiltInZoomControls(true);
+//                    wvCCADisplay.setVerticalScrollBarEnabled(false);
+//                    wvCCADisplay.setHorizontalScrollBarEnabled(false);
+                    LinearLayout.LayoutParams llwvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                    wvCCADisplay.setLayoutParams(llwvParams);
+                    wvCCADisplay.setInitialScale(getScale());
+                    wvCCADisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
+                    llPaymentStartTransaction.addView(wvCCADisplay);
                     break;
                 }
             }
@@ -588,4 +638,77 @@ public class PaymentsActivity extends AbstractActivity {
             e.printStackTrace();
         }
     }
+
+    /******************************AUTO RECHECK RESPONSE UNTIL RESULT RECEIVE FUNCTIONALITY START************************************/
+
+    private boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isCheckPaymentResponseServiceIsInProgress() {
+        return isServiceRunning(CheckPaymentResponseService.class);
+    }
+
+    private void callCheckPaymentResponseService(String jsonRequest) {
+        Intent intent = new Intent(activity, CheckPaymentResponseService.class);
+        intent.putExtra(BundleConstants.CHECK_PAYMENT_RESPONSE_JSON_REQUEST,jsonRequest);
+        startService(intent);
+        acquirewakeLock();
+    }
+
+    public void stopCheckPaymentResponseService() {
+        stopService(new Intent(activity, CheckPaymentResponseService.class));
+        releaseWakeLock();
+    }
+
+    public void acquirewakeLock() {
+
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Login Wakelock");
+        wakeLock.acquire();
+    }
+
+    public void releaseWakeLock() {
+        wakeLock.release();
+    }
+
+    public class CheckPaymentStatusResponseReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null && intent.getAction() != null) {
+                if(intent.getAction().equals(AppConstants.CHECK_PAYMENT_RESPONSE_ACTION_IN_PROGRESS)){
+                    //TODO show indeterminate Progress circle
+                } else if (intent.getAction().equals(AppConstants.CHECK_PAYMENT_RESPONSE_ACTION_DONE)) {
+                    if (intent.getExtras() != null) {
+                        boolean isIssueFoundInSync = false;
+                        if (intent.getExtras().containsKey(AppConstants.CHECK_PAYMENT_RESPONSE_ISSUE_FOUND)) {
+                            isIssueFoundInSync = intent.getExtras().getBoolean(AppConstants.CHECK_PAYMENT_RESPONSE_ISSUE_FOUND);
+                        }
+
+                        if (isCheckPaymentResponseServiceIsInProgress()) {
+                            stopCheckPaymentResponseService();
+                        }
+
+                        if (isIssueFoundInSync) {
+                            Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(activity, getResources().getString(R.string.sync_done_master_table), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                } else if (intent.getAction().equals(AppConstants.CHECK_PAYMENT_RESPONSE_ACTION_NO_DATA)) {
+                    Toast.makeText(activity, getResources().getString(R.string.sync_no_data), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    /******************************AUTO RECHECK RESPONSE UNTIL RESULT RECEIVE FUNCTIONALITY END************************************/
 }

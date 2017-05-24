@@ -66,6 +66,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
+        activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
         savedModel = appPreferenceManager.getBtechAvailabilityAPIRequestModel();
         selectedSlotsArr = appPreferenceManager.getSelectedSlotsArr();

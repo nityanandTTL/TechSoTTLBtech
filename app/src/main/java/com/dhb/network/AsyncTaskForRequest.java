@@ -7,6 +7,7 @@ import android.util.Log;
 import com.dhb.R;
 import com.dhb.models.api.request.ApplyLeaveRequestModel;
 import com.dhb.models.api.request.BtechsRequestModel;
+import com.dhb.models.api.request.CallPatchRequestModel;
 import com.dhb.models.api.request.CampStartedRequestModel;
 import com.dhb.models.api.request.ChangePasswordRequestModel;
 import com.dhb.models.api.request.HubStartRequestModel;
@@ -68,6 +69,34 @@ public class AsyncTaskForRequest {
             abstractApiModel.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_X_WWW_FROM_URLENCODED));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.LOGIN);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_X_WWW_FROM_URLENCODED);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_authenticating_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+	/*
+     * Call Mask Api Integration*/
+
+    public ApiCallAsyncTask getCallPatchRequestAsyncTask(CallPatchRequestModel callPatchRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            List<NameValuePair> nameValuePairs = new ArrayList<>();
+            nameValuePairs.add(new BasicNameValuePair("Srcnumber", callPatchRequestModel.getSrcnumber()));
+            nameValuePairs.add(new BasicNameValuePair("DestNumber", callPatchRequestModel.getDestNumber()));
+            nameValuePairs.add(new BasicNameValuePair("VisitID", callPatchRequestModel.getVisitID()));
+
+            abstractApiModel.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_X_WWW_FROM_URLENCODED));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.PATCH_CALL_REQUEST);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_X_WWW_FROM_URLENCODED);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -346,8 +375,7 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-           // String postJson = new Gson().toJson(orderVisitDetailsModel);
-          //  abstractApiModel.setPostData(postJson);
+
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_SLOT_DETAIL+"/"+appPreferenceManager.getLoginResponseModel().getUserID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -415,8 +443,6 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             Log.e(AsyncTaskForRequest.class.getSimpleName(), "getFetchLedgerDetailsRequestAsyncTask: " );
-            // String postJson = new Gson().toJson(orderVisitDetailsModel);
-            //  abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_LEDGER_DETAIL+"/"+appPreferenceManager.getLoginResponseModel().getUserID()+"/"+fromdate+"/"+todate);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -440,9 +466,6 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getFetchEarningDetailsRequestAsyncTask: " );
-            // String postJson = new Gson().toJson(orderVisitDetailsModel);
-            //  abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_DEPOSITREGISTER_DETAIL+"/"+appPreferenceManager.getLoginResponseModel().getUserID()+"/"+fromdate+"/"+todate);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -466,7 +489,6 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getFetchDepositDetailsRequestAsyncTask: " );
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_EARNINGREGISTER_DETAIL+"/"+appPreferenceManager.getLoginResponseModel().getUserID()+"/"+fromdate+"/"+todate);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -489,7 +511,7 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getMaterialsDetailsRequestAsyncTask: " );
+
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_MATERIALMASTER_DETAIL+"/"+Category);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -514,9 +536,6 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getMaterialINVDetailsRequestAsyncTask: " );
-            // String postJson = new Gson().toJson(orderVisitDetailsModel);
-            //  abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_MATERIALINV_DETAIL+"/"+appPreferenceManager.getLoginResponseModel().getUserID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -665,7 +684,6 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getBtechCollectionListRequestAsyncTask: " );
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BTECH_COLLECTIONS+"/"+appPreferenceManager.getLoginResponseModel().getUserID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -687,7 +705,6 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getFetchOrderDetailsRequestAsyncTask: " );
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BTECH_HUB_DETAILS_DISPLAY+"/"+appPreferenceManager.getLoginResponseModel().getUserID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -708,7 +725,6 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getBtechClientsListDetailsDisplayRequestAsyncTask: " );
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BTECH_CLIENTS_DETAILS_DISPLAY+"/"+appPreferenceManager.getLoginResponseModel().getUserID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -730,7 +746,6 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getCampListDetailsDisplayRequestAsyncTask: " );
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.CAMPS_DETAILS_DISPLAY+"/"+appPreferenceManager.getLoginResponseModel().getUserID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -777,7 +792,6 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getLeaveDetailsRequestAsyncTask: " );
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_LEAVE_NATURE_MASTER);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -801,7 +815,6 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getVersionControlDetailsRequestAsyncTask: " );
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_VERSION_CONTROL_DETAIL);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));

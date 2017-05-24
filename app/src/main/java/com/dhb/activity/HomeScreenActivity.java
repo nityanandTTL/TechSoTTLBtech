@@ -52,6 +52,7 @@ public class HomeScreenActivity extends AbstractActivity
     private DhbDao dhbDao;
     private int  camefrom=0;
     private boolean doubleBackToExitPressedOnce = false;
+    public boolean isOnHome = false;
     ActionBarDrawerToggle toggle;
 
     @Override
@@ -69,7 +70,7 @@ public class HomeScreenActivity extends AbstractActivity
 
         }
         else {
-            pushFragments(HomeScreenFragment.newInstance(), false,false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            pushFragments(HomeScreenFragment.newInstance(), false,false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         }
         initData();
        // pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
@@ -131,8 +132,13 @@ public class HomeScreenActivity extends AbstractActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }else{
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+            if(isOnHome) {
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                pushFragments(HomeScreenFragment.newInstance(), false,false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            }
         }
         new Handler().postDelayed(new Runnable() {
             @Override
