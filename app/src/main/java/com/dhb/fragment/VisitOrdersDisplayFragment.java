@@ -111,6 +111,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     }
 
     private void fetchData() {
+        beneficiaryDetailsDao.deleteAll();
+        orderDetailsDao.deleteAll();
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask();
         fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsApiAsyncTaskDelegateResult());
@@ -142,13 +144,12 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
+
             if (statusCode == 200) {
                 ResponseParser responseParser = new ResponseParser(activity);
                 FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = new FetchOrderDetailsResponseModel();
                 fetchOrderDetailsResponseModel = responseParser.getFetchOrderDetailsResponseModel(json, statusCode);
                 if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
-                    beneficiaryDetailsDao.deleteAll();
-                    orderDetailsDao.deleteAll();
                     for (OrderVisitDetailsModel orderVisitDetailsModel :
                             fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
                         if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {

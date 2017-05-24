@@ -134,9 +134,10 @@ public class SplashScreenActivity extends AbstractActivity {
                 } else {
                     goAhead();
                 }
-
-
-                //initData();
+            }
+            else{
+                Toast.makeText(activity,"Unable to Fetch Version Information",LENGTH_SHORT).show();
+                goAhead();
             }
 
         }

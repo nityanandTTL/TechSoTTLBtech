@@ -304,11 +304,8 @@ public class LeaveIntimationFragment extends AbstractFragment {
             Logger.debug(TAG_FRAGMENT + "--apiCallResult: ");
             if (statusCode == 200) {
                 Toast.makeText(getActivity(), "Success", LENGTH_SHORT).show();
-
-
-                Fragment mFragment = new HomeScreenFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fl_homeScreen, mFragment).commit();
+                activity.toolbarHome.setVisibility(View.VISIBLE);
+                pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         }
 

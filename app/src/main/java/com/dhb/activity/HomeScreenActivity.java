@@ -42,7 +42,7 @@ public class HomeScreenActivity extends AbstractActivity
     private FloatingActionButton fabBtn;
     private DrawerLayout drawer;
     private NavigationView navigationView;
-    private Toolbar toolbarHome;
+    public Toolbar toolbarHome;
     private RoundedImageView rivSelfie;
     private TextView txtUserName;
     private TextView txtUserId;
@@ -70,6 +70,7 @@ public class HomeScreenActivity extends AbstractActivity
 
         }
         else {
+            toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(HomeScreenFragment.newInstance(), false,false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         }
         initData();
@@ -193,12 +194,18 @@ public class HomeScreenActivity extends AbstractActivity
 
         }*/
         if (id == R.id.nav_home) {
+
+            toolbarHome.setVisibility(View.VISIBLE);
             Toast.makeText(getApplicationContext(),"in home",Toast.LENGTH_SHORT).show();
             pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_change_password) {
+
+            toolbarHome.setVisibility(View.VISIBLE);
+
             Toast.makeText(getApplicationContext(),"in change password",Toast.LENGTH_SHORT).show();
             pushFragments(ResetPasswordFragment.newInstance(),false,false, ResetPasswordFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_logout) {
+            toolbarHome.setVisibility(View.VISIBLE);
             ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
             logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
             if(isNetworkAvailable(activity)){
@@ -207,12 +214,9 @@ public class HomeScreenActivity extends AbstractActivity
             else{
                 Toast.makeText(activity,"Logout functionality is only available in Online Mode",Toast.LENGTH_SHORT).show();
             }
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_feedback) {
-
         } else if (id == R.id.nav_communication) {
 
+            toolbarHome.setVisibility(View.VISIBLE);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
