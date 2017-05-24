@@ -33,7 +33,7 @@ public class CampOrderBookingActivity extends AbstractActivity {
     private TextView txtHeaderText;
     private ImageView imgBack;
     private Toolbar tbOBA;
-    CampDetailModel campDetailModel;
+    CampDetailModel campDetailModel=new CampDetailModel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,10 @@ public class CampOrderBookingActivity extends AbstractActivity {
         setContentView(R.layout.activity_camp_order_booking);
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
-        campDetailModel=getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
+        if(getIntent().getExtras()!=null){
+            campDetailModel=getIntent().getExtras().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
+        }
+
         initUI();
         initListeners();
         pushFragments(CampManualWOEFragment.newInstance(campDetailModel),false,false,CampManualWOEFragment.TAG_FRAGMENT,R.id.fl_camp_order_booking,TAG_ACTIVITY);

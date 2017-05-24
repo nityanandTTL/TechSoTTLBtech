@@ -155,17 +155,17 @@
                                 android:layout_width="35dp"
                                 android:visibility="gone"
                                 android:layout_height="2dp"
-                                android:background="#c0c0c0" />
+                                android:background="@color/colorPrimary" />
                         </LinearLayout>
 
                         <ImageView
                             android:id="@+id/img_vsg"
-                            android:layout_width="30dp"
+                            android:layout_width="20dp"
                             android:layout_height="35dp"
                             android:layout_gravity="center"
                             android:fadingEdge="horizontal"
                             android:src="@drawable/vseparator_gender"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -186,7 +186,7 @@
                                 android:layout_width="35dp"
                                 android:visibility="gone"
                                 android:layout_height="2dp"
-                                android:background="#c0c0c0" />
+                                android:background="@color/colorPrimary" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

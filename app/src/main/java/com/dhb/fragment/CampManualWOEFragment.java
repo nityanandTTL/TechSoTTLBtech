@@ -262,7 +262,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
 
         OrderDetailsModel campAllOrderDetailsModel = new OrderDetailsModel();
         orderBookingDetailsModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-
+        orderBookingDetailsModel.setPaymentMode(1);
         orderBookingDetailsModel.setVisitId("");
         orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
         campAllOrderDetailsModel.setOrderNo(orderNO);
@@ -271,7 +271,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         campAllOrderDetailsModel.setPincode(edt_pincode.getText().toString());
         campAllOrderDetailsModel.setMobile(edt_mobile.getText().toString());
         campAllOrderDetailsModel.setEmail(edt_email.getText().toString());
-        campAllOrderDetailsModel.setPayType("Postpaid");
+        campAllOrderDetailsModel.setPayType(campDetailModel.getPayType());
         campAllOrderDetailsModel.setAmountDue(campDetailModel.getAmount());
         campAllOrderDetailsModel.setMargin(0);
         campAllOrderDetailsModel.setDiscount(0);

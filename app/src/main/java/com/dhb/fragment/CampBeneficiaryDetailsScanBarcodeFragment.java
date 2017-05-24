@@ -98,6 +98,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     private CampOrderBookingActivity activity;
     private static final int REQUEST_CAMERA = 100;
     private View rootview;
+    private ImageView img_vsg;
     private CampDetailsBenMasterModel beneficiaryDetailsArr;
     private OrderDetailsModel orderDetailsModel;
     private CampAllOrderDetailsModel campAllOrderDetailsModel;
@@ -110,9 +111,9 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     private ArrayList<BeneficiaryLabAlertsModel> benLAArr;
     private ArrayList<LabAlertMasterModel> labAlertsArr;
     private static RefreshCampBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegateResult;
-    private EditText edt_name, edt_mobile, edt_email, edt_age,  edt_amount, edt_address,edt_pincode;
+    private EditText edt_name, edt_mobile, edt_email, edt_age, edt_amount, edt_address, edt_pincode;
     private Button btn_scan_qr, btn_enter_manually, btn_next;
-    private TextView tv_age, tv_gender, edt_test_alerts,edt_brand_name;
+    private TextView tv_age, tv_gender, edt_test_alerts, edt_brand_name;
     private LinearLayout ll_tests;
     private ArrayList<String> tests_iems = new ArrayList<>();
     private Spinner sp_test;
@@ -132,6 +133,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     int benId;
     ImageView img_male, img_female;
     private BrandMasterModel brandMasterModel;
+
     public CampBeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
     }
@@ -153,17 +155,18 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         Bundle bundle = getArguments();
         beneficiaryDetailsArr = bundle.getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
         campAllOrderDetailsModel = bundle.getParcelable(BundleConstants.CAMP_ALL_ORDER_DETAIL);
-        campDetailModel=bundle.getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
+        campDetailModel = bundle.getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
         BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
         brandMasterModel = brandMasterDao.getModelFromId(campAllOrderDetailsModel.getBrandId());
         orderNO = DeviceUtils.randomString(8);
-        benId = DeviceUtils.randomInt(1,10);
+        benId = DeviceUtils.randomInt(1, 10);
         initUI();
         initData();
         setListeners();
-        initBrandMaster();
+        //  initBrandMaster();
         return rootview;
     }
+
     private void initData() {
         String testCodes = campDetailModel.getProduct();
         Logger.error("testCodes " + testCodes);
@@ -181,6 +184,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         }
         initScanBarcodeView();
     }
+
     private void initScanBarcodeView() {
         if (barcodeDetailsArr.size() > 0) {
             ll_test_scan.removeAllViews();
@@ -211,6 +215,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
             }
         }
     }
+
     private void initBrandMaster() {
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchBrandMasterRequestAsyncTask();
@@ -239,13 +244,13 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 }
 
             } else {
-                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onApiCancelled() {
-
+            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -267,8 +272,10 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         edt_name.setText("" + beneficiaryDetailsArr.getName());
         btn_scan_qr = (Button) rootview.findViewById(R.id.btn_scan_qr);
         btn_enter_manually = (Button) rootview.findViewById(R.id.btn_enter_manually);
-        edt_pincode=(EditText) rootview.findViewById(R.id.edt_pincode);
-        edt_pincode.setText(""+campAllOrderDetailsModel.getPincode());
+        edt_pincode = (EditText) rootview.findViewById(R.id.edt_pincode);
+        img_vsg = (ImageView) rootview.findViewById(R.id.img_vsg);
+        img_vsg.setVisibility(View.GONE);
+        edt_pincode.setText("" + campAllOrderDetailsModel.getPincode());
         btn_next = (Button) rootview.findViewById(R.id.btn_next);
         btn_scan_qr.setVisibility(View.GONE);
         img_female = (ImageView) rootview.findViewById(R.id.img_female);
@@ -377,7 +384,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     public void onClick(View v) {
         if (v.getId() == R.id.btn_enter_manually) {
             Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
-            //intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModels);
+            intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModel);
             startActivity(intentOrderBooking);
         }
         if (v.getId() == R.id.btn_next) {
@@ -411,7 +418,8 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         OrderBookingDetailsModel orderBookingDetailsModel = new OrderBookingDetailsModel();
         OrderDetailsModel campAllOrderDetailsModel = new OrderDetailsModel();
         orderBookingDetailsModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-        orderBookingDetailsModel.setVisitId(""+beneficiaryDetailsArr.getOrderNo());
+        orderBookingDetailsModel.setVisitId("" + beneficiaryDetailsArr.getOrderNo());
+        orderBookingDetailsModel.setPaymentMode(1);
         orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
         campAllOrderDetailsModel.setOrderNo(beneficiaryDetailsArr.getOrderNo());
         campAllOrderDetailsModel.setBrandId(campDetailModel.getBrandId());
@@ -420,7 +428,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         campAllOrderDetailsModel.setPincode(campAllOrderDetailsModel.getPincode());
         campAllOrderDetailsModel.setMobile(edt_mobile.getText().toString());
         campAllOrderDetailsModel.setEmail(edt_email.getText().toString());
-        campAllOrderDetailsModel.setPayType("Postpaid");
+        campAllOrderDetailsModel.setPayType(campDetailModel.getPayType());
         campAllOrderDetailsModel.setAmountDue(campDetailModel.getAmount());
         campAllOrderDetailsModel.setMargin(0);
         campAllOrderDetailsModel.setDiscount(0);
@@ -450,7 +458,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         } else {
             beneficiaryDetailsModel.setFasting("false");
         }
-        beneficiaryDetailsModel.setProjId(""+campAllOrderDetailsModel.getProjId());
+        beneficiaryDetailsModel.setProjId("" + campAllOrderDetailsModel.getProjId());
         ArrayList<BeneficiaryDetailsModel> bendtl = new ArrayList<>();
         bendtl.add(beneficiaryDetailsModel);
         orderBookingRequestModel.setBendtl(bendtl);
@@ -459,14 +467,43 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         return orderBookingRequestModel;
     }
 
+    private void callWoeApi() {
+        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+        ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
+        workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
+        } else {
+            Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class WorkOrderEntryAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
 
     private class OrderBookingAPIAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode==200){
-                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
-            }else {
-                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+            if (statusCode == 200) {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                callWoeApi();
+
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 

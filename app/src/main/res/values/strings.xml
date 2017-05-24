@@ -38,6 +38,7 @@
     <string name="progress_message_olc_start_please_wait">Starting for OLC,\n Please wait ....</string>
     <string name="progress_message_mapping_master_barcode_please_wait">Mapping Master Barcode,\n Please wait ....</string>
     <string name="progress_message_fetching_dispatch_to_hub_details_please_wait">Fetching Hub Details,\n Please wait ....</string>
+    <string name="progress_message_fetchingolc_picup_details_details_please_wait">Fetching OLC pickup details Details,\n Please wait ....</string>
     <string name="progress_message_fetching_camp_details_please_wait">Fetching Camp Details,\n Please wait ....</string>
     <string name="progress_message_scan_barcode_check_for_duplicate_please_wait">Scanning Barcode,\n Please wait ....</string>
     <string name="progress_message_fetching_btech_collections_please_wait">Fetching BTech Collections,\n Please wait ....</string>
