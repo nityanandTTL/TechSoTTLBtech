@@ -155,17 +155,17 @@
                                 android:layout_width="35dp"
                                 android:visibility="gone"
                                 android:layout_height="2dp"
-                                android:background="#c0c0c0" />
+                                android:background="@color/colorPrimary" />
                         </LinearLayout>
 
                         <ImageView
                             android:id="@+id/img_vsg"
-                            android:layout_width="30dp"
+                            android:layout_width="20dp"
                             android:layout_height="35dp"
                             android:layout_gravity="center"
                             android:fadingEdge="horizontal"
                             android:src="@drawable/vseparator_gender"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -186,7 +186,7 @@
                                 android:layout_width="35dp"
                                 android:visibility="gone"
                                 android:layout_height="2dp"
-                                android:background="#c0c0c0" />
+                                android:background="@color/colorPrimary" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -268,6 +268,33 @@
                         android:layout_gravity="center"
                         android:background="@android:drawable/edit_text"
                         android:minEms="11"
+                        android:paddingRight="@dimen/dp_5" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:minEms="5"
+                        android:padding="@dimen/dp_10"
+                        android:text="Pincode:"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/edt_pincode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:layout_gravity="center"
+                        android:background="@android:drawable/edit_text"
+                        android:minEms="11"
+                        android:maxLength="6"
                         android:paddingRight="@dimen/dp_5" />
                 </LinearLayout>
 

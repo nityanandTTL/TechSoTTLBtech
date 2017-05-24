@@ -58,4 +58,5 @@ public class BundleConstants {
     public static final String PAYMENTS_BILLING_EMAIL = "paymentsBillingEmail";
 
     public static final String CHECK_PAYMENT_RESPONSE_JSON_REQUEST = "checkPaymentResponseJsonRequest";
+    public static final String CAMP_ALL_ORDER_DETAIL = "CampAllOrderDetail";
 }

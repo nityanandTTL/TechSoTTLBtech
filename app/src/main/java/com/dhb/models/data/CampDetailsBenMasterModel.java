@@ -11,10 +11,7 @@ import java.util.ArrayList;
 
 public class CampDetailsBenMasterModel implements Parcelable{
     private int benId,Age,ProjId;
-    private String Name,Gender,testsCode,Fasting;
-    private ArrayList<CampDetailsSampleTypeModel> sampleType;
-    private ArrayList<CampDetailsKitsModel> kits;
-    private String OrderNo;
+    private String Name,Gender,testsCode,Fasting,Pincode;
 
     protected CampDetailsBenMasterModel(Parcel in) {
         benId = in.readInt();
@@ -24,6 +21,9 @@ public class CampDetailsBenMasterModel implements Parcelable{
         Gender = in.readString();
         testsCode = in.readString();
         Fasting = in.readString();
+        Pincode = in.readString();
+        sampleType = in.createTypedArrayList(CampDetailsSampleTypeModel.CREATOR);
+        kits = in.createTypedArrayList(CampDetailsKitsModel.CREATOR);
         OrderNo = in.readString();
     }
 
@@ -36,6 +36,9 @@ public class CampDetailsBenMasterModel implements Parcelable{
         dest.writeString(Gender);
         dest.writeString(testsCode);
         dest.writeString(Fasting);
+        dest.writeString(Pincode);
+        dest.writeTypedList(sampleType);
+        dest.writeTypedList(kits);
         dest.writeString(OrderNo);
     }
 
@@ -55,6 +58,18 @@ public class CampDetailsBenMasterModel implements Parcelable{
             return new CampDetailsBenMasterModel[size];
         }
     };
+
+    public String getPincode() {
+        return Pincode;
+    }
+
+    public void setPincode(String pincode) {
+        Pincode = pincode;
+    }
+
+    private ArrayList<CampDetailsSampleTypeModel> sampleType;
+    private ArrayList<CampDetailsKitsModel> kits;
+    private String OrderNo;
 
     public int getBenId() {
         return benId;
