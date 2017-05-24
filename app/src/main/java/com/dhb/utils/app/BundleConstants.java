@@ -3,6 +3,8 @@ package com.dhb.utils.app;
 /**
  * Created by ISRO on 4/27/2017.
  */
+import java.lang.String;
+
 
 public class BundleConstants {
     //Intent and Activity Result related constants
@@ -49,5 +51,12 @@ public class BundleConstants {
     public static final String PAYMENTS_SOURCE_CODE = "paymentsSourceCode";
     public static final String PAYMENT_STATUS = "PaymentStatus";
 
+    public static final String PAYMENTS_BILLING_NAME = "paymentsBillingStatus";
+    public static final String PAYMENTS_BILLING_ADDRESS = "paymentsBillingAddress";
+    public static final String PAYMENTS_BILLING_PIN = "paymentsBillingPin";
+    public static final String PAYMENTS_BILLING_MOBILE = "paymentsBillingMobile";
+    public static final String PAYMENTS_BILLING_EMAIL = "paymentsBillingEmail";
+
+    public static final String CHECK_PAYMENT_RESPONSE_JSON_REQUEST = "checkPaymentResponseJsonRequest";
     public static final String CAMP_ALL_ORDER_DETAIL = "CampAllOrderDetail";
 }

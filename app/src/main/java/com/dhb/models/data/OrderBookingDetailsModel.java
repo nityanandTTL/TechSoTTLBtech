@@ -11,10 +11,43 @@ import java.util.ArrayList;
 public class OrderBookingDetailsModel implements Parcelable{
     private int BtechId;
     private String VisitId;
+    private int PaymentMode;
     private ArrayList<OrderDetailsModel> orddtl;
 
     public OrderBookingDetailsModel() {
     }
+
+    protected OrderBookingDetailsModel(Parcel in) {
+        BtechId = in.readInt();
+        VisitId = in.readString();
+        PaymentMode = in.readInt();
+        orddtl = in.createTypedArrayList(OrderDetailsModel.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(BtechId);
+        dest.writeString(VisitId);
+        dest.writeInt(PaymentMode);
+        dest.writeTypedList(orddtl);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<OrderBookingDetailsModel> CREATOR = new Creator<OrderBookingDetailsModel>() {
+        @Override
+        public OrderBookingDetailsModel createFromParcel(Parcel in) {
+            return new OrderBookingDetailsModel(in);
+        }
+
+        @Override
+        public OrderBookingDetailsModel[] newArray(int size) {
+            return new OrderBookingDetailsModel[size];
+        }
+    };
 
     public int getBtechId() {
         return BtechId;
@@ -40,33 +73,11 @@ public class OrderBookingDetailsModel implements Parcelable{
         this.orddtl = orddtl;
     }
 
-    protected OrderBookingDetailsModel(Parcel in) {
-        BtechId = in.readInt();
-        VisitId = in.readString();
-        orddtl = in.createTypedArrayList(OrderDetailsModel.CREATOR);
+    public int getPaymentMode() {
+        return PaymentMode;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(BtechId);
-        dest.writeString(VisitId);
-        dest.writeTypedList(orddtl);
+    public void setPaymentMode(int paymentMode) {
+        PaymentMode = paymentMode;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<OrderBookingDetailsModel> CREATOR = new Creator<OrderBookingDetailsModel>() {
-        @Override
-        public OrderBookingDetailsModel createFromParcel(Parcel in) {
-            return new OrderBookingDetailsModel(in);
-        }
-
-        @Override
-        public OrderBookingDetailsModel[] newArray(int size) {
-            return new OrderBookingDetailsModel[size];
-        }
-    };
 }

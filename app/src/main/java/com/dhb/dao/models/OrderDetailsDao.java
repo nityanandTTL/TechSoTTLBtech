@@ -29,37 +29,37 @@ public class OrderDetailsDao {
 
 	// DB TABLE COLUMN INFO
 
-	String ORDER_NO = "OrderNo";
-	String VISIT_ID = "VisitId";
-	String SLOT = "Slot";
-	String RESPONSE = "Response";
-	String BRAND_ID = "BrandId";
-	String SLOT_ID = "SlotId";
-	String ADDRESS = "Address";
-	String PINCODE = "Pincode";
-	String MOBILE = "Mobile";
-	String EMAIL = "Email";
-	String PAY_TYPE = "PayType";
-	String AMOUNT_DUE = "AmountDue";
-	String MARGIN = "Margin";
-	String DISCOUNT = "Discount";
-	String REFCODE = "Refcode";
-	String PROJ_ID = "ProjId";
-	String REPORT_HC = "ReportHC";
-	String KITS = "kits";
-	String DISTANCE = "Distance";
-	String LATITUDE = "Latitude";
-	String LONGITUDE = "Longitude";
-	String STATUS = "Status";
-	String IS_TEST_EDIT = "isTestEdit";
-	String IS_ADD_BEN = "isAddBen";
-	String CREATED_AT = "createdAt";
-	String CREATED_BY = "createdBy";
-	String UPDATED_AT = "updatedAt";
-	String UPDATED_BY = "updatedBy";
-	String RECORD_STATUS = "recordStatus";
-	String SYNC_STATUS = "syncStatus";
-	String SYNC_ACTION = "syncAction";
+	private String ORDER_NO = "OrderNo";
+	private String VISIT_ID = "VisitId";
+	private String SLOT = "Slot";
+	private String RESPONSE = "Response";
+	private String BRAND_ID = "BrandId";
+	private String SLOT_ID = "SlotId";
+	private String ADDRESS = "Address";
+	private String PINCODE = "Pincode";
+	private String MOBILE = "Mobile";
+	private String EMAIL = "Email";
+	private String PAY_TYPE = "PayType";
+	private String AMOUNT_DUE = "AmountDue";
+	private String MARGIN = "Margin";
+	private String DISCOUNT = "Discount";
+	private String REFCODE = "Refcode";
+	private String PROJ_ID = "ProjId";
+	private String REPORT_HC = "ReportHC";
+	private String KITS = "kits";
+	private String DISTANCE = "Distance";
+	private String LATITUDE = "Latitude";
+	private String LONGITUDE = "Longitude";
+	private String STATUS = "Status";
+	private String IS_TEST_EDIT = "isTestEdit";
+	private String IS_ADD_BEN = "isAddBen";
+	private String CREATED_AT = "createdAt";
+	private String CREATED_BY = "createdBy";
+	private String UPDATED_AT = "updatedAt";
+	private String UPDATED_BY = "updatedBy";
+	private String RECORD_STATUS = "recordStatus";
+	private String SYNC_STATUS = "syncStatus";
+	private String SYNC_ACTION = "syncAction";
 
 
 	// Constructors
@@ -334,5 +334,32 @@ public class OrderDetailsDao {
 			cursor.close();
 		}
 		return orderVisitDetailsModelsArr;
+	}
+	public OrderVisitDetailsModel getOrderVisitModel(String visitId) {
+		OrderVisitDetailsModel orderVisitDetailsModel = new OrderVisitDetailsModel();
+        if(!InputUtils.isNull(visitId)) {
+            ArrayList<OrderDetailsModel> orderDetailsModelsArr = new ArrayList<>();
+            orderDetailsModelsArr = getModelsFromVisitId(visitId);
+            ArrayList<OrderDetailsModel> orderDetailsModels = orderDetailsModelsArr;
+            for (OrderDetailsModel orderDetailsModel :
+                    orderDetailsModels) {
+                if (orderDetailsModel.getStatus().equalsIgnoreCase("RESCHEDULED")
+                        ||orderDetailsModel.getStatus().equalsIgnoreCase("RELEASED")
+                        || orderDetailsModel.getStatus().equalsIgnoreCase("CANCELLED")) {
+                    orderDetailsModelsArr.remove(orderDetailsModel);
+                    deleteByOrderNo(orderDetailsModel.getOrderNo());
+                }
+            }
+            if (orderDetailsModelsArr.size() > 0) {
+                orderVisitDetailsModel = new OrderVisitDetailsModel();
+                orderVisitDetailsModel.setResponse(orderDetailsModelsArr.get(0).getResponse());
+                orderVisitDetailsModel.setSlot(orderDetailsModelsArr.get(0).getSlot());
+                orderVisitDetailsModel.setSlotId(orderDetailsModelsArr.get(0).getSlotId());
+                orderVisitDetailsModel.setVisitId(orderDetailsModelsArr.get(0).getVisitId());
+                orderVisitDetailsModel.setDistance(orderDetailsModelsArr.get(0).getDistance());
+                orderVisitDetailsModel.setAllOrderdetails(orderDetailsModelsArr);
+            }
+        }
+		return orderVisitDetailsModel;
 	}
 }

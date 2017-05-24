@@ -20,16 +20,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
+import com.dhb.models.api.request.CallPatchRequestModel;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.AppConstants;
+import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.GPSTracker;
 import com.dhb.utils.fileutils.DataParser;
@@ -47,6 +51,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.vision.text.Line;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,25 +83,29 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
     private Button btn_startNav, btn_arrived;
     private FragmentActivity activity;
     private OrderVisitDetailsModel orderVisitDetailsModel;
-    private TextView txtName,txtAge,txtSrNo,txtAadharNo;
-    private ImageView imgRelease,imgDistance;
+    private TextView txtName, txtAge, txtSrNo, txtAadharNo;
+    private ImageView imgRelease, imgDistance;
     private TextView txtDistance;
     private TextView txtAddress;
-    private String  address;
-    private double destlat,destlong,currentlat,currentlong;
+    private LinearLayout llCall;
+    private String address;
+    private double destlat, destlong, currentlat, currentlong;
     private int Integertotaldiff;
     private boolean isStarted = false;
+    private AppPreferenceManager appPreferenceManager;
+    private String MaskedPhoneNumber = "";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_map_display);
         activity = this;
-        Bundle bundle= new Bundle();
+        appPreferenceManager = new AppPreferenceManager(activity);
+        Bundle bundle = new Bundle();
         bundle = getIntent().getExtras();
         orderVisitDetailsModel = bundle.getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
         initUI();
         initData();
-        address= getAddress(Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()),Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude()));
+        address = getAddress(Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()), Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude()));
         setListeners();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -106,10 +115,10 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
     }
 
     private void initData() {
-        txtAge.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getAge()+" Y | "+orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
+        txtAge.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
         txtName.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
-        txtSrNo.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getBenId()+"");
-        txtDistance.setText(orderVisitDetailsModel.getDistance()+"");
+        txtSrNo.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getBenId() + "");
+        txtDistance.setText(orderVisitDetailsModel.getDistance() + "");
         txtDistance.setVisibility(View.VISIBLE);
         imgDistance.setVisibility(View.VISIBLE);
         imgRelease.setVisibility(View.INVISIBLE);
@@ -119,13 +128,26 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
     private void setListeners() {
         btn_arrived.setOnClickListener(this);
         btn_startNav.setOnClickListener(this);
-        double totaldist = distFrom(currentlat,currentlong,destlat,destlong);
+        double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
 
         Integertotaldiff = (int) totaldist;
+        llCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
+                callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
+                callPatchRequestModel.setDestNumber(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+                callPatchRequestModel.setVisitID(orderVisitDetailsModel.getVisitId());
+                ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
+                callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
+                callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
+            }
+        });
 //        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
     }
 
     private void initUI() {
+        llCall = (LinearLayout) findViewById(R.id.ll_call);
         btn_arrived = (Button) findViewById(R.id.btn_arrived);
         btn_startNav = (Button) findViewById(R.id.btn_startNav);
         txtName = (TextView) findViewById(R.id.txt_name);
@@ -163,92 +185,91 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                     //     mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker in Sydney"));
                     //    mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
                     if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
+                        ActivityCompat.requestPermissions(activity,
+                                new String[]{
+                                        Manifest.permission.ACCESS_FINE_LOCATION,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_LOCATION);
                     }
-                    MarkerPoints.add(currentLocation);
-                    Logger.error("orderVisitDetailsModel lat"+orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()+"long "+orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude());
-                    destlat= Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
-                    destlong= Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
-                    LatLng destTempLocation = new LatLng(destlat, destlong);
-//                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
-//                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
-                    MarkerOptions options = new MarkerOptions();
-                    options.position(destTempLocation);
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                    mMap.addMarker(options);
-                    // mMap.addMarker(new MarkerOptions().position(destTempLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_24dp)));
-                    LatLng dest = destTempLocation;
-                    LatLng origin = currentLocation;
-                    String url = getUrl(origin, dest);
-                    Log.d("onMapClick", url.toString());
-                    FetchUrl FetchUrl = new FetchUrl();
+                    else{
+                        MarkerPoints.add(currentLocation);
+                        Logger.error("orderVisitDetailsModel lat" + orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude() + "long " + orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude());
+                        destlat = Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
+                        destlong = Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
+                        LatLng destTempLocation = new LatLng(destlat, destlong);
+    //                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
+    //                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
+                        MarkerOptions options = new MarkerOptions();
+                        options.position(destTempLocation);
+                        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                        mMap.addMarker(options);
+                        // mMap.addMarker(new MarkerOptions().position(destTempLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_24dp)));
+                        LatLng dest = destTempLocation;
+                        LatLng origin = currentLocation;
+                        String url = getUrl(origin, dest);
+                        Log.d("onMapClick", url.toString());
+                        FetchUrl FetchUrl = new FetchUrl();
 
-                    // Start downloading json data from Google Directions API
-                    FetchUrl.execute(url);
-                    //move map camera
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+                        // Start downloading json data from Google Directions API
+                        FetchUrl.execute(url);
+                        //move map camera
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
+                        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
-                    Log.e(TAG_FRAGMENT, "onMapReady: ");
-                    //    moveToCurrentLocation(currentLocation);
-                    //=====================
-                /*    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                        @Override
-                        public void onMapClick(LatLng point) {
-                            // Already two locations
-                            if (MarkerPoints.size() > 1) {
-                                MarkerPoints.clear();
-                                mMap.clear();
+                        Log.e(TAG_FRAGMENT, "onMapReady: ");
+                        //    moveToCurrentLocation(currentLocation);
+                        //=====================
+                    /*    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                            @Override
+                            public void onMapClick(LatLng point) {
+                                // Already two locations
+                                if (MarkerPoints.size() > 1) {
+                                    MarkerPoints.clear();
+                                    mMap.clear();
+                                }
+                                //1 to create current
+                                MarkerPoints.add(point);
+                                MarkerOptions options = new MarkerOptions();
+                                options.position(point);
+
+                                *//**
+                         * For the start location, the color of marker is GREEN and
+                         * for the end location, the color of marker is RED.*//*
+
+                                if (MarkerPoints.size() == 1) {
+                                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                                } else if (MarkerPoints.size() == 2) {
+                                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                                }
+
+
+                                // Add new marker to the Google Map Android API V2
+                                mMap.addMarker(options);
+
+                                // Checks, whether start and end locations are captured
+                                if (MarkerPoints.size() >= 2) {
+                                    LatLng origin =currentLocation; MarkerPoints.get(0);
+
+                                    LatLng destTempLocation = new LatLng(19.9975, 73.7898);
+                                    LatLng dest = destTempLocation;MarkerPoints.get(1);
+    //                                title_distance.setText("" + distance(MarkerPoints.get(0).latitude, MarkerPoints.get(0).longitude, MarkerPoints.get(1).latitude, MarkerPoints.get(1).longitude));
+                                    Log.e(TAG_FRAGMENT, "onMapClick: distance " + "" + distance(MarkerPoints.get(0).latitude, MarkerPoints.get(0).longitude, MarkerPoints.get(1).latitude, MarkerPoints.get(1).longitude));
+                                    // Getting URL to the Google Directions API
+                                    String url = getUrl(origin, dest);
+                                    Log.d("onMapClick", url.toString());
+                                    FetchUrl FetchUrl = new FetchUrl();
+
+                                    // Start downloading json data from Google Directions API
+                                    FetchUrl.execute(url);
+                                    //move map camera
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
+                                    mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+                                }
+
                             }
-                            //1 to create current
-                            MarkerPoints.add(point);
-                            MarkerOptions options = new MarkerOptions();
-                            options.position(point);
 
-                            *//**
-                             * For the start location, the color of marker is GREEN and
-                             * for the end location, the color of marker is RED.*//*
-
-                            if (MarkerPoints.size() == 1) {
-                                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                            } else if (MarkerPoints.size() == 2) {
-                                options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                            }
-
-
-                            // Add new marker to the Google Map Android API V2
-                            mMap.addMarker(options);
-
-                            // Checks, whether start and end locations are captured
-                            if (MarkerPoints.size() >= 2) {
-                                LatLng origin =currentLocation; MarkerPoints.get(0);
-
-                                LatLng destTempLocation = new LatLng(19.9975, 73.7898);
-                                LatLng dest = destTempLocation;MarkerPoints.get(1);
-//                                title_distance.setText("" + distance(MarkerPoints.get(0).latitude, MarkerPoints.get(0).longitude, MarkerPoints.get(1).latitude, MarkerPoints.get(1).longitude));
-                                Log.e(TAG_FRAGMENT, "onMapClick: distance " + "" + distance(MarkerPoints.get(0).latitude, MarkerPoints.get(0).longitude, MarkerPoints.get(1).latitude, MarkerPoints.get(1).longitude));
-                                // Getting URL to the Google Directions API
-                                String url = getUrl(origin, dest);
-                                Log.d("onMapClick", url.toString());
-                                FetchUrl FetchUrl = new FetchUrl();
-
-                                // Start downloading json data from Google Directions API
-                                FetchUrl.execute(url);
-                                //move map camera
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
-                                mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-                            }
-
-                        }
-
-                    });*/
+                        });*/
+                    }
                 } else {
                     gpsTracker.showSettingsAlert();
                     Toast.makeText(activity, "Check Internet connection and gps settings", Toast.LENGTH_SHORT).show();
@@ -257,6 +278,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         });
         btn_arrived.setVisibility(View.GONE);
     }
+
     private String getAddress(double latitude, double longitude) {
         StringBuilder result = new StringBuilder();
         try {
@@ -273,6 +295,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
 
         return result.toString();
     }
+
     private String getUrl(LatLng origin, LatLng dest) {
         // Origin of route
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
@@ -364,8 +387,8 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
-        currentlat=location.getLatitude();
-        currentlong=location.getLongitude();
+        currentlat = location.getLatitude();
+        currentlong = location.getLongitude();
 
 //        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
 //        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
@@ -380,15 +403,14 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         }
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        if (Integertotaldiff > 100 || !isStarted)
-        {
+        if (Integertotaldiff > 100 || !isStarted) {
             btn_arrived.setVisibility(View.INVISIBLE);
             btn_startNav.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             btn_arrived.setVisibility(View.VISIBLE);
             btn_startNav.setVisibility(View.INVISIBLE);
         }
@@ -402,8 +424,8 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         } else if (v.getId() == R.id.btn_startNav) {
             callOrderStatusChangeApi(7);
             Intent intent = new Intent(Intent.ACTION_VIEW,
-                 //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
-                    Uri.parse("google.navigation:q=an+"+address));
+                    //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
+                    Uri.parse("google.navigation:q=an+" + address));
             startActivity(intent);
         }
     }
@@ -413,15 +435,15 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
 
-        orderStatusChangeRequestModel.setId(""+orderVisitDetailsModel.getSlotId());
+        orderStatusChangeRequestModel.setId("" + orderVisitDetailsModel.getSlotId());
         orderStatusChangeRequestModel.setStatus(status);
         ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
-        if(status==3){
+        if (status == 3) {
             orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangetoArrivedApiAsyncTaskDelegateResult());
-        }else {
+        } else {
             orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangetoStartApiAsyncTaskDelegateResult());
         }
-      
+
         if (isNetworkAvailable(activity)) {
             orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
         } else {
@@ -429,15 +451,15 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         }
     }
 
-    private class OrderStatusChangetoArrivedApiAsyncTaskDelegateResult  implements ApiCallAsyncTaskDelegate {
+    private class OrderStatusChangetoArrivedApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             Logger.error(json);
-            if (statusCode == 204 || statusCode==200) {
+            if (statusCode == 204 || statusCode == 200) {
                 Toast.makeText(activity, "Arrived Successfully", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
-                intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL,orderVisitDetailsModel);
-                setResult(BundleConstants.VOMD_ARRIVED,intent);
+                intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+                setResult(BundleConstants.VOMD_ARRIVED, intent);
                 finish();
 
             } else {
@@ -605,21 +627,47 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted. Do the
-                    // contacts-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(activity,
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-
-                        if (mGoogleApiClient == null) {
-                            buildGoogleApiClient();
+                if (grantResults.length > 0) {
+                    boolean allGranted = true;
+                    for (int result : grantResults
+                            ) {
+                        if (result != PackageManager.PERMISSION_GRANTED) {
+                            allGranted = false;
+                            break;
                         }
-                        mMap.setMyLocationEnabled(true);
+                    }
+                    if(allGranted) {
+                        // permission was granted. Do the
+                        // contacts-related task you need to do.
+                        if (ContextCompat.checkSelfPermission(activity,
+                                Manifest.permission.ACCESS_FINE_LOCATION)
+                                == PackageManager.PERMISSION_GRANTED) {
+
+                            if (mGoogleApiClient == null) {
+                                buildGoogleApiClient();
+                            }
+                            mMap.setMyLocationEnabled(true);
+                        }
+                    }else{
+                        Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
                     }
 
+                } else {
+
+                    // Permission denied, Disable the functionality that depends on activity permission.
+                    Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+            case AppConstants.APP_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(Intent.ACTION_CALL);
+                    intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
+                    startActivity(intent);
                 } else {
 
                     // Permission denied, Disable the functionality that depends on activity permission.
@@ -632,14 +680,15 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
             // You can add here other case statements according to your requirement.
         }
     }
+
     public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
         double earthRadius = 6371000; //meters
-        double dLat = Math.toRadians(lat2-lat1);
-        double dLng = Math.toRadians(lng2-lng1);
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLng/2) * Math.sin(dLng/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         float dist = (float) (earthRadius * c);
 
         return dist;
@@ -648,16 +697,43 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
     private class OrderStatusChangetoStartApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if(statusCode==204 || statusCode==200){
+            if (statusCode == 204 || statusCode == 200) {
                 isStarted = true;
-                if (Integertotaldiff > 100)
-                {
+                if (Integertotaldiff > 100) {
                     btn_arrived.setVisibility(View.INVISIBLE);
                     btn_startNav.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     btn_arrived.setVisibility(View.VISIBLE);
                     btn_startNav.setVisibility(View.INVISIBLE);
+                }
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    private class CallPatchRequestAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_CALL);
+                    MaskedPhoneNumber = json;
+                    intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
+                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(activity,
+                                new String[]{
+                                        Manifest.permission.CALL_PHONE},
+                                AppConstants.APP_PERMISSIONS);
+                    }
+                    else {
+                        startActivity(intent);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         }

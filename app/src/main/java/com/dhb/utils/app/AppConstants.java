@@ -186,6 +186,12 @@ public interface AppConstants {
 	public static final String MASTER_TABLE_UPDATE_COMPLETED_COUNT = "master_table_update_completed_count";
 	public static final String MASTER_TABLE_UPDATE_ISSUE_FOUND = "master_table_update_issue_found";
 
+	public static final String CHECK_PAYMENT_RESPONSE_ACTION_DONE = "com.app.dhb.checkPaymentResponseStatusDone";
+	public static final String CHECK_PAYMENT_RESPONSE_ACTION_NO_DATA = "com.app.dhb.checkPaymentResponseStatusNoData";
+	public static final String CHECK_PAYMENT_RESPONSE_ACTION_ISSUE = "com.app.dhb.checkPaymentResponseStatusIssue";
+	public static final String CHECK_PAYMENT_RESPONSE_ACTION_IN_PROGRESS = "com.app.dhb.checkPaymentResponseStatusInProgress";
+	public static final String CHECK_PAYMENT_RESPONSE_ISSUE_FOUND = "check_payment_response_issue_found";
+
 	public static final String POSTPAID_BILL_TYPE = "1";
 	public static final String PREPAID_BILL_TYPE = "2";
 
