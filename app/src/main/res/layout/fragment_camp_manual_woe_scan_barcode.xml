@@ -54,6 +54,7 @@
 
                     <EditText
                         android:id="@+id/edt_name"
+                        android:digits="abcdefghijklmnopqrstuvwxyz "
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -248,6 +249,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_marginBottom="@dimen/dp_10"
                     android:orientation="horizontal">
 
@@ -266,6 +268,60 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:background="@android:drawable/edit_text"
+                        android:minEms="11"
+                        android:paddingRight="@dimen/dp_5" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:minEms="5"
+                        android:padding="@dimen/dp_10"
+                        android:text="Clinical History:"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/edtCH"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/click_to_select_clinical_history"
+                        android:layout_gravity="center"
+                        android:drawableEnd="@android:drawable/arrow_down_float"
+                        android:background="@android:drawable/edit_text"
+                        android:minEms="11"
+                        android:paddingRight="@dimen/dp_5" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:minEms="5"
+                        android:padding="@dimen/dp_10"
+                        android:text="Lab Alert:"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/edtLA"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:hint="Select Lab Alert"
+                        android:drawableEnd="@android:drawable/arrow_down_float"
                         android:background="@android:drawable/edit_text"
                         android:minEms="11"
                         android:paddingRight="@dimen/dp_5" />

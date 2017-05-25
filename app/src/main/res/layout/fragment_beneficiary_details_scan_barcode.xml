@@ -157,6 +157,7 @@
                         android:freezesText="true"
                         android:textSize="14sp"
                         android:gravity="center"
+                        android:lines="1"
                         android:minEms="13"
                         android:drawableEnd="@android:drawable/arrow_down_float"
                         android:hint="Select Clinical History"

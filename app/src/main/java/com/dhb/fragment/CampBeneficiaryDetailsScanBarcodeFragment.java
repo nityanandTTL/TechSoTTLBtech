@@ -424,7 +424,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         campAllOrderDetailsModel.setOrderNo(beneficiaryDetailsArr.getOrderNo());
         campAllOrderDetailsModel.setBrandId(campDetailModel.getBrandId());
 
-        campAllOrderDetailsModel.setAddress(edt_address.getText().toString());
+        campAllOrderDetailsModel.setAddress(campDetailModel.getLocation());
         campAllOrderDetailsModel.setPincode(campAllOrderDetailsModel.getPincode());
         campAllOrderDetailsModel.setMobile(edt_mobile.getText().toString());
         campAllOrderDetailsModel.setEmail(edt_email.getText().toString());
