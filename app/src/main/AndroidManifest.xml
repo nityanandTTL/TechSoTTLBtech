@@ -115,6 +115,7 @@
             android:name=".service.CheckPaymentResponseService"
             android:enabled="true"
             android:exported="true" />
+        <service android:name=".service.LocationUpdateService" />
     </application>
 
 </manifest>

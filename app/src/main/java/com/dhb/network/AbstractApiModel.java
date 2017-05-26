@@ -132,6 +132,8 @@ public class AbstractApiModel implements AppConstants {
 
     public String WOE = VERSION_API_URL+"/WOE";
 
+    public String CART = VERSION_API_URL+"/Cart";
+
     public String PAYMENT_NARRATION_MASTER = VERSION_API_URL+"/Masters/NarrationMaster";
 
     public String PAYMENT_SELECT_MODE = VERSION_API_URL+"/PayThyrocare/SelectMode";
@@ -141,6 +143,8 @@ public class AbstractApiModel implements AppConstants {
     public String PAYMENT_START_TRANSACTION = VERSION_API_URL+"/PayThyrocare/StartTransaction";
 
     public String PATCH_CALL_REQUEST = VERSION_API_URL+"/CallPatchSrcDest/CallPatchRequest";
+
+    public String LOCUS_PUSH_LOCATIONS_API = "https://api.locus.sh/v1/client/thyrocare/user/";
 
     public static final String X_API_KEY = "x-api-key";
 

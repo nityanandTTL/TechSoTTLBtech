@@ -324,6 +324,10 @@ public class PaymentsActivity extends AbstractActivity {
                             paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
                         }
                     });
+                    if(paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("Amount") && NarrationId!=3){
+                        paymentPassInputsModel.getNameValueCollection().get(i).setValue(Amount+"");
+                        edtPaymentUserInputs.setText(paymentPassInputsModel.getNameValueCollection().get(i).getValue());
+                    }
                     llPaymentPassInputs.addView(edtPaymentUserInputs);
                 }
                 else if(paymentPassInputsModel.getNameValueCollection().get(i).getRequired().equals("System")){

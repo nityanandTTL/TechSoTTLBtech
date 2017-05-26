@@ -24,7 +24,9 @@ import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BeneficiaryDetailsDao;
 import com.dhb.dao.models.OrderDetailsDao;
 import com.dhb.delegate.RefreshBeneficiariesSliderDelegate;
+import com.dhb.models.api.request.CartAPIRequestModel;
 import com.dhb.models.api.request.OrderBookingRequestModel;
+import com.dhb.models.api.response.CartAPIResponseModel;
 import com.dhb.models.api.response.OrderBookingResponseBeneficiaryModel;
 import com.dhb.models.api.response.OrderBookingResponseOrderModel;
 import com.dhb.models.api.response.OrderBookingResponseVisitModel;
@@ -33,6 +35,9 @@ import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
+import com.dhb.models.data.CartAPIResponseOrderModel;
+import com.dhb.models.data.CartRequestBeneficiaryModel;
+import com.dhb.models.data.CartRequestOrderModel;
 import com.dhb.models.data.OrderBookingDetailsModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
@@ -45,6 +50,7 @@ import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.DeviceUtils;
+import com.dhb.utils.app.InputUtils;
 
 import org.json.JSONException;
 
@@ -151,16 +157,42 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             public void onClick(View v) {
 
                 OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
-                ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(orderBookingRequestModel);
-                orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new OrderBookingAPIAsyncTaskDelegateResult());
-                if(isNetworkAvailable(activity)){
-                    orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
-                }
-                else{
-                    Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+                if(validate(orderBookingRequestModel)) {
+                    ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(orderBookingRequestModel);
+                    orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new OrderBookingAPIAsyncTaskDelegateResult());
+                    if (isNetworkAvailable(activity)) {
+                        orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
+                    } else {
+                        Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
+    }
+
+    private boolean validate(OrderBookingRequestModel orderBookingRequestModel) {
+        for (BeneficiaryBarcodeDetailsModel barcodesModel:
+             orderBookingRequestModel.getBarcodedtl()) {
+            if(InputUtils.isNull(barcodesModel.getBarcode())){
+                for(BeneficiaryDetailsModel bdm:orderBookingRequestModel.getBendtl()){
+                    if(barcodesModel.getBenId()==bdm.getBenId()){
+                        Toast.makeText(activity,"Please scan all barcodes for "+bdm.getName(),Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                }
+            }
+        }
+        for(BeneficiaryDetailsModel bdm:orderBookingRequestModel.getBendtl()){
+            if(InputUtils.isNull(bdm.getTests())){
+                Toast.makeText(activity,"Please select atleast one test for "+bdm.getName(),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if(bdm.getVenepuncture()!=null){
+                Toast.makeText(activity,"Please capture venepuncture image for "+bdm.getName(),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        return true;
     }
 
     private OrderBookingRequestModel generateOrderBookingRequestModel() {
@@ -236,6 +268,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     }
 
     private void initData() {
+        vpBeneficiaries.removeAllViews();
+        vpBeneficiaries.clearOnPageChangeListeners();
+        totalAmount = 0;
         for (OrderDetailsModel orderDetailsModel :
                 orderVisitDetailsModel.getAllOrderdetails()) {
             totalAmount = totalAmount + orderDetailsModel.getAmountDue();
@@ -262,8 +297,37 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         beneficiaryScreenSlidePagerAdapter = new BeneficiaryScreenSlidePagerAdapter(getFragmentManager(), activity, beneficiariesArr, orderVisitDetailsModel.getAllOrderdetails(), new RefreshBeneficiariesSliderDelegate() {
             @Override
             public void onRefreshActionCallbackReceived(OrderVisitDetailsModel orderVisitDetails) {
-                orderVisitDetailsModel = orderVisitDetails;
-                initData();
+                CartAPIRequestModel cartAPIRequestModel = new CartAPIRequestModel();
+                ArrayList<CartRequestOrderModel> ordersArr = new ArrayList<>();
+                ArrayList<CartRequestBeneficiaryModel> beneficiariesArr = new ArrayList<>();
+                cartAPIRequestModel.setVisitId(orderVisitDetails.getVisitId());
+                for (OrderDetailsModel order:
+                     orderVisitDetails.getAllOrderdetails()) {
+                    CartRequestOrderModel crom = new CartRequestOrderModel();
+                    crom.setOrderNo(order.getOrderNo());
+                    crom.setHC(order.getReportHC());
+                    crom.setBrandId(order.getBrandId()+"");
+                    ordersArr.add(crom);
+                    for (BeneficiaryDetailsModel ben:order.getBenMaster()){
+                        CartRequestBeneficiaryModel crbm = new CartRequestBeneficiaryModel();
+                        crbm.setOrderNo(order.getOrderNo());
+                        crbm.setAddben(order.isAddBen()?1:0);
+                        crbm.setTests(ben.getTestsCode());
+                        beneficiariesArr.add(crbm);
+                    }
+                }
+                cartAPIRequestModel.setOrders(ordersArr);
+                cartAPIRequestModel.setBeneficiaries(beneficiariesArr);
+
+                ApiCallAsyncTask cartAPIAsyncTaskRequest = new AsyncTaskForRequest(activity).getCartRequestAsyncTask(cartAPIRequestModel);
+                cartAPIAsyncTaskRequest.setApiCallAsyncTaskDelegate(new CartAPIAsyncTaskDelegateResult());
+                if(isNetworkAvailable(activity)){
+                    orderVisitDetailsModel = orderVisitDetails;
+                    cartAPIAsyncTaskRequest.execute(cartAPIAsyncTaskRequest);
+                }
+                else{
+                    Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+                }
             }
         });
         vpBeneficiaries.setAdapter(beneficiaryScreenSlidePagerAdapter);
@@ -291,7 +355,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     }
 
     private void setUiPageViewController() {
-
+        pagerIndicator.removeAllViews();
         dotsCount = beneficiaryScreenSlidePagerAdapter.getCount();
         dots = new ImageView[dotsCount];
 
@@ -462,7 +526,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                         intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT,totalAmount);
                                         intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,2);
                                         intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderVisitDetailsModel.getVisitId());
-                                        intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,appPreferenceManager.getLoginResponseModel().getUserID());
+                                        intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
                                         startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
                                     }
                                 }
@@ -513,6 +577,42 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         @Override
         public void onApiCancelled() {
             Toast.makeText(activity,"Work Order Entry Failed",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class CartAPIAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if(statusCode==200){
+                CartAPIResponseModel cartAPIResponseModel = new ResponseParser(activity).getCartAPIResponse(json,statusCode);
+                if(cartAPIResponseModel!=null
+                        && !InputUtils.isNull(cartAPIResponseModel.getResponse())
+                        && cartAPIResponseModel.getResponse().equals("SUCCESS")
+                        && cartAPIResponseModel.getOrders()!=null
+                        && cartAPIResponseModel.getOrders().size()>0){
+
+                    for(int i=0;i<orderVisitDetailsModel.getAllOrderdetails().size();i++){
+                        int orderAmountDue = 0;
+                        for(int j=0;j<cartAPIResponseModel.getOrders().size();j++){
+                            if(orderVisitDetailsModel.getAllOrderdetails().get(i).getOrderNo().equals(cartAPIResponseModel.getOrders().get(j).getOrderNo())) {
+                                orderAmountDue = orderAmountDue + cartAPIResponseModel.getOrders().get(j).getTestCharges() + cartAPIResponseModel.getOrders().get(j).getServiceCharge();
+                                orderVisitDetailsModel.getAllOrderdetails().get(i).setAmountDue(orderAmountDue);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            else{
+                Toast.makeText(activity,"Failed to fetch updated Payment Details",Toast.LENGTH_SHORT).show();
+            }
+            initData();
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity,"Failed to fetch updated Payment Details",Toast.LENGTH_SHORT).show();
+            initData();
         }
     }
 }

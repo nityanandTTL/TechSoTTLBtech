@@ -355,7 +355,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             edt_email.requestFocus();
             return false;
         }/* else if (isValidEmail(edt_email.getText().toString())) {
-            edt_email.setError("Enter Valid Email");
+            edt_email.setMessage("Enter Valid Email");
             edt_email.requestFocus();
             return false;
         }*/

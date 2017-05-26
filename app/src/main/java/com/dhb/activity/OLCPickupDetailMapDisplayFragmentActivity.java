@@ -94,7 +94,6 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
     private AppPreferenceManager appPreferenceManager;
     private Geocoder geocoder;
     private List<Address> addresses;
-    private String address, city;
     private ImageView title_aadhar_icon, title_distance_icon;
     private double destlat,destlong,currentlat,currentlong;
     private int Integertotaldiff;
@@ -111,9 +110,6 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
 
         initUI();
         initData();
-        Log.e(TAG, "onCreate: lat "+Double.parseDouble(btechClientsModel.getLatitude())+" long "+Double.parseDouble(btechClientsModel.getLongitude()) );
-        address = getAddress(Double.parseDouble(btechClientsModel.getLatitude()), Double.parseDouble(btechClientsModel.getLongitude()));
-        Log.e(TAG, "onCreate: address "+address );
         setListeners();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -185,7 +181,7 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
                     buildGoogleApiClient();
                     mMap.setMyLocationEnabled(true);
                 }
-                final GPSTracker gpsTracker = new GPSTracker(activity);
+                GPSTracker gpsTracker = new GPSTracker(activity);
                 if (gpsTracker.canGetLocation() && !gpsTracker.isInternetAvailable()) {
                     Log.e(TAG, "onMapReady: location : " + Double.toString(gpsTracker.getLatitude()) + "long " + gpsTracker.getLongitude());
 
@@ -274,17 +270,16 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
 
     @Override
     protected void onResume() {
-        super.onResume();
-        if (Integertotaldiff > 100 || !isStarted)
-        {
+        double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
+        Integertotaldiff = (int) totaldist;
+        if (Integertotaldiff > 100 || !isStarted) {
             btn_arrived.setVisibility(View.GONE);
             btn_startNav.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             btn_arrived.setVisibility(View.VISIBLE);
             btn_startNav.setVisibility(View.GONE);
         }
-
+        super.onResume();
     }
 
     public boolean checkLocationPermission() {
@@ -352,7 +347,7 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
             callOrderStatusChangeApi(7);
             Intent intent = new Intent(Intent.ACTION_VIEW,
                     //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
-                    Uri.parse("google.navigation:q=an+" + address));
+                    Uri.parse("google.navigation:q="+destlat+","+destlong));
             startActivity(intent);
         }
     }

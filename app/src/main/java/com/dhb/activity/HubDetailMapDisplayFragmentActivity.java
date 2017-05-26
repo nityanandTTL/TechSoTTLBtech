@@ -92,7 +92,6 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private AppPreferenceManager appPreferenceManager;
     private Geocoder geocoder;
     private List<Address> addresses;
-    private String  address,city;
     private double destlat,destlong,currentlat,currentlong;
     private int Integertotaldiff;
     private boolean isStarted = false;
@@ -106,8 +105,6 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         hubBTechModel = getIntent().getExtras().getParcelable(BundleConstants.HUB_BTECH_MODEL);
         initUI();
         initData();
-
-      address= getAddress(Double.parseDouble(hubBTechModel.getLatitude()),Double.parseDouble(hubBTechModel.getLongitude()));
         setListeners();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -177,7 +174,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                     buildGoogleApiClient();
                     mMap.setMyLocationEnabled(true);
                 }
-                final GPSTracker gpsTracker = new GPSTracker(activity);
+                GPSTracker gpsTracker = new GPSTracker(activity);
                 if (gpsTracker.canGetLocation() && !gpsTracker.isInternetAvailable()) {
                     Log.e(TAG, "onMapReady: location : " + Double.toString(gpsTracker.getLatitude()) + "long " + gpsTracker.getLongitude());
                     final LatLng currentLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
@@ -324,17 +321,16 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
 
     @Override
     protected void onResume() {
-        super.onResume();
-        if (Integertotaldiff > 100 || !isStarted)
-        {
-            btn_arrived.setVisibility(View.INVISIBLE);
+        double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
+        Integertotaldiff = (int) totaldist;
+        if (Integertotaldiff > 100 || !isStarted) {
+            btn_arrived.setVisibility(View.GONE);
             btn_startNav.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             btn_arrived.setVisibility(View.VISIBLE);
-            btn_startNav.setVisibility(View.INVISIBLE);
+            btn_startNav.setVisibility(View.GONE);
         }
-
+        super.onResume();
     }
 
     /*@Override
@@ -348,7 +344,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
             callOrderStatusChangeApi(7);
             Intent intent = new Intent(Intent.ACTION_VIEW,
                  //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
-            Uri.parse("google.navigation:q=an+"+address));
+            Uri.parse("google.navigation:q="+destlat+","+destlong));
             startActivity(intent);
         }
     }
@@ -621,7 +617,6 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                         Math.sin(dLng/2) * Math.sin(dLng/2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         float dist = (float) (earthRadius * c);
-
         return dist;
     }
 
@@ -648,12 +643,12 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                if (Integertotaldiff > 100)
                {
                    isStarted = true;
-                   btn_arrived.setVisibility(View.INVISIBLE);
+                   btn_arrived.setVisibility(View.GONE);
                    btn_startNav.setVisibility(View.VISIBLE);
                }
                else {
                    btn_arrived.setVisibility(View.VISIBLE);
-                   btn_startNav.setVisibility(View.INVISIBLE);
+                   btn_startNav.setVisibility(View.GONE);
                }
             }
         }

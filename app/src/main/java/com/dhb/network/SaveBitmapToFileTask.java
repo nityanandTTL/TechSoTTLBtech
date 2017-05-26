@@ -53,7 +53,7 @@ public class SaveBitmapToFileTask extends AsyncTask<Void, Void, Void> {
 		super.onPreExecute();
 
 //		progressDialog = new ProgressDialog(context);
-//		progressDialog.setError_description("Please wait...");
+//		progressDialog.setMessage("Please wait...");
 //		progressDialog.setCancelable(false);
 //		progressDialog.setCanceledOnTouchOutside(false);
 //		progressDialog.show();

@@ -1,13 +1,21 @@
 package com.dhb.utils.app;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
 import com.dhb.R;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 /**
  * Created by Pratik Ambhore on 21/9/15.
@@ -48,5 +56,4 @@ public class GeoLocationUtils {
 		}
 		return gps_enabled;
 	}
-
 }

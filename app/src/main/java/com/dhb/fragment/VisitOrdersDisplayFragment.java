@@ -25,6 +25,7 @@ import com.dhb.dialog.ConfirmOrderReleaseDialog;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
 import com.dhb.models.api.response.FetchOrderDetailsResponseModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
+import com.dhb.models.data.KitsCountModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.network.ApiCallAsyncTask;
@@ -34,10 +35,13 @@ import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
+import com.dhb.utils.app.InputUtils;
 
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class VisitOrdersDisplayFragment extends AbstractFragment {
 
@@ -56,6 +60,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private TextView txtNoRecord;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConfirmOrderReleaseDialog cdd;
+    private boolean isToFromMap = false;
 
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
@@ -98,15 +103,16 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             @Override
             public void onRefresh() {
                 fetchData();
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
-
     }
 
     @Override
     public void onResume() {
-        fetchData();
+        if(!isToFromMap) {
+            fetchData();
+        }
+        isToFromMap = false;
         super.onResume();
     }
 
@@ -126,7 +132,45 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
     private void initData() {
         orderDetailsResponseModels = orderDetailsDao.getAllModels();
+        int totalDistance = 0;
+        float estIncome = 0;
+        HashMap<String,Integer> kitsCount = new HashMap<>();
+        String kitsReq = "";
+        for (OrderVisitDetailsModel orderVisitDetailsModel:
+             orderDetailsResponseModels) {
+            totalDistance = totalDistance + orderVisitDetailsModel.getDistance();
+            estIncome = estIncome + orderVisitDetailsModel.getEstIncome();
+
+            for (OrderDetailsModel orderDetailsModel:
+                 orderVisitDetailsModel.getAllOrderdetails()) {
+
+                for (KitsCountModel kt:
+                     orderDetailsModel.getKits()) {
+                    if(kitsCount.containsKey(kt.getKit())){
+                        kitsCount.put(kt.getKit(),kitsCount.get(kt.getKit())+kt.getValue());
+                    }
+                    else{
+                        kitsCount.put(kt.getKit(),kt.getValue());
+                    }
+                }
+            }
+        }
+        txtTotalDistance.setText(totalDistance+"");
+        txtTotalEarnings.setText(estIncome+"");
+        Iterator it = kitsCount.entrySet().iterator();
+        while (it.hasNext()) {
+            HashMap.Entry pair = (HashMap.Entry)it.next();
+            if(InputUtils.isNull(kitsReq)){
+                kitsReq = pair.getValue()+" "+pair.getKey();
+            }
+            else{
+                kitsReq = kitsReq+" | "+pair.getValue()+" "+pair.getKey();
+            }
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+        txtTotalKitsRequired.setText(kitsReq);
         prepareRecyclerView();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void prepareRecyclerView() {
@@ -159,6 +203,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                                 orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
                                 orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
                                 orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
+                                orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
                                 if(orderDetailsModel.getBenMaster()!=null && orderDetailsModel.getBenMaster().size()>0) {
                                     for (BeneficiaryDetailsModel beneficiaryDetailsModel :
                                             orderDetailsModel.getBenMaster()) {
@@ -230,6 +275,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==BundleConstants.VOMD_START && resultCode==BundleConstants.VOMD_ARRIVED){
+            isToFromMap = true;
             OrderVisitDetailsModel orderVisitDetailsModel = data.getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
             Intent intentOrderBooking = new Intent(activity, OrderBookingActivity.class);
             intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL,orderVisitDetailsModel);
