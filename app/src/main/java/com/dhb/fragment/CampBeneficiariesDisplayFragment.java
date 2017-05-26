@@ -132,7 +132,7 @@ private CampDetailModel campDetailModel;
                 beneficiariesArr.add(beneficiaryDetailsModel);
             }
         }
-        CampBeneficiaryScreenSlidePagerAdapter = new CampBeneficiaryScreenSlidePagerAdapter(getFragmentManager(), activity,campDetailModel, beneficiariesArr, campScanQRResponseModel.getAllOrderdetails(), new RefreshCampBeneficiariesSliderDelegate() {
+        CampBeneficiaryScreenSlidePagerAdapter = new CampBeneficiaryScreenSlidePagerAdapter(getFragmentManager(), activity,campDetailModel, beneficiariesArr, campScanQRResponseModel.getAllOrderdetails(),campScanQRResponseModel, new RefreshCampBeneficiariesSliderDelegate() {
             @Override
             public void onRefreshActionCallbackReceived(CampListDisplayResponseModel campListDisplayResponseModel) {
 

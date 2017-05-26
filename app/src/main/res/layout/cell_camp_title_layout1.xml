@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:orientation="vertical">
 
     <LinearLayout
@@ -23,33 +24,6 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="5dp"
-                android:layout_height="155dp"
-                android:background="@color/colorSecondary"></RelativeLayout>
-
-            <TextView
-                android:id="@+id/txt_camp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-
-                android:layout_centerInParent="true"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/bg_circle"
-                android:editable="false"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:freezesText="false"
-                android:gravity="center"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:minEms="13"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="1"
-                android:textColor="@android:color/white"
-                android:textSize="26sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -62,12 +36,10 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+
             android:background="@color/bgTitleRight"
-            android:paddingEnd="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingStart="15dp"
+
+
             android:paddingTop="20dp">
 
             <ImageView
@@ -80,24 +52,24 @@
                 android:src="@drawable/user_profile" />
 
             <TextView
-                android:id="@+id/txt_name"
-                android:minEms="13"
-                android:editable="false"
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
+                android:layout_gravity="center_vertical"
+                android:layout_toEndOf="@+id/title_from_to_dots"
+                android:editable="false"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:freezesText="false"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/title_from_to_dots"
-                android:ellipsize="marquee"
-                android:fadingEdge="horizontal"
                 android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:minEms="13"
+                android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="Rehan Khan"
+                android:text="CPL LOYALTY EUDP AAROGYAMM"
                 android:textColor="@color/colorPrimary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -106,23 +78,23 @@
                 android:id="@+id/txt_ledger"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txt_name"
+                android:layout_below="@id/tv_name"
                 android:layout_marginTop="@dimen/dp_5"
                 android:layout_toEndOf="@id/title_from_to_dots"
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
+                android:lines="2"
                 android:singleLine="true"
                 android:text="Leader: 2"
-                android:lines="2"
-
                 android:textColor="@android:color/darker_gray"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/txt_call_leader"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_below="@id/txt_name"
+                android:layout_below="@id/tv_name"
                 android:layout_marginLeft="@dimen/dp_4"
                 android:layout_marginTop="@dimen/dp_5"
                 android:layout_toEndOf="@id/txt_ledger"
@@ -131,32 +103,33 @@
                 android:fadingEdge="horizontal"
                 android:lines="2"
                 android:textColor="@android:color/darker_gray"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/title_camp_date"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/txt_ledger"
                 android:layout_marginEnd="10dp"
-                android:layout_marginTop="0dp"
-                android:src="@android:drawable/ic_menu_my_calendar" />
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="@dimen/dp_10"
+                android:src="@drawable/hub_home_icon" />
 
             <TextView
 
-                android:id="@+id/txt_date_time"
+                android:id="@+id/txt_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txt_ledger"
-                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_10"
                 android:layout_toEndOf="@+id/title_camp_date"
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
-                android:paddingTop="5dp"
-                android:singleLine="true"
-                android:text="5/10/2017 12:00:00 AM"
-                android:textColor="@android:color/darker_gray"
+                android:lines="2"
+                android:text="11, Sushila app., shani chowk, panchavati, nashik"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
 
 
@@ -191,6 +164,7 @@
                 android:layout_below="@+id/txt_date_time"
                 android:layout_toEndOf="@+id/txt_distance"
                 android:paddingBottom="2dp"
+                android:visibility="gone"
                 android:paddingTop="2dp"
                 android:src="@drawable/vseparator" />
 
@@ -216,16 +190,18 @@
                 android:singleLine="true"
                 android:text="BSV Kit"
                 android:textColor="@android:color/darker_gray"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/imgedit"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/edit_order_icon"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/img_release"
@@ -235,6 +211,24 @@
                 android:layout_alignParentEnd="true"
                 android:src="@drawable/release_order"
                 android:visibility="gone" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="-10dp"
+                android:layout_marginRight="-20dp"
+                android:src="@drawable/layout_corner" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="-10dp"
+                android:layout_marginLeft="-20dp"
+                android:src="@drawable/layout_corner" />
 
         </RelativeLayout>
     </LinearLayout>
