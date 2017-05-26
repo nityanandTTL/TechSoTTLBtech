@@ -20,17 +20,32 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.activity.CampOrderBookingActivity;
 import com.dhb.dao.DhbDao;
+import com.dhb.dao.models.BeneficiaryDetailsDao;
 import com.dhb.dao.models.BrandMasterDao;
+import com.dhb.dao.models.LabAlertMasterDao;
+import com.dhb.dao.models.TestRateMasterDao;
+import com.dhb.delegate.SelectClinicalHistoryCheckboxDelegate;
+import com.dhb.delegate.SelectLabAlertsCheckboxDelegate;
+import com.dhb.dialog.ClinicalHistorySelectorDialog;
+import com.dhb.dialog.LabAlertSelectorDialog;
 import com.dhb.models.api.request.OrderBookingRequestModel;
 import com.dhb.models.api.response.CampScanQRResponseModel;
+import com.dhb.models.api.response.OrderBookingResponseBeneficiaryModel;
+import com.dhb.models.api.response.OrderBookingResponseOrderModel;
+import com.dhb.models.api.response.OrderBookingResponseVisitModel;
 import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
+import com.dhb.models.data.BeneficiaryLabAlertsModel;
+import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.dhb.models.data.BrandMasterModel;
 import com.dhb.models.data.CampAllOrderDetailsModel;
 
 import com.dhb.models.data.CampDetailModel;
+import com.dhb.models.data.LabAlertMasterModel;
 import com.dhb.models.data.OrderBookingDetailsModel;
 import com.dhb.models.data.OrderDetailsModel;
+import com.dhb.models.data.TestClinicalHistoryModel;
+import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -74,7 +89,14 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     private String currentSampleType;
     private DhbDao dhbDao;
     private BrandMasterModel brandMasterModel;
-
+    private OrderBookingResponseVisitModel orderBookingResponseVisitModel = new OrderBookingResponseVisitModel();
+    private ArrayList<OrderBookingResponseBeneficiaryModel> orderBookingResponseBeneficiaryModelArr = new ArrayList<>();
+    private LabAlertMasterDao labAlertMasterDao;
+    private ArrayList<LabAlertMasterModel> labAlertsArr;
+    private ArrayList<BeneficiaryLabAlertsModel> benLAArr;
+    ArrayList<TestRateMasterModel> testRateMasterModels = new ArrayList<>();
+    private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr;
+    private TextView edtCH,edtLA;
     public CampManualWOEFragment() {
         // Required empty public constructor
     }
@@ -97,10 +119,15 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         appPreferenceManager = new AppPreferenceManager(activity);
         orderNO = DeviceUtils.randomString(8);
         Random r = new Random();
-
+        Bundle bundle = getArguments();
+        // beneficiaryDetailsModel = bundle.getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
         benId = DeviceUtils.randomInt(1, 10);
         BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
         brandMasterModel = brandMasterDao.getModelFromId(campDetailModel.getBrandId());
+        labAlertMasterDao = new LabAlertMasterDao(dhbDao.getDb());
+        labAlertsArr = labAlertMasterDao.getAllModels();
+        benLAArr = new ArrayList<>();
+        benCHArr = new ArrayList<>();
         initUI(view);
         initData();
         setListeners();
@@ -108,7 +135,11 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     }
 
     private void initData() {
+
         String testCodes = campDetailModel.getProduct();
+        TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
+
+        testRateMasterModels = testRateMasterDao.getModelsFromTestCodes(testCodes);
         Logger.error("testCodes " + testCodes);
         if (campDetailModel.getSampleType().size() > 0) {
             barcodeDetailsArr = new ArrayList<>();
@@ -122,6 +153,42 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                 barcodeDetailsArr.add(bbdm);
             }
         }
+        if (testRateMasterModels != null) {
+            for (TestRateMasterModel testRateMasterModel :
+                    testRateMasterModels) {
+                if (testRateMasterModel.getTstClinicalHistory() != null && testRateMasterModel.getTstClinicalHistory().size() > 0) {
+                    testRateMasterModels.add(testRateMasterModel);
+                }
+            }
+        }
+        String chS = "";
+        if(benCHArr!=null && benCHArr.size()>0) {
+            for (BeneficiaryTestWiseClinicalHistoryModel chm :
+                    benCHArr) {
+                if (InputUtils.isNull(chS))
+                    chS = "" + chm.getClinicalHistoryId();
+                else
+                    chS = chS + ", " + chm.getClinicalHistoryId();
+            }
+        }
+        Logger.error("chS "+chS);
+        edtCH.setText(chS);
+        String laS = "";
+        if(benLAArr!=null && benLAArr.size()>0) {
+            for (BeneficiaryLabAlertsModel lam :
+                    benLAArr) {
+                LabAlertMasterModel labAlertMasterModel = labAlertMasterDao.getModelFromId(lam.getLabAlertId()+"");
+                if(labAlertMasterModel!=null) {
+                    if (InputUtils.isNull(laS))
+                        laS = "" + labAlertMasterModel.getLabAlert();
+                    else
+                        laS = laS + ", " + labAlertMasterModel.getLabAlert();
+                }
+            }
+        }
+        Logger.error("laS "+laS);
+        edtLA.setText(laS);
+
         initScanBarcodeView();
     }
 
@@ -163,6 +230,52 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         edt_test_alerts.setOnClickListener(this);
         img_male.setOnClickListener(this);
         img_female.setOnClickListener(this);
+
+        edtCH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<TestRateMasterModel> forCHSelection = new ArrayList<>();
+                if(testRateMasterModels!=null) {
+                    for (TestRateMasterModel testRateMasterModel :
+                            testRateMasterModels) {
+                        if(testRateMasterModel.getTstClinicalHistory()!=null && testRateMasterModel.getTstClinicalHistory().size()>0){
+                            forCHSelection.add(testRateMasterModel);
+                        }
+                    }
+                }
+                if(forCHSelection.size()>0) {
+                    ClinicalHistorySelectorDialog clinicalHistorySelectorDialog = new ClinicalHistorySelectorDialog(activity, forCHSelection, benCHArr, benId, new SelectClinicalHistoryCheckboxDelegate() {
+                        @Override
+                        public void onCheckChange(ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr) {
+                            benCHArr = chArr;
+                            initData();
+                        }
+                    });
+                    clinicalHistorySelectorDialog.show();
+                }
+                else{
+                    Toast.makeText(activity,"Clinical History Not Required",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        edtLA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(labAlertsArr.size()>0) {
+                    LabAlertSelectorDialog labAlertSelectorDialog = new LabAlertSelectorDialog(activity, labAlertsArr, benLAArr, benId, new SelectLabAlertsCheckboxDelegate() {
+                        @Override
+                        public void onCheckChange(ArrayList<BeneficiaryLabAlertsModel> chArr) {
+                            benLAArr = chArr;
+                            initData();
+                        }
+                    });
+                    labAlertSelectorDialog.show();
+                }
+                else{
+                    Toast.makeText(activity,"Lab Alerts Master Not Available",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void initUI(View view) {
@@ -196,6 +309,8 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         testsList = tests.split(",");
         edt_test_alerts.setText("" + testsList[0]);
         edt_brand_name = (TextView) view.findViewById(R.id.edt_brand_name);
+        edtCH=(EditText)view.findViewById(R.id.edtCH);
+        edtLA=(EditText)view.findViewById(R.id.edtLA);
         if (brandMasterModel != null) {
             if (InputUtils.isNull(brandMasterModel.getBrandName())) {
                 edt_brand_name.setText("" + brandMasterModel.getBrandId());
@@ -267,7 +382,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
         campAllOrderDetailsModel.setOrderNo(orderNO);
         campAllOrderDetailsModel.setBrandId(campDetailModel.getBrandId());
-        campAllOrderDetailsModel.setAddress(edt_address.getText().toString());
+        campAllOrderDetailsModel.setAddress(campDetailModel.getLocation());
         campAllOrderDetailsModel.setPincode(edt_pincode.getText().toString());
         campAllOrderDetailsModel.setMobile(edt_mobile.getText().toString());
         campAllOrderDetailsModel.setEmail(edt_email.getText().toString());
@@ -307,6 +422,8 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         orderBookingRequestModel.setBendtl(bendtl);
         orderBookingRequestModel.setBarcodedtl(barcodeDetailsArr);
         orderBookingRequestModel.setSmpldtl(campDetailModel.getSampleType());
+        orderBookingRequestModel.setClHistory(benCHArr);
+        orderBookingRequestModel.setLabAlert(benLAArr);
         return orderBookingRequestModel;
     }
 
@@ -338,11 +455,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             edt_mobile.setError("Enter Valid Mobile Number");
             edt_mobile.requestFocus();
             return false;
-        } else if (InputUtils.isNull(edt_address.getText().toString())) {
-            edt_address.setError("Enter Address");
-            edt_address.requestFocus();
-            return false;
-        } else if (InputUtils.isNull(edt_pincode.getText().toString())) {
+        }  else if (InputUtils.isNull(edt_pincode.getText().toString())) {
             edt_pincode.setError("Enter Pincode");
             edt_pincode.requestFocus();
             return false;
@@ -354,11 +467,11 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             edt_email.setError("Enter Email");
             edt_email.requestFocus();
             return false;
-        }/* else if (isValidEmail(edt_email.getText().toString())) {
+        } else if (!isValidEmail(edt_email.getText().toString())) {
             edt_email.setMessage("Enter Valid Email");
             edt_email.requestFocus();
             return false;
-        }*/
+        }
         return true;
     }
 
@@ -439,13 +552,123 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         pushFragments(CampBeneficiariesDisplayFragment.newInstance(campScanQRResponseModel, campDetailModel), false, false, CampBeneficiariesDisplayFragment.TAG_FRAGMENT, R.id.fl_camp_order_booking, TAG_ACTIVITY);
     }
 
+    private OrderBookingRequestModel fixForAddBeneficiary(OrderBookingRequestModel orderBookingRequestModel) {
+        //Update Visit ID in OrdBooking Model
+        if (orderBookingRequestModel.getOrdbooking().getVisitId().equals(orderBookingResponseVisitModel.getOldVisitId())) {
+            orderBookingRequestModel.getOrdbooking().setVisitId(orderBookingResponseVisitModel.getNewVisitId());
+        }
+        //Update Order No and Visit ID in Order Dtl Arr
+        if (orderBookingRequestModel.getOrddtl() != null) {
+            for (int i = 0; i < orderBookingRequestModel.getOrddtl().size(); i++) {
+                if (!InputUtils.isNull(orderBookingRequestModel.getOrddtl().get(i).getVisitId()) && orderBookingRequestModel.getOrddtl().get(i).getVisitId().equals(orderBookingResponseVisitModel.getOldVisitId())) {
+                    orderBookingRequestModel.getOrddtl().get(i).setVisitId(orderBookingResponseVisitModel.getNewVisitId());
+                }
+                if (orderBookingResponseVisitModel.getOrderids() != null) {
+                    for (int j = 0; j < orderBookingResponseVisitModel.getOrderids().size(); j++) {
+                        if (!InputUtils.isNull(orderBookingRequestModel.getOrddtl().get(i).getOrderNo()) && orderBookingRequestModel.getOrddtl().get(i).getOrderNo().equals(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())) {
+                            orderBookingRequestModel.getOrddtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+                        }
+                    }
+                }
+
+            }
+        }
+
+        //Update Order No and BenId in Bendtl Arr
+        if (orderBookingRequestModel.getBendtl() != null) {
+            for (int i = 0; i < orderBookingRequestModel.getBendtl().size(); i++) {
+                if (orderBookingResponseVisitModel.getOrderids() != null) {
+                    for (int j = 0; j < orderBookingResponseVisitModel.getOrderids().size(); j++) {
+                        if (!InputUtils.isNull(orderBookingRequestModel.getBendtl().get(i).getOrderNo()) && orderBookingRequestModel.getBendtl().get(i).getOrderNo().equals(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())) {
+                            orderBookingRequestModel.getBendtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+                        }
+                    }
+                }
+
+                if (orderBookingResponseBeneficiaryModelArr != null) {
+                    for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                        if (!InputUtils.isNull((orderBookingRequestModel.getBendtl().get(i).getBenId() + "")) && (orderBookingRequestModel.getBendtl().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                            orderBookingRequestModel.getBendtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                        }
+                    }
+                }
+
+            }
+        }
+
+        //Update orderNo and BenId in BarcodeDtl Arr
+        if (orderBookingRequestModel.getBarcodedtl() != null) {
+            for (int i = 0; i < orderBookingRequestModel.getBarcodedtl().size(); i++) {
+                if (orderBookingResponseVisitModel.getOrderids() != null) {
+                    for (int j = 0; j < orderBookingResponseVisitModel.getOrderids().size(); j++) {
+                        if (!InputUtils.isNull(orderBookingRequestModel.getBarcodedtl().get(i).getOrderNo()) && orderBookingRequestModel.getBarcodedtl().get(i).getOrderNo().equals(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())) {
+                            orderBookingRequestModel.getBarcodedtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+                        }
+                    }
+                }
+                if (orderBookingResponseBeneficiaryModelArr != null) {
+                    for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                        if (!InputUtils.isNull((orderBookingRequestModel.getBarcodedtl().get(i).getBenId() + "")) && (orderBookingRequestModel.getBarcodedtl().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                            orderBookingRequestModel.getBarcodedtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                        }
+                    }
+                }
+
+            }
+        }
+
+        //Update BenId in SmplDtl Arr
+        if (orderBookingRequestModel.getSmpldtl() != null) {
+            for (int i = 0; i < orderBookingRequestModel.getSmpldtl().size(); i++) {
+                if (orderBookingResponseBeneficiaryModelArr != null) {
+                    for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                        if ((orderBookingRequestModel.getSmpldtl().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                            orderBookingRequestModel.getSmpldtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                        }
+                    }
+                }
+
+            }
+        }
+
+        //Update BenId in ClHistory Arr
+        if (orderBookingRequestModel.getClHistory() != null) {
+            for (int i = 0; i < orderBookingRequestModel.getClHistory().size(); i++) {
+                for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                    if ((orderBookingRequestModel.getClHistory().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                        orderBookingRequestModel.getClHistory().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                    }
+                }
+            }
+        }
+
+        //Update BenId in LabAlert Arr
+        if (orderBookingRequestModel.getLabAlert() != null) {
+            for (int i = 0; i < orderBookingRequestModel.getLabAlert().size(); i++) {
+                for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                    if ((orderBookingRequestModel.getLabAlert().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                        orderBookingRequestModel.getLabAlert().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                    }
+                }
+            }
+        }
+
+        return orderBookingRequestModel;
+    }
+
     private class OrderBookingAPIAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
+                orderBookingResponseVisitModel = new ResponseParser(activity).getOrderBookingAPIResponse(json, statusCode);
+                for (OrderBookingResponseOrderModel obrom :
+                        orderBookingResponseVisitModel.getOrderids()) {
+                    orderBookingResponseBeneficiaryModelArr.addAll(obrom.getBenfids());
+                }
+
                 callWoeApi();
             } else {
-                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -457,6 +680,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
 
     private void callWoeApi() {
         OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+        orderBookingRequestModel = fixForAddBeneficiary(orderBookingRequestModel);
         ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
         workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
@@ -469,11 +693,11 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     private class WorkOrderEntryAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode==200){
-                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+            if (statusCode == 200) {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
 
-            }else {
-                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 

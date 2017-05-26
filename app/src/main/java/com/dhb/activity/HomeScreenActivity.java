@@ -113,7 +113,7 @@ public class HomeScreenActivity extends AbstractActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+         navigationView.setItemIconTintList(null);
         View NavHeaderHomeScreen = LayoutInflater.from(activity).inflate(R.layout.nav_header_home_screen,null);
         llNavHeader = (LinearLayout) NavHeaderHomeScreen.findViewById(R.id.ll_nav_header);
         rivSelfie = (RoundedImageView) NavHeaderHomeScreen.findViewById(R.id.img_user_picture);

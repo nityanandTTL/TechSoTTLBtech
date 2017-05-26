@@ -28,7 +28,7 @@
                 android:layout_height="155dp">
             </RelativeLayout>
             <TextView
-                android:background="@drawable/bg_circle"
+                android:background="@drawable/counter_icon"
                 android:text="1"
                 android:gravity="center"
                 android:id="@+id/tv_sr_no"

@@ -101,4 +101,5 @@
     <string name="progress_message_fetching_payment_status_please_wait">Obtaining Payment Status, Please wait …</string>
     <string name="progress_message_fetching_payment_details_please_wait">Obtaining Updated Payment Details, Please wait …</string>
     <string name="submit">Submit</string>
+    <string name="click_to_select_clinical_history">Select Clinical History</string>
 </resources>
