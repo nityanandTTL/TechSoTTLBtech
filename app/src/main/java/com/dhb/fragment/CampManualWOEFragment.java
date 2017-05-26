@@ -309,8 +309,8 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         testsList = tests.split(",");
         edt_test_alerts.setText("" + testsList[0]);
         edt_brand_name = (TextView) view.findViewById(R.id.edt_brand_name);
-        edtCH=(EditText)view.findViewById(R.id.edtCH);
-        edtLA=(EditText)view.findViewById(R.id.edtLA);
+        edtCH=(EditText)view.findViewById(R.id.edt_ch);
+        edtLA=(EditText)view.findViewById(R.id.edt_la);
         if (brandMasterModel != null) {
             if (InputUtils.isNull(brandMasterModel.getBrandName())) {
                 edt_brand_name.setText("" + brandMasterModel.getBrandId());

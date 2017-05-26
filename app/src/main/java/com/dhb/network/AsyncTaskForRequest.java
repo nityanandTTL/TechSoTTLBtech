@@ -2,6 +2,7 @@ package com.dhb.network;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Base64;
 import android.util.Log;
 
 import com.dhb.R;
@@ -9,8 +10,10 @@ import com.dhb.models.api.request.ApplyLeaveRequestModel;
 import com.dhb.models.api.request.BtechsRequestModel;
 import com.dhb.models.api.request.CallPatchRequestModel;
 import com.dhb.models.api.request.CampStartedRequestModel;
+import com.dhb.models.api.request.CartAPIRequestModel;
 import com.dhb.models.api.request.ChangePasswordRequestModel;
 import com.dhb.models.api.request.HubStartRequestModel;
+import com.dhb.models.api.request.LocusPushLocationRequestModel;
 import com.dhb.models.api.request.LoginRequestModel;
 import com.dhb.models.api.request.MasterBarcodeMappingRequestModel;
 import com.dhb.models.api.request.MaterialorderRequestModel;
@@ -1039,12 +1042,12 @@ public class AsyncTaskForRequest {
     /*
 	 * Recheck Payment Response Response Api Integration*/
 
-    public ApiCallAsyncTask getRecheckPaymentResponseRequestAsyncTask(JSONObject jsonRequest,String URL) {
+    public ApiCallAsyncTask getRecheckPaymentResponseRequestAsyncTask(String jsonRequest,String URL) {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            abstractApiModel.setPostData(jsonRequest.toString());
+            abstractApiModel.setPostData(jsonRequest);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(URL);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
@@ -1058,11 +1061,72 @@ public class AsyncTaskForRequest {
         }
         return apiCallAsyncTask;
     }
+    /*
+	 * Cart Api Integration*/
+
+    public ApiCallAsyncTask getCartRequestAsyncTask(CartAPIRequestModel cartAPIRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            String postJson = new Gson().toJson(cartAPIRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.CART);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetching_payment_details_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+    /*
+	 * Locus Push Geo Location Api Integration*/
+
+    public ApiCallAsyncTask getLocusPushGeoLocationRequestAsyncTask(LocusPushLocationRequestModel locusPushLocationRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            String postJson = new Gson().toJson(locusPushLocationRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeaderLocus(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(abstractApiModel.LOCUS_PUSH_LOCATIONS_API+appPreferenceManager.getLoginResponseModel().getUserID()+"/location");
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarVisible(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
 
     private List<HeaderData> getHeader(String contentType) {
         HeaderData headerData = new HeaderData();
         headerData.setHeaderKey(AbstractApiModel.AUTHORIZATION);
         headerData.setHeaderValue("Bearer " + appPreferenceManager.getAPISessionKey());
+
+        HeaderData headerData1 = new HeaderData();
+        headerData1.setHeaderKey("Content-Type");
+        headerData1.setHeaderValue(contentType);
+
+        List<HeaderData> header = new ArrayList<>();
+        header.add(headerData);
+        header.add(headerData1);
+        return header;
+    }
+
+    private List<HeaderData> getHeaderLocus(String contentType) {
+        HeaderData headerData = new HeaderData();
+        headerData.setHeaderKey(AbstractApiModel.AUTHORIZATION);
+        String credentials = "thyrocare/personnel/demop:f5a0-4be7";
+        String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        headerData.setHeaderValue("Basic " + base64EncodedCredentials);
 
         HeaderData headerData1 = new HeaderData();
         headerData1.setHeaderKey("Content-Type");

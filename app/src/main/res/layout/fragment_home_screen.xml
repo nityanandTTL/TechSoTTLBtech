@@ -119,11 +119,11 @@
 
                     <ImageView
                         android:id="@+id/schedule_icon"
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:src="@drawable/schedule_icon" />
-
+.
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -149,8 +149,8 @@
 
                     <ImageView
                         android:id="@+id/orders_booked"
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:src="@drawable/orders_booked_icon" />
 
@@ -180,8 +180,8 @@
 
                     <ImageView
                         android:id="@+id/payment_icon"
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:src="@drawable/payment" />
 
@@ -222,8 +222,8 @@
 
                     <ImageView
                         android:id="@+id/materials_icon"
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:src="@drawable/materials_icon" />
 
@@ -252,8 +252,8 @@
 
                     <ImageView
                         android:id="@+id/olc_pickup_icon"
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:src="@drawable/olc_pickup_icon" />
 
@@ -283,8 +283,8 @@
 
                     <ImageView
                         android:id="@+id/hub_icon"
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:src="@drawable/hub_icon" />
 
@@ -330,8 +330,8 @@
 
                         <ImageView
                             android:id="@+id/camp_icon"
-                            android:layout_width="@dimen/dp_30"
-                            android:layout_height="@dimen/dp_30"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:src="@drawable/camp_icon" />
 
@@ -375,8 +375,8 @@
 
                     <ImageView
                         android:id="@+id/communication_icon"
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:src="@drawable/communication_icon" />
 
@@ -405,8 +405,8 @@
 
                     <ImageView
                         android:id="@+id/Ledger_icon"
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:src="@drawable/ledger" />
 

@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.dhb.R;
 import com.dhb.customview.RoundedImageView;
 import com.dhb.dao.DhbDao;
@@ -62,8 +63,12 @@ public class HomeScreenActivity extends AbstractActivity
         activity = this;
         dhbDao = new DhbDao(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
+
+        Crashlytics.setUserIdentifier(appPreferenceManager.getLoginResponseModel().getUserID());
+        Crashlytics.setUserName(appPreferenceManager.getLoginResponseModel().getUserName());
+
         initUI();
-     /*   if(appPreferenceManager.getLeaveFlag()!=0){
+        if(appPreferenceManager.getLeaveFlag()!=0){
             pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
             appPreferenceManager.setCameFrom(1);
             toolbarHome.setVisibility(View.GONE);
@@ -72,7 +77,7 @@ public class HomeScreenActivity extends AbstractActivity
         else {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(HomeScreenFragment.newInstance(), false,false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-        }*/
+        }
         initData();
        // pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
     }
@@ -113,7 +118,7 @@ public class HomeScreenActivity extends AbstractActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+         navigationView.setItemIconTintList(null);
         View NavHeaderHomeScreen = LayoutInflater.from(activity).inflate(R.layout.nav_header_home_screen,null);
         llNavHeader = (LinearLayout) NavHeaderHomeScreen.findViewById(R.id.ll_nav_header);
         rivSelfie = (RoundedImageView) NavHeaderHomeScreen.findViewById(R.id.img_user_picture);
@@ -196,13 +201,13 @@ public class HomeScreenActivity extends AbstractActivity
         if (id == R.id.nav_home) {
 
             toolbarHome.setVisibility(View.VISIBLE);
-            Toast.makeText(getApplicationContext(),"in home",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(),"in home",Toast.LENGTH_SHORT).show();
             pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_change_password) {
 
             toolbarHome.setVisibility(View.VISIBLE);
 
-            Toast.makeText(getApplicationContext(),"in change password",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(),"in change password",Toast.LENGTH_SHORT).show();
             pushFragments(ResetPasswordFragment.newInstance(),false,false, ResetPasswordFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_logout) {
             toolbarHome.setVisibility(View.VISIBLE);

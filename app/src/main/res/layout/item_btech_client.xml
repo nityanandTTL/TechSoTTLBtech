@@ -195,7 +195,7 @@
             android:visibility="invisible"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/release_order" />
+            android:src="@drawable/release_icon" />
 
     </RelativeLayout>
 </LinearLayout>

@@ -30,7 +30,7 @@ public class CommonUtils {
 
 	     errorModel.setStatus("ERROR-BUSSINESS");
 	     String messages = msg;
-	     errorModel.setError_description(messages);
+	     errorModel.setMessage(messages);
 
 	     ApiResponseModel apiResponseModel = new ApiResponseModel();
 	     apiResponseModel.setResponseData(gson.toJson(errorModel));

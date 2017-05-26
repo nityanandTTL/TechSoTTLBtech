@@ -262,7 +262,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/bg_circle"
+                android:background="@drawable/counter_icon"
                 android:gravity="center"
                 android:text="1"
                 android:textColor="@android:color/white"
@@ -301,7 +301,6 @@
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_toEndOf="@+id/title_from_to_dots"
                 android:editable="false"
                 android:ellipsize="marquee"
@@ -351,13 +350,13 @@
 
             <ImageView
                 android:id="@+id/title_camp_date"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/tv_leader"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="0dp"
-                android:src="@android:drawable/ic_menu_my_calendar" />
+                android:src="@drawable/calender_icon" />
 
             <TextView
                 android:id="@+id/tv_date_time"

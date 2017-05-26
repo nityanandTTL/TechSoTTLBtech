@@ -24,7 +24,7 @@
             android:layout_height="145dp">
         </RelativeLayout>
         <TextView
-            android:background="@drawable/bg_circle"
+            android:background="@drawable/counter_icon"
             android:text="1"
             android:gravity="center"
             android:id="@+id/txt_sr_no"
@@ -131,8 +131,8 @@
 
         <ImageView
             android:id="@+id/title_distance_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/txt_age"
             android:layout_marginEnd="10dp"

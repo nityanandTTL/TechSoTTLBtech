@@ -10,9 +10,11 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.dhb.dao.DbHelper;
 import com.dhb.utils.app.AppPreferenceManager;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.Stack;
 
 public class ApplicationController extends MultiDexApplication {
@@ -44,6 +46,7 @@ public class ApplicationController extends MultiDexApplication {
 	public void onCreate() {
 
 		super.onCreate();
+		Fabric.with(this, new Crashlytics());
 
 		applicationController = this;
 		/*
@@ -53,6 +56,7 @@ public class ApplicationController extends MultiDexApplication {
 
 		DbHelper.init(applicationController);
 		appPreferenceManager=new AppPreferenceManager(getApplicationContext());
+
 		handler=new Handler();
 
 		player = new MediaPlayer();
@@ -92,7 +96,6 @@ public class ApplicationController extends MultiDexApplication {
 		super.attachBaseContext(base);
 		MultiDex.install(this);
 	}
-
 	@Override
 	public void onLowMemory() {
 

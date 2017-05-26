@@ -43,8 +43,8 @@ public class EditTestListActivity extends AbstractActivity{
     private int totalAmount;
     private ArrayList<BeneficiarySampleTypeDetailsModel> sampleTypesArr;
     private boolean isOfferSelected = false;
-    private long selectedTestsCost;
-    private long selectedTestsTotalCost;
+    private int selectedTestsCost;
+    private int selectedTestsTotalCost;
     private ArrayList<TestRateMasterModel> restOfTestList;
     private OrderDetailsModel orderDetailsModel;
 
@@ -135,13 +135,13 @@ public class EditTestListActivity extends AbstractActivity{
             public void onClick(View v) {
                 trimSelectedTestsListforDuplicates(selectedTestsList);
                 selectedTestsCost = calculateCost(selectedTestsList);
-                long restBenTestCost = calculateCost(restOfTestList);
+                int restBenTestCost = calculateCost(restOfTestList);
 
-                long selectedTestsDiscount = calculateDiscount(selectedTestsList);
-                long restTestsDiscount = calculateDiscount(restOfTestList);
+                int selectedTestsDiscount = calculateDiscount(selectedTestsList);
+                int restTestsDiscount = calculateDiscount(restOfTestList);
 
-                long selectedTestsIncentive = calculateIncentive(selectedTestsList);
-                long restTestsIncentive = calculateIncentive(restOfTestList);
+                int selectedTestsIncentive = calculateIncentive(selectedTestsList);
+                int restTestsIncentive = calculateIncentive(restOfTestList);
 
                 selectedTestsTotalCost = restBenTestCost+selectedTestsCost;
                 Intent intentFinish = new Intent();
@@ -156,9 +156,9 @@ public class EditTestListActivity extends AbstractActivity{
         });
     }
 
-    private long calculateCost(ArrayList<TestRateMasterModel> selTests) {
+    private int calculateCost(ArrayList<TestRateMasterModel> selTests) {
         //TODO  calculate the total price order wise
-        long totalCost = 0;
+        int totalCost = 0;
         for (TestRateMasterModel tt : selTests){
             if (tt.getRate() != 0){
                 totalCost = totalCost + tt.getRate();
@@ -166,9 +166,9 @@ public class EditTestListActivity extends AbstractActivity{
         }
         return totalCost;
     }
-    private long calculateDiscount(ArrayList<TestRateMasterModel> selTests) {
+    private int calculateDiscount(ArrayList<TestRateMasterModel> selTests) {
         //TODO  calculate the total Discount order wise
-        long totalCost = 0;
+        int totalCost = 0;
         for (TestRateMasterModel tt : selTests){
             if (tt.getRate() != 0){
                 totalCost = totalCost + tt.getDiscount();
@@ -176,9 +176,9 @@ public class EditTestListActivity extends AbstractActivity{
         }
         return totalCost;
     }
-    private long calculateIncentive(ArrayList<TestRateMasterModel> selTests) {
+    private int calculateIncentive(ArrayList<TestRateMasterModel> selTests) {
         //TODO  calculate the total incentive order wise
-        long totalCost = 0;
+        int totalCost = 0;
         for (TestRateMasterModel tt : selTests){
             if (tt.getRate() != 0){
                 totalCost = totalCost + tt.getIncentive();

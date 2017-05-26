@@ -48,6 +48,7 @@ public class OrderDetailsDao {
 	private String REPORT_HC = "ReportHC";
 	private String KITS = "kits";
 	private String DISTANCE = "Distance";
+	private String EST_INCOME = "EstIncome";
 	private String LATITUDE = "Latitude";
 	private String LONGITUDE = "Longitude";
 	private String STATUS = "Status";
@@ -92,6 +93,7 @@ public class OrderDetailsDao {
 		orderDetailsModel.setAmountDue(cursor.getInt(cursor.getColumnIndex(AMOUNT_DUE)));
 		orderDetailsModel.setMargin(cursor.getInt(cursor.getColumnIndex(MARGIN)));
 		orderDetailsModel.setDiscount(cursor.getInt(cursor.getColumnIndex(DISCOUNT)));
+		orderDetailsModel.setEstIncome(cursor.getFloat(cursor.getColumnIndex(EST_INCOME)));
 		orderDetailsModel.setDistance(cursor.getInt(cursor.getColumnIndex(DISTANCE)));
 		orderDetailsModel.setRefcode(cursor.getString(cursor.getColumnIndex(REFCODE)));
 		orderDetailsModel.setStatus(cursor.getString(cursor.getColumnIndex(STATUS)));
@@ -135,6 +137,7 @@ public class OrderDetailsDao {
 		values.put(MARGIN, orderDetailsModel.getMargin());
 		values.put(DISCOUNT, orderDetailsModel.getDiscount());
 		values.put(DISTANCE, orderDetailsModel.getDistance());
+		values.put(EST_INCOME, orderDetailsModel.getEstIncome());
 		values.put(REFCODE, orderDetailsModel.getRefcode());
 		values.put(PROJ_ID, orderDetailsModel.getProjId());
 		values.put(REPORT_HC, orderDetailsModel.getReportHC());
@@ -324,6 +327,7 @@ public class OrderDetailsDao {
 						orderVisitDetailsModel.setSlotId(orderDetailsModelsArr.get(0).getSlotId());
 						orderVisitDetailsModel.setVisitId(orderDetailsModelsArr.get(0).getVisitId());
 						orderVisitDetailsModel.setDistance(orderDetailsModelsArr.get(0).getDistance());
+						orderVisitDetailsModel.setEstIncome(orderDetailsModelsArr.get(0).getEstIncome());
 						orderVisitDetailsModel.setAllOrderdetails(orderDetailsModelsArr);
 						orderVisitDetailsModelsArr.add(orderVisitDetailsModel);
 					}

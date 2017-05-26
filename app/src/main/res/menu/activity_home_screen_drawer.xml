@@ -3,20 +3,20 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:icon="@drawable/ic_home_black"
+            android:icon="@drawable/home"
             android:id="@+id/nav_home"
             android:title="Home" />
         <item
             android:id="@+id/nav_change_password"
-            android:icon="@drawable/ic_password"
+            android:icon="@drawable/change_password"
             android:title="Change Password" />
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_logout"
+            android:icon="@drawable/logout"
             android:title="Logout" />
         <item
             android:id="@+id/nav_communication"
-            android:icon="@drawable/ic_communication"
+            android:icon="@drawable/communication"
             android:title="Communication" />
     </group>
 </menu>

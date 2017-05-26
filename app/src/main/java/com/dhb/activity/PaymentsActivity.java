@@ -62,15 +62,15 @@ public class PaymentsActivity extends AbstractActivity {
     private ApiCallAsyncTask fetchPaymentPassInputsAsyncTask;
     private PaymentProcessAPIResponseModel paymentPassInputsModel;
     private ApiCallAsyncTask startTransactionAsyncTask;
-    private int NarrationId = 1;
-    private String OrderNo = "TT082938";
-    private int Amount = 100;
-    private int SourceCode = 88453101;
-    private String BillingName = "Test Thyrocare";
-    private String BillingAddr = "TTC, Turbhe, Navi Mumbai";
-    private String BillingPin = "400007";
-    private String BillingMob = "7738185400";
-    private String BillingEmail = "tejas.e3565@thyrocare.com";
+    private int NarrationId = 0;
+    private String OrderNo = "";
+    private int Amount = 0;
+    private int SourceCode = 0;
+    private String BillingName = "";
+    private String BillingAddr = "";
+    private String BillingPin = "";
+    private String BillingMob = "";
+    private String BillingEmail = "";
     private PaymentStartTransactionAPIResponseModel paymentStartTransactionAPIResponseModel;
     private PaymentDoCaptureResponseAPIResponseModel paymentDoCaptureResponseAPIResponseModel;
     private int checkPaymentSuccessResponseRetryCount = 0;
@@ -101,7 +101,8 @@ public class PaymentsActivity extends AbstractActivity {
             BillingEmail = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_EMAIL);
         }
         initUI();
-        fetchNarrationMaster();
+//        fetchNarrationMaster();
+        fetchPaymentModes();
     }
 
     @Override
@@ -170,12 +171,12 @@ public class PaymentsActivity extends AbstractActivity {
 
         @Override
         public void onClick(View v) {
-            fetchPaymentModes(nmm);
+            fetchPaymentModes();
         }
     }
 
-    private void fetchPaymentModes(NarrationMasterModel nmm) {
-        fetchPaymentModesAsyncTask = asyncTaskForRequest.getPaymentModesFromNarrationIdRequestAsyncTask(nmm.getNarrationId());
+    private void fetchPaymentModes() {
+        fetchPaymentModesAsyncTask = asyncTaskForRequest.getPaymentModesFromNarrationIdRequestAsyncTask(NarrationId);
         fetchPaymentModesAsyncTask.setApiCallAsyncTaskDelegate(new FetchPaymentModesAsyncTaskDelegateResult());
         if(isNetworkAvailable(activity)){
             fetchPaymentModesAsyncTask.execute(fetchPaymentModesAsyncTask);
@@ -324,6 +325,10 @@ public class PaymentsActivity extends AbstractActivity {
                             paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
                         }
                     });
+                    if(paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("Amount") && NarrationId!=3){
+                        paymentPassInputsModel.getNameValueCollection().get(i).setValue(Amount+"");
+                        edtPaymentUserInputs.setText(paymentPassInputsModel.getNameValueCollection().get(i).getValue());
+                    }
                     llPaymentPassInputs.addView(edtPaymentUserInputs);
                 }
                 else if(paymentPassInputsModel.getNameValueCollection().get(i).getRequired().equals("System")){

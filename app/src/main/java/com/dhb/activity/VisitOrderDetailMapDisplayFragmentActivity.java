@@ -88,7 +88,6 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
     private TextView txtDistance;
     private TextView txtAddress;
     private LinearLayout llCall;
-    private String address;
     private double destlat, destlong, currentlat, currentlong;
     private int Integertotaldiff;
     private boolean isStarted = false;
@@ -105,7 +104,6 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         orderVisitDetailsModel = bundle.getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
         initUI();
         initData();
-        address = getAddress(Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()), Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude()));
         setListeners();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -178,7 +176,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                     mMap.setMyLocationEnabled(true);
                 }
 //===========================
-                final GPSTracker gpsTracker = new GPSTracker(activity);
+                GPSTracker gpsTracker = new GPSTracker(activity);
                 if (gpsTracker.canGetLocation() && !gpsTracker.isInternetAvailable()) {
                     Log.e(TAG_FRAGMENT, "onMapReady: location : " + Double.toString(gpsTracker.getLatitude()) + "long " + gpsTracker.getLongitude());
                     final LatLng currentLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
@@ -195,7 +193,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                         MarkerPoints.add(currentLocation);
                         Logger.error("orderVisitDetailsModel lat" + orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude() + "long " + orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude());
                         destlat = Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
-                        destlong = Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
+                        destlong = Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude());
                         LatLng destTempLocation = new LatLng(destlat, destlong);
     //                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
     //                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
@@ -406,7 +404,8 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
 
     @Override
     protected void onResume() {
-        super.onResume();
+        double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
+        Integertotaldiff = (int) totaldist;
         if (Integertotaldiff > 100 || !isStarted) {
             btn_arrived.setVisibility(View.GONE);
             btn_startNav.setVisibility(View.VISIBLE);
@@ -414,7 +413,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
             btn_arrived.setVisibility(View.VISIBLE);
             btn_startNav.setVisibility(View.GONE);
         }
-
+        super.onResume();
     }
 
     @Override
@@ -425,7 +424,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
             callOrderStatusChangeApi(7);
             Intent intent = new Intent(Intent.ACTION_VIEW,
                     //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
-                    Uri.parse("google.navigation:q=an+" + address));
+                    Uri.parse("google.navigation:q="+destlat+","+destlong));
             startActivity(intent);
         }
     }

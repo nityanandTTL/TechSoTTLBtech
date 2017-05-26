@@ -262,9 +262,9 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
 
 
     private class FoldingCellViewHolder {
-        TextView tv_camp, tvName, tv_leader, tv_date_time, tv_location, tv_kits, txt_address, tv_product, tv_amount, tv_call_leader,
-                tv_expected_crowd, tv_address;
-        TextView txt_camp, txt_name, txt_ledger, txt_date_time, txt_distance, txt_kits, txt_call_leader;
+        TextView tv_camp, tvName, tv_leader, tv_date_time, tv_location, tv_kits, txt_address, tv_product, tv_amount,tv_call_leader,
+                txt_call_leader,tv_expected_crowd, tv_address;
+        TextView txt_camp, txt_name, txt_ledger, txt_date_time, txt_distance, txt_kits ;
         LinearLayout ll_view_btech, ll_leader_detail, ll_btechs;
         ImageView img_accept, imgedit;
         Button btn_start, btn_arrived;
