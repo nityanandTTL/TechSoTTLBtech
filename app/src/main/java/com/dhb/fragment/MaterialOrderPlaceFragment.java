@@ -37,6 +37,7 @@ import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.InputUtils;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -67,6 +68,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
     EditText searchbar;
     RadioButton Operational_radio,Promotional_radio;
     RadioGroup group;
+    private float Grandtotal = 0;
 
     public MaterialOrderPlaceFragment() {
         // Required empty public constructor
@@ -229,13 +231,14 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
             Logger.debug(TAG_FRAGMENT + "--apiCallResult: ");
             if (statusCode == 200) {
                 Toast.makeText(getActivity(), "Success", LENGTH_SHORT).show();
+                JSONObject jsonResponse = new JSONObject(json);
+                int orderNo = jsonResponse.getInt("OrderId");
                 Intent intentPayments = new Intent(activity, PaymentsActivity.class);
-                //TODO add order no , narration Id = 1, amount, btech id, etc. intent
+                intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderNo+"");
+                intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT,Grandtotal+"");
+                intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,1);
                 startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
-
-                 /*   Fragment mFragment = new HomeScreenFragment();
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fl_homeScreen, mFragment).commit();*/
             }
         }
         @Override
@@ -405,8 +408,9 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                             Float temprate = Float.parseFloat(finalMaterialModels.getMaterialDetailsModel().getUnitCost().toString());
 
                             //Toast.makeText(getActivity(),finalMaterialModels.getMaterialDetailsModel().getMaterialName()+"",Toast.LENGTH_SHORT).show();
-                            Float total = temprate * (Integer.parseInt(s.toString()));
+                            Float total = temprate * (Float.parseFloat(s.toString()));
                             Total.setText(total + "");
+                            Grandtotal += total;
                             MaterialOrderDataModel materialOrderDataModel = new MaterialOrderDataModel();
                             materialOrderDataModel.setMaterialId(finalMaterialModels.getMaterialDetailsModel().getMaterialId());
                             materialOrderDataModel.setOrderQty(Integer.parseInt(s.toString()));

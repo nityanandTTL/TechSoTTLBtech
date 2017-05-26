@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.text.format.DateFormat;
@@ -297,7 +298,8 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
 
     private class FoldingCellViewHolder {
         TextView tv_camp, tvName, tv_leader, tv_date_time, tv_location, tv_kits, txt_address, tv_product, tv_amount,tv_call_leader,
-                txt_call_leader,tv_expected_crowd, tv_address;
+                tv_expected_crowd, tv_address;
+        ImageView txt_call_leader;
         TextView txt_camp, txt_name, txt_ledger, txt_date_time, txt_distance, txt_kits ;
         LinearLayout ll_view_btech, ll_leader_detail, ll_btechs;
         ImageView img_accept, imgedit;
@@ -338,7 +340,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             ll_btechs = (LinearLayout) itemView.findViewById(R.id.ll_btechs);
             btn_arrived = (Button) itemView.findViewById(R.id.btn_arrived);
             tv_call_leader = (TextView) itemView.findViewById(R.id.tv_call_leader);
-            txt_call_leader = (TextView) itemView.findViewById(R.id.txt_call_leader);
+            txt_call_leader = (ImageView) itemView.findViewById(R.id.txt_call_leader);
         }
     }
 
