@@ -47,7 +47,7 @@
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20"
                     android:layout_gravity="center"
-                    android:src="@drawable/counter_icon" />
+                    android:src="@drawable/call_icon" />
 
                 <TextView
                     android:id="@+id/title_est_call"
@@ -74,7 +74,7 @@
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20"
                     android:layout_gravity="center"
-                    android:src="@drawable/counter_icon" />
+                    android:src="@drawable/hub_home_icon" />
 
                 <TextView
                     android:id="@+id/title_est_address"
