@@ -10,10 +10,13 @@ import android.widget.TextView;
 import com.dhb.R;
 import com.dhb.dao.DhbDao;
 import com.dhb.fragment.BeneficiariesDisplayFragment;
+import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.uiutils.AbstractActivity;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
+
+import java.util.ArrayList;
 
 import static com.dhb.activity.HomeScreenActivity.TAG_ACTIVITY;
 
@@ -31,6 +34,7 @@ public class OrderBookingActivity extends AbstractActivity {
     private ImageView imgBack;
     private Toolbar tbOBA;
     private OrderVisitDetailsModel orderVisitDetailsModel;
+    public ArrayList<BeneficiaryBarcodeDetailsModel> scannedBarcodes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

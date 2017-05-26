@@ -91,7 +91,6 @@ public class SplashScreenActivity extends AbstractActivity {
         }, AppConstants.SPLASH_SCREEN_TIMEOUT);
         //Call Service
         locationUpdateIntent= new Intent(this,LocationUpdateService.class);
-        StartLocationUpdateService();
     }
     void StartLocationUpdateService() {
         try {
@@ -227,9 +226,9 @@ public class SplashScreenActivity extends AbstractActivity {
     private class DhbDbDelegate implements CreateOrUpgradeDbTask.DbTaskDelegate {
         @Override
         public void dbTaskCompletedWithResult(Boolean result) {
+            StartLocationUpdateService();
             if (InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
                 switchToActivity(activity, LoginScreenActivity.class, new Bundle());
-
             } else {
                 Calendar c = Calendar.getInstance();
                 c.set(Calendar.MILLISECOND, 0);
@@ -239,7 +238,6 @@ public class SplashScreenActivity extends AbstractActivity {
                 if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
                     switchToActivity(activity, HomeScreenActivity.class, new Bundle());
                 } else {
-
                     switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
                 }
             }

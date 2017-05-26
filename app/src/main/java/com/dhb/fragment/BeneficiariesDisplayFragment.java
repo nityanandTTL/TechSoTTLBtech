@@ -51,6 +51,7 @@ import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.DeviceUtils;
 import com.dhb.utils.app.InputUtils;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 
@@ -131,12 +132,16 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 }).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Logger.debug("orderVisitDetailsModel 1 :"+new Gson().toJson(orderVisitDetailsModel));
                         tempOrderDetailsModel.setOrderNo(DeviceUtils.randomString(8));
+                        Logger.debug("tempOrderDetailsModel:"+new Gson().toJson(tempOrderDetailsModel));
+                        Logger.debug("orderVisitDetailsModel 2 :"+new Gson().toJson(orderVisitDetailsModel));
                         ArrayList<BeneficiaryDetailsModel> beneficiaries = new ArrayList<BeneficiaryDetailsModel>();
 
                         tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
                         tempBeneficiaryDetailsModel.setOrderNo(tempOrderDetailsModel.getOrderNo());
                         tempBeneficiaryDetailsModel.setBenId((int)(Math.random()*999));
+                        Logger.debug("tempOrderDetailsModel:"+new Gson().toJson(tempOrderDetailsModel));
                         beneficiaryDetailsDao.insertOrUpdate(tempBeneficiaryDetailsModel);
 
                         beneficiaries.add(tempBeneficiaryDetailsModel);
@@ -527,6 +532,11 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                         intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,2);
                                         intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderVisitDetailsModel.getVisitId());
                                         intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME,orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+                                        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS,orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
+                                        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN,orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
+                                        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE,orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+                                        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL,orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail());
                                         startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
                                     }
                                 }

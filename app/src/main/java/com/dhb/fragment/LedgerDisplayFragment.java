@@ -360,7 +360,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
             for (EarningRegisterModel earningRegisterModel :
                     earningRegisterModels) {
 
-                Toast.makeText(getActivity(), "InSide Initview", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "InSide Initview", Toast.LENGTH_SHORT).show();
                 TableRow trEr = (TableRow) LayoutInflater.from(activity).inflate(R.layout.item_title_ledgersub_earning, null);
                 TextView txtDate = (TextView) trEr.findViewById(R.id.txt_Registerdate);
                 TextView txtAmount = (TextView) trEr.findViewById(R.id.txt_Amount);
@@ -388,7 +388,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
             for (DepositRegisterModel depositRegisterModel :
                     depositRegisterModels) {
 
-                Toast.makeText(getActivity(), "InSide Initview", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "InSide Initview", Toast.LENGTH_SHORT).show();
                 TableRow trDr = (TableRow) LayoutInflater.from(activity).inflate(R.layout.item_title_ledgersub_earning, null);
                 TextView txtDate = (TextView) trDr.findViewById(R.id.txt_Registerdate);
                 TextView txtAmount = (TextView) trDr.findViewById(R.id.txt_Amount);

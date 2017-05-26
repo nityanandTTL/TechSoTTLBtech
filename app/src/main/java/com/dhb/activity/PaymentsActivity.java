@@ -62,15 +62,15 @@ public class PaymentsActivity extends AbstractActivity {
     private ApiCallAsyncTask fetchPaymentPassInputsAsyncTask;
     private PaymentProcessAPIResponseModel paymentPassInputsModel;
     private ApiCallAsyncTask startTransactionAsyncTask;
-    private int NarrationId = 1;
-    private String OrderNo = "TT082938";
-    private int Amount = 100;
-    private int SourceCode = 88453101;
-    private String BillingName = "Test Thyrocare";
-    private String BillingAddr = "TTC, Turbhe, Navi Mumbai";
-    private String BillingPin = "400007";
-    private String BillingMob = "7738185400";
-    private String BillingEmail = "tejas.e3565@thyrocare.com";
+    private int NarrationId = 0;
+    private String OrderNo = "";
+    private int Amount = 0;
+    private int SourceCode = 0;
+    private String BillingName = "";
+    private String BillingAddr = "";
+    private String BillingPin = "";
+    private String BillingMob = "";
+    private String BillingEmail = "";
     private PaymentStartTransactionAPIResponseModel paymentStartTransactionAPIResponseModel;
     private PaymentDoCaptureResponseAPIResponseModel paymentDoCaptureResponseAPIResponseModel;
     private int checkPaymentSuccessResponseRetryCount = 0;
@@ -302,7 +302,7 @@ public class PaymentsActivity extends AbstractActivity {
             for (int i=0;i<paymentPassInputsModel.getNameValueCollection().size();i++) {
                 final int currentPosition = i;
                 if(paymentPassInputsModel.getNameValueCollection().get(i).getRequired().equals("User")){
-                    TextView edtPaymentUserInputs = new TextView(activity);
+                    EditText edtPaymentUserInputs = new EditText(activity);
                     LinearLayout.LayoutParams edtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
                     edtParams.setMargins(10,5,5,10);
                     edtPaymentUserInputs.setLayoutParams(edtParams);

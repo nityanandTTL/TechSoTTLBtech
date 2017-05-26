@@ -289,7 +289,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/edtCH"
+                        android:id="@+id/edt_ch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="@string/click_to_select_clinical_history"
@@ -316,7 +316,7 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/edtLA"
+                        android:id="@+id/edt_la"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

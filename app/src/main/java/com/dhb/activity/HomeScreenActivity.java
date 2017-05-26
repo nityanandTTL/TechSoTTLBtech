@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.dhb.R;
 import com.dhb.customview.RoundedImageView;
 import com.dhb.dao.DhbDao;
@@ -62,6 +63,10 @@ public class HomeScreenActivity extends AbstractActivity
         activity = this;
         dhbDao = new DhbDao(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
+
+        Crashlytics.setUserIdentifier(appPreferenceManager.getLoginResponseModel().getUserID());
+        Crashlytics.setUserName(appPreferenceManager.getLoginResponseModel().getUserName());
+
         initUI();
         if(appPreferenceManager.getLeaveFlag()!=0){
             pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
