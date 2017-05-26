@@ -1042,12 +1042,12 @@ public class AsyncTaskForRequest {
     /*
 	 * Recheck Payment Response Response Api Integration*/
 
-    public ApiCallAsyncTask getRecheckPaymentResponseRequestAsyncTask(JSONObject jsonRequest,String URL) {
+    public ApiCallAsyncTask getRecheckPaymentResponseRequestAsyncTask(String jsonRequest,String URL) {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            abstractApiModel.setPostData(jsonRequest.toString());
+            abstractApiModel.setPostData(jsonRequest);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(URL);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));

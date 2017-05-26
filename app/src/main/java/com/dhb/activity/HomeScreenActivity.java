@@ -201,13 +201,13 @@ public class HomeScreenActivity extends AbstractActivity
         if (id == R.id.nav_home) {
 
             toolbarHome.setVisibility(View.VISIBLE);
-            Toast.makeText(getApplicationContext(),"in home",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(),"in home",Toast.LENGTH_SHORT).show();
             pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_change_password) {
 
             toolbarHome.setVisibility(View.VISIBLE);
 
-            Toast.makeText(getApplicationContext(),"in change password",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(),"in change password",Toast.LENGTH_SHORT).show();
             pushFragments(ResetPasswordFragment.newInstance(),false,false, ResetPasswordFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_logout) {
             toolbarHome.setVisibility(View.VISIBLE);

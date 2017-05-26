@@ -5,10 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
+import com.dhb.R;
+import com.dhb.network.ApiCallAsyncTask;
+import com.dhb.network.ApiCallAsyncTaskDelegate;
+import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.utils.api.NetworkUtils;
 import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
+import com.dhb.utils.app.BundleConstants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class CheckPaymentResponseService extends Service {
 
@@ -18,7 +27,9 @@ public class CheckPaymentResponseService extends Service {
     private static final int retryCountMax = 5;
     private boolean isIssueFound = false;
     private int serviceId;
-
+    private String jsonRequest;
+    private String recheckResponseURL;
+    private boolean isRecheckComplete = false;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -41,7 +52,8 @@ public class CheckPaymentResponseService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         serviceId = startId;
-
+        jsonRequest = intent.getExtras().getString(BundleConstants.PAYMENTS_RECHECK_REQUEST);
+        recheckResponseURL = intent.getExtras().getString(BundleConstants.PAYMENTS_RECHECK_REQUEST_URL);
         if (appPreferenceManager.getLoginResponseModel()==null){
             broadcastSyncIssue();
             stopSelf(serviceId);
@@ -50,7 +62,7 @@ public class CheckPaymentResponseService extends Service {
         if (NetworkUtils.isNetworkAvailable(getApplicationContext())){
             isIssueFound = false;
             broadcastSyncProgress(true);
-            startUpdatingMasterTables();
+            startRecheckingPaymentResponse();
         } else {
             broadcastSyncIssue();
             stopSelf(serviceId);
@@ -59,18 +71,36 @@ public class CheckPaymentResponseService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void startUpdatingMasterTables() {
+    private void startRecheckingPaymentResponse() {
+        if(!isRecheckComplete||retryCount<=retryCountMax){
+            callRecheckPaymentResponseAPI(jsonRequest,recheckResponseURL);
+        }
         broadcastSyncDone();
         stopSelf(serviceId);
     }
 
-    private void callMasterTableUpdateUploadAPI(int infoType, String brandId, int previousCount) {
-        /*AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(context);
-        ApiCallAsyncTask queueUploadApiCallAsyncTask = new ApiCallAsyncTask(context);
-        queueUploadApiCallAsyncTask.setApiCallAsyncTaskDelegate(new MasterTableUpdateApiCallResult(infoType,previousCount));
-        queueUploadApiCallAsyncTask.execute(queueUploadApiCallAsyncTask);*/
+    private void callRecheckPaymentResponseAPI(String jsonRequest, String recheckResponseURL) {
+        ApiCallAsyncTask recheckPaymentResponseAsyncTask = new AsyncTaskForRequest(getApplicationContext()).getRecheckPaymentResponseRequestAsyncTask(jsonRequest,recheckResponseURL);
+        recheckPaymentResponseAsyncTask.setApiCallAsyncTaskDelegate(new RecheckPaymentResponseAsyncTaskDelegateResult());
+        if(NetworkUtils.isNetworkAvailable(getApplicationContext())){
+            recheckPaymentResponseAsyncTask.execute(recheckPaymentResponseAsyncTask);
+        }
+        else{
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+        }
     }
 
+    private class RecheckPaymentResponseAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
     public void broadcastSyncProgress(boolean isInInitialMode) {
         Intent intent = new Intent();
         intent.setAction(AppConstants.CHECK_PAYMENT_RESPONSE_ACTION_IN_PROGRESS);
