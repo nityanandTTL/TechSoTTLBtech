@@ -53,12 +53,9 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
     private static final String TAG = CampListDetailDisplayAdapter.class.getSimpleName();
     private HomeScreenActivity activity;
     private ArrayList<CampDetailModel> campDetailModelList;
-    CampListDisplayResponseModel campListDisplayResponseModel;
     private CampListDisplayRecyclerViewAdapterDelegate campListDisplayRecyclerViewAdapterDelegate;
     private HashSet<Integer> unfoldedIndexes = new HashSet<>();
     private LayoutInflater layoutInflater;
-    // ConfirmCallDialog cod;
-    public static String[] arr;
 
     public CampListDetailDisplayAdapter(HomeScreenActivity activity,
                                         ArrayList<CampDetailModel> campDetailModelList,
@@ -101,7 +98,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
     }
 
     private void initListeners(final FoldingCellViewHolder holder, final int pos) {
-        holder.imgedit.setOnClickListener(new View.OnClickListener() {
+       /* holder.imgedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 8, pos);
@@ -112,7 +109,8 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             public void onClick(View v) {
                 campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 8, pos);
             }
-        });
+        });*/
+/*
         holder.btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,6 +123,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
                 campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 3, pos);
             }
         });
+*/
         holder.cell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,7 +132,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
                 initData(holder, pos);
             }
         });
-        holder.tv_call_leader.setOnClickListener(new View.OnClickListener() {
+     /*   holder.tv_call_leader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 0, pos);
@@ -144,54 +143,55 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             public void onClick(View v) {
                 campListDisplayRecyclerViewAdapterDelegate.onItemClick(campDetailModelList.get(pos), 0, pos);
             }
-        });
+        });*/
     }
 
     private void initData(FoldingCellViewHolder holder, final int pos) {
         holder.bool_check = new boolean[campDetailModelList.size()];
         holder.ids_check = new int[campDetailModelList.size()];
         if (campDetailModelList.size() > pos) {
-            holder.tv_leader.setText("Leader Name :" + campDetailModelList.get(pos).getLeaderName());
-            holder.tv_date_time.setText("" + campDetailModelList.get(pos).getCampDateTime());
-            holder.tv_location.setText(""/* + campDetailModelList.get(pos).getLocation()*/);
-            holder.tv_camp.setText(String.valueOf(pos + 1));
+
+            holder.tv_location.setText("" + campDetailModelList.get(pos).getLocation());
+          /*  holder.tv_camp.setText(String.valueOf(pos + 1));
             String campName="" + campDetailModelList.get(pos).getCampName();
             holder.tvName.setSelected(true);
-            holder.tvName.setText(campName);
-            if (campDetailModelList.get(pos).getProduct().equals("")) {
+            holder.tvName.setText(campName);*/
+            // holder.tv_leader.setText("Leader Name :" + campDetailModelList.get(pos).getLeaderName());
+            // holder.tv_date_time.setText("" + campDetailModelList.get(pos).getCampDateTime());
+            /*if (campDetailModelList.get(pos).getProduct().equals("")) {
                 holder.tv_product.setVisibility(View.INVISIBLE);
             }
             if (campDetailModelList.get(pos).getAmount() == 0) {
                 holder.tv_amount.setVisibility(View.INVISIBLE);
-            }
-            if (campDetailModelList.get(pos).getExpectedCrowd() == 0) {
+            }*/
+          /*  if (campDetailModelList.get(pos).getExpectedCrowd() == 0) {
                 holder.tv_expected_crowd.setVisibility(View.INVISIBLE);
             }
             if (holder.tv_expected_crowd.getVisibility() == View.INVISIBLE && holder.tv_amount.getVisibility() == View.INVISIBLE && holder.tv_product.getVisibility() == View.INVISIBLE) {
                 holder.ll_leader_detail.setVisibility(View.GONE);
-            }
+            }*/
 
             String test="" + campDetailModelList.get(pos).getProduct();
-            holder.tv_product.setSelected(true);
-            holder.tv_product.setText(test);
+          //  holder.tv_product.setSelected(true);
+          //  holder.tv_product.setText(test);
           /*  arr[pos] = "" + campDetailModelList.get(pos).getProduct();
             Logger.error("arr: "+ arr[pos]);*/
-            holder.tv_amount.setText("" + campDetailModelList.get(pos).getAmount());
-            holder.tv_expected_crowd.setText("" + campDetailModelList.get(pos).getExpectedCrowd());
+         //   holder.tv_amount.setText("" + campDetailModelList.get(pos).getAmount());
+           /* holder.tv_expected_crowd.setText("" + campDetailModelList.get(pos).getExpectedCrowd());
             String p=String.valueOf(pos + 1);
             holder.txt_camp.setSelected(true);
             holder.txt_camp.setText(p);
-            holder.txt_name.setText("" + campDetailModelList.get(pos).getCampName());
-            holder.txt_ledger.setText("Leader Name: " + campDetailModelList.get(pos).getLeaderName());
-            holder.txt_date_time.setText("" + campDetailModelList.get(pos).getCampDateTime());
-            holder.tv_address.setText("" + campDetailModelList.get(pos).getLocation());
-            holder.tv_kits.setVisibility(View.GONE);
-            holder.txt_kits.setVisibility(View.GONE);
+            holder.txt_name.setText("" + campDetailModelList.get(pos).getCampName());*/
+         //   holder.txt_ledger.setText("Leader Name: " + campDetailModelList.get(pos).getLeaderName());
+         //   holder.txt_date_time.setText("" + campDetailModelList.get(pos).getCampDateTime());
+          //  holder.tv_address.setText("" + campDetailModelList.get(pos).getLocation());
+          //  holder.tv_kits.setVisibility(View.GONE);
+          //  holder.txt_kits.setVisibility(View.GONE);
 
-            if (campDetailModelList.get(pos).isAccepted()) {
-                holder.img_accept.setVisibility(View.GONE);
-                holder.imgedit.setVisibility(View.GONE);
-                if (/*isTommorrowOnwards(""+campDetailModelList.get(pos).getCampDateTime()) &&*/ !campDetailModelList.get(pos).isStarted()) {
+          /*  if (campDetailModelList.get(pos).isAccepted()) {
+              //  holder.img_accept.setVisibility(View.GONE);
+              //  holder.imgedit.setVisibility(View.GONE);
+                if (*//*isTommorrowOnwards(""+campDetailModelList.get(pos).getCampDateTime()) &&*//* !campDetailModelList.get(pos).isStarted()) {
                     holder.btn_start.setVisibility(View.VISIBLE);
                     holder.btn_arrived.setVisibility(View.GONE);
                 } else {
@@ -200,16 +200,16 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
                 }
 
             } else {
-                holder.img_accept.setVisibility(View.VISIBLE);
-                holder.imgedit.setVisibility(View.VISIBLE);
-                if (/*isTommorrowOnwards() &&*/ !campDetailModelList.get(pos).isStarted()) {
+               // holder.img_accept.setVisibility(View.VISIBLE);
+              //  holder.imgedit.setVisibility(View.VISIBLE);
+                if (*//*isTommorrowOnwards() &&*//* !campDetailModelList.get(pos).isStarted()) {
                     holder.btn_start.setVisibility(View.VISIBLE);
                     holder.btn_arrived.setVisibility(View.GONE);
                 } else {
                     holder.btn_start.setVisibility(View.GONE);
                     holder.btn_arrived.setVisibility(View.VISIBLE);
                 }
-            }
+            }*/
         }
         if (campDetailModelList.get(pos).getBtechs() != null) {
             if (campDetailModelList.get(pos).getBtechs().size() > 0) {
@@ -259,41 +259,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
 
     }
 
-    private boolean isTommorrowOnwards(String date) {
-        Date campDate = stringToDate(date);
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        Date today = new Date();
-        Logger.error("date: " + today);
 
-      /*  if (campDate.before(today)) {
-            System.err.println("Date specified [" + campDate + "] is before today [" + today + "]");
-            return false;
-        } else {
-            System.err.println("Date specified [" + campDate + "] is NOT before today [" + today + "]");
-            return true;
-        }
-*/
-        return true;
-    }
-
-
-    private Date stringToDate(String dtStart) {
-        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
-        try {
-            Date date = format.parse(dtStart);
-
-            System.out.println(date);
-            return date;
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }
 
 
     private class FoldingCellViewHolder {
@@ -315,28 +281,28 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
 
         private void initUI(View itemView) {
             cell = (FoldingCell) itemView.findViewById(R.id.item_camp_folding_cell);
-            tv_camp = (TextView) itemView.findViewById(R.id.tv_camp);
-            tv_leader = (TextView) itemView.findViewById(R.id.tv_leader);
-            tv_date_time = (TextView) itemView.findViewById(R.id.tv_date_time);
+          //  tv_camp = (TextView) itemView.findViewById(R.id.tv_camp);
+          //  tv_leader = (TextView) itemView.findViewById(R.id.tv_leader);
+          //  tv_date_time = (TextView) itemView.findViewById(R.id.tv_date_time);
             tv_location = (TextView) itemView.findViewById(R.id.tv_location);
-            tv_kits = (TextView) itemView.findViewById(R.id.tv_kits);
-            txt_address = (TextView) itemView.findViewById(R.id.txt_address);
-            tv_product = (TextView) itemView.findViewById(R.id.tv_product);
-            tv_amount = (TextView) itemView.findViewById(R.id.tv_amount);
+          //  tv_kits = (TextView) itemView.findViewById(R.id.tv_kits);
+          //  txt_address = (TextView) itemView.findViewById(R.id.txt_address);
+           // tv_product = (TextView) itemView.findViewById(R.id.tv_product);
+           // tv_amount = (TextView) itemView.findViewById(R.id.tv_amount);
             tv_expected_crowd = (TextView) itemView.findViewById(R.id.tv_expected_crowd);
             ll_view_btech = (LinearLayout) itemView.findViewById(R.id.ll_view_btech);
             btn_start = (Button) itemView.findViewById(R.id.btn_start);
-            ll_leader_detail = (LinearLayout) itemView.findViewById(R.id.ll_leader_detail);
+          //  ll_leader_detail = (LinearLayout) itemView.findViewById(R.id.ll_leader_detail);
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
-            txt_camp = (TextView) itemView.findViewById(R.id.txt_camp);
+          //  txt_camp = (TextView) itemView.findViewById(R.id.txt_camp);
             txt_name = (TextView) itemView.findViewById(R.id.txt_name);
-            txt_ledger = (TextView) itemView.findViewById(R.id.txt_ledger);
-            txt_date_time = (TextView) itemView.findViewById(R.id.txt_date_time);
-            txt_distance = (TextView) itemView.findViewById(R.id.txt_distance);
-            txt_kits = (TextView) itemView.findViewById(R.id.txt_kits);
-            img_accept = (ImageView) itemView.findViewById(R.id.img_accept);
-            imgedit = (ImageView) itemView.findViewById(R.id.imgedit);
-            tv_address = (TextView) itemView.findViewById(R.id.tv_address);
+           // txt_ledger = (TextView) itemView.findViewById(R.id.txt_ledger);
+         //   txt_date_time = (TextView) itemView.findViewById(R.id.txt_date_time);
+         //   txt_distance = (TextView) itemView.findViewById(R.id.txt_distance);
+         //   txt_kits = (TextView) itemView.findViewById(R.id.txt_kits);
+          //  img_accept = (ImageView) itemView.findViewById(R.id.img_accept);
+          //  imgedit = (ImageView) itemView.findViewById(R.id.imgedit);
+           // tv_address = (TextView) itemView.findViewById(R.id.tv_address);
             ll_btechs = (LinearLayout) itemView.findViewById(R.id.ll_btechs);
             btn_arrived = (Button) itemView.findViewById(R.id.btn_arrived);
             tv_call_leader = (TextView) itemView.findViewById(R.id.tv_call_leader);

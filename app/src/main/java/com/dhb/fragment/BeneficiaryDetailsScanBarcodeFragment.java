@@ -148,80 +148,85 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private void initData() {
         beneficiaryDetailsModel = beneficiaryDetailsDao.getModelFromId(beneficiaryDetailsModel.getBenId());
         orderDetailsModel = orderDetailsDao.getModelFromId(orderDetailsModel.getOrderNo());
-        benCHArr = beneficiaryDetailsModel.getClHistory();
-        benLAArr = beneficiaryDetailsModel.getLabAlert();
-        if(beneficiaryDetailsModel.getVenepuncture()!=null) {
-            encodedVanipunctureImg = encodeImage(beneficiaryDetailsModel.getVenepuncture());
-        }
-        String chS = "";
-        if(benCHArr!=null && benCHArr.size()>0) {
-            for (BeneficiaryTestWiseClinicalHistoryModel chm :
-                    benCHArr) {
-                if (InputUtils.isNull(chS))
-                    chS = "" + chm.getClinicalHistoryId();
-                else
-                    chS = chS + ", " + chm.getClinicalHistoryId();
+        if(beneficiaryDetailsModel!=null && orderDetailsModel!=null) {
+            if (beneficiaryDetailsModel.getClHistory() != null) {
+                benCHArr = beneficiaryDetailsModel.getClHistory();
             }
-        }
-        edtCH.setText(chS);
-
-        String laS = "";
-        if(benLAArr!=null && benLAArr.size()>0) {
-            for (BeneficiaryLabAlertsModel lam :
-                    benLAArr) {
-                LabAlertMasterModel labAlertMasterModel = labAlertMasterDao.getModelFromId(lam.getLabAlertId()+"");
-                if(labAlertMasterModel!=null) {
-                    if (InputUtils.isNull(laS))
-                        laS = "" + labAlertMasterModel.getLabAlert();
+            if (beneficiaryDetailsModel.getLabAlert() != null) {
+                benLAArr = beneficiaryDetailsModel.getLabAlert();
+            }
+            if (beneficiaryDetailsModel.getVenepuncture() != null) {
+                encodedVanipunctureImg = encodeImage(beneficiaryDetailsModel.getVenepuncture());
+            }
+            String chS = "";
+            if (benCHArr != null && benCHArr.size() > 0) {
+                for (BeneficiaryTestWiseClinicalHistoryModel chm :
+                        benCHArr) {
+                    if (InputUtils.isNull(chS))
+                        chS = "" + chm.getClinicalHistoryId();
                     else
-                        laS = laS + ", " + labAlertMasterModel.getLabAlert();
+                        chS = chS + ", " + chm.getClinicalHistoryId();
                 }
             }
-        }
-        edtLA.setText(laS);
+            edtCH.setText(chS);
 
-        txtName.setText(beneficiaryDetailsModel.getName());
-        txtAge.setText(beneficiaryDetailsModel.getAge() + " | " + beneficiaryDetailsModel.getGender());
-        txtAadharNo.setVisibility(View.GONE);
-        edtTests.setText(beneficiaryDetailsModel.getTestsCode());
-        txtSrNo.setText(beneficiaryDetailsModel.getBenId() + "");
-        if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
-            imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
-        } else {
-            imgHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
-        }
-        if (beneficiaryDetailsModel != null
-                && beneficiaryDetailsModel.getBarcodedtl() != null
-                && beneficiaryDetailsModel.getSampleType() != null
-                && beneficiaryDetailsModel.getBarcodedtl().size() == beneficiaryDetailsModel.getSampleType().size()) {
+            String laS = "";
+            if (benLAArr != null && benLAArr.size() > 0) {
+                for (BeneficiaryLabAlertsModel lam :
+                        benLAArr) {
+                    LabAlertMasterModel labAlertMasterModel = labAlertMasterDao.getModelFromId(lam.getLabAlertId() + "");
+                    if (labAlertMasterModel != null) {
+                        if (InputUtils.isNull(laS))
+                            laS = "" + labAlertMasterModel.getLabAlert();
+                        else
+                            laS = laS + ", " + labAlertMasterModel.getLabAlert();
+                    }
+                }
+            }
+            edtLA.setText(laS);
 
-        } else {
-            if(beneficiaryDetailsModel.getBarcodedtl()==null){
-                beneficiaryDetailsModel.setBarcodedtl(new ArrayList<BeneficiaryBarcodeDetailsModel>());
+            txtName.setText(beneficiaryDetailsModel.getName());
+            txtAge.setText(beneficiaryDetailsModel.getAge() + " | " + beneficiaryDetailsModel.getGender());
+            txtAadharNo.setVisibility(View.GONE);
+            edtTests.setText(beneficiaryDetailsModel.getTestsCode());
+            txtSrNo.setText(beneficiaryDetailsModel.getBenId() + "");
+            if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
+                imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
+            } else {
+                imgHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
             }
-            else{
-                beneficiaryDetailsModel.getBarcodedtl().clear();
+            if (beneficiaryDetailsModel != null
+                    && beneficiaryDetailsModel.getBarcodedtl() != null
+                    && beneficiaryDetailsModel.getSampleType() != null
+                    && beneficiaryDetailsModel.getBarcodedtl().size() == beneficiaryDetailsModel.getSampleType().size()) {
+
+            } else {
+                if (beneficiaryDetailsModel.getBarcodedtl() == null) {
+                    beneficiaryDetailsModel.setBarcodedtl(new ArrayList<BeneficiaryBarcodeDetailsModel>());
+                } else {
+                    beneficiaryDetailsModel.getBarcodedtl().clear();
+                }
+                for (BeneficiarySampleTypeDetailsModel sampleTypes :
+                        beneficiaryDetailsModel.getSampleType()) {
+                    BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
+                    beneficiaryBarcodeDetailsModel.setBenId(beneficiaryDetailsModel.getBenId());
+                    beneficiaryBarcodeDetailsModel.setId(DeviceUtils.getRandomUUID());
+                    beneficiaryBarcodeDetailsModel.setSamplType(sampleTypes.getSampleType());
+                    beneficiaryBarcodeDetailsModel.setOrderNo(beneficiaryDetailsModel.getOrderNo());
+                    beneficiaryDetailsModel.getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
+                }
+                beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             }
-            for (BeneficiarySampleTypeDetailsModel sampleTypes :
-                    beneficiaryDetailsModel.getSampleType()) {
-                BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
-                beneficiaryBarcodeDetailsModel.setBenId(beneficiaryDetailsModel.getBenId());
-                beneficiaryBarcodeDetailsModel.setId(DeviceUtils.getRandomUUID());
-                beneficiaryBarcodeDetailsModel.setSamplType(sampleTypes.getSampleType());
-                beneficiaryBarcodeDetailsModel.setOrderNo(beneficiaryDetailsModel.getOrderNo());
-                beneficiaryDetailsModel.getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
+            restOfTestsList = new ArrayList<>();
+            TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
+            for (BeneficiaryDetailsModel beneficiaryModel :
+                    orderDetailsModel.getBenMaster()) {
+                if (beneficiaryDetailsModel.getBenId() != beneficiaryModel.getBenId()) {
+                    restOfTestsList.addAll(testRateMasterDao.getModelsFromTestCodes(beneficiaryModel.getTestsCode()));
+                }
             }
-            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+            initScanBarcodeView();
         }
-        restOfTestsList = new ArrayList<>();
-        TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
-        for (BeneficiaryDetailsModel beneficiaryModel:
-                orderDetailsModel.getBenMaster()) {
-            if(beneficiaryDetailsModel.getBenId()!=beneficiaryModel.getBenId()){
-                restOfTestsList.addAll(testRateMasterDao.getModelsFromTestCodes(beneficiaryModel.getTestsCode()));
-            }
-        }
-        initScanBarcodeView();
     }
 
     private void setListeners() {
@@ -253,6 +258,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     orderDetailsModel.setReportHC(1);
                 }
                 orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
             }
         });
         btnRelease.setOnClickListener(new View.OnClickListener() {

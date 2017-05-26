@@ -4,16 +4,16 @@ package com.dhb.models.api.response;
  * Created by Pratik Ambhore on 9/11/15.
  */
 public class ErrorResponseModel {
-	private String error_description;
-	private String error;
+	private String CustomErrorCode;
+	private String Message;
 	private int status;
 
-	public String getError_description() {
-		return error_description;
+	public String getCustomErrorCode() {
+		return CustomErrorCode;
 	}
 
-	public void setError_description(String error_description) {
-		this.error_description = error_description;
+	public void setCustomErrorCode(String customErrorCode) {
+		this.CustomErrorCode = customErrorCode;
 	}
 
 	public int getStatus() {
@@ -24,12 +24,12 @@ public class ErrorResponseModel {
 		this.status = status;
 	}
 
-	public String getError() {
-		return error;
+	public String getMessage() {
+		return Message;
 	}
 
-	public void setError(String error) {
-		this.error = error;
+	public void setMessage(String message) {
+		this.Message = message;
 	}
 
 }

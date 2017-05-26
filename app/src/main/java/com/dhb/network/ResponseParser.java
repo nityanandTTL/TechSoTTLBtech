@@ -10,6 +10,7 @@ import com.dhb.models.api.response.BtechCollectionsResponseModel;
 import com.dhb.models.api.response.BusinessErrorModel;
 import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
+import com.dhb.models.api.response.CartAPIResponseModel;
 import com.dhb.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.dhb.models.api.response.ErrorModel;
 import com.dhb.models.api.response.ErrorResponseModel;
@@ -160,8 +161,8 @@ public class ResponseParser implements AppConstants {
 				}
 
 				ErrorResponseModel errorResponseModel = gson.fromJson(json, ErrorResponseModel.class );
-				if (errorResponseModel != null && errorResponseModel.getError_description() != null){
-					Toast.makeText(activity, errorResponseModel.getError_description().toString(), Toast.LENGTH_LONG).show();
+				if (errorResponseModel != null && errorResponseModel.getCustomErrorCode() != null){
+					Toast.makeText(activity, errorResponseModel.getCustomErrorCode().toString(), Toast.LENGTH_LONG).show();
 					return false;
 				}
 
@@ -235,7 +236,7 @@ public class ResponseParser implements AppConstants {
 
 			case 200:
 				ErrorModel errorModel = gson.fromJson(json, ErrorModel.class );
-				if (errorModel != null && errorModel.getError_description() != null && errorModel.getError() != null && (errorModel.getError().equalsIgnoreCase(SUCCESS_MESSAGE) || errorModel.getError().equalsIgnoreCase(ERROR_MESSAGE))){
+				if (errorModel != null && errorModel.getMessage() != null && errorModel.getCustomErrorCode() != null && (errorModel.getCustomErrorCode().equalsIgnoreCase(SUCCESS_MESSAGE) || errorModel.getCustomErrorCode().equalsIgnoreCase(ERROR_MESSAGE))){
 					parseAfterError(json, errorModel);
 				} else {
 					errorModel = null;
@@ -245,7 +246,7 @@ public class ResponseParser implements AppConstants {
 			case 201:
 				ErrorModel errorModels = null;
 //				ErrorModel errorModel = gson.fromJson(json, ErrorModel.class );
-//				if (errorModel != null && errorModel.getError_description() != null && errorModel.getError() != null && (errorModel.getError().equalsIgnoreCase(SUCCESS_MESSAGE) || errorModel.getError().equalsIgnoreCase(ERROR_MESSAGE))){
+//				if (errorModel != null && errorModel.getMessage() != null && errorModel.getMessage() != null && (errorModel.getMessage().equalsIgnoreCase(SUCCESS_MESSAGE) || errorModel.getMessage().equalsIgnoreCase(ERROR_MESSAGE))){
 					parseAfterError(json, errorModels);
 //				} else {
 //					errorModel = null;
@@ -256,7 +257,7 @@ public class ResponseParser implements AppConstants {
 				ErrorModel errorModela = null;
 //				ErrorModel errorModela = gson.fromJson(json, ErrorModel.class );
 				parseAfterError(json, errorModela);
-				/*if (errorModel != null && errorModel.getError_description() != null && errorModel.getError() != null && (errorModel.getError().equalsIgnoreCase(SUCCESS_MESSAGE) || errorModel.getError().equalsIgnoreCase(ERROR_MESSAGE))){
+				/*if (errorModel != null && errorModel.getMessage() != null && errorModel.getMessage() != null && (errorModel.getMessage().equalsIgnoreCase(SUCCESS_MESSAGE) || errorModel.getMessage().equalsIgnoreCase(ERROR_MESSAGE))){
 
 				} else {
 					errorModel = null;
@@ -280,8 +281,8 @@ public class ResponseParser implements AppConstants {
 				break;
 			default:
 				ErrorModel defaultErrorModel = gson.fromJson(json, ErrorModel.class );
-				if (defaultErrorModel != null && defaultErrorModel.getError_description() != null){
-					if (defaultErrorModel.getError_description().equalsIgnoreCase("User logged out successfully")){
+				if (defaultErrorModel != null && defaultErrorModel.getMessage() != null){
+					if (defaultErrorModel.getMessage().equalsIgnoreCase("User logged out successfully")){
 						//parseLogoutApi(json);
 						return true;
 					} else {
@@ -309,7 +310,7 @@ public class ResponseParser implements AppConstants {
 			switch (statusCode){
 			case 401:
 				ErrorResponseModel busiError = gson.fromJson(json, ErrorResponseModel.class );
-				if (busiError != null && busiError.getError_description() != null){
+				if (busiError != null && busiError.getCustomErrorCode() != null){
 					return parseAfterError(json, busiError);
 				} else {
 					SessionExpireModel sessionExpireModel = gson.fromJson(json, SessionExpireModel.class );
@@ -325,20 +326,20 @@ public class ResponseParser implements AppConstants {
 				break;
 			case 400:
 				ErrorResponseModel businessErrorModel = gson.fromJson(json, ErrorResponseModel.class );
-				if (businessErrorModel != null && businessErrorModel.getError_description() != null){
+				if (businessErrorModel != null && businessErrorModel.getCustomErrorCode() != null){
 					return parseAfterError(json, businessErrorModel);
 				}
 
 				ErrorResponseModel errorResponseModel = gson.fromJson(json, ErrorResponseModel.class );
-				if (errorResponseModel != null && errorResponseModel.getError_description() != null){
+				if (errorResponseModel != null && errorResponseModel.getCustomErrorCode() != null){
 					if (isToShowToast && !DeviceUtils.isAppIsInBackground(context)){
-						if (errorResponseModel.getError_description().contains(" ") && countSpacesInMessage(errorResponseModel.getError_description()) >= SPACE_COUNT_FOR_TOAST_TIME){
+						if (errorResponseModel.getCustomErrorCode().contains(" ") && countSpacesInMessage(errorResponseModel.getCustomErrorCode()) >= SPACE_COUNT_FOR_TOAST_TIME){
 							// if (!appPreferenceManager.isAppInBackground()) {
-							Toast.makeText(activity, errorResponseModel.getError_description(), Toast.LENGTH_LONG).show();
+							Toast.makeText(activity, errorResponseModel.getCustomErrorCode(), Toast.LENGTH_LONG).show();
 							// }
 						} else {
 							//  if (!appPreferenceManager.isAppInBackground()) {
-							Toast.makeText(context, errorResponseModel.getError_description(), Toast.LENGTH_SHORT).show();
+							Toast.makeText(context, errorResponseModel.getCustomErrorCode(), Toast.LENGTH_SHORT).show();
 							//  }
 						}
 					}
@@ -411,8 +412,8 @@ public class ResponseParser implements AppConstants {
 
 			case 200:
 				ErrorModel errorModel = gson.fromJson(json, ErrorModel.class );
-				if (errorModel != null && errorModel.getError_description() != null && errorModel.getError() != null && (errorModel.getError().equalsIgnoreCase(ERROR_MESSAGE)
-				                                                                                              || errorModel.getError().equals(ERROR_MESSAGE_OPTIONAL))){
+				if (errorModel != null && errorModel.getMessage() != null && errorModel.getCustomErrorCode() != null && (errorModel.getCustomErrorCode().equalsIgnoreCase(ERROR_MESSAGE)
+				                                                                                              || errorModel.getCustomErrorCode().equals(ERROR_MESSAGE_OPTIONAL))){
 					parseAfterError(json, errorModel);
 				} else {
 					errorModel = null;
@@ -436,8 +437,8 @@ public class ResponseParser implements AppConstants {
 				break;
 			default:
 				ErrorModel defaultErrorModel = gson.fromJson(json, ErrorModel.class );
-				if (defaultErrorModel != null && defaultErrorModel.getError_description() != null){
-					if (defaultErrorModel.getError_description().equalsIgnoreCase("User logged out successfully")){
+				if (defaultErrorModel != null && defaultErrorModel.getMessage() != null){
+					if (defaultErrorModel.getMessage().equalsIgnoreCase("User logged out successfully")){
 						//parseLogoutApi(json);
 						return true;
 					} else {
@@ -459,33 +460,33 @@ public class ResponseParser implements AppConstants {
 	}
 
 	private boolean parseAfterError(String json, ErrorModel errorModel) {
-		if (errorModel != null && errorModel.getError() != null && errorModel.getError_description() != null){
-			if (errorModel.getError_description().equals(MSG_SERVER_EXCEPTION)){
+		if (errorModel != null && errorModel.getCustomErrorCode() != null && errorModel.getMessage() != null){
+			if (errorModel.getMessage().equals(MSG_SERVER_EXCEPTION)){
 
-				if (errorModel.getError_description().equals(MSG_INTERNET_CONNECTION_SLOW)){
-
-					onApiFailed(errorModel);
-					return false;
-				} else if (errorModel.getError_description().equals(MSG_COMMUNICATION_PROBLEM)){
+				if (errorModel.getMessage().equals(MSG_INTERNET_CONNECTION_SLOW)){
 
 					onApiFailed(errorModel);
 					return false;
-				} else if (errorModel.getError_description().equals(MSG_NETWORK_ERROR)){
+				} else if (errorModel.getMessage().equals(MSG_COMMUNICATION_PROBLEM)){
 
 					onApiFailed(errorModel);
 					return false;
-				} else if (errorModel.getError_description().equals(MSG_UNKNOW_ERROR)){
+				} else if (errorModel.getMessage().equals(MSG_NETWORK_ERROR)){
 
 					onApiFailed(errorModel);
 					return false;
-				} else if (errorModel.getError_description().equals("Please check your network connection.")){
+				} else if (errorModel.getMessage().equals(MSG_UNKNOW_ERROR)){
 
 					onApiFailed(errorModel);
 					return false;
-				} else if (errorModel.getError().equalsIgnoreCase("ERR-BUSS")){
+				} else if (errorModel.getMessage().equals("Please check your network connection.")){
+
 					onApiFailed(errorModel);
-				} else if (errorModel.getError().equals(ERROR_MESSAGE) || errorModel.getError().equals(ERROR_MESSAGE_OPTIONAL) || (errorModel.getError_description() != null)){
-					if (!errorModel.getError().equals(SUCCESS_MESSAGE) || !errorModel.getError().equals(SUCCESS_MESSAGE_OPTIONAL)){
+					return false;
+				} else if (errorModel.getCustomErrorCode().equalsIgnoreCase("ERR-BUSS")){
+					onApiFailed(errorModel);
+				} else if (errorModel.getCustomErrorCode().equals(ERROR_MESSAGE) || errorModel.getCustomErrorCode().equals(ERROR_MESSAGE_OPTIONAL) || (errorModel.getMessage() != null)){
+					if (!errorModel.getCustomErrorCode().equals(SUCCESS_MESSAGE) || !errorModel.getCustomErrorCode().equals(SUCCESS_MESSAGE_OPTIONAL)){
 						onApiFailed(errorModel);
 						return false;
 					} else {
@@ -504,13 +505,13 @@ public class ResponseParser implements AppConstants {
 	}
 
 	private boolean parseAfterError(String json, ErrorResponseModel businessErrorModel) {
-		if (businessErrorModel != null && businessErrorModel.getError() != null && businessErrorModel.getError_description() != null){
+		if (businessErrorModel != null && businessErrorModel.getMessage() != null && businessErrorModel.getCustomErrorCode() != null){
 
 			if (isToShowErrorDailog && !DeviceUtils.isAppIsInBackground(context)){
 				if (activity != null){
-					alertDialogMessage.showAlert(activity, businessErrorModel.getError_description(), true);
+					alertDialogMessage.showAlert(activity, businessErrorModel.getCustomErrorCode(), true);
 				} else {
-					alertDialogMessage.showAlert(context.getApplicationContext(), businessErrorModel.getError_description(), true);
+					alertDialogMessage.showAlert(context.getApplicationContext(), businessErrorModel.getCustomErrorCode(), true);
 				}
 
 				alertDialogMessage.setAlertDialogOkListener(new DialogOkButtonListener());
@@ -576,7 +577,7 @@ public class ResponseParser implements AppConstants {
 
 			if (activity != null && context != null && !DeviceUtils.isAppIsInBackground(context)){
 				AlertDialogMessage alertDialogMessage1 = new AlertDialogMessage();
-				alertDialogMessage1.showAlert(activity, errorModel.getError_description().toString(), true);
+				alertDialogMessage1.showAlert(activity, errorModel.getMessage().toString(), true);
 				// alertDialogMessage1.setAlertDialogOkListener(new DialogOkButtonListener());
 
 			}
@@ -836,5 +837,13 @@ public class ResponseParser implements AppConstants {
 			orderBookingResponseVisitModel = gson.fromJson(json, OrderBookingResponseVisitModel.class);
 		}
 		return orderBookingResponseVisitModel;
+	}
+	////Cart API Response parse:
+	public CartAPIResponseModel getCartAPIResponse (String json, int statusCode) {
+		CartAPIResponseModel  cartAPIResponseModel = null;
+		if (!parseIntoError(json, statusCode)){
+			cartAPIResponseModel = gson.fromJson(json, CartAPIResponseModel.class);
+		}
+		return cartAPIResponseModel;
 	}
 }

@@ -52,6 +52,7 @@ import com.dhb.dialog.RescheduleOrderDialog;
 import com.dhb.models.api.request.OrderBookingRequestModel;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
 import com.dhb.models.api.request.RemoveBeneficiaryAPIRequestModel;
+import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
@@ -132,6 +133,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     IntentIntegrator integrator;
     int benId;
     ImageView img_male, img_female;
+    private CampScanQRResponseModel campScanQRResponseModel;
     private BrandMasterModel brandMasterModel;
 
     public CampBeneficiaryDetailsScanBarcodeFragment() {
@@ -155,6 +157,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         Bundle bundle = getArguments();
         beneficiaryDetailsArr = bundle.getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
         campAllOrderDetailsModel = bundle.getParcelable(BundleConstants.CAMP_ALL_ORDER_DETAIL);
+        campScanQRResponseModel=bundle.getParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL);
         campDetailModel = bundle.getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
         BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
         brandMasterModel = brandMasterDao.getModelFromId(campAllOrderDetailsModel.getBrandId());
@@ -418,7 +421,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         OrderBookingDetailsModel orderBookingDetailsModel = new OrderBookingDetailsModel();
         OrderDetailsModel campAllOrderDetailsModel = new OrderDetailsModel();
         orderBookingDetailsModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-        orderBookingDetailsModel.setVisitId("" + beneficiaryDetailsArr.getOrderNo());
+        orderBookingDetailsModel.setVisitId("vis" + campScanQRResponseModel.getVisitId());
         orderBookingDetailsModel.setPaymentMode(1);
         orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
         campAllOrderDetailsModel.setOrderNo(beneficiaryDetailsArr.getOrderNo());

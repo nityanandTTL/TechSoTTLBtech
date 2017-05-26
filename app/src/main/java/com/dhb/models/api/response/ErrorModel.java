@@ -4,10 +4,10 @@ package com.dhb.models.api.response;
 public class ErrorModel {
 
 	// @SerializedName("TYPE")
-	private String error;
+	private String CustomErrorCode;
 
 	// @SerializedName("MESSAGE")
-	private String error_description;
+	private String Message;
 
 	public String getResponse() {
 		return Response;
@@ -27,20 +27,20 @@ public class ErrorModel {
 	private long errorId;
 
 
-	public String getError() {
-		return error;
+	public String getCustomErrorCode() {
+		return CustomErrorCode;
 	}
 
-	public void setError(String error) {
-		this.error = error;
+	public void setCustomErrorCode(String customErrorCode) {
+		this.CustomErrorCode = customErrorCode;
 	}
 
-	public String getError_description() {
-		return error_description;
+	public String getMessage() {
+		return Message;
 	}
 
-	public void setError_description(String error_description) {
-		this.error_description = error_description;
+	public void setMessage(String message) {
+		this.Message = message;
 	}
 
 	public int getStatus() {

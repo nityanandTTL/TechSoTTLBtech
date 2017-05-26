@@ -36,6 +36,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private String Longitude;
     private String Status;
     private String Servicetype;
+    private float EstIncome;
     private ArrayList<KitsCountModel> kits;
 
     protected OrderDetailsModel(Parcel in) {
@@ -66,6 +67,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         Longitude = in.readString();
         Status = in.readString();
         Servicetype = in.readString();
+        EstIncome = in.readFloat();
         kits = in.createTypedArrayList(KitsCountModel.CREATOR);
     }
 
@@ -98,6 +100,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeString(Longitude);
         dest.writeString(Status);
         dest.writeString(Servicetype);
+        dest.writeFloat(EstIncome);
         dest.writeTypedList(kits);
     }
 
@@ -336,6 +339,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setStatus(String status) {
         Status = status;
+    }
+
+    public float getEstIncome() {
+        return EstIncome;
+    }
+
+    public void setEstIncome(float estIncome) {
+        EstIncome = estIncome;
     }
 
     @Override

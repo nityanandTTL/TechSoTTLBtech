@@ -220,7 +220,7 @@ public class AbstractActivity extends AppCompatActivity implements ActivityHelpe
 		progressDialog = new ProgressDialog(activity);
 		progressDialog.setTitle("");
 		progressDialog.setMessage(activity.getString(R.string.progress_message_authenticating_please_wait));
-//		progressDialog.setError_description("Fetching data...");
+//		progressDialog.setMessage("Fetching data...");
 		progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		progressDialog.setCancelable(false);
 		progressDialog.setCanceledOnTouchOutside(false);

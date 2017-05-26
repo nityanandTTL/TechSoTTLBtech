@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.dhb.R;
 import com.dhb.customview.RoundedImageView;
 import com.dhb.dao.DhbDao;
@@ -62,6 +63,10 @@ public class HomeScreenActivity extends AbstractActivity
         activity = this;
         dhbDao = new DhbDao(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
+
+        Crashlytics.setUserIdentifier(appPreferenceManager.getLoginResponseModel().getUserID());
+        Crashlytics.setUserName(appPreferenceManager.getLoginResponseModel().getUserName());
+
         initUI();
         if(appPreferenceManager.getLeaveFlag()!=0){
             pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
@@ -196,13 +201,13 @@ public class HomeScreenActivity extends AbstractActivity
         if (id == R.id.nav_home) {
 
             toolbarHome.setVisibility(View.VISIBLE);
-            Toast.makeText(getApplicationContext(),"in home",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(),"in home",Toast.LENGTH_SHORT).show();
             pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_change_password) {
 
             toolbarHome.setVisibility(View.VISIBLE);
 
-            Toast.makeText(getApplicationContext(),"in change password",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(),"in change password",Toast.LENGTH_SHORT).show();
             pushFragments(ResetPasswordFragment.newInstance(),false,false, ResetPasswordFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_logout) {
             toolbarHome.setVisibility(View.VISIBLE);

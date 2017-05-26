@@ -188,7 +188,7 @@ public class MaterialFragment extends AbstractFragment {
 
                 materialDetailsModels = responseParser.getMaterialdetailsResponseModel(json, statusCode);
                 if (materialDetailsModels != null && materialDetailsModels.size() > 0) {
-                    Toast.makeText(activity, "MaterialdetailsResponseModel not null", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(activity, "MaterialdetailsResponseModel not null", Toast.LENGTH_SHORT).show();
 
                 }
 

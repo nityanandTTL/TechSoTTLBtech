@@ -2,6 +2,9 @@ package com.dhb.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,18 +16,16 @@ import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.dhb.R;
-import com.dhb.customview.CustomOKDialog;
 import com.dhb.customview.CustomUpdateDailog;
 import com.dhb.dao.CreateOrUpgradeDbTask;
 import com.dhb.dao.DbHelper;
-import com.dhb.delegate.CustomOkDialogOkButtonOnClickedDelegate;
 import com.dhb.delegate.CustomUpdateDialogOkButtonOnClickedDelegate;
-import com.dhb.models.api.response.MaterialINVResponseModel;
 import com.dhb.models.data.VersionControlMasterModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.network.ResponseParser;
+import com.dhb.service.LocationUpdateService;
 import com.dhb.uiutils.AbstractActivity;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppConstants;
@@ -33,7 +34,6 @@ import com.dhb.utils.app.InputUtils;
 
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import static android.widget.Toast.LENGTH_SHORT;
@@ -45,6 +45,7 @@ public class SplashScreenActivity extends AbstractActivity {
     private AppPreferenceManager appPreferenceManager;
     public static final String TAG_FRAGMENT = "SPLASH_SCREEN_ACTIVITY";
     CustomUpdateDailog cudd;
+    private static Intent locationUpdateIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +86,39 @@ public class SplashScreenActivity extends AbstractActivity {
                             AppConstants.APP_PERMISSIONS);
                 } else {
                     fetchVersionControlDetails();
-
                 }
             }
         }, AppConstants.SPLASH_SCREEN_TIMEOUT);
+        //Call Service
+        locationUpdateIntent= new Intent(this,LocationUpdateService.class);
     }
+    void StartLocationUpdateService() {
+        try {
 
+            try {
+
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.SECOND, 1);
+                if (!IsAlarmSet()) {
+                    PendingIntent pintent = PendingIntent.getService(this, 0,
+                            locationUpdateIntent, 0);
+                    AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    alarm.setRepeating(AlarmManager.RTC_WAKEUP,
+                            cal.getTimeInMillis(),15000L,
+                            pintent);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            startService(locationUpdateIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    boolean IsAlarmSet() {
+        return PendingIntent.getBroadcast(this, 0, locationUpdateIntent,
+                PendingIntent.FLAG_NO_CREATE) != null;
+    }
     private void goAhead() {
         DbHelper.init(activity.getApplicationContext());
         new CreateOrUpgradeDbTask(new DhbDbDelegate(), getApplicationContext()).execute();
@@ -198,9 +226,9 @@ public class SplashScreenActivity extends AbstractActivity {
     private class DhbDbDelegate implements CreateOrUpgradeDbTask.DbTaskDelegate {
         @Override
         public void dbTaskCompletedWithResult(Boolean result) {
+            StartLocationUpdateService();
             if (InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
                 switchToActivity(activity, LoginScreenActivity.class, new Bundle());
-
             } else {
                 Calendar c = Calendar.getInstance();
                 c.set(Calendar.MILLISECOND, 0);
@@ -210,7 +238,6 @@ public class SplashScreenActivity extends AbstractActivity {
                 if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
                     switchToActivity(activity, HomeScreenActivity.class, new Bundle());
                 } else {
-
                     switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
                 }
             }
