@@ -1,5 +1,6 @@
 package com.dhb.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
+import com.dhb.activity.PaymentsActivity;
 import com.dhb.models.api.request.MaterialorderRequestModel;
 import com.dhb.models.api.response.MaterialINVResponseModel;
 import com.dhb.models.data.BTMaterialsModel;
@@ -31,6 +33,7 @@ import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
+import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.InputUtils;
 
 import org.json.JSONException;
@@ -226,7 +229,9 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
             Logger.debug(TAG_FRAGMENT + "--apiCallResult: ");
             if (statusCode == 200) {
                 Toast.makeText(getActivity(), "Success", LENGTH_SHORT).show();
-
+                Intent intentPayments = new Intent(activity, PaymentsActivity.class);
+                //TODO add order no , narration Id = 1, amount, btech id, etc. intent
+                startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
 
                  /*   Fragment mFragment = new HomeScreenFragment();
                     getActivity().getSupportFragmentManager().beginTransaction()

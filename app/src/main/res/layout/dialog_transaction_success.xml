@@ -26,7 +26,7 @@
                 android:layout_height="145dp">
             </RelativeLayout>
             <TextView
-                android:background="@drawable/bg_circle"
+                android:background="@drawable/counter_icon"
                 android:text="1"
                 android:gravity="center"
                 android:id="@+id/txt_sr_no"
@@ -63,7 +63,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="-8dp"
-                android:src="@drawable/user_profile" />
+                android:src="@drawable/profile_icon" />
 
             <TextView
                 android:id="@+id/txt_name"

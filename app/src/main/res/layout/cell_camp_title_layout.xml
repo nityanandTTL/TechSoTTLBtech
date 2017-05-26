@@ -31,7 +31,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/bg_circle"
+                android:background="@drawable/counter_icon"
                 android:gravity="center"
                 android:text="1"
                 android:textColor="@android:color/white"
@@ -94,11 +94,11 @@
                 android:textSize="16sp" />
             <TextView
                 android:id="@+id/txt_call_leader"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/txt_name"
                 android:layout_marginTop="@dimen/dp_5"
-                android:layout_toEndOf="@id/txt_ledger"
+                android:layout_toEndOf="@+id/txt_ledger"
                 android:ellipsize="marquee"
                 android:fadingEdge="horizontal"
                 android:singleLine="true"
@@ -109,13 +109,13 @@
 
             <ImageView
                 android:id="@+id/title_camp_date"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/txt_ledger"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="0dp"
-                android:src="@android:drawable/ic_menu_my_calendar" />
+                android:src="@drawable/calender_icon" />
 
             <TextView
                 android:id="@+id/txt_date_time"
@@ -206,7 +206,7 @@
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/release_order"
+                android:src="@drawable/counter_icon"
                 android:visibility="gone" />
 
         </RelativeLayout>

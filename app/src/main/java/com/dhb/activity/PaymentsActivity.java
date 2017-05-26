@@ -101,7 +101,8 @@ public class PaymentsActivity extends AbstractActivity {
             BillingEmail = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_EMAIL);
         }
         initUI();
-        fetchNarrationMaster();
+//        fetchNarrationMaster();
+        fetchPaymentModes();
     }
 
     @Override
@@ -170,12 +171,12 @@ public class PaymentsActivity extends AbstractActivity {
 
         @Override
         public void onClick(View v) {
-            fetchPaymentModes(nmm);
+            fetchPaymentModes();
         }
     }
 
-    private void fetchPaymentModes(NarrationMasterModel nmm) {
-        fetchPaymentModesAsyncTask = asyncTaskForRequest.getPaymentModesFromNarrationIdRequestAsyncTask(nmm.getNarrationId());
+    private void fetchPaymentModes() {
+        fetchPaymentModesAsyncTask = asyncTaskForRequest.getPaymentModesFromNarrationIdRequestAsyncTask(NarrationId);
         fetchPaymentModesAsyncTask.setApiCallAsyncTaskDelegate(new FetchPaymentModesAsyncTaskDelegateResult());
         if(isNetworkAvailable(activity)){
             fetchPaymentModesAsyncTask.execute(fetchPaymentModesAsyncTask);
@@ -301,7 +302,7 @@ public class PaymentsActivity extends AbstractActivity {
             for (int i=0;i<paymentPassInputsModel.getNameValueCollection().size();i++) {
                 final int currentPosition = i;
                 if(paymentPassInputsModel.getNameValueCollection().get(i).getRequired().equals("User")){
-                    EditText edtPaymentUserInputs = new EditText(activity);
+                    TextView edtPaymentUserInputs = new TextView(activity);
                     LinearLayout.LayoutParams edtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
                     edtParams.setMargins(10,5,5,10);
                     edtPaymentUserInputs.setLayoutParams(edtParams);

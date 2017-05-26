@@ -115,7 +115,7 @@
                     android:layout_gravity="center"
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20"
-                    android:src="@drawable/vial_icon" />
+                    android:src="@drawable/kit_icon" />
 
                 <TextView
                     android:id="@+id/title_est_kits"
