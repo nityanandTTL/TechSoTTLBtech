@@ -68,7 +68,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="-10dp"
                     android:layout_marginTop="-3dp"
-                    android:src="@drawable/counter_icon" />
+                    android:src="@drawable/user_profile" />
 
                 <EditText
                     android:id="@+id/edt_ben_name"

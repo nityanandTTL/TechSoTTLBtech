@@ -46,13 +46,13 @@ public class MaterialFragment extends AbstractFragment {
 
     public static final String TAG_FRAGMENT = "MATERIAL_FRAGMENT";
     HomeScreenActivity activity;
-    LinearLayout orderstatus;
     AppPreferenceManager appPreferenceManager;
     private View rootView;
     private ArrayList<MaterialDetailsModel> materialDetailsModels;
     private MaterialINVResponseModel materialINVResponseModel;
     TableLayout materialtable;
     Button update;
+    LinearLayout btn_virtual,btn_material;
     Integer finalstock;
     CustomOKDialog cdd;
     String Category= "180";
@@ -102,7 +102,9 @@ public class MaterialFragment extends AbstractFragment {
         super.initUI();
         materialtable = (TableLayout) rootView.findViewById(R.id.materialtable);
         update = (Button) rootView.findViewById(R.id.updateRecord);
-        orderstatus = (LinearLayout) rootView.findViewById(R.id.order_stock);
+        btn_virtual=(LinearLayout) rootView.findViewById(R.id.virtual_stock);
+        btn_material=(LinearLayout) rootView.findViewById(R.id.material_order);
+
     }
 
     private void setListners() {
@@ -137,7 +139,19 @@ public class MaterialFragment extends AbstractFragment {
         });
 
 
-        orderstatus.setOnClickListener(new View.OnClickListener() {
+        btn_virtual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Fragment mFragment = new MaterialFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fl_homeScreen, mFragment ).commit();
+
+
+            }
+        });
+
+        btn_material.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -259,7 +273,7 @@ public class MaterialFragment extends AbstractFragment {
 
     private void initData() {
 
-        if (materialINVResponseModel != null && materialINVResponseModel.getBTMaterials().size() > 0) {
+        if (materialINVResponseModel != null && materialINVResponseModel.getBTMaterials()!= null && materialINVResponseModel.getBTMaterials().size() > 0) {
             TableRow trmH = (TableRow)  LayoutInflater.from(activity).inflate(R.layout.item_title_materials, null);
             materialtable.addView(trmH);
             for (final BTMaterialsModel btMaterialsModel :

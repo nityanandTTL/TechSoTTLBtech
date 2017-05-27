@@ -25,9 +25,9 @@ public class AbstractApiModel implements AppConstants {
 
     private UrlEncodedFormEntity entity;
 
-    public static String appEnvironment = "DEVELOPMENT";
+//   public static String appEnvironment = "DEVELOPMENT";
     //public static String appEnvironment = "DEMO";
-//	public static String appEnvironment = "PRODUCTION";
+	public static String appEnvironment = "PRODUCTION";
 
 
 
@@ -40,7 +40,7 @@ public class AbstractApiModel implements AppConstants {
 
     // New DB changes Amazon Production
 
-    public static String SERVER_BASE_API_URL_PROD = "https://api.thyrocare.com";
+    public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.com/btsapi";
 
     public static String SERVER_BASE_API_URL = appEnvironment.equals("DEVELOPMENT") ? SERVER_BASE_API_URL_DEV : appEnvironment.equals("DEMO") ? SERVER_BASE_API_URL_DEMO : appEnvironment.equals("PRODUCTION") ? SERVER_BASE_API_URL_PROD : SERVER_BASE_API_URL_DEV;
 

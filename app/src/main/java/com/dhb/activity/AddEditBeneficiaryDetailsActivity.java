@@ -232,7 +232,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     orderDetailsModel.setReportHC(0);
                 } else {
                     isHC = true;
-                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.check_mark));
+                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.green_tick_icon));
                     orderDetailsModel.setReportHC(1);
                 }
                 orderDetailsDao.insertOrUpdate(orderDetailsModel);
@@ -362,7 +362,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
             imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
         } else {
-            imgHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
+            imgHC.setImageDrawable(getResources().getDrawable(R.drawable.green_tick_icon));
         }
         if (beneficiaryDetailsModel != null
                 && beneficiaryDetailsModel.getBarcodedtl() != null
@@ -449,7 +449,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.tick_icon));
                 isHC = false;
             }else{
-                imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.check_mark));
+                imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.green_tick_icon));
                 isHC = true;
             }
             restOfTestsList = new ArrayList<>();

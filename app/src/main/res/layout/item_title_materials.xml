@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:layout_width="0dp"
         android:padding="15dp"
-        android:text="VirtualStock"
+        android:text="Virtual Stock"
         android:textStyle="bold"
         android:background="@color/navyblue"
         android:layout_margin="4dp"

@@ -193,7 +193,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
                 imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
             } else {
-                imgHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
+                imgHC.setImageDrawable(getResources().getDrawable(R.drawable.green_tick_icon));
             }
             if (beneficiaryDetailsModel != null
                     && beneficiaryDetailsModel.getBarcodedtl() != null
@@ -254,7 +254,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     orderDetailsModel.setReportHC(0);
                 } else {
                     isHC = true;
-                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.check_mark));
+                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.green_tick_icon));
                     orderDetailsModel.setReportHC(1);
                 }
                 orderDetailsDao.insertOrUpdate(orderDetailsModel);

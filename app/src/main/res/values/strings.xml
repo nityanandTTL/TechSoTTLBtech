@@ -83,7 +83,7 @@
     <string name="sync_no_data">No Data to Sync</string>
     <string name="enter_remarks">Please enter remarks</string>
     <string name="password_criteria">Password should be minimum 8 character  and maximum 12 character long and should contain atleat one digit,lower case and upper case and special character</string>
-    <string name="password_do_not_match">New Password and confirm visitID do not match</string>
+    <string name="password_do_not_match">New Password and confirm Password do not match</string>
     <string name="progress_message_Applying_Leave_please_wait">Applying Leave, Please wait ....</string>
     <string name="progress_message_fetching_Leave_details_please_wait">Fetching Leave  Details, Please wait ....</string>
     <string name="add_sample_barcode">Enter Barcode Value</string>

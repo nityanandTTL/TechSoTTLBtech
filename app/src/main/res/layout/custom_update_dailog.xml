@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:text="This Version of BtechApp has Become Outdated. Please go to the Google Playstore to Download the latest Version"
+        android:text="This Version of Btech App has Become Outdated. Please go to the Google Playstore to Download the latest Version"
         android:textColor="@android:color/white"
         android:textSize="15dp"
         android:textStyle="bold"/>
