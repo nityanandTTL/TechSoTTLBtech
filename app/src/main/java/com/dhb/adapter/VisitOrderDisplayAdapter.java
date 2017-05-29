@@ -93,19 +93,9 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 }
             }
         });
-        if(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")){
-            holder.imgCBAccept.setVisibility(View.VISIBLE);
-            holder.imgCBAccept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    visitOrderDisplayRecyclerViewAdapterDelegate.onOrderAccepted(orderVisitDetailsModelsArr.get(pos));
-                }
-            });
-        }
-
     }
 
-    private void initData(final FoldingCellViewHolder holder, final int pos) {
+    private void initData(FoldingCellViewHolder holder, final int pos) {
         if(orderVisitDetailsModelsArr.size()>pos
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size()>0
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size()>0
@@ -128,6 +118,15 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.cell.unfold(true);
             } else {
                 holder.cell.fold(true);
+            }
+            if(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")){
+                holder.imgCBAccept.setVisibility(View.VISIBLE);
+                holder.imgCBAccept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        visitOrderDisplayRecyclerViewAdapterDelegate.onOrderAccepted(orderVisitDetailsModelsArr.get(pos));
+                    }
+                });
             }
         }
     }

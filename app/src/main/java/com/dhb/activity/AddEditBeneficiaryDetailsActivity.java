@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -111,6 +113,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         orderDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
 
         isEdit = getIntent().getExtras().getBoolean(BundleConstants.IS_BENEFICIARY_EDIT);
+
         initUI();
         initData();
         initListeners();
@@ -132,6 +135,21 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 TextView edtBarcode = (TextView)tr.findViewById(R.id.edt_barcode);
                 ImageView imgScan = (ImageView) tr.findViewById(R.id.scan_barcode_button);
                 txtSampleType.setText(beneficiaryBarcodeDetailsModel.getSamplType());
+                if(beneficiaryBarcodeDetailsModel.getSamplType().equals("SERUM")){
+                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
+                }
+                else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("EDTA")){
+                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
+                }
+                else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE")){
+                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                }
+                else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("HEPARIN")){
+                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
+                }
+                else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("URINE")){
+                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
+                }
                 edtBarcode.setText(beneficiaryBarcodeDetailsModel.getBarcode());
                 imgScan.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -181,18 +199,22 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 if(validate()){
                     beneficiaryDetailsModel.setName(edtBenName.getText().toString().trim());
                     beneficiaryDetailsModel.setAge(Integer.parseInt(edtAge.getText().toString().trim()));
-                    beneficiaryDetailsModel.setGender(isM?"F":"M");
+                    beneficiaryDetailsModel.setGender(isM?"M":"F");
                     beneficiaryDetailsModel.setVenepuncture(CommonUtils.decodedImageBytes(encodedVanipunctureImg));
                     beneficiaryDetailsModel.setTestsCode(edtTests.getText().toString());
                     beneficiaryDetailsModel.setTests(edtTests.getText().toString());
                     beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                    orderDetailsModel.setAddBen(isEdit);
                     orderDetailsModel.setReportHC(isHC?1:0);
                     orderDetailsDao.insertOrUpdate(orderDetailsModel);
                     Intent intentFinish = new Intent();
                     intentFinish.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL,beneficiaryDetailsModel);
                     intentFinish.putExtra(BundleConstants.ORDER_DETAILS_MODEL,orderDetailsModel);
-                    setResult(BundleConstants.ADD_EDIT_FINISH,intentFinish);
+                    if(isEdit) {
+                        setResult(BundleConstants.EDIT_FINISH, intentFinish);
+                    }
+                    else{
+                        setResult(BundleConstants.ADD_FINISH, intentFinish);
+                    }
                     finish();
                 }
             }
@@ -232,7 +254,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     orderDetailsModel.setReportHC(0);
                 } else {
                     isHC = true;
-                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.check_mark));
+                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.green_tick_icon));
                     orderDetailsModel.setReportHC(1);
                 }
                 orderDetailsDao.insertOrUpdate(orderDetailsModel);
@@ -328,6 +350,52 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 }
             }
         });
+        edtBenName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String benName = s.toString();
+                if(InputUtils.isNull(benName)){
+                    beneficiaryDetailsModel.setName("");
+                }
+                else{
+                    beneficiaryDetailsModel.setName(benName);
+                }
+                beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+            }
+        });
+        edtAge.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String benAge = s.toString();
+                if(InputUtils.isNull(benAge)){
+                    beneficiaryDetailsModel.setAge(0);
+                }
+                else{
+                    beneficiaryDetailsModel.setAge(Integer.parseInt(benAge));
+                }
+                beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+            }
+        });
     }
 
     private void cameraIntent() {
@@ -361,8 +429,10 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
         if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
             imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
+            isHC = false;
         } else {
-            imgHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
+            imgHC.setImageDrawable(getResources().getDrawable(R.drawable.green_tick_icon));
+            isHC = true;
         }
         if (beneficiaryDetailsModel != null
                 && beneficiaryDetailsModel.getBarcodedtl() != null
@@ -449,7 +519,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.tick_icon));
                 isHC = false;
             }else{
-                imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.check_mark));
+                imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.green_tick_icon));
                 isHC = true;
             }
             restOfTestsList = new ArrayList<>();
@@ -521,9 +591,21 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 for (TestRateMasterModel testRateMasterModel :
                         selectedTests) {
                     if (InputUtils.isNull(testsCode)) {
-                        testsCode = testRateMasterModel.getTestCode();
+                        if(testRateMasterModel.getTestType().equals("OFFER")) {
+                            testsCode = testRateMasterModel.getDescription();
+                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
+                        }
+                        else{
+                            testsCode = testRateMasterModel.getTestCode();
+                        }
                     } else {
-                        testsCode = testsCode + "," + testRateMasterModel.getTestCode();
+                        if(testRateMasterModel.getTestType().equals("OFFER")) {
+                            testsCode = testsCode + "," + testRateMasterModel.getDescription();
+                        }
+                        else{
+                            testsCode = testsCode + "," + testRateMasterModel.getTestCode();
+                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
+                        }
                     }
                 }
                 ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();

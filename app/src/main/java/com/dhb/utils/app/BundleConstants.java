@@ -14,8 +14,10 @@ public class BundleConstants {
     public static final int HMD_ARRIVED = 1007;
     public static final int EDIT_TESTS_START = 1008;
     public static final int EDIT_TESTS_FINISH = 1009;
-    public static final int ADD_EDIT_START = 1010;
-    public static final int ADD_EDIT_FINISH = 1011;
+    public static final int EDIT_START = 1010;
+    public static final int EDIT_FINISH = 1011;
+    public static final int ADD_START = 1023;
+    public static final int ADD_FINISH = 1024;
     public static final int BCMD_START = 1012;
     public static final int BCMD_ARRIVED =1013;
     public static final int CMD_START =1014;
@@ -25,7 +27,6 @@ public class BundleConstants {
     public static final int PAYMENTS_FINISH = 1022;
 
     //Bundle Constants
-    public static final String ACTIVITY = "activity";
     public static final String VISIT_ORDER_DETAILS_MODEL = "visitOrderDetailsModel";
     public static final String CAMP_ORDER_DETAILS_MODEL = "campOrderDetailsModel";
     public static final String BENEFICIARY_DETAILS_MODEL = "beneficiaryDetailsModel";

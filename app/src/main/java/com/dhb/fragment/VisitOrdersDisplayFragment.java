@@ -19,6 +19,7 @@ import com.dhb.adapter.VisitOrderDisplayAdapter;
 import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BeneficiaryDetailsDao;
 import com.dhb.dao.models.OrderDetailsDao;
+import com.dhb.dao.models.TestRateMasterDao;
 import com.dhb.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.dhb.delegate.VisitOrderDisplayRecyclerViewAdapterDelegate;
 import com.dhb.dialog.ConfirmOrderReleaseDialog;
@@ -61,6 +62,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConfirmOrderReleaseDialog cdd;
     private boolean isToFromMap = false;
+    private TestRateMasterDao testRateMasterDao;
 
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
@@ -80,6 +82,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
         dhbDao = new DhbDao(activity);
+        testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
         orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
         beneficiaryDetailsDao = new BeneficiaryDetailsDao(dhbDao.getDb());
         if (getArguments() != null) {
@@ -340,7 +343,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
                 for (OrderDetailsModel orderDetailsModel :
                         orderVisitDetailsModel.getAllOrderdetails()) {
-                    orderDetailsModel.setStatus("CONFIRMED");
+                    orderDetailsModel.setStatus("ACCEPTED");
                     orderDetailsDao.insertOrUpdate(orderDetailsModel);
                 }
                 initData();

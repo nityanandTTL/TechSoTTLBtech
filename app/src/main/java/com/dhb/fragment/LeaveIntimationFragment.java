@@ -198,13 +198,18 @@ public class LeaveIntimationFragment extends AbstractFragment {
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-
-
-                                todate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-                                toDt.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
-                                toDt.add(Calendar.HOUR, 24);
-                                calNumDays(toDt.getTimeInMillis(),fromDt.getTimeInMillis());
-                                days.setText(daysdiff+"");
+                                Calendar td = Calendar.getInstance();
+                                td.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
+                                if(fromDt.getTimeInMillis()<=td.getTimeInMillis()) {
+                                    todate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                                    toDt.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
+                                    toDt.add(Calendar.HOUR, 24);
+                                    calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
+                                    days.setText(daysdiff + "");
+                                }
+                                else{
+                                    Toast.makeText(activity,"From Date cannot be greater than To Date",LENGTH_SHORT).show();
+                                }
                             }
                         }, mYear, mMonth, mDay);
 

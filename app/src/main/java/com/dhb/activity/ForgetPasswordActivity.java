@@ -26,7 +26,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
     Button btn_send_otp, btn_verify_otp;
     LinearLayout ll_send_otp, ll_verify_otp;
     private String code;
-    String regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,12})";
+    String regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!-_]).{8,12})";
     String str;
 
     @Override
@@ -67,7 +67,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
         }
         if (v.getId() == R.id.btn_verify_otp) {
             if (validateFields()) {
-                Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
                   getOtpApi("verify otp");
             }
         }
@@ -159,6 +159,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
                 Toast.makeText(ForgetPasswordActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                finish();
             } else {
                 Toast.makeText(ForgetPasswordActivity.this, "" + json, Toast.LENGTH_SHORT).show();
             }

@@ -118,22 +118,22 @@
             </LinearLayout>
 
 
-
-        <LinearLayout
-            android:id="@+id/itembackground"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/circlebackgrounditem">
-            <TextView
+            <LinearLayout
+                android:id="@+id/itembackground"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Cash Register"
-                android:layout_marginTop="5dp"
-                android:gravity="center_horizontal|center_vertical"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/circlebackgrounditem">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="Cash Register"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <TableLayout
@@ -168,24 +168,26 @@
                     android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
-<LinearLayout
-    android:id="@+id/noleaderlay"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="@color/light">
-    <TextView
-        android:id="@+id/noledger"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="NO RECORDS FOUND"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/noleaderlay"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/light">
+
+                <TextView
+                    android:id="@+id/noledger"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="NO RECORDS FOUND"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
 
-</LinearLayout>
+            </LinearLayout>
 
             <Button
                 android:id="@+id/deposit_button"
@@ -202,13 +204,14 @@
                 android:layout_height="30dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/circlebackgrounditem">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Earning Register"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:textColor="#FFFFFF"
                     android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="Earning Register"
+                    android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -226,13 +229,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/light">
+
                 <TextView
                     android:id="@+id/nodeposit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="NO RECORDS FOUND"
-                    android:gravity="center"
                     android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="NO RECORDS FOUND"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -247,34 +251,38 @@
                 android:layout_height="30dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/circlebackgrounditem">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Deposit Register"
                     android:layout_marginTop="5dp"
                     android:gravity="center_horizontal|center_vertical"
+                    android:text="Deposit Register"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
+
             <TableLayout
 
                 android:id="@+id/earningsRegisterTable"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp_2">
+
                 <LinearLayout
                     android:id="@+id/recordearninglay"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@color/light">
+
                     <TextView
                         android:id="@+id/norecordearning"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="NO RECORDS FOUND"
-                        android:gravity="center"
                         android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="NO RECORDS FOUND"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="14sp"
                         android:textStyle="bold" />

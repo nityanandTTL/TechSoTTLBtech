@@ -52,7 +52,7 @@
                     android:id="@+id/username_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="Enter User Name"
+                    android:hint="Enter Username"
                     android:maxLines="1"
                     android:minEms="15"
                     android:nextFocusForward="@+id/password_login"

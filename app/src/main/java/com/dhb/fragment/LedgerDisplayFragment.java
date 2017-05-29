@@ -2,6 +2,7 @@ package com.dhb.fragment;
 
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
+import com.dhb.activity.PaymentsActivity;
 import com.dhb.models.api.response.FetchLedgerResponseModel;
 import com.dhb.models.data.DepositRegisterModel;
 import com.dhb.models.data.EarningRegisterModel;
@@ -27,6 +29,7 @@ import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
+import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.InputUtils;
 
 import org.json.JSONException;
@@ -110,6 +113,26 @@ public class LedgerDisplayFragment extends AbstractFragment {
     }
 
     private void setListners() {
+
+
+        depositbuttn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intentPaymentsActivity = new Intent(activity, PaymentsActivity.class);
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_ORDER_NO,"VST090543");
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_AMOUNT,"1");
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,3);
+                startActivity(intentPaymentsActivity);
+
+
+            }
+        });
+
+
+
+
         txtFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,6 +213,10 @@ public class LedgerDisplayFragment extends AbstractFragment {
                                          }
                                      }
         );
+
+
+
+
     }
 
 

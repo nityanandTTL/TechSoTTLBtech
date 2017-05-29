@@ -59,6 +59,7 @@ import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.DeviceUtils;
 import com.dhb.utils.app.InputUtils;
+import com.dhb.utils.app.StringUtils;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -193,7 +194,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
                 imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
             } else {
-                imgHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
+                imgHC.setImageDrawable(getResources().getDrawable(R.drawable.green_tick_icon));
             }
             if (beneficiaryDetailsModel != null
                     && beneficiaryDetailsModel.getBarcodedtl() != null
@@ -242,7 +243,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
                 intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
                 intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
-                startActivityForResult(intentEdit, BundleConstants.ADD_EDIT_START);
+                intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_EDIT, true);
+                startActivityForResult(intentEdit, BundleConstants.EDIT_START);
             }
         });
         imgHC.setOnClickListener(new View.OnClickListener() {
@@ -250,11 +252,11 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             public void onClick(View v) {
                 if (isHC) {
                     isHC = false;
-                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.tick_icon));
+//                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.tick_icon));
                     orderDetailsModel.setReportHC(0);
                 } else {
                     isHC = true;
-                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.check_mark));
+//                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.green_tick_icon));
                     orderDetailsModel.setReportHC(1);
                 }
                 orderDetailsDao.insertOrUpdate(orderDetailsModel);
@@ -358,10 +360,18 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
                 String tests = beneficiaryDetailsModel.getTestsCode();
-                final String[] testsList = tests.split(",");
+                String projId = beneficiaryDetailsModel.getProjId();
+                ArrayList<String> testCodesList = new ArrayList<String>();
+                for (String testName:
+                        tests.split(",")) {
+                    testCodesList.add(testName);
+                }
+                if(!InputUtils.isNull(projId)){
+                    testCodesList.add(projId);
+                }
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Tests List");
-                builder.setItems(testsList, new DialogInterface.OnClickListener() {
+                builder.setItems(testCodesList.toArray(new String[testCodesList.size()]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -470,6 +480,21 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 TextView edtBarcode = (TextView)tr.findViewById(R.id.edt_barcode);
                 ImageView imgScan = (ImageView) tr.findViewById(R.id.scan_barcode_button);
                 txtSampleType.setText(beneficiaryBarcodeDetailsModel.getSamplType());
+                if(beneficiaryBarcodeDetailsModel.getSamplType().equals("SERUM")){
+                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
+                }
+                else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("EDTA")){
+                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
+                }
+                else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE")){
+                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                }
+                else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("HEPARIN")){
+                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
+                }
+                else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("URINE")){
+                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
+                }
                 edtBarcode.setText(beneficiaryBarcodeDetailsModel.getBarcode());
                 imgScan.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -552,9 +577,21 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 for (TestRateMasterModel testRateMasterModel :
                         selectedTests) {
                     if (InputUtils.isNull(testsCode)) {
-                        testsCode = testRateMasterModel.getTestCode();
+                        if(testRateMasterModel.getTestType().equals("OFFER")) {
+                            testsCode = testRateMasterModel.getDescription();
+                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
+                        }
+                        else{
+                            testsCode = testRateMasterModel.getTestCode();
+                        }
                     } else {
-                        testsCode = testsCode + "," + testRateMasterModel.getTestCode();
+                        if(testRateMasterModel.getTestType().equals("OFFER")) {
+                            testsCode = testsCode + "," + testRateMasterModel.getDescription();
+                        }
+                        else{
+                            testsCode = testsCode + "," + testRateMasterModel.getTestCode();
+                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
+                        }
                     }
                 }
                 ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
@@ -580,7 +617,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
         }
-        if (requestCode == BundleConstants.ADD_EDIT_START && resultCode == BundleConstants.ADD_EDIT_FINISH) {
+        if (requestCode == BundleConstants.EDIT_START && resultCode == BundleConstants.EDIT_FINISH) {
             beneficiaryDetailsModel = data.getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
             orderDetailsModel = data.getExtras().getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
             refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));

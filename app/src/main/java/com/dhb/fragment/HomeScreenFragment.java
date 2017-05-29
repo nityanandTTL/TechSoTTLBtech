@@ -109,8 +109,10 @@ public class HomeScreenFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
                 Intent intentPaymentsActivity = new Intent(activity, PaymentsActivity.class);
-                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,3);
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_ORDER_NO,"VST090543");
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_AMOUNT,"1");
                 intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,2);
                 startActivity(intentPaymentsActivity);
             }
         });

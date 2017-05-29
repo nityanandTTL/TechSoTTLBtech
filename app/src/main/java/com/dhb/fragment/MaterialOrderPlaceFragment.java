@@ -3,6 +3,7 @@ package com.dhb.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableLayout;
@@ -37,6 +39,7 @@ import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.InputUtils;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -58,15 +61,15 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
     TableLayout materialordertable;
     private ArrayList<FinalMaterialModel> finalMaterialModelsArr;
     private ArrayList<FinalMaterialModel> Filterarraylst ;
-    private ArrayList<FinalMaterialModel> templst;
-    Integer temprate,total =0;
-    String PROMOTIONAL="181";
-    String OPERATIONAL="180";
-    String Category="180";
+  /*  String PROMOTIONAL="205";
+    String OPERATIONAL="204";*/
+    String Category="204";
     Button Material_order;
     EditText searchbar;
     RadioButton Operational_radio,Promotional_radio;
     RadioGroup group;
+    LinearLayout btn_virtual,btn_material;
+    private float Grandtotal = 0;
 
     public MaterialOrderPlaceFragment() {
         // Required empty public constructor
@@ -112,6 +115,8 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
         Promotional_radio=(RadioButton) rootView.findViewById(R.id.promotional);
         group=(RadioGroup) rootView.findViewById(R.id.group);
         Material_order =(Button) rootView.findViewById(R.id.btn_material_order);
+        btn_virtual=(LinearLayout) rootView.findViewById(R.id.virtual_stock);
+        btn_material=(LinearLayout) rootView.findViewById(R.id.material_order);
 
     }
 
@@ -129,8 +134,19 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                 materialorderRequestModel.setFinalStatus("BTECHGENERATE");
                 materialorderRequestModel.setRemarks("NA");
                 materialorderRequestModel.setMaterialDetails(materialsOrderArr);
+                Grandtotal= 0;
+                for (MaterialOrderDataModel materialOrderDataModel:
+                materialsOrderArr) {
+                    for (FinalMaterialModel finalMaterialModel:finalMaterialModelsArr
 
+                         ) {
+                        if (materialOrderDataModel.getMaterialId()==finalMaterialModel.getMaterialDetailsModel().getMaterialId()){
 
+                            Grandtotal+=materialOrderDataModel.getOrderQty()*Float.parseFloat(finalMaterialModel.getMaterialDetailsModel().getUnitCost());
+
+                        }
+                    }
+                }
                 AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
                 ApiCallAsyncTask setMaterialsDetailApiAsyncTask = asyncTaskForRequest.getPostMaterialOrderAsyncTask(materialorderRequestModel);
                 setMaterialsDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new MaterialOrderPlaceFragment.setMaterialOrderDetailsApiAsyncTaskDelegateResult());
@@ -170,14 +186,14 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
 
                 if (Promotional_radio.isChecked()){
 
-                    Category="181";
+                    Category="205";
                     Toast.makeText(getActivity(),text,LENGTH_SHORT).show();
                     materialordertable.removeAllViews();
                     fetchMaterialsDetails2();
                 }
                 else
                 {
-                    Category="180";
+                    Category="204";
                     Toast.makeText(getActivity(),text,LENGTH_SHORT).show();
                     materialordertable.removeAllViews();
                     fetchMaterialsDetails2();
@@ -214,6 +230,29 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
 
             }
         });
+        btn_virtual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Fragment mFragment = new  MaterialFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fl_homeScreen, mFragment ).commit();
+
+
+            }
+        });
+
+        btn_material.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Fragment mFragment = new MaterialOrderPlaceFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fl_homeScreen, mFragment ).commit();
+
+
+            }
+        });
 
 
 
@@ -229,13 +268,14 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
             Logger.debug(TAG_FRAGMENT + "--apiCallResult: ");
             if (statusCode == 200) {
                 Toast.makeText(getActivity(), "Success", LENGTH_SHORT).show();
+                JSONObject jsonResponse = new JSONObject(json);
+                int orderNo = jsonResponse.getInt("OrderId");
                 Intent intentPayments = new Intent(activity, PaymentsActivity.class);
-                //TODO add order no , narration Id = 1, amount, btech id, etc. intent
+                intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderNo+"");
+                intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT,Grandtotal+"");
+                intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,1);
                 startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
-
-                 /*   Fragment mFragment = new HomeScreenFragment();
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fl_homeScreen, mFragment).commit();*/
             }
         }
         @Override
@@ -336,30 +376,34 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
         ArrayList<Integer> insertedMaterialIDs = new ArrayList<>();
         finalMaterialModelsArr = new ArrayList<>();
         Filterarraylst = new ArrayList<>();
-        for (MaterialDetailsModel materialDetailsModel :
-                materialDetailsModels) {
-            for (BTMaterialsModel btMaterialsModel :
-                    materialINVResponseModel.getBTMaterials()) {
-                if ((materialDetailsModel.getMaterialId() + "").equals(btMaterialsModel.getMaterialID())) {
-                    FinalMaterialModel finalMaterialModel = new FinalMaterialModel();
-                    finalMaterialModel.setBtMaterialsModel(btMaterialsModel);
-                    finalMaterialModel.setMaterialDetailsModel(materialDetailsModel);
-                    finalMaterialModelsArr.add(finalMaterialModel);
-                    insertedMaterialIDs.add(materialDetailsModel.getMaterialId());
+        if(materialDetailsModels!= null) {
+            for (MaterialDetailsModel materialDetailsModel :
+                    materialDetailsModels) {
+                if (materialINVResponseModel.getBTMaterials() != null) {
+                    for (BTMaterialsModel btMaterialsModel :
+                            materialINVResponseModel.getBTMaterials()) {
+                        if ((materialDetailsModel.getMaterialId() + "").equals(btMaterialsModel.getMaterialID())) {
+                            FinalMaterialModel finalMaterialModel = new FinalMaterialModel();
+                            finalMaterialModel.setBtMaterialsModel(btMaterialsModel);
+                            finalMaterialModel.setMaterialDetailsModel(materialDetailsModel);
+                            finalMaterialModelsArr.add(finalMaterialModel);
+                            insertedMaterialIDs.add(materialDetailsModel.getMaterialId());
+                        }
+                    }
                 }
             }
-        }
 
-        for (MaterialDetailsModel materialDetailsModel :
-                materialDetailsModels) {
-            if (!insertedMaterialIDs.contains(materialDetailsModel.getMaterialId())) {
-                FinalMaterialModel finalMaterialModel = new FinalMaterialModel();
-                finalMaterialModel.setBtMaterialsModel(new BTMaterialsModel());
-                finalMaterialModel.setMaterialDetailsModel(materialDetailsModel);
-                finalMaterialModelsArr.add(finalMaterialModel);
+            for (MaterialDetailsModel materialDetailsModel :
+                    materialDetailsModels) {
+                if (!insertedMaterialIDs.contains(materialDetailsModel.getMaterialId())) {
+                    FinalMaterialModel finalMaterialModel = new FinalMaterialModel();
+                    finalMaterialModel.setBtMaterialsModel(new BTMaterialsModel());
+                    finalMaterialModel.setMaterialDetailsModel(materialDetailsModel);
+                    finalMaterialModelsArr.add(finalMaterialModel);
+                }
             }
+            Filterarraylst = finalMaterialModelsArr;
         }
-        Filterarraylst = finalMaterialModelsArr;
         initData();
     }
 
@@ -405,7 +449,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                             Float temprate = Float.parseFloat(finalMaterialModels.getMaterialDetailsModel().getUnitCost().toString());
 
                             //Toast.makeText(getActivity(),finalMaterialModels.getMaterialDetailsModel().getMaterialName()+"",Toast.LENGTH_SHORT).show();
-                            Float total = temprate * (Integer.parseInt(s.toString()));
+                            Float total = temprate * (Float.parseFloat(s.toString()));
                             Total.setText(total + "");
                             MaterialOrderDataModel materialOrderDataModel = new MaterialOrderDataModel();
                             materialOrderDataModel.setMaterialId(finalMaterialModels.getMaterialDetailsModel().getMaterialId());
@@ -414,6 +458,16 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                                 materialsOrderArr.remove(materialOrderDataModel);
                             }
                             materialsOrderArr.add(materialOrderDataModel);
+                        }
+                        else {
+
+                            Total.setText(0 + "");
+                            MaterialOrderDataModel materialOrderDataModel = new MaterialOrderDataModel();
+                            materialOrderDataModel.setMaterialId(finalMaterialModels.getMaterialDetailsModel().getMaterialId());
+                            if(materialsOrderArr.contains(materialOrderDataModel)){
+                                materialsOrderArr.remove(materialOrderDataModel);
+                            }
+
                         }
                     }
                 });

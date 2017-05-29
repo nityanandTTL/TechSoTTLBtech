@@ -11,6 +11,7 @@ import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.InputUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -37,6 +38,7 @@ public class BeneficiaryDetailsDao {
 	String AGE = "Age";
 	String GENDER = "Gender";
 	String TESTS = "tests";
+	String PROJ_ID = "ProjId";
 	String TESTS_CODE = "testsCode";
 	String TESTS_LIST = "testsList";
 	String FASTING = "Fasting";
@@ -76,6 +78,7 @@ public class BeneficiaryDetailsDao {
 		beneficiaryDetailsModel.setGender(cursor.getString(cursor.getColumnIndex(GENDER)));
 		beneficiaryDetailsModel.setOrderNo(cursor.getString(cursor.getColumnIndex(ORDER_NO)));
 		beneficiaryDetailsModel.setTests(cursor.getString(cursor.getColumnIndex(TESTS)));
+		beneficiaryDetailsModel.setProjId(cursor.getString(cursor.getColumnIndex(PROJ_ID)));
 		beneficiaryDetailsModel.setTestsCode(cursor.getString(cursor.getColumnIndex(TESTS_CODE)));
 		beneficiaryDetailsModel.setFasting(cursor.getString(cursor.getColumnIndex(FASTING)));
 		beneficiaryDetailsModel.setVenepuncture(cursor.getBlob(cursor.getColumnIndex(VENEPUNCTURE)));
@@ -113,7 +116,6 @@ public class BeneficiaryDetailsDao {
 	}
 
 	public ContentValues getContentValuesFromModel(BeneficiaryDetailsModel orderDetailsModel) {
-
 		ContentValues values = new ContentValues();
 		values.put(ORDER_NO, orderDetailsModel.getOrderNo());
 		values.put(BEN_ID, orderDetailsModel.getBenId());
@@ -121,6 +123,7 @@ public class BeneficiaryDetailsDao {
 		values.put(AGE, orderDetailsModel.getAge());
 		values.put(GENDER, orderDetailsModel.getGender());
 		values.put(TESTS, orderDetailsModel.getTests());
+		values.put(PROJ_ID, orderDetailsModel.getProjId());
 		values.put(TESTS_CODE, orderDetailsModel.getTestsCode());
 		values.put(FASTING, orderDetailsModel.getFasting());
 		values.put(VENEPUNCTURE, orderDetailsModel.getVenepuncture());
@@ -151,6 +154,9 @@ public class BeneficiaryDetailsDao {
 				if (beneficiaryDetailsModel != null){
 					TestRateMasterDao testRateMasterDao = new TestRateMasterDao(db);
 					ArrayList<TestRateMasterModel> testsList = testRateMasterDao.getModelsFromTestCodes(beneficiaryDetailsModel.getTestsCode());
+					if(!InputUtils.isNull(beneficiaryDetailsModel.getProjId())){
+						testsList.addAll(testRateMasterDao.getModelsFromTestCodes(beneficiaryDetailsModel.getProjId()));
+					}
 					beneficiaryDetailsModel.setTestsList(testsList);
 					beneficiaryDetailsModels.add(beneficiaryDetailsModel);
 				}
@@ -158,27 +164,6 @@ public class BeneficiaryDetailsDao {
 			cursor.close();
 		}
 		return beneficiaryDetailsModels;
-	}
-
-	public ArrayList<BeneficiaryDetailsModel> getModelsFromBenId(String benId) {
-
-		ArrayList<BeneficiaryDetailsModel> beneficiaryDetailsModelsArr = new ArrayList<>();
-		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + BEN_ID + "=? AND " + RECORD_STATUS + "=?";
-		String[] whereParams = new String[] {benId,"A"};
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && (cursor.moveToFirst())){
-			do {
-				BeneficiaryDetailsModel beneficiaryDetailsModel = getModelFromCursor(cursor);
-				if (beneficiaryDetailsModel != null){
-					TestRateMasterDao testRateMasterDao = new TestRateMasterDao(db);
-					ArrayList<TestRateMasterModel> testsList = testRateMasterDao.getModelsFromTestCodes(beneficiaryDetailsModel.getTestsCode());
-					beneficiaryDetailsModel.setTestsList(testsList);
-					beneficiaryDetailsModelsArr.add(beneficiaryDetailsModel);
-				}
-			} while ((cursor.moveToNext()));
-			cursor.close();
-		}
-		return beneficiaryDetailsModelsArr;
 	}
 
 	public BeneficiaryDetailsModel getModelFromId(int benId){
@@ -194,6 +179,9 @@ public class BeneficiaryDetailsDao {
 					beneficiaryDetailsModel = getModelFromCursor(cursor);
 					TestRateMasterDao testRateMasterDao = new TestRateMasterDao(db);
 					ArrayList<TestRateMasterModel> testsList = testRateMasterDao.getModelsFromTestCodes(beneficiaryDetailsModel.getTestsCode());
+					if(!InputUtils.isNull(beneficiaryDetailsModel.getProjId())){
+						testsList.addAll(testRateMasterDao.getModelsFromTestCodes(beneficiaryDetailsModel.getProjId()));
+					}
 					beneficiaryDetailsModel.setTestsList(testsList);
 				}while ((cursor.moveToNext()));
 			}

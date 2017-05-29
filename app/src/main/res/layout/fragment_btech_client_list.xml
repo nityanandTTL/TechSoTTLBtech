@@ -85,6 +85,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginLeft="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
@@ -112,7 +113,7 @@
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
-                    android:text="EST.Distance 10km"
+                    android:text="EST. Distance 10km"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     android:layout_weight="1.5"/>
