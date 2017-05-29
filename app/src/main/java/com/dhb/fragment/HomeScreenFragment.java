@@ -135,8 +135,8 @@ public class HomeScreenFragment extends AbstractFragment {
          imgCamp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity,"Feature coming soon.",Toast.LENGTH_SHORT).show();
-//                pushFragments(CampListDisplayFragment.newInstance(),false,false,CampListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                //Toast.makeText(activity,"Feature coming soon.",Toast.LENGTH_SHORT).show();
+               pushFragments(CampListDisplayFragment.newInstance(),false,false,CampListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
         imgCommunication.setOnClickListener(new View.OnClickListener() {

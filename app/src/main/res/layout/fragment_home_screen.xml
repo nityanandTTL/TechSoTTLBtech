@@ -345,7 +345,7 @@
                             android:layout_height="@dimen/dp_10"
                             android:background="@drawable/badge"
                             android:textColor="@android:color/white"
-                            android:text="2"
+                            android:text=""
                             android:gravity="center"
                             android:textSize="10sp" />
                     </RelativeLayout>

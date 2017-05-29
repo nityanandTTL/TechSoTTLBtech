@@ -267,6 +267,7 @@ public class CampListDisplayFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+
             } else {
                 Toast.makeText(activity, "error : " + json, Toast.LENGTH_SHORT).show();
             }
