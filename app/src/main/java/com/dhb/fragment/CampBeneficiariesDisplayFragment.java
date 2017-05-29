@@ -208,7 +208,7 @@ private CampDetailModel campDetailModel;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BundleConstants.ADD_EDIT_START && resultCode == BundleConstants.ADD_EDIT_FINISH) {
+        if (requestCode == BundleConstants.ADD_START && resultCode == BundleConstants.ADD_FINISH) {
             initData();
         }
         super.onActivityResult(requestCode, resultCode, data);

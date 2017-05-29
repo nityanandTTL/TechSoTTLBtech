@@ -152,7 +152,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
                         intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, tempBeneficiaryDetailsModel);
                         intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, tempOrderDetailsModel);
-                        startActivityForResult(intentEdit, BundleConstants.ADD_EDIT_START);
+                        startActivityForResult(intentEdit, BundleConstants.ADD_START);
                     }
                 }).show();
             }
@@ -192,7 +192,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 Toast.makeText(activity,"Please select atleast one test for "+bdm.getName(),Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if(bdm.getVenepuncture()!=null){
+            if(bdm.getVenepuncture()==null){
                 Toast.makeText(activity,"Please capture venepuncture image for "+bdm.getName(),Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -276,6 +276,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         vpBeneficiaries.removeAllViews();
         vpBeneficiaries.clearOnPageChangeListeners();
         totalAmount = 0;
+        orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
         for (OrderDetailsModel orderDetailsModel :
                 orderVisitDetailsModel.getAllOrderdetails()) {
             totalAmount = totalAmount + orderDetailsModel.getAmountDue();
@@ -317,7 +318,13 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         CartRequestBeneficiaryModel crbm = new CartRequestBeneficiaryModel();
                         crbm.setOrderNo(order.getOrderNo());
                         crbm.setAddben(order.isAddBen()?1:0);
-                        crbm.setTests(ben.getTestsCode());
+                        if(!InputUtils.isNull(ben.getProjId())) {
+                            crbm.setTests(ben.getProjId()+","+ben.getTestsCode());
+                            crbm.setProjId(ben.getProjId());
+                        }
+                        else{
+                            crbm.setTests(ben.getTestsCode());
+                        }
                         beneficiariesArr.add(crbm);
                     }
                 }
@@ -404,7 +411,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BundleConstants.ADD_EDIT_START && resultCode == BundleConstants.ADD_EDIT_FINISH) {
+        if (requestCode == BundleConstants.ADD_START && resultCode == BundleConstants.ADD_FINISH) {
             initData();
         }
         if(requestCode==BundleConstants.PAYMENTS_START && resultCode==BundleConstants.PAYMENTS_FINISH){
@@ -576,11 +583,36 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if(statusCode==200){
-                Toast.makeText(activity,"Work Order Entry Successful",Toast.LENGTH_SHORT).show();
-                activity.finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle("Work Order Entry Status")
+                        .setMessage("Work Order Entry Successful!\nPlease note Ref Id - "+orderVisitDetailsModel.getVisitId()+" for future references.")
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                activity.finish();
+                            }
+                        })
+                        .create()
+                        .show();
             }
             else{
-                Toast.makeText(activity,"Work Order Entry Failed",Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle("Work Order Entry Status")
+                        .setMessage("Work Order Entry Failed!")
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                activity.finish();
+                            }
+                        })
+                        .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                btnProceedPayment.performClick();
+                            }
+                        })
+                        .create()
+                        .show();
             }
         }
 
@@ -607,6 +639,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                             if(orderVisitDetailsModel.getAllOrderdetails().get(i).getOrderNo().equals(cartAPIResponseModel.getOrders().get(j).getOrderNo())) {
                                 orderAmountDue = orderAmountDue + cartAPIResponseModel.getOrders().get(j).getTestCharges() + cartAPIResponseModel.getOrders().get(j).getServiceCharge();
                                 orderVisitDetailsModel.getAllOrderdetails().get(i).setAmountDue(orderAmountDue);
+                                orderVisitDetailsModel.getAllOrderdetails().get(i).setReportHC(cartAPIResponseModel.getOrders().get(j).isHC()?1:0);
+                                orderDetailsDao.insertOrUpdate(orderVisitDetailsModel.getAllOrderdetails().get(i));
                                 break;
                             }
                         }
