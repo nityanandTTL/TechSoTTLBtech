@@ -204,14 +204,20 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                 TextView edt_barcode = (TextView) v.findViewById(R.id.edt_barcode);
                 ImageView scan_barcode_button = (ImageView) v.findViewById(R.id.scan_barcode_button);
                 txt_sample_type.setText(barcodeDetailsArr.get(i).getSamplType());
-                if(barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("Urine")){
-//txt_sample_type.setBackgroundResource(R.draw);
+                if(barcodeDetailsArr.get(i).getSamplType().equals("SERUM")){
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
                 }
-                if(barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("Edta")){
-                    txt_sample_type.setBackgroundResource(R.drawable.bg_sample_type_edta);
+                else if(barcodeDetailsArr.get(i).getSamplType().equals("EDTA")){
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
                 }
-                if(barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("Urine")){
-
+                else if(barcodeDetailsArr.get(i).getSamplType().equals("FLUORIDE")){
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                }
+                else if(barcodeDetailsArr.get(i).getSamplType().equals("HEPARIN")){
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
+                }
+                else if(barcodeDetailsArr.get(i).getSamplType().equals("URINE")){
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
                 }
                 edt_barcode.setText(barcodeDetailsArr.get(i).getBarcode());
                 scan_barcode_button.setOnClickListener(new View.OnClickListener() {
