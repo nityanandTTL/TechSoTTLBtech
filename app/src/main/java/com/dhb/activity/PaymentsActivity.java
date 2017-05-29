@@ -430,7 +430,12 @@ public class PaymentsActivity extends AbstractActivity {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
                 paymentStartTransactionAPIResponseModel = responseParser.getPaymentStartTransactionResponse(json, statusCode);
-                initDoCaptureResponseData();
+                if(paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
+                    initDoCaptureResponseData();
+                }
+                else{
+                    Toast.makeText(activity,paymentStartTransactionAPIResponseModel.getTokenData(),Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(activity, json + "", Toast.LENGTH_SHORT).show();
             }
@@ -448,18 +453,20 @@ public class PaymentsActivity extends AbstractActivity {
                 && paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection() != null
                 && paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().size() > 0) {
             flPayments.removeAllViews();
-            LinearLayout llPaymentStartTransaction = new LinearLayout(activity);
+            View vpp = getLayoutInflater().inflate(R.layout.pay_ccna, null);
+            LinearLayout llPaymentStartTransaction = (LinearLayout) vpp.findViewById(R.id.lineapay);
+           /* LinearLayout llPaymentStartTransaction = new LinearLayout(activity);
             LinearLayout.LayoutParams llParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             llParams.setMargins(10, 10, 10, 10);
             llPaymentStartTransaction.setLayoutParams(llParams);
             llPaymentStartTransaction.setOrientation(LinearLayout.VERTICAL);
-            llPaymentStartTransaction.setGravity(Gravity.CENTER);
+            llPaymentStartTransaction.setGravity(Gravity.CENTER);*/
             String btnSubmitText = "Submit";
             for (int i = 0; i < paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().size(); i++) {
                 final int currentPosition = i;
                 if (paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().get(i).getRequired().equals("User")) {
                     EditText edtPaymentUserInputs = new EditText(activity);
-                    LinearLayout.LayoutParams edtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams edtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                     edtParams.setMargins(10, 5, 5, 10);
                     edtPaymentUserInputs.setLayoutParams(edtParams);
                     edtPaymentUserInputs.setGravity(Gravity.CENTER);
@@ -487,10 +494,15 @@ public class PaymentsActivity extends AbstractActivity {
             for (PaymentNameValueModel paymentNameValueModel :
                     paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection()) {
                 if (paymentNameValueModel.getKey().equals("ModeId") && paymentNameValueModel.getValue().equals("3")) {
-                    WebView wvQRDisplay = new WebView(activity);
+
+                    View webViewXml = getLayoutInflater().inflate(R.layout.activity_web_view, null);
+                    WebView wvQRDisplay = (WebView) webViewXml.findViewById(R.id.webview);
+
+
+                    //  WebView wvQRDisplay = new WebView(activity);
                     WebSettings settings = wvQRDisplay.getSettings();
-                    settings.setUseWideViewPort(true);
-                    settings.setLoadWithOverviewMode(true);
+//                    settings.setUseWideViewPort(true);
+//                    settings.setLoadWithOverviewMode(true);
                     settings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
                     wvQRDisplay.setVerticalScrollBarEnabled(false);
                     wvQRDisplay.setHorizontalScrollBarEnabled(false);
@@ -500,7 +512,7 @@ public class PaymentsActivity extends AbstractActivity {
                     wvQRDisplay.setPadding(0, 0, 0, 0);
                     wvQRDisplay.setInitialScale(getScale());
                     wvQRDisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
-                    llPaymentStartTransaction.addView(wvQRDisplay);
+                    llPaymentStartTransaction.addView(webViewXml);
                     btnSubmitText = "Verify Payment Status";
                     break;
                 } else if (paymentNameValueModel.getKey().equals("ModeId") && paymentNameValueModel.getValue().equals("1")) {
