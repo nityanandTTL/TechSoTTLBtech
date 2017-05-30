@@ -7,20 +7,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,13 +35,11 @@ import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.network.ResponseParser;
 import com.dhb.service.CheckPaymentResponseService;
-import com.dhb.service.MasterTablesSyncService;
 import com.dhb.uiutils.AbstractActivity;
+import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
-import com.google.android.gms.cast.framework.CastButtonFactory;
-import com.google.android.gms.vision.text.Line;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,6 +81,12 @@ public class PaymentsActivity extends AbstractActivity {
 
     //TODO tejas - 7738185400 for airtel money
     //TODO tejas - tejaspatil92axisbank@axis for UPI
+
+
+
+    //changes_29may2017
+    int buttonDecider = 0;
+    //changes_29may2017
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -495,6 +499,10 @@ public class PaymentsActivity extends AbstractActivity {
                     paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection()) {
                 if (paymentNameValueModel.getKey().equals("ModeId") && paymentNameValueModel.getValue().equals("3")) {
 
+                    //changes_29may2017
+                    buttonDecider = 1;
+                    //changes_29may2017
+
                     View webViewXml = getLayoutInflater().inflate(R.layout.activity_web_view, null);
                     WebView wvQRDisplay = (WebView) webViewXml.findViewById(R.id.webview);
 
@@ -506,16 +514,33 @@ public class PaymentsActivity extends AbstractActivity {
                     settings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
                     wvQRDisplay.setVerticalScrollBarEnabled(false);
                     wvQRDisplay.setHorizontalScrollBarEnabled(false);
+
+
+                    //changes_29-05-2017
                     LinearLayout.LayoutParams llwvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    llwvParams.setMargins(10, 300, 10, 0);
+                    wvQRDisplay.setLayoutParams(llwvParams);
+                    //wvQRDisplay.setPadding(0, 0, 0, 0);
+                    wvQRDisplay.setInitialScale(getScale());
+                    //changes_29-05-2017
+
+                   /* LinearLayout.LayoutParams llwvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     llwvParams.setMargins(20, 20, 20, 20);
                     wvQRDisplay.setLayoutParams(llwvParams);
                     wvQRDisplay.setPadding(0, 0, 0, 0);
-                    wvQRDisplay.setInitialScale(getScale());
+                    wvQRDisplay.setInitialScale(getScale());*/
                     wvQRDisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
                     llPaymentStartTransaction.addView(webViewXml);
                     btnSubmitText = "Verify Payment Status";
                     break;
                 } else if (paymentNameValueModel.getKey().equals("ModeId") && paymentNameValueModel.getValue().equals("1")) {
+
+
+
+                    //changes_29may2017
+                    buttonDecider = 1;
+                    //changes_29may2017
+
                     WebView wvCCADisplay = new WebView(activity);
                     WebSettings settings = wvCCADisplay.getSettings();
                     settings.setJavaScriptEnabled(true);
@@ -523,6 +548,11 @@ public class PaymentsActivity extends AbstractActivity {
 //                    wvCCADisplay.setVerticalScrollBarEnabled(false);
 //                    wvCCADisplay.setHorizontalScrollBarEnabled(false);
                     LinearLayout.LayoutParams llwvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                    //changes_29-05-2017
+                    llwvParams.gravity = Gravity.CENTER_HORIZONTAL;
+                    //changes_29-05-2017
+
                     wvCCADisplay.setLayoutParams(llwvParams);
                     wvCCADisplay.setInitialScale(getScale());
                     wvCCADisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
@@ -531,15 +561,17 @@ public class PaymentsActivity extends AbstractActivity {
                     break;
                 }
             }
-            Button btnPaymentStartTransactionSubmit = new Button(activity);
+           /* ImageView btnPaymentStartTransactionSubmit = new ImageView(activity);
+       *//*     Button btnPaymentStartTransactionSubmit = new Button(activity);*//*
             LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             btnParams.setMargins(10, 5, 5, 10);
             btnPaymentStartTransactionSubmit.setLayoutParams(btnParams);
-            btnPaymentStartTransactionSubmit.setGravity(Gravity.CENTER);
-            btnPaymentStartTransactionSubmit.setMinEms(10);
+            btnPaymentStartTransactionSubmit.setImageResource();
+         *//*   btnPaymentStartTransactionSubmit.setGravity(Gravity.CENTER);
+            btnPaymentStartTransactionSubmit.setMinEms(10);*//*
             btnPaymentStartTransactionSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
-            btnPaymentStartTransactionSubmit.setText(btnSubmitText);
-            btnPaymentStartTransactionSubmit.setTextColor(getResources().getColor(android.R.color.white));
+          *//*  btnPaymentStartTransactionSubmit.setText(btnSubmitText);
+            btnPaymentStartTransactionSubmit.setTextColor(getResources().getColor(android.R.color.white));*//*
             btnPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -547,7 +579,60 @@ public class PaymentsActivity extends AbstractActivity {
                 }
             });
             llPaymentStartTransaction.addView(btnPaymentStartTransactionSubmit);
-            flPayments.addView(llPaymentStartTransaction);
+            flPayments.addView(llPaymentStartTransaction);*/
+
+
+            //changes_29may2017
+            //for paytm & cca
+            if (buttonDecider == 1) {
+                ImageView btnPaymentStartTransactionSubmit = new ImageView(activity);
+       /*     Button btnPaymentStartTransactionSubmit = new Button(activity);*/
+
+                //Toast.makeText(activity, "counter" + String.valueOf(buttonDecider), Toast.LENGTH_SHORT).show();
+                Logger.debug("counter" + String.valueOf(buttonDecider));
+
+                LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(100, 100);
+                btnParams.setMargins(10, 5, 5, 10);
+                btnParams.gravity = Gravity.CENTER_HORIZONTAL;
+                btnPaymentStartTransactionSubmit.setLayoutParams(btnParams);
+                btnPaymentStartTransactionSubmit.setImageResource(R.drawable.refresh__icon);
+
+                btnPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fetchDoCaptureResponse();
+                    }
+                });
+                llPaymentStartTransaction.addView(btnPaymentStartTransactionSubmit);
+                flPayments.addView(llPaymentStartTransaction);
+            }
+            //for airtel
+            else if (buttonDecider == 0) {
+                Button btnPaymentStartTransactionSubmit = new Button(activity);
+
+                //Toast.makeText(activity, "counter" + String.valueOf(buttonDecider), Toast.LENGTH_SHORT).show();
+                Logger.debug("counter" + String.valueOf(buttonDecider));
+
+                LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                btnParams.setMargins(10, 5, 5, 10);
+                btnParams.gravity = Gravity.CENTER_HORIZONTAL;
+                btnPaymentStartTransactionSubmit.setLayoutParams(btnParams);
+                btnPaymentStartTransactionSubmit.setText("Submit");
+                btnPaymentStartTransactionSubmit.setBackgroundResource(R.drawable.purple_btn_bg);
+                btnPaymentStartTransactionSubmit.setTextColor(activity.getResources().getColor(R.color.loginbg));
+
+                btnPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fetchDoCaptureResponse();
+                    }
+                });
+                llPaymentStartTransaction.addView(btnPaymentStartTransactionSubmit);
+                flPayments.addView(llPaymentStartTransaction);
+            }
+            //changes_29may2017
+
+
         }
     }
 
