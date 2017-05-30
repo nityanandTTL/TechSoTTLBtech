@@ -160,8 +160,8 @@ public class TestRateMasterDao {
 	public ArrayList<TestRateMasterModel> getModelsFromTestCodes(String testCodes) {
 		ArrayList<TestRateMasterModel> testRateMasterModels = new ArrayList<>();
 		if(!InputUtils.isNull(testCodes)) {
-			String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TEST_CODE + " IN (?) AND " + RECORD_STATUS + "=?";
-			String[] whereParams = new String[]{testCodes, "A"};
+			String query = "SELECT * FROM " + TABLE_NAME + " WHERE (" + TEST_CODE + " IN (?) OR "+DESCRIPTION+" IN(?) ) AND " + RECORD_STATUS + "=?";
+			String[] whereParams = new String[]{testCodes, testCodes, "A"};
 			Cursor cursor = db.rawQuery(query, whereParams);
 			if (cursor != null && (cursor.moveToFirst())) {
 				do {

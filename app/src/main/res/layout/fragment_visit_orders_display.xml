@@ -68,7 +68,7 @@
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
-                    android:text="30km"
+                    android:text="0km"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp" />
 
@@ -96,7 +96,7 @@
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
-                    android:text="Rs 1500"
+                    android:text="Rs 0"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp" />
 
@@ -124,7 +124,7 @@
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
-                    android:text="10BSU | 05BSV"
+                    android:text="0 Kits"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp" />
             </LinearLayout>

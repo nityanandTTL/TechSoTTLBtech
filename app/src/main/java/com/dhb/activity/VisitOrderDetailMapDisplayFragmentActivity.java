@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
+import com.dhb.dao.DhbDao;
+import com.dhb.dao.models.OrderDetailsDao;
 import com.dhb.models.api.request.CallPatchRequestModel;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
@@ -93,12 +95,16 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
     private boolean isStarted = false;
     private AppPreferenceManager appPreferenceManager;
     private String MaskedPhoneNumber = "";
+    private DhbDao dhbDao;
+    private OrderDetailsDao orderDetailsDao;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_map_display);
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
+        dhbDao = new DhbDao(activity);
+        orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
         Bundle bundle = new Bundle();
         bundle = getIntent().getExtras();
         orderVisitDetailsModel = bundle.getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
@@ -456,6 +462,10 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
             Logger.error(json);
             if (statusCode == 204 || statusCode == 200) {
                 Toast.makeText(activity, "Arrived Successfully", Toast.LENGTH_SHORT).show();
+                for (int i=0;i<orderVisitDetailsModel.getAllOrderdetails().size();i++) {
+                    orderVisitDetailsModel.getAllOrderdetails().get(i).setStatus("ARRIVED");
+                    orderDetailsDao.insertOrUpdate(orderVisitDetailsModel.getAllOrderdetails().get(i));
+                }
                 Intent intent = new Intent();
                 intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
                 setResult(BundleConstants.VOMD_ARRIVED, intent);
@@ -704,6 +714,10 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                 } else {
                     btn_arrived.setVisibility(View.VISIBLE);
                     btn_startNav.setVisibility(View.GONE);
+                }
+                for (int i=0;i<orderVisitDetailsModel.getAllOrderdetails().size();i++) {
+                    orderVisitDetailsModel.getAllOrderdetails().get(i).setStatus("STARTED");
+                    orderDetailsDao.insertOrUpdate(orderVisitDetailsModel.getAllOrderdetails().get(i));
                 }
             }
         }
