@@ -40,13 +40,14 @@ public class CampBeneficiariesDisplayFragment extends AbstractFragment {
     private TextView txtAmtPayable, txtAddBeneficiary;
     private Button btnProceedPayment;
     private CampScanQRResponseModel campScanQRResponseModel;
-    private CampAllOrderDetailsModel campAllOrderDetailsModel=new CampAllOrderDetailsModel();
+    private CampAllOrderDetailsModel campAllOrderDetailsModel = new CampAllOrderDetailsModel();
     private int totalAmount = 0;
     private int dotsCount;
     private ImageView[] dots;
     private CampBeneficiaryScreenSlidePagerAdapter CampBeneficiaryScreenSlidePagerAdapter;
     private LinearLayout pagerIndicator;
-private CampDetailModel campDetailModel;
+    private CampDetailModel campDetailModel;
+
     public CampBeneficiariesDisplayFragment() {
         // Required empty public constructor
     }
@@ -55,7 +56,7 @@ private CampDetailModel campDetailModel;
         CampBeneficiariesDisplayFragment fragment = new CampBeneficiariesDisplayFragment();
         Bundle args = new Bundle();
         args.putParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL, campScanQRResponseModel);
-        args.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL,campDetailModel);
+        args.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModel);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,7 +68,7 @@ private CampDetailModel campDetailModel;
         appPreferenceManager = new AppPreferenceManager(activity);
         if (getArguments() != null) {
             campScanQRResponseModel = getArguments().getParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL);
-            campDetailModel=getArguments().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
+            campDetailModel = getArguments().getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
         }
     }
 
@@ -132,7 +133,7 @@ private CampDetailModel campDetailModel;
                 beneficiariesArr.add(beneficiaryDetailsModel);
             }
         }
-        CampBeneficiaryScreenSlidePagerAdapter = new CampBeneficiaryScreenSlidePagerAdapter(getFragmentManager(), activity,campDetailModel, beneficiariesArr, campScanQRResponseModel.getAllOrderdetails(),campScanQRResponseModel, new RefreshCampBeneficiariesSliderDelegate() {
+        CampBeneficiaryScreenSlidePagerAdapter = new CampBeneficiaryScreenSlidePagerAdapter(getFragmentManager(), activity, campDetailModel, beneficiariesArr, campScanQRResponseModel.getAllOrderdetails(), campScanQRResponseModel, new RefreshCampBeneficiariesSliderDelegate() {
             @Override
             public void onRefreshActionCallbackReceived(CampListDisplayResponseModel campListDisplayResponseModel) {
 

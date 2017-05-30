@@ -10,16 +10,17 @@ import java.util.ArrayList;
  */
 
 public class CampAllOrderDetailsModel implements Parcelable{
-    private int BrandId, Margin, Discount, Refcode, ReportHC, Distance;
-    private String OrderNo, Address, Pincode, Mobile, Email, PayType, AmountDue, Status, Longitude, Latitude;
+    private int BrandId, Margin, Discount,  ReportHC, AmountDue,Distance;
+    private String OrderNo, Address, Pincode, Mobile, Email, PayType,  Status,Refcode ;
+    private double Longitude,Latitude;
     private ArrayList<CampDetailsBenMasterModel> benMaster;
 
     protected CampAllOrderDetailsModel(Parcel in) {
         BrandId = in.readInt();
         Margin = in.readInt();
         Discount = in.readInt();
-        Refcode = in.readInt();
         ReportHC = in.readInt();
+        AmountDue = in.readInt();
         Distance = in.readInt();
         OrderNo = in.readString();
         Address = in.readString();
@@ -27,21 +28,20 @@ public class CampAllOrderDetailsModel implements Parcelable{
         Mobile = in.readString();
         Email = in.readString();
         PayType = in.readString();
-        AmountDue = in.readString();
         Status = in.readString();
-        Longitude = in.readString();
-        Latitude = in.readString();
+        Refcode = in.readString();
+        Longitude = in.readDouble();
+        Latitude = in.readDouble();
+        benMaster = in.createTypedArrayList(CampDetailsBenMasterModel.CREATOR);
     }
-    public CampAllOrderDetailsModel() {
-        // Required empty public constructor
-    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(BrandId);
         dest.writeInt(Margin);
         dest.writeInt(Discount);
-        dest.writeInt(Refcode);
         dest.writeInt(ReportHC);
+        dest.writeInt(AmountDue);
         dest.writeInt(Distance);
         dest.writeString(OrderNo);
         dest.writeString(Address);
@@ -49,10 +49,11 @@ public class CampAllOrderDetailsModel implements Parcelable{
         dest.writeString(Mobile);
         dest.writeString(Email);
         dest.writeString(PayType);
-        dest.writeString(AmountDue);
         dest.writeString(Status);
-        dest.writeString(Longitude);
-        dest.writeString(Latitude);
+        dest.writeString(Refcode);
+        dest.writeDouble(Longitude);
+        dest.writeDouble(Latitude);
+        dest.writeTypedList(benMaster);
     }
 
     @Override
@@ -71,6 +72,14 @@ public class CampAllOrderDetailsModel implements Parcelable{
             return new CampAllOrderDetailsModel[size];
         }
     };
+
+    public void setRefcode(String refcode) {
+        Refcode = refcode;
+    }
+
+    public CampAllOrderDetailsModel() {
+        // Required empty public constructor
+    }
 
     public int getBrandId() {
         return BrandId;
@@ -96,12 +105,8 @@ public class CampAllOrderDetailsModel implements Parcelable{
         Discount = discount;
     }
 
-    public int getRefcode() {
+    public String getRefcode() {
         return Refcode;
-    }
-
-    public void setRefcode(int refcode) {
-        Refcode = refcode;
     }
 
     public int getReportHC() {
@@ -168,11 +173,11 @@ public class CampAllOrderDetailsModel implements Parcelable{
         PayType = payType;
     }
 
-    public String getAmountDue() {
+    public int getAmountDue() {
         return AmountDue;
     }
 
-    public void setAmountDue(String amountDue) {
+    public void setAmountDue(int amountDue) {
         AmountDue = amountDue;
     }
 
@@ -182,23 +187,23 @@ public class CampAllOrderDetailsModel implements Parcelable{
 
     public void setStatus(String status) {
         Status = status;
-    }
+    }/*
 
-    public String getLongitude() {
+    public double getLongitude() {
         return Longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(double longitude) {
         Longitude = longitude;
     }
 
-    public String getLatitude() {
+    public double getLatitude() {
         return Latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(double latitude) {
         Latitude = latitude;
-    }
+    }*/
 
     public ArrayList<CampDetailsBenMasterModel> getBenMaster() {
         return benMaster;
@@ -206,5 +211,21 @@ public class CampAllOrderDetailsModel implements Parcelable{
 
     public void setBenMaster(ArrayList<CampDetailsBenMasterModel> benMaster) {
         this.benMaster = benMaster;
+    }
+
+    public double getLongitude() {
+        return Longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        Longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return Latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        Latitude = latitude;
     }
 }

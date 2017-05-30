@@ -12,7 +12,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/dp_110"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:layout_weight="2"
@@ -39,10 +39,21 @@
             android:orientation="vertical">
 
             <TextView
+                android:layout_gravity="center_horizontal"
+                android:scrollHorizontally="true"
+                android:editable="false"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:freezesText="false"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:id="@+id/tv_btech_id1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:singleLine="true"
                 android:text="BtechId : 884543106" />
 
             <TextView

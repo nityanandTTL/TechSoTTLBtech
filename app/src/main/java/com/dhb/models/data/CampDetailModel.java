@@ -20,6 +20,7 @@ public class CampDetailModel implements Parcelable {
     private ArrayList<CampDetailsKitsModel> kits;
     private ArrayList<BeneficiarySampleTypeDetailsModel> sampleType;
     private boolean IsFasting;
+private int Pincode;
 
     protected CampDetailModel(Parcel in) {
         Id = in.readInt();
@@ -49,6 +50,7 @@ public class CampDetailModel implements Parcelable {
         kits = in.createTypedArrayList(CampDetailsKitsModel.CREATOR);
         sampleType = in.createTypedArrayList(BeneficiarySampleTypeDetailsModel.CREATOR);
         IsFasting = in.readByte() != 0;
+        Pincode = in.readInt();
     }
 
     @Override
@@ -80,6 +82,7 @@ public class CampDetailModel implements Parcelable {
         dest.writeTypedList(kits);
         dest.writeTypedList(sampleType);
         dest.writeByte((byte) (IsFasting ? 1 : 0));
+        dest.writeInt(Pincode);
     }
 
     @Override
@@ -98,6 +101,14 @@ public class CampDetailModel implements Parcelable {
             return new CampDetailModel[size];
         }
     };
+
+    public int getPincode() {
+        return Pincode;
+    }
+
+    public void setPincode(int pincode) {
+        Pincode = pincode;
+    }
 
     public String getPayType() {
         return PayType;
