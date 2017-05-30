@@ -12,17 +12,57 @@ import java.util.ArrayList;
  */
 
 public class CampScanQRResponseModel implements Parcelable{
-    private int SlotId, Distance;
+    private int SlotId;
+    private double Distance;
     ArrayList<CampAllOrderDetailsModel> allOrderdetails;
     private String VisitId, Slot;
 
     public CampScanQRResponseModel() {
-        // Required empty public constructor
+    }
+
+    public int getSlotId() {
+        return SlotId;
+    }
+
+    public void setSlotId(int slotId) {
+        SlotId = slotId;
+    }
+
+    public double getDistance() {
+        return Distance;
+    }
+
+    public void setDistance(double distance) {
+        Distance = distance;
+    }
+
+    public ArrayList<CampAllOrderDetailsModel> getAllOrderdetails() {
+        return allOrderdetails;
+    }
+
+    public void setAllOrderdetails(ArrayList<CampAllOrderDetailsModel> allOrderdetails) {
+        this.allOrderdetails = allOrderdetails;
+    }
+
+    public String getVisitId() {
+        return VisitId;
+    }
+
+    public void setVisitId(String visitId) {
+        VisitId = visitId;
+    }
+
+    public String getSlot() {
+        return Slot;
+    }
+
+    public void setSlot(String slot) {
+        Slot = slot;
     }
 
     protected CampScanQRResponseModel(Parcel in) {
         SlotId = in.readInt();
-        Distance = in.readInt();
+        Distance = in.readDouble();
         allOrderdetails = in.createTypedArrayList(CampAllOrderDetailsModel.CREATOR);
         VisitId = in.readString();
         Slot = in.readString();
@@ -31,7 +71,7 @@ public class CampScanQRResponseModel implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(SlotId);
-        dest.writeInt(Distance);
+        dest.writeDouble(Distance);
         dest.writeTypedList(allOrderdetails);
         dest.writeString(VisitId);
         dest.writeString(Slot);
@@ -53,45 +93,4 @@ public class CampScanQRResponseModel implements Parcelable{
             return new CampScanQRResponseModel[size];
         }
     };
-
-    public String getSlot() {
-        return Slot;
-    }
-
-    public void setSlot(String slot) {
-        Slot = slot;
-    }
-
-    public String getVisitId() {
-        return VisitId;
-    }
-
-    public void setVisitId(String visitId) {
-        VisitId = visitId;
-    }
-
-    public int getSlotId() {
-        return SlotId;
-    }
-
-    public void setSlotId(int slotId) {
-        SlotId = slotId;
-    }
-
-
-    public int getDistance() {
-        return Distance;
-    }
-
-    public void setDistance(int distance) {
-        Distance = distance;
-    }
-
-    public ArrayList<CampAllOrderDetailsModel> getAllOrderdetails() {
-        return allOrderdetails;
-    }
-
-    public void setAllOrderdetails(ArrayList<CampAllOrderDetailsModel> allOrderdetails) {
-        this.allOrderdetails = allOrderdetails;
-    }
 }

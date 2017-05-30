@@ -10,18 +10,32 @@ import java.util.ArrayList;
  */
 
 public class CampDetailsBenMasterModel implements Parcelable{
-    private int benId,Age,ProjId;
-    private String Name,Gender,testsCode,Fasting,Pincode;
+    private int benId,Age;
+    private String Name,Gender,testsCode,Fasting,Pincode,ProjId;
+    private ArrayList<CampDetailsSampleTypeModel> sampleType;
+    private ArrayList<CampDetailsKitsModel> kits;
+    private String OrderNo;
+
+    public CampDetailsBenMasterModel() {
+    }
+
+    public String getProjId() {
+        return ProjId;
+    }
+
+    public void setProjId(String projId) {
+        ProjId = projId;
+    }
 
     protected CampDetailsBenMasterModel(Parcel in) {
         benId = in.readInt();
         Age = in.readInt();
-        ProjId = in.readInt();
         Name = in.readString();
         Gender = in.readString();
         testsCode = in.readString();
         Fasting = in.readString();
         Pincode = in.readString();
+        ProjId = in.readString();
         sampleType = in.createTypedArrayList(CampDetailsSampleTypeModel.CREATOR);
         kits = in.createTypedArrayList(CampDetailsKitsModel.CREATOR);
         OrderNo = in.readString();
@@ -31,12 +45,12 @@ public class CampDetailsBenMasterModel implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(benId);
         dest.writeInt(Age);
-        dest.writeInt(ProjId);
         dest.writeString(Name);
         dest.writeString(Gender);
         dest.writeString(testsCode);
         dest.writeString(Fasting);
         dest.writeString(Pincode);
+        dest.writeString(ProjId);
         dest.writeTypedList(sampleType);
         dest.writeTypedList(kits);
         dest.writeString(OrderNo);
@@ -67,9 +81,6 @@ public class CampDetailsBenMasterModel implements Parcelable{
         Pincode = pincode;
     }
 
-    private ArrayList<CampDetailsSampleTypeModel> sampleType;
-    private ArrayList<CampDetailsKitsModel> kits;
-    private String OrderNo;
 
     public int getBenId() {
         return benId;
@@ -87,13 +98,6 @@ public class CampDetailsBenMasterModel implements Parcelable{
         Age = age;
     }
 
-    public int getProjId() {
-        return ProjId;
-    }
-
-    public void setProjId(int projId) {
-        ProjId = projId;
-    }
 
     public String getName() {
         return Name;

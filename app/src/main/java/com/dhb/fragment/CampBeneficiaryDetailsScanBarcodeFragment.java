@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -119,6 +120,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     private ArrayList<String> tests_iems = new ArrayList<>();
     private Spinner sp_test;
     private String test_codes;
+    RelativeLayout rl_2;
     private String[] test_code_arr;
     private ArrayList<String> strings = new ArrayList<>();
     private LinearLayout ll_test_scan;
@@ -135,6 +137,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     ImageView img_male, img_female;
     private CampScanQRResponseModel campScanQRResponseModel;
     private BrandMasterModel brandMasterModel;
+    private TextView txt_name, tv_location;
 
     public CampBeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
@@ -150,14 +153,14 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootview = inflater.inflate(R.layout.fragment_camp_manual_woe_scan_barcode, container, false);
+        rootview = inflater.inflate(R.layout.camp_new_cell_content_layout, container, false);
         activity = (CampOrderBookingActivity) getActivity();
         appPreferenceManager = new AppPreferenceManager(activity);
         dhbDao = new DhbDao(activity);
         Bundle bundle = getArguments();
         beneficiaryDetailsArr = bundle.getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
         campAllOrderDetailsModel = bundle.getParcelable(BundleConstants.CAMP_ALL_ORDER_DETAIL);
-        campScanQRResponseModel=bundle.getParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL);
+        campScanQRResponseModel = bundle.getParcelable(BundleConstants.CAMP_SCAN_OR_RESPONSE_MODEL);
         campDetailModel = bundle.getParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL);
         BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
         brandMasterModel = brandMasterDao.getModelFromId(campAllOrderDetailsModel.getBrandId());
@@ -165,6 +168,8 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         benId = DeviceUtils.randomInt(1, 10);
         initUI();
         initData();
+        btn_scan_qr.setBackgroundDrawable(getResources().getDrawable(R.drawable.footer_bg_deselected));
+        btn_enter_manually.setBackgroundDrawable(getResources().getDrawable(R.drawable.footer_bg));
         setListeners();
         //  initBrandMaster();
         return rootview;
@@ -199,6 +204,17 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 TextView edt_barcode = (TextView) v.findViewById(R.id.edt_barcode);
                 ImageView scan_barcode_button = (ImageView) v.findViewById(R.id.scan_barcode_button);
                 txt_sample_type.setText(barcodeDetailsArr.get(i).getSamplType());
+                if (barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("SERUM")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
+                } else if (barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("EDTA")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
+                } else if (barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("FLUORIDE")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                } else if (barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("HEPARIN")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
+                } else if (barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("URINE")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
+                }
                 edt_barcode.setText(barcodeDetailsArr.get(i).getBarcode());
                 scan_barcode_button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -241,7 +257,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 responseParser.setToShowToast(false);
                 CampManualWOEFragment.brandMastersArr = new ArrayList<BrandMasterModel>();
                 CampManualWOEFragment.brandMastersArr = responseParser.getBrandMaster(json, statusCode);
-                edt_brand_name.setText("" + CampManualWOEFragment.brandMastersArr.get(0).getBrandName());
+                // edt_brand_name.setText("" + CampManualWOEFragment.brandMastersArr.get(0).getBrandName());
                 for (int i = 0; i < CampManualWOEFragment.brandMastersArr.size(); i++) {
                     strings.add(CampManualWOEFragment.brandMastersArr.get(i).getBrandName());
                 }
@@ -260,51 +276,60 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     private void setListeners() {
         btn_enter_manually.setOnClickListener(this);
         btn_next.setOnClickListener(this);
-        edt_brand_name.setOnClickListener(this);
+//        edt_brand_name.setOnClickListener(this);
     }
 
     @Override
     public void initUI() {
+        rl_2=(RelativeLayout)rootview.findViewById(R.id.rl_2);
+        rl_2.requestFocus();
+        tv_location = (TextView) rootview.findViewById(R.id.tv_location);
+        txt_name = (TextView) rootview.findViewById(R.id.txt_name);
+        String upperString = campDetailModel.getLocation();
+        tv_location.setText(upperString);
+        txt_name.setText(campDetailModel.getCampName());
         ll_test_scan = (LinearLayout) rootview.findViewById(R.id.ll_test_scan);
         edt_test_alerts = (TextView) rootview.findViewById(R.id.edt_test_alerts);
         edt_name = (EditText) rootview.findViewById(R.id.edt_name);
         edt_mobile = (EditText) rootview.findViewById(R.id.edt_mobile);
-        edt_email = (EditText) rootview.findViewById(R.id.edt_email);
-        edt_email.setText("" + campAllOrderDetailsModel.getEmail());
+        //  edt_email = (EditText) rootview.findViewById(R.id.edt_email);
+        //  edt_email.setText("" + campAllOrderDetailsModel.getEmail());
         edt_mobile.setText("" + campAllOrderDetailsModel.getMobile());
         edt_name.setText("" + beneficiaryDetailsArr.getName());
         btn_scan_qr = (Button) rootview.findViewById(R.id.btn_scan_qr);
         btn_enter_manually = (Button) rootview.findViewById(R.id.btn_enter_manually);
-        edt_pincode = (EditText) rootview.findViewById(R.id.edt_pincode);
-        img_vsg = (ImageView) rootview.findViewById(R.id.img_vsg);
-        img_vsg.setVisibility(View.GONE);
-        edt_pincode.setText("" + campAllOrderDetailsModel.getPincode());
+        // edt_pincode = (EditText) rootview.findViewById(R.id.edt_pincode);
+        // img_vsg = (ImageView) rootview.findViewById(R.id.img_vsg);
+        // img_vsg.setVisibility(View.GONE);
+        // edt_pincode.setText("" + campAllOrderDetailsModel.getPincode());
         btn_next = (Button) rootview.findViewById(R.id.btn_next);
-        btn_scan_qr.setVisibility(View.GONE);
+        // btn_scan_qr.setVisibility(View.GONE);
         img_female = (ImageView) rootview.findViewById(R.id.img_female);
         img_male = (ImageView) rootview.findViewById(R.id.img_male);
         if (beneficiaryDetailsArr.getGender().equals("M")) {
             img_female.setVisibility(View.GONE);
             img_male.setVisibility(View.VISIBLE);
+            img_male.setImageDrawable(getResources().getDrawable(R.drawable.m_selected));
         } else {
             img_female.setVisibility(View.VISIBLE);
             img_male.setVisibility(View.GONE);
+            img_female.setImageDrawable(getResources().getDrawable(R.drawable.f_selected));
         }
         btn_enter_manually.setVisibility(View.VISIBLE);
-        ll_tests = (LinearLayout) rootview.findViewById(R.id.ll_tests);
+        // ll_tests = (LinearLayout) rootview.findViewById(R.id.ll_tests);
         tv_age = (TextView) rootview.findViewById(R.id.tv_age);
         tv_gender = (TextView) rootview.findViewById(R.id.tv_gender);
-        sp_test = (Spinner) rootview.findViewById(R.id.sp_tests);
-        edt_address = (EditText) rootview.findViewById(R.id.edt_address);
-        tv_age.setText("Age: " + beneficiaryDetailsArr.getAge());
+        // sp_test = (Spinner) rootview.findViewById(R.id.sp_tests);
+        // edt_address = (EditText) rootview.findViewById(R.id.edt_address);
+        //  tv_age.setText("Age: " + beneficiaryDetailsArr.getAge());
         edt_age = (EditText) rootview.findViewById(R.id.edt_age);
         edt_age.setText("" + beneficiaryDetailsArr.getAge());
-        tv_gender.setText("| Gender: " + beneficiaryDetailsArr.getGender());
-        edt_amount = (EditText) rootview.findViewById(R.id.edt_amount);
-        edt_amount.setText("" + campAllOrderDetailsModel.getAmountDue());
-        ll_tests.setVisibility(View.GONE);
-        edt_address.setText("" + campAllOrderDetailsModel.getAddress());
-        edt_brand_name = (TextView) rootview.findViewById(R.id.edt_brand_name);
+        //  tv_gender.setText("| Gender: " + beneficiaryDetailsArr.getGender());
+        // edt_amount = (EditText) rootview.findViewById(R.id.edt_amount);
+        // edt_amount.setText("" + campAllOrderDetailsModel.getAmountDue());
+        // ll_tests.setVisibility(View.GONE);
+        // edt_address.setText("" + campAllOrderDetailsModel.getAddress());
+        // edt_brand_name = (TextView) rootview.findViewById(R.id.edt_brand_name);
         for (int i = 0; i < beneficiaryDetailsArr.getSampleType().size(); i++) {
             tests_iems.add(beneficiaryDetailsArr.getSampleType().get(i).getSampleType());
         }
@@ -321,6 +346,18 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 edt_barcode = (TextView) v.findViewById(R.id.edt_barcode);
                 ImageView scan_barcode_button = (ImageView) v.findViewById(R.id.scan_barcode_button);
                 txt_sample_type.setText("" + beneficiaryDetailsArr.getSampleType().get(i).getSampleType());
+                Logger.error("sample : "+ beneficiaryDetailsArr.getSampleType().get(i).getSampleType());
+                if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("SERUM")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
+                } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("EDTA")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
+                } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("FLUORIDE")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("HEPARIN")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
+                } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("URINE")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
+                }
                 scan_barcode_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -341,6 +378,8 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         edt_test_alerts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_scan_qr.setBackgroundDrawable(getResources().getDrawable(R.drawable.footer_bg_deselected));
+                btn_enter_manually.setBackgroundDrawable(getResources().getDrawable(R.drawable.footer_bg));
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 LayoutInflater inflater = activity.getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
@@ -357,25 +396,35 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         });
 
     }
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        Toast.makeText(activity, "scanned res " + scanningResult, Toast.LENGTH_SHORT).show();
+    //    Toast.makeText(activity, "scanned res " + scanningResult, Toast.LENGTH_SHORT).show();
         if (scanningResult != null && scanningResult.getContents() != null) {
-            //  String scanned_barcode = scanningResult.getContents();
+              String scanned_barcode = scanningResult.getContents();
             Logger.error("" + scanningResult);
             Logger.error("scanned_barcode " + scanningResult.getContents());
             Toast.makeText(activity, "" + scanningResult, Toast.LENGTH_SHORT).show();
-            for (int i = 0; i < barcodeDetailsArr.size(); i++) {
-                if (barcodeDetailsArr.get(i).getSamplType().equals(currentSampleType)) {
-                    barcodeDetailsArr.get(i).setBarcode(scanningResult.getContents());
-                    break;
-                }
-            }
-            initScanBarcodeView();
+            if(!InputUtils.isNull(scanned_barcode)&& scanned_barcode.length()==8) {
+                for (int i = 0; i < barcodeDetailsArr.size(); i++) {
+                    if (barcodeDetailsArr.get(i).getSamplType().equals(currentSampleType)) {
+                        for (BeneficiaryBarcodeDetailsModel benBarcode :
+                                barcodeDetailsArr) {
+                            if (!InputUtils.isNull(benBarcode.getBarcode()) && benBarcode.getBarcode().equals(scanned_barcode)) {
+                                if (benBarcode.getSamplType().equals(currentSampleType)) {
 
+                                } else {
+                                    Toast.makeText(activity, "Barcode Already Scanned for Sample Type " + currentSampleType, Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }
+                        }
+                        barcodeDetailsArr.get(i).setBarcode(scanned_barcode);
+                        break;
+                    }
+                }
+                initScanBarcodeView();
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
             Toast.makeText(activity, "no result", Toast.LENGTH_SHORT).show();
@@ -383,25 +432,60 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private boolean validate() {
+        if (InputUtils.isNull(edt_name.getText().toString())) {
+            edt_name.setError("Enter Name");
+            edt_name.requestFocus();
+            return false;
+        } else if (InputUtils.isNull(edt_age.getText().toString())) {
+            edt_age.setError("Enter Age");
+            edt_age.requestFocus();
+            return false;
+        } else if (Integer.parseInt(edt_age.getText().toString()) > 135 || Integer.parseInt(edt_age.getText().toString()) < 1) {
+            edt_age.setError("Age Should be minimum 1 year and maximum 135 year");
+            edt_age.requestFocus();
+            return false;
+        } else if (InputUtils.isNull(edt_mobile.getText().toString())) {
+            edt_mobile.setError("Enter Mobile");
+            edt_mobile.requestFocus();
+            return false;
+        } else if (edt_mobile.getText().toString().length() < 10) {
+            edt_mobile.setError("Enter Valid Mobile Number");
+            edt_mobile.requestFocus();
+            return false;
+        }
+        for (BeneficiaryBarcodeDetailsModel benBarcode:barcodeDetailsArr){
+            if(InputUtils.isNull(benBarcode.getBarcode())){
+                Toast.makeText(activity,"Please scan barcode for sample type "+benBarcode.getSamplType(),Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_enter_manually) {
+            btn_scan_qr.setBackgroundDrawable(getResources().getDrawable(R.drawable.footer_bg));
+            btn_enter_manually.setBackgroundDrawable(getResources().getDrawable(R.drawable.footer_bg_deselected));
             Intent intentOrderBooking = new Intent(activity, CampOrderBookingActivity.class);
             intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModel);
             startActivity(intentOrderBooking);
         }
         if (v.getId() == R.id.btn_next) {
-            OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
-            ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(orderBookingRequestModel);
-            orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new OrderBookingAPIAsyncTaskDelegateResult());
-            if (isNetworkAvailable(activity)) {
-                orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
-            } else {
-                Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+            if (validate()) {
+                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+                ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(orderBookingRequestModel);
+                orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new OrderBookingAPIAsyncTaskDelegateResult());
+                if (isNetworkAvailable(activity)) {
+                    orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
+                } else {
+                    Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                }
             }
 
         }
-        if (v.getId() == R.id.edt_brand_name) {
+       /* if (v.getId() == R.id.edt_brand_name) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             LayoutInflater inflater = activity.getLayoutInflater();
             View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
@@ -413,7 +497,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
             lv_test_codes.setAdapter(adapter);
             btn_edit.setVisibility(View.GONE);
             builder.show();
-        }
+        }*/
     }
 
     private OrderBookingRequestModel generateOrderBookingRequestModel() {
