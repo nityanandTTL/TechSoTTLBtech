@@ -293,7 +293,6 @@ public class PaymentsActivity extends AbstractActivity {
             LinearLayout llPaymentPassInputs = (LinearLayout) v.findViewById(R.id.ll_payments_pass_inputs_data);
             EditText editAmount= (EditText) v.findViewById(R.id.amount1);
             TextView textAmount=(TextView) v.findViewById(R.id.amount);
-            TextView titleAmount =(TextView) v.findViewById(R.id.title);
 
             for (int i = 0; i < paymentPassInputsModel.getNameValueCollection().size(); i++) {
                 final int currentPosition = i;
@@ -431,7 +430,12 @@ public class PaymentsActivity extends AbstractActivity {
             if (statusCode == 200) {
                 paymentStartTransactionAPIResponseModel = responseParser.getPaymentStartTransactionResponse(json, statusCode);
                 if(paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
-                    initDoCaptureResponseData();
+                    if(NarrationId==1||NarrationId==3) {
+                        fetchDoCaptureResponse();
+                    }
+                    else{
+                        initDoCaptureResponseData();
+                    }
                 }
                 else{
                     Toast.makeText(activity,paymentStartTransactionAPIResponseModel.getTokenData(),Toast.LENGTH_SHORT).show();
@@ -455,18 +459,12 @@ public class PaymentsActivity extends AbstractActivity {
             flPayments.removeAllViews();
             View vpp = getLayoutInflater().inflate(R.layout.pay_ccna, null);
             LinearLayout llPaymentStartTransaction = (LinearLayout) vpp.findViewById(R.id.lineapay);
-           /* LinearLayout llPaymentStartTransaction = new LinearLayout(activity);
-            LinearLayout.LayoutParams llParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            llParams.setMargins(10, 10, 10, 10);
-            llPaymentStartTransaction.setLayoutParams(llParams);
-            llPaymentStartTransaction.setOrientation(LinearLayout.VERTICAL);
-            llPaymentStartTransaction.setGravity(Gravity.CENTER);*/
             String btnSubmitText = "Submit";
             for (int i = 0; i < paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().size(); i++) {
                 final int currentPosition = i;
                 if (paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().get(i).getRequired().equals("User")) {
                     EditText edtPaymentUserInputs = new EditText(activity);
-                    LinearLayout.LayoutParams edtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                    LinearLayout.LayoutParams edtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     edtParams.setMargins(10, 5, 5, 10);
                     edtPaymentUserInputs.setLayoutParams(edtParams);
                     edtPaymentUserInputs.setGravity(Gravity.CENTER);
@@ -489,6 +487,23 @@ public class PaymentsActivity extends AbstractActivity {
                         }
                     });
                     llPaymentStartTransaction.addView(edtPaymentUserInputs);
+
+                    Button btnPaymentStartTransactionSubmit = new Button(activity);
+                    LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    btnParams.setMargins(10, 5, 5, 10);
+                    btnPaymentStartTransactionSubmit.setLayoutParams(btnParams);
+                    btnPaymentStartTransactionSubmit.setGravity(Gravity.CENTER);
+                    btnPaymentStartTransactionSubmit.setMinEms(10);
+                    btnPaymentStartTransactionSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
+                    btnPaymentStartTransactionSubmit.setText(btnSubmitText);
+                    btnPaymentStartTransactionSubmit.setTextColor(getResources().getColor(android.R.color.white));
+                    btnPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fetchDoCaptureResponse();
+                        }
+                    });
+                    llPaymentStartTransaction.addView(btnPaymentStartTransactionSubmit);
                 }
             }
             for (PaymentNameValueModel paymentNameValueModel :
@@ -513,10 +528,28 @@ public class PaymentsActivity extends AbstractActivity {
                     wvQRDisplay.setInitialScale(getScale());
                     wvQRDisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
                     llPaymentStartTransaction.addView(webViewXml);
-                    btnSubmitText = "Verify Payment Status";
+                    btnSubmitText = "Verify Payment";
+                    Button btnPaymentStartTransactionSubmit = new Button(activity);
+                    LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    btnParams.setMargins(10, 5, 5, 10);
+                    btnPaymentStartTransactionSubmit.setLayoutParams(btnParams);
+                    btnPaymentStartTransactionSubmit.setGravity(Gravity.CENTER);
+                    btnPaymentStartTransactionSubmit.setMinEms(10);
+                    btnPaymentStartTransactionSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
+                    btnPaymentStartTransactionSubmit.setText(btnSubmitText);
+                    btnPaymentStartTransactionSubmit.setTextColor(getResources().getColor(android.R.color.white));
+                    btnPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fetchDoCaptureResponse();
+                        }
+                    });
+                    llPaymentStartTransaction.addView(btnPaymentStartTransactionSubmit);
+                    btnPaymentStartTransactionSubmit.callOnClick();
                     break;
                 } else if (paymentNameValueModel.getKey().equals("ModeId") && paymentNameValueModel.getValue().equals("1")) {
-                    WebView wvCCADisplay = new WebView(activity);
+                    View webViewXml = getLayoutInflater().inflate(R.layout.activity_web_view, null);
+                    WebView wvCCADisplay = (WebView) webViewXml.findViewById(R.id.webview);
                     WebSettings settings = wvCCADisplay.getSettings();
                     settings.setJavaScriptEnabled(true);
                     settings.setBuiltInZoomControls(true);
@@ -527,26 +560,27 @@ public class PaymentsActivity extends AbstractActivity {
                     wvCCADisplay.setInitialScale(getScale());
                     wvCCADisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
                     llPaymentStartTransaction.addView(wvCCADisplay);
-                    btnSubmitText = "Verify Payment Status";
+                    btnSubmitText = "Verify Payment";
+                    Button btnPaymentStartTransactionSubmit = new Button(activity);
+                    LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    btnParams.setMargins(10, 5, 5, 10);
+                    btnPaymentStartTransactionSubmit.setLayoutParams(btnParams);
+                    btnPaymentStartTransactionSubmit.setGravity(Gravity.CENTER);
+                    btnPaymentStartTransactionSubmit.setMinEms(10);
+                    btnPaymentStartTransactionSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
+                    btnPaymentStartTransactionSubmit.setText(btnSubmitText);
+                    btnPaymentStartTransactionSubmit.setTextColor(getResources().getColor(android.R.color.white));
+                    btnPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fetchDoCaptureResponse();
+                        }
+                    });
+                    llPaymentStartTransaction.addView(btnPaymentStartTransactionSubmit);
+                    btnPaymentStartTransactionSubmit.callOnClick();
                     break;
                 }
             }
-            Button btnPaymentStartTransactionSubmit = new Button(activity);
-            LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            btnParams.setMargins(10, 5, 5, 10);
-            btnPaymentStartTransactionSubmit.setLayoutParams(btnParams);
-            btnPaymentStartTransactionSubmit.setGravity(Gravity.CENTER);
-            btnPaymentStartTransactionSubmit.setMinEms(10);
-            btnPaymentStartTransactionSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
-            btnPaymentStartTransactionSubmit.setText(btnSubmitText);
-            btnPaymentStartTransactionSubmit.setTextColor(getResources().getColor(android.R.color.white));
-            btnPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fetchDoCaptureResponse();
-                }
-            });
-            llPaymentStartTransaction.addView(btnPaymentStartTransactionSubmit);
             flPayments.addView(llPaymentStartTransaction);
         }
     }

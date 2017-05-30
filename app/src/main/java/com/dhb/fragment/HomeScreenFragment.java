@@ -109,10 +109,10 @@ public class HomeScreenFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
                 Intent intentPaymentsActivity = new Intent(activity, PaymentsActivity.class);
-                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_ORDER_NO,"VST090543");
-                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_AMOUNT,"1");
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_ORDER_NO,"");
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_AMOUNT,"0");
                 intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,2);
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,3);
                 startActivity(intentPaymentsActivity);
             }
         });
@@ -137,8 +137,8 @@ public class HomeScreenFragment extends AbstractFragment {
          imgCamp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity,"Feature coming soon.",Toast.LENGTH_SHORT).show();
-//                pushFragments(CampListDisplayFragment.newInstance(),false,false,CampListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+//                Toast.makeText(activity,"Feature coming soon.",Toast.LENGTH_SHORT).show();
+                pushFragments(CampListDisplayFragment.newInstance(),false,false,CampListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
             }
         });
         imgCommunication.setOnClickListener(new View.OnClickListener() {

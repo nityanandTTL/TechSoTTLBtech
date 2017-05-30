@@ -410,7 +410,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
 
     @Override
     protected void onResume() {
-        double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
+        /*double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
         Integertotaldiff = (int) totaldist;
         if (Integertotaldiff > 100 || !isStarted) {
             btn_arrived.setVisibility(View.GONE);
@@ -418,7 +418,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         } else {
             btn_arrived.setVisibility(View.VISIBLE);
             btn_startNav.setVisibility(View.GONE);
-        }
+        }*/
         super.onResume();
     }
 
@@ -428,10 +428,6 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
             callOrderStatusChangeApi(3);
         } else if (v.getId() == R.id.btn_startNav) {
             callOrderStatusChangeApi(7);
-            Intent intent = new Intent(Intent.ACTION_VIEW,
-                    //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
-                    Uri.parse("google.navigation:q="+destlat+","+destlong));
-            startActivity(intent);
         }
     }
 
@@ -461,16 +457,15 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         public void apiCallResult(String json, int statusCode) throws JSONException {
             Logger.error(json);
             if (statusCode == 204 || statusCode == 200) {
-                Toast.makeText(activity, "Arrived Successfully", Toast.LENGTH_SHORT).show();
                 for (int i=0;i<orderVisitDetailsModel.getAllOrderdetails().size();i++) {
                     orderVisitDetailsModel.getAllOrderdetails().get(i).setStatus("ARRIVED");
                     orderDetailsDao.insertOrUpdate(orderVisitDetailsModel.getAllOrderdetails().get(i));
                 }
+                Toast.makeText(activity, "Arrived Successfully", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
                 setResult(BundleConstants.VOMD_ARRIVED, intent);
                 finish();
-
             } else {
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
@@ -708,17 +703,24 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 204 || statusCode == 200) {
                 isStarted = true;
-                if (Integertotaldiff > 100) {
+                /*if (Integertotaldiff > 100) {
                     btn_arrived.setVisibility(View.GONE);
                     btn_startNav.setVisibility(View.VISIBLE);
                 } else {
                     btn_arrived.setVisibility(View.VISIBLE);
                     btn_startNav.setVisibility(View.GONE);
-                }
+                }*/
+                btn_arrived.setVisibility(View.VISIBLE);
+                btn_startNav.setVisibility(View.GONE);
                 for (int i=0;i<orderVisitDetailsModel.getAllOrderdetails().size();i++) {
                     orderVisitDetailsModel.getAllOrderdetails().get(i).setStatus("STARTED");
                     orderDetailsDao.insertOrUpdate(orderVisitDetailsModel.getAllOrderdetails().get(i));
                 }
+                Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
+                        Uri.parse("google.navigation:q="+destlat+","+destlong));
+                startActivity(intent);
             }
         }
 

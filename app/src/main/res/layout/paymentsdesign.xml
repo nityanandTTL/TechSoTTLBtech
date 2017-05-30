@@ -16,7 +16,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp">
+            android:layout_marginTop="120dp">
 
             <LinearLayout
                 android:layout_gravity="center"
@@ -43,44 +43,43 @@
             android:background="@drawable/solid_circle"
             android:gravity="center"
             android:padding="5dp">
-<RelativeLayout
+            <RelativeLayout
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/solid_bluecircle"
+                android:layout_width="140dp"
+                android:layout_height="140dp">
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="22sp"
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Amount" />
 
-    android:gravity="center"
-    android:layout_centerHorizontal="true"
-    android:layout_gravity="center_horizontal"
-    android:background="@drawable/solid_bluecircle"
-    android:layout_width="140dp"
-    android:layout_height="140dp">
-    <TextView
-        android:textStyle="bold"
-        android:textSize="22sp"
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Amount" />
+                <TextView
+                    android:textSize="18sp"
+                    android:id="@+id/amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title"
+                    android:gravity="center"
+                    android:text="4500/-"
+                    android:visibility="visible"/>
 
-    <TextView
-        android:textSize="18sp"
-        android:id="@+id/amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:gravity="center"
-        android:text="4500/-"
-        android:visibility="visible"/>
-
-    <EditText
-        android:inputType="number"
-        android:digits="0123456789"
-        android:visibility="gone"
-        android:textSize="18sp"
-        android:id="@+id/amount1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/amount"
-        android:gravity="center"
-        android:hint="Enter Amount" />
-</RelativeLayout>
+                <EditText
+                    android:inputType="number"
+                    android:digits="0123456789"
+                    android:visibility="gone"
+                    android:textSize="18sp"
+                    android:id="@+id/amount1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/amount"
+                    android:gravity="center"
+                    android:hint="Enter Amount" />
+            </RelativeLayout>
 
         </RelativeLayout>
 

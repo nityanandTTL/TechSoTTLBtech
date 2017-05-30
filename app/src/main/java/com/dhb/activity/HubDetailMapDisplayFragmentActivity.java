@@ -321,7 +321,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
 
     @Override
     protected void onResume() {
-        double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
+        /*double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
         Integertotaldiff = (int) totaldist;
         if (Integertotaldiff > 100 || !isStarted) {
             btn_arrived.setVisibility(View.GONE);
@@ -329,7 +329,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         } else {
             btn_arrived.setVisibility(View.VISIBLE);
             btn_startNav.setVisibility(View.GONE);
-        }
+        }*/
         super.onResume();
     }
 
@@ -342,10 +342,6 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
             callOrderStatusChangeApi(3);
         } else if (v.getId() == R.id.btn_startNav) {
             callOrderStatusChangeApi(7);
-            Intent intent = new Intent(Intent.ACTION_VIEW,
-                 //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
-            Uri.parse("google.navigation:q="+destlat+","+destlong));
-            startActivity(intent);
         }
     }
 
@@ -640,7 +636,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 204 || statusCode == 200 ) {
-               if (Integertotaldiff > 100)
+               /*if (Integertotaldiff > 100)
                {
                    isStarted = true;
                    btn_arrived.setVisibility(View.GONE);
@@ -649,7 +645,14 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                else {
                    btn_arrived.setVisibility(View.VISIBLE);
                    btn_startNav.setVisibility(View.GONE);
-               }
+               }*/
+               Toast.makeText(activity,"Started Successfully",Toast.LENGTH_SHORT).show();
+                btn_arrived.setVisibility(View.VISIBLE);
+                btn_startNav.setVisibility(View.GONE);
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
+                        Uri.parse("google.navigation:q="+destlat+","+destlong));
+                startActivity(intent);
             }
         }
 

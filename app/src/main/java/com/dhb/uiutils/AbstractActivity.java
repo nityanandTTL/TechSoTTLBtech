@@ -215,11 +215,11 @@ public class AbstractActivity extends AppCompatActivity implements ActivityHelpe
 		inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
-	public void showProgressDialog(Activity activity) {
+	public void showProgressDialog(Activity activity,String message) {
 		Logger.debug("Progress dialog open");
 		progressDialog = new ProgressDialog(activity);
-		progressDialog.setTitle("");
-		progressDialog.setMessage(activity.getString(R.string.progress_message_authenticating_please_wait));
+		progressDialog.setTitle("Please wait");
+		progressDialog.setMessage(message);
 //		progressDialog.setMessage("Fetching data...");
 		progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		progressDialog.setCancelable(false);

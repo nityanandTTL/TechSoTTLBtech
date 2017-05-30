@@ -535,7 +535,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                     else{
                                         PaymentMode = 2;
                                         Intent intentPayments = new Intent(activity, PaymentsActivity.class);
-                                        intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT,totalAmount);
+                                        intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT,totalAmount+"");
                                         intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,2);
                                         intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderVisitDetailsModel.getVisitId());
                                         intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));

@@ -238,6 +238,7 @@ public class EditTestListActivity extends AbstractActivity{
 
     private void initData() {
         BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
+        showProgressDialog(activity,"Loading ...");
         final ArrayList<BrandMasterModel> brandMasterModels = brandMasterDao.getAllModels();
         ArrayAdapter<BrandMasterModel> adapter = new ArrayAdapter<BrandMasterModel>(this, android.R.layout.simple_spinner_item, brandMasterModels);
         sp_tests.setAdapter(adapter);
@@ -250,6 +251,7 @@ public class EditTestListActivity extends AbstractActivity{
             }
             sp_tests.setEnabled(false);
         }
+        closeProgressDialog();
     }
 
     @Override

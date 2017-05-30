@@ -108,7 +108,7 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
             holder = (ViewChildHolder) convertView.getTag();
         }
         final TestRateMasterModel testRateMasterModel = testRateMasterModels.get(groupPosition).getTestRateMasterModels().get(childPosition);
-        holder.txt_dis_amt.setText("" + testRateMasterModel.getRate());
+        holder.txt_dis_amt.setText("₹ " + testRateMasterModel.getRate()+"/-");
         holder.imgCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +130,7 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
                                     mcallback.onCheckChange(selectedTests);
                                 }
                             })
+                            .setCancelable(false)
                             .show();
 
                 }

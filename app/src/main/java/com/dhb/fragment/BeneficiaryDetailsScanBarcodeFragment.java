@@ -546,6 +546,27 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
                     for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
                         if (currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
+
+                            //CHECK for duplicate barcode scanned for the same visit
+                            OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
+                            for (OrderDetailsModel odm:
+                                 orderVisitDetailsModel.getAllOrderdetails()) {
+                                for (BeneficiaryDetailsModel bdm:
+                                     odm.getBenMaster()) {
+                                    for (BeneficiaryBarcodeDetailsModel bbdm:
+                                         bdm.getBarcodedtl()) {
+                                        if(!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)){
+                                            if(bbdm.getSamplType().equals(currentScanSampleType)&&bbdm.getBenId()==beneficiaryDetailsModel.getBenId()){
+
+                                            }
+                                            else{
+                                                Toast.makeText(activity,"Same Barcode Already Scanned for "+bdm.getName()+" - "+bbdm.getSamplType(),Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                             beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
                             beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
                             beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
