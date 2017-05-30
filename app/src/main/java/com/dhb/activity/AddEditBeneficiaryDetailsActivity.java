@@ -201,7 +201,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     beneficiaryDetailsModel.setName(edtBenName.getText().toString().trim());
                     beneficiaryDetailsModel.setAge(Integer.parseInt(edtAge.getText().toString().trim()));
                     beneficiaryDetailsModel.setGender(isM?"M":"F");
-                    beneficiaryDetailsModel.setVenepuncture(CommonUtils.decodedImageBytes(encodedVanipunctureImg));
+                    beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
                     beneficiaryDetailsModel.setTestsCode(edtTests.getText().toString());
                     beneficiaryDetailsModel.setTests(edtTests.getText().toString());
                     beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
@@ -296,6 +296,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                             intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
                             intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
                             startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
+                            dialog.dismiss();
                         }
                     });
                     builder.show();
@@ -421,6 +422,15 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             Toast.makeText(activity, "Venepuncture Image is required", Toast.LENGTH_SHORT).show();
             return false;
         }
+        if(beneficiaryDetailsModel.getBarcodedtl()!=null && beneficiaryDetailsModel.getBarcodedtl().size()>0){
+            for (BeneficiaryBarcodeDetailsModel benBarcode:
+                 beneficiaryDetailsModel.getBarcodedtl()) {
+                if(InputUtils.isNull(benBarcode.getBarcode())){
+                    Toast.makeText(activity, "Please scan Barcode for Sample Type "+benBarcode.getSamplType(), Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        }
         return true;
     }
 
@@ -445,6 +455,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 beneficiaryDetailsModel.setBarcodedtl(new ArrayList<BeneficiaryBarcodeDetailsModel>());
             }
             if(beneficiaryDetailsModel!=null && beneficiaryDetailsModel.getSampleType()!=null) {
+                beneficiaryDetailsModel.getBarcodedtl().clear();
                 for (BeneficiarySampleTypeDetailsModel sampleTypes :
                         beneficiaryDetailsModel.getSampleType()) {
                     BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
@@ -484,7 +495,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 }
             }
             if(beneficiaryDetailsModel.getVenepuncture()!=null) {
-                encodedVanipunctureImg = encodeImage(beneficiaryDetailsModel.getVenepuncture());
+                encodedVanipunctureImg = beneficiaryDetailsModel.getVenepuncture();
             }
             benCHArr = beneficiaryDetailsModel.getClHistory();
             benLAArr = beneficiaryDetailsModel.getLabAlert();
@@ -670,7 +681,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             e.printStackTrace();
         }*/
         encodedVanipunctureImg = encodeImage(thumbnail);
-        beneficiaryDetailsModel.setVenepuncture(decodedImageBytes(encodedVanipunctureImg));
+        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
     }
 }

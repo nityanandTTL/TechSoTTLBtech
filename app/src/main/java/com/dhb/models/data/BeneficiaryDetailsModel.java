@@ -18,7 +18,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     private String tests;
     private String testsCode;
     private String Fasting;
-    private byte[] Venepuncture;
+    private String Venepuncture;
     private ArrayList<BeneficiaryBarcodeDetailsModel> barcodedtl;
     private ArrayList<BeneficiarySampleTypeDetailsModel> sampleType;
     private ArrayList<TestRateMasterModel> testsList;
@@ -40,7 +40,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         tests = in.readString();
         testsCode = in.readString();
         Fasting = in.readString();
-        Venepuncture = in.createByteArray();
+        Venepuncture = in.readString();
         barcodedtl = in.createTypedArrayList(BeneficiaryBarcodeDetailsModel.CREATOR);
         sampleType = in.createTypedArrayList(BeneficiarySampleTypeDetailsModel.CREATOR);
         testsList = in.createTypedArrayList(TestRateMasterModel.CREATOR);
@@ -60,7 +60,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         dest.writeString(tests);
         dest.writeString(testsCode);
         dest.writeString(Fasting);
-        dest.writeByteArray(Venepuncture);
+        dest.writeString(Venepuncture);
         dest.writeTypedList(barcodedtl);
         dest.writeTypedList(sampleType);
         dest.writeTypedList(testsList);
@@ -150,11 +150,11 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         Fasting = fasting;
     }
 
-    public byte[] getVenepuncture() {
+    public String getVenepuncture() {
         return Venepuncture;
     }
 
-    public void setVenepuncture(byte[] venepuncture) {
+    public void setVenepuncture(String venepuncture) {
         Venepuncture = venepuncture;
     }
 

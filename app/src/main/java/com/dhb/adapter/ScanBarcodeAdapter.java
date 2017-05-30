@@ -29,7 +29,7 @@ public class ScanBarcodeAdapter extends RecyclerView.Adapter<ScanBarcodeAdapter.
     public static String scanned_result="";
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView sample__type_name;
+        public TextView sample_type_name;
         public EditText editbarcode;
         ImageView scan_barcode_button;
 
@@ -40,7 +40,7 @@ public class ScanBarcodeAdapter extends RecyclerView.Adapter<ScanBarcodeAdapter.
         }
 
         private void initComp(View view) {
-            sample__type_name = (TextView) view.findViewById(R.id.sample__type_name);
+            sample_type_name = (TextView) view.findViewById(R.id.sample_type_name);
             editbarcode = (EditText) view.findViewById(R.id.editbarcode);
             scan_barcode_button = (ImageView) view.findViewById(R.id.scan_barcode_button);
 
@@ -67,7 +67,7 @@ public class ScanBarcodeAdapter extends RecyclerView.Adapter<ScanBarcodeAdapter.
         final BeneficiarySampleTypeDetailsModel beneficiarySampleTypeDetailsModel = beneficiarySampleTypeDetailsModelList.get(position);
         final int pos = position;
         if (beneficiarySampleTypeDetailsModel != null) {
-            holder.sample__type_name.setText("" + beneficiarySampleTypeDetailsModel.getSampleType());
+            holder.sample_type_name.setText("" + beneficiarySampleTypeDetailsModel.getSampleType());
             holder.scan_barcode_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -87,7 +87,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
             if (valtdate()) {
-                orderRescheduleDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_remark.getText().toString().trim());
+                orderRescheduleDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_remark.getText().toString().trim(),txt_from_date.getText().toString());
                 dismiss();
             }
         }

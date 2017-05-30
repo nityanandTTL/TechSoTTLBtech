@@ -223,6 +223,8 @@ public class AbstractActivity extends AppCompatActivity implements ActivityHelpe
 //		progressDialog.setMessage("Fetching data...");
 		progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		progressDialog.setCancelable(false);
+		progressDialog.setIndeterminate(true);
+		progressDialog.setIndeterminateDrawable(getResources().getDrawable(R.drawable.payment_progress_circle));
 		progressDialog.setCanceledOnTouchOutside(false);
 		progressDialog.show();
 	}

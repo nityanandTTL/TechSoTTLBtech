@@ -296,4 +296,5 @@ public interface AppConstants {
 	public static final String WOE_TTL_TYPE = "TTL";
 
 	public static final int APP_PERMISSIONS = 1001;
+	int CHECK_PAYMENT_RESPONSE_MAX_RETRY_COUNT = 10;
 }

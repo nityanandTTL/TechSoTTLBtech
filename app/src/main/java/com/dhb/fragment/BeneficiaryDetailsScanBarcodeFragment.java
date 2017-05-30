@@ -157,7 +157,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 benLAArr = beneficiaryDetailsModel.getLabAlert();
             }
             if (beneficiaryDetailsModel.getVenepuncture() != null) {
-                encodedVanipunctureImg = encodeImage(beneficiaryDetailsModel.getVenepuncture());
+                encodedVanipunctureImg = beneficiaryDetailsModel.getVenepuncture();
             }
             String chS = "";
             if (benCHArr != null && benCHArr.size() > 0) {
@@ -389,6 +389,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
                         intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
                         startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
+                        dialog.dismiss();
                     }
                 });
                 builder.show();
@@ -662,7 +663,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             e.printStackTrace();
         }*/
         encodedVanipunctureImg = encodeImage(thumbnail);
-        beneficiaryDetailsModel.setVenepuncture(decodedImageBytes(encodedVanipunctureImg));
+        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
     }
 
@@ -672,13 +673,15 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     }
 
     private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
+
         @Override
-        public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark) {
+        public void onOkButtonClicked(OrderDetailsModel orderVisitDetailsModel, String remark, String date) {
             AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
             OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
             orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
             orderStatusChangeRequestModel.setRemarks(remark);
             orderStatusChangeRequestModel.setStatus(11);
+            orderStatusChangeRequestModel.setAppointmentDate(date);
             ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
             orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeApiAsyncTaskDelegateResult(orderDetailsModel));
             if (isNetworkAvailable(activity)) {
@@ -718,7 +721,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         orderDetailsModel.setStatus("CANCELLED");
                         orderDetailsDao.insertOrUpdate(orderDetailsModel);
                         Toast.makeText(activity, "Order cancelled Successfully", Toast.LENGTH_SHORT).show();
-                        refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
+                        activity.finish();
                     }
                 }else {
                     orderDetailsModel.setStatus("RESCHEDULED");

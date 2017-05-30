@@ -11,6 +11,8 @@ import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.CommonUtils;
+import com.dhb.utils.app.DeviceUtils;
 import com.dhb.utils.app.InputUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -81,7 +83,7 @@ public class BeneficiaryDetailsDao {
 		beneficiaryDetailsModel.setProjId(cursor.getString(cursor.getColumnIndex(PROJ_ID)));
 		beneficiaryDetailsModel.setTestsCode(cursor.getString(cursor.getColumnIndex(TESTS_CODE)));
 		beneficiaryDetailsModel.setFasting(cursor.getString(cursor.getColumnIndex(FASTING)));
-		beneficiaryDetailsModel.setVenepuncture(cursor.getBlob(cursor.getColumnIndex(VENEPUNCTURE)));
+		beneficiaryDetailsModel.setVenepuncture(CommonUtils.encodeImage(cursor.getBlob(cursor.getColumnIndex(VENEPUNCTURE))));
 
 		TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>> tokenBarcode = new TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>>(){};
 		ArrayList<BeneficiaryBarcodeDetailsModel> bmArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(BARCODE_DTL)),tokenBarcode.getType());
@@ -126,7 +128,7 @@ public class BeneficiaryDetailsDao {
 		values.put(PROJ_ID, orderDetailsModel.getProjId());
 		values.put(TESTS_CODE, orderDetailsModel.getTestsCode());
 		values.put(FASTING, orderDetailsModel.getFasting());
-		values.put(VENEPUNCTURE, orderDetailsModel.getVenepuncture());
+		values.put(VENEPUNCTURE, CommonUtils.decodedImageBytes(InputUtils.isNull(orderDetailsModel.getVenepuncture())?"":orderDetailsModel.getVenepuncture()));
 		values.put(BARCODE_DTL, new Gson().toJson(orderDetailsModel.getBarcodedtl()));
 		values.put(SAMPLE_TYPE, new Gson().toJson(orderDetailsModel.getSampleType()));
 		values.put(TESTS_LIST, new Gson().toJson(orderDetailsModel.getTestsList()));

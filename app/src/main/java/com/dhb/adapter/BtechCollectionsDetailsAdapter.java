@@ -41,7 +41,7 @@ public class BtechCollectionsDetailsAdapter extends RecyclerView.Adapter<BtechCo
         }
 
         private void initComp(View view) {
-            sample__type_name = (TextView) view.findViewById(R.id.sample__type_name);
+            sample__type_name = (TextView) view.findViewById(R.id.sample_type_name);
             editbarcode = (EditText) view.findViewById(R.id.editbarcode);
             scan_barcode_button = (ImageView) view.findViewById(R.id.scan_barcode_button);
             ll_edt_barcode = (LinearLayout) view.findViewById(R.id.ll_edt_barcode);

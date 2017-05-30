@@ -569,7 +569,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 }
             }
             else{
-                Toast.makeText(activity,"Order Booking Failed",Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
             }
         }
 
