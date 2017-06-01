@@ -22,16 +22,15 @@
         android:paddingRight="@dimen/dp_2"
         android:paddingTop="@dimen/dp_5"
         android:visibility="visible"
-        android:weightSum="4">
+        >
 
 
         <TextView
             android:id="@+id/txt_from_date"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:layout_weight="1.5"
+            android:layout_marginLeft="@dimen/dp_2"
             android:background="@drawable/shape_filter_date_button"
             android:drawableRight="@drawable/calender_icon"
             android:gravity="center_vertical"
@@ -45,12 +44,10 @@
 
         <TextView
             android:id="@+id/txt_to_date"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:layout_marginRight="@dimen/dp_5"
-            android:layout_weight="1.5"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/dp_2"
             android:background="@drawable/shape_filter_date_button"
             android:drawableRight="@drawable/calender_icon"
             android:gravity="center_vertical"
@@ -64,12 +61,10 @@
 
         <Button
             android:id="@+id/btn_filter"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:layout_marginRight="@dimen/dp_5"
-            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/dp_2"
             android:background="@drawable/shape_filter_date_button"
             android:gravity="center"
             android:paddingBottom="2dp"
@@ -130,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:gravity="center_horizontal|center_vertical"
-                    android:text="Cash Register"
+                    android:text="Ledger"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:textStyle="bold" />

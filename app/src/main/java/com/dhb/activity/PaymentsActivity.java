@@ -305,7 +305,18 @@ public class PaymentsActivity extends AbstractActivity {
                         View v1 = activity.getLayoutInflater().inflate(R.layout.payment_edit_text, null);
                         EditText edtPaymentUserInputs = (EditText) v1.findViewById(R.id.edit_payment);
                         TextView txtPaymentUserInputss = (TextView) v1.findViewById(R.id.payment_text);
-                        txtPaymentUserInputss.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
+
+                        //changes_1may2017
+                        if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Mobile")) {
+                            String strMobile = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint());
+                            txtPaymentUserInputss.setText(strMobile);
+                        }
+                        else {
+                            txtPaymentUserInputss.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
+                        }
+                        //txtPaymentUserInputss.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
+                        //changes_1may2017
+
                         edtPaymentUserInputs.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                         edtPaymentUserInputs.addTextChangedListener(new TextWatcher() {
                             @Override
@@ -397,7 +408,30 @@ public class PaymentsActivity extends AbstractActivity {
                         View v2 = activity.getLayoutInflater().inflate(R.layout.payment_textview, null);
                         TextView txtPaymentSystemInputsLabel = (TextView) v2.findViewById(R.id.payment_text1);
                         TextView txtPaymentSystemInputs = (TextView) v2.findViewById(R.id.payment_text2);
-                        txtPaymentSystemInputsLabel.setText((paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":"));
+
+                        //changes_1may2017
+                        if(paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Name"))
+                        {
+                            String strName = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":");
+                            txtPaymentSystemInputsLabel.setText(strName);
+                        }
+                        else if(paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Mobile"))
+                        {
+                            String strMobile = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":");
+                            txtPaymentSystemInputsLabel.setText(strMobile);
+                        }
+                        else if(paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Email"))
+                        {
+                            String strEmail = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":");
+                            txtPaymentSystemInputsLabel.setText(strEmail);
+                        }
+                        else
+                        {
+                            txtPaymentSystemInputsLabel.setText((paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":"));
+                        }
+                        //txtPaymentSystemInputsLabel.setText((paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":"));
+                        //changes_1may2017
+
                         txtPaymentSystemInputs.setText(paymentPassInputsModel.getNameValueCollection().get(i).getValue());
                         llPaymentPassInputs.addView(v2);
                     }

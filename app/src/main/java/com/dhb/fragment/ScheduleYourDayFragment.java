@@ -42,7 +42,11 @@ public class ScheduleYourDayFragment extends AbstractFragment {
     private HomeScreenActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private View rootView;
-    private TextView txtNo,txtYes;
+
+    //changes
+    private Button txtNo,txtYes;
+    //changes
+
     private LinearLayout llSlotsDisplay;
     private GridView gvSlots;
     private Button btnProceed;
@@ -89,8 +93,8 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         txtYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                txtYes.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                txtNo.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
+                txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
+                txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 llSlotsDisplay.setVisibility(View.VISIBLE);
                 isAvailable = true;
                 btnProceed.setVisibility(View.VISIBLE);
@@ -100,8 +104,9 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         txtNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
+
+                txtNo.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
+                txtYes.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 llSlotsDisplay.setVisibility(View.GONE);
                 btnProceed.setVisibility(View.INVISIBLE);
                 isAvailable = false;
@@ -198,8 +203,11 @@ public class ScheduleYourDayFragment extends AbstractFragment {
     @Override
     public void initUI() {
         super.initUI();
-        txtYes = (TextView) rootView.findViewById(R.id.txt_yes);
-        txtNo = (TextView) rootView.findViewById(R.id.txt_no);
+        //changes
+        txtYes = (Button) rootView.findViewById(R.id.txt_yes);
+        txtNo = (Button) rootView.findViewById(R.id.txt_no);
+        //changes
+
         btnProceed = (Button) rootView.findViewById(R.id.btn_proceed);
         btnProceed.setVisibility(View.INVISIBLE);
         llSlotsDisplay = (LinearLayout) rootView.findViewById(R.id.ll_slots_display);

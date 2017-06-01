@@ -30,12 +30,12 @@ import org.json.JSONException;
 
 public class OlcMasterBarcodeScanFragment extends AbstractFragment {
     public static final String TAG_FRAGMENT = OlcMasterBarcodeScanFragment.class.getSimpleName();
-    private TextView txt_name, tv_distance, txt_call;
+    private TextView txt_name, tv_distance;
     private OlcPickupActivity activity;
     String scanned_barcode;
     BtechClientsModel btechClientsModel;
     IntentIntegrator integrator;
-    ImageView btnScanBarcode;
+    ImageView btnScanBarcode, txt_call;
     EditText edtScannedBarcode;
     public OlcMasterBarcodeScanFragment() {
         // Required empty public constructor
@@ -66,7 +66,7 @@ public class OlcMasterBarcodeScanFragment extends AbstractFragment {
     public void initUI(View rootView) {
         super.initUI();
         txt_name = (TextView) rootView.findViewById(R.id.txt_name);
-        txt_call = (TextView) rootView.findViewById(R.id.txt_call);
+        txt_call = (ImageView) rootView.findViewById(R.id.txt_call);
         tv_distance = (TextView) rootView.findViewById(R.id.tv_distance);
         btnScanBarcode = (ImageView) rootView.findViewById(R.id.scan_barcode_button);
         edtScannedBarcode = (EditText) rootView.findViewById(R.id.edt_barcode);

@@ -26,8 +26,8 @@ public class BtechClientDetailsAdapter extends RecyclerView.Adapter<BtechClientD
     BtechClientDetailsAdapterOnItemClickDelegate mcallback;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_call, tv_name, tv_distance;
-        public ImageView title_distance_icon;
+        TextView  tv_name, tv_distance;
+        public ImageView tv_call,title_distance_icon;
         View itemView;
 
         public MyViewHolder(View view) {
@@ -37,7 +37,7 @@ public class BtechClientDetailsAdapter extends RecyclerView.Adapter<BtechClientD
         }
 
         private void initComp(View view) {
-            tv_call = (TextView) view.findViewById(R.id.txt_call);
+            tv_call = (ImageView) view.findViewById(R.id.txt_call);
             tv_name = (TextView) view.findViewById(R.id.txt_name);
             tv_distance = (TextView) view.findViewById(R.id.tv_distance);
         }
