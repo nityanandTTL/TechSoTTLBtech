@@ -127,6 +127,18 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4612bbfb1ca95fe8479cf9d3baac76030f78672e" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
+
     </application>
 
 </manifest>

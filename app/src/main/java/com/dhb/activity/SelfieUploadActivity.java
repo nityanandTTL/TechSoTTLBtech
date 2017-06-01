@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,6 +40,7 @@ import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.CommonUtils;
 import com.dhb.utils.app.InputUtils;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONException;
 
@@ -51,7 +53,12 @@ import java.util.Calendar;
 public class SelfieUploadActivity extends AbstractActivity implements View.OnClickListener {
     private static final String TAG = SelfieUploadActivity.class.getSimpleName();
     TextView tv_username, tv_user_address;
-    RoundedImageView img_user_picture;
+
+    //changes_1june2017
+    //RoundedImageView img_user_picture;
+    CircularImageView img_user_picture;
+    //changes_1june2017
+
     Button btn_takePhoto, btn_uploadPhoto;
     String userChoosenTask, encodedProImg;
     Bitmap thumbnail;// = null;
@@ -65,6 +72,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     SyncStatusReceiver syncStatusReceiver;
     private int leaveFlag = 0;
     private String fromdateapi, todateapi;
+    Uri outPutfileUri;
+    Bitmap bitmap = null;
 
     @Override
     protected void onStart() {
@@ -140,7 +149,10 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         super.initUI();
         tv_username = (TextView) findViewById(R.id.tv_username);
         tv_user_address = (TextView) findViewById(R.id.tv_user_address);
-        img_user_picture = (RoundedImageView) findViewById(R.id.img_user_picture);
+        //changes_1june2017
+        img_user_picture = (CircularImageView) findViewById(R.id.img_user_picture);
+        //img_user_picture = (RoundedImageView) findViewById(R.id.img_user_picture);
+        //changes_1june2017
         btn_takePhoto = (Button) findViewById(R.id.btn_takePhoto);
         btn_uploadPhoto = (Button) findViewById(R.id.btn_uploadPhoto);
     }
@@ -180,8 +192,16 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     private void cameraIntent() {
 
+        //changes_1june2017
+       /* Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);*/
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
+        outPutfileUri = FileProvider.getUriForFile(SelfieUploadActivity.this, SelfieUploadActivity.this.getApplicationContext().getPackageName() + ".provider", file);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, outPutfileUri);
         startActivityForResult(intent, REQUEST_CAMERA);
+        //changes_1june2017
 
     }
 
@@ -197,38 +217,49 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     private void onCaptureImageResult(Intent data) {
-        thumbnail = (Bitmap) data.getExtras().get("data");
 
-        //changes_31may2017
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        //changes_31may2017
 
-        /*File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
-        FileOutputStream fo;
+        String uri = outPutfileUri.toString();
+        Log.e("uri-:", uri);
+        Toast.makeText(this, outPutfileUri.toString(), Toast.LENGTH_LONG).show();
+
         try {
-            boolean isFileCreated = destination.createNewFile();
-            if (isFileCreated) {
-                fo = new FileOutputStream(destination);
-                fo.write(bytes.toByteArray());
-
-                fo.close();
-            } else {
-                Toast.makeText(activity, "Failed to create file", Toast.LENGTH_SHORT).show();
-            }
+            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outPutfileUri);
+            Drawable img = new BitmapDrawable(getResources(), bitmap);
+            img_user_picture.setImageDrawable(img);
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
-        encodedProImg = CommonUtils.encodeImage(thumbnail);
-        if (!InputUtils.isNull(encodedProImg)) {
-            btn_uploadPhoto.setVisibility(View.VISIBLE);
-            btn_takePhoto.setVisibility(View.INVISIBLE);
-        } else {
-            btn_uploadPhoto.setVisibility(View.INVISIBLE);
-            btn_takePhoto.setVisibility(View.VISIBLE);
         }
-        img_user_picture.setImageBitmap(thumbnail);
+
+        //thumbnail = (Bitmap) data.getExtras().get("data");
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+//
+//        /*File destination = new File(Environment.getExternalStorageDirectory(),
+//                System.currentTimeMillis() + ".jpg");
+//        FileOutputStream fo;
+//        try {
+//            boolean isFileCreated = destination.createNewFile();
+//            if (isFileCreated) {
+//                fo = new FileOutputStream(destination);
+//                fo.write(bytes.toByteArray());
+//
+//                fo.close();
+//            } else {
+//                Toast.makeText(activity, "Failed to create file", Toast.LENGTH_SHORT).show();
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }*/
+//        encodedProImg = CommonUtils.encodeImage(thumbnail);
+//        if (!InputUtils.isNull(encodedProImg)) {
+//            btn_uploadPhoto.setVisibility(View.VISIBLE);
+//            btn_takePhoto.setVisibility(View.INVISIBLE);
+//        } else {
+//            btn_uploadPhoto.setVisibility(View.INVISIBLE);
+//            btn_takePhoto.setVisibility(View.VISIBLE);
+//        }
+//        img_user_picture.setImageBitmap(thumbnail);
     }
 
     private void showImage(Bitmap bm) {

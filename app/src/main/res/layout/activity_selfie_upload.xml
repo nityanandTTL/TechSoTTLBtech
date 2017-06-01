@@ -33,103 +33,112 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="5"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="5">
+
         <LinearLayout
-            android:gravity="bottom"
-            android:layout_weight="4"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:gravity="bottom"
+            android:orientation="vertical">
 
             <TextView
-                android:textStyle="italic"
-                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:text="Welcome,"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textStyle="italic" />
 
             <TextView
-                android:layout_marginTop="5dp"
-                android:textStyle="bold"
-                android:gravity="center"
                 android:id="@+id/tv_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
                 android:text="Mr. Ajay Kulkarni"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
             <TextView
-                android:visibility="invisible"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
                 android:id="@+id/tv_user_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tara Apt., vashi, Navi Mumbai" />
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="Tara Apt., vashi, Navi Mumbai"
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:layout_weight="1"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:background="@drawable/solid_circle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="5dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:background="@drawable/solid_circle"
+                android:gravity="center"
+                android:padding="5dp">
 
-                <com.dhb.customview.RoundedImageView
+
+                <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/img_user_picture"
                     android:layout_width="250dp"
                     android:layout_height="250dp"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center" />
+
+                <!--<com.dhb.customview.RoundedImageView
+                    android:id="@+id/img_user_picture"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_gravity="center"/>-->
             </LinearLayout>
 
             <RelativeLayout
-                android:weightSum="2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <Button
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:textSize="16sp"
                     android:id="@+id/btn_takePhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
                     android:layout_centerInParent="true"
+                    android:layout_margin="4dp"
                     android:background="@drawable/purple_btn_bg"
+                    android:gravity="center"
+                    android:minEms="10"
                     android:text="@string/take_photo"
                     android:textColor="@android:color/white"
-                    android:minEms="10"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <Button
-                    android:visibility="gone"
-                    android:layout_centerInParent="true"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:textSize="16sp"
                     android:id="@+id/btn_uploadPhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_margin="4dp"
                     android:background="@drawable/purple_btn_bg"
+                    android:gravity="center"
+                    android:minEms="8"
                     android:text="@string/upload"
                     android:textColor="@android:color/white"
-                    android:minEms="8"/>
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
