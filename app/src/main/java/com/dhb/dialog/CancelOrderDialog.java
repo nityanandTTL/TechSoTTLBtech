@@ -74,8 +74,14 @@ public class CancelOrderDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
             if(!InputUtils.isNull(edt_remark.getText().toString().trim())) {
-                orderCancelDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel,edt_remark.getText().toString().trim());
-                dismiss();
+                if(edt_remark.getText().toString().length()<10) {
+                    orderCancelDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_remark.getText().toString().trim());
+                    dismiss();
+                }
+                else{
+                    edt_remark.requestFocus();
+                    edt_remark.setError("Remarks should be atleast 10 characters long");
+                }
             }else{
                 Toast.makeText(activity, R.string.enter_remarks,Toast.LENGTH_SHORT).show();
             }

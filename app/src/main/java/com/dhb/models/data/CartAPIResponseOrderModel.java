@@ -13,7 +13,7 @@ public class CartAPIResponseOrderModel implements Parcelable {
     private String OrderNo;
     private int BrandId;
     private boolean HC;
-
+    private int AmountDue;
     private int TestCharges;
     private int ServiceCharge;
     private int Fasting;
@@ -31,6 +31,7 @@ public class CartAPIResponseOrderModel implements Parcelable {
         OrderNo = in.readString();
         BrandId = in.readInt();
         HC = in.readByte() != 0;
+        AmountDue = in.readInt();
         TestCharges = in.readInt();
         ServiceCharge = in.readInt();
         Fasting = in.readInt();
@@ -47,6 +48,7 @@ public class CartAPIResponseOrderModel implements Parcelable {
         dest.writeString(OrderNo);
         dest.writeInt(BrandId);
         dest.writeByte((byte) (HC ? 1 : 0));
+        dest.writeInt(AmountDue);
         dest.writeInt(TestCharges);
         dest.writeInt(ServiceCharge);
         dest.writeInt(Fasting);
@@ -161,6 +163,14 @@ public class CartAPIResponseOrderModel implements Parcelable {
 
     public void setPercentageOfOrder(int percentageOfOrder) {
         PercentageOfOrder = percentageOfOrder;
+    }
+
+    public int getAmountDue() {
+        return AmountDue;
+    }
+
+    public void setAmountDue(int amountDue) {
+        AmountDue = amountDue;
     }
 
     public int getExtraBen() {

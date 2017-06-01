@@ -76,7 +76,12 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         holder.btnStartNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                visitOrderDisplayRecyclerViewAdapterDelegate.onNavigationStart(orderVisitDetailsModelsArr.get(pos));
+                if(!orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equals("ASSIGNED")) {
+                    visitOrderDisplayRecyclerViewAdapterDelegate.onNavigationStart(orderVisitDetailsModelsArr.get(pos));
+                }
+                else{
+                    Toast.makeText(activity,"Please accept the order first",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         holder.cell.setOnClickListener(new View.OnClickListener() {

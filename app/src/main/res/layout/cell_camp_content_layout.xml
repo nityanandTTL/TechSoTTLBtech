@@ -182,7 +182,6 @@
             </LinearLayout>
 
             <include
-                android:id="@+id/ll_view_btech"
                 layout="@layout/group_item" />
 
             <HorizontalScrollView

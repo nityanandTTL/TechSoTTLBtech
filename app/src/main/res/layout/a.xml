@@ -14,8 +14,8 @@
             android:id="@+id/ll_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
             android:baselineAligned="false"
             android:orientation="horizontal">
@@ -222,8 +222,8 @@
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:layout_below="@+id/ll_1"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
             android:background="@color/bg_content">
 
@@ -317,8 +317,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl_2"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
             android:background="@color/bg_content">
 
@@ -347,16 +347,6 @@
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_5"
                 android:text="No. of Days:" />
-            <!--  <Button
-                  android:layout_margin="8dp"
-                  android:id="@+id/btn_edit"
-                  android:padding="4dp"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_horizontal"
-                  android:layout_weight="1"
-
-                  android:text="Edit" />-->
             <Button
                 android:id="@+id/img_accept"
                 android:layout_width="@dimen/dp_60"
@@ -377,6 +367,7 @@
                 android:layout_marginBottom="2dp"
                 android:background="@drawable/purple_btn_bg"
                 android:text="Start"
+                android:minEms="5"
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
 
@@ -387,50 +378,11 @@
                 android:layout_below="@+id/no_of_days"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="2dp"
+                android:minEms="5"
                 android:background="@drawable/purple_btn_bg"
                 android:text="Arrived"
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
-
-
         </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignStart="@+id/rl_2"
-            android:layout_alignTop="@+id/imageView4"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/layout_corner"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignBottom="@+id/rl_3"
-            android:layout_alignEnd="@+id/rl_2"
-            android:layout_marginBottom="88dp"
-            android:src="@drawable/layout_corner"
-            android:visibility="invisible" />
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignStart="@+id/imageView4"
-            android:layout_alignTop="@+id/imageView2"
-            android:src="@drawable/layout_corner" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/ll_1"
-            android:layout_marginTop="144dp"
-            android:src="@drawable/layout_corner" />
-
     </RelativeLayout>
 </FrameLayout>

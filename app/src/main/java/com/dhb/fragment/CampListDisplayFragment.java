@@ -2,8 +2,10 @@ package com.dhb.fragment;
 
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +28,7 @@ import com.dhb.delegate.SelectLabAlertsCheckboxDelegate;
 import com.dhb.dialog.ClinicalHistorySelectorDialog;
 import com.dhb.dialog.ConfirmOrderReleaseDialog;
 import com.dhb.dialog.LabAlertSelectorDialog;
+import com.dhb.models.api.request.CallPatchRequestModel;
 import com.dhb.models.api.request.CampStartedRequestModel;
 import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
@@ -41,6 +44,7 @@ import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -221,27 +225,71 @@ public class CampListDisplayFragment extends AbstractFragment {
         ApiCallAsyncTask campStartedApiAsyncTask = asyncTaskForRequest.getCampStartedRequestAsyncTask(campStartedRequestModel);
         if (i == 7) {
             campStartedApiAsyncTask.setApiCallAsyncTaskDelegate(new CampStartedAsyncTaskDelegateResult());
+
+            if (isNetworkAvailable(activity)) {
+                campStartedApiAsyncTask.execute(campStartedApiAsyncTask);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
         }
         if (i == 8) {
             campStartedApiAsyncTask.setApiCallAsyncTaskDelegate(new CampAcceptedAsyncTaskDelegateResult());
+
+            if (isNetworkAvailable(activity)) {
+                campStartedApiAsyncTask.execute(campStartedApiAsyncTask);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
         }
         if (i == 3) {
             campStartedApiAsyncTask.setApiCallAsyncTaskDelegate(new CampArrivedAsyncTaskDelegateResult(campDetailModel));
+
+            if (isNetworkAvailable(activity)) {
+                campStartedApiAsyncTask.execute(campStartedApiAsyncTask);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
         }
         if (i == 0) {
-            Intent intent = new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:" + campDetailModel.getLeaderContactNo()));
-            startActivity(intent);
+            CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
+            callPatchRequestModel.setSrcnumber(new AppPreferenceManager(activity).getLoginResponseModel().getUserID());
+            callPatchRequestModel.setDestNumber(campDetailModel.getLeaderContactNo()+"");
+            ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
+            callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
+            callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
         }
 
-        if (isNetworkAvailable(activity)) {
-            campStartedApiAsyncTask.execute(campStartedApiAsyncTask);
-        } else {
-            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-        }
     }
 
 
+
+    private class CallPatchRequestAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_CALL);
+                    intent.setData(Uri.parse("tel:" + json));
+                    if (ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(activity,
+                                new String[]{
+                                        android.Manifest.permission.CALL_PHONE},
+                                AppConstants.APP_PERMISSIONS);
+                    }
+                    else {
+                        activity.startActivity(intent);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
     private class CampStartedAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {

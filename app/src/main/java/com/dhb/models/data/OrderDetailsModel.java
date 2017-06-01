@@ -18,6 +18,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private String Email;
     private String PayType;//
     private int AmountDue;//
+    private int AmountPayable;
     private int Margin;//
     private int Discount;//
     private String Refcode;
@@ -49,6 +50,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         Email = in.readString();
         PayType = in.readString();
         AmountDue = in.readInt();
+        AmountPayable = in.readInt();
         Margin = in.readInt();
         Discount = in.readInt();
         Refcode = in.readString();
@@ -82,6 +84,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeString(Email);
         dest.writeString(PayType);
         dest.writeInt(AmountDue);
+        dest.writeInt(AmountPayable);
         dest.writeInt(Margin);
         dest.writeInt(Discount);
         dest.writeString(Refcode);
@@ -347,6 +350,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setEstIncome(float estIncome) {
         EstIncome = estIncome;
+    }
+
+    public int getAmountPayable() {
+        return AmountPayable;
+    }
+
+    public void setAmountPayable(int amountPayable) {
+        AmountPayable = amountPayable;
     }
 
     @Override

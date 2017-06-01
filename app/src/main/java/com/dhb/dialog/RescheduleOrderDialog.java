@@ -41,6 +41,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
 
     private OrderRescheduleDialogButtonClickedDelegate orderRescheduleDialogButtonClickedDelegate;
     private OrderDetailsModel orderDetailsModel;
+    private int TIME_PICKER_INTERVAL = 30;
 
     public RescheduleOrderDialog(Activity activity, OrderRescheduleDialogButtonClickedDelegate orderRescheduleDialogButtonClickedDelegate, OrderDetailsModel orderDetailsModel) {
         super(activity);
@@ -109,13 +110,20 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                             String yyyy = sampleCollectedYear + "";
-                            String MM = sampleCollectedMonth < 10 ? "0" + sampleCollectedMonth : sampleCollectedMonth + "";
+                            String MM = (sampleCollectedMonth + 1) < 10 ? "0" + (sampleCollectedMonth + 1) : (sampleCollectedMonth + 1) + "";
                             String dd = sampleCollectedDay < 10 ? "0" + sampleCollectedDay : sampleCollectedDay + "";
                             String HH = hourOfDay < 10 ? "0" + hourOfDay : hourOfDay + "";
+                            minute = getRoundedMinute(minute);
                             String mm = minute < 10 ? "0" + minute : minute + "";
-                            String sampleCollectedTime = yyyy + "-" + MM + "-" + dd + " " + HH + ":" + mm + ":00";
-
-                            txt_from_date.setText(sampleCollectedTime);
+                            String sampleCollectedTime = yyyy + "-" + MM + "-" + dd + " " + HH + ":" + mm;
+                            Calendar cl = Calendar.getInstance();
+                            cl.set(sampleCollectedYear,sampleCollectedMonth,sampleCollectedDay,hourOfDay,minute);
+                            if(cl.getTimeInMillis()> Calendar.getInstance().getTimeInMillis()) {
+                                txt_from_date.setText(sampleCollectedTime);
+                            }
+                            else{
+                                Toast.makeText(activity,"You cannot select a previous Time",Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity));
                     timePickerDialog.show();
@@ -123,5 +131,15 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
             }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
             datePickerDialog.show();
         }
+    }
+    private int getRoundedMinute(int minute){
+        if(minute % TIME_PICKER_INTERVAL != 0){
+            int minuteFloor = minute - (minute % TIME_PICKER_INTERVAL);
+            minute = minuteFloor + (minute == minuteFloor + 1 ? TIME_PICKER_INTERVAL : 0);
+            if (minute == 60)
+                minute=0;
+        }
+
+        return minute;
     }
 }

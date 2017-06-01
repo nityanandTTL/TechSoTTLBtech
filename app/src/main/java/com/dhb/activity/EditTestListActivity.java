@@ -36,7 +36,6 @@ public class EditTestListActivity extends AbstractActivity{
     private Activity activity;
     private ExpandableListView expandList;
     private EditTestExpandListAdapter expAdapter;
-    private int brandMasterId;
     private ArrayList<TestRateMasterModel> selectedTestsList;
     private AppPreferenceManager appPreferenceManager;
     private Button btnSave;
@@ -65,9 +64,11 @@ public class EditTestListActivity extends AbstractActivity{
         }
         totalAmount = 0;
         sampleTypesArr = new ArrayList<>();
+        showProgressDialog(activity,"Loading ...");
         initUI();
         initData();
         initListener();
+        closeProgressDialog();
     }
 
     private void initListener() {
@@ -79,7 +80,6 @@ public class EditTestListActivity extends AbstractActivity{
                 if (item != null) {
                     Logger.error("click");
                     Logger.error("ID : " + brandMasterModel.getBrandId());
-                    brandMasterId=brandMasterModel.getBrandId();
                     TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
                     ArrayList<String> testTypesArr = new ArrayList<String>() ;
                     ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels = new ArrayList<TestTypeWiseTestRateMasterModelsList>();
@@ -238,7 +238,6 @@ public class EditTestListActivity extends AbstractActivity{
 
     private void initData() {
         BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
-        showProgressDialog(activity,"Loading ...");
         final ArrayList<BrandMasterModel> brandMasterModels = brandMasterDao.getAllModels();
         ArrayAdapter<BrandMasterModel> adapter = new ArrayAdapter<BrandMasterModel>(this, android.R.layout.simple_spinner_item, brandMasterModels);
         sp_tests.setAdapter(adapter);
@@ -251,7 +250,6 @@ public class EditTestListActivity extends AbstractActivity{
             }
             sp_tests.setEnabled(false);
         }
-        closeProgressDialog();
     }
 
     @Override

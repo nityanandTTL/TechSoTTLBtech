@@ -147,8 +147,9 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
                 mcallback.onCheckChange(selectedTests);
             }
         });
-        if((testRateMasterModel.getTestType().equals("TEST")||testRateMasterModel.getTestType().equals("OFFER")) && !InputUtils.isNull(testRateMasterModel.getDescription())){
-            holder.txt_test.setText(testRateMasterModel.getDescription());
+        if((testRateMasterModel.getTestType().equals("TEST")||testRateMasterModel.getTestType().equals("OFFER"))
+                && !InputUtils.isNull(testRateMasterModel.getDescription())){
+            holder.txt_test.setText(testRateMasterModel.getDescription()+"("+testRateMasterModel.getTestCode()+")");
         }
         else{
             holder.txt_test.setText(testRateMasterModel.getTestCode());

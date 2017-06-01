@@ -121,10 +121,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     }
 
     private void initScanBarcodeView() {
-        //        View scanBarcodeView = activity.getLayoutInflater().inflate(R.layout.item_list_view, null);
-//        ListView lv = (ListView) scanBarcodeView.findViewById(R.id.lv_barcodes);
-//        displayScanBarcodeItemListAdapter = new DisplayScanBarcodeItemListAdapter(activity, beneficiaryDetailsModel.getBarcodedtl(), new ScanBarcodeIconClickedDelegateResult());
-//        lv.setAdapter(displayScanBarcodeItemListAdapter);
         if(beneficiaryDetailsModel!=null
                 && beneficiaryDetailsModel.getBarcodedtl()!=null
                 && beneficiaryDetailsModel.getBarcodedtl().size()>0) {
@@ -172,16 +168,47 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                         AddSampleBarcodeDialog sampleBarcodeDialog = new AddSampleBarcodeDialog(activity, new AddSampleBarcodeDialogDelegate() {
                             @Override
                             public void onSampleBarcodeAdded(String scanned_barcode) {
-                                if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                                    for(int i=0;i<beneficiaryDetailsModel.getBarcodedtl().size();i++){
-                                        if(currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())){
+                            if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                                if(beneficiaryDetailsModel.getBarcodedtl()!=null) {
+                                    for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                                        if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                                && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
+                                            //CHECK for duplicate barcode scanned for the same visit
+                                            OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
+                                            for (OrderDetailsModel odm :
+                                                    orderVisitDetailsModel.getAllOrderdetails()) {
+                                                for (BeneficiaryDetailsModel bdm :
+                                                        odm.getBenMaster()) {
+                                                    if(bdm.getBarcodedtl()!=null && bdm.getBarcodedtl().size()>0) {
+                                                        for (BeneficiaryBarcodeDetailsModel bbdm :
+                                                                bdm.getBarcodedtl()) {
+                                                            if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
+                                                                if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
+
+                                                                } else {
+                                                                    Toast.makeText(activity, "Same Barcode Already Scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                                    return;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
                                             beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
                                             beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
                                             break;
                                         }
                                     }
                                     initData();
                                 }
+                                else{
+                                    Toast.makeText(activity,"Failed to Update Barcode Value",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else{
+                                Toast.makeText(activity,"Failed to Update Barcode Value",Toast.LENGTH_SHORT).show();
+                            }
                             }
                         });
                         sampleBarcodeDialog.show();
@@ -224,8 +251,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 isM = true;
-                imgMale.setBackgroundColor(activity.getResources().getColor(R.color.colorSecondaryDark));
-                imgFemale.setBackgroundColor(activity.getResources().getColor(android.R.color.white));
+                imgMale.setImageDrawable(activity.getResources().getDrawable(R.drawable.m_selected));
+                imgFemale.setImageDrawable(activity.getResources().getDrawable(R.drawable.female));
                 beneficiaryDetailsModel.setGender("M");
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             }
@@ -234,8 +261,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 isM = false;
-                imgFemale.setBackgroundColor(activity.getResources().getColor(R.color.colorSecondaryDark));
-                imgMale.setBackgroundColor(activity.getResources().getColor(android.R.color.white));
+                imgMale.setImageDrawable(activity.getResources().getDrawable(R.drawable.male));
+                imgFemale.setImageDrawable(activity.getResources().getDrawable(R.drawable.f_selected));
                 beneficiaryDetailsModel.setGender("F");
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             }
@@ -275,7 +302,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 }
                 else{
                     testsList = tests.split(",");
-
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setTitle("Tests List");
                     builder.setItems(testsList, new DialogInterface.OnClickListener() {
@@ -570,34 +596,45 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         if ((scanningResult != null) && (scanningResult.getContents() != null)) {
             String scanned_barcode = scanningResult.getContents();
             if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                for(int i=0;i<beneficiaryDetailsModel.getBarcodedtl().size();i++){
-                    if(currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())){
-                        //CHECK for duplicate barcode scanned for the same visit
-                        OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
-                        for (OrderDetailsModel odm:
-                                orderVisitDetailsModel.getAllOrderdetails()) {
-                            for (BeneficiaryDetailsModel bdm:
-                                    odm.getBenMaster()) {
-                                for (BeneficiaryBarcodeDetailsModel bbdm:
-                                        bdm.getBarcodedtl()) {
-                                    if(!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)){
-                                        if(bbdm.getSamplType().equals(currentScanSampleType)&&bbdm.getBenId()==beneficiaryDetailsModel.getBenId()){
+                if(beneficiaryDetailsModel.getBarcodedtl()!=null) {
+                    for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                        if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
+                            //CHECK for duplicate barcode scanned for the same visit
+                            OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
+                            for (OrderDetailsModel odm :
+                                    orderVisitDetailsModel.getAllOrderdetails()) {
+                                for (BeneficiaryDetailsModel bdm :
+                                        odm.getBenMaster()) {
+                                    if(bdm.getBarcodedtl()!=null && bdm.getBarcodedtl().size()>0) {
+                                        for (BeneficiaryBarcodeDetailsModel bbdm :
+                                                bdm.getBarcodedtl()) {
+                                            if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
+                                                if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
 
-                                        }
-                                        else{
-                                            Toast.makeText(activity,"Same Barcode Already Scanned for "+bdm.getName()+" - "+bbdm.getSamplType(),Toast.LENGTH_SHORT).show();
-                                            return;
+                                                } else {
+                                                    Toast.makeText(activity, "Same Barcode Already Scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                    return;
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             }
+                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                            break;
                         }
-                        beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
-                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                        break;
                     }
+                    initData();
                 }
-                initData();
+                else{
+                    Toast.makeText(activity,"Failed to Update Scanned Barcode Value",Toast.LENGTH_SHORT).show();
+                }
+            }
+            else{
+                Toast.makeText(activity,"Failed to Scan Barcode",Toast.LENGTH_SHORT).show();
             }
         }
         if (resultCode == Activity.RESULT_OK) {
@@ -667,8 +704,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
     private void onCaptureImageResult(Intent data) {
         thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
         /*File destination = new File(Environment.getExternalStorageDirectory(),
                 System.currentTimeMillis() + ".jpg");
         FileOutputStream fo;

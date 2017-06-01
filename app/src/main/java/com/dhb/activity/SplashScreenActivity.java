@@ -60,7 +60,6 @@ public class SplashScreenActivity extends AbstractActivity {
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
-                        ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED ||
@@ -74,7 +73,6 @@ public class SplashScreenActivity extends AbstractActivity {
                                     Manifest.permission.CHANGE_WIFI_STATE,
                                     Manifest.permission.ACCESS_WIFI_STATE,
                                     Manifest.permission.READ_CONTACTS,
-                                    Manifest.permission.WRITE_CONTACTS,
                                     Manifest.permission.CALL_PHONE,
                                     Manifest.permission.ACCESS_NETWORK_STATE,
                                     Manifest.permission.ACCESS_FINE_LOCATION,

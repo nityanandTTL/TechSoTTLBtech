@@ -26,11 +26,8 @@ import static com.dhb.activity.HomeScreenActivity.TAG_ACTIVITY;
  */
 
 public class CampOrderBookingActivity extends AbstractActivity {
-    public final static String TAG_ACTIIVTY = CampOrderBookingActivity.class.getSimpleName();
+    public static final String TAG_ACTIVITY = "CAMP_ORDER_BOOKING_ACTIVITY";
     private CampOrderBookingActivity activity;
-    private AppPreferenceManager appPreferenceManager;
-    private FrameLayout flOrderBooking;
-    private TextView txtHeaderText;
     private ImageView imgBack;
     private Toolbar tbOBA;
     CampDetailModel campDetailModel=new CampDetailModel();
@@ -62,9 +59,7 @@ public class CampOrderBookingActivity extends AbstractActivity {
     @Override
     public void initUI() {
         super.initUI();
-        flOrderBooking = (FrameLayout) findViewById(R.id.fl_order_booking);
         tbOBA = (Toolbar) findViewById(R.id.toolbar);
-        txtHeaderText = (TextView) tbOBA.findViewById(R.id.txt_header_text);
         imgBack = (ImageView) tbOBA.findViewById(R.id.img_back);
     }
 }

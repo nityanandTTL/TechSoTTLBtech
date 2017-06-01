@@ -38,10 +38,14 @@
 -keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.** { *; }
 
-# Keep these for GSON and Jackson
+# Keep these for GSON, Jackson and Crashlytics
 -keepattributes Signature
 -keepattributes *Annotation*
 -keepattributes EnclosingMethod
+-keepattributes SourceFile,LineNumberTable
+
+# Keep these for Custom Exceptions
+-keep public class * extends java.lang.Exception
 
 # Application classes that will be serialized/deserialized over Gson
 -keep class com.dhb.** { *; }
@@ -79,3 +83,7 @@
 # Android Support Libraries
 -keep class com.android.** { *; }
 -dontwarn com.android.**
+
+#Crashlytics library
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**

@@ -297,4 +297,5 @@ public interface AppConstants {
 
 	public static final int APP_PERMISSIONS = 1001;
 	int CHECK_PAYMENT_RESPONSE_MAX_RETRY_COUNT = 10;
+	long CHECK_PAYMENT_RESPONSE_MAX_TIMEOUT = 300000;
 }
