@@ -8,19 +8,23 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,11 +44,13 @@ import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
+import com.dhb.utils.app.InputUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by Vendor3 on 5/16/2017.
@@ -74,11 +80,10 @@ public class PaymentsActivity extends AbstractActivity {
     private String BillingEmail = "";
     private PaymentStartTransactionAPIResponseModel paymentStartTransactionAPIResponseModel;
     private PaymentDoCaptureResponseAPIResponseModel paymentDoCaptureResponseAPIResponseModel;
-    private int checkPaymentSuccessResponseRetryCount = 0;
     private ApiCallAsyncTask doCaptureResponseAsyncTask;
     private ApiCallAsyncTask recheckResponseAsyncTask;
     private PowerManager.WakeLock wakeLock;
-
+    private long startRecheckMillis;
     //TODO tejas - 7738185400 for airtel money
     //TODO tejas - testthyrocare@axis for UPI
     int buttonDecider = 0;
@@ -290,7 +295,7 @@ public class PaymentsActivity extends AbstractActivity {
             flPayments.removeAllViews();
             View v = activity.getLayoutInflater().inflate(R.layout.paymentsdesign, null);
             LinearLayout llPaymentPassInputs = (LinearLayout) v.findViewById(R.id.ll_payments_pass_inputs_data);
-            EditText editAmount= (EditText) v.findViewById(R.id.amount1);
+            final EditText editAmount= (EditText) v.findViewById(R.id.amount1);
             TextView textAmount=(TextView) v.findViewById(R.id.amount);
 
             for (int i = 0; i < paymentPassInputsModel.getNameValueCollection().size(); i++) {
@@ -338,7 +343,26 @@ public class PaymentsActivity extends AbstractActivity {
 
                             @Override
                             public void afterTextChanged(Editable s) {
-                                paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+                                if(!InputUtils.isNull(s.toString())) {
+                                    try {
+                                        int amountPayable = Integer.parseInt(s.toString());
+                                        if(amountPayable>0) {
+                                            paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(amountPayable + "");
+                                        }
+                                        else{
+                                            editAmount.requestFocus();
+                                            editAmount.setError("Please enter Valid Amount");
+                                        }
+                                    }catch (Exception e){
+                                        editAmount.requestFocus();
+                                        editAmount.setError("Please enter Valid Amount");
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else{
+                                    editAmount.requestFocus();
+                                    editAmount.setError("Amount Cannot be Empty");
+                                }
                             }
                         });
                     }
@@ -409,6 +433,10 @@ public class PaymentsActivity extends AbstractActivity {
                     jsonRequest.put(pnvm.getKey(), appPreferenceManager.getLoginResponseModel().getUserID());
                 } else {
                     jsonRequest.put(pnvm.getKey(), pnvm.getValue());
+                    if(pnvm.getRequired().equals("User") && InputUtils.isNull(pnvm.getValue())){
+                        Toast.makeText(activity,"All input fields are necessary",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
             }
             startTransactionAsyncTask = asyncTaskForRequest.getStartTransactionRequestAsyncTask(jsonRequest);
@@ -430,7 +458,12 @@ public class PaymentsActivity extends AbstractActivity {
                 paymentStartTransactionAPIResponseModel = responseParser.getPaymentStartTransactionResponse(json, statusCode);
                 if(paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
                     if(NarrationId==1||NarrationId==3) {
-                        fetchDoCaptureResponse();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                fetchDoCaptureResponse(true);
+                            }
+                        },5000);
                     }
                     else{
                         initDoCaptureResponseData();
@@ -492,31 +525,74 @@ public class PaymentsActivity extends AbstractActivity {
                     paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection()) {
                 if (paymentNameValueModel.getKey().equals("ModeId") && paymentNameValueModel.getValue().equals("3")) {
                     buttonDecider = 1;
-                    View webViewXml = getLayoutInflater().inflate(R.layout.activity_web_view, null);
-                    WebView wvQRDisplay = (WebView) webViewXml.findViewById(R.id.webview);
+                    WebView wvQRDisplay = new WebView(activity);
+                    wvQRDisplay.loadUrl("about:blank");
+                    wvQRDisplay.canGoBack();
+                    wvQRDisplay.setWebChromeClient(new WebChromeClient() {
+                        public void onProgressChanged(WebView view, int progress) {
+                            activity.setProgress(progress * 1000);
+                        }
+                    });
+                    wvQRDisplay.setWebViewClient(new WebViewClient(){
+                        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                            Toast.makeText(activity, "Error while loading the QR Code!" + description, Toast.LENGTH_SHORT).show();
+                            initPaymentPassInputsData();
+                        }
+                    });
                     WebSettings settings = wvQRDisplay.getSettings();
                     settings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
                     wvQRDisplay.setVerticalScrollBarEnabled(false);
                     wvQRDisplay.setHorizontalScrollBarEnabled(false);
                     LinearLayout.LayoutParams llwvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    llwvParams.gravity = Gravity.CENTER;
                     llwvParams.setMargins(10, 300, 10, 0);
                     wvQRDisplay.setLayoutParams(llwvParams);
                     wvQRDisplay.setInitialScale(getScale());
                     wvQRDisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
-                    llPaymentStartTransaction.addView(webViewXml);
+                    llPaymentStartTransaction.addView(wvQRDisplay);
+                    /*View pbView = getLayoutInflater().inflate(R.layout.item_progress_bar,null);
+                    ProgressBar pb = (ProgressBar) pbView.findViewById(R.id.pb_payment_progress);
+                    llPaymentStartTransaction.addView(pbView);*/
+                    /*new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fetchDoCaptureResponse(false);
+                        }
+                    },30000);*/
                     break;
                 } else if (paymentNameValueModel.getKey().equals("ModeId") && paymentNameValueModel.getValue().equals("1")) {
                     buttonDecider = 1;
                     WebView wvCCADisplay = new WebView(activity);
+                    wvCCADisplay.loadUrl("about:blank");
+                    wvCCADisplay.canGoBack();
+                    wvCCADisplay.setWebChromeClient(new WebChromeClient() {
+                        public void onProgressChanged(WebView view, int progress) {
+                            activity.setProgress(progress * 1000);
+                        }
+                    });
+                    wvCCADisplay.setWebViewClient(new WebViewClient(){
+                        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                            Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    wvCCADisplay.setWebViewClient(new WebViewClient());
                     WebSettings settings = wvCCADisplay.getSettings();
                     settings.setJavaScriptEnabled(true);
                     settings.setBuiltInZoomControls(true);
                     LinearLayout.LayoutParams llwvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    llwvParams.gravity = Gravity.CENTER_HORIZONTAL;
                     wvCCADisplay.setLayoutParams(llwvParams);
                     wvCCADisplay.setInitialScale(getScale());
                     wvCCADisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
                     llPaymentStartTransaction.addView(wvCCADisplay);
+                    /*View pbView = getLayoutInflater().inflate(R.layout.item_progress_bar,null);
+                    ProgressBar pb = (ProgressBar) pbView.findViewById(R.id.pb_payment_progress);
+                    llPaymentStartTransaction.addView(pbView);*/
+                    /*new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fetchDoCaptureResponse(false);
+                        }
+                    },60000);*/
                     break;
                 }
             }
@@ -529,11 +605,10 @@ public class PaymentsActivity extends AbstractActivity {
                 btnParams.gravity = Gravity.CENTER_HORIZONTAL;
                 imgPaymentStartTransactionSubmit.setLayoutParams(btnParams);
                 imgPaymentStartTransactionSubmit.setImageResource(R.drawable.refresh_icon);
-
                 imgPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fetchDoCaptureResponse();
+                        fetchDoCaptureResponse(false);
                     }
                 });
                 llPaymentStartTransaction.addView(imgPaymentStartTransactionSubmit);
@@ -550,11 +625,10 @@ public class PaymentsActivity extends AbstractActivity {
                 btnPaymentStartTransactionSubmit.setText(btnSubmitText);
                 btnPaymentStartTransactionSubmit.setBackgroundResource(R.drawable.purple_btn_bg);
                 btnPaymentStartTransactionSubmit.setTextColor(activity.getResources().getColor(R.color.loginbg));
-
                 btnPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fetchDoCaptureResponse();
+                        fetchDoCaptureResponse(true);
                     }
                 });
                 llPaymentStartTransaction.addView(btnPaymentStartTransactionSubmit);
@@ -563,7 +637,7 @@ public class PaymentsActivity extends AbstractActivity {
         }
     }
 
-    private void fetchDoCaptureResponse() {
+    private void fetchDoCaptureResponse(boolean showProgressDialog) {
         JSONObject jsonRequest = new JSONObject();
         try {
             jsonRequest.put("URLId", paymentStartTransactionAPIResponseModel.getReqParameters().getURLId());
@@ -573,7 +647,9 @@ public class PaymentsActivity extends AbstractActivity {
             }
             doCaptureResponseAsyncTask = asyncTaskForRequest.getDoCaptureResponseRequestAsyncTask(jsonRequest, paymentStartTransactionAPIResponseModel.getReqParameters().getAPIUrl());
             doCaptureResponseAsyncTask.setApiCallAsyncTaskDelegate(new DoCaptureResponseAsyncTaskDelegateResult());
+            doCaptureResponseAsyncTask.setProgressBarVisible(showProgressDialog);
             if (isNetworkAvailable(activity)) {
+                startRecheckMillis = Calendar.getInstance().getTimeInMillis();
                 doCaptureResponseAsyncTask.execute(doCaptureResponseAsyncTask);
             } else {
                 Toast.makeText(activity, getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
@@ -590,24 +666,38 @@ public class PaymentsActivity extends AbstractActivity {
                 paymentDoCaptureResponseAPIResponseModel = responseParser.getPaymentDoCaptureAPIResponse(json, statusCode);
                 switch (paymentDoCaptureResponseAPIResponseModel.getStatus()) {
                     case "PAYMENT SUCCESS": {
-                        Toast.makeText(activity, paymentDoCaptureResponseAPIResponseModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent();
-                        intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
-                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                        finish();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setTitle("Payment Status")
+                                .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent();
+                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
+                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                        finish();
+                                    }
+                                }).show();
                         break;
                     }
                     case "PAYMENT FAILED": {
-                        Toast.makeText(activity, paymentDoCaptureResponseAPIResponseModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent();
-                        intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                        finish();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setTitle("Payment Status")
+                                .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent();
+                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                        finish();
+                                    }
+                                }).show();
                         break;
                     }
                     default:
-                        checkPaymentSuccessResponseRetryCount++;
-                        if (checkPaymentSuccessResponseRetryCount <= AppConstants.CHECK_PAYMENT_RESPONSE_MAX_RETRY_COUNT) {
+
+                        if ((Calendar.getInstance().getTimeInMillis()-startRecheckMillis) <= AppConstants.CHECK_PAYMENT_RESPONSE_MAX_TIMEOUT) {
                             fetchRecheckResponseData();
                         } else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(activity);

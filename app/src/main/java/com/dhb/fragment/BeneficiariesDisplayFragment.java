@@ -35,7 +35,6 @@ import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
 import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
-import com.dhb.models.data.CartAPIResponseOrderModel;
 import com.dhb.models.data.CartRequestBeneficiaryModel;
 import com.dhb.models.data.CartRequestOrderModel;
 import com.dhb.models.data.OrderBookingDetailsModel;
@@ -67,7 +66,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private TextView txtAmtPayable,txtAddBeneficiary;
     private Button btnProceedPayment;
     private OrderVisitDetailsModel orderVisitDetailsModel;
-    private int totalAmount = 0;
+    private int totalAmountPayable = 0;
     private int dotsCount;
     private ImageView[] dots;
     private BeneficiaryScreenSlidePagerAdapter beneficiaryScreenSlidePagerAdapter;
@@ -275,15 +274,15 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private void initData() {
         vpBeneficiaries.removeAllViews();
         vpBeneficiaries.clearOnPageChangeListeners();
-        totalAmount = 0;
+        totalAmountPayable = 0;
         orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
         for (OrderDetailsModel orderDetailsModel :
                 orderVisitDetailsModel.getAllOrderdetails()) {
-            totalAmount = totalAmount + orderDetailsModel.getAmountDue();
+            totalAmountPayable = totalAmountPayable + orderDetailsModel.getAmountPayable();
         }
 
-        txtAmtPayable.setText(totalAmount+"");
-        if(totalAmount==0){
+        txtAmtPayable.setText(""+ totalAmountPayable +"/-");
+        if(totalAmountPayable ==0){
             btnProceedPayment.setText("Submit Work Order");
         }
         else{
@@ -417,6 +416,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         if(requestCode==BundleConstants.PAYMENTS_START && resultCode==BundleConstants.PAYMENTS_FINISH){
             boolean isPaymentSuccess = data.getBooleanExtra(BundleConstants.PAYMENT_STATUS,false);
             if(isPaymentSuccess) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
                 OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
                 orderBookingRequestModel = fixForAddBeneficiary(orderBookingRequestModel);
                 ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
@@ -512,61 +513,87 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         orderBookingResponseVisitModel.getOrderids()) {
                     orderBookingResponseBeneficiaryModelArr.addAll(obrom.getBenfids());
                 }
-
-                if(btnProceedPayment.getText().equals("Proceed for Payment")) {
-                    final String[] paymentItems = new String[]{"Cash","Digital"};
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setTitle("Choose Payment Mode")
-                            .setItems(paymentItems, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if(paymentItems[which].equals("Cash")){
-                                        PaymentMode = 1;
-                                        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
-                                        ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
-                                        workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
-                                        if(isNetworkAvailable(activity)){
-                                            workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setMessage("Amount Payable ₹ "+ totalAmountPayable +"/-")
+                    .setPositiveButton("Collect", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(btnProceedPayment.getText().equals("Proceed for Payment")) {
+                                final String[] paymentItems = new String[]{"Cash","Digital"};
+                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                builder.setTitle("Choose Payment Mode")
+                                    .setItems(paymentItems, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if(paymentItems[which].equals("Cash")){
+                                                AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+                                                builder1.setMessage("Confirm Amount Received ₹ "+ totalAmountPayable +"")
+                                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                PaymentMode = 1;
+                                                                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+                                                                ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
+                                                                workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
+                                                                if(isNetworkAvailable(activity)){
+                                                                    workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
+                                                                }
+                                                                else{
+                                                                    Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+                                                        })
+                                                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                dialog.dismiss();
+                                                            }
+                                                        })
+                                                        .show();
+                                            }
+                                            else{
+                                                PaymentMode = 2;
+                                                Intent intentPayments = new Intent(activity, PaymentsActivity.class);
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable +"");
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,2);
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderVisitDetailsModel.getVisitId());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME,orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS,orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN,orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE,orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL,orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail());
+                                                startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                                            }
+                                            dialog.dismiss();
                                         }
-                                        else{
-                                            Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
                                         }
-                                    }
-                                    else{
-                                        PaymentMode = 2;
-                                        Intent intentPayments = new Intent(activity, PaymentsActivity.class);
-                                        intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT,totalAmount+"");
-                                        intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,2);
-                                        intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderVisitDetailsModel.getVisitId());
-                                        intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-                                        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME,orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
-                                        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS,orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
-                                        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN,orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
-                                        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE,orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
-                                        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL,orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail());
-                                        startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
-                                    }
+                                    }).show();
+                            }
+                            else if(btnProceedPayment.getText().equals("Submit Work Order")){
+                                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+                                ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
+                                workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
+                                if(isNetworkAvailable(activity)){
+                                    workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
                                 }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
+                                else{
+                                    Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
                                 }
-                            }).show();
-
-                }
-                else if(btnProceedPayment.getText().equals("Submit Work Order")){
-                    OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
-                    ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
-                    workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
-                    if(isNetworkAvailable(activity)){
-                        workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
-                    }
-                    else{
-                        Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
-                    }
-                }
+                            }
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
             }
             else{
                 Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
@@ -584,7 +611,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if(statusCode==200){
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setTitle("Work Order Entry Status")
+                builder.setTitle("Order Status")
                         .setMessage("Work Order Entry Successful!\nPlease note Ref Id - "+orderVisitDetailsModel.getVisitId()+" for future references.")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
@@ -597,7 +624,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             }
             else{
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setTitle("Work Order Entry Status")
+                builder.setTitle("Order Status")
                         .setMessage("Work Order Entry Failed!")
                         .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
@@ -634,10 +661,13 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         && cartAPIResponseModel.getOrders().size()>0){
 
                     for(int i=0;i<orderVisitDetailsModel.getAllOrderdetails().size();i++){
+                        int orderAmountPayable = 0;
                         int orderAmountDue = 0;
                         for(int j=0;j<cartAPIResponseModel.getOrders().size();j++){
                             if(orderVisitDetailsModel.getAllOrderdetails().get(i).getOrderNo().equals(cartAPIResponseModel.getOrders().get(j).getOrderNo())) {
-                                orderAmountDue = orderAmountDue + cartAPIResponseModel.getOrders().get(j).getTestCharges() + cartAPIResponseModel.getOrders().get(j).getServiceCharge();
+                                orderAmountPayable = orderAmountPayable + cartAPIResponseModel.getOrders().get(j).getAmountDue();
+                                orderAmountDue = orderAmountDue + cartAPIResponseModel.getOrders().get(j).getTestCharges() + cartAPIResponseModel.getOrders().get(j).getServiceCharge() ;
+                                orderVisitDetailsModel.getAllOrderdetails().get(i).setAmountPayable(orderAmountPayable);
                                 orderVisitDetailsModel.getAllOrderdetails().get(i).setAmountDue(orderAmountDue);
                                 orderVisitDetailsModel.getAllOrderdetails().get(i).setReportHC(cartAPIResponseModel.getOrders().get(j).isHC()?1:0);
                                 orderDetailsDao.insertOrUpdate(orderVisitDetailsModel.getAllOrderdetails().get(i));

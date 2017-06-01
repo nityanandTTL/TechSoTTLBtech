@@ -5,41 +5,18 @@
     android:background="@color/colorBackground"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/bg_content"
-        android:baselineAligned="false"
-        android:orientation="horizontal">
-
-        <!-- LEFT TITLE PART -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="155dp"
-            android:layout_weight="3"
-            android:background="@color/bgTitleRight"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/vseparator"
-                android:textSize="14sp" />
-        </RelativeLayout>
+        android:layout_marginTop="10dp">
         <!-- RIGHT TITLE PART -->
         <RelativeLayout
+            android:id="@+id/rl_rtp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:background="@color/bgTitleRight"
-
-
             android:paddingTop="20dp">
 
             <ImageView
@@ -164,9 +141,9 @@
                 android:layout_below="@+id/txt_date_time"
                 android:layout_toEndOf="@+id/txt_distance"
                 android:paddingBottom="2dp"
-                android:visibility="gone"
                 android:paddingTop="2dp"
-                android:src="@drawable/vseparator" />
+                android:src="@drawable/vseparator"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/title_kits_icon"
@@ -212,25 +189,7 @@
                 android:src="@drawable/release_order"
                 android:visibility="gone" />
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="-10dp"
-                android:layout_marginRight="-20dp"
-                android:src="@drawable/layout_corner" />
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginBottom="-10dp"
-                android:layout_marginLeft="-20dp"
-                android:src="@drawable/layout_corner" />
-
         </RelativeLayout>
-    </LinearLayout>
 
+    </RelativeLayout>
 </LinearLayout>

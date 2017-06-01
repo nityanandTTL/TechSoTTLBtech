@@ -16,40 +16,50 @@
         android:background="@drawable/bg_sample_type_edta"
         android:gravity="center"
         android:minEms="5"
-        android:padding="@dimen/dp_2"
+        android:padding="@dimen/dp_5"
         android:text="EDTA"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="16sp" />
 
     <LinearLayout
+        android:weightSum="3"
         android:id="@+id/ll_barcode"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:paddingRight="@dimen/dp_2">
+        android:layout_weight="3">
         <LinearLayout
+            android:layout_weight="2.5"
             android:id="@+id/ll_edt_barcode"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/editbarcode"
+            <TextView
+                android:id="@+id/editbarcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:drawable/edit_text"
+                android:text="25825255"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:maxLength="8"
+                android:minEms="10"
+                android:padding="@dimen/dp_2" />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/scanned_status_green"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@android:drawable/edit_text"
-            android:inputType="text"
-            android:maxLength="8"
-            android:minEms="10"
-            android:padding="@dimen/dp_2" />
-        </LinearLayout>
+            android:background="@drawable/green_tick_icon"
+            android:visibility="gone"
+            android:padding="@dimen/dp_1" />
         <ImageView
-            android:id="@+id/scan_barcode_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:visibility="visible"
+            android:id="@+id/scanned_status_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="8dp"
-            android:background="@android:drawable/ic_menu_camera"
+            android:background="@drawable/red_cross_icon"
             android:padding="@dimen/dp_1" />
     </LinearLayout>
 </LinearLayout>

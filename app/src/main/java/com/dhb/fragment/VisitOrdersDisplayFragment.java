@@ -62,7 +62,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConfirmOrderReleaseDialog cdd;
     private boolean isToFromMap = false;
-    private TestRateMasterDao testRateMasterDao;
 
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
@@ -82,7 +81,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
         dhbDao = new DhbDao(activity);
-        testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
         orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
         beneficiaryDetailsDao = new BeneficiaryDetailsDao(dhbDao.getDb());
         if (getArguments() != null) {
@@ -206,6 +204,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                                 orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
                                 orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
                                 orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
+                                orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
                                 orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
                                 if(orderDetailsModel.getBenMaster()!=null && orderDetailsModel.getBenMaster().size()>0) {
                                     for (BeneficiaryDetailsModel beneficiaryDetailsModel :

@@ -5,7 +5,7 @@ package com.dhb.models.data;
  */
 
 public class HubBarcodeModel {
-    private int Barcode;
+    private String Barcode;
     private String SampleType,SCT;
     private boolean isScanned;
 
@@ -13,11 +13,11 @@ public class HubBarcodeModel {
         isScanned = false;
     }
 
-    public int getBarcode() {
+    public String getBarcode() {
         return Barcode;
     }
 
-    public void setBarcode(int barcode) {
+    public void setBarcode(String barcode) {
         Barcode = barcode;
     }
 

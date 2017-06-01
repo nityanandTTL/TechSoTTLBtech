@@ -102,6 +102,8 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     private TextView edtCH,edtLA;
     private boolean isGenderSelected=false;
     private TextView txt_name,tv_location;
+    private boolean isMale = false;
+    private boolean isFemale = false;
     public CampManualWOEFragment() {
         // Required empty public constructor
     }
@@ -384,12 +386,16 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         }
         if (v.getId() == R.id.img_female) {
             isGenderSelected=true;
+            isFemale = true;
+            isMale = false;
            // view_male.setVisibility(View.GONE);
           //  view_female.setVisibility(View.VISIBLE);
             img_male.setImageDrawable(getResources().getDrawable(R.drawable.male));
             img_female.setImageDrawable(getResources().getDrawable(R.drawable.f_selected));
         } else if (v.getId() == R.id.img_male) {
             isGenderSelected=true;
+            isMale = true;
+            isFemale = false;
             img_male.setImageDrawable(getResources().getDrawable(R.drawable.m_selected));
             img_female.setImageDrawable(getResources().getDrawable(R.drawable.female));
             //view_male.setVisibility(View.VISIBLE);
@@ -444,9 +450,9 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         beneficiaryDetailsModel.setOrderNo(orderNO);
         beneficiaryDetailsModel.setName(edt_name.getText().toString());
         beneficiaryDetailsModel.setAge(Integer.parseInt(edt_age.getText().toString()));
-        if (view_female.getVisibility() == View.VISIBLE) {
+        if (isFemale) {
             beneficiaryDetailsModel.setGender("F");
-        } else if (view_male.getVisibility() == View.VISIBLE) {
+        } else if (isMale) {
             beneficiaryDetailsModel.setGender("M");
         }
         beneficiaryDetailsModel.setTests(campDetailModel.getProduct());
@@ -500,35 +506,16 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                 Toast.makeText(activity,"Please scan barcode for sample type "+benBarcode.getSamplType(),Toast.LENGTH_SHORT).show();
                 return false;
             }
-        }/*else if (InputUtils.isNull(edt_pincode.getText().toString())) {
-            edt_pincode.setError("Enter Pincode");
-            edt_pincode.requestFocus();
-            return false;
-        } else if (edt_pincode.getText().toString().length() < 6) {
-            edt_pincode.setError("Enter Valid Pincode");
-            edt_pincode.requestFocus();
-            return false;
-        } else if (InputUtils.isNull(edt_email.getText().toString())) {
-            edt_email.setError("Enter Email");
-            edt_email.requestFocus();
-            return false;
-        } else if (!isValidEmail(edt_email.getText().toString())) {
-            edt_email.setError("Enter Valid Email");
-            edt_email.requestFocus();
-            return false;
-        }*/
+        }
         return true;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-      //  Toast.makeText(activity, "scanned res " + scanningResult, Toast.LENGTH_SHORT).show();
         if (scanningResult != null && scanningResult.getContents() != null) {
             String scanned_barcode = scanningResult.getContents();
-            Logger.error("" + scanningResult);
             Logger.error("scanned_barcode " + scanningResult.getContents());
-            Toast.makeText(activity, "" + scanningResult, Toast.LENGTH_SHORT).show();
             if (issampleTypeScan) {
                 if(!InputUtils.isNull(scanned_barcode)&& scanned_barcode.length()==8) {
                     for (int i = 0; i < barcodeDetailsArr.size(); i++) {
@@ -555,10 +542,8 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                 callsendQRCodeApi(scanningResult.getContents());
             }
         } else {
-
             super.onActivityResult(requestCode, resultCode, data);
             callsendQRCodeApi("jhjhj");
-            Toast.makeText(activity, "no result", Toast.LENGTH_SHORT).show();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -571,7 +556,6 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
         } else {
             Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-            // initData();
         }
     }
 

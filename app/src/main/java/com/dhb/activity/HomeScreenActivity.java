@@ -63,10 +63,8 @@ public class HomeScreenActivity extends AbstractActivity
         activity = this;
         dhbDao = new DhbDao(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
-
         Crashlytics.setUserIdentifier(appPreferenceManager.getLoginResponseModel().getUserID());
         Crashlytics.setUserName(appPreferenceManager.getLoginResponseModel().getUserName());
-
         initUI();
         if(appPreferenceManager.getLeaveFlag()!=0){
             pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
@@ -81,7 +79,9 @@ public class HomeScreenActivity extends AbstractActivity
         initData();
        // pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
     }
-
+    public void setTitle(String title){
+        toolbarHome.setTitle(title);
+    }
     private void initData() {
         if(!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserName()))
             txtUserName.setText(appPreferenceManager.getLoginResponseModel().getUserName());
@@ -91,9 +91,6 @@ public class HomeScreenActivity extends AbstractActivity
             rivSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
         }
     }
-
-
-
     @Override
     public void initUI() {
         super.initUI();
@@ -182,32 +179,11 @@ public class HomeScreenActivity extends AbstractActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        /*if (id == R.id.nav_visit_orders) {
-            Toast.makeText(getApplicationContext(),"in visit orders",Toast.LENGTH_SHORT).show();
-            pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
-        } else if (id == R.id.nav_schedule_your_day) {
-            Toast.makeText(getApplicationContext(),"in schedule your day",Toast.LENGTH_SHORT).show();
-            pushFragments(ScheduleYourDayFragment.newInstance(),false,false,ScheduleYourDayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
-        } else if (id == R.id.nav_ledger) {
-            Toast.makeText(getApplicationContext(),"in ledger",Toast.LENGTH_SHORT).show();
-            pushFragments(LedgerDisplayFragment.newInstance(),false,false,LedgerDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
-        } else if (id == R.id.nav_hub) {
-            Toast.makeText(getApplicationContext(),"in Hub drop",Toast.LENGTH_SHORT).show();
-            pushFragments(HubListDisplayFragment.newInstance(),false,false, HubListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
-        } else if (id == R.id.nav_materials) {
-
-        }*/
         if (id == R.id.nav_home) {
-
             toolbarHome.setVisibility(View.VISIBLE);
-//            Toast.makeText(getApplicationContext(),"in home",Toast.LENGTH_SHORT).show();
             pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_change_password) {
-
             toolbarHome.setVisibility(View.VISIBLE);
-
-//            Toast.makeText(getApplicationContext(),"in change password",Toast.LENGTH_SHORT).show();
             pushFragments(ResetPasswordFragment.newInstance(),false,false, ResetPasswordFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_logout) {
             toolbarHome.setVisibility(View.VISIBLE);
@@ -220,10 +196,8 @@ public class HomeScreenActivity extends AbstractActivity
                 Toast.makeText(activity,"Logout functionality is only available in Online Mode",Toast.LENGTH_SHORT).show();
             }
         } else if (id == R.id.nav_communication) {
-
             toolbarHome.setVisibility(View.VISIBLE);
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

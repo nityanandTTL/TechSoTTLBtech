@@ -26,7 +26,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
     Button btn_send_otp, btn_verify_otp;
     LinearLayout ll_send_otp, ll_verify_otp;
     private String code;
-    String regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!-_]).{8,12})";
+    String regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!-_]).{6,12})";
     String str;
 
     @Override
@@ -102,7 +102,6 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
         ResetPasswordRequestModel resetPasswordRequestModel = new ResetPasswordRequestModel();
         resetPasswordRequestModel.setEmail(edt_mobile_no.getText().toString());
         if (action.equals("verify otp")) {
-            str = code.substring(1, code.length() - 1);
             str = code.trim().replaceAll("\n ", "");
             Logger.error(str.replaceAll("^\"|\"$", ""));
             resetPasswordRequestModel.setCode(str.replaceAll("^\"|\"$", ""));

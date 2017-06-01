@@ -41,6 +41,7 @@ public class OrderDetailsDao {
 	private String EMAIL = "Email";
 	private String PAY_TYPE = "PayType";
 	private String AMOUNT_DUE = "AmountDue";
+	private String AMOUNT_PAYABLE = "AmountPayable";
 	private String MARGIN = "Margin";
 	private String DISCOUNT = "Discount";
 	private String REFCODE = "Refcode";
@@ -91,6 +92,7 @@ public class OrderDetailsDao {
 		orderDetailsModel.setEmail(cursor.getString(cursor.getColumnIndex(EMAIL)));
 		orderDetailsModel.setPayType(cursor.getString(cursor.getColumnIndex(PAY_TYPE)));
 		orderDetailsModel.setAmountDue(cursor.getInt(cursor.getColumnIndex(AMOUNT_DUE)));
+		orderDetailsModel.setAmountPayable(cursor.getInt(cursor.getColumnIndex(AMOUNT_PAYABLE)));
 		orderDetailsModel.setMargin(cursor.getInt(cursor.getColumnIndex(MARGIN)));
 		orderDetailsModel.setDiscount(cursor.getInt(cursor.getColumnIndex(DISCOUNT)));
 		orderDetailsModel.setEstIncome(cursor.getFloat(cursor.getColumnIndex(EST_INCOME)));
@@ -134,6 +136,7 @@ public class OrderDetailsDao {
 		values.put(EMAIL, orderDetailsModel.getEmail());
 		values.put(PAY_TYPE, orderDetailsModel.getPayType());
 		values.put(AMOUNT_DUE, orderDetailsModel.getAmountDue());
+		values.put(AMOUNT_PAYABLE, orderDetailsModel.getAmountPayable());
 		values.put(MARGIN, orderDetailsModel.getMargin());
 		values.put(DISCOUNT, orderDetailsModel.getDiscount());
 		values.put(DISTANCE, orderDetailsModel.getDistance());

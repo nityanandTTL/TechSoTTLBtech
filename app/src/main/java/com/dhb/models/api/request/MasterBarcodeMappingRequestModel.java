@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class MasterBarcodeMappingRequestModel {
     private int BtechId, HubId;
     private String MasterBarcode;
-    private ArrayList<HubBarcodeModel> barcodeModels;
+    private ArrayList<HubBarcodeModel> barcodes;
 
     public int getBtechId() {
         return BtechId;
@@ -37,11 +37,11 @@ public class MasterBarcodeMappingRequestModel {
         MasterBarcode = masterBarcode;
     }
 
-    public ArrayList<HubBarcodeModel> getBarcodeModels() {
-        return barcodeModels;
+    public ArrayList<HubBarcodeModel> getBarcodes() {
+        return barcodes;
     }
 
-    public void setBarcodeModels(ArrayList<HubBarcodeModel> barcodeModels) {
-        this.barcodeModels = barcodeModels;
+    public void setBarcodes(ArrayList<HubBarcodeModel> barcodes) {
+        this.barcodes = barcodes;
     }
 }
