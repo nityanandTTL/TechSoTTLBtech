@@ -125,9 +125,6 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         dhbDao = new DhbDao(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
         orderNO = DeviceUtils.randomString(8);
-        Random r = new Random();
-        Bundle bundle = getArguments();
-        // beneficiaryDetailsModel = bundle.getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
         benId = DeviceUtils.randomInt(1, 10);
         BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
         brandMasterModel = brandMasterDao.getModelFromId(campDetailModel.getBrandId());
@@ -144,10 +141,8 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     }
 
     private void initData() {
-
         String testCodes = campDetailModel.getProduct();
         TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
-
         testRateMasterModels = testRateMasterDao.getModelsFromTestCodes(testCodes);
         Logger.error("testCodes " + testCodes);
         if (campDetailModel.getSampleType().size() > 0) {
@@ -181,7 +176,6 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             }
         }
         Logger.error("chS "+chS);
-       // edtCH.setText(chS);
         String laS = "";
         if(benLAArr!=null && benLAArr.size()>0) {
             for (BeneficiaryLabAlertsModel lam :
@@ -196,8 +190,6 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             }
         }
         Logger.error("laS "+laS);
-     //   edtLA.setText(laS);
-
         initScanBarcodeView();
     }
 
@@ -254,58 +246,12 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         edt_test_alerts.setOnClickListener(this);
         img_male.setOnClickListener(this);
         img_female.setOnClickListener(this);
-
-      /*  edtCH.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<TestRateMasterModel> forCHSelection = new ArrayList<>();
-                if(testRateMasterModels!=null) {
-                    for (TestRateMasterModel testRateMasterModel :
-                            testRateMasterModels) {
-                        if(testRateMasterModel.getTstClinicalHistory()!=null && testRateMasterModel.getTstClinicalHistory().size()>0){
-                            forCHSelection.add(testRateMasterModel);
-                        }
-                    }
-                }
-                if(forCHSelection.size()>0) {
-                    ClinicalHistorySelectorDialog clinicalHistorySelectorDialog = new ClinicalHistorySelectorDialog(activity, forCHSelection, benCHArr, benId, new SelectClinicalHistoryCheckboxDelegate() {
-                        @Override
-                        public void onCheckChange(ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr) {
-                            benCHArr = chArr;
-                            initData();
-                        }
-                    });
-                    clinicalHistorySelectorDialog.show();
-                }
-                else{
-                    Toast.makeText(activity,"Clinical History Not Required",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        edtLA.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(labAlertsArr.size()>0) {
-                    LabAlertSelectorDialog labAlertSelectorDialog = new LabAlertSelectorDialog(activity, labAlertsArr, benLAArr, benId, new SelectLabAlertsCheckboxDelegate() {
-                        @Override
-                        public void onCheckChange(ArrayList<BeneficiaryLabAlertsModel> chArr) {
-                            benLAArr = chArr;
-                            initData();
-                        }
-                    });
-                    labAlertSelectorDialog.show();
-                }
-                else{
-                    Toast.makeText(activity,"Lab Alerts Master Not Available",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });*/
     }
 
     private void initUI(View view) {
         rl_2=(RelativeLayout)view.findViewById(R.id.rl_2);
         rl_2.requestFocus();
-      rl_2.setFocusable(true);
+        rl_2.setFocusable(true);
         rl_2.requestFocusFromTouch();
         tv_location=(TextView)view.findViewById(R.id.tv_location);
         txt_name=(TextView)view.findViewById(R.id.txt_name);
@@ -315,44 +261,23 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         ll_test_scan = (LinearLayout) view.findViewById(R.id.ll_test_scan);
         edt_name = (EditText) view.findViewById(R.id.edt_name);
         edt_mobile = (EditText) view.findViewById(R.id.edt_mobile);
-        //edt_email = (EditText) view.findViewById(R.id.edt_email);
-       // edt_scan_result = (EditText) view.findViewById(R.id.edt_scan_result);
         tv_age = (TextView) view.findViewById(R.id.tv_age);
         tv_gender = (TextView) view.findViewById(R.id.tv_gender);
         edt_test = (TextView) view.findViewById(R.id.edt_test);
         scan_barcode_button = (ImageView) view.findViewById(R.id.scan_barcode_button);
         btn_enter_manually = (Button) view.findViewById(R.id.btn_enter_manually);
         btn_scan_qr = (Button) view.findViewById(R.id.btn_scan_qr);
-       // edt_address = (EditText) view.findViewById(R.id.edt_address);
         btn_next = (Button) view.findViewById(R.id.btn_next);
         view_female = (View) view.findViewById(R.id.view_female);
         view_male = (View) view.findViewById(R.id.view_male);
         edt_age = (EditText) view.findViewById(R.id.edt_age);
         img_male = (ImageView) view.findViewById(R.id.img_male);
-     //   edt_pincode = (EditText) view.findViewById(R.id.edt_pincode);
         img_female = (ImageView) view.findViewById(R.id.img_female);
-       // btn_enter_manually.setVisibility(View.GONE);
         btn_scan_qr.setVisibility(View.VISIBLE);
-     //   ll_age_gender = (LinearLayout) view.findViewById(R.id.ll_age_gender);
-      //  ll_age_gender.setVisibility(View.GONE);
         edt_test_alerts = (TextView) view.findViewById(R.id.edt_test_alerts);
         String tests = campDetailModel.getProduct();
-        //edt_amount = (EditText) view.findViewById(R.id.edt_amount);
-       // edt_amount.setText("" + campDetailModel.getAmount());
         testsList = tests.split(",");
         edt_test_alerts.setText("" + testsList[0]);
-       // edt_brand_name = (TextView) view.findViewById(R.id.edt_brand_name);
-       // edtCH=(EditText)view.findViewById(R.id.edt_ch);
-        //edtLA=(EditText)view.findViewById(R.id.edt_la);
-        /*if (brandMasterModel != null) {
-            if (InputUtils.isNull(brandMasterModel.getBrandName())) {
-                edt_brand_name.setText("" + brandMasterModel.getBrandId());
-            } else {
-                edt_brand_name.setText(brandMasterModel.getBrandName());
-            }
-
-        }*/
-
     }
 
 

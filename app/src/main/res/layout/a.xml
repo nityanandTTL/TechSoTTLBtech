@@ -347,16 +347,6 @@
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_5"
                 android:text="No. of Days:" />
-            <!--  <Button
-                  android:layout_margin="8dp"
-                  android:id="@+id/btn_edit"
-                  android:padding="4dp"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_horizontal"
-                  android:layout_weight="1"
-
-                  android:text="Edit" />-->
             <Button
                 android:id="@+id/img_accept"
                 android:layout_width="@dimen/dp_60"
@@ -377,6 +367,7 @@
                 android:layout_marginBottom="2dp"
                 android:background="@drawable/purple_btn_bg"
                 android:text="Start"
+                android:minEms="5"
                 android:textColor="@android:color/white"
                 android:visibility="gone" />
 
@@ -387,6 +378,7 @@
                 android:layout_below="@+id/no_of_days"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="2dp"
+                android:minEms="5"
                 android:background="@drawable/purple_btn_bg"
                 android:text="Arrived"
                 android:textColor="@android:color/white"
