@@ -511,13 +511,13 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             if(!InputUtils.isNull(beneficiaryDetailsModel.getGender())){
                 if(beneficiaryDetailsModel.getGender().equals("M")||beneficiaryDetailsModel.getGender().equalsIgnoreCase("Male")) {
                     isM = true;
-                    imgMale.setBackgroundColor(activity.getResources().getColor(R.color.colorSecondaryDark));
-                    imgFemale.setBackgroundColor(activity.getResources().getColor(android.R.color.white));
+                    imgFemale.setImageDrawable(getResources().getDrawable(R.drawable.female));
+                    imgMale.setImageDrawable(getResources().getDrawable(R.drawable.m_selected));
                 }
                 else{
                     isM = false;
-                    imgFemale.setBackgroundColor(activity.getResources().getColor(R.color.colorSecondaryDark));
-                    imgMale.setBackgroundColor(activity.getResources().getColor(android.R.color.white));
+                    imgFemale.setImageDrawable(getResources().getDrawable(R.drawable.f_selected));
+                    imgMale.setImageDrawable(getResources().getDrawable(R.drawable.male));
                 }
             }
             if(beneficiaryDetailsModel.getVenepuncture()!=null) {

@@ -84,47 +84,6 @@
                 android:textSize="18sp"
                 android:visibility="gone" />
         </LinearLayout>
-
-        <!--<RelativeLayout-->
-        <!--android:layout_width="140dp"-->
-        <!--android:layout_height="140dp"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:background="@drawable/solid_bluecircle"-->
-        <!--android:gravity="center">-->
-
-        <!--<TextView-->
-        <!--android:id="@+id/title"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Amount"-->
-        <!--android:textSize="22sp"-->
-        <!--android:textStyle="bold" />-->
-
-        <!---->
-        <!--<TextView-->
-        <!--android:id="@+id/amount"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/title"-->
-        <!--android:gravity="center"-->
-        <!--android:text="4500/-"-->
-        <!--android:textSize="18sp"-->
-        <!--android:visibility="visible" />-->
-
-        <!--<EditText-->
-        <!--android:id="@+id/amount1"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/amount"-->
-        <!--android:digits="0123456789"-->
-        <!--android:gravity="center"-->
-        <!--android:hint="Enter Amount"-->
-        <!--android:inputType="number"-->
-        <!--android:textSize="18sp"-->
-        <!--android:visibility="gone" />-->
-        <!--</RelativeLayout>-->
-
     </RelativeLayout>
 
 </RelativeLayout>

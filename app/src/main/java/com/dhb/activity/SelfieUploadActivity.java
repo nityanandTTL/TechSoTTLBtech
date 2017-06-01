@@ -73,7 +73,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private int leaveFlag = 0;
     private String fromdateapi, todateapi;
     Uri outPutfileUri;
-    Bitmap bitmap = null;
 
     @Override
     protected void onStart() {
@@ -191,18 +190,11 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     private void cameraIntent() {
-
-        //changes_1june2017
-       /* Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_CAMERA);*/
-
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
         outPutfileUri = FileProvider.getUriForFile(SelfieUploadActivity.this, SelfieUploadActivity.this.getApplicationContext().getPackageName() + ".provider", file);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, outPutfileUri);
         startActivityForResult(intent, REQUEST_CAMERA);
-        //changes_1june2017
-
     }
 
     @Override
@@ -210,60 +202,34 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CAMERA) {
-
-                onCaptureImageResult(data);
+                onCaptureImageResult();
             }
         }
     }
 
-    private void onCaptureImageResult(Intent data) {
-
-
+    private void onCaptureImageResult() {
         String uri = outPutfileUri.toString();
         Log.e("uri-:", uri);
         Toast.makeText(this, outPutfileUri.toString(), Toast.LENGTH_LONG).show();
-
         try {
-            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outPutfileUri);
-            Drawable img = new BitmapDrawable(getResources(), bitmap);
+            thumbnail = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outPutfileUri);
+            Drawable img = new BitmapDrawable(getResources(), thumbnail);
+
+            encodedProImg = CommonUtils.encodeImage(thumbnail);
+            if (!InputUtils.isNull(encodedProImg)) {
+                btn_uploadPhoto.setVisibility(View.VISIBLE);
+                btn_takePhoto.setVisibility(View.INVISIBLE);
+            } else {
+                btn_uploadPhoto.setVisibility(View.INVISIBLE);
+                btn_takePhoto.setVisibility(View.VISIBLE);
+            }
             img_user_picture.setImageDrawable(img);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //thumbnail = (Bitmap) data.getExtras().get("data");
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//
-//        /*File destination = new File(Environment.getExternalStorageDirectory(),
-//                System.currentTimeMillis() + ".jpg");
-//        FileOutputStream fo;
-//        try {
-//            boolean isFileCreated = destination.createNewFile();
-//            if (isFileCreated) {
-//                fo = new FileOutputStream(destination);
-//                fo.write(bytes.toByteArray());
-//
-//                fo.close();
-//            } else {
-//                Toast.makeText(activity, "Failed to create file", Toast.LENGTH_SHORT).show();
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }*/
-//        encodedProImg = CommonUtils.encodeImage(thumbnail);
-//        if (!InputUtils.isNull(encodedProImg)) {
-//            btn_uploadPhoto.setVisibility(View.VISIBLE);
-//            btn_takePhoto.setVisibility(View.INVISIBLE);
-//        } else {
-//            btn_uploadPhoto.setVisibility(View.INVISIBLE);
-//            btn_takePhoto.setVisibility(View.VISIBLE);
-//        }
-//        img_user_picture.setImageBitmap(thumbnail);
     }
 
     private void showImage(Bitmap bm) {
-
         final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.dialog_full_image_display);
         TouchImageView imgFullDisplay = (TouchImageView) dialog.findViewById(R.id.img_selfie_full);

@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/payment_text"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.8"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
@@ -17,9 +17,10 @@
         android:textStyle="bold" />
 
     <EditText
+        android:background="@android:drawable/edit_text"
         android:id="@+id/edit_payment"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.2"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
