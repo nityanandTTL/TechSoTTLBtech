@@ -9,7 +9,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -39,6 +43,8 @@ import com.dhb.utils.app.InputUtils;
 import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 
 
@@ -58,7 +64,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private boolean isAfterMasterSyncDone;
     SyncStatusReceiver syncStatusReceiver;
     private int leaveFlag = 0;
-    private String fromdateapi,todateapi;
+    private String fromdateapi, todateapi;
 
     @Override
     protected void onStart() {
@@ -173,8 +179,10 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     private void cameraIntent() {
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
+
     }
 
     @Override
@@ -182,6 +190,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CAMERA) {
+
                 onCaptureImageResult(data);
             }
         }
@@ -189,8 +198,12 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     private void onCaptureImageResult(Intent data) {
         thumbnail = (Bitmap) data.getExtras().get("data");
+
+        //changes_31may2017
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        //changes_31may2017
+
         /*File destination = new File(Environment.getExternalStorageDirectory(),
                 System.currentTimeMillis() + ".jpg");
         FileOutputStream fo;
@@ -208,11 +221,10 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             e.printStackTrace();
         }*/
         encodedProImg = CommonUtils.encodeImage(thumbnail);
-        if(!InputUtils.isNull(encodedProImg)){
+        if (!InputUtils.isNull(encodedProImg)) {
             btn_uploadPhoto.setVisibility(View.VISIBLE);
             btn_takePhoto.setVisibility(View.INVISIBLE);
-        }
-        else{
+        } else {
             btn_uploadPhoto.setVisibility(View.INVISIBLE);
             btn_takePhoto.setVisibility(View.VISIBLE);
         }
@@ -249,8 +261,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     appPreferenceManager.setSelfieResponseModel(selfieUploadResponseModel);
 //                    Toast.makeText(getApplicationContext(),+selfieUploadResponseModel.getFlag()+"",Toast.LENGTH_SHORT).show();
                     leaveFlag = selfieUploadResponseModel.getFlag();
-                    fromdateapi=selfieUploadResponseModel.getFromDate();
-                    todateapi=selfieUploadResponseModel.getToDate();
+                    fromdateapi = selfieUploadResponseModel.getFromDate();
+                    todateapi = selfieUploadResponseModel.getToDate();
                     callMasterSync();
                 }
             } else {

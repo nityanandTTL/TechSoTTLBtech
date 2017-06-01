@@ -54,16 +54,15 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final FoldingCellViewHolder holder;
-        if(convertView==null) {
+        if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.item_folding_cell, parent, false);
             holder = new FoldingCellViewHolder(convertView);
             convertView.setTag(holder);
-        }
-        else{
+        } else {
             holder = (FoldingCellViewHolder) convertView.getTag();
         }
-        initData(holder,position);
-        initListeners(holder,position);
+        initData(holder, position);
+        initListeners(holder, position);
         return convertView;
     }
 
@@ -71,36 +70,36 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         holder.imgRelease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            visitOrderDisplayRecyclerViewAdapterDelegate.onItemRelease(orderVisitDetailsModelsArr.get(pos));
+                visitOrderDisplayRecyclerViewAdapterDelegate.onItemRelease(orderVisitDetailsModelsArr.get(pos));
             }
         });
         holder.btnStartNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            visitOrderDisplayRecyclerViewAdapterDelegate.onNavigationStart(orderVisitDetailsModelsArr.get(pos));
+                visitOrderDisplayRecyclerViewAdapterDelegate.onNavigationStart(orderVisitDetailsModelsArr.get(pos));
             }
         });
         holder.cell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(pos==0) {
+                if (pos == 0) {
                     registerToggle(pos);
                     holder.cell.toggle(false);
                     initData(holder, pos);
-                }
-                else{
-                    Toast.makeText(activity,"Please service the earlier orders first",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
     private void initData(FoldingCellViewHolder holder, final int pos) {
-        if(orderVisitDetailsModelsArr.size()>pos
-                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size()>0
-                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size()>0
-                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0)!=null) {
+        if (orderVisitDetailsModelsArr.size() > pos
+                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0
+                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() > 0
+                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0) != null) {
             holder.tvAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
+
             holder.tvName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
             holder.tvName.setSelected(true);
             holder.tvSrNo.setText(pos + 1 + "");
@@ -119,7 +118,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             } else {
                 holder.cell.fold(true);
             }
-            if(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")){
+            if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
                 holder.imgCBAccept.setVisibility(View.VISIBLE);
                 holder.imgCBAccept.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -131,10 +130,10 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         }
     }
 
-    private class FoldingCellViewHolder{
-        TextView tvSrNo, tvName, tvAge, txtAddress,txtDistance,txtKits;//tvAadharNo,
+    private class FoldingCellViewHolder {
+        TextView tvSrNo, tvName, tvAge, txtAddress, txtDistance, txtKits;//tvAadharNo,
         ImageView imgCBAccept;
-        TextView txtSrNo, txtName,txtAge,txtAadharNo;
+        TextView txtSrNo, txtName, txtAge, txtAadharNo;
         ImageView imgRelease;
         Button btnStartNavigation;
         FoldingCell cell;
