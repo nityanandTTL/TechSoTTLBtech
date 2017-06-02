@@ -84,6 +84,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
+        activity.toolbarHome.setTitle("Leave Intimation");
         activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
 

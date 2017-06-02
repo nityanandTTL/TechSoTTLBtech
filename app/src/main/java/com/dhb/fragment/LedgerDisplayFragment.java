@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class LedgerDisplayFragment extends AbstractFragment {
 
@@ -71,6 +72,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
+        activity.toolbarHome.setTitle("Ledger");
         activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
         if (getArguments() != null) {
@@ -83,15 +85,8 @@ public class LedgerDisplayFragment extends AbstractFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_ledger_display, container, false);
-        Logger.error(TAG_FRAGMENT + "onCreateView: ");
-        activity = (HomeScreenActivity) getActivity();
-
-
         //today date
-        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        todate = (today).toString();
-
-
+        todate = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
         //previous 7  days
         fromdate = getCalculatedDate("yyyy-MM-dd", -7);
 

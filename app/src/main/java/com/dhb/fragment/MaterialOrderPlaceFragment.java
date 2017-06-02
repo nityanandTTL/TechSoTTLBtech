@@ -86,6 +86,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
+        activity.toolbarHome.setTitle("Place Material Order");
         appPreferenceManager = new AppPreferenceManager(activity);
         if (getArguments() != null) {
 

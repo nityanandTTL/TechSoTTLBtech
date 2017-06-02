@@ -70,7 +70,6 @@ public class HomeScreenActivity extends AbstractActivity
             pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
             appPreferenceManager.setCameFrom(1);
             toolbarHome.setVisibility(View.GONE);
-
         }
         else {
             toolbarHome.setVisibility(View.VISIBLE);
@@ -182,7 +181,10 @@ public class HomeScreenActivity extends AbstractActivity
         if (id == R.id.nav_home) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
-        } else if (id == R.id.nav_change_password) {
+        } else if (id == R.id.nav_leave) {
+            toolbarHome.setVisibility(View.VISIBLE);
+            pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+        }else if (id == R.id.nav_change_password) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(ResetPasswordFragment.newInstance(),false,false, ResetPasswordFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         } else if (id == R.id.nav_logout) {

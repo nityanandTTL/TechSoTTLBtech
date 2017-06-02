@@ -10,7 +10,8 @@ import java.util.ArrayList;
  */
 
 public class CampDetailModel implements Parcelable {
-    private int Id, Amount, ExpectedCrowd, ExpectedBtech, Leader, LeaderContactNo,BrandId;
+    private int Id,  ExpectedCrowd, ExpectedBtech, Leader,BrandId, Amount;
+    private String LeaderContactNo;
     private String CampId, VisitId, CampDate, Location, Status,CampName,LeaderName,PayType;
     private boolean InventoryAssign, isStarted;
     private String CampDateTime, BookedBy, Product, QRCode;
@@ -20,16 +21,16 @@ public class CampDetailModel implements Parcelable {
     private ArrayList<CampDetailsKitsModel> kits;
     private ArrayList<BeneficiarySampleTypeDetailsModel> sampleType;
     private boolean IsFasting;
-private int Pincode;
+    private String Pincode;
 
     protected CampDetailModel(Parcel in) {
         Id = in.readInt();
-        Amount = in.readInt();
         ExpectedCrowd = in.readInt();
         ExpectedBtech = in.readInt();
         Leader = in.readInt();
-        LeaderContactNo = in.readInt();
         BrandId = in.readInt();
+        Amount = in.readInt();
+        LeaderContactNo = in.readString();
         CampId = in.readString();
         VisitId = in.readString();
         CampDate = in.readString();
@@ -50,18 +51,18 @@ private int Pincode;
         kits = in.createTypedArrayList(CampDetailsKitsModel.CREATOR);
         sampleType = in.createTypedArrayList(BeneficiarySampleTypeDetailsModel.CREATOR);
         IsFasting = in.readByte() != 0;
-        Pincode = in.readInt();
+        Pincode = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(Id);
-        dest.writeInt(Amount);
         dest.writeInt(ExpectedCrowd);
         dest.writeInt(ExpectedBtech);
         dest.writeInt(Leader);
-        dest.writeInt(LeaderContactNo);
         dest.writeInt(BrandId);
+        dest.writeInt(Amount);
+        dest.writeString(LeaderContactNo);
         dest.writeString(CampId);
         dest.writeString(VisitId);
         dest.writeString(CampDate);
@@ -82,7 +83,7 @@ private int Pincode;
         dest.writeTypedList(kits);
         dest.writeTypedList(sampleType);
         dest.writeByte((byte) (IsFasting ? 1 : 0));
-        dest.writeInt(Pincode);
+        dest.writeString(Pincode);
     }
 
     @Override
@@ -102,11 +103,11 @@ private int Pincode;
         }
     };
 
-    public int getPincode() {
+    public String getPincode() {
         return Pincode;
     }
 
-    public void setPincode(int pincode) {
+    public void setPincode(String pincode) {
         Pincode = pincode;
     }
 
@@ -220,11 +221,11 @@ private int Pincode;
         Leader = leader;
     }
 
-    public int getLeaderContactNo() {
+    public String getLeaderContactNo() {
         return LeaderContactNo;
     }
 
-    public void setLeaderContactNo(int leaderContactNo) {
+    public void setLeaderContactNo(String leaderContactNo) {
         LeaderContactNo = leaderContactNo;
     }
 

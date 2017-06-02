@@ -355,7 +355,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         campAllOrderDetailsModel.setAddress(campDetailModel.getLocation());
         campAllOrderDetailsModel.setPincode(String.valueOf(campDetailModel.getPincode())/*.getText().toString()*/);
         campAllOrderDetailsModel.setMobile(edt_mobile.getText().toString());
-        campAllOrderDetailsModel.setEmail(/*campAllOrderDetailsModel.getEmail()*/"");
+        campAllOrderDetailsModel.setEmail("");
         campAllOrderDetailsModel.setPayType(campDetailModel.getPayType());
         campAllOrderDetailsModel.setAmountDue(campDetailModel.getAmount());
         campAllOrderDetailsModel.setMargin(0);

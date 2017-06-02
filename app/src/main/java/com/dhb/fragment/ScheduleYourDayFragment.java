@@ -128,12 +128,8 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                                 calendar.add(Calendar.DAY_OF_MONTH,1);
                                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
-
-                                Fragment mfrFragment = new LeaveIntimationFragment();
-                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fl_homeScreen,mfrFragment).commit();
-
                                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
-                                setBtechAvailabilityAsyncTask.setApiCallAsyncTaskDelegate(new SetBtechAvailabilityAsyncTaskDelegateResult());
+                                setBtechAvailabilityAsyncTask.setApiCallAsyncTaskDelegate(new SetBtechAvailabilityAsyncTaskDelegateResult(false));
                                 if(isNetworkAvailable(activity)){
                                     setBtechAvailabilityAsyncTask.execute(setBtechAvailabilityAsyncTask);
                                 }
@@ -179,7 +175,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
-                setBtechAvailabilityAsyncTask.setApiCallAsyncTaskDelegate(new SetBtechAvailabilityAsyncTaskDelegateResult());
+                setBtechAvailabilityAsyncTask.setApiCallAsyncTaskDelegate(new SetBtechAvailabilityAsyncTaskDelegateResult(true));
                 if(isNetworkAvailable(activity)){
                     setBtechAvailabilityAsyncTask.execute(setBtechAvailabilityAsyncTask);
                 }
@@ -252,13 +248,23 @@ public class ScheduleYourDayFragment extends AbstractFragment {
     }
 
     private class SetBtechAvailabilityAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        boolean isAvailable;
+        public SetBtechAvailabilityAsyncTaskDelegateResult(boolean isAvailable) {
+            this.isAvailable = isAvailable;
+        }
+
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if(statusCode==200||statusCode==201){
                 Toast.makeText(activity,"Availability set Successfully",Toast.LENGTH_SHORT).show();
-                appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json,SetBtechAvailabilityAPIRequestModel.class));
-                appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
-                pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false,VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                if(isAvailable) {
+                    appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json, SetBtechAvailabilityAPIRequestModel.class));
+                    appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
+                    pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                }
+                else{
+                    pushFragments(LeaveIntimationFragment.newInstance(),false,false,LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                }
             }
             else{
                 Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();

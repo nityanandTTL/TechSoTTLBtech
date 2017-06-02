@@ -71,6 +71,7 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_btech_collections_list, container, false);
         activity = (HomeScreenActivity) getActivity();
+        activity.toolbarHome.setTitle("Hub Scan");
         appPreferenceManager = new AppPreferenceManager(activity);
         hubbTechModel = getArguments().getParcelable(BundleConstants.HUB_BTECH_MODEL);
         initUI(view);

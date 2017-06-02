@@ -7,6 +7,10 @@
             android:id="@+id/nav_home"
             android:title="Home" />
         <item
+            android:id="@+id/nav_leave"
+            android:icon="@drawable/change_password"
+            android:title="Leave Intimation" />
+        <item
             android:id="@+id/nav_change_password"
             android:icon="@drawable/change_password"
             android:title="Change Password" />

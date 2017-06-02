@@ -59,6 +59,7 @@ public class OLCPickupListDisplayFragment extends AbstractFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_btech_client_list, container, false);
         activity = (HomeScreenActivity) getActivity();
+        activity.toolbarHome.setTitle("OLC Pickup");
         activity.isOnHome = false;
         initUI(view);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

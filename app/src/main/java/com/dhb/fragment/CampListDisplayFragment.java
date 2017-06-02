@@ -96,6 +96,7 @@ public class CampListDisplayFragment extends AbstractFragment {
         rootView = inflater.inflate(R.layout.fragment_camp_list, container, false);
         initUI();
         activity = (HomeScreenActivity) getActivity();
+        activity.toolbarHome.setTitle("Camp");
         activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
         fetchData();

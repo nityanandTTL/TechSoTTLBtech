@@ -68,10 +68,9 @@ public class SplashScreenActivity extends AbstractActivity {
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(activity,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            new String[]{
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
                                     Manifest.permission.CAMERA,
-                                    Manifest.permission.CHANGE_WIFI_STATE,
-                                    Manifest.permission.ACCESS_WIFI_STATE,
                                     Manifest.permission.READ_CONTACTS,
                                     Manifest.permission.CALL_PHONE,
                                     Manifest.permission.ACCESS_NETWORK_STATE,
