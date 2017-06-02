@@ -61,7 +61,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     Button btn_takePhoto, btn_uploadPhoto;
     String userChoosenTask, encodedProImg;
-    Bitmap thumbnail;// = null;
+    Bitmap thumbnail, thumbnailToDisplay;// = null;
     private static final int REQUEST_CAMERA = 100;
     Activity activity;
     AppPreferenceManager appPreferenceManager;
@@ -190,11 +190,18 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     private void cameraIntent() {
+
+        //changes_1june2017
+       /* Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);*/
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
         outPutfileUri = FileProvider.getUriForFile(SelfieUploadActivity.this, SelfieUploadActivity.this.getApplicationContext().getPackageName() + ".provider", file);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, outPutfileUri);
         startActivityForResult(intent, REQUEST_CAMERA);
+        //changes_1june2017
+
     }
 
     @Override
@@ -202,34 +209,71 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CAMERA) {
-                onCaptureImageResult();
+
+                onCaptureImageResult(data);
             }
         }
     }
 
-    private void onCaptureImageResult() {
+    private void onCaptureImageResult(Intent data) {
+
+        //This image is for upload purpose...
+        thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        encodedProImg = CommonUtils.encodeImage(thumbnail);
+
         String uri = outPutfileUri.toString();
         Log.e("uri-:", uri);
-        Toast.makeText(this, outPutfileUri.toString(), Toast.LENGTH_LONG).show();
-        try {
-            thumbnail = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outPutfileUri);
-            Drawable img = new BitmapDrawable(getResources(), thumbnail);
+        //Toast.makeText(this, outPutfileUri.toString(), Toast.LENGTH_LONG).show();
 
-            encodedProImg = CommonUtils.encodeImage(thumbnail);
+        try {
             if (!InputUtils.isNull(encodedProImg)) {
+                //Toast.makeText(activity, "if", Toast.LENGTH_SHORT).show();
+
                 btn_uploadPhoto.setVisibility(View.VISIBLE);
                 btn_takePhoto.setVisibility(View.INVISIBLE);
             } else {
+                //Toast.makeText(activity, "else", Toast.LENGTH_SHORT).show();
+
                 btn_uploadPhoto.setVisibility(View.INVISIBLE);
                 btn_takePhoto.setVisibility(View.VISIBLE);
             }
+
+            //This image is for display purpose...
+            thumbnailToDisplay = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outPutfileUri);
+            ByteArrayOutputStream bytesToDisplay = new ByteArrayOutputStream();
+            thumbnailToDisplay.compress(Bitmap.CompressFormat.JPEG, 90, bytesToDisplay);
+            Drawable img = new BitmapDrawable(getResources(), thumbnailToDisplay);
             img_user_picture.setImageDrawable(img);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        /*************************************************************************************/
+
+        /*thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        encodedProImg = CommonUtils.encodeImage(thumbnail);
+        if (!InputUtils.isNull(encodedProImg)) {
+            //Toast.makeText(activity, "if", Toast.LENGTH_SHORT).show();
+
+            btn_uploadPhoto.setVisibility(View.VISIBLE);
+            btn_takePhoto.setVisibility(View.INVISIBLE);
+        } else {
+            //Toast.makeText(activity, "else", Toast.LENGTH_SHORT).show();
+
+            btn_uploadPhoto.setVisibility(View.INVISIBLE);
+            btn_takePhoto.setVisibility(View.VISIBLE);
+        }
+        img_user_picture.setImageBitmap(thumbnail);*/
     }
 
     private void showImage(Bitmap bm) {
+
         final Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.dialog_full_image_display);
         TouchImageView imgFullDisplay = (TouchImageView) dialog.findViewById(R.id.img_selfie_full);

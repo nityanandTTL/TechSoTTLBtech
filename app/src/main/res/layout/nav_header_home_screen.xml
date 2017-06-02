@@ -13,7 +13,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <com.dhb.customview.RoundedImageView
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:layout_marginTop="18dp"
         android:id="@+id/img_user_picture"
         android:layout_width="60dp"
         android:layout_height="60dp"

@@ -2,11 +2,18 @@ package com.dhb.activity;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -34,8 +41,13 @@ import com.dhb.uiutils.AbstractActivity;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.CommonUtils;
 import com.dhb.utils.app.InputUtils;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONException;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 public class HomeScreenActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,14 +56,14 @@ public class HomeScreenActivity extends AbstractActivity
     private DrawerLayout drawer;
     private NavigationView navigationView;
     public Toolbar toolbarHome;
-    private RoundedImageView rivSelfie;
+    private CircularImageView rivSelfie;
     private TextView txtUserName;
     private TextView txtUserId;
     private LinearLayout llNavHeader;
     private HomeScreenActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private DhbDao dhbDao;
-    private int  camefrom=0;
+    private int camefrom = 0;
     private boolean doubleBackToExitPressedOnce = false;
     public boolean isOnHome = false;
     ActionBarDrawerToggle toggle;
@@ -66,30 +78,48 @@ public class HomeScreenActivity extends AbstractActivity
         Crashlytics.setUserIdentifier(appPreferenceManager.getLoginResponseModel().getUserID());
         Crashlytics.setUserName(appPreferenceManager.getLoginResponseModel().getUserName());
         initUI();
-        if(appPreferenceManager.getLeaveFlag()!=0){
-            pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+        if (appPreferenceManager.getLeaveFlag() != 0) {
+            pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             appPreferenceManager.setCameFrom(1);
             toolbarHome.setVisibility(View.GONE);
-        }
-        else {
+
+        } else {
             toolbarHome.setVisibility(View.VISIBLE);
-            pushFragments(HomeScreenFragment.newInstance(), false,false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         }
         initData();
-       // pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+        // pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
     }
-    public void setTitle(String title){
+
+    public void setTitle(String title) {
         toolbarHome.setTitle(title);
     }
+
     private void initData() {
-        if(!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserName()))
+        if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserName()))
             txtUserName.setText(appPreferenceManager.getLoginResponseModel().getUserName());
-        if(!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()))
+        if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()))
             txtUserId.setText(appPreferenceManager.getLoginResponseModel().getUserID());
-        if(appPreferenceManager.getSelfieResponseModel()!=null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
-            rivSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
+        if (appPreferenceManager.getSelfieResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
+
+            //changed_for_selfie_2june_2017
+            //rivSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
+            File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
+            Uri outPutfileUri = FileProvider.getUriForFile(HomeScreenActivity.this, HomeScreenActivity.this.getApplicationContext().getPackageName() + ".provider", file);
+            Bitmap thumbnailToDisplay = null;
+            try {
+                thumbnailToDisplay = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outPutfileUri);
+                ByteArrayOutputStream bytesToDisplay = new ByteArrayOutputStream();
+                thumbnailToDisplay.compress(Bitmap.CompressFormat.JPEG, 90, bytesToDisplay);
+                Drawable img = new BitmapDrawable(getResources(), thumbnailToDisplay);
+                rivSelfie.setImageDrawable(img);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //changed_for_selfie_2june_2017
         }
     }
+
     @Override
     public void initUI() {
         super.initUI();
@@ -114,10 +144,10 @@ public class HomeScreenActivity extends AbstractActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-         navigationView.setItemIconTintList(null);
-        View NavHeaderHomeScreen = LayoutInflater.from(activity).inflate(R.layout.nav_header_home_screen,null);
+        navigationView.setItemIconTintList(null);
+        View NavHeaderHomeScreen = LayoutInflater.from(activity).inflate(R.layout.nav_header_home_screen, null);
         llNavHeader = (LinearLayout) NavHeaderHomeScreen.findViewById(R.id.ll_nav_header);
-        rivSelfie = (RoundedImageView) NavHeaderHomeScreen.findViewById(R.id.img_user_picture);
+        rivSelfie = (CircularImageView) NavHeaderHomeScreen.findViewById(R.id.img_user_picture);
         txtUserId = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_id);
         txtUserName = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_name);
         navigationView.addHeaderView(NavHeaderHomeScreen);
@@ -133,19 +163,18 @@ public class HomeScreenActivity extends AbstractActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }else{
-            if(isOnHome) {
+        } else {
+            if (isOnHome) {
                 this.doubleBackToExitPressedOnce = true;
                 Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                pushFragments(HomeScreenFragment.newInstance(), false,false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            } else {
+                pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             }
         }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
     }
@@ -166,7 +195,7 @@ public class HomeScreenActivity extends AbstractActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+            pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             return true;
         }
 
@@ -186,16 +215,21 @@ public class HomeScreenActivity extends AbstractActivity
             pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         }else if (id == R.id.nav_change_password) {
             toolbarHome.setVisibility(View.VISIBLE);
-            pushFragments(ResetPasswordFragment.newInstance(),false,false, ResetPasswordFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+            pushFragments(ResetPasswordFragment.newInstance(), false, false, ResetPasswordFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         } else if (id == R.id.nav_logout) {
             toolbarHome.setVisibility(View.VISIBLE);
+
+            //delete the image from storage_change_2june_2017
+            File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
+            boolean deleted = file.delete();
+            //delete the image from storage_change_2june_2017
+
             ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
             logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
-            if(isNetworkAvailable(activity)){
+            if (isNetworkAvailable(activity)) {
                 logoutAsyncTask.execute(logoutAsyncTask);
-            }
-            else{
-                Toast.makeText(activity,"Logout functionality is only available in Online Mode",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
             }
         } else if (id == R.id.nav_communication) {
             toolbarHome.setVisibility(View.VISIBLE);
@@ -208,17 +242,16 @@ public class HomeScreenActivity extends AbstractActivity
     private class LogoutAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if(statusCode==200){
+            if (statusCode == 200) {
                 appPreferenceManager.clearAllPreferences();
                 dhbDao.deleteTablesonLogout();
                 Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-                homeIntent.addCategory( Intent.CATEGORY_HOME );
+                homeIntent.addCategory(Intent.CATEGORY_HOME);
                 homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(homeIntent);
                 finish();
-            }
-            else{
-                Toast.makeText(activity,"Failed to Logout",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
             }
         }
 

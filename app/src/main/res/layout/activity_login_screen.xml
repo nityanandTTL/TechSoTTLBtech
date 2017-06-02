@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/dp_10"
-        android:src="@drawable/app_logo"/>
+        android:src="@drawable/app_logo_img"/>
     <LinearLayout
         android:layout_weight="5"
         android:layout_width="match_parent"
@@ -49,6 +49,7 @@
                     android:background="@drawable/username_icon" />
 
                 <EditText
+                    android:background="@drawable/custom_border_grey"
                     android:id="@+id/username_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -75,6 +76,7 @@
                     android:background="@drawable/password_icon" />
 
                 <EditText
+                    android:background="@drawable/custom_border_grey"
                     android:id="@+id/password_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -2,7 +2,14 @@ package com.dhb.fragment;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +29,14 @@ import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.CommonUtils;
 import com.dhb.utils.app.InputUtils;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 public class HomeScreenFragment extends AbstractFragment {
 
@@ -32,9 +44,10 @@ public class HomeScreenFragment extends AbstractFragment {
     private HomeScreenActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private View rootView;
-    private TextView txtUserName,txt_no_of_camps;
-    private RoundedImageView rvSelfie;
-    private ImageView imgPayment, imgOrders,imgSchedule, imgMaterials, imgOLCPickup, imgHub,imgCamp,imgCommunication,imgLedger;
+    private TextView txtUserName, txt_no_of_camps;
+    private CircularImageView rvSelfie;
+    private ImageView imgPayment, imgOrders, imgSchedule, imgMaterials, imgOLCPickup, imgHub, imgCamp, imgCommunication, imgLedger;
+
     public HomeScreenFragment() {
         // Required empty public constructor
     }
@@ -44,8 +57,6 @@ public class HomeScreenFragment extends AbstractFragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-
-
 
 
     }
@@ -88,8 +99,23 @@ public class HomeScreenFragment extends AbstractFragment {
 
     private void initData() {
         txtUserName.setText(appPreferenceManager.getLoginResponseModel().getUserName());
-        if(appPreferenceManager.getSelfieResponseModel()!=null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
-            rvSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
+        if (appPreferenceManager.getSelfieResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
+
+            //changed_for_selfie_2june_2017
+            //rvSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
+            File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
+            Uri outPutfileUri = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName() + ".provider", file);
+            Bitmap thumbnailToDisplay = null;
+            try {
+                thumbnailToDisplay = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), outPutfileUri);
+                ByteArrayOutputStream bytesToDisplay = new ByteArrayOutputStream();
+                thumbnailToDisplay.compress(Bitmap.CompressFormat.JPEG, 90, bytesToDisplay);
+                Drawable img = new BitmapDrawable(getResources(), thumbnailToDisplay);
+                rvSelfie.setImageDrawable(img);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //changed_for_selfie_2june_2017
         }
     }
 
@@ -97,61 +123,61 @@ public class HomeScreenFragment extends AbstractFragment {
         imgOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(VisitOrdersDisplayFragment.newInstance(),false,false, VisitOrdersDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(VisitOrdersDisplayFragment.newInstance(), false, false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         imgHub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(HubListDisplayFragment.newInstance(),false,false, HubListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(HubListDisplayFragment.newInstance(), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         imgPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentPaymentsActivity = new Intent(activity, PaymentsActivity.class);
-                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_ORDER_NO,"");
-                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_AMOUNT,"0");
-                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,3);
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_ORDER_NO, "");
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_AMOUNT, "0");
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE, Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                intentPaymentsActivity.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 3);
                 startActivity(intentPaymentsActivity);
             }
         });
         imgSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(ScheduleYourDayFragment.newInstance(),false,false,ScheduleYourDayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(ScheduleYourDayFragment.newInstance(), false, false, ScheduleYourDayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         imgMaterials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(MaterialFragment.newInstance(),false,false,MaterialFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(MaterialFragment.newInstance(), false, false, MaterialFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         imgOLCPickup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(OLCPickupListDisplayFragment.newInstance(),false,false, OLCPickupListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(OLCPickupListDisplayFragment.newInstance(), false, false, OLCPickupListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
-         imgCamp.setOnClickListener(new View.OnClickListener() {
+        imgCamp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Toast.makeText(activity,"Feature coming soon.",Toast.LENGTH_SHORT).show();
-                pushFragments(CampListDisplayFragment.newInstance(),false,false,CampListDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(CampListDisplayFragment.newInstance(), false, false, CampListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         imgCommunication.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 Toast.makeText(activity,"Feature coming soon.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Feature coming soon.", Toast.LENGTH_SHORT).show();
             }
         });
         imgLedger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(LedgerDisplayFragment.newInstance(),false,false,LedgerDisplayFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(LedgerDisplayFragment.newInstance(), false, false, LedgerDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
     }
@@ -160,28 +186,27 @@ public class HomeScreenFragment extends AbstractFragment {
     public void initUI() {
         super.initUI();
         txtUserName = (TextView) rootView.findViewById(R.id.txt_username);
-        rvSelfie = (RoundedImageView) rootView.findViewById(R.id.img_user_picture);
+        rvSelfie = (CircularImageView) rootView.findViewById(R.id.img_user_picture);
         imgPayment = (ImageView) rootView.findViewById(R.id.payment_icon);
         imgOrders = (ImageView) rootView.findViewById(R.id.orders_booked);
         imgSchedule = (ImageView) rootView.findViewById(R.id.schedule_icon);
         imgHub = (ImageView) rootView.findViewById(R.id.hub_icon);
         imgOLCPickup = (ImageView) rootView.findViewById(R.id.olc_pickup_icon);
         imgCommunication = (ImageView) rootView.findViewById(R.id.communication_icon);
-        imgLedger= (ImageView) rootView.findViewById(R.id.Ledger_icon);
+        imgLedger = (ImageView) rootView.findViewById(R.id.Ledger_icon);
         imgCamp = (ImageView) rootView.findViewById(R.id.camp_icon);
         imgMaterials = (ImageView) rootView.findViewById(R.id.materials_icon);
-        imgOLCPickup=(ImageView)rootView.findViewById(R.id.olc_pickup_icon);
-        txt_no_of_camps=(TextView)rootView.findViewById(R.id.txt_no_of_camps);
+        imgOLCPickup = (ImageView) rootView.findViewById(R.id.olc_pickup_icon);
+        txt_no_of_camps = (TextView) rootView.findViewById(R.id.txt_no_of_camps);
     }
 
     private class CampDetailsCountApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode==200){
-                JSONObject jsonObject=new JSONObject(json);
-                txt_no_of_camps.setText(""+jsonObject.getString("CampCount"));
-            }
-            else {
+            if (statusCode == 200) {
+                JSONObject jsonObject = new JSONObject(json);
+                txt_no_of_camps.setText("" + jsonObject.getString("CampCount"));
+            } else {
                 Toast.makeText(activity, "Failed to Fetch Camp Count", Toast.LENGTH_SHORT).show();
             }
         }
