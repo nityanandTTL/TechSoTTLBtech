@@ -74,7 +74,7 @@ public class CancelOrderDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
             if(!InputUtils.isNull(edt_remark.getText().toString().trim())) {
-                if(edt_remark.getText().toString().length()<10) {
+                if(edt_remark.getText().toString().length()>=10) {
                     orderCancelDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_remark.getText().toString().trim());
                     dismiss();
                 }

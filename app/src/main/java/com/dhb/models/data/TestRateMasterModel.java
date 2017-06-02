@@ -218,7 +218,7 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
         return false;
     }
 
-    public boolean checkIfChildsMatch(TestRateMasterModel tt){
+    public boolean checkIfChildsContained(TestRateMasterModel tt){
         boolean isChilds = false;
         if(getChldtests()!=null && getChldtests().size()>0) {
             int ttChildSize = tt.getChldtests().size();

@@ -220,7 +220,7 @@ public class EditTestListActivity extends AbstractActivity{
                                         k++;
                                     }
                                 }
-                                if(tt.checkIfChildsMatch(tt2)){
+                                if(tt.checkIfChildsContained(tt2)){
                                     selectedTestsList.remove(tt2);
                                 }
                             }

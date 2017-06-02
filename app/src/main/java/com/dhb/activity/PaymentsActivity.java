@@ -667,27 +667,78 @@ public class PaymentsActivity extends AbstractActivity {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                paymentDoCaptureResponseAPIResponseModel = responseParser.getPaymentDoCaptureAPIResponse(json, statusCode);
-                switch (paymentDoCaptureResponseAPIResponseModel.getStatus()) {
-                    case "PAYMENT SUCCESS": {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setTitle("Payment Status")
-                            .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                PaymentDoCaptureResponseAPIResponseModel tempPDCRAPRM  = responseParser.getPaymentDoCaptureAPIResponse(json, statusCode);
+                if(tempPDCRAPRM.getStatus()!=null) {
+                    paymentDoCaptureResponseAPIResponseModel = tempPDCRAPRM;
+                    switch (paymentDoCaptureResponseAPIResponseModel.getStatus()) {
+                        case "PAYMENT SUCCESS": {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setTitle("Payment Status")
+                                    .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent intent = new Intent();
+                                            intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
+                                            setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                            finish();
+                                        }
+                                    }).show();
+                            break;
+                        }
+                        case "PAYMENT FAILED": {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setTitle("Payment Status")
+                                    .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
+                                    .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent intent = new Intent();
+                                            intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                            setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                            finish();
+                                        }
+                                    }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent();
-                                    intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
-                                    setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                    finish();
+                                    fetchRecheckResponseData(showProgressDialog);
                                 }
                             }).show();
-                        break;
+                            break;
+                        }
+                        default: {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setTitle("Verify Payment")
+                                    .setMessage("Verify Payment Status failed! Please click Retry to check payment status again.")
+                                    .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            fetchRecheckResponseData(showProgressDialog);
+                                        }
+                                    })
+                                    .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent intent = new Intent();
+                                            intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                            setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                            finish();
+                                        }
+                                    }).show();
+                            break;
+                        }
                     }
-                    case "PAYMENT FAILED": {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setTitle("Payment Status")
-                            .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
+                }
+                else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setTitle("Verify Payment")
+                            .setMessage("Verify Payment Status failed! Please click Retry to check payment status again.")
+                            .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    fetchDoCaptureResponse(true);
+                                }
+                            })
                             .setPositiveButton("Close", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -696,35 +747,7 @@ public class PaymentsActivity extends AbstractActivity {
                                     setResult(BundleConstants.PAYMENTS_FINISH, intent);
                                     finish();
                                 }
-                            }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                fetchRecheckResponseData(showProgressDialog);
-                            }
-                        }).show();
-                        break;
-                    }
-                    default: {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                            builder.setTitle("Verify Payment")
-                                .setMessage("Verify Payment Status failed! Please click Retry to check payment status again.")
-                                .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        fetchRecheckResponseData(showProgressDialog);
-                                    }
-                                })
-                                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent();
-                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                        finish();
-                                    }
-                                }).show();
-                        break;
-                    }
+                            }).show();
                 }
             } else {
                 Toast.makeText(activity, json + "", Toast.LENGTH_SHORT).show();
