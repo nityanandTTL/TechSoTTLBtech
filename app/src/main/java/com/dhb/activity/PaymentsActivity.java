@@ -45,6 +45,7 @@ import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.InputUtils;
+import com.google.zxing.qrcode.decoder.Mode;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,6 +88,7 @@ public class PaymentsActivity extends AbstractActivity {
     //TODO tejas - 7738185400 for airtel money
     //TODO tejas - testthyrocare@axis for UPI
     int buttonDecider = 0;
+    private int ModeId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,6 +259,9 @@ public class PaymentsActivity extends AbstractActivity {
             jsonRequest.put("URLId", pparm.getURLId());
             for (PaymentNameValueModel pnvm :
                     pparm.getNameValueCollection()) {
+                if(pnvm.getKey().equals("ModeId")){
+                    ModeId = Integer.parseInt(pnvm.getValue());
+                }
                 jsonRequest.put(pnvm.getKey(), pnvm.getValue());
             }
             fetchPaymentPassInputsAsyncTask = asyncTaskForRequest.getTransactionInputsRequestAsyncTask(jsonRequest);
@@ -305,8 +310,6 @@ public class PaymentsActivity extends AbstractActivity {
                         View v1 = activity.getLayoutInflater().inflate(R.layout.payment_edit_text, null);
                         EditText edtPaymentUserInputs = (EditText) v1.findViewById(R.id.edit_payment);
                         TextView txtPaymentUserInputss = (TextView) v1.findViewById(R.id.payment_text);
-
-                        //changes_1may2017
                         if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Mobile")) {
                             String strMobile = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                             txtPaymentUserInputss.setText(strMobile);
@@ -314,9 +317,6 @@ public class PaymentsActivity extends AbstractActivity {
                         else {
                             txtPaymentUserInputss.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                         }
-                        //txtPaymentUserInputss.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
-                        //changes_1may2017
-
                         edtPaymentUserInputs.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                         edtPaymentUserInputs.addTextChangedListener(new TextWatcher() {
                             @Override
@@ -408,8 +408,6 @@ public class PaymentsActivity extends AbstractActivity {
                         View v2 = activity.getLayoutInflater().inflate(R.layout.payment_textview, null);
                         TextView txtPaymentSystemInputsLabel = (TextView) v2.findViewById(R.id.payment_text1);
                         TextView txtPaymentSystemInputs = (TextView) v2.findViewById(R.id.payment_text2);
-
-                        //changes_1may2017
                         if(paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Name"))
                         {
                             String strName = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":");
@@ -429,9 +427,6 @@ public class PaymentsActivity extends AbstractActivity {
                         {
                             txtPaymentSystemInputsLabel.setText((paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":"));
                         }
-                        //txtPaymentSystemInputsLabel.setText((paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":"));
-                        //changes_1may2017
-
                         txtPaymentSystemInputs.setText(paymentPassInputsModel.getNameValueCollection().get(i).getValue());
                         llPaymentPassInputs.addView(v2);
                     }
@@ -491,13 +486,18 @@ public class PaymentsActivity extends AbstractActivity {
             if (statusCode == 200) {
                 paymentStartTransactionAPIResponseModel = responseParser.getPaymentStartTransactionResponse(json, statusCode);
                 if(paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
-                    if(NarrationId==1||NarrationId==3) {
+                    if(NarrationId==1||NarrationId==3||(NarrationId==2&& ModeId==1)) {
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setMessage("Please wait while we generate a payment request");
+                        final AlertDialog dialog = builder.create();
+                        dialog.show();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                dialog.dismiss();
                                 fetchDoCaptureResponse(true);
                             }
-                        },5000);
+                        },60000);
                     }
                     else{
                         initDoCaptureResponseData();
@@ -584,53 +584,17 @@ public class PaymentsActivity extends AbstractActivity {
                     wvQRDisplay.setInitialScale(getScale());
                     wvQRDisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
                     llPaymentStartTransaction.addView(wvQRDisplay);
-                    /*View pbView = getLayoutInflater().inflate(R.layout.item_progress_bar,null);
-                    ProgressBar pb = (ProgressBar) pbView.findViewById(R.id.pb_payment_progress);
-                    llPaymentStartTransaction.addView(pbView);*/
-                    /*new Handler().postDelayed(new Runnable() {
+                    Toast.makeText(activity,"Please wait while the customer scans the QR Code",Toast.LENGTH_LONG).show();
+                    new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             fetchDoCaptureResponse(false);
                         }
-                    },30000);*/
-                    break;
-                } else if (paymentNameValueModel.getKey().equals("ModeId") && paymentNameValueModel.getValue().equals("1")) {
-                    buttonDecider = 1;
-                    WebView wvCCADisplay = new WebView(activity);
-                    wvCCADisplay.loadUrl("about:blank");
-                    wvCCADisplay.canGoBack();
-                    wvCCADisplay.setWebChromeClient(new WebChromeClient() {
-                        public void onProgressChanged(WebView view, int progress) {
-                            activity.setProgress(progress * 1000);
-                        }
-                    });
-                    wvCCADisplay.setWebViewClient(new WebViewClient(){
-                        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                            Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    wvCCADisplay.setWebViewClient(new WebViewClient());
-                    WebSettings settings = wvCCADisplay.getSettings();
-                    settings.setJavaScriptEnabled(true);
-                    settings.setBuiltInZoomControls(true);
-                    LinearLayout.LayoutParams llwvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    wvCCADisplay.setLayoutParams(llwvParams);
-                    wvCCADisplay.setInitialScale(getScale());
-                    wvCCADisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
-                    llPaymentStartTransaction.addView(wvCCADisplay);
-                    /*View pbView = getLayoutInflater().inflate(R.layout.item_progress_bar,null);
-                    ProgressBar pb = (ProgressBar) pbView.findViewById(R.id.pb_payment_progress);
-                    llPaymentStartTransaction.addView(pbView);*/
-                    /*new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            fetchDoCaptureResponse(false);
-                        }
-                    },60000);*/
+                    },60000);
                     break;
                 }
             }
-            //for paytm & cc avenue
+            /*//for paytm & cc avenue
             if (buttonDecider == 1) {
                 ImageView imgPaymentStartTransactionSubmit = new ImageView(activity);
                 Logger.debug("counter" + String.valueOf(buttonDecider));
@@ -649,7 +613,7 @@ public class PaymentsActivity extends AbstractActivity {
                 flPayments.addView(llPaymentStartTransaction);
             }
             //for airtel
-            else if (buttonDecider == 0) {
+            else */if (buttonDecider == 0) {
                 Button btnPaymentStartTransactionSubmit = new Button(activity);
                 Logger.debug("counter" + String.valueOf(buttonDecider));
                 LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -680,7 +644,7 @@ public class PaymentsActivity extends AbstractActivity {
                 jsonRequest.put(pnvm.getKey(), pnvm.getValue());
             }
             doCaptureResponseAsyncTask = asyncTaskForRequest.getDoCaptureResponseRequestAsyncTask(jsonRequest, paymentStartTransactionAPIResponseModel.getReqParameters().getAPIUrl());
-            doCaptureResponseAsyncTask.setApiCallAsyncTaskDelegate(new DoCaptureResponseAsyncTaskDelegateResult());
+            doCaptureResponseAsyncTask.setApiCallAsyncTaskDelegate(new DoCaptureResponseAsyncTaskDelegateResult(showProgressDialog));
             doCaptureResponseAsyncTask.setProgressBarVisible(showProgressDialog);
             if (isNetworkAvailable(activity)) {
                 startRecheckMillis = Calendar.getInstance().getTimeInMillis();
@@ -694,6 +658,11 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
     private class DoCaptureResponseAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        private boolean showProgressDialog;
+        public DoCaptureResponseAsyncTaskDelegateResult(boolean showProgressDialog) {
+            this.showProgressDialog = showProgressDialog;
+        }
+
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
@@ -702,23 +671,52 @@ public class PaymentsActivity extends AbstractActivity {
                     case "PAYMENT SUCCESS": {
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                         builder.setTitle("Payment Status")
-                                .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent();
-                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
-                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                        finish();
-                                    }
-                                }).show();
+                            .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent();
+                                    intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
+                                    setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                    finish();
+                                }
+                            }).show();
                         break;
                     }
                     case "PAYMENT FAILED": {
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                         builder.setTitle("Payment Status")
-                                .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent();
+                                    intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                    setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                    finish();
+                                }
+                            }).show();
+                        break;
+                    }
+                    default: {
+                        if ((Calendar.getInstance().getTimeInMillis() - startRecheckMillis) <= AppConstants.CHECK_PAYMENT_RESPONSE_MAX_TIMEOUT) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    fetchRecheckResponseData(showProgressDialog);
+                                }
+                            }, 15000);
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setTitle("Payment Status")
+                                .setMessage("Failed to Verify Payment Status!")
+                                .setNegativeButton("Recheck", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        fetchRecheckResponseData(showProgressDialog);
+                                    }
+                                })
+                                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         Intent intent = new Intent();
@@ -727,33 +725,9 @@ public class PaymentsActivity extends AbstractActivity {
                                         finish();
                                     }
                                 }).show();
-                        break;
-                    }
-                    default:
-
-                        if ((Calendar.getInstance().getTimeInMillis()-startRecheckMillis) <= AppConstants.CHECK_PAYMENT_RESPONSE_MAX_TIMEOUT) {
-                            fetchRecheckResponseData();
-                        } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                            builder.setTitle("Payment Status")
-                                    .setMessage("Failed to Verify Payment Status!")
-                                    .setNegativeButton("Recheck", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            fetchRecheckResponseData();
-                                        }
-                                    })
-                                    .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Intent intent = new Intent();
-                                            intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                                            setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                            finish();
-                                        }
-                                    }).show();
                         }
                         break;
+                    }
                 }
             } else {
                 Toast.makeText(activity, json + "", Toast.LENGTH_SHORT).show();
@@ -766,7 +740,7 @@ public class PaymentsActivity extends AbstractActivity {
         }
     }
 
-    private void fetchRecheckResponseData() {
+    private void fetchRecheckResponseData(boolean showProgressDialog) {
         JSONObject jsonRequest = new JSONObject();
         try {
             jsonRequest.put("URLId", paymentDoCaptureResponseAPIResponseModel.getReqParameters().getURLId());
@@ -775,7 +749,8 @@ public class PaymentsActivity extends AbstractActivity {
                 jsonRequest.put(pnvm.getKey(), pnvm.getValue());
             }
             recheckResponseAsyncTask = asyncTaskForRequest.getDoCaptureResponseRequestAsyncTask(jsonRequest, paymentDoCaptureResponseAPIResponseModel.getReqParameters().getAPIUrl());
-            recheckResponseAsyncTask.setApiCallAsyncTaskDelegate(new DoCaptureResponseAsyncTaskDelegateResult());
+            recheckResponseAsyncTask.setApiCallAsyncTaskDelegate(new DoCaptureResponseAsyncTaskDelegateResult(showProgressDialog));
+            recheckResponseAsyncTask.setProgressBarVisible(showProgressDialog);
             if (isNetworkAvailable(activity)) {
                 recheckResponseAsyncTask.execute(recheckResponseAsyncTask);
             } else {
