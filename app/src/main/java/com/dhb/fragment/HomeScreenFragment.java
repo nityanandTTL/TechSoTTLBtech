@@ -102,8 +102,8 @@ public class HomeScreenFragment extends AbstractFragment {
         if (appPreferenceManager.getSelfieResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
 
             //changed_for_selfie_2june_2017
-            //rvSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
-            File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
+            rvSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
+            /*File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
             Uri outPutfileUri = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName() + ".provider", file);
             Bitmap thumbnailToDisplay = null;
             try {
@@ -114,7 +114,7 @@ public class HomeScreenFragment extends AbstractFragment {
                 rvSelfie.setImageDrawable(img);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
             //changed_for_selfie_2june_2017
         }
     }

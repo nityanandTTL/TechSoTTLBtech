@@ -70,6 +70,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
+        activity.toolbarHome.setTitle("Schedule your Day");
         activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
         savedModel = appPreferenceManager.getBtechAvailabilityAPIRequestModel();
@@ -104,7 +105,6 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         txtNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 txtNo.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
                 txtYes.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 llSlotsDisplay.setVisibility(View.GONE);

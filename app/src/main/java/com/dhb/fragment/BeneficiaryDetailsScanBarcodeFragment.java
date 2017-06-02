@@ -67,6 +67,7 @@ import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static com.dhb.utils.app.CommonUtils.decodedImageBytes;
 import static com.dhb.utils.app.CommonUtils.encodeImage;
@@ -361,14 +362,9 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             public void onClick(View v) {
                 String tests = beneficiaryDetailsModel.getTestsCode();
                 String projId = beneficiaryDetailsModel.getProjId();
-                ArrayList<String> testCodesList = new ArrayList<String>();
-                for (String testName:
-                        tests.split(",")) {
-                    testCodesList.add(testName);
-                }
-                if(!InputUtils.isNull(projId)){
-                    testCodesList.add(projId);
-                }
+                final ArrayList<String> testCodesList = new ArrayList<String>();
+                Collections.addAll(testCodesList, tests.split(","));
+                beneficiaryDetailsModel.setTestsList(new TestRateMasterDao(dhbDao.getDb()).getModelsFromTestCodes(tests));
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Tests List");
                 builder.setItems(testCodesList.toArray(new String[testCodesList.size()]), new DialogInterface.OnClickListener() {
@@ -384,12 +380,17 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intentEdit = new Intent(activity, EditTestListActivity.class);
-                        intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST,restOfTestsList);
-                        intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
-                        intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
-                        startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
-                        dialog.dismiss();
+                        if(testCodesList.size()==beneficiaryDetailsModel.getTestsList().size()) {
+                            Intent intentEdit = new Intent(activity, EditTestListActivity.class);
+                            intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST, restOfTestsList);
+                            intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
+                            intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                            startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
+                            dialog.dismiss();
+                        }
+                        else{
+                            Toast.makeText(activity,"Tests & Profiles cannot be edited for DSA Orders",Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
                 builder.show();

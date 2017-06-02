@@ -487,17 +487,24 @@ public class PaymentsActivity extends AbstractActivity {
                 paymentStartTransactionAPIResponseModel = responseParser.getPaymentStartTransactionResponse(json, statusCode);
                 if(paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
                     if(NarrationId==1||NarrationId==3||(NarrationId==2&& ModeId==1)) {
-                        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setMessage("Please wait while we generate a payment request");
-                        final AlertDialog dialog = builder.create();
-                        dialog.show();
-                        new Handler().postDelayed(new Runnable() {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setTitle("Verify Payment")
+                                .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
+                                .setCancelable(false)
+                        .setPositiveButton("Verify Payment", new DialogInterface.OnClickListener() {
                             @Override
-                            public void run() {
-                                dialog.dismiss();
+                            public void onClick(DialogInterface dialog, int which) {
                                 fetchDoCaptureResponse(true);
                             }
-                        },60000);
+                        }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent();
+                                intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                finish();
+                            }
+                        }).show();
                     }
                     else{
                         initDoCaptureResponseData();
@@ -585,16 +592,10 @@ public class PaymentsActivity extends AbstractActivity {
                     wvQRDisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
                     llPaymentStartTransaction.addView(wvQRDisplay);
                     Toast.makeText(activity,"Please wait while the customer scans the QR Code",Toast.LENGTH_LONG).show();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            fetchDoCaptureResponse(false);
-                        }
-                    },60000);
                     break;
                 }
             }
-            /*//for paytm & cc avenue
+            //for paytm & cc avenue
             if (buttonDecider == 1) {
                 ImageView imgPaymentStartTransactionSubmit = new ImageView(activity);
                 Logger.debug("counter" + String.valueOf(buttonDecider));
@@ -606,14 +607,14 @@ public class PaymentsActivity extends AbstractActivity {
                 imgPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fetchDoCaptureResponse(false);
+                        fetchDoCaptureResponse(true);
                     }
                 });
                 llPaymentStartTransaction.addView(imgPaymentStartTransactionSubmit);
                 flPayments.addView(llPaymentStartTransaction);
             }
             //for airtel
-            else */if (buttonDecider == 0) {
+            else if (buttonDecider == 0) {
                 Button btnPaymentStartTransactionSubmit = new Button(activity);
                 Logger.debug("counter" + String.valueOf(buttonDecider));
                 LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -687,7 +688,7 @@ public class PaymentsActivity extends AbstractActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                         builder.setTitle("Payment Status")
                             .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("Close", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent intent = new Intent();
@@ -695,22 +696,19 @@ public class PaymentsActivity extends AbstractActivity {
                                     setResult(BundleConstants.PAYMENTS_FINISH, intent);
                                     finish();
                                 }
-                            }).show();
+                            }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                fetchRecheckResponseData(showProgressDialog);
+                            }
+                        }).show();
                         break;
                     }
                     default: {
-                        if ((Calendar.getInstance().getTimeInMillis() - startRecheckMillis) <= AppConstants.CHECK_PAYMENT_RESPONSE_MAX_TIMEOUT) {
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    fetchRecheckResponseData(showProgressDialog);
-                                }
-                            }, 15000);
-                        } else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                            builder.setTitle("Payment Status")
-                                .setMessage("Failed to Verify Payment Status!")
-                                .setNegativeButton("Recheck", new DialogInterface.OnClickListener() {
+                            builder.setTitle("Verify Payment")
+                                .setMessage("Verify Payment Status failed! Please click Retry to check payment status again.")
+                                .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         fetchRecheckResponseData(showProgressDialog);
@@ -725,7 +723,6 @@ public class PaymentsActivity extends AbstractActivity {
                                         finish();
                                     }
                                 }).show();
-                        }
                         break;
                     }
                 }

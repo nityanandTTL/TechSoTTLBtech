@@ -103,8 +103,8 @@ public class HomeScreenActivity extends AbstractActivity
         if (appPreferenceManager.getSelfieResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
 
             //changed_for_selfie_2june_2017
-            //rivSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
-            File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
+            rivSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
+            /*File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
             Uri outPutfileUri = FileProvider.getUriForFile(HomeScreenActivity.this, HomeScreenActivity.this.getApplicationContext().getPackageName() + ".provider", file);
             Bitmap thumbnailToDisplay = null;
             try {
@@ -115,7 +115,7 @@ public class HomeScreenActivity extends AbstractActivity
                 rivSelfie.setImageDrawable(img);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
             //changed_for_selfie_2june_2017
         }
     }
@@ -219,10 +219,10 @@ public class HomeScreenActivity extends AbstractActivity
         } else if (id == R.id.nav_logout) {
             toolbarHome.setVisibility(View.VISIBLE);
 
-            //delete the image from storage_change_2june_2017
+            /*//delete the image from storage_change_2june_2017
             File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
             boolean deleted = file.delete();
-            //delete the image from storage_change_2june_2017
+            //delete the image from storage_change_2june_2017*/
 
             ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
             logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());

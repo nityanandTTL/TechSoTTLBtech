@@ -192,42 +192,42 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private void cameraIntent() {
 
         //changes_1june2017
-       /* Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_CAMERA);*/
-
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
+
+        /*Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
         outPutfileUri = FileProvider.getUriForFile(SelfieUploadActivity.this, SelfieUploadActivity.this.getApplicationContext().getPackageName() + ".provider", file);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, outPutfileUri);
-        startActivityForResult(intent, REQUEST_CAMERA);
+        startActivityForResult(intent, REQUEST_CAMERA);*/
         //changes_1june2017
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CAMERA) {
-
                 onCaptureImageResult(data);
             }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void onCaptureImageResult(Intent data) {
 
-        //This image is for upload purpose...
-        thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        encodedProImg = CommonUtils.encodeImage(thumbnail);
 
-        String uri = outPutfileUri.toString();
-        Log.e("uri-:", uri);
-        //Toast.makeText(this, outPutfileUri.toString(), Toast.LENGTH_LONG).show();
+        /*try {
+            //This image is for upload purpose...
+            thumbnail = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outPutfileUri);
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 10, bytes);
+            encodedProImg = CommonUtils.encodeImage(thumbnail);
 
-        try {
+            String uri = outPutfileUri.toString();
+            Log.e("uri-:", uri);
+            //Toast.makeText(this, outPutfileUri.toString(), Toast.LENGTH_LONG).show();
+
             if (!InputUtils.isNull(encodedProImg)) {
                 //Toast.makeText(activity, "if", Toast.LENGTH_SHORT).show();
 
@@ -249,11 +249,11 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         /*************************************************************************************/
 
-        /*thumbnail = (Bitmap) data.getExtras().get("data");
+        thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
@@ -269,7 +269,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             btn_uploadPhoto.setVisibility(View.INVISIBLE);
             btn_takePhoto.setVisibility(View.VISIBLE);
         }
-        img_user_picture.setImageBitmap(thumbnail);*/
+        img_user_picture.setImageBitmap(thumbnail);
     }
 
     private void showImage(Bitmap bm) {
