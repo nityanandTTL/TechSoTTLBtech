@@ -399,10 +399,10 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
                 ArrayList<TestRateMasterModel> forCHSelection = new ArrayList<>();
-                if(beneficiaryDetailsModel.getTestsList()!=null) {
+                if(beneficiaryDetailsModel.getTestsList()!= null) {
                     for (TestRateMasterModel testRateMasterModel :
                             beneficiaryDetailsModel.getTestsList()) {
-                        if(testRateMasterModel.getTstClinicalHistory()!=null && testRateMasterModel.getTstClinicalHistory().size()>0){
+                        if(testRateMasterModel.getTstClinicalHistory()!= null && testRateMasterModel.getTstClinicalHistory().size()>0){
                             forCHSelection.add(testRateMasterModel);
                         }
                     }

@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/bgTitleRight"
+                android:background="@drawable/camp_screen_bg"
                 android:paddingTop="20dp">
 
                 <ImageView
@@ -225,7 +225,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
-            android:background="@color/bg_content">
+            android:background="@drawable/camp_screen_bg1">
 
             <LinearLayout
                 android:id="@+id/ll_content"
@@ -320,7 +320,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
-            android:background="@color/bg_content">
+            android:background="@drawable/camp_screen_bg2">
 
             <TextView
                 android:id="@+id/tv_test"
