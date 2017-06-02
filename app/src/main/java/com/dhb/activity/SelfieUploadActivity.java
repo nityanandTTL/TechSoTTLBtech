@@ -61,7 +61,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     Button btn_takePhoto, btn_uploadPhoto;
     String userChoosenTask, encodedProImg;
-    Bitmap thumbnail;// = null;
+    Bitmap thumbnail, thumbnailToDisplay;// = null;
     private static final int REQUEST_CAMERA = 100;
     Activity activity;
     AppPreferenceManager appPreferenceManager;
@@ -73,7 +73,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private int leaveFlag = 0;
     private String fromdateapi, todateapi;
     Uri outPutfileUri;
-    Bitmap bitmap = null;
 
     @Override
     protected void onStart() {
@@ -218,48 +217,59 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     private void onCaptureImageResult(Intent data) {
 
+        //This image is for upload purpose...
+        thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        encodedProImg = CommonUtils.encodeImage(thumbnail);
 
         String uri = outPutfileUri.toString();
         Log.e("uri-:", uri);
-        Toast.makeText(this, outPutfileUri.toString(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, outPutfileUri.toString(), Toast.LENGTH_LONG).show();
 
         try {
-            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outPutfileUri);
-            Drawable img = new BitmapDrawable(getResources(), bitmap);
+            if (!InputUtils.isNull(encodedProImg)) {
+                //Toast.makeText(activity, "if", Toast.LENGTH_SHORT).show();
+
+                btn_uploadPhoto.setVisibility(View.VISIBLE);
+                btn_takePhoto.setVisibility(View.INVISIBLE);
+            } else {
+                //Toast.makeText(activity, "else", Toast.LENGTH_SHORT).show();
+
+                btn_uploadPhoto.setVisibility(View.INVISIBLE);
+                btn_takePhoto.setVisibility(View.VISIBLE);
+            }
+
+            //This image is for display purpose...
+            thumbnailToDisplay = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outPutfileUri);
+            ByteArrayOutputStream bytesToDisplay = new ByteArrayOutputStream();
+            thumbnailToDisplay.compress(Bitmap.CompressFormat.JPEG, 90, bytesToDisplay);
+            Drawable img = new BitmapDrawable(getResources(), thumbnailToDisplay);
             img_user_picture.setImageDrawable(img);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        //thumbnail = (Bitmap) data.getExtras().get("data");
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//
-//        /*File destination = new File(Environment.getExternalStorageDirectory(),
-//                System.currentTimeMillis() + ".jpg");
-//        FileOutputStream fo;
-//        try {
-//            boolean isFileCreated = destination.createNewFile();
-//            if (isFileCreated) {
-//                fo = new FileOutputStream(destination);
-//                fo.write(bytes.toByteArray());
-//
-//                fo.close();
-//            } else {
-//                Toast.makeText(activity, "Failed to create file", Toast.LENGTH_SHORT).show();
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }*/
-//        encodedProImg = CommonUtils.encodeImage(thumbnail);
-//        if (!InputUtils.isNull(encodedProImg)) {
-//            btn_uploadPhoto.setVisibility(View.VISIBLE);
-//            btn_takePhoto.setVisibility(View.INVISIBLE);
-//        } else {
-//            btn_uploadPhoto.setVisibility(View.INVISIBLE);
-//            btn_takePhoto.setVisibility(View.VISIBLE);
-//        }
-//        img_user_picture.setImageBitmap(thumbnail);
+        /*************************************************************************************/
+
+        /*thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        encodedProImg = CommonUtils.encodeImage(thumbnail);
+        if (!InputUtils.isNull(encodedProImg)) {
+            //Toast.makeText(activity, "if", Toast.LENGTH_SHORT).show();
+
+            btn_uploadPhoto.setVisibility(View.VISIBLE);
+            btn_takePhoto.setVisibility(View.INVISIBLE);
+        } else {
+            //Toast.makeText(activity, "else", Toast.LENGTH_SHORT).show();
+
+            btn_uploadPhoto.setVisibility(View.INVISIBLE);
+            btn_takePhoto.setVisibility(View.VISIBLE);
+        }
+        img_user_picture.setImageBitmap(thumbnail);*/
     }
 
     private void showImage(Bitmap bm) {
