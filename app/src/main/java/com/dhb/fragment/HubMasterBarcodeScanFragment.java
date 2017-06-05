@@ -21,6 +21,7 @@ import com.dhb.activity.HomeScreenActivity;
 import com.dhb.adapter.HubScanBarcodeListAdapter;
 import com.dhb.models.api.request.MasterBarcodeMappingRequestModel;
 import com.dhb.models.api.response.BtechCollectionsResponseModel;
+import com.dhb.models.data.BaseModel;
 import com.dhb.models.data.HUBBTechModel;
 import com.dhb.models.data.HubBarcodeModel;
 import com.dhb.network.ApiCallAsyncTask;
@@ -31,6 +32,7 @@ import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
+import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -166,9 +168,10 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
     private class BtechCollectionsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
+            System.out.println("@---->\n" + json);
             if (statusCode == 200) {
                 ResponseParser responseParser = new ResponseParser(activity);
-                BtechCollectionsResponseModel btechCollectionsResponseModel = new BtechCollectionsResponseModel();
+                BtechCollectionsResponseModel btechCollectionsResponseModel;
                 btechCollectionsResponseModel = responseParser.getBtechCollectionsDetailsResponseModel(json, statusCode);
                 if (btechCollectionsResponseModel != null && btechCollectionsResponseModel.getBarcode()!=null && btechCollectionsResponseModel.getBarcode().size() > 0) {
                     barcodeModels = btechCollectionsResponseModel.getBarcode();
@@ -179,7 +182,8 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
                 }
             }
             else{
-                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG)
+                    Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -223,6 +227,10 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
     }
 
     private void prepareRecyclerView() {
+//        for(HubBarcodeModel j : barcodeModels){
+//            System.out.println("\n\n------------------------->\n" + new Gson().toJson(j, HubBarcodeModel.class));
+//
+//        }
         hubScanBarcodeListAdapter = new HubScanBarcodeListAdapter(barcodeModels, activity);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -256,7 +264,7 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -265,7 +273,8 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
                 },3000);
             }
             else{
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG)
+                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 

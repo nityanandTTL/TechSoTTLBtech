@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
-import com.dhb.delegate.BtechCollectionsAdapterOnscanBarcodeClickedDelegate;
 import com.dhb.models.data.HubBarcodeModel;
 import com.dhb.utils.api.Logger;
 
@@ -27,7 +26,7 @@ public class HubScanBarcodeListAdapter extends RecyclerView.Adapter<HubScanBarco
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView sample_type_name;
-        TextView editbarcode;
+        TextView editBarcode;
         ImageView imgGreenTick;
         ImageView imgRedCross;
         View itemView;
@@ -41,7 +40,7 @@ public class HubScanBarcodeListAdapter extends RecyclerView.Adapter<HubScanBarco
 
         private void initComp(View view) {
             sample_type_name = (TextView) view.findViewById(R.id.sample_type_name);
-            editbarcode = (TextView) view.findViewById(R.id.editbarcode);
+            editBarcode = (TextView) view.findViewById(R.id.editbarcode);
             ll_edt_barcode = (LinearLayout) view.findViewById(R.id.ll_edt_barcode);
             imgGreenTick = (ImageView) view.findViewById(R.id.scanned_status_green);
             imgRedCross = (ImageView) view.findViewById(R.id.scanned_status_red);
@@ -82,7 +81,10 @@ public class HubScanBarcodeListAdapter extends RecyclerView.Adapter<HubScanBarco
             else if(barcodeModel.getSampleType().equals("URINE")){
                 holder.sample_type_name.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.bg_sample_type_urine));
             }
-            holder.editbarcode.setText(barcodeModel.getBarcode());
+            holder.editBarcode.setText(barcodeModel.getBarcode());
+
+
+            System.out.println("##############\nbarcode:" + barcodeModel.getBarcode()+"\nisScanned:"+barcodeModel.isScanned());
             if(barcodeModel.isScanned()){
                 holder.imgRedCross.setVisibility(View.GONE);
                 holder.imgGreenTick.setVisibility(View.VISIBLE);

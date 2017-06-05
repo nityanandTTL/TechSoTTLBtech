@@ -263,7 +263,8 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 }
 
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG)
+                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -572,7 +573,8 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
 
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG)
+                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -590,7 +592,8 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 callWoeApi();
 
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG)
+                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 

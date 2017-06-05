@@ -9,6 +9,8 @@ public interface AppConstants {
 
 	public static final int ANDROID_APP_VERSION = 1;
 
+    public static final boolean IS_DEBUG = false;
+
 	//public static final String LOGIN_TYPE = "Reception";
 	//public static final String LOGIN_TYPE = "Doctor";
 	//public static final String LOGIN_TYPE = "Pharmacist";

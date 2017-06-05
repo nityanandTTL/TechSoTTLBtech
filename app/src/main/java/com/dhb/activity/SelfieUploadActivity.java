@@ -307,7 +307,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     callMasterSync();
                 }
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG)
+                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 

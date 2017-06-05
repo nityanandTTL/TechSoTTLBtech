@@ -143,7 +143,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
                 edt_otp.requestFocus();
                 edt_mobile_no.setEnabled(false);
             } else {
-                Toast.makeText(ForgetPasswordActivity.this, "" + json, Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG) Toast.makeText(ForgetPasswordActivity.this, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -160,7 +160,8 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
                 Toast.makeText(ForgetPasswordActivity.this, "Success", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
-                Toast.makeText(ForgetPasswordActivity.this, "" + json, Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG)
+                    Toast.makeText(ForgetPasswordActivity.this, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 

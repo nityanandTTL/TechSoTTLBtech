@@ -768,7 +768,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     activity.finish();
                 }
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG)
+                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 

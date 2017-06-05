@@ -70,6 +70,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
+import static com.dhb.utils.app.AppConstants.IS_DEBUG;
 
 
 public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
@@ -467,7 +468,8 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                 setResult(BundleConstants.VOMD_ARRIVED, intent);
                 finish();
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG)
+                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
