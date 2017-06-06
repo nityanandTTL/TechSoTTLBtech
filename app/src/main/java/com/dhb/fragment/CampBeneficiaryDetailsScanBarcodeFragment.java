@@ -638,6 +638,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         bendtl.add(beneficiaryDetailsModel);
         orderBookingRequestModel.setBendtl(bendtl);
         orderBookingRequestModel.setBarcodedtl(barcodeDetailsArr);
+        //orderBookingRequestModel.setBarcodedtl(beneficiaryDetailsModel.getBarcodedtl());
         orderBookingRequestModel.setSmpldtl(campDetailModel.getSampleType());
         orderBookingRequestModel.setClHistory(benCHArr);
         orderBookingRequestModel.setLabAlert(benLAArr);
