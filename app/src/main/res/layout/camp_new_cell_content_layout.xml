@@ -436,7 +436,7 @@
                     android:visibility="visible"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:orientation="vertical"></LinearLayout>
+                    android:orientation="vertical"/>
                 <Button
                     android:layout_marginTop="@dimen/dp_2"
                     android:id="@+id/btn_next"

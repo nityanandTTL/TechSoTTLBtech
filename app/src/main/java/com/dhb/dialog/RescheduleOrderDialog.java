@@ -122,13 +122,14 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
                                 txt_from_date.setText(sampleCollectedTime);
                             }
                             else{
-                                Toast.makeText(activity,"You cannot select a previous Time",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity,"Past time cannot be selected",Toast.LENGTH_SHORT).show();
                             }
                         }
                     }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity));
                     timePickerDialog.show();
                 }
             }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
             datePickerDialog.show();
         }
     }

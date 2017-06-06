@@ -142,7 +142,8 @@ public class OLCPickupListDisplayFragment extends AbstractFragment {
                 }
             } else {
                 Logger.error("" + json);
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG)
+                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 

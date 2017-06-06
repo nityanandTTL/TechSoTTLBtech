@@ -280,6 +280,14 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         edt_test_alerts.setText("" + testsList[0]);
     }
 
+    private void clearEntries() {
+        edt_name.setText("");
+        edt_age.setText("");
+        edt_mobile.setText("");
+        img_male.setImageDrawable(getResources().getDrawable(R.drawable.male));
+        img_female.setImageDrawable(getResources().getDrawable(R.drawable.female));
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -644,8 +652,11 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                 }
 
                 callWoeApi();
+
+
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG)
+                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -673,8 +684,11 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             if (statusCode == 200) {
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
 
+                clearEntries();
+
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                if(IS_DEBUG)
+                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -683,4 +697,6 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
 
         }
     }
+
+
 }

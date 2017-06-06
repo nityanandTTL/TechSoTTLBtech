@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:textSize="20sp"
-        android:inputType="textPassword"
+        android:inputType="text"
         android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         android:hint="please enter barcode"
         android:background="@android:drawable/edit_text"
