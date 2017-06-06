@@ -54,6 +54,8 @@ import com.dhb.models.api.request.OrderBookingRequestModel;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
 import com.dhb.models.api.request.RemoveBeneficiaryAPIRequestModel;
 import com.dhb.models.api.response.CampScanQRResponseModel;
+import com.dhb.models.api.response.OrderBookingResponseBeneficiaryModel;
+import com.dhb.models.api.response.OrderBookingResponseVisitModel;
 import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
@@ -95,15 +97,18 @@ import static com.dhb.utils.app.CommonUtils.encodeImage;
 
 public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment implements View.OnClickListener {
     public static final String TAG_FRAGMENT = CampBeneficiaryDetailsScanBarcodeFragment.class.getSimpleName();
-
+    private OrderBookingResponseVisitModel orderBookingResponseVisitModel = new OrderBookingResponseVisitModel();
     private BeneficiaryDetailsModel beneficiaryDetailsModel;
     private CampOrderBookingActivity activity;
+    private ArrayList<OrderBookingResponseBeneficiaryModel> orderBookingResponseBeneficiaryModelArr = new ArrayList<>();
     private static final int REQUEST_CAMERA = 100;
     private View rootview;
     private ImageView img_vsg;
     private CampDetailsBenMasterModel beneficiaryDetailsArr;
+    ArrayList<CampDetailsBenMasterModel> campDetailsBenMasterModelsArray=new ArrayList<>();
     private OrderDetailsModel orderDetailsModel;
     private CampAllOrderDetailsModel campAllOrderDetailsModel;
+   // private CampDetailsBenMasterModel
     private String currentScanSampleType;
     private RescheduleOrderDialog cdd;
     private CancelOrderDialog cod;
@@ -130,7 +135,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     private DhbDao dhbDao;
     private boolean issampleTypeScan;
     private String orderNO;
-    TextView edt_barcode;
+
     private String currentSampleType;
     IntentIntegrator integrator;
     int benId;
@@ -138,7 +143,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     private CampScanQRResponseModel campScanQRResponseModel;
     private BrandMasterModel brandMasterModel;
     private TextView txt_name, tv_location;
-
+    private LabAlertMasterDao labAlertMasterDao;
     public CampBeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
     }
@@ -166,6 +171,13 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         brandMasterModel = brandMasterDao.getModelFromId(campAllOrderDetailsModel.getBrandId());
         orderNO = DeviceUtils.randomString(8);
         benId = DeviceUtils.randomInt(1, 10);
+        labAlertMasterDao = new LabAlertMasterDao(dhbDao.getDb());
+        labAlertsArr = labAlertMasterDao.getAllModels();
+        benLAArr = new ArrayList<>();
+        benCHArr = new ArrayList<>();
+
+
+
         initUI();
         initData();
         btn_scan_qr.setBackgroundDrawable(getResources().getDrawable(R.drawable.footer_bg_deselected));
@@ -190,31 +202,105 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 barcodeDetailsArr.add(bbdm);
             }
         }
+        if (testRateMasterModels != null) {
+            for (TestRateMasterModel testRateMasterModel :
+                    testRateMasterModels) {
+                if (testRateMasterModel.getTstClinicalHistory() != null && testRateMasterModel.getTstClinicalHistory().size() > 0) {
+                    testRateMasterModels.add(testRateMasterModel);
+                }
+            }
+        }
+        String chS = "";
+        if(benCHArr!=null && benCHArr.size()>0) {
+            for (BeneficiaryTestWiseClinicalHistoryModel chm :
+                    benCHArr) {
+                if (InputUtils.isNull(chS))
+                    chS = "" + chm.getClinicalHistoryId();
+                else
+                    chS = chS + ", " + chm.getClinicalHistoryId();
+            }
+        }
+        Logger.error("chS "+chS);
+        String laS = "";
+        if(benLAArr!=null && benLAArr.size()>0) {
+            for (BeneficiaryLabAlertsModel lam :
+                    benLAArr) {
+                LabAlertMasterModel labAlertMasterModel = labAlertMasterDao.getModelFromId(lam.getLabAlertId()+"");
+                if(labAlertMasterModel!=null) {
+                    if (InputUtils.isNull(laS))
+                        laS = "" + labAlertMasterModel.getLabAlert();
+                    else
+                        laS = laS + ", " + labAlertMasterModel.getLabAlert();
+                }
+            }
+        }
+        Logger.error("laS "+laS);
         initScanBarcodeView();
     }
 
     private void initScanBarcodeView() {
-        if (barcodeDetailsArr.size() > 0) {
+
+
+        Logger.error("barcodeDetailsArr.size() "+barcodeDetailsArr.size());
+        if (beneficiaryDetailsArr.getSampleType().size() > 0) {
             ll_test_scan.removeAllViews();
-            for (int i = 0; i < barcodeDetailsArr.size(); i++) {
+            for (int i = 0; i < beneficiaryDetailsArr.getSampleType().size(); i++) {
                 final int pos = i;
                 LayoutInflater vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View v = vi.inflate(R.layout.item_scan_barcode, null);
                 TextView txt_sample_type = (TextView) v.findViewById(R.id.txt_sample_type);
                 TextView edt_barcode = (TextView) v.findViewById(R.id.edt_barcode);
                 ImageView scan_barcode_button = (ImageView) v.findViewById(R.id.scan_barcode_button);
-                txt_sample_type.setText(barcodeDetailsArr.get(i).getSamplType());
-                if (barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("SERUM")) {
+                txt_sample_type.setText( beneficiaryDetailsArr.getSampleType().get(i).getSampleType());
+                if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("SERUM")) {
                     txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
-                } else if (barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("EDTA")) {
+                } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("EDTA")) {
                     txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
-                } else if (barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("FLUORIDE")) {
+                } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("FLUORIDE")) {
                     txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
-                } else if (barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("HEPARIN")) {
+                } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("HEPARIN")) {
                     txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
-                } else if (barcodeDetailsArr.get(i).getSamplType().equalsIgnoreCase("URINE")) {
+                } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("URINE")) {
                     txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
                 }
+                /*
+                 if (beneficiaryDetailsArr.getSampleType().size() > 0) {
+            for (int i = 0; i < beneficiaryDetailsArr.getSampleType().size(); i++) {
+                LayoutInflater vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v = vi.inflate(R.layout.item_scan_barcode, null);
+                TextView txt_sample_type = (TextView) v.findViewById(R.id.txt_sample_type);
+            //    edt_barcode = (TextView) v.findViewById(R.id.edt_barcode);
+                ImageView scan_barcode_button = (ImageView) v.findViewById(R.id.scan_barcode_button);
+                txt_sample_type.setText("" + beneficiaryDetailsArr.getSampleType().get(i).getSampleType());
+                Logger.error("sample : "+ beneficiaryDetailsArr.getSampleType().get(i).getSampleType());
+                if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("SERUM")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
+                } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("EDTA")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
+                } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("FLUORIDE")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("HEPARIN")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
+                } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("URINE")) {
+                    txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
+                }
+           //   edt_barcode.setText(barcodeDetailsArr.get(i).getBarcode());
+                scan_barcode_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        integrator = new IntentIntegrator(getActivity()) {
+                            @Override
+                            protected void startActivityForResult(Intent intent, int code) {
+                                CampBeneficiaryDetailsScanBarcodeFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+
+                            }
+                        };
+                        integrator.initiateScan();
+                    }
+                });
+                ll_test_scan.addView(v, i, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            }
+                 */
                 edt_barcode.setText(barcodeDetailsArr.get(i).getBarcode());
                 scan_barcode_button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -344,7 +430,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 LayoutInflater vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View v = vi.inflate(R.layout.item_scan_barcode, null);
                 TextView txt_sample_type = (TextView) v.findViewById(R.id.txt_sample_type);
-                edt_barcode = (TextView) v.findViewById(R.id.edt_barcode);
+            //    edt_barcode = (TextView) v.findViewById(R.id.edt_barcode);
                 ImageView scan_barcode_button = (ImageView) v.findViewById(R.id.scan_barcode_button);
                 txt_sample_type.setText("" + beneficiaryDetailsArr.getSampleType().get(i).getSampleType());
                 Logger.error("sample : "+ beneficiaryDetailsArr.getSampleType().get(i).getSampleType());
@@ -359,6 +445,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 } else if (beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equalsIgnoreCase("URINE")) {
                     txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
                 }
+           //   edt_barcode.setText(barcodeDetailsArr.get(i).getBarcode());
                 scan_barcode_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -455,12 +542,12 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
             edt_mobile.requestFocus();
             return false;
         }
-        for (BeneficiaryBarcodeDetailsModel benBarcode:barcodeDetailsArr){
+        /*for (BeneficiaryBarcodeDetailsModel benBarcode:barcodeDetailsArr){
             if(InputUtils.isNull(benBarcode.getBarcode())){
                 Toast.makeText(activity,"Please scan barcode for sample type "+benBarcode.getSamplType(),Toast.LENGTH_SHORT).show();
                 return false;
             }
-        }
+        }*/
         return true;
     }
 
@@ -504,29 +591,29 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     private OrderBookingRequestModel generateOrderBookingRequestModel() {
         OrderBookingRequestModel orderBookingRequestModel = new OrderBookingRequestModel();
         OrderBookingDetailsModel orderBookingDetailsModel = new OrderBookingDetailsModel();
-        OrderDetailsModel campAllOrderDetailsModel = new OrderDetailsModel();
+        OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
         orderBookingDetailsModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-        orderBookingDetailsModel.setVisitId("vis" + campScanQRResponseModel.getVisitId());
+        orderBookingDetailsModel.setVisitId("" + campScanQRResponseModel.getVisitId());
         orderBookingDetailsModel.setPaymentMode(1);
         orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
-        campAllOrderDetailsModel.setOrderNo(beneficiaryDetailsArr.getOrderNo());
-        campAllOrderDetailsModel.setBrandId(campDetailModel.getBrandId());
+        orderDetailsModel.setOrderNo(beneficiaryDetailsArr.getOrderNo());
+        orderDetailsModel.setBrandId(campDetailModel.getBrandId());
 
-        campAllOrderDetailsModel.setAddress(campDetailModel.getLocation());
-        campAllOrderDetailsModel.setPincode(campAllOrderDetailsModel.getPincode());
-        campAllOrderDetailsModel.setMobile(edt_mobile.getText().toString());
-        campAllOrderDetailsModel.setEmail(edt_email.getText().toString());
-        campAllOrderDetailsModel.setPayType(campDetailModel.getPayType());
-        campAllOrderDetailsModel.setAmountDue(campDetailModel.getAmount());
-        campAllOrderDetailsModel.setMargin(0);
-        campAllOrderDetailsModel.setDiscount(0);
-        campAllOrderDetailsModel.setRefcode(edt_mobile.getText().toString());
-        campAllOrderDetailsModel.setReportHC(0);
-        campAllOrderDetailsModel.setTestEdit(false);
-        campAllOrderDetailsModel.setServicetype("2");
-        campAllOrderDetailsModel.setCampId(String.valueOf(campDetailModel.getId()));
+        orderDetailsModel.setAddress(campDetailModel.getLocation());
+        orderDetailsModel.setPincode(""+campAllOrderDetailsModel.getPincode());
+        orderDetailsModel.setMobile(edt_mobile.getText().toString());
+        orderDetailsModel.setEmail(""+campAllOrderDetailsModel.getEmail());
+        orderDetailsModel.setPayType(campDetailModel.getPayType());
+        orderDetailsModel.setAmountDue(campDetailModel.getAmount());
+        orderDetailsModel.setMargin(0);
+        orderDetailsModel.setDiscount(0);
+        orderDetailsModel.setRefcode(edt_mobile.getText().toString());
+        orderDetailsModel.setReportHC(0);
+        orderDetailsModel.setTestEdit(false);
+        orderDetailsModel.setServicetype("2");
+        orderDetailsModel.setCampId(String.valueOf(campDetailModel.getId()));
         ArrayList<OrderDetailsModel> ordrDtl = new ArrayList<>();
-        ordrDtl.add(campAllOrderDetailsModel);
+        ordrDtl.add(orderDetailsModel);
         orderBookingDetailsModel.setOrddtl(ordrDtl);
         orderBookingRequestModel.setOrddtl(ordrDtl);
         orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
@@ -546,17 +633,20 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         } else {
             beneficiaryDetailsModel.setFasting("false");
         }
-        beneficiaryDetailsModel.setProjId("" + campAllOrderDetailsModel.getProjId());
+        beneficiaryDetailsModel.setProjId("" + orderDetailsModel.getProjId());
         ArrayList<BeneficiaryDetailsModel> bendtl = new ArrayList<>();
         bendtl.add(beneficiaryDetailsModel);
         orderBookingRequestModel.setBendtl(bendtl);
         orderBookingRequestModel.setBarcodedtl(barcodeDetailsArr);
         orderBookingRequestModel.setSmpldtl(campDetailModel.getSampleType());
+        orderBookingRequestModel.setClHistory(benCHArr);
+        orderBookingRequestModel.setLabAlert(benLAArr);
         return orderBookingRequestModel;
     }
 
     private void callWoeApi() {
         OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
+        orderBookingRequestModel = fixForAddBeneficiary(orderBookingRequestModel);
         ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
         workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
@@ -565,15 +655,140 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
             Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
         }
     }
+    private OrderBookingRequestModel fixForAddBeneficiary(OrderBookingRequestModel orderBookingRequestModel) {
+        //Update Visit ID in OrdBooking Model
+        if (orderBookingRequestModel.getOrdbooking().getVisitId().equals(orderBookingResponseVisitModel.getOldVisitId())) {
+            orderBookingRequestModel.getOrdbooking().setVisitId(orderBookingResponseVisitModel.getNewVisitId());
+        }
+        //Update Order No and Visit ID in Order Dtl Arr
+        if (orderBookingRequestModel.getOrddtl() != null) {
+            for (int i = 0; i < orderBookingRequestModel.getOrddtl().size(); i++) {
+                if (!InputUtils.isNull(orderBookingRequestModel.getOrddtl().get(i).getVisitId()) && orderBookingRequestModel.getOrddtl().get(i).getVisitId().equals(orderBookingResponseVisitModel.getOldVisitId())) {
+                    orderBookingRequestModel.getOrddtl().get(i).setVisitId(orderBookingResponseVisitModel.getNewVisitId());
+                }
+                if (orderBookingResponseVisitModel.getOrderids() != null) {
+                    for (int j = 0; j < orderBookingResponseVisitModel.getOrderids().size(); j++) {
+                        if (!InputUtils.isNull(orderBookingRequestModel.getOrddtl().get(i).getOrderNo()) && orderBookingRequestModel.getOrddtl().get(i).getOrderNo().equals(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())) {
+                            orderBookingRequestModel.getOrddtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+                        }
+                    }
+                }
+
+            }
+        }
+
+        //Update Order No and BenId in Bendtl Arr
+        if (orderBookingRequestModel.getBendtl() != null) {
+            for (int i = 0; i < orderBookingRequestModel.getBendtl().size(); i++) {
+                if (orderBookingResponseVisitModel.getOrderids() != null) {
+                    for (int j = 0; j < orderBookingResponseVisitModel.getOrderids().size(); j++) {
+                        if (!InputUtils.isNull(orderBookingRequestModel.getBendtl().get(i).getOrderNo()) && orderBookingRequestModel.getBendtl().get(i).getOrderNo().equals(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())) {
+                            orderBookingRequestModel.getBendtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+                        }
+                    }
+                }
+
+                if (orderBookingResponseBeneficiaryModelArr != null) {
+                    for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                        if (!InputUtils.isNull((orderBookingRequestModel.getBendtl().get(i).getBenId() + "")) && (orderBookingRequestModel.getBendtl().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                            orderBookingRequestModel.getBendtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                        }
+                    }
+                }
+
+            }
+        }
+
+        //Update orderNo and BenId in BarcodeDtl Arr
+        if (orderBookingRequestModel.getBarcodedtl() != null) {
+            for (int i = 0; i < orderBookingRequestModel.getBarcodedtl().size(); i++) {
+                if (orderBookingResponseVisitModel.getOrderids() != null) {
+                    for (int j = 0; j < orderBookingResponseVisitModel.getOrderids().size(); j++) {
+                        if (!InputUtils.isNull(orderBookingRequestModel.getBarcodedtl().get(i).getOrderNo()) && orderBookingRequestModel.getBarcodedtl().get(i).getOrderNo().equals(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())) {
+                            orderBookingRequestModel.getBarcodedtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+                        }
+                    }
+                }
+                if (orderBookingResponseBeneficiaryModelArr != null) {
+                    for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                        if (!InputUtils.isNull((orderBookingRequestModel.getBarcodedtl().get(i).getBenId() + "")) && (orderBookingRequestModel.getBarcodedtl().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                            orderBookingRequestModel.getBarcodedtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                        }
+                    }
+                }
+
+            }
+        }
+
+        //Update BenId in SmplDtl Arr
+        if (orderBookingRequestModel.getSmpldtl() != null) {
+            for (int i = 0; i < orderBookingRequestModel.getSmpldtl().size(); i++) {
+                if (orderBookingResponseBeneficiaryModelArr != null) {
+                    for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                        if ((orderBookingRequestModel.getSmpldtl().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                            orderBookingRequestModel.getSmpldtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                        }
+                    }
+                }
+
+            }
+        }
+
+        //Update BenId in ClHistory Arr
+        if (orderBookingRequestModel.getClHistory() != null) {
+            for (int i = 0; i < orderBookingRequestModel.getClHistory().size(); i++) {
+                for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                    if ((orderBookingRequestModel.getClHistory().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                        orderBookingRequestModel.getClHistory().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                    }
+                }
+            }
+        }
+
+        //Update BenId in LabAlert Arr
+        if (orderBookingRequestModel.getLabAlert() != null) {
+            for (int i = 0; i < orderBookingRequestModel.getLabAlert().size(); i++) {
+                for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                    if ((orderBookingRequestModel.getLabAlert().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                        orderBookingRequestModel.getLabAlert().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                    }
+                }
+            }
+        }
+
+        return orderBookingRequestModel;
+    }
+    private void clearEntries() {
+        edt_name.setText("");
+        edt_age.setText("");
+        edt_mobile.setText("");
+        img_male.setImageDrawable(getResources().getDrawable(R.drawable.male));
+        img_female.setImageDrawable(getResources().getDrawable(R.drawable.female));
+      /*  if (barcodeDetailsArr.size() > 0) {
+            ll_test_scan.removeAllViews();
+            for (int i = 0; i < barcodeDetailsArr.size(); i++) {
+                final int pos = i;
+                LayoutInflater vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v = vi.inflate(R.layout.item_scan_barcode, null);
+                TextView txt_sample_type = (TextView) v.findViewById(R.id.txt_sample_type);
+                TextView edt_barcode = (TextView) v.findViewById(R.id.edt_barcode);
+                ImageView scan_barcode_button = (ImageView) v.findViewById(R.id.scan_barcode_button);
+
+            }
+        }*/
+
+    }
 
     private class WorkOrderEntryAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
+
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                clearEntries();
 
             } else {
-                if(IS_DEBUG)
+              //  if(IS_DEBUG)
                     Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }

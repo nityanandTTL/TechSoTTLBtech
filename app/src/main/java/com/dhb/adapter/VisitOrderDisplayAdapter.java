@@ -163,6 +163,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             imgRelease = (ImageView) itemView.findViewById(R.id.img_release);
             btnStartNavigation = (Button) itemView.findViewById(R.id.btn_start_navigation);
             imgCBAccept = (ImageView) itemView.findViewById(R.id.img_oas);
+            txtKits.setSelected(true);
         }
     }
 

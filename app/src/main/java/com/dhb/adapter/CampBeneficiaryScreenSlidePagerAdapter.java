@@ -51,6 +51,7 @@ public class CampBeneficiaryScreenSlidePagerAdapter extends FragmentStatePagerAd
                 break;
             }
         }
+       // bundle.putParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL_ARRAY,beneficiaryDetailsArr);
         bundle.putParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsArr.get(position));
         bundle.putParcelable(BundleConstants.CAMP_ALL_ORDER_DETAIL, campAllOrderDetailsModel);
         bundle.putParcelable(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModel);
