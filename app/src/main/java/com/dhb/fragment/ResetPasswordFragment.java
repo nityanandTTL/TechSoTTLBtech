@@ -1,6 +1,7 @@
 package com.dhb.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,7 +111,13 @@ public class ResetPasswordFragment extends AbstractFragment implements View.OnCl
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
+
+
                 Toast.makeText(activity, R.string.password_changed_successfully, Toast.LENGTH_SHORT).show();
+                Fragment mFragment = new HomeScreenFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fl_homeScreen, mFragment ).commit();
+
             } else {
                 Toast.makeText(activity, json, Toast.LENGTH_SHORT).show();
                 Logger.error(json);

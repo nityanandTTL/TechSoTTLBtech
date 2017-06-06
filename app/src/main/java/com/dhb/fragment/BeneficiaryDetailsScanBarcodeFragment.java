@@ -91,7 +91,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private static final int REQUEST_CAMERA = 100;
     private Bitmap thumbnail;
     private View rootview;
-    private boolean isHC = false;
+  //  private boolean isHC = false;
+      private int isHC = 0;
 
     private String userChoosenReleaseTask;
     private OrderDetailsModel orderDetailsModel;
@@ -193,7 +194,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             edtTests.setText(beneficiaryDetailsModel.getTestsCode());
             txtSrNo.setText(beneficiaryDetailsModel.getBenId() + "");
             if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
-                imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
+               imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
             } else {
                 imgHC.setImageDrawable(getResources().getDrawable(R.drawable.green_tick_icon));
             }
@@ -251,13 +252,14 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         imgHC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isHC) {
-                    isHC = false;
-//                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.tick_icon));
+                if (isHC == 1
+                        ) {
+                    isHC = 0;
+                   imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.tick_icon));
                     orderDetailsModel.setReportHC(0);
                 } else {
-                    isHC = true;
-//                    imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.green_tick_icon));
+                    isHC = 1;
+                   imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.green_tick_icon));
                     orderDetailsModel.setReportHC(1);
                 }
                 orderDetailsDao.insertOrUpdate(orderDetailsModel);
@@ -618,6 +620,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         }
         if (requestCode==REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
             onCaptureImageResult(data);
+            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
         }
         if (requestCode == BundleConstants.EDIT_TESTS_START && resultCode == BundleConstants.EDIT_TESTS_FINISH) {
             String testsCode = "";

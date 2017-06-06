@@ -109,7 +109,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginTop="0dp"
             android:src="@drawable/aadhar_icon"
-            android:visibility="gone"/>
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/txt_aadhar_no"
@@ -125,7 +125,7 @@
             android:text="221115245562"
             android:textColor="@android:color/darker_gray"
             android:textSize="16sp"
-            android:visibility="gone"/>
+            android:visibility="invisible"/>
 
         <ImageView
             android:id="@+id/title_distance_icon"

@@ -272,6 +272,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 cameraIntent();
+
             }
         });
         imgHC.setOnClickListener(new View.OnClickListener() {
@@ -646,6 +647,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             }
         }
         if (resultCode == Activity.RESULT_OK) {
+            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
             if (requestCode == REQUEST_CAMERA) {
                 onCaptureImageResult(data);
             }
