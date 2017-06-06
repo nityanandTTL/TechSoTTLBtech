@@ -468,7 +468,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
-            callsendQRCodeApi("jhjhj");
+           // callsendQRCodeApi("jhjhj");
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
