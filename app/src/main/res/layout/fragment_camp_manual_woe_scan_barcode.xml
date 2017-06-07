@@ -49,7 +49,7 @@
                         android:gravity="center"
                         android:minEms="5"
                         android:padding="@dimen/dp_10"
-                        android:text="Name:"
+                        android:text="Name:\u0020\u0020\u0020\u0020"
                         android:textSize="18sp" />
 
                     <EditText
@@ -107,7 +107,7 @@
                             android:gravity="center"
                             android:minEms="5"
                             android:padding="@dimen/dp_10"
-                            android:text="Age:"
+                            android:text="Age:\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020"
                             android:textSize="18sp" />
 
                         <EditText
@@ -205,7 +205,7 @@
                         android:gravity="center"
                         android:minEms="5"
                         android:padding="@dimen/dp_10"
-                        android:text="Mobile:"
+                        android:text="Mobile:\u0020\u0020\u0020"
                         android:textSize="18sp" />
 
                     <EditText
@@ -371,7 +371,7 @@
                         android:gravity="center"
                         android:minEms="5"
                         android:padding="@dimen/dp_10"
-                        android:text="Email:"
+                        android:text="Email:\u0020\u0020\u0020\u0020\u0020"
                         android:textSize="18sp" />
 
                     <EditText

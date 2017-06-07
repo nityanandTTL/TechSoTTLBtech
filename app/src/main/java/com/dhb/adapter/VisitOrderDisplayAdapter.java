@@ -67,6 +67,13 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     }
 
     private void initListeners(final FoldingCellViewHolder holder, final int pos) {
+
+        holder.imgRelease2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                visitOrderDisplayRecyclerViewAdapterDelegate.onItemRelease(orderVisitDetailsModelsArr.get(pos));
+            }
+        });
         holder.imgRelease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,6 +105,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         });
     }
 
+
+
     private void initData(FoldingCellViewHolder holder, final int pos) {
         if (orderVisitDetailsModelsArr.size() > pos
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0
@@ -108,6 +117,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             holder.tvName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
             holder.tvName.setSelected(true);
             holder.tvSrNo.setText(pos + 1 + "");
+            holder.txtorderno.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
             holder.txtAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
             holder.txtName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
             holder.txtName.setSelected(true);
@@ -116,7 +126,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 //            holder.tvAadharNo.setVisibility(View.GONE);
             holder.txtAadharNo.setVisibility(View.GONE);
             if (pos != 0) {
-                holder.btnStartNavigation.setVisibility(View.GONE);
+                holder.btnStartNavigation.setVisibility(View.VISIBLE);
             }
             if (unfoldedIndexes.contains(pos)) {
                 holder.cell.unfold(true);
@@ -136,10 +146,10 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     }
 
     private class FoldingCellViewHolder {
-        TextView tvSrNo, tvName, tvAge, txtAddress, txtDistance, txtKits;//tvAadharNo,
+        TextView tvSrNo, tvName, tvAge, txtAddress, txtorderno, txtKits;//tvAadharNo,
         ImageView imgCBAccept;
         TextView txtSrNo, txtName, txtAge, txtAadharNo;
-        ImageView imgRelease;
+        ImageView imgRelease,imgRelease2;
         Button btnStartNavigation;
         FoldingCell cell;
 
@@ -158,11 +168,12 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             tvAge = (TextView) itemView.findViewById(R.id.tv_age);
 //            tvAadharNo = (TextView) itemView.findViewById(R.id.tv_aadhar_no);
             txtAddress = (TextView) itemView.findViewById(R.id.txt_address);
-            txtDistance = (TextView) itemView.findViewById(R.id.txt_distance);
+            txtorderno = (TextView) itemView.findViewById(R.id.tv_orderno);
             txtKits = (TextView) itemView.findViewById(R.id.txt_num_kits);
             imgRelease = (ImageView) itemView.findViewById(R.id.img_release);
             btnStartNavigation = (Button) itemView.findViewById(R.id.btn_start_navigation);
             imgCBAccept = (ImageView) itemView.findViewById(R.id.img_oas);
+            imgRelease2 = (ImageView) itemView.findViewById(R.id.img_release2);
         }
     }
 

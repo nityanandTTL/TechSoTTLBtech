@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="8000dp"
-    android:visibility="gone">
+    android:layout_height="wrap_content"
+    android:visibility="visible">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -58,7 +58,6 @@
                     android:id="@+id/txt_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:layout_gravity="center_vertical"
                     android:layout_toEndOf="@+id/title_from_to_dots"
                     android:editable="false"
@@ -118,7 +117,8 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="@dimen/dp_10"
-                    android:src="@drawable/hub_home_icon" />
+                    android:src="@drawable/hub_home_icon"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_location"
@@ -132,7 +132,8 @@
                     android:lines="2"
                     android:text="11, Sushila app., shani chowk, panchavati, nashik"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
 
                 <ImageView
@@ -220,7 +221,7 @@
         <RelativeLayout
             android:id="@+id/rl_2"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="250dp"
             android:layout_below="@+id/ll_1"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
@@ -232,7 +233,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -265,6 +266,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
                         android:layout_marginTop="@dimen/dp_5"
                         android:layout_weight="1"
                         android:gravity="left">
@@ -287,16 +289,16 @@
                         android:id="@+id/tv_call_leader"
                         android:layout_width="50dp"
                         android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
                         android:padding="4dp"
                         android:src="@drawable/call_olc_picup_icon" />
                 </LinearLayout>
 
                 <HorizontalScrollView
-                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="18dp"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="18dp">
 
                     <LinearLayout
                         android:id="@+id/ll_btechs"
@@ -347,7 +349,7 @@
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_5"
                 android:text="No. of Days:" />
-            <Button
+            <!--<Button
                 android:id="@+id/img_accept"
                 android:layout_width="@dimen/dp_60"
                 android:layout_height="wrap_content"
@@ -382,7 +384,45 @@
                 android:background="@drawable/purple_btn_bg"
                 android:text="Arrived"
                 android:textColor="@android:color/white"
-                android:visibility="gone" />
+                android:visibility="gone" />-->
         </RelativeLayout>
+
+        <Button
+            android:id="@+id/img_accept"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/purple_btn_bg"
+            android:text="Accept"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/purple_btn_bg"
+            android:minEms="5"
+            android:text="Start"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_arrived"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/purple_btn_bg"
+            android:minEms="5"
+            android:text="Arrived"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
+
     </RelativeLayout>
 </FrameLayout>

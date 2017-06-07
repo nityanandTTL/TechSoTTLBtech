@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/bg_content"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
     android:layout_marginTop="10dp"
     android:baselineAligned="false"
     android:orientation="horizontal">
@@ -109,7 +109,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginTop="0dp"
             android:src="@drawable/aadhar_icon"
-            android:visibility="invisible"/>
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/txt_aadhar_no"
@@ -125,7 +125,7 @@
             android:text="221115245562"
             android:textColor="@android:color/darker_gray"
             android:textSize="16sp"
-            android:visibility="invisible"/>
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/title_distance_icon"
@@ -136,6 +136,31 @@
             android:layout_marginEnd="10dp"
             android:src="@drawable/location_track_icon"
             android:visibility="invisible" />
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/txt_age"
+            android:layout_alignParentStart="true"
+            android:layout_toEndOf="@+id/title_from_to_dots"
+            android:layout_marginLeft="50dp"
+            android:id="@+id/oderno_title"
+            android:text="Order-No"
+            android:textSize="16sp"
+
+            />
+        <TextView
+            android:id="@+id/tv_orderno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_age"
+            android:layout_alignLeft="@+id/oderno_title"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:text="12345678"
+            android:layout_marginLeft="80dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_distance"
@@ -198,7 +223,7 @@
             android:visibility="invisible" />
 
         <ImageView
-            android:id="@+id/img_release"
+            android:id="@+id/img_release2"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"

@@ -36,6 +36,27 @@ public class AppPreferenceManager {
 	private String leaveToDate = "leaveToDate";
 	private String cameFrom = "cameFrom";
 
+	//changes_5june2017--START
+	private String scheduleCounter = "scheduleCounter";
+	private String scheduleDate = "scheduleDate";
+
+	public String getScheduleDate() {
+		return appPreference.getString(scheduleDate, "");
+	}
+
+	public void setScheduleDate(String scheduleDate) {
+		appPreference.putString(this.scheduleDate, scheduleDate);
+	}
+
+	public String getScheduleCounter() {
+		return appPreference.getString(scheduleCounter, "");
+	}
+
+	public void setScheduleCounter(String scheduleCounter) {
+		appPreference.putString(this.scheduleCounter, scheduleCounter);
+	}
+	//changes_5june2017--END
+
 	public AppPreferenceManager(Activity activity) {
 		super();
 		appPreference = AppPreference.getAppPreferences(activity);

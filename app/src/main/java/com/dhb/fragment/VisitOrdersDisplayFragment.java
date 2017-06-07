@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,6 +64,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private ConfirmOrderReleaseDialog cdd;
     private boolean isToFromMap = false;
 
+
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
     }
@@ -78,7 +80,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
-//        activity.toolbarHome.setTitle("Visit Orders");
+   activity.toolbarHome.setTitle("Visit Orders");
         activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
         dhbDao = new DhbDao(activity);
@@ -241,6 +243,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         txtTotalEarnings = (TextView) rootView.findViewById(R.id.title_est_earnings);
         txtTotalKitsRequired = (TextView) rootView.findViewById(R.id.title_est_kits);
         txtNoRecord = (TextView) rootView.findViewById(R.id.txt_no_orders);
+
     }
 
     private class VisitOrderDisplayRecyclerViewAdapterDelegateResult implements VisitOrderDisplayRecyclerViewAdapterDelegate {

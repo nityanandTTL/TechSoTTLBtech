@@ -29,10 +29,10 @@
                 android:src="@drawable/user_profile" />
 
             <TextView
+                android:layout_marginLeft="-10dp"
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_gravity="center_vertical"
                 android:layout_toEndOf="@+id/title_from_to_dots"
                 android:editable="false"
@@ -41,7 +41,7 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:freezesText="false"
-                android:gravity="center"
+                android:gravity="center_vertical|start"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:minEms="13"
                 android:scrollHorizontally="true"
@@ -95,7 +95,6 @@
                 android:src="@drawable/hub_home_icon" />
 
             <TextView
-
                 android:id="@+id/txt_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
