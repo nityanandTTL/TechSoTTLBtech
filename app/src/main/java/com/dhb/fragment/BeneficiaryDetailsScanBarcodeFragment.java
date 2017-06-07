@@ -127,6 +127,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootview = inflater.inflate(R.layout.fragment_beneficiary_details_scan_barcode, container, false);
+
         activity = (OrderBookingActivity) getActivity();
         appPreferenceManager = new AppPreferenceManager(activity);
 
@@ -378,14 +379,14 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         System.out.println("closing Dialog");
-
                         dialog.dismiss();
                     }
                 }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        if(testCodesList.size() == beneficiaryDetailsModel.getTestsList().size()) {
+                        Toast.makeText(activity, "Feature coming soon.", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        /*if(testCodesList.size() == beneficiaryDetailsModel.getTestsList().size()) {
                             Intent intentEdit = new Intent(activity, EditTestListActivity.class);
                             intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST, restOfTestsList);
                             intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
@@ -395,7 +396,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         }
                         else{
                             Toast.makeText(activity,"Tests & Profiles cannot be edited for DSA Orders",Toast.LENGTH_SHORT).show();
-                        }
+                        }*/
                     }
                 });
                 builder.show();

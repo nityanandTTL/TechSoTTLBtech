@@ -446,7 +446,10 @@ public class PaymentsActivity extends AbstractActivity {
             }
             Button btnPaymentInputsSubmit = new Button(activity);
             LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            btnParams.setMargins(10, 5, 5, 10);
+            //btnParams.setMargins(10, 5, 5, 10);
+            //changes_7june2017
+            btnParams.setMargins(300, 5, 5, 10);
+            //change_7june2017...
             btnPaymentInputsSubmit.setLayoutParams(btnParams);
             btnPaymentInputsSubmit.setGravity(Gravity.CENTER);
             btnPaymentInputsSubmit.setMinEms(10);

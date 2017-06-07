@@ -146,6 +146,8 @@ public class AbstractApiModel implements AppConstants {
 
     public String LOCUS_PUSH_LOCATIONS_API = "https://api.locus.sh/v1/client/thyrocare/user/";
 
+    public static final String ADD_BENEFICIARY = "/api/AddBeneficiary";
+
     public static final String X_API_KEY = "x-api-key";
 
     public static final String AUTHORIZATION = "Authorization";
