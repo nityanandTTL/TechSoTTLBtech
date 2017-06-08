@@ -70,6 +70,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     private static final String TAG_ACTIVITY = CampManualWOEFragment.class.getSimpleName();
     private EditText edt_name, edt_mobile, edt_email, edt_scan_result, edt_amount, edt_pincode;
     private TextView edt_brand_name;
+    private int clearText = 0;
     private boolean isSuceed = false;
     private TextView tv_age, tv_gender, edt_test, edt_test_alerts, edt_age, edt_address;
     private ImageView scan_barcode_button, img_female, img_male;
@@ -217,7 +218,14 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                 } else if (barcodeDetailsArr.get(i).getSamplType().equals("URINE")) {
                     txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
                 }
-                edt_barcode.setText(barcodeDetailsArr.get(i).getBarcode());
+
+               // edt_barcode.setText(barcodeDetailsArr.get(i).getBarcode());
+
+                if (clearText == 0) {
+                    edt_barcode.setText(barcodeDetailsArr.get(i).getBarcode());
+                } else if (clearText == 1) {
+                    edt_barcode.setText("");
+                }
 
                 scan_barcode_button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -509,7 +517,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
                 try {
-                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
                     ResponseParser responseParser = new ResponseParser(activity);
                     campScanQRResponseModel = new CampScanQRResponseModel();
 
@@ -661,6 +669,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                 for (OrderBookingResponseOrderModel obrom :
                         orderBookingResponseVisitModel.getOrderids()) {
                     orderBookingResponseBeneficiaryModelArr.addAll(obrom.getBenfids());
+                    Logger.error("ben for woe "+obrom.getBenfids());
                 }
 
                 callWoeApi();
@@ -697,7 +706,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
                 isSuceed = true;
                 clearEntries();
-
+                clearText=1;
             } else {
                 if (IS_DEBUG)
                     Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();

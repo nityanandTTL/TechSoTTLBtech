@@ -10,18 +10,17 @@ import android.os.Parcelable;
 public class CampDetailsSampleTypeModel implements Parcelable{
     private String sampleType,Tests;
 
-    public CampDetailsSampleTypeModel() {
-    }
-
     protected CampDetailsSampleTypeModel(Parcel in) {
         sampleType = in.readString();
         Tests = in.readString();
+        benId = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(sampleType);
         dest.writeString(Tests);
+        dest.writeString(benId);
     }
 
     @Override
@@ -40,6 +39,19 @@ public class CampDetailsSampleTypeModel implements Parcelable{
             return new CampDetailsSampleTypeModel[size];
         }
     };
+
+    public String getBenId() {
+        return benId;
+    }
+
+    public void setBenId(String benId) {
+        this.benId = benId;
+    }
+
+    private String benId;
+
+    public CampDetailsSampleTypeModel() {
+    }
 
     public String getSampleType() {
         return sampleType;
