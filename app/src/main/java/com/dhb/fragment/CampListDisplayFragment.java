@@ -252,12 +252,17 @@ public class CampListDisplayFragment extends AbstractFragment {
             }
         }
         if (i == 0) {
-            CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
-            callPatchRequestModel.setSrcnumber(new AppPreferenceManager(activity).getLoginResponseModel().getUserID());
-            callPatchRequestModel.setDestNumber(campDetailModel.getLeaderContactNo()+"");
-            ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
-            callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-            callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
+            if (isNetworkAvailable(activity)) {
+                CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
+                callPatchRequestModel.setSrcnumber(new AppPreferenceManager(activity).getLoginResponseModel().getUserID());
+                callPatchRequestModel.setDestNumber(campDetailModel.getLeaderContactNo()+"");
+                ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
+                callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
+                callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+
         }
 
     }

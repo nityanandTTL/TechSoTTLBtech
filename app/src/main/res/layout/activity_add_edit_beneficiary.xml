@@ -220,26 +220,27 @@
                         android:minEms="5"
                         android:padding="@dimen/dp_10"
                         android:text="Tests:"
-                        android:textSize="18sp" />
+                         />
 
                     <TextView
-                        android:textSize="14sp"
-                        android:gravity="center"
-                        android:ellipsize="marquee"
-                        android:scrollHorizontally="true"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:freezesText="true"
-                        android:hint="Click to view tests list"
-                        android:singleLine="true"
+                        android:layout_marginLeft="50dp"
                         android:id="@+id/edt_test"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:background="@android:drawable/edit_text"
                         android:drawableEnd="@android:drawable/arrow_down_float"
-                        android:minEms="14" />
+                        android:ellipsize="marquee"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:freezesText="true"
+                        android:gravity="center"
+                        android:hint="Click to view tests list"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:minEms="14"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -277,6 +278,7 @@
                         android:text="Venipuncture: " />
 
                     <ImageView
+                        android:layout_marginLeft="10dp"
                         android:layout_gravity="center"
                         android:id="@+id/img_venipuncture"
                         android:layout_width="30dp"
@@ -315,6 +317,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:layout_marginLeft="-5dp"
                             android:id="@+id/clinical_history_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -322,7 +325,7 @@
                             android:gravity="center"
                             android:padding="@dimen/dp_10"
                             android:text="Clinical History:"
-                            android:textSize="16sp" />
+                             />
 
                         <TextView
                             android:drawableEnd="@android:drawable/arrow_down_float"
@@ -361,9 +364,10 @@
                             android:minEms="5"
                             android:padding="@dimen/dp_10"
                             android:text="Lab Alerts:"
-                            android:textSize="16sp" />
+                             />
 
                         <TextView
+                            android:layout_marginLeft="25dp"
                             android:drawableEnd="@android:drawable/arrow_down_float"
                             android:hint="Select Lab Alerts"
                             android:editable="false"
@@ -400,9 +404,10 @@
                             android:minEms="5"
                             android:padding="@dimen/dp_10"
                             android:text="Remarks:"
-                            android:textSize="16sp" />
+                             />
 
                         <EditText
+                            android:layout_marginLeft="35dp"
                             android:hint="Enter Remarks"
                             android:id="@+id/edt_customer_sign"
                             android:layout_width="wrap_content"

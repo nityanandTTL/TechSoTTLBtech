@@ -308,7 +308,7 @@ public class PaymentsActivity extends AbstractActivity {
                 if (paymentPassInputsModel.getNameValueCollection().get(i).getRequired().equals("User")) {
                     if(!paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("Amount")) {
                         View v1 = activity.getLayoutInflater().inflate(R.layout.payment_edit_text, null);
-                        EditText edtPaymentUserInputs = (EditText) v1.findViewById(R.id.edit_payment);
+                         final  EditText edtPaymentUserInputs = (EditText) v1.findViewById(R.id.edit_payment);
                         TextView txtPaymentUserInputss = (TextView) v1.findViewById(R.id.payment_text);
 
 
@@ -338,7 +338,31 @@ public class PaymentsActivity extends AbstractActivity {
 
                             @Override
                             public void afterTextChanged(Editable s) {
-                                paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+                               //paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+
+                                String remarks = s.toString();
+
+                                //for REMARKS
+                                if (edtPaymentUserInputs.getHint().equals("Remarks")) {
+                                    if (remarks.contains("\'")) {
+                                        edtPaymentUserInputs.setError("Apostroph symbol ( ' ) is not allowed.");
+                                        edtPaymentUserInputs.setText("");
+                                    } else
+                                        paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+                                    //paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+                                }
+
+
+                                //for VPA
+                                if (edtPaymentUserInputs.getHint().equals("VPA")) {
+                                    if (remarks.contains(" ")) {
+                                        edtPaymentUserInputs.setError("Space is not allowed.");
+                                        edtPaymentUserInputs.setText("");
+                                    } else
+                                        paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+                                }
+
+
                             }
                         });
                         llPaymentPassInputs.addView(v1);
