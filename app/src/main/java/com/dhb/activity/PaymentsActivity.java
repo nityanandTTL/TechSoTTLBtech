@@ -114,6 +114,7 @@ public class PaymentsActivity extends AbstractActivity {
             BillingEmail = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_EMAIL);
         }
         initUI();
+
 //        fetchNarrationMaster();
         fetchPaymentModes();
     }
@@ -121,8 +122,23 @@ public class PaymentsActivity extends AbstractActivity {
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
+
+            final AlertDialog.Builder builder=new AlertDialog.Builder(activity);
+            builder.setMessage("You are trying to close the payments")
+                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                           dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton("CONTINUE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                           activity.finish();
+                            return;
+                        }
+                    })
+                    .show();
         }
         else{
             this.doubleBackToExitPressedOnce = true;
