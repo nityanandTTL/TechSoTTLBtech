@@ -63,7 +63,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private AppPreferenceManager appPreferenceManager;
     private View rootView;
     private ViewPager vpBeneficiaries;
-    private TextView txtAmtPayable,txtAddBeneficiary;
+    private TextView txtAmtPayable;
     private Button btnProceedPayment;
     private OrderVisitDetailsModel orderVisitDetailsModel;
     private int totalAmountPayable = 0;
@@ -79,7 +79,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private int PaymentMode;
     private OrderBookingResponseVisitModel orderBookingResponseVisitModel = new OrderBookingResponseVisitModel();
     private ArrayList<OrderBookingResponseBeneficiaryModel> orderBookingResponseBeneficiaryModelArr = new ArrayList<>();
-
+    private LinearLayout llAddBeneficiary;
     public BeneficiariesDisplayFragment() {
         // Required empty public constructor
     }
@@ -117,10 +117,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     }
 
     private void initListeners() {
-        txtAddBeneficiary.setOnClickListener(new View.OnClickListener() {
+        llAddBeneficiary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+                Toast.makeText(getActivity(),"Feature Coming Soon Stay tuned...... ",Toast.LENGTH_SHORT).show();
+               /* AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Confirm Action")
                         .setMessage("Do you want to add a new beneficiary?")
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -133,6 +135,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         Logger.debug("orderVisitDetailsModel 1 :"+new Gson().toJson(orderVisitDetailsModel));
                         tempOrderDetailsModel.setOrderNo(DeviceUtils.randomString(8));
+                        tempOrderDetailsModel.setAddBen(true);
                         Logger.debug("tempOrderDetailsModel:"+new Gson().toJson(tempOrderDetailsModel));
                         Logger.debug("orderVisitDetailsModel 2 :"+new Gson().toJson(orderVisitDetailsModel));
                         ArrayList<BeneficiaryDetailsModel> beneficiaries = new ArrayList<BeneficiaryDetailsModel>();
@@ -151,9 +154,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
                         intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, tempBeneficiaryDetailsModel);
                         intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, tempOrderDetailsModel);
+                        intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_ADD,true);
                         startActivityForResult(intentEdit, BundleConstants.ADD_START);
                     }
-                }).show();
+                }).show();*/
             }
         });
         btnProceedPayment.setOnClickListener(new View.OnClickListener() {
@@ -280,8 +284,6 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         vpBeneficiaries.removeAllViews();
         vpBeneficiaries.clearOnPageChangeListeners();
         totalAmountPayable = 0;
-        totalAmountPayable = tempOrderDetailsModel.getAmountPayable();
-
 
         orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
         for (OrderDetailsModel orderDetailsModel :
@@ -368,7 +370,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         super.initUI();
         vpBeneficiaries = (ViewPager) rootView.findViewById(R.id.vp_beneficiaries);
         btnProceedPayment = (Button) rootView.findViewById(R.id.btn_proceed_payment);
-        txtAddBeneficiary = (TextView) rootView.findViewById(R.id.title_add_beneficiary);
+        llAddBeneficiary = (LinearLayout) rootView.findViewById(R.id.ll_add_beneficiary);
         txtAmtPayable = (TextView) rootView.findViewById(R.id.title_amt_payable);
         pagerIndicator = (LinearLayout) rootView.findViewById(R.id.viewPagerCountDots);
     }
@@ -419,9 +421,49 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BundleConstants.ADD_START && resultCode == BundleConstants.ADD_FINISH) {
-            tempBeneficiaryDetailsModel = (BeneficiaryDetailsModel) data.getExtras().getSerializable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
-            tempOrderDetailsModel = (OrderDetailsModel) data.getExtras().getSerializable(BundleConstants.ORDER_DETAILS_MODEL);
-            initData();
+            tempBeneficiaryDetailsModel = data.getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
+            tempOrderDetailsModel = data.getExtras().getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
+
+            OrderVisitDetailsModel orderVisitDetails = orderDetailsDao.getOrderVisitModel(tempOrderDetailsModel.getVisitId());
+
+            CartAPIRequestModel cartAPIRequestModel = new CartAPIRequestModel();
+            ArrayList<CartRequestOrderModel> ordersArr = new ArrayList<>();
+            ArrayList<CartRequestBeneficiaryModel> beneficiariesArr = new ArrayList<>();
+            cartAPIRequestModel.setVisitId(orderVisitDetails.getVisitId());
+            for (OrderDetailsModel order:
+                    orderVisitDetails.getAllOrderdetails()) {
+                CartRequestOrderModel crom = new CartRequestOrderModel();
+                crom.setOrderNo(order.getOrderNo());
+                crom.setHC(order.getReportHC());
+                crom.setBrandId(order.getBrandId()+"");
+                ordersArr.add(crom);
+                for (BeneficiaryDetailsModel ben:order.getBenMaster()){
+                    CartRequestBeneficiaryModel crbm = new CartRequestBeneficiaryModel();
+                    crbm.setOrderNo(order.getOrderNo());
+                    crbm.setAddben(order.isAddBen()?1:0);
+                    if(!InputUtils.isNull(ben.getProjId())) {
+                        crbm.setTests(ben.getProjId()+","+ben.getTestsCode());
+                        crbm.setProjId(ben.getProjId());
+                    }
+                    else{
+                        crbm.setTests(ben.getTestsCode());
+                    }
+                    beneficiariesArr.add(crbm);
+                }
+            }
+            cartAPIRequestModel.setOrders(ordersArr);
+            cartAPIRequestModel.setBeneficiaries(beneficiariesArr);
+
+            ApiCallAsyncTask cartAPIAsyncTaskRequest = new AsyncTaskForRequest(activity).getCartRequestAsyncTask(cartAPIRequestModel);
+            cartAPIAsyncTaskRequest.setApiCallAsyncTaskDelegate(new CartAPIAsyncTaskDelegateResult());
+            if(isNetworkAvailable(activity)){
+                orderVisitDetailsModel = orderVisitDetails;
+                cartAPIAsyncTaskRequest.execute(cartAPIAsyncTaskRequest);
+            }
+            else{
+                Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+            }
+//          initData();
         }
         if(requestCode==BundleConstants.PAYMENTS_START && resultCode==BundleConstants.PAYMENTS_FINISH){
             boolean isPaymentSuccess = data.getBooleanExtra(BundleConstants.PAYMENT_STATUS,false);
@@ -699,4 +741,5 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             initData();
         }
     }
+
 }

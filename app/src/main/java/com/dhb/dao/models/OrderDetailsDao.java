@@ -103,8 +103,8 @@ public class OrderDetailsDao {
 		orderDetailsModel.setLongitude(cursor.getString(cursor.getColumnIndex(LONGITUDE)));
 		orderDetailsModel.setProjId(cursor.getString(cursor.getColumnIndex(PROJ_ID)));
 		orderDetailsModel.setReportHC(cursor.getInt(cursor.getColumnIndex(REPORT_HC)));
-		orderDetailsModel.setTestEdit(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(IS_TEST_EDIT))));
-		orderDetailsModel.setAddBen(Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(IS_ADD_BEN))));
+		orderDetailsModel.setTestEdit(cursor.getString(cursor.getColumnIndex(IS_TEST_EDIT)).equals("1"));
+		orderDetailsModel.setAddBen(cursor.getString(cursor.getColumnIndex(IS_ADD_BEN)).equals("1"));
 
 		TypeToken<ArrayList<KitsCountModel>> tokenBarcode = new TypeToken<ArrayList<KitsCountModel>>(){};
 		ArrayList<KitsCountModel> kitsArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(KITS)),tokenBarcode.getType());
@@ -144,8 +144,8 @@ public class OrderDetailsDao {
 		values.put(REFCODE, orderDetailsModel.getRefcode());
 		values.put(PROJ_ID, orderDetailsModel.getProjId());
 		values.put(REPORT_HC, orderDetailsModel.getReportHC());
-		values.put(IS_TEST_EDIT, orderDetailsModel.isTestEdit());
-		values.put(IS_ADD_BEN, orderDetailsModel.isAddBen());
+		values.put(IS_TEST_EDIT, orderDetailsModel.isTestEdit()?"1":"0");
+		values.put(IS_ADD_BEN, orderDetailsModel.isAddBen()?"1":"0");
 		values.put(STATUS, orderDetailsModel.getStatus());
 		values.put(LATITUDE, orderDetailsModel.getLatitude());
 		values.put(LONGITUDE, orderDetailsModel.getLongitude());
@@ -237,6 +237,23 @@ public class OrderDetailsDao {
 				contentValues = this.getContentValuesFromModel(model);
 				int insertValue = (int) db.insert(TABLE_NAME, null, contentValues);
 				Logger.debug("insertOrUpdateOrderDetailsModel: insert : " + insertValue);
+			}
+		}
+		return false;
+	}
+
+	public boolean updateOrderNo(String oldOrderNo,OrderDetailsModel model){
+		ContentValues contentValues = new ContentValues();
+		OrderDetailsModel barcodeDetailsModel;
+		if(model!=null && !InputUtils.isNull(model.getOrderNo())) {
+			barcodeDetailsModel = getModelFromId(model.getOrderNo());
+			if (barcodeDetailsModel!=null) {
+				contentValues = this.getContentValuesFromModel(model);
+				int updateValue = (int) db.update(TABLE_NAME, contentValues, ORDER_NO + "=?", new String[] {oldOrderNo});
+				Logger.debug("insertOrUpdateOrderDetailsModel - UpdateOrderNo: update : " + updateValue);
+			}
+			else{
+				return false;
 			}
 		}
 		return false;

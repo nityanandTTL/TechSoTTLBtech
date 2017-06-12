@@ -205,16 +205,35 @@ public class BeneficiaryDetailsDao {
 				contentValues = this.getContentValuesFromModel(model);
 				int updateValue = (int) db.update(TABLE_NAME, contentValues, BEN_ID + "="+model.getBenId(), new String[] {});
 				Logger.debug("insertOrUpdateBeneficiaryDetailsModel: update : " + updateValue);
+                return true;
 			}
 			else{
 				contentValues = this.getContentValuesFromModel(model);
 				int insertValue = (int) db.insert(TABLE_NAME, null, contentValues);
 				Logger.debug("insertOrUpdateBeneficiaryDetailsModel: insert : " + insertValue);
+                return true;
 			}
 		}
 		return false;
 	}
 
+	public boolean updateBeneficiaryId(int oldBeneficiaryId,BeneficiaryDetailsModel model) {
+		ContentValues contentValues = new ContentValues();
+		BeneficiaryDetailsModel barcodeDetailsModel;
+		if(model!=null && model.getBenId()!=0) {
+			barcodeDetailsModel = getModelFromId(model.getBenId());
+			if (barcodeDetailsModel!=null) {
+				contentValues = this.getContentValuesFromModel(model);
+				int updateValue = (int) db.update(TABLE_NAME, contentValues, BEN_ID + "="+oldBeneficiaryId, new String[] {});
+				Logger.debug("insertOrUpdateBeneficiaryDetailsModel: update : " + updateValue);
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		return false;
+	}
 	public long getLastUpdatedAt() {
 
 		long updatedDate = 0;

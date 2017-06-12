@@ -39,6 +39,7 @@ public class BtechClientDetailsAdapter extends RecyclerView.Adapter<BtechClientD
         private void initComp(View view) {
             tv_call = (ImageView) view.findViewById(R.id.txt_call);
             tv_name = (TextView) view.findViewById(R.id.txt_name);
+            tv_name.setSelected(true);
             tv_distance = (TextView) view.findViewById(R.id.tv_distance);
         }
     }

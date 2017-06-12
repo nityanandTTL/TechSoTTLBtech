@@ -167,7 +167,7 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
 
             String postJson = new Gson().toJson(orderBookingRequestModel);
-            // Logging the response that is too large for logcat in multiple lines -- START
+            /*// Logging the response that is too large for logcat in multiple lines -- START
             int maxLogSize = 500;
             for (int i = 0; i <= postJson.length() / maxLogSize; i++) {
                 int start = i * maxLogSize;
@@ -176,7 +176,7 @@ public class AsyncTaskForRequest {
                 Log.v(AddEditBeneficiaryDetailsActivity.class.getSimpleName(), postJson.substring(start, end));
             }
             // Logging the response that is too large for logcat in multiple lines -- END
-
+*/
 
 
             abstractApiModel.setPostData(postJson);
@@ -202,7 +202,7 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
 
             String postJson = new Gson().toJson(orderBookingRequestModel);
-            // Logging the response that is too large for logcat in multiple lines -- START
+           /* // Logging the response that is too large for logcat in multiple lines -- START
             int maxLogSize = 500;
             for (int i = 0; i <= postJson.length() / maxLogSize; i++) {
                 int start = i * maxLogSize;
@@ -212,9 +212,7 @@ public class AsyncTaskForRequest {
             }
             // Logging the response that is too large for logcat in multiple lines -- END
 
-
-
-            abstractApiModel.setPostData(postJson);
+*/          abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.ADD_BENEFICIARY);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));

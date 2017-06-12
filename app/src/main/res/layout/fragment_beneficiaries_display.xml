@@ -82,6 +82,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_add_beneficiary"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/dp_2"
