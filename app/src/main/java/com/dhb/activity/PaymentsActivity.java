@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -29,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
+import com.dhb.fragment.HomeScreenFragment;
 import com.dhb.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.dhb.models.api.response.PaymentProcessAPIResponseModel;
 import com.dhb.models.api.response.PaymentStartTransactionAPIResponseModel;
@@ -65,6 +68,7 @@ public class PaymentsActivity extends AbstractActivity {
     private ApiCallAsyncTask fetchNarrationMasterAsyncTask;
     private ApiCallAsyncTask fetchPaymentModesAsyncTask;
     private FrameLayout flPayments;
+    public boolean isOnHome = false;
     private ArrayList<NarrationMasterModel> narrationsArr;
     private ArrayList<PaymentProcessAPIResponseModel> paymentModesArr;
     private ApiCallAsyncTask fetchPaymentPassInputsAsyncTask;
@@ -83,12 +87,14 @@ public class PaymentsActivity extends AbstractActivity {
     private PaymentDoCaptureResponseAPIResponseModel paymentDoCaptureResponseAPIResponseModel;
     private ApiCallAsyncTask doCaptureResponseAsyncTask;
     private ApiCallAsyncTask recheckResponseAsyncTask;
+    private boolean doubleBackToExitPressedOnce = false;
     private PowerManager.WakeLock wakeLock;
     private long startRecheckMillis;
     //TODO tejas - 7738185400 for airtel money
     //TODO tejas - testthyrocare@axis for UPI
     int buttonDecider = 0;
     private int ModeId = 0;
+    String TAG = PaymentsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +118,32 @@ public class PaymentsActivity extends AbstractActivity {
         initUI();
 //        fetchNarrationMaster();
         fetchPaymentModes();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            if (isOnHome) {
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+            } else {
+                pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG);
+            }
+        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+
     }
 
     @Override
@@ -259,7 +291,7 @@ public class PaymentsActivity extends AbstractActivity {
             jsonRequest.put("URLId", pparm.getURLId());
             for (PaymentNameValueModel pnvm :
                     pparm.getNameValueCollection()) {
-                if(pnvm.getKey().equals("ModeId")){
+                if (pnvm.getKey().equals("ModeId")) {
                     ModeId = Integer.parseInt(pnvm.getValue());
                 }
                 jsonRequest.put(pnvm.getKey(), pnvm.getValue());
@@ -300,21 +332,20 @@ public class PaymentsActivity extends AbstractActivity {
             flPayments.removeAllViews();
             View v = activity.getLayoutInflater().inflate(R.layout.paymentsdesign, null);
             LinearLayout llPaymentPassInputs = (LinearLayout) v.findViewById(R.id.ll_payments_pass_inputs_data);
-            final EditText editAmount= (EditText) v.findViewById(R.id.amount1);
-            TextView textAmount=(TextView) v.findViewById(R.id.amount);
+            final EditText editAmount = (EditText) v.findViewById(R.id.amount1);
+            TextView textAmount = (TextView) v.findViewById(R.id.amount);
 
             for (int i = 0; i < paymentPassInputsModel.getNameValueCollection().size(); i++) {
                 final int currentPosition = i;
                 if (paymentPassInputsModel.getNameValueCollection().get(i).getRequired().equals("User")) {
-                    if(!paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("Amount")) {
+                    if (!paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("Amount")) {
                         View v1 = activity.getLayoutInflater().inflate(R.layout.payment_edit_text, null);
                         EditText edtPaymentUserInputs = (EditText) v1.findViewById(R.id.edit_payment);
                         TextView txtPaymentUserInputss = (TextView) v1.findViewById(R.id.payment_text);
                         if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Mobile")) {
                             String strMobile = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                             txtPaymentUserInputss.setText(strMobile);
-                        }
-                        else {
+                        } else {
                             txtPaymentUserInputss.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                         }
                         edtPaymentUserInputs.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
@@ -335,8 +366,7 @@ public class PaymentsActivity extends AbstractActivity {
                             }
                         });
                         llPaymentPassInputs.addView(v1);
-                    }
-                    else{
+                    } else {
                         textAmount.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                         textAmount.setVisibility(View.GONE);
                         editAmount.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
@@ -354,30 +384,28 @@ public class PaymentsActivity extends AbstractActivity {
 
                             @Override
                             public void afterTextChanged(Editable s) {
-                                if(!InputUtils.isNull(s.toString())) {
+                                if (!InputUtils.isNull(s.toString())) {
                                     try {
                                         int amountPayable = Integer.parseInt(s.toString());
-                                        if(amountPayable>0) {
+                                        if (amountPayable > 0) {
                                             paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(amountPayable + "");
-                                        }
-                                        else{
+                                        } else {
                                             editAmount.requestFocus();
                                             editAmount.setError("Please enter Valid Amount");
                                         }
-                                    }catch (Exception e){
+                                    } catch (Exception e) {
                                         editAmount.requestFocus();
                                         editAmount.setError("Please enter Valid Amount");
                                         e.printStackTrace();
                                     }
-                                }
-                                else{
+                                } else {
                                     editAmount.requestFocus();
                                     editAmount.setError("Amount Cannot be Empty");
                                 }
                             }
                         });
                     }
-                   // llPaymentPassInputs.addView(edtPaymentUserInputs);
+                    // llPaymentPassInputs.addView(edtPaymentUserInputs);
                 } else if (paymentPassInputsModel.getNameValueCollection().get(i).getRequired().equals("System")) {
                     if (paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("NarrationId")) {
                         paymentPassInputsModel.getNameValueCollection().get(i).setValue(NarrationId + "");
@@ -404,27 +432,20 @@ public class PaymentsActivity extends AbstractActivity {
                         textAmount.setVisibility(View.VISIBLE);
                         editAmount.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                         editAmount.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         View v2 = activity.getLayoutInflater().inflate(R.layout.payment_textview, null);
                         TextView txtPaymentSystemInputsLabel = (TextView) v2.findViewById(R.id.payment_text1);
                         TextView txtPaymentSystemInputs = (TextView) v2.findViewById(R.id.payment_text2);
-                        if(paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Name"))
-                        {
+                        if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Name")) {
                             String strName = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":");
                             txtPaymentSystemInputsLabel.setText(strName);
-                        }
-                        else if(paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Mobile"))
-                        {
+                        } else if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Mobile")) {
                             String strMobile = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":");
                             txtPaymentSystemInputsLabel.setText(strMobile);
-                        }
-                        else if(paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Email"))
-                        {
+                        } else if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Email")) {
                             String strEmail = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":");
                             txtPaymentSystemInputsLabel.setText(strEmail);
-                        }
-                        else
-                        {
+                        } else {
                             txtPaymentSystemInputsLabel.setText((paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":"));
                         }
                         txtPaymentSystemInputs.setText(paymentPassInputsModel.getNameValueCollection().get(i).getValue());
@@ -462,8 +483,8 @@ public class PaymentsActivity extends AbstractActivity {
                     jsonRequest.put(pnvm.getKey(), appPreferenceManager.getLoginResponseModel().getUserID());
                 } else {
                     jsonRequest.put(pnvm.getKey(), pnvm.getValue());
-                    if(pnvm.getRequired().equals("User") && InputUtils.isNull(pnvm.getValue())){
-                        Toast.makeText(activity,"All input fields are necessary",Toast.LENGTH_SHORT).show();
+                    if (pnvm.getRequired().equals("User") && InputUtils.isNull(pnvm.getValue())) {
+                        Toast.makeText(activity, "All input fields are necessary", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
@@ -485,18 +506,18 @@ public class PaymentsActivity extends AbstractActivity {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
                 paymentStartTransactionAPIResponseModel = responseParser.getPaymentStartTransactionResponse(json, statusCode);
-                if(paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
-                    if(NarrationId==1||NarrationId==3||(NarrationId==2&& ModeId==1)) {
+                if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
+                    if (NarrationId == 1 || NarrationId == 3 || (NarrationId == 2 && ModeId == 1)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                         builder.setTitle("Verify Payment")
                                 .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
                                 .setCancelable(false)
-                        .setPositiveButton("Verify Payment", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                fetchDoCaptureResponse(true);
-                            }
-                        }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                                .setPositiveButton("Verify Payment", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        fetchDoCaptureResponse(true);
+                                    }
+                                }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent();
@@ -505,13 +526,11 @@ public class PaymentsActivity extends AbstractActivity {
                                 finish();
                             }
                         }).show();
-                    }
-                    else{
+                    } else {
                         initDoCaptureResponseData();
                     }
-                }
-                else{
-                    Toast.makeText(activity,paymentStartTransactionAPIResponseModel.getTokenData(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, paymentStartTransactionAPIResponseModel.getTokenData(), Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(activity, json + "", Toast.LENGTH_SHORT).show();
@@ -574,7 +593,7 @@ public class PaymentsActivity extends AbstractActivity {
                             activity.setProgress(progress * 1000);
                         }
                     });
-                    wvQRDisplay.setWebViewClient(new WebViewClient(){
+                    wvQRDisplay.setWebViewClient(new WebViewClient() {
                         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                             Toast.makeText(activity, "Error while loading the QR Code!" + description, Toast.LENGTH_SHORT).show();
                             initPaymentPassInputsData();
@@ -591,7 +610,7 @@ public class PaymentsActivity extends AbstractActivity {
                     wvQRDisplay.setInitialScale(getScale());
                     wvQRDisplay.loadDataWithBaseURL(null, paymentStartTransactionAPIResponseModel.getTokenData(), "text/html", "UTF-8", null);
                     llPaymentStartTransaction.addView(wvQRDisplay);
-                    Toast.makeText(activity,"Please wait while the customer scans the QR Code",Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, "Please wait while the customer scans the QR Code", Toast.LENGTH_LONG).show();
                     break;
                 }
             }
@@ -660,6 +679,7 @@ public class PaymentsActivity extends AbstractActivity {
 
     private class DoCaptureResponseAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         private boolean showProgressDialog;
+
         public DoCaptureResponseAsyncTaskDelegateResult(boolean showProgressDialog) {
             this.showProgressDialog = showProgressDialog;
         }
@@ -667,8 +687,8 @@ public class PaymentsActivity extends AbstractActivity {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                PaymentDoCaptureResponseAPIResponseModel tempPDCRAPRM  = responseParser.getPaymentDoCaptureAPIResponse(json, statusCode);
-                if(tempPDCRAPRM.getStatus()!=null) {
+                PaymentDoCaptureResponseAPIResponseModel tempPDCRAPRM = responseParser.getPaymentDoCaptureAPIResponse(json, statusCode);
+                if (tempPDCRAPRM.getStatus() != null) {
                     paymentDoCaptureResponseAPIResponseModel = tempPDCRAPRM;
                     switch (paymentDoCaptureResponseAPIResponseModel.getStatus()) {
                         case "PAYMENT SUCCESS": {
@@ -728,8 +748,7 @@ public class PaymentsActivity extends AbstractActivity {
                             break;
                         }
                     }
-                }
-                else{
+                } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setTitle("Verify Payment")
                             .setMessage("Verify Payment Status failed! Please click Retry to check payment status again.")

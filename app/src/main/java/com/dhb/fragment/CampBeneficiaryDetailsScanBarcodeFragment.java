@@ -181,7 +181,9 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         initUI();
         initData();
         btn_scan_qr.setBackgroundDrawable(getResources().getDrawable(R.drawable.footer_bg_deselected));
+
         btn_enter_manually.setBackgroundDrawable(getResources().getDrawable(R.drawable.footer_bg));
+        //btn_enter_manually.setElevation(10);
         setListeners();
         //  initBrandMaster();
         return rootview;
@@ -749,7 +751,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 initScanBarcodeView();
 
             } else {
-                //  if(IS_DEBUG)
+                  if(IS_DEBUG)
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }

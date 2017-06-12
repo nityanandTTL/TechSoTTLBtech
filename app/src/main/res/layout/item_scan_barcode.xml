@@ -2,24 +2,27 @@
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
         <TextView
-            android:layout_weight="3"
             android:id="@+id/txt_sample_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/dp_5"
             android:layout_marginRight="@dimen/dp_5"
-            android:maxLines="1"
+            android:layout_weight="3"
             android:background="@drawable/bg_sample_type_edta"
+            android:ellipsize="marquee"
             android:gravity="center"
             android:marqueeRepeatLimit="marquee_forever"
-            android:ellipsize="marquee"
-            android:padding="@dimen/dp_5"
+            android:maxLines="1"
             android:minEms="6"
+          android:elevation="6dp"
+            android:padding="@dimen/dp_5"
             android:text="EDTA"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
+
         <LinearLayout
             android:layout_gravity="center"
             android:orientation="horizontal"

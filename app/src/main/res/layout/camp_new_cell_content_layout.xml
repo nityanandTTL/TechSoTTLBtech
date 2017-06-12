@@ -307,6 +307,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -317,6 +318,7 @@
 
                         <LinearLayout
                             android:layout_width="wrap_content"
+                            android:layout_marginTop="10dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
@@ -348,6 +350,7 @@
 
                         <LinearLayout
                             android:layout_width="wrap_content"
+                            android:layout_marginTop="10dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
@@ -355,7 +358,6 @@
                                 android:id="@+id/img_female"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
-
                                 android:layout_gravity="center"
                                 android:fadingEdge="horizontal"
                                 android:src="@drawable/female" />
@@ -395,8 +397,8 @@
                         android:layout_weight="1"
                         android:background="@android:drawable/edit_text"
                         android:inputType="number"
-                        android:minEms="11"
                         android:maxLength="10"
+                        android:minEms="11"
                         android:paddingRight="@dimen/dp_5" />
 
                 </LinearLayout>
@@ -442,6 +444,7 @@
                     android:id="@+id/btn_next"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:elevation="10dp"
                     android:layout_gravity="center"
                     android:background="@drawable/purple_btn_bg"
                     android:text="SUBMIT"
