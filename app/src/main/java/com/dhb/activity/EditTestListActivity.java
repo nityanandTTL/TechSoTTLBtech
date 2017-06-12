@@ -64,17 +64,18 @@ public class EditTestListActivity extends AbstractActivity{
         }
         totalAmount = 0;
         sampleTypesArr = new ArrayList<>();
-        showProgressDialog(activity,"Loading ...");
+
         initUI();
         initData();
         initListener();
-        closeProgressDialog();
+
     }
 
     private void initListener() {
         sp_tests.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                showProgressDialog(activity,"Loading ...");
                 BrandMasterModel brandMasterModel = (BrandMasterModel) parent.getItemAtPosition(position);
                 Object item = parent.getItemAtPosition(position);
                 if (item != null) {
@@ -104,6 +105,7 @@ public class EditTestListActivity extends AbstractActivity{
                 } else {
                     Logger.error("item null");
                 }
+                closeProgressDialog();
             }
 
             @Override

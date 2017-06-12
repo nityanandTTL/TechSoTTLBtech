@@ -20,6 +20,11 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import com.dhb.R;
+import com.dhb.fragment.OLCPickupListDisplayFragment;
+import com.dhb.uiutils.AbstractActivity;
+import com.dhb.uiutils.AbstractFragment;
+
 import java.net.InetAddress;
 
 /**
@@ -167,6 +172,7 @@ public class GPSTracker extends Service implements LocationListener {
         // on pressing cancel button
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+
                 dialog.cancel();
 
             }
