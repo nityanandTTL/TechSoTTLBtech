@@ -205,4 +205,5 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     public void setLabAlert(ArrayList<BeneficiaryLabAlertsModel> labAlert) {
         this.labAlert = labAlert;
     }
+
 }

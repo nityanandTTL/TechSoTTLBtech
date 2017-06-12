@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -207,6 +208,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             }
         } else {
             holder.ll_btechs.setVisibility(View.GONE);
+            holder.sc_ll_btechs.setVisibility(View.GONE);
         }
 
         if (unfoldedIndexes.contains(pos)) {
@@ -248,6 +250,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
         TextView tvName, tv_leader, tv_location, tv_expected_crowd, tv_test;
         TextView txt_name, txt_location ;
         LinearLayout ll_btechs;
+        HorizontalScrollView sc_ll_btechs;
         ImageView tv_call_leader;
         Button btn_start, btn_arrived ,img_accept;
         FoldingCell cell;
@@ -274,6 +277,7 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
             txt_name = (TextView) itemView.findViewById(R.id.txt_name);
             img_accept = (Button) itemView.findViewById(R.id.img_accept);
             ll_btechs = (LinearLayout) itemView.findViewById(R.id.ll_btechs);
+            sc_ll_btechs=(HorizontalScrollView)itemView.findViewById(R.id.sc_ll_btechs);
             btn_arrived = (Button) itemView.findViewById(R.id.btn_arrived);
             tv_call_leader = (ImageView) itemView.findViewById(R.id.tv_call_leader);
         }

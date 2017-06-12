@@ -41,6 +41,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private AppPreferenceManager appPreferenceManager;
     private String MaskedPhoneNumber = "";
+    private boolean isSelected;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
 
@@ -173,10 +174,10 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         visitOrderDisplayRecyclerViewAdapterDelegate.onOrderAccepted(orderVisitDetailsModelsArr.get(pos));
-
-
                     }
                 });
+            }else {
+                holder.imgCBAccept.setVisibility(View.INVISIBLE);
             }
 
 

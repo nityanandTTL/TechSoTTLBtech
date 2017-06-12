@@ -208,7 +208,7 @@
         <RelativeLayout
             android:background="@color/colorSecondary"
             android:layout_width="5dp"
-            android:layout_height="@dimen/dp_220">
+            android:layout_height="match_parent">
         </RelativeLayout>
         <LinearLayout
             android:id="@+id/ll_content"

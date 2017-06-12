@@ -2,6 +2,7 @@ package com.dhb.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -52,6 +53,7 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
         edt_username_login = (EditText) findViewById(R.id.username_login);
         edt_password_login = (EditText) findViewById(R.id.password_login);
         tv_forget_password = (TextView) findViewById(R.id.forget_password);
+        edt_password_login.setTypeface(Typeface.DEFAULT);
         btn_login = (Button) findViewById(R.id.login_button);
         ll_login = (LinearLayout) findViewById(R.id.ll_login);
     }

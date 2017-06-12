@@ -26,24 +26,23 @@
 
         <TextView
 
-            android:layout_marginTop="20dp"
             android:id="@+id/txt_sr_no"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
             android:background="@drawable/counter_icon"
             android:gravity="center"
             android:text="1"
             android:textColor="@android:color/white"
-            android:textSize="26sp"
-            />
+            android:textSize="26sp" />
 
         <ImageView
-            android:layout_marginTop="20dp"
             android:id="@+id/img_oas"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
             android:src="@drawable/tick_icon"
             android:visibility="invisible" />
 
@@ -51,9 +50,9 @@
             android:id="@+id/call"
             android:layout_width="@dimen/dp_20"
             android:layout_height="@dimen/dp_20"
-            android:layout_marginTop="40dp"
             android:layout_below="@+id/img_oas"
             android:layout_centerInParent="true"
+            android:layout_marginTop="40dp"
             android:src="@drawable/call_icon"
             android:visibility="gone" />
 

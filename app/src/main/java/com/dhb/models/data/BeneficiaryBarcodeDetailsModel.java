@@ -67,6 +67,11 @@ public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcela
         }
     };
 
+    @Override
+    public String toString() {
+        return /*SamplType*/Barcode;
+    }
+
     public String getId() {
         return id;
     }
