@@ -106,7 +106,14 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
                 if(loginResponseModel!=null){
                     appPreferenceManager.setLoginResponseModel(loginResponseModel);
                     appPreferenceManager.setAPISessionKey(loginResponseModel.getAccess_token());
-                    switchToActivity(activity,SelfieUploadActivity.class,new Bundle());
+                   // switchToActivity(activity,SelfieUploadActivity.class,new Bundle());
+
+                    //change_7june2017...
+                    if (loginResponseModel.getRole().equals("4"))
+                        switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
+                    else
+                        Toast.makeText(activity, "You are not authorized to log in...", Toast.LENGTH_SHORT).show();
+                    //change_7june2017...
                 }
             }
             else{

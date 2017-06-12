@@ -77,7 +77,7 @@ import static com.dhb.utils.app.CommonUtils.encodeImage;
 public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     public static final String TAG_FRAGMENT = BeneficiaryDetailsScanBarcodeFragment.class.getSimpleName();
     private ImageView imgVenipuncture, imgHC;
-    private TextView txtSrNo;
+    private TextView txtSrNo,tv_orderno;
     private TextView txtName;
     private TextView txtAge;
     private TextView txtAadharNo;
@@ -191,6 +191,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             edtLA.setText(laS);
 
             txtName.setText(beneficiaryDetailsModel.getName());
+            tv_orderno.setText(beneficiaryDetailsModel.getOrderNo());
             txtAge.setText(beneficiaryDetailsModel.getAge() + " | " + beneficiaryDetailsModel.getGender());
             txtAadharNo.setVisibility(View.GONE);
             edtTests.setText(beneficiaryDetailsModel.getTestsCode());
@@ -365,7 +366,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             public void onClick(View v) {
                 String tests = beneficiaryDetailsModel.getTestsCode();
                 String projId = beneficiaryDetailsModel.getProjId();
-                final ArrayList<String> testCodesList = new ArrayList<String>();
+                final ArrayList<String> testCodesList = new ArrayList<>();
                 Collections.addAll(testCodesList, tests.split(","));
                 beneficiaryDetailsModel.setTestsList(new TestRateMasterDao(dhbDao.getDb()).getModelsFromTestCodes(tests));
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -378,6 +379,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 }).setPositiveButton("Close", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        System.out.println("closing Dialog");
+
                         dialog.dismiss();
                     }
                 }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
@@ -450,13 +453,16 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     @Override
     public void initUI() {
         imgVenipuncture = (ImageView) rootview.findViewById(R.id.img_venipuncture);
+        tv_orderno = (TextView)rootview.findViewById(R.id.tv_orderno);
+        tv_orderno.setSelected(true);
         imgHC = (ImageView) rootview.findViewById(R.id.hard_copy_check);
         txtName = (TextView) rootview.findViewById(R.id.txt_name);
+        txtName.setSelected(true);
         txtAge = (TextView) rootview.findViewById(R.id.txt_age);
         txtAadharNo = (TextView) rootview.findViewById(R.id.txt_aadhar_no);
         txtSrNo = (TextView) rootview.findViewById(R.id.txt_sr_no);
         btnEdit = (ImageView) rootview.findViewById(R.id.img_edit);
-        btnRelease = (ImageView) rootview.findViewById(R.id.img_release);
+        btnRelease = (ImageView) rootview.findViewById(R.id.img_release2);
         edtTests = (TextView) rootview.findViewById(R.id.edt_test);
         edtCH = (TextView) rootview.findViewById(R.id.clinical_history);
         edtLA = (TextView) rootview.findViewById(R.id.edt_lab_alerts);
@@ -633,7 +639,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         }
         if (requestCode == BundleConstants.EDIT_TESTS_START && resultCode == BundleConstants.EDIT_TESTS_FINISH) {
             String testsCode = "";
-            ArrayList<TestRateMasterModel> selectedTests = new ArrayList<>();
+            ArrayList<TestRateMasterModel> selectedTests;
             selectedTests = data.getExtras().getParcelableArrayList(BundleConstants.SELECTED_TESTS_LIST);
 
             int selectedTestsTotalCost = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_TOTAL_COST);
@@ -791,12 +797,14 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private class OrderCancelDialogButtonClickedDelegateResult implements OrderCancelDialogButtonClickedDelegate {
 
         @Override
-        public void onOkButtonClicked(OrderDetailsModel orderVisitDetailsModel, String remark) {
+        public void onOkButtonClicked(OrderDetailsModel orderVisitDetailsModel, String remark, int status) {
             AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
             OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
             orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
             orderStatusChangeRequestModel.setRemarks(remark);
-            orderStatusChangeRequestModel.setStatus(12);
+
+
+            orderStatusChangeRequestModel.setStatus(status);
             ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
             orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeApiAsyncTaskDelegateResult(orderDetailsModel));
             if (isNetworkAvailable(activity)) {

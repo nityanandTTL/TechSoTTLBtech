@@ -708,7 +708,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                 clearEntries();
                 clearText=1;
             } else {
-                if (IS_DEBUG)
+                 //if (IS_DEBUG)
                     Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
                 isSuceed = false;
             }

@@ -59,18 +59,20 @@ public class AddSampleBarcodeDialog extends Dialog {
 	private class DoneBtnClickListener implements View.OnClickListener {
 		@Override
 		public void onClick(View v) {
-			if (!isFieldValid(etBarcodeValue.getText().toString()) || !isFieldValid(etConfirmBarcodeValue.getText().toString())){
+			if (!isFieldValid(etBarcodeValue.getText().toString())){
 				Toast.makeText(activity, activity.getResources().getString(R.string.alert_invalid_barcode_value), Toast.LENGTH_SHORT).show();
+			}else if ( !isFieldValid(etConfirmBarcodeValue.getText().toString())){
+				Toast.makeText(activity,  activity.getResources().getString(R.string.re_enter_barcode), Toast.LENGTH_SHORT).show();
 			} else if (!etBarcodeValue.getText().toString().equalsIgnoreCase(etConfirmBarcodeValue.getText().toString())){
 				Toast.makeText(activity, activity.getResources().getString(R.string.alert_unmatched_barcode_values), Toast.LENGTH_SHORT).show();
-			} else {
+			}  else {
 				InputUtils.hideKeyboard(activity,v);
 				addSampleBarcodeDialog.dismiss();
 				addSampleBarcodeDialogDelegate.onSampleBarcodeAdded(etBarcodeValue.getText().toString());
+
 			}
 		}
-
-	}
+}
 
 	private boolean isFieldValid(String text) {
 		if (!InputUtils.isNull(text)&&text.length()==8)

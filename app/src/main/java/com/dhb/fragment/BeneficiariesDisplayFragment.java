@@ -272,9 +272,17 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     }
 
     private void initData() {
+
+//        tempBeneficiaryDetailsModel =
+
+
+        // Here #############################################################################################
         vpBeneficiaries.removeAllViews();
         vpBeneficiaries.clearOnPageChangeListeners();
         totalAmountPayable = 0;
+        totalAmountPayable = tempOrderDetailsModel.getAmountPayable();
+
+
         orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
         for (OrderDetailsModel orderDetailsModel :
                 orderVisitDetailsModel.getAllOrderdetails()) {
@@ -411,6 +419,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BundleConstants.ADD_START && resultCode == BundleConstants.ADD_FINISH) {
+            tempBeneficiaryDetailsModel = (BeneficiaryDetailsModel) data.getExtras().getSerializable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
+            tempOrderDetailsModel = (OrderDetailsModel) data.getExtras().getSerializable(BundleConstants.ORDER_DETAILS_MODEL);
             initData();
         }
         if(requestCode==BundleConstants.PAYMENTS_START && resultCode==BundleConstants.PAYMENTS_FINISH){

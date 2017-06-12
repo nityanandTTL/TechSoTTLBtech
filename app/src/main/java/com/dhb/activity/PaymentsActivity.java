@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
-import com.dhb.fragment.HomeScreenFragment;
 import com.dhb.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.dhb.models.api.response.PaymentProcessAPIResponseModel;
 import com.dhb.models.api.response.PaymentStartTransactionAPIResponseModel;
@@ -68,7 +67,6 @@ public class PaymentsActivity extends AbstractActivity {
     private ApiCallAsyncTask fetchNarrationMasterAsyncTask;
     private ApiCallAsyncTask fetchPaymentModesAsyncTask;
     private FrameLayout flPayments;
-    public boolean isOnHome = false;
     private ArrayList<NarrationMasterModel> narrationsArr;
     private ArrayList<PaymentProcessAPIResponseModel> paymentModesArr;
     private ApiCallAsyncTask fetchPaymentPassInputsAsyncTask;
@@ -126,16 +124,9 @@ public class PaymentsActivity extends AbstractActivity {
             super.onBackPressed();
             return;
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            if (isOnHome) {
-                this.doubleBackToExitPressedOnce = true;
-                Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-            } else {
-                pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG);
-            }
+        else{
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
         }
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -143,7 +134,6 @@ public class PaymentsActivity extends AbstractActivity {
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
-
     }
 
     @Override
@@ -340,14 +330,21 @@ public class PaymentsActivity extends AbstractActivity {
                 if (paymentPassInputsModel.getNameValueCollection().get(i).getRequired().equals("User")) {
                     if (!paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("Amount")) {
                         View v1 = activity.getLayoutInflater().inflate(R.layout.payment_edit_text, null);
-                        EditText edtPaymentUserInputs = (EditText) v1.findViewById(R.id.edit_payment);
+                         final  EditText edtPaymentUserInputs = (EditText) v1.findViewById(R.id.edit_payment);
                         TextView txtPaymentUserInputss = (TextView) v1.findViewById(R.id.payment_text);
-                        if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Mobile")) {
+
+
+                        //changes_5june2017
+                        /*if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Mobile")) {
                             String strMobile = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                             txtPaymentUserInputss.setText(strMobile);
                         } else {
                             txtPaymentUserInputss.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
-                        }
+                        }*/
+
+                        txtPaymentUserInputss.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
+                        //changes_5june2017
+
                         edtPaymentUserInputs.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                         edtPaymentUserInputs.addTextChangedListener(new TextWatcher() {
                             @Override
@@ -362,7 +359,31 @@ public class PaymentsActivity extends AbstractActivity {
 
                             @Override
                             public void afterTextChanged(Editable s) {
-                                paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+                               //paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+
+                                String remarks = s.toString();
+
+                                //for REMARKS
+                                if (edtPaymentUserInputs.getHint().equals("Remarks")) {
+                                    if (remarks.contains("\'")) {
+                                        edtPaymentUserInputs.setError("Apostroph symbol ( ' ) is not allowed.");
+                                        edtPaymentUserInputs.setText("");
+                                    } else
+                                        paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+                                    //paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+                                }
+
+
+                                //for VPA
+                                if (edtPaymentUserInputs.getHint().equals("VPA")) {
+                                    if (remarks.contains(" ")) {
+                                        edtPaymentUserInputs.setError("Space is not allowed.");
+                                        edtPaymentUserInputs.setText("");
+                                    } else
+                                        paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+                                }
+
+
                             }
                         });
                         llPaymentPassInputs.addView(v1);
@@ -436,7 +457,10 @@ public class PaymentsActivity extends AbstractActivity {
                         View v2 = activity.getLayoutInflater().inflate(R.layout.payment_textview, null);
                         TextView txtPaymentSystemInputsLabel = (TextView) v2.findViewById(R.id.payment_text1);
                         TextView txtPaymentSystemInputs = (TextView) v2.findViewById(R.id.payment_text2);
-                        if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Name")) {
+
+                        //changes_5june2017
+                        /*if(paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Name"))
+                        {
                             String strName = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":");
                             txtPaymentSystemInputsLabel.setText(strName);
                         } else if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Mobile")) {
@@ -447,7 +471,10 @@ public class PaymentsActivity extends AbstractActivity {
                             txtPaymentSystemInputsLabel.setText(strEmail);
                         } else {
                             txtPaymentSystemInputsLabel.setText((paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":"));
-                        }
+                        }*/
+                        //changes_5june2017
+
+                        txtPaymentSystemInputsLabel.setText((paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":"));
                         txtPaymentSystemInputs.setText(paymentPassInputsModel.getNameValueCollection().get(i).getValue());
                         llPaymentPassInputs.addView(v2);
                     }
@@ -455,7 +482,10 @@ public class PaymentsActivity extends AbstractActivity {
             }
             Button btnPaymentInputsSubmit = new Button(activity);
             LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            btnParams.setMargins(10, 5, 5, 10);
+            //btnParams.setMargins(10, 5, 5, 10);
+            //changes_7june2017
+            btnParams.setMargins(300, 5, 5, 10);
+            //change_7june2017...
             btnPaymentInputsSubmit.setLayoutParams(btnParams);
             btnPaymentInputsSubmit.setGravity(Gravity.CENTER);
             btnPaymentInputsSubmit.setMinEms(10);

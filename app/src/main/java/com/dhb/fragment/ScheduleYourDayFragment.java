@@ -1,7 +1,9 @@
 package com.dhb.fragment;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -25,28 +27,28 @@ import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
+import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.InputUtils;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class ScheduleYourDayFragment extends AbstractFragment {
+
 
     public static final String TAG_FRAGMENT = "SCHEDULE_YOUR_DAY_FRAGMENT";
     private HomeScreenActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private View rootView;
-
-    //changes
-    private Button txtNo,txtYes;
-    //changes
-
+    private Button txtNo, txtYes;
     private LinearLayout llSlotsDisplay;
     private GridView gvSlots;
     private Button btnProceed;
@@ -55,10 +57,14 @@ public class ScheduleYourDayFragment extends AbstractFragment {
     private SlotsDisplayAdapter slotsDisplayAdapter;
     private boolean isAvailable = false;
     private SetBtechAvailabilityAPIRequestModel savedModel;
+
+    private String lasScheduleDate;
+
     public ScheduleYourDayFragment() {
         // Required empty public constructor
     }
-  // txt_no
+
+    // txt_no
     public static ScheduleYourDayFragment newInstance() {
         ScheduleYourDayFragment fragment = new ScheduleYourDayFragment();
         Bundle args = new Bundle();
@@ -69,6 +75,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         activity = (HomeScreenActivity) getActivity();
         activity.toolbarHome.setTitle("Schedule your Day");
         activity.isOnHome = false;
@@ -87,19 +94,69 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         rootView = inflater.inflate(R.layout.fragment_schedule_your_day, container, false);
         initUI();
         initListeners();
+
+        //changes_5june2017
+        findSchedularDate();
+        //changes_5june2017
+
         return rootView;
     }
+
+    //changes_5june2017
+    private void findSchedularDate() {
+
+        if (!appPreferenceManager.getScheduleDate().isEmpty()) {
+            lasScheduleDate = appPreferenceManager.getScheduleDate();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date strDate = null;
+            try {
+                strDate = sdf.parse(lasScheduleDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            Date todayDate = null;
+            try {
+                String todayDateStr = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+                SimpleDateFormat todaySdf = new SimpleDateFormat("dd/MM/yyyy");
+                todayDate = todaySdf.parse(todayDateStr);
+
+                Logger.debug("*******************************************************************");
+                Logger.debug(String.valueOf(strDate));
+                Logger.debug(String.valueOf(todayDate));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            if (todayDate.after(strDate)) {
+                //Toast.makeText(activity, "after valid date", Toast.LENGTH_SHORT).show();
+                appPreferenceManager.setScheduleCounter("n");
+            } else {
+                //Toast.makeText(activity, "same or before valid date", Toast.LENGTH_SHORT).show();
+                appPreferenceManager.setScheduleCounter("y");
+            }
+
+        }
+    }
+    //changes_5june2017
 
     private void initListeners() {
         txtYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
-                txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                llSlotsDisplay.setVisibility(View.VISIBLE);
-                isAvailable = true;
-                btnProceed.setVisibility(View.VISIBLE);
-                fetchData();
+                //changes_5june2017
+                if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {
+                    txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
+                    txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                    llSlotsDisplay.setVisibility(View.VISIBLE);
+                    isAvailable = true;
+                    btnProceed.setVisibility(View.VISIBLE);
+                    fetchData();
+                } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
+                    Toast.makeText(activity, "User can schedule only once per day...Please try again later.", Toast.LENGTH_SHORT).show();
+                }
+                //changes_5june2017
             }
         });
         txtNo.setOnClickListener(new View.OnClickListener() {
@@ -125,16 +182,15 @@ public class ScheduleYourDayFragment extends AbstractFragment {
 
                                 setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
                                 setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
-                                calendar.add(Calendar.DAY_OF_MONTH,1);
+                                calendar.add(Calendar.DAY_OF_MONTH, 1);
                                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
                                 setBtechAvailabilityAsyncTask.setApiCallAsyncTaskDelegate(new SetBtechAvailabilityAsyncTaskDelegateResult(false));
-                                if(isNetworkAvailable(activity)){
+                                if (isNetworkAvailable(activity)) {
                                     setBtechAvailabilityAsyncTask.execute(setBtechAvailabilityAsyncTask);
-                                }
-                                else{
-                                    Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })
@@ -155,7 +211,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
                 setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
                 String slots = "";
-                if(selectedSlotsArr!=null && selectedSlotsArr.size()>0) {
+                if (selectedSlotsArr != null && selectedSlotsArr.size() > 0) {
                     for (SlotModel selecSlotModel :
                             selectedSlotsArr) {
                         if (InputUtils.isNull(slots)) {
@@ -171,16 +227,15 @@ public class ScheduleYourDayFragment extends AbstractFragment {
 
                 setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
                 setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
-                calendar.add(Calendar.DAY_OF_MONTH,1);
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
                 setBtechAvailabilityAsyncTask.setApiCallAsyncTaskDelegate(new SetBtechAvailabilityAsyncTaskDelegateResult(true));
-                if(isNetworkAvailable(activity)){
+                if (isNetworkAvailable(activity)) {
                     setBtechAvailabilityAsyncTask.execute(setBtechAvailabilityAsyncTask);
-                }
-                else{
-                    Toast.makeText(activity,activity.getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -189,10 +244,10 @@ public class ScheduleYourDayFragment extends AbstractFragment {
     private void fetchData() {
         ApiCallAsyncTask fetchSlotsAsyncTask = new AsyncTaskForRequest(activity).getFetchSlotDetailsRequestAsyncTask();
         fetchSlotsAsyncTask.setApiCallAsyncTaskDelegate(new FetchSlotsAsyncTaskDelegateResult());
-        if(isNetworkAvailable(activity)){
+        if (isNetworkAvailable(activity)) {
             fetchSlotsAsyncTask.execute(fetchSlotsAsyncTask);
-        }else{
-            Toast.makeText(activity,getResources().getString(R.string.internet_connetion_error),Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(activity, getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -213,19 +268,18 @@ public class ScheduleYourDayFragment extends AbstractFragment {
     private class FetchSlotsAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if(statusCode==200){
-                slotsArr = new ResponseParser(activity).getSlotDetailsResponseModel(json,statusCode);
+            if (statusCode == 200) {
+                slotsArr = new ResponseParser(activity).getSlotDetailsResponseModel(json, statusCode);
                 selectedSlotsArr = new ArrayList<>();
                 for (SlotModel slotModel :
                         slotsArr) {
-                    if(slotModel.isMandatorySlot()){
+                    if (slotModel.isMandatorySlot()) {
                         selectedSlotsArr.add(slotModel);
                     }
                 }
                 initData();
-            }
-            else{
-                Toast.makeText(activity,"Failed to Fetch Slots",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "Failed to Fetch Slots", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -242,38 +296,44 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 selectedSlotsArr = selectedSlotModels;
                 slotsDisplayAdapter.notifyDataSetChanged();
             }
-        },selectedSlotsArr);
+        }, selectedSlotsArr);
         gvSlots.setAdapter(slotsDisplayAdapter);
         llSlotsDisplay.setVisibility(View.VISIBLE);
     }
 
     private class SetBtechAvailabilityAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         boolean isAvailable;
+
         public SetBtechAvailabilityAsyncTaskDelegateResult(boolean isAvailable) {
             this.isAvailable = isAvailable;
         }
 
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if(statusCode==200||statusCode==201){
-                Toast.makeText(activity,"Availability set Successfully",Toast.LENGTH_SHORT).show();
-                if(isAvailable) {
+            if (statusCode == 200 || statusCode == 201) {
+                Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
+                if (isAvailable) {
+
+                    //changes_5june2017
+                    appPreferenceManager.setScheduleCounter("y");
+                    String scheduledDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+                    appPreferenceManager.setScheduleDate(scheduledDate);
+                    //changes_5june2017
+
                     appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json, SetBtechAvailabilityAPIRequestModel.class));
                     appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
-                    pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                    pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                } else {
+                    pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                 }
-                else{
-                    pushFragments(LeaveIntimationFragment.newInstance(),false,false,LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
-                }
-            }
-            else{
+            } else {
                 Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onApiCancelled() {
-            Toast.makeText(activity,"Failed to set Availability",Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class AppPreferenceManager {
 
 	private AppPreference appPreference;
-
+	private String maskNumber = "maskNumber";
 	private String AppVersion = "app_version";
 	private String APISessionKey = "ApiSessionKey";
 	private String userId = "userId";
@@ -35,6 +35,35 @@ public class AppPreferenceManager {
 	private String leaveFromDate = "leaveFromDate";
 	private String leaveToDate = "leaveToDate";
 	private String cameFrom = "cameFrom";
+
+	//changes_5june2017--START
+	private String scheduleCounter = "scheduleCounter";
+	private String scheduleDate = "scheduleDate";
+
+	public String getMaskNumber() {
+		return appPreference.getString(maskNumber, "");
+	}
+
+	public void setMaskNumber(String maskNumber) {
+		appPreference.putString(this.maskNumber, maskNumber);
+	}
+
+	public String getScheduleDate() {
+		return appPreference.getString(scheduleDate, "");
+	}
+
+	public void setScheduleDate(String scheduleDate) {
+		appPreference.putString(this.scheduleDate, scheduleDate);
+	}
+
+	public String getScheduleCounter() {
+		return appPreference.getString(scheduleCounter, "");
+	}
+
+	public void setScheduleCounter(String scheduleCounter) {
+		appPreference.putString(this.scheduleCounter, scheduleCounter);
+	}
+	//changes_5june2017--END
 
 	public AppPreferenceManager(Activity activity) {
 		super();

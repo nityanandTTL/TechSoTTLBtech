@@ -89,7 +89,8 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
     private TextView txtName, txtAge, txtSrNo, txtAadharNo;
     private ImageView imgRelease, imgDistance;
     private TextView txtDistance;
-    private TextView txtAddress;
+    private TextView txtAddress, tv_orderno, oderno_title;
+
     private LinearLayout llCall;
     private double destlat, destlong, currentlat, currentlong;
     private int Integertotaldiff;
@@ -98,6 +99,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
     private String MaskedPhoneNumber = "";
     private DhbDao dhbDao;
     private OrderDetailsDao orderDetailsDao;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +129,8 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         txtDistance.setVisibility(View.VISIBLE);
         imgDistance.setVisibility(View.VISIBLE);
         imgRelease.setVisibility(View.INVISIBLE);
+        tv_orderno.setVisibility(View.INVISIBLE);
+        oderno_title.setVisibility(View.INVISIBLE);
         txtAddress.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
     }
 
@@ -161,9 +165,10 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         txtSrNo = (TextView) findViewById(R.id.txt_sr_no);
         txtDistance = (TextView) findViewById(R.id.tv_distance);
         txtAddress = (TextView) findViewById(R.id.title_est_address);
-        imgRelease = (ImageView) findViewById(R.id.img_release);
+        imgRelease = (ImageView) findViewById(R.id.img_release2);
         imgDistance = (ImageView) findViewById(R.id.title_distance_icon);
-
+        tv_orderno = (TextView) findViewById(R.id.tv_orderno);
+        oderno_title = (TextView) findViewById(R.id.oderno_title);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) activity.getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -195,15 +200,14 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                                         Manifest.permission.ACCESS_FINE_LOCATION,
                                         Manifest.permission.ACCESS_COARSE_LOCATION},
                                 MY_PERMISSIONS_REQUEST_LOCATION);
-                    }
-                    else{
+                    } else {
                         MarkerPoints.add(currentLocation);
                         Logger.error("orderVisitDetailsModel lat" + orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude() + "long " + orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude());
                         destlat = Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude());
                         destlong = Double.parseDouble(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude());
                         LatLng destTempLocation = new LatLng(destlat, destlong);
-    //                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
-    //                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
+                        //                    Toast.makeText(getApplicationContext(),"Destlat"+destlat+"",Toast.LENGTH_SHORT).show();
+                        //                    Toast.makeText(getApplicationContext(),"Destlong"+destlong+"",Toast.LENGTH_SHORT).show();
                         MarkerOptions options = new MarkerOptions();
                         options.position(destTempLocation);
                         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
@@ -458,7 +462,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         public void apiCallResult(String json, int statusCode) throws JSONException {
             Logger.error(json);
             if (statusCode == 204 || statusCode == 200) {
-                for (int i=0;i<orderVisitDetailsModel.getAllOrderdetails().size();i++) {
+                for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
                     orderVisitDetailsModel.getAllOrderdetails().get(i).setStatus("ARRIVED");
                     orderDetailsDao.insertOrUpdate(orderVisitDetailsModel.getAllOrderdetails().get(i));
                 }
@@ -468,7 +472,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                 setResult(BundleConstants.VOMD_ARRIVED, intent);
                 finish();
             } else {
-                if(IS_DEBUG)
+                if (IS_DEBUG)
                     Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
@@ -643,7 +647,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                             break;
                         }
                     }
-                    if(allGranted) {
+                    if (allGranted) {
                         // permission was granted. Do the
                         // contacts-related task you need to do.
                         if (ContextCompat.checkSelfPermission(activity,
@@ -655,7 +659,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                             }
                             mMap.setMyLocationEnabled(true);
                         }
-                    }else{
+                    } else {
                         Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
                     }
 
@@ -714,14 +718,14 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                 }*/
                 btn_arrived.setVisibility(View.VISIBLE);
                 btn_startNav.setVisibility(View.GONE);
-                for (int i=0;i<orderVisitDetailsModel.getAllOrderdetails().size();i++) {
+                for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
                     orderVisitDetailsModel.getAllOrderdetails().get(i).setStatus("STARTED");
                     orderDetailsDao.insertOrUpdate(orderVisitDetailsModel.getAllOrderdetails().get(i));
                 }
                 Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Intent.ACTION_VIEW,
                         //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
-                        Uri.parse("google.navigation:q="+destlat+","+destlong));
+                        Uri.parse("google.navigation:q=" + destlat + "," + destlong));
                 startActivity(intent);
             }
         }
@@ -745,11 +749,10 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                                 new String[]{
                                         Manifest.permission.CALL_PHONE},
                                 AppConstants.APP_PERMISSIONS);
-                    }
-                    else {
+                    } else {
                         startActivity(intent);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

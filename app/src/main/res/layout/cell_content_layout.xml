@@ -8,8 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bg_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         android:layout_marginTop="10dp"
         android:baselineAligned="false"
         android:orientation="horizontal">
@@ -17,7 +17,7 @@
         <!-- LEFT TITLE PART -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="155dp"
+            android:layout_height="165dp"
             android:layout_weight="3"
             android:background="@color/bgTitleRight"
             android:gravity="center_horizontal"
@@ -25,7 +25,7 @@
             <RelativeLayout
                 android:background="@color/colorSecondary"
                 android:layout_width="5dp"
-                android:layout_height="155dp">
+                android:layout_height="165dp">
             </RelativeLayout>
             <TextView
                 android:background="@drawable/counter_icon"
@@ -200,8 +200,8 @@
     </LinearLayout>
     <RelativeLayout
         android:background="@color/bg_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -247,7 +247,7 @@
                     android:contentDescription="@string/estimated_distance" />
                 <TextView
                     android:text="3 KM"
-                    android:id="@+id/txt_distance"
+                    android:id="@+id/txt_distance_1"
                     android:layout_marginStart="10dp"
                     android:layout_gravity="center_vertical"
                     android:textSize="16sp"

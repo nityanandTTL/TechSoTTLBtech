@@ -751,7 +751,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                 initScanBarcodeView();
 
             } else {
-                  if(IS_DEBUG)
+                //  if(IS_DEBUG)
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }

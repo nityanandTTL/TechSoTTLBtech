@@ -227,10 +227,6 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
     }
 
     private void prepareRecyclerView() {
-//        for(HubBarcodeModel j : barcodeModels){
-//            System.out.println("\n\n------------------------->\n" + new Gson().toJson(j, HubBarcodeModel.class));
-//
-//        }
         hubScanBarcodeListAdapter = new HubScanBarcodeListAdapter(barcodeModels, activity);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(mLayoutManager);

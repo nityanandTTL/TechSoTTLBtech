@@ -303,7 +303,7 @@ public class OrderDetailsDao {
 	}
 	public ArrayList<OrderVisitDetailsModel> getAllModels() {
 		ArrayList<OrderVisitDetailsModel> orderVisitDetailsModelsArr = new ArrayList<>();
-		String query = "SELECT DISTINCT("+VISIT_ID+") FROM " + TABLE_NAME + " WHERE " + RECORD_STATUS + " = 'A' ORDER BY "+SLOT_ID+" ASC";
+		String query = "SELECT DISTINCT("+VISIT_ID+") FROM " + TABLE_NAME + " WHERE " + RECORD_STATUS + " = 'A'";
 		Logger.debug("Query - " + query);
 		String[] whereParams = new String[]{};
 		Cursor cursor = this.db.rawQuery(query, whereParams);

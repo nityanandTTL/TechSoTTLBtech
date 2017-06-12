@@ -89,7 +89,7 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
 
     private TextView txtName, txtAge, txtSrNo, txtAadharNo;
     private ImageView imgRelease, imgDistance;
-    private TextView txtDistance;
+    private TextView txtDistance,txtorder_no,txt_title;
     private TextView txtAddress;
     private AppPreferenceManager appPreferenceManager;
     private Geocoder geocoder;
@@ -148,6 +148,8 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
     }
 
     private void initUI() {
+        txtorder_no=(TextView) findViewById(R.id.tv_orderno);
+        txt_title=(TextView) findViewById(R.id.oderno_title);
         btn_arrived = (Button) findViewById(R.id.btn_arrived);
         btn_startNav = (Button) findViewById(R.id.btn_startNav);
         txtName = (TextView) findViewById(R.id.txt_name);
@@ -160,10 +162,13 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
         txtSrNo = (TextView) findViewById(R.id.txt_sr_no);
         txtDistance = (TextView) findViewById(R.id.tv_distance);
         txtAddress = (TextView) findViewById(R.id.title_est_address);
-        imgRelease = (ImageView) findViewById(R.id.img_release);
+        imgRelease = (ImageView) findViewById(R.id.img_release2);
         imgDistance = (ImageView) findViewById(R.id.title_distance_icon);
         title_aadhar_icon = (ImageView) findViewById(R.id.title_aadhar_icon);
         title_distance_icon = (ImageView) findViewById(R.id.title_distance_icon);
+
+        txtorder_no.setVisibility(View.GONE);
+        txt_title.setVisibility(View.GONE);
         SupportMapFragment mapFragment = (SupportMapFragment) activity.getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {

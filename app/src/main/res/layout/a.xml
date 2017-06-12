@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -58,7 +58,6 @@
                     android:id="@+id/txt_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:layout_gravity="center_vertical"
                     android:layout_toEndOf="@+id/title_from_to_dots"
                     android:editable="false"
@@ -118,7 +117,8 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="@dimen/dp_10"
-                    android:src="@drawable/hub_home_icon" />
+                    android:src="@drawable/hub_home_icon"
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/tv_location"
@@ -132,7 +132,8 @@
                     android:lines="2"
                     android:text="11, Sushila app., shani chowk, panchavati, nashik"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="visible" />
 
 
                 <ImageView
@@ -149,7 +150,6 @@
                     android:id="@+id/txt_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txt_date_time"
                     android:layout_toEndOf="@+id/title_distance_icon"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
@@ -163,7 +163,6 @@
                     android:id="@+id/title_svSeparator"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_below="@+id/txt_date_time"
                     android:layout_toEndOf="@+id/txt_distance"
                     android:paddingBottom="2dp"
                     android:paddingTop="2dp"
@@ -184,7 +183,6 @@
                     android:id="@+id/txt_kits"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txt_date_time"
                     android:layout_toEndOf="@+id/title_kits_icon"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
@@ -220,7 +218,7 @@
         <RelativeLayout
             android:id="@+id/rl_2"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="250dp"
             android:layout_below="@+id/ll_1"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
@@ -232,7 +230,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -265,6 +263,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
                         android:layout_marginTop="@dimen/dp_5"
                         android:layout_weight="1"
                         android:gravity="left">
@@ -287,6 +286,7 @@
                         android:id="@+id/tv_call_leader"
                         android:layout_width="50dp"
                         android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
                         android:padding="4dp"
                         android:src="@drawable/call_olc_picup_icon" />
                 </LinearLayout>
@@ -296,8 +296,8 @@
                     android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="18dp"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="18dp">
 
                     <LinearLayout
                         android:id="@+id/ll_btechs"
@@ -348,7 +348,7 @@
                 android:layout_marginStart="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_5"
                 android:text="No. of Days:" />
-            <Button
+            <!--<Button
                 android:id="@+id/img_accept"
                 android:layout_width="@dimen/dp_60"
                 android:layout_height="wrap_content"
@@ -383,7 +383,45 @@
                 android:background="@drawable/purple_btn_bg"
                 android:text="Arrived"
                 android:textColor="@android:color/white"
-                android:visibility="gone" />
+                android:visibility="gone" />-->
         </RelativeLayout>
+
+        <Button
+            android:id="@+id/img_accept"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/purple_btn_bg"
+            android:text="Accept"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/purple_btn_bg"
+            android:minEms="5"
+            android:text="Start"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_arrived"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/purple_btn_bg"
+            android:minEms="5"
+            android:text="Arrived"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
+
     </RelativeLayout>
 </FrameLayout>

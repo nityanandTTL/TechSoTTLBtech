@@ -26,7 +26,7 @@ public class DispatchToHubDisplayDetailsAdapter extends RecyclerView.Adapter<Dis
     DispatchToHubAdapterOnItemClickedDelegate mcallback;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_sr_no, tv_name, tv_age, tv_aadhar_no;//, tv_distance, tv_kits;
+        TextView tv_sr_no, tv_name, tv_age, tv_aadhar_no,txtorder_no,txt_title;//, tv_distance, tv_kits;
         public ImageView img_release, img_edit, title_aadhar_icon;//, title_distance_icon, title_kits_icon;
         View itemView;
 
@@ -37,6 +37,9 @@ public class DispatchToHubDisplayDetailsAdapter extends RecyclerView.Adapter<Dis
         }
 
         private void initComp(View view) {
+            txtorder_no=(TextView) view.findViewById(R.id.tv_orderno);
+            txt_title=(TextView) view.findViewById(R.id.oderno_title);
+
             tv_sr_no = (TextView) view.findViewById(R.id.txt_sr_no);
             tv_name = (TextView) view.findViewById(R.id.txt_name);
             tv_age = (TextView) view.findViewById(R.id.txt_age);
@@ -44,7 +47,7 @@ public class DispatchToHubDisplayDetailsAdapter extends RecyclerView.Adapter<Dis
 //            tv_distance = (TextView) view.findViewById(R.id.tv_distance);
 //            tv_kits = (TextView) view.findViewById(R.id.tv_kits);
             img_edit = (ImageView) view.findViewById(R.id.img_edit);
-            img_release = (ImageView) view.findViewById(R.id.img_release);
+            img_release = (ImageView) view.findViewById(R.id.img_release2);
             title_aadhar_icon = (ImageView) view.findViewById(R.id.title_aadhar_icon);
 //            title_distance_icon = (ImageView) view.findViewById(R.id.title_distance_icon);
 //            title_kits_icon = (ImageView) view.findViewById(R.id.title_kits_icon);
@@ -74,10 +77,13 @@ public class DispatchToHubDisplayDetailsAdapter extends RecyclerView.Adapter<Dis
 
         final int pos = position;
         if (hubbTechModel != null) {
+
             holder.tv_name.setText("" + hubbTechModel.getIncharge());
             holder.tv_age.setText(hubbTechModel.getCutOffTime());
             holder.tv_aadhar_no.setText(hubbTechModel.getAddress());
             holder.title_aadhar_icon.setVisibility(View.GONE);
+            holder.txtorder_no.setVisibility(View.GONE);
+            holder.txt_title.setVisibility(View.GONE);
             holder.tv_sr_no.setText(pos+1+"");
             if(holder.itemView.getParent()!=null)
                 ((ViewGroup)holder.itemView.getParent()).removeView(holder.itemView);
