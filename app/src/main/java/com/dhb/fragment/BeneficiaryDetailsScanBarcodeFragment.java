@@ -366,7 +366,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             public void onClick(View v) {
                 String tests = beneficiaryDetailsModel.getTestsCode();
                 String projId = beneficiaryDetailsModel.getProjId();
-                final ArrayList<String> testCodesList = new ArrayList<String>();
+                final ArrayList<String> testCodesList = new ArrayList<>();
                 Collections.addAll(testCodesList, tests.split(","));
                 beneficiaryDetailsModel.setTestsList(new TestRateMasterDao(dhbDao.getDb()).getModelsFromTestCodes(tests));
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -379,6 +379,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 }).setPositiveButton("Close", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        System.out.println("closing Dialog");
+
                         dialog.dismiss();
                     }
                 }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
@@ -637,7 +639,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         }
         if (requestCode == BundleConstants.EDIT_TESTS_START && resultCode == BundleConstants.EDIT_TESTS_FINISH) {
             String testsCode = "";
-            ArrayList<TestRateMasterModel> selectedTests = new ArrayList<>();
+            ArrayList<TestRateMasterModel> selectedTests;
             selectedTests = data.getExtras().getParcelableArrayList(BundleConstants.SELECTED_TESTS_LIST);
 
             int selectedTestsTotalCost = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_TOTAL_COST);
@@ -795,12 +797,14 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private class OrderCancelDialogButtonClickedDelegateResult implements OrderCancelDialogButtonClickedDelegate {
 
         @Override
-        public void onOkButtonClicked(OrderDetailsModel orderVisitDetailsModel, String remark) {
+        public void onOkButtonClicked(OrderDetailsModel orderVisitDetailsModel, String remark, int status) {
             AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
             OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
             orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
             orderStatusChangeRequestModel.setRemarks(remark);
-            orderStatusChangeRequestModel.setStatus(12);
+
+
+            orderStatusChangeRequestModel.setStatus(status);
             ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
             orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeApiAsyncTaskDelegateResult(orderDetailsModel));
             if (isNetworkAvailable(activity)) {

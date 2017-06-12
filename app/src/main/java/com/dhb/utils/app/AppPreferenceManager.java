@@ -19,9 +19,6 @@ public class AppPreferenceManager {
 	private String maskNumber = "maskNumber";
 	private String AppVersion = "app_version";
 	private String APISessionKey = "ApiSessionKey";
-
-
-
 	private String userId = "userId";
 	private String totalDistance = "totalDistance";
 	private String totalEarnings = "totalEarnings";

@@ -75,7 +75,7 @@ public class CancelOrderDialog extends Dialog implements View.OnClickListener {
         if (v.getId() == R.id.btn_yes) {
             if(!InputUtils.isNull(edt_remark.getText().toString().trim())) {
                 if(edt_remark.getText().toString().length()>=10) {
-                    orderCancelDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_remark.getText().toString().trim());
+                    orderCancelDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_remark.getText().toString().trim(),12);
                     dismiss();
                 }
                 else{
@@ -91,7 +91,7 @@ public class CancelOrderDialog extends Dialog implements View.OnClickListener {
             dismiss();
         }
         if(v.getId()==R.id.btn_send_otp){
-            orderCancelDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel,edt_otp.getText().toString().trim());
+            orderCancelDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel,edt_otp.getText().toString().trim(),2);
             dismiss();
         }
     }
