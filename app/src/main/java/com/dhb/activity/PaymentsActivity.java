@@ -126,7 +126,7 @@ public class PaymentsActivity extends AbstractActivity {
         }
         else{
             this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please click BACK again to exit Payments", Toast.LENGTH_SHORT).show();
         }
         new Handler().postDelayed(new Runnable() {
             @Override

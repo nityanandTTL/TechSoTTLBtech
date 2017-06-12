@@ -283,7 +283,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         txtTotalDistance = (TextView) rootView.findViewById(R.id.title_est_distance);
         txtTotalEarnings = (TextView) rootView.findViewById(R.id.title_est_earnings);
         txtTotalKitsRequired = (TextView) rootView.findViewById(R.id.title_est_kits);
-
         txtTotalKitsRequired.setSelected(true);
         txtNoRecord = (TextView) rootView.findViewById(R.id.txt_no_orders);
 
