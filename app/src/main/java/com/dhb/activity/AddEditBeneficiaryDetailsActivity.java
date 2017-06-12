@@ -321,7 +321,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if(testCodesList.size()==beneficiaryDetailsModel.getTestsList().size()) {
+                            Toast.makeText(activity, "Feature Coming Soon..", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            /*if(testCodesList.size()==beneficiaryDetailsModel.getTestsList().size()) {
                                 Intent intentEdit = new Intent(activity, EditTestListActivity.class);
                                 intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST, restOfTestsList);
                                 intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
@@ -331,7 +333,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                             }
                             else{
                                 Toast.makeText(activity,"Tests & Profiles cannot be edited for DSA Orders",Toast.LENGTH_SHORT).show();
-                            }
+                            }*/
                         }
                     });
                     builder.show();

@@ -23,8 +23,8 @@ android {
         applicationId "com.dhb"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 3
+        versionName "1.0.2"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -55,13 +55,13 @@ android {
     productFlavors {
         BTECHdev {
             applicationId = "com.dhb.btech.dev"
-            versionCode 1
-            versionName "1.0.0"
+            versionCode 3
+            versionName "1.0.2"
         }
         BTECHprod {
             applicationId = "com.dhb.btech"
-            versionCode 1
-            versionName "1.0.0"
+            versionCode 3
+            versionName "1.0.2"
         }
     }
     packagingOptions {
@@ -87,6 +87,8 @@ dependencies {
     compile 'com.mikhaellopez:circularimageview:3.0.2'
     compile 'com.ramotion.foldingcell:folding-cell:1.1.0'
     compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:mediarouter-v7:25.3.1'
+    compile 'com.android.support:animated-vector-drawable:25.3.1'
     compile 'com.google.android.gms:play-services:10.2.1'
     compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     compile 'com.google.code.gson:gson:2.8.0'

@@ -86,7 +86,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private FragmentActivity activity;
     private HUBBTechModel hubBTechModel;
 
-    private TextView txtName,txtAge,txtSrNo,txtAadharNo;
+    private TextView txtName,txtAge,txtSrNo,txtAadharNo,txtorder_no,txt_title;
     private ImageView imgRelease,imgDistance;
     private TextView txtDistance;
     private TextView txtAddress;
@@ -104,6 +104,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
         hubBTechModel = getIntent().getExtras().getParcelable(BundleConstants.HUB_BTECH_MODEL);
+
         initUI();
         initData();
         setListeners();
@@ -145,6 +146,11 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         return result.toString();
     }
     private void initUI() {
+
+
+        txtorder_no=(TextView) findViewById(R.id.tv_orderno);
+        txt_title=(TextView) findViewById(R.id.oderno_title);
+
         btn_arrived = (Button) findViewById(R.id.btn_arrived);
         btn_startNav = (Button) findViewById(R.id.btn_startNav);
         llCall = (LinearLayout) findViewById(R.id.ll_call);
@@ -155,8 +161,10 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         txtSrNo = (TextView) findViewById(R.id.txt_sr_no);
         txtDistance = (TextView) findViewById(R.id.tv_distance);
         txtAddress = (TextView) findViewById(R.id.title_est_address);
-        imgRelease = (ImageView) findViewById(R.id.img_release);
+        imgRelease = (ImageView) findViewById(R.id.img_release2);
         imgDistance= (ImageView) findViewById(R.id.title_distance_icon);
+        txtorder_no.setVisibility(View.GONE);
+        txt_title.setVisibility(View.GONE);
 
         SupportMapFragment mapFragment = (SupportMapFragment) activity.getSupportFragmentManager()
                 .findFragmentById(R.id.map);

@@ -1,8 +1,13 @@
 package com.dhb.fragment;
 
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +29,7 @@ import com.dhb.dao.models.TestRateMasterDao;
 import com.dhb.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.dhb.delegate.VisitOrderDisplayRecyclerViewAdapterDelegate;
 import com.dhb.dialog.ConfirmOrderReleaseDialog;
+import com.dhb.models.api.request.CallPatchRequestModel;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
 import com.dhb.models.api.response.FetchOrderDetailsResponseModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
@@ -35,6 +41,7 @@ import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
+import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.InputUtils;
@@ -54,6 +61,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private OrderDetailsDao orderDetailsDao;
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
     private View rootView;
+
     private ListView recyclerView;
     private TextView txtTotalDistance;
     private TextView txtTotalEarnings;
@@ -63,6 +71,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConfirmOrderReleaseDialog cdd;
     private boolean isToFromMap = false;
+
 
 
     public VisitOrdersDisplayFragment() {
@@ -109,7 +118,38 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 fetchData();
             }
         });
+
+
+
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(Intent.ACTION_CALL);
+
+                    String MaskedPhoneNumber = appPreferenceManager.getMaskNumber();
+                    intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
+                    startActivity(intent);
+                } else {
+
+                    // Permission denied, Disable the functionality that depends on activity permission.
+                    Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            // other 'case' lines to check for other permissions activity app might request.
+            // You can add here other case statements according to your requirement.
+
+
+
+
 
     @Override
     public void onResume() {
@@ -160,7 +200,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             }
         }
         txtTotalDistance.setText(totalDistance+"");
-        txtTotalEarnings.setText(estIncome+"");
+        int amount_estIncome = Math.round(estIncome);
+        txtTotalEarnings.setText(amount_estIncome+"");
         Iterator it = kitsCount.entrySet().iterator();
         while (it.hasNext()) {
             HashMap.Entry pair = (HashMap.Entry)it.next();
@@ -242,6 +283,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         txtTotalDistance = (TextView) rootView.findViewById(R.id.title_est_distance);
         txtTotalEarnings = (TextView) rootView.findViewById(R.id.title_est_earnings);
         txtTotalKitsRequired = (TextView) rootView.findViewById(R.id.title_est_kits);
+
+        txtTotalKitsRequired.setSelected(true);
         txtNoRecord = (TextView) rootView.findViewById(R.id.txt_no_orders);
 
     }
@@ -311,6 +354,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
         }
     }
+
+
     private class OrderStatusChangeApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         OrderVisitDetailsModel orderVisitDetailsModel;
         public OrderStatusChangeApiAsyncTaskDelegateResult(OrderVisitDetailsModel orderVisitDetailsModel) {
@@ -333,7 +378,11 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         }
     }
 
-    private class OrderStatusChangeConfirmedApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+
+
+
+
+        private class OrderStatusChangeConfirmedApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         OrderVisitDetailsModel orderVisitDetailsModel;
         public OrderStatusChangeConfirmedApiAsyncTaskDelegateResult(OrderVisitDetailsModel orderVisitDetailsModel) {
             this.orderVisitDetailsModel = orderVisitDetailsModel;

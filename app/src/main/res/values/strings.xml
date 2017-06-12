@@ -102,4 +102,5 @@
     <string name="progress_message_fetching_payment_details_please_wait">Obtaining Updated Payment Details, Please wait …</string>
     <string name="submit">Submit</string>
     <string name="click_to_select_clinical_history">Select Clinical History</string>
+    <string name="re_enter_barcode">Re-enter barcode</string>
 </resources>

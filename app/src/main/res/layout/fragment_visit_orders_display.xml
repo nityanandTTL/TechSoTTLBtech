@@ -124,7 +124,17 @@
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:freezesText="true"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
                     android:text="0 Kits"
+
+
+
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp" />
             </LinearLayout>

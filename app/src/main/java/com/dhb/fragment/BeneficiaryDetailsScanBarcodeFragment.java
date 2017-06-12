@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +77,7 @@ import static com.dhb.utils.app.CommonUtils.encodeImage;
 public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     public static final String TAG_FRAGMENT = BeneficiaryDetailsScanBarcodeFragment.class.getSimpleName();
     private ImageView imgVenipuncture, imgHC;
-    private TextView txtSrNo;
+    private TextView txtSrNo,tv_orderno;
     private TextView txtName;
     private TextView txtAge;
     private TextView txtAadharNo;
@@ -93,12 +92,13 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private static final int REQUEST_CAMERA = 100;
     private Bitmap thumbnail;
     private View rootview;
-    private boolean isHC;
-   /*   private int isHC = 0;*/
+    //  private boolean isHC = false;
+    private int isHC = 0;
 
     private String userChoosenReleaseTask;
     private OrderDetailsModel orderDetailsModel;
     private String currentScanSampleType;
+    private String currentScanBarcode;
     private RescheduleOrderDialog cdd;
     private CancelOrderDialog cod;
     private boolean isCancelRequesGenereted = false;
@@ -191,15 +191,14 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             edtLA.setText(laS);
 
             txtName.setText(beneficiaryDetailsModel.getName());
+            tv_orderno.setText(beneficiaryDetailsModel.getOrderNo());
             txtAge.setText(beneficiaryDetailsModel.getAge() + " | " + beneficiaryDetailsModel.getGender());
             txtAadharNo.setVisibility(View.GONE);
             edtTests.setText(beneficiaryDetailsModel.getTestsCode());
             txtSrNo.setText(beneficiaryDetailsModel.getBenId() + "");
             if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
-                isHC = false;
                 imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
             } else {
-                isHC = true;
                 imgHC.setImageDrawable(getResources().getDrawable(R.drawable.green_tick_icon));
             }
             if (beneficiaryDetailsModel != null
@@ -215,6 +214,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 }
                 for (BeneficiarySampleTypeDetailsModel sampleTypes :
                         beneficiaryDetailsModel.getSampleType()) {
+                    Logger.error("sample type: "+beneficiaryDetailsModel.getSampleType());
                     BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
                     beneficiaryBarcodeDetailsModel.setBenId(beneficiaryDetailsModel.getBenId());
                     beneficiaryBarcodeDetailsModel.setId(DeviceUtils.getRandomUUID());
@@ -256,12 +256,13 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         imgHC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isHC) {
-                    isHC = false;
+                if (isHC == 1
+                        ) {
+                    isHC = 0;
                     imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.tick_icon));
                     orderDetailsModel.setReportHC(0);
                 } else {
-                    isHC = true;
+                    isHC = 1;
                     imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.green_tick_icon));
                     orderDetailsModel.setReportHC(1);
                 }
@@ -450,8 +451,11 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     @Override
     public void initUI() {
         imgVenipuncture = (ImageView) rootview.findViewById(R.id.img_venipuncture);
+        tv_orderno = (TextView)rootview.findViewById(R.id.tv_orderno);
+        tv_orderno.setSelected(true);
         imgHC = (ImageView) rootview.findViewById(R.id.hard_copy_check);
         txtName = (TextView) rootview.findViewById(R.id.txt_name);
+        txtName.setSelected(true);
         txtAge = (TextView) rootview.findViewById(R.id.txt_age);
         txtAadharNo = (TextView) rootview.findViewById(R.id.txt_aadhar_no);
         txtSrNo = (TextView) rootview.findViewById(R.id.txt_sr_no);
@@ -483,24 +487,36 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("EDTA")) {
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE")) {
+
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("HEPARIN")) {
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("URINE")) {
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
                 }
+                else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE-F")) {
+
+                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                }
+                else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE-PP")) {
+
+                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                }
+                Logger.error("beneficiaryBarcodeDetailsModel.getBarcode() " + beneficiaryBarcodeDetailsModel.getBarcode());
+                Logger.error("barcode value: " + beneficiaryBarcodeDetailsModel.getBarcode());
 
                 edtBarcode.setText(beneficiaryBarcodeDetailsModel.getBarcode());
+
                 imgScan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Logger.error("sample type img scan click "+beneficiaryBarcodeDetailsModel.getSamplType());
                         currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
+
                         intentIntegrator = new IntentIntegrator(activity) {
                             @Override
                             protected void startActivityForResult(Intent intent, int code) {
                                 BeneficiaryDetailsScanBarcodeFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
-
-
                             }
                         };
                         intentIntegrator.initiateScan();
@@ -510,7 +526,6 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     @Override
                     public void onClick(View v) {
                         currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
-
                         AddSampleBarcodeDialog sampleBarcodeDialog = new AddSampleBarcodeDialog(activity, new AddSampleBarcodeDialogDelegate() {
                             @Override
                             public void onSampleBarcodeAdded(String scanned_barcode) {
@@ -523,7 +538,6 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                                 OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
                                                 for (OrderDetailsModel odm :
                                                         orderVisitDetailsModel.getAllOrderdetails()) {
-
                                                     for (BeneficiaryDetailsModel bdm :
                                                             odm.getBenMaster()) {
                                                         if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
@@ -571,12 +585,13 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if ((scanningResult != null) && (scanningResult.getContents() != null)) {
                 String scanned_barcode = scanningResult.getContents();
-                Logger.error("AAAAAAAAAAAAAAAAAAAAAAAA"+scanned_barcode);
                 if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                    currentScanBarcode=scanned_barcode;
                     if (beneficiaryDetailsModel.getBarcodedtl() != null) {
                         for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                            //size 4
                             if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
-                                    && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
+                                    && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType()) /*&& currentScanBarcode.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())*/) {
 
                                 //CHECK for duplicate barcode scanned for the same visit
                                 OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
@@ -587,6 +602,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                         if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
                                             for (BeneficiaryBarcodeDetailsModel bbdm :
                                                     bdm.getBarcodedtl()) {
+
                                                 if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
                                                     if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
 
@@ -598,20 +614,9 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                             }
                                         }
                                     }
-
-                                    //------------------------------------------------------------------------
-
-
-
-
-
-
-                                    //------------------------------------------------------------------------
-
-
                                 }
-
                                 beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                             //   Logger.error("getBarcodedtl "+beneficiaryDetailsModel);
                                 beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
                                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
                                 break;
