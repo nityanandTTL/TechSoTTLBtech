@@ -73,7 +73,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private boolean isToFromMap = false;
 
 
-
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
     }
@@ -89,7 +88,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
-   activity.toolbarHome.setTitle("Visit Orders");
+        activity.toolbarHome.setTitle("Visit Orders");
         activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
         dhbDao = new DhbDao(activity);
@@ -120,7 +119,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         });
 
 
-
     }
 
 
@@ -129,31 +127,28 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                                            String permissions[], int[] grantResults) {
 
 
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(Intent.ACTION_CALL);
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(Intent.ACTION_CALL);
 
-                    String MaskedPhoneNumber = appPreferenceManager.getMaskNumber();
-                    intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
-                    startActivity(intent);
-                } else {
+            String MaskedPhoneNumber = appPreferenceManager.getMaskNumber();
+            intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
+            startActivity(intent);
+        } else {
 
-                    // Permission denied, Disable the functionality that depends on activity permission.
-                    Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
-                }
-            }
+            // Permission denied, Disable the functionality that depends on activity permission.
+            Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
+        }
+    }
 
-            // other 'case' lines to check for other permissions activity app might request.
-            // You can add here other case statements according to your requirement.
-
-
-
+    // other 'case' lines to check for other permissions activity app might request.
+    // You can add here other case statements according to your requirement.
 
 
     @Override
     public void onResume() {
-        if(!isToFromMap) {
+        if (!isToFromMap) {
             fetchData();
         }
         isToFromMap = false;
@@ -178,38 +173,36 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         orderDetailsResponseModels = orderDetailsDao.getAllModels();
         int totalDistance = 0;
         float estIncome = 0;
-        HashMap<String,Integer> kitsCount = new HashMap<>();
+        HashMap<String, Integer> kitsCount = new HashMap<>();
         String kitsReq = "";
-        for (OrderVisitDetailsModel orderVisitDetailsModel:
-             orderDetailsResponseModels) {
+        for (OrderVisitDetailsModel orderVisitDetailsModel :
+                orderDetailsResponseModels) {
             totalDistance = totalDistance + orderVisitDetailsModel.getDistance();
             estIncome = estIncome + orderVisitDetailsModel.getEstIncome();
 
-            for (OrderDetailsModel orderDetailsModel:
-                 orderVisitDetailsModel.getAllOrderdetails()) {
+            for (OrderDetailsModel orderDetailsModel :
+                    orderVisitDetailsModel.getAllOrderdetails()) {
 
-                for (KitsCountModel kt:
-                     orderDetailsModel.getKits()) {
-                    if(kitsCount.containsKey(kt.getKit())){
-                        kitsCount.put(kt.getKit(),kitsCount.get(kt.getKit())+kt.getValue());
-                    }
-                    else{
-                        kitsCount.put(kt.getKit(),kt.getValue());
+                for (KitsCountModel kt :
+                        orderDetailsModel.getKits()) {
+                    if (kitsCount.containsKey(kt.getKit())) {
+                        kitsCount.put(kt.getKit(), kitsCount.get(kt.getKit()) + kt.getValue());
+                    } else {
+                        kitsCount.put(kt.getKit(), kt.getValue());
                     }
                 }
             }
         }
-        txtTotalDistance.setText(totalDistance+"");
+        txtTotalDistance.setText(totalDistance + "");
         int amount_estIncome = Math.round(estIncome);
-        txtTotalEarnings.setText(amount_estIncome+"");
+        txtTotalEarnings.setText(amount_estIncome + "");
         Iterator it = kitsCount.entrySet().iterator();
         while (it.hasNext()) {
-            HashMap.Entry pair = (HashMap.Entry)it.next();
-            if(InputUtils.isNull(kitsReq)){
-                kitsReq = pair.getValue()+" "+pair.getKey();
-            }
-            else{
-                kitsReq = kitsReq+" | "+pair.getValue()+" "+pair.getKey();
+            HashMap.Entry pair = (HashMap.Entry) it.next();
+            if (InputUtils.isNull(kitsReq)) {
+                kitsReq = pair.getValue() + " " + pair.getKey();
+            } else {
+                kitsReq = kitsReq + " | " + pair.getValue() + " " + pair.getKey();
             }
             it.remove(); // avoids a ConcurrentModificationException
         }
@@ -219,12 +212,11 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     }
 
     private void prepareRecyclerView() {
-        if(orderDetailsResponseModels.size()>0) {
+        if (orderDetailsResponseModels.size() > 0) {
             VisitOrderDisplayAdapter visitOrderDisplayRecyclerViewAdapter = new VisitOrderDisplayAdapter(activity, orderDetailsResponseModels, new VisitOrderDisplayRecyclerViewAdapterDelegateResult());
             recyclerView.setAdapter(visitOrderDisplayRecyclerViewAdapter);
             txtNoRecord.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             txtNoRecord.setVisibility(View.VISIBLE);
         }
     }
@@ -250,12 +242,12 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                                 orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
                                 orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
                                 orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
-                                if(orderDetailsModel.getBenMaster()!=null && orderDetailsModel.getBenMaster().size()>0) {
+                                if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
                                     for (BeneficiaryDetailsModel beneficiaryDetailsModel :
                                             orderDetailsModel.getBenMaster()) {
                                         beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
                                         beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
-                                        for (int i=0;i<beneficiaryDetailsModel.getSampleType().size();i++) {
+                                        for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
                                             beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
                                         }
                                         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
@@ -277,7 +269,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     }
 
     @Override
-    public void initUI(){
+    public void initUI() {
         recyclerView = (ListView) rootView.findViewById(R.id.rv_visit_orders_display);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.srl_visit_orders_display);
         txtTotalDistance = (TextView) rootView.findViewById(R.id.title_est_distance);
@@ -291,22 +283,22 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private class VisitOrderDisplayRecyclerViewAdapterDelegateResult implements VisitOrderDisplayRecyclerViewAdapterDelegate {
         @Override
         public void onItemRelease(OrderVisitDetailsModel orderVisitDetailsModel) {
-            cdd = new ConfirmOrderReleaseDialog(activity, new ConfirmOrderReleaseDialogButtonClickedDelegateResult(),orderVisitDetailsModel);
+            cdd = new ConfirmOrderReleaseDialog(activity, new ConfirmOrderReleaseDialogButtonClickedDelegateResult(), orderVisitDetailsModel);
             cdd.show();
         }
 
         @Override
         public void onNavigationStart(OrderVisitDetailsModel orderVisitDetailsModel) {
             Intent intentNavigate = new Intent(activity, VisitOrderDetailMapDisplayFragmentActivity.class);
-            intentNavigate.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL,orderVisitDetailsModel);
-            startActivityForResult(intentNavigate,BundleConstants.VOMD_START);
+            intentNavigate.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+            startActivityForResult(intentNavigate, BundleConstants.VOMD_START);
         }
 
         @Override
         public void onOrderAccepted(OrderVisitDetailsModel orderVisitDetailsModel) {
             AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
             OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
-            orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId()+"");
+            orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId() + "");
             orderStatusChangeRequestModel.setRemarks("");
             orderStatusChangeRequestModel.setStatus(8);
             ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
@@ -322,11 +314,11 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==BundleConstants.VOMD_START && resultCode==BundleConstants.VOMD_ARRIVED){
+        if (requestCode == BundleConstants.VOMD_START && resultCode == BundleConstants.VOMD_ARRIVED) {
             isToFromMap = true;
             OrderVisitDetailsModel orderVisitDetailsModel = data.getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
             Intent intentOrderBooking = new Intent(activity, OrderBookingActivity.class);
-            intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL,orderVisitDetailsModel);
+            intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
             startActivity(intentOrderBooking);
         }
     }
@@ -336,7 +328,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
             AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
             OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
-            orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId()+"");
+            orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId() + "");
             orderStatusChangeRequestModel.setRemarks(remarks);
             orderStatusChangeRequestModel.setStatus(6);
             ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
@@ -357,17 +349,18 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
     private class OrderStatusChangeApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         OrderVisitDetailsModel orderVisitDetailsModel;
+
         public OrderStatusChangeApiAsyncTaskDelegateResult(OrderVisitDetailsModel orderVisitDetailsModel) {
             this.orderVisitDetailsModel = orderVisitDetailsModel;
         }
 
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode == 204||statusCode==200) {
+            if (statusCode == 204 || statusCode == 200) {
                 Toast.makeText(activity, "Order Released Successfully", Toast.LENGTH_SHORT).show();
                 fetchData();
-            }else {
-                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -378,18 +371,16 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     }
 
 
-
-
-
-        private class OrderStatusChangeConfirmedApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+    private class OrderStatusChangeConfirmedApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         OrderVisitDetailsModel orderVisitDetailsModel;
+
         public OrderStatusChangeConfirmedApiAsyncTaskDelegateResult(OrderVisitDetailsModel orderVisitDetailsModel) {
             this.orderVisitDetailsModel = orderVisitDetailsModel;
         }
 
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode == 204||statusCode==200) {
+            if (statusCode == 204 || statusCode == 200) {
                 Toast.makeText(activity, "Order Accepted Successfully", Toast.LENGTH_SHORT).show();
                 OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
                 for (OrderDetailsModel orderDetailsModel :
@@ -398,8 +389,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                     orderDetailsDao.insertOrUpdate(orderDetailsModel);
                 }
                 initData();
-            }else {
-                Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 

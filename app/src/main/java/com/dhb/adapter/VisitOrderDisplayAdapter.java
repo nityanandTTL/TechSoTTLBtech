@@ -102,7 +102,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         holder.btnStartNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equals("ASSIGNED")) {
+                Logger.error("Status: "+orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus());
+                if (!orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equals("Y") ) {
 
                     visitOrderDisplayRecyclerViewAdapterDelegate.onNavigationStart(orderVisitDetailsModelsArr.get(pos));
                 } else {

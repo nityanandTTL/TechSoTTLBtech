@@ -63,6 +63,7 @@ public class HomeScreenActivity extends AbstractActivity
     private HomeScreenActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private DhbDao dhbDao;
+    private TextView txt_version_code;
     private int camefrom = 0;
     private boolean doubleBackToExitPressedOnce = false;
     public boolean isOnHome = false;
@@ -150,6 +151,8 @@ public class HomeScreenActivity extends AbstractActivity
         rivSelfie = (CircularImageView) NavHeaderHomeScreen.findViewById(R.id.img_user_picture);
         txtUserId = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_id);
         txtUserName = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_name);
+        txt_version_code=(TextView)findViewById(R.id.txt_version_code);
+        txt_version_code.setText("Version: "+CommonUtils.getAppVersion(activity));
         navigationView.addHeaderView(NavHeaderHomeScreen);
     }
 
