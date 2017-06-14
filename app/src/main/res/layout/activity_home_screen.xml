@@ -13,13 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <android.support.design.widget.NavigationView
-       app:itemIconTint="@android:color/black"
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:menu="@menu/activity_home_screen_drawer" />
+    <android.support.design.widget.NavigationView    android:id="@+id/nav_view"    android:layout_width="wrap_content"    android:layout_height="match_parent"    android:layout_gravity="start"    android:fitsSystemWindows="true"    app:itemIconTint="@android:color/black"    app:menu="@menu/activity_home_screen_drawer">    <TextView        android:id="@+id/txt_version_code"        android:layout_width="wrap_content"        android:layout_height="wrap_content"        android:layout_gravity="bottom"        android:text="jdfyutyutyutyutyuhj" /></android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

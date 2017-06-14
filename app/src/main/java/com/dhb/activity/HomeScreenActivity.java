@@ -57,7 +57,7 @@ public class HomeScreenActivity extends AbstractActivity
     private NavigationView navigationView;
     public Toolbar toolbarHome;
     private CircularImageView rivSelfie;
-    private TextView txtUserName;
+    private TextView txtUserName,txt_version_code;
     private TextView txtUserId;
     private LinearLayout llNavHeader;
     private HomeScreenActivity activity;
@@ -150,7 +150,11 @@ public class HomeScreenActivity extends AbstractActivity
         rivSelfie = (CircularImageView) NavHeaderHomeScreen.findViewById(R.id.img_user_picture);
         txtUserId = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_id);
         txtUserName = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_name);
+        txt_version_code=(TextView)findViewById(R.id.txt_version_code);
+        txt_version_code.setText("Version: "+CommonUtils.getAppVersion(activity));
+
         navigationView.addHeaderView(NavHeaderHomeScreen);
+
     }
 
     @Override

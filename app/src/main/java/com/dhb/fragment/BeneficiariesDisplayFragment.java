@@ -122,7 +122,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             public void onClick(View v) {
 
                 Toast.makeText(getActivity(),"Feature Coming Soon Stay tuned...... ",Toast.LENGTH_SHORT).show();
-               /* AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Confirm Action")
                         .setMessage("Do you want to add a new beneficiary?")
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -157,7 +157,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_ADD,true);
                         startActivityForResult(intentEdit, BundleConstants.ADD_START);
                     }
-                }).show();*/
+                }).show();
             }
         });
         btnProceedPayment.setOnClickListener(new View.OnClickListener() {
