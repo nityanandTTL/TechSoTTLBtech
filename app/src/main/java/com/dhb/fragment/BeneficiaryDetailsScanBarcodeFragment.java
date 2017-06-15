@@ -92,8 +92,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private static final int REQUEST_CAMERA = 100;
     private Bitmap thumbnail;
     private View rootview;
-    //  private boolean isHC = false;
-    private int isHC = 0;
+      private boolean isHC = false;
+//    private int isHC = 0;
 
     private String userChoosenReleaseTask;
     private OrderDetailsModel orderDetailsModel;
@@ -198,8 +198,10 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             txtSrNo.setText(beneficiaryDetailsModel.getBenId() + "");
             if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
                 imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
+                isHC = false;
             } else {
                 imgHC.setImageDrawable(getResources().getDrawable(R.drawable.green_tick_icon));
+                isHC = true;
             }
             if (beneficiaryDetailsModel != null
                     && beneficiaryDetailsModel.getBarcodedtl() != null
@@ -232,6 +234,10 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     restOfTestsList.addAll(testRateMasterDao.getModelsFromTestCodes(beneficiaryModel.getTestsCode()));
                 }
             }
+            if(!InputUtils.isNull(beneficiaryDetailsModel.getVenepuncture()))
+            {
+                imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
+            }
             initScanBarcodeView();
         }
     }
@@ -256,13 +262,12 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         imgHC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isHC == 1
-                        ) {
-                    isHC = 0;
+                if (isHC) {
+                    isHC = false;
                     imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.tick_icon));
                     orderDetailsModel.setReportHC(0);
                 } else {
-                    isHC = 1;
+                    isHC = true;
                     imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.green_tick_icon));
                     orderDetailsModel.setReportHC(1);
                 }
@@ -635,7 +640,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         }
         if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
             onCaptureImageResult(data);
-            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
+
         }
         if (requestCode == BundleConstants.EDIT_TESTS_START && resultCode == BundleConstants.EDIT_TESTS_FINISH) {
             String testsCode = "";
@@ -718,6 +723,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         }*/
         encodedVanipunctureImg = encodeImage(thumbnail);
         beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
+        imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
     }
 

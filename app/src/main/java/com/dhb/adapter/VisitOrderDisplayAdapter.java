@@ -145,7 +145,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             holder.txtorderno.setSelected(true);
 
             holder.pindata.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getPincode());
-            holder.timedata.setText(orderVisitDetailsModelsArr.get(pos).getSlot() + "HRS");
+            holder.timedata.setText(orderVisitDetailsModelsArr.get(pos).getSlot() + "  HRS");
             holder.txtorderno.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
             holder.txtAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
             holder.txtName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
@@ -168,7 +168,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.cell.fold(true);
             }
             Logger.error("ASASASASA"+orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus());
-            if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("Y")) {
+            if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("FIX APPOINTMENT") ||orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equals("ASSIGNED")) {
+                Toast.makeText(activity, "inside", Toast.LENGTH_SHORT).show();
                 Toast.makeText(activity, "inside", Toast.LENGTH_SHORT).show();
                 holder.imgCBAccept.setVisibility(View.VISIBLE);
                 holder.imgCBAccept.setOnClickListener(new View.OnClickListener() {

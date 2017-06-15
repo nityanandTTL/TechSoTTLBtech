@@ -40,6 +40,7 @@ public class BundleConstants {
     public static final String TESTS_LIST = "testsList";
     public static final String SELECTED_TESTS_LIST = "selectedTestsList";
     public static final String IS_BENEFICIARY_EDIT = "isBeneficiaryEdit";
+    public static final String IS_BENEFICIARY_ADD = "isBeneficiaryAdd";
     public static final String SELECTED_TESTS_COST = "selectedTestsCost";
     public static final String SELECTED_TESTS_TOTAL_COST = "selectedTestsTotalCost";
     public static final String REST_BEN_TESTS_LIST = "restBeneficiaryTestList";

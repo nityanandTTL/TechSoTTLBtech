@@ -42,6 +42,7 @@ public class DispatchToHubDisplayDetailsAdapter extends RecyclerView.Adapter<Dis
 
             tv_sr_no = (TextView) view.findViewById(R.id.txt_sr_no);
             tv_name = (TextView) view.findViewById(R.id.txt_name);
+            tv_name.setSelected(true);
             tv_age = (TextView) view.findViewById(R.id.txt_age);
             tv_aadhar_no = (TextView) view.findViewById(R.id.txt_aadhar_no);
 //            tv_distance = (TextView) view.findViewById(R.id.tv_distance);

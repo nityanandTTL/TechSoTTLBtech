@@ -23,8 +23,8 @@ android {
         applicationId "com.dhb"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -55,13 +55,13 @@ android {
     productFlavors {
         BTECHdev {
             applicationId = "com.dhb.btech.dev"
-            versionCode 3
-            versionName "1.0.2"
+            versionCode 4
+            versionName "1.0.3"
         }
         BTECHprod {
             applicationId = "com.dhb.btech"
-            versionCode 3
-            versionName "1.0.2"
+            versionCode 4
+            versionName "1.0.3"
         }
     }
     packagingOptions {

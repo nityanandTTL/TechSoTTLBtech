@@ -425,7 +425,13 @@ public class PaymentsActivity extends AbstractActivity {
                                     try {
                                         int amountPayable = Integer.parseInt(s.toString());
                                         if (amountPayable > 0) {
-                                            paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(amountPayable + "");
+                                            if(NarrationId == 3 && amountPayable<2000){
+                                                editAmount.requestFocus();
+                                                editAmount.setError("Amount Should be greater than Rs 2000/-");
+                                            }
+                                            else {
+                                                paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(amountPayable + "");
+                                            }
                                         } else {
                                             editAmount.requestFocus();
                                             editAmount.setError("Please enter Valid Amount");
