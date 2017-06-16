@@ -218,8 +218,8 @@ public class HomeScreenActivity extends AbstractActivity
             pushFragments(ResetPasswordFragment.newInstance(), false, false, ResetPasswordFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         } else if (id == R.id.nav_orderserved) {
             toolbarHome.setVisibility(View.VISIBLE);
-            //pushFragments(OrderServedFragment.newInstance(), false, false, OrderServedFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-            Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
+            pushFragments(OrderServedFragment.newInstance(), false, false, OrderServedFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+          //  Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_logout) {
             toolbarHome.setVisibility(View.VISIBLE);
 
