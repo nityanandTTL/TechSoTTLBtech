@@ -333,8 +333,7 @@ public class OrderDetailsDao {
 					ArrayList<OrderDetailsModel> orderDetailsModels = orderDetailsModelsArr;
 					for (OrderDetailsModel orderDetailsModel :
 							orderDetailsModels) {
-						if (orderDetailsModel.getStatus().equalsIgnoreCase("RESCHEDULED")
-								||orderDetailsModel.getStatus().equalsIgnoreCase("RELEASED")
+						if (orderDetailsModel.getStatus().equalsIgnoreCase("RELEASED")
 								|| orderDetailsModel.getStatus().equalsIgnoreCase("CANCELLED")) {
 							orderDetailsModelsArr.remove(orderDetailsModel);
 							deleteByOrderNo(orderDetailsModel.getOrderNo());

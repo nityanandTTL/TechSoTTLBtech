@@ -16,7 +16,7 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
     private String Response;
     private int SlotId;
     private ArrayList<OrderDetailsModel> allOrderdetails;
-    private int Distance;
+    private float Distance;
     private float EstIncome;
 
     public OrderVisitDetailsModel() {
@@ -30,7 +30,7 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
         Response = in.readString();
         SlotId = in.readInt();
         allOrderdetails = in.createTypedArrayList(OrderDetailsModel.CREATOR);
-        Distance = in.readInt();
+        Distance = in.readFloat();
         EstIncome = in.readFloat();
     }
 
@@ -42,7 +42,7 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
         dest.writeString(Response);
         dest.writeInt(SlotId);
         dest.writeTypedList(allOrderdetails);
-        dest.writeInt(Distance);
+        dest.writeFloat(Distance);
         dest.writeFloat(EstIncome);
     }
 
@@ -71,13 +71,6 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
         Response = response;
     }
 
-    public int getDistance() {
-        return Distance;
-    }
-
-    public void setDistance(int distance) {
-        Distance = distance;
-    }
 
     public String getVisitId() {
         return VisitId;
@@ -109,6 +102,14 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
 
     public void setAllOrderdetails(ArrayList<OrderDetailsModel> allOrderdetails) {
         this.allOrderdetails = allOrderdetails;
+    }
+
+    public float getDistance() {
+        return Distance;
+    }
+
+    public void setDistance(float distance) {
+        Distance = distance;
     }
 
     public float getEstIncome() {

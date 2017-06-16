@@ -14,6 +14,12 @@
             android:id="@+id/nav_change_password"
             android:icon="@drawable/change_password"
             android:title="Change Password" />
+
+
+        <item
+            android:id="@+id/nav_orderserved"
+            android:icon="@drawable/communication"
+            android:title="Order Served" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/logout"
@@ -22,5 +28,8 @@
             android:id="@+id/nav_communication"
             android:icon="@drawable/communication"
             android:title="Communication" />
+
+
+
     </group>
 </menu>

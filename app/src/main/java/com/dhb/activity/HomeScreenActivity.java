@@ -32,6 +32,7 @@ import com.dhb.customview.RoundedImageView;
 import com.dhb.dao.DhbDao;
 import com.dhb.fragment.HomeScreenFragment;
 import com.dhb.fragment.LeaveIntimationFragment;
+import com.dhb.fragment.OrderServedFragment;
 import com.dhb.fragment.ResetPasswordFragment;
 import com.dhb.fragment.VisitOrdersDisplayFragment;
 import com.dhb.network.ApiCallAsyncTask;
@@ -57,7 +58,7 @@ public class HomeScreenActivity extends AbstractActivity
     private NavigationView navigationView;
     public Toolbar toolbarHome;
     private CircularImageView rivSelfie;
-    private TextView txtUserName,txt_version_code;
+    private TextView txtUserName, txt_version_code;
     private TextView txtUserId;
     private LinearLayout llNavHeader;
     private HomeScreenActivity activity;
@@ -122,10 +123,8 @@ public class HomeScreenActivity extends AbstractActivity
 
     @Override
     public void initUI() {
-        super.initUI();
         toolbarHome = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbarHome);
-
         fabBtn = (FloatingActionButton) findViewById(R.id.fab);
         fabBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,14 +133,12 @@ public class HomeScreenActivity extends AbstractActivity
                         .setAction("Action", null).show();
             }
         });
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbarHome, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         drawer.setEnabled(false);
         toggle.syncState();
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
@@ -150,11 +147,10 @@ public class HomeScreenActivity extends AbstractActivity
         rivSelfie = (CircularImageView) NavHeaderHomeScreen.findViewById(R.id.img_user_picture);
         txtUserId = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_id);
         txtUserName = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_name);
-        txt_version_code=(TextView)findViewById(R.id.txt_version_code);
-        txt_version_code.setText("Version: "+CommonUtils.getAppVersion(activity));
-
+        txt_version_code = (TextView) findViewById(R.id.txt_version_code);
+        txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
         navigationView.addHeaderView(NavHeaderHomeScreen);
-
+        super.initUI();
     }
 
     @Override
@@ -213,15 +209,20 @@ public class HomeScreenActivity extends AbstractActivity
         int id = item.getItemId();
         if (id == R.id.nav_home) {
             toolbarHome.setVisibility(View.VISIBLE);
-            pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
+            pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         } else if (id == R.id.nav_leave) {
             toolbarHome.setVisibility(View.VISIBLE);
-            pushFragments(LeaveIntimationFragment.newInstance(),false,false, LeaveIntimationFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
-        }else if (id == R.id.nav_change_password) {
+            pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        } else if (id == R.id.nav_change_password) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(ResetPasswordFragment.newInstance(), false, false, ResetPasswordFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        } else if (id == R.id.nav_orderserved) {
+            toolbarHome.setVisibility(View.VISIBLE);
+            //pushFragments(OrderServedFragment.newInstance(), false, false, OrderServedFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_logout) {
             toolbarHome.setVisibility(View.VISIBLE);
+
 
             /*//delete the image from storage_change_2june_2017
             File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");

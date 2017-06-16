@@ -32,7 +32,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private String  CampId;
     private String Response;
     private int SlotId;
-    private int Distance;
+    private float Distance;
     private String Latitude;
     private String Longitude;
     private String Status;
@@ -64,7 +64,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         CampId = in.readString();
         Response = in.readString();
         SlotId = in.readInt();
-        Distance = in.readInt();
+        Distance = in.readFloat();
         Latitude = in.readString();
         Longitude = in.readString();
         Status = in.readString();
@@ -98,7 +98,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeString(CampId);
         dest.writeString(Response);
         dest.writeInt(SlotId);
-        dest.writeInt(Distance);
+        dest.writeFloat(Distance);
         dest.writeString(Latitude);
         dest.writeString(Longitude);
         dest.writeString(Status);
@@ -248,13 +248,6 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         Margin = margin;
     }
 
-    public int getDiscount() {
-        return Discount;
-    }
-
-    public void setDiscount(int discount) {
-        Discount = discount;
-    }
 
     public String getRefcode() {
         return Refcode;
@@ -312,11 +305,19 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         this.kits = kits;
     }
 
-    public int getDistance() {
+    public int getDiscount() {
+        return Discount;
+    }
+
+    public void setDiscount(int discount) {
+        Discount = discount;
+    }
+
+    public float getDistance() {
         return Distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(float distance) {
         Distance = distance;
     }
 

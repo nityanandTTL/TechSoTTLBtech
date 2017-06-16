@@ -293,7 +293,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses.size() > 0) {
+            if (addresses!=null && addresses.size() > 0) {
                 Address address = addresses.get(0);
                 result.append(address.getLocality()).append("\n");
                 result.append(address.getCountryName());
@@ -462,7 +462,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         public void apiCallResult(String json, int statusCode) throws JSONException {
             Logger.error(json);
             if (statusCode == 204 || statusCode == 200) {
-                for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
+                for (int i = 0; orderVisitDetailsModel.getAllOrderdetails()!=null && i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
                     orderVisitDetailsModel.getAllOrderdetails().get(i).setStatus("ARRIVED");
                     orderDetailsDao.insertOrUpdate(orderVisitDetailsModel.getAllOrderdetails().get(i));
                 }
@@ -586,7 +586,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
             PolylineOptions lineOptions = null;
 
             // Traversing through all the routes
-            for (int i = 0; i < result.size(); i++) {
+            for (int i = 0; result!=null && i < result.size(); i++) {
                 points = new ArrayList<>();
                 lineOptions = new PolylineOptions();
 
@@ -594,7 +594,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                 List<HashMap<String, String>> path = result.get(i);
 
                 // Fetching all the points in i-th route
-                for (int j = 0; j < path.size(); j++) {
+                for (int j = 0; path!=null && j < path.size(); j++) {
                     HashMap<String, String> point = path.get(j);
 
                     double lat = Double.parseDouble(point.get("lat"));
@@ -718,7 +718,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                 }*/
                 btn_arrived.setVisibility(View.VISIBLE);
                 btn_startNav.setVisibility(View.GONE);
-                for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
+                for (int i = 0; orderVisitDetailsModel.getAllOrderdetails()!=null && i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
                     orderVisitDetailsModel.getAllOrderdetails().get(i).setStatus("STARTED");
                     orderDetailsDao.insertOrUpdate(orderVisitDetailsModel.getAllOrderdetails().get(i));
                 }

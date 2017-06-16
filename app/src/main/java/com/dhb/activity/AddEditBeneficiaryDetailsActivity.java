@@ -29,12 +29,8 @@ import com.dhb.delegate.AddSampleBarcodeDialogDelegate;
 import com.dhb.delegate.SelectClinicalHistoryCheckboxDelegate;
 import com.dhb.delegate.SelectLabAlertsCheckboxDelegate;
 import com.dhb.dialog.AddSampleBarcodeDialog;
-import com.dhb.dialog.CancelOrderDialog;
 import com.dhb.dialog.ClinicalHistorySelectorDialog;
 import com.dhb.dialog.LabAlertSelectorDialog;
-import com.dhb.dialog.RescheduleOrderDialog;
-import com.dhb.fragment.BeneficiariesDisplayFragment;
-import com.dhb.models.api.request.CartAPIRequestModel;
 import com.dhb.models.api.request.OrderBookingRequestModel;
 import com.dhb.models.api.response.OrderBookingResponseBeneficiaryModel;
 import com.dhb.models.api.response.OrderBookingResponseOrderModel;
@@ -43,13 +39,13 @@ import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
+import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.dhb.models.data.LabAlertMasterModel;
 import com.dhb.models.data.OrderBookingDetailsModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestSampleTypeModel;
-import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -57,7 +53,6 @@ import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractActivity;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
-import com.dhb.utils.app.CommonUtils;
 import com.dhb.utils.app.DeviceUtils;
 import com.dhb.utils.app.InputUtils;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -65,11 +60,9 @@ import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static com.dhb.utils.app.CommonUtils.decodedImageBytes;
 import static com.dhb.utils.app.CommonUtils.encodeImage;
 
 /**
@@ -110,7 +103,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private LabAlertMasterDao labAlertMasterDao;
     private IntentIntegrator intentIntegrator;
     private boolean isAdd = false;
-
+    private boolean isFasting = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -310,6 +303,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 if(validate()){
+
                     beneficiaryDetailsModel.setName(edtBenName.getText().toString().trim());
                     beneficiaryDetailsModel.setAge(Integer.parseInt(edtAge.getText().toString().trim()));
                     beneficiaryDetailsModel.setGender(isM?"M":"F");
@@ -319,6 +313,11 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
                     orderDetailsModel.setReportHC(isHC?1:0);
                     orderDetailsModel.setAddBen(isAdd);
+
+                    /********************/
+
+                    /********************/
+
                     orderDetailsDao.insertOrUpdate(orderDetailsModel);
                     OrderBookingRequestModel obrm = generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
 //            if(validate(obrm)) {
@@ -769,12 +768,16 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     } else {
                         if(testRateMasterModel.getTestType().equals("OFFER")) {
                             testsCode = testsCode + "," + testRateMasterModel.getDescription();
+                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
                         }
                         else{
                             testsCode = testsCode + "," + testRateMasterModel.getTestCode();
-                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
+
                         }
                     }
+                }
+                if(InputUtils.isNull(beneficiaryDetailsModel.getProjId())){
+                    beneficiaryDetailsModel.setProjId("");
                 }
                 ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
                 for (TestRateMasterModel trmm :
@@ -791,10 +794,23 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     }
                 }
                 beneficiaryDetailsModel.setSampleType(samples);
+                for (TestRateMasterModel trmm:
+                     selectedTests) {
+                    if(!trmm.getFasting().toLowerCase().contains("non")){
+                        isFasting = true;
+                        break;
+                    }
+                }
             }
             beneficiaryDetailsModel.setTestsCode(testsCode);
             beneficiaryDetailsModel.setTests(testsCode);
             edtTests.setText(testsCode);
+            if(isFasting) {
+                beneficiaryDetailsModel.setFasting("Fasting");
+            }
+            else{
+                beneficiaryDetailsModel.setFasting("Non-Fasting");
+            }
             beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             initData();
         }
@@ -876,6 +892,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             if(beneficiaryDetailsModel.getLabAlert()!=null) {
                 benLAArr.addAll(beneficiaryDetailsModel.getLabAlert());
             }
+            //*******
+
         }
         orderBookingRequestModel.setBarcodedtl(benBarcodeArr);
         //SET BENEFICIARY Barcode Details Models Array - END

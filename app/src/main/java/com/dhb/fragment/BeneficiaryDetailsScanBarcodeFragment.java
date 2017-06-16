@@ -28,6 +28,8 @@ import com.dhb.dao.models.LabAlertMasterDao;
 import com.dhb.dao.models.OrderDetailsDao;
 import com.dhb.dao.models.TestRateMasterDao;
 import com.dhb.delegate.AddSampleBarcodeDialogDelegate;
+import com.dhb.delegate.AddTestListDailogDelegate;
+import com.dhb.delegate.CancelButtonDailogDelegate;
 import com.dhb.delegate.OrderCancelDialogButtonClickedDelegate;
 import com.dhb.delegate.OrderRescheduleDialogButtonClickedDelegate;
 import com.dhb.delegate.RefreshBeneficiariesSliderDelegate;
@@ -36,20 +38,26 @@ import com.dhb.delegate.SelectLabAlertsCheckboxDelegate;
 import com.dhb.dialog.AddSampleBarcodeDialog;
 import com.dhb.dialog.CancelOrderDialog;
 import com.dhb.dialog.ClinicalHistorySelectorDialog;
+import com.dhb.dialog.EditTestList;
 import com.dhb.dialog.LabAlertSelectorDialog;
 import com.dhb.dialog.RescheduleOrderDialog;
+import com.dhb.models.api.request.OrderBookingRequestModel;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
 import com.dhb.models.api.request.RemoveBeneficiaryAPIRequestModel;
+import com.dhb.models.api.response.OrderBookingResponseBeneficiaryModel;
+import com.dhb.models.api.response.OrderBookingResponseOrderModel;
+import com.dhb.models.api.response.OrderBookingResponseVisitModel;
 import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
+import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.dhb.models.data.LabAlertMasterModel;
+import com.dhb.models.data.OrderBookingDetailsModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestSampleTypeModel;
-import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -60,17 +68,14 @@ import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.DeviceUtils;
 import com.dhb.utils.app.InputUtils;
-import com.dhb.utils.app.StringUtils;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static com.dhb.utils.app.CommonUtils.decodedImageBytes;
 import static com.dhb.utils.app.CommonUtils.encodeImage;
 
 
@@ -101,6 +106,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private String currentScanBarcode;
     private RescheduleOrderDialog cdd;
     private CancelOrderDialog cod;
+    private EditTestList etl;
     private boolean isCancelRequesGenereted = false;
     private ArrayList<TestRateMasterModel> restOfTestsList;
     private DhbDao dhbDao;
@@ -113,6 +119,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private TableLayout tlBarcodes;
     private IntentIntegrator intentIntegrator;
     private static RefreshBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegateResult;
+    private boolean isFasting = false;
 
     public BeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
@@ -374,7 +381,35 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 final ArrayList<String> testCodesList = new ArrayList<>();
                 Collections.addAll(testCodesList, tests.split(","));
                 beneficiaryDetailsModel.setTestsList(new TestRateMasterDao(dhbDao.getDb()).getModelsFromTestCodes(tests));
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                etl= new EditTestList(activity, testCodesList, new CancelButtonDailogDelegate() {
+                    @Override
+                    public void onItemClick() {
+
+                        OrderBookingRequestModel obrm = generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
+                        ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(obrm);
+                        orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new BeneficiaryDetailsScanBarcodeFragment.AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
+                        if (isNetworkAvailable(activity)) {
+                            orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
+                        } else {
+                            Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                        }
+
+
+                    }
+                }, new AddTestListDailogDelegate() {
+                    @Override
+                    public void onItemClick() {
+
+                        Intent intentEdit = new Intent(activity, EditTestListActivity.class);
+
+                        startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
+
+                    }
+                });
+                etl.show();
+
+
+         /*       AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Tests List");
                 builder.setItems(testCodesList.toArray(new String[testCodesList.size()]), new DialogInterface.OnClickListener() {
                     @Override
@@ -403,7 +438,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         }
                     }
                 });
-                builder.show();
+                builder.show();*/
             }
         });
         edtCH.setOnClickListener(new View.OnClickListener() {
@@ -669,11 +704,15 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     } else {
                         if (testRateMasterModel.getTestType().equals("OFFER")) {
                             testsCode = testsCode + "," + testRateMasterModel.getDescription();
+                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
                         } else {
                             testsCode = testsCode + "," + testRateMasterModel.getTestCode();
-                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
                         }
                     }
+                }
+
+                if(InputUtils.isNull(beneficiaryDetailsModel.getProjId())){
+                    beneficiaryDetailsModel.setProjId("");
                 }
                 ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
                 for (TestRateMasterModel trmm :
@@ -690,11 +729,24 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     }
                 }
                 beneficiaryDetailsModel.setSampleType(samples);
+                for (TestRateMasterModel trmm:
+                        selectedTests) {
+                    if(!trmm.getFasting().toLowerCase().contains("non")){
+                        isFasting = true;
+                        break;
+                    }
+                }
             }
             beneficiaryDetailsModel.setTestsList(selectedTests);
             beneficiaryDetailsModel.setTestsCode(testsCode);
             beneficiaryDetailsModel.setTests(testsCode);
             edtTests.setText(testsCode);
+            if(isFasting) {
+                beneficiaryDetailsModel.setFasting("Fasting");
+            }
+            else{
+                beneficiaryDetailsModel.setFasting("Non-Fasting");
+            }
             beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
         }
@@ -825,4 +877,141 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
         }
     }
+    private class AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+
+        private OrderBookingResponseVisitModel orderBookingResponseVisitModel = new OrderBookingResponseVisitModel();
+        private ArrayList<OrderBookingResponseBeneficiaryModel> orderBookingResponseBeneficiaryModelArr = new ArrayList<>();
+        private OrderVisitDetailsModel orderVisitDetailsModel;
+
+        public AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult(OrderVisitDetailsModel orderVisitModel) {
+            this.orderVisitDetailsModel = orderVisitModel;
+        }
+
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if(statusCode==200) {
+                orderBookingResponseVisitModel = new ResponseParser(activity).getOrderBookingAPIResponse(json, statusCode);
+                for (OrderBookingResponseOrderModel obrom :
+                        orderBookingResponseVisitModel.getOrderids()) {
+                    orderBookingResponseBeneficiaryModelArr.addAll(obrom.getBenfids());
+                }
+
+                OrderVisitDetailsModel orderVisitDetails = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
+
+                //UPDATE old Order No and Benficiary Id with New Order No and Beneficiary Id
+                for (OrderDetailsModel odm :
+                        orderVisitDetails.getAllOrderdetails()) {
+                    for (OrderBookingResponseOrderModel obrom:
+                            orderBookingResponseVisitModel.getOrderids()) {
+                        //CHECK if old ORDER NO from API response equals order no of local Order Detail Model
+                        // AND API response old order Id not equals new order Id
+                        if(odm.getOrderNo().equals(obrom.getOldOrderId()) && !obrom.getOldOrderId().equals(obrom.getNewOrderId())){
+                            odm.setOrderNo(obrom.getNewOrderId());
+                            //UPDATE old order no with new order no
+                            orderDetailsDao.updateOrderNo(obrom.getOldOrderId(),odm);
+                            for (BeneficiaryDetailsModel bdm:
+                                    odm.getBenMaster()) {
+                                for (OrderBookingResponseBeneficiaryModel obrbm:
+                                        orderBookingResponseBeneficiaryModelArr) {
+                                    //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                    // AND API response old beneficiary Id not equals new beneficiary Id
+                                    if((bdm.getBenId()+"").equals(obrbm.getOldBenIds())){
+                                        bdm.setOrderNo(obrom.getNewOrderId());
+                                        bdm.setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                        //UPDATE old beneficiary Id with new Beneficiary Id
+                                        beneficiaryDetailsDao.updateBeneficiaryId(Integer.parseInt(obrbm.getNewBenIds()),bdm);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                //END of UPDATE old Order No and Benficiary Id with New Order No and Beneficiary Id
+
+                Intent intentFinish = new Intent();
+                intentFinish.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL,beneficiaryDetailsModel);
+                intentFinish.putExtra(BundleConstants.ORDER_DETAILS_MODEL,orderDetailsModel);
+
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    private OrderBookingRequestModel generateOrderBookingRequestModel(OrderVisitDetailsModel orderVisitDetailsModel) {
+        OrderBookingRequestModel orderBookingRequestModel = new OrderBookingRequestModel();
+
+        //SET Order Booking Details Model - START
+        OrderBookingDetailsModel orderBookingDetailsModel = new OrderBookingDetailsModel();
+        orderBookingDetailsModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+        orderBookingDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+        orderBookingDetailsModel.setOrddtl(orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId()));
+        orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
+        //SET Order Booking Details Model - END
+
+        //SET Order Details Models Array - START
+        orderBookingRequestModel.setOrddtl(orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId()));
+        //SET Order Details Models Array - END
+
+
+        //SET BENEFICIARY Details Models Array - START
+        ArrayList<BeneficiaryDetailsModel> benArr = new ArrayList<>();
+        for (OrderDetailsModel orderDetailsModel:
+                orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId())) {
+            ArrayList<BeneficiaryDetailsModel> tempBenArr = new ArrayList<>();
+            tempBenArr = beneficiaryDetailsDao.getModelsFromOrderNo(orderDetailsModel.getOrderNo());
+            if(tempBenArr!=null) {
+                benArr.addAll(tempBenArr);
+            }
+        }
+        orderBookingRequestModel.setBendtl(benArr);
+        //SET BENEFICIARY Details Models Array - END
+
+        //SET BENEFICIARY Barcode Details Models Array - START
+        ArrayList<BeneficiaryBarcodeDetailsModel> benBarcodeArr = new ArrayList<>();
+
+        //SET BENEFICIARY Sample Types Details Models Array - START
+        ArrayList<BeneficiarySampleTypeDetailsModel> benSTArr = new ArrayList<>();
+
+        //SET BENEFICIARY Test Wise Clinical History Models Array - START
+        ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr = new ArrayList<>();
+
+        //SET BENEFICIARY Lab Alerts Models Array - START
+        ArrayList<BeneficiaryLabAlertsModel> benLAArr = new ArrayList<>();
+
+        for (BeneficiaryDetailsModel beneficiaryDetailsModel:
+                benArr) {
+            if(beneficiaryDetailsModel.getBarcodedtl()!=null) {
+                benBarcodeArr.addAll(beneficiaryDetailsModel.getBarcodedtl());
+            }
+            if(beneficiaryDetailsModel.getSampleType()!=null) {
+                benSTArr.addAll(beneficiaryDetailsModel.getSampleType());
+            }
+            if(beneficiaryDetailsModel.getClHistory()!=null) {
+                benCHArr.addAll(beneficiaryDetailsModel.getClHistory());
+            }
+            if(beneficiaryDetailsModel.getLabAlert()!=null) {
+                benLAArr.addAll(beneficiaryDetailsModel.getLabAlert());
+            }
+            //*******
+
+        }
+        orderBookingRequestModel.setBarcodedtl(benBarcodeArr);
+        //SET BENEFICIARY Barcode Details Models Array - END
+
+        orderBookingRequestModel.setSmpldtl(benSTArr);
+        //SET BENEFICIARY Sample Type Details Models Array - END
+
+        orderBookingRequestModel.setClHistory(benCHArr);
+        //SET BENEFICIARY Test Wise Clinical History Models Array - END
+
+        orderBookingRequestModel.setLabAlert(benLAArr);
+        //SET BENEFICIARY Lab Alerts Models Array - END
+
+        return orderBookingRequestModel;
+    }
+
 }

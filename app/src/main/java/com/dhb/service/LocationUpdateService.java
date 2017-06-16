@@ -65,10 +65,10 @@ public class LocationUpdateService extends IntentService{
                     }
                 });
                 locusPushLocationRequestAsyncTask.execute();
-            } else {
+            }/* else {
 //            gpsTracker.showSettingsAlert();
                 Toast.makeText(getApplicationContext(), "Check Internet connection and gps settings", Toast.LENGTH_SHORT).show();
-            }
+            }*/
         }
         return START_STICKY;
     }

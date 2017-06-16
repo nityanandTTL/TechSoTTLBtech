@@ -11,8 +11,11 @@ public class CartRequestBeneficiaryModel implements Parcelable {
     private String OrderNo;
     private String BenId;
     private String Tests;
+
     private String ProjId;
-    private int Addben;
+    private Boolean Addben;
+    private Boolean isTestEdit;
+
 
     public CartRequestBeneficiaryModel() {
     }
@@ -22,7 +25,8 @@ public class CartRequestBeneficiaryModel implements Parcelable {
         BenId = in.readString();
         Tests = in.readString();
         ProjId = in.readString();
-        Addben = in.readInt();
+        isTestEdit = in.readByte() != 0;
+        Addben = in.readByte() != 0;
     }
 
     @Override
@@ -31,7 +35,9 @@ public class CartRequestBeneficiaryModel implements Parcelable {
         dest.writeString(BenId);
         dest.writeString(Tests);
         dest.writeString(ProjId);
-        dest.writeInt(Addben);
+        dest.writeByte((byte) (isTestEdit ? 1 : 0));
+        dest.writeByte((byte) (Addben ? 1 : 0));
+
     }
 
     @Override
@@ -75,13 +81,7 @@ public class CartRequestBeneficiaryModel implements Parcelable {
         Tests = tests;
     }
 
-    public int getAddben() {
-        return Addben;
-    }
 
-    public void setAddben(int addben) {
-        Addben = addben;
-    }
 
     public String getProjId() {
         return ProjId;
@@ -89,5 +89,21 @@ public class CartRequestBeneficiaryModel implements Parcelable {
 
     public void setProjId(String projId) {
         ProjId = projId;
+    }
+
+    public Boolean getAddben() {
+        return Addben;
+    }
+
+    public void setAddben(Boolean addben) {
+        Addben = addben;
+    }
+
+    public Boolean getTestEdit() {
+        return isTestEdit;
+    }
+
+    public void setTestEdit(Boolean testEdit) {
+        isTestEdit = testEdit;
     }
 }
