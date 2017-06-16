@@ -209,7 +209,6 @@ public class OrderServedFragment extends AbstractFragment {
 
     private void prepareRecyclerView() {
         orderServedDisplayDetailsAdapter=new OrderServedDisplayDetailsAdapter(btechOrderModels,activity);
-       // orderServedDisplayDetailsAdapter.notifyDataSetChanged();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
         recycler_view.setLayoutManager(mLayoutManager);
         recycler_view.setItemAnimator(new DefaultItemAnimator());
