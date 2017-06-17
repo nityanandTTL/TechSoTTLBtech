@@ -10,7 +10,9 @@
         android:id="@+id/lv_test_codes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="3"></ListView>
+        android:layout_weight="3"
+
+        ></ListView>
 
     <Button
         android:layout_margin="8dp"

@@ -46,6 +46,8 @@ public class EditTestListActivity extends AbstractActivity{
     private int selectedTestsTotalCost;
     private ArrayList<TestRateMasterModel> restOfTestList;
     private OrderDetailsModel orderDetailsModel;
+    private boolean isEdit = false;
+    private BrandMasterModel brandMasterModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class EditTestListActivity extends AbstractActivity{
             selectedTestsList = getIntent().getExtras().getParcelableArrayList(BundleConstants.SELECTED_TESTS_LIST);
             restOfTestList = getIntent().getExtras().getParcelableArrayList(BundleConstants.REST_BEN_TESTS_LIST);
             orderDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
+            isEdit = getIntent().getExtras().getBoolean(BundleConstants.IS_TEST_EDIT,true);
         }
         totalAmount = 0;
         sampleTypesArr = new ArrayList<>();
@@ -76,11 +79,11 @@ public class EditTestListActivity extends AbstractActivity{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 showProgressDialog(activity,"Loading ...");
-                BrandMasterModel brandMasterModel = (BrandMasterModel) parent.getItemAtPosition(position);
+                brandMasterModel = (BrandMasterModel) parent.getItemAtPosition(position);
                 Object item = parent.getItemAtPosition(position);
                 if (item != null) {
                     Logger.error("click");
-                    Logger.error("ID : " + brandMasterModel.getBrandId());
+                    Logger.error("Brand ID : " + brandMasterModel.getBrandId());
                     TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
                     ArrayList<String> testTypesArr = new ArrayList<String>() ;
                     ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels = new ArrayList<TestTypeWiseTestRateMasterModelsList>();
@@ -250,7 +253,12 @@ public class EditTestListActivity extends AbstractActivity{
                     break;
                 }
             }
+        }
+        if(isEdit){
             sp_tests.setEnabled(false);
+        }
+        else{
+            sp_tests.setEnabled(true);
         }
     }
 

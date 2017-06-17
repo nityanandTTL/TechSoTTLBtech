@@ -246,7 +246,7 @@ public class OrderDetailsDao {
 		ContentValues contentValues = new ContentValues();
 		OrderDetailsModel barcodeDetailsModel;
 		if(model!=null && !InputUtils.isNull(model.getOrderNo())) {
-			barcodeDetailsModel = getModelFromId(model.getOrderNo());
+			barcodeDetailsModel = getModelFromId(oldOrderNo);
 			if (barcodeDetailsModel!=null) {
 				contentValues = this.getContentValuesFromModel(model);
 				int updateValue = (int) db.update(TABLE_NAME, contentValues, ORDER_NO + "=?", new String[] {oldOrderNo});
