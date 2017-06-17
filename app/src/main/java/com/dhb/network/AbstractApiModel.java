@@ -108,6 +108,8 @@ public class AbstractApiModel implements AppConstants {
 
     public String BTECH_HUB_DETAILS_DISPLAY=VERSION_API_URL+"/BtechHubs";
 
+    public String ORDER_SERVED_DETAILS_DISPLAY=VERSION_API_URL+"/BtechOrderSummary/BtechServedOrders";
+
     public String BTECH_CLIENTS_DETAILS_DISPLAY=VERSION_API_URL+"/BtechClients";
 
     public String CAMPS_DETAILS_DISPLAY=VERSION_API_URL+"/CampDetails/MyCampDetails";
