@@ -83,7 +83,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private LinearLayout llAddBeneficiary;
 
     //changes_17june2017
-    private TextView title_add_beneficiary;
+    //private TextView title_add_beneficiary;
     //changes_17june2017
 
 
@@ -180,13 +180,13 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             public void onClick(View v) {
 
                 //changes_17june2017
-                if (title_add_beneficiary.getText().equals("Next Beneficiary")) {
+               /* if (title_add_beneficiary.getText().equals("Next Beneficiary")) {
                     title_add_beneficiary.setError("Proceed to next beneficiary...");
                     //Toast.makeText(activity, "next ben.", Toast.LENGTH_SHORT).show();
                 } else {
                     title_add_beneficiary.setError("test run");
                     //Toast.makeText(activity, "add ben.", Toast.LENGTH_SHORT).show();
-                }
+                }*/
                 //changes_17june2017
 
                 OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
@@ -411,7 +411,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         pagerIndicator = (LinearLayout) rootView.findViewById(R.id.viewPagerCountDots);
 
         //changes_17june2017
-        title_add_beneficiary = (TextView) rootView.findViewById(R.id.title_add_beneficiary);
+        //title_add_beneficiary = (TextView) rootView.findViewById(R.id.title_add_beneficiary);
         //changes_17june2017
     }
 
@@ -456,11 +456,11 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 Logger.debug("dots_counter" + dotsCount);
 
                 //changes_17june2017
-                if ((i + 1) < dotsCount) {
+               /* if ((i + 1) < dotsCount) {
                     title_add_beneficiary.setText("Next Beneficiary");
                 } else {
                     title_add_beneficiary.setText("Add Beneficiary");
-                }
+                }*/
                 //changes_17june2017
             }
             dots[position].setImageDrawable(activity.getResources().getDrawable(R.drawable.selected_item_dot));
