@@ -141,7 +141,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Logger.debug("orderVisitDetailsModel 1 :" + new Gson().toJson(orderVisitDetailsModel));
-                        tempOrderDetailsModel.setOrderNo(DeviceUtils.randomString(8));
+                        tempOrderDetailsModel.setOrderNo("TEMP_"+DeviceUtils.randomString(8));
                         tempOrderDetailsModel.setAddBen(true);
                         Logger.debug("tempOrderDetailsModel:" + new Gson().toJson(tempOrderDetailsModel));
                         Logger.debug("orderVisitDetailsModel 2 :" + new Gson().toJson(orderVisitDetailsModel));
@@ -723,6 +723,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         .create()
                         .show();
             } else {
+                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Order Status")
                         .setMessage("Work Order Entry Failed!")

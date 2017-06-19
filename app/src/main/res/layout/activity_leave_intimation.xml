@@ -39,7 +39,7 @@
                 android:id="@+id/sp_leave_nature"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dp_5"></Spinner>
+                android:padding="@dimen/dp_5"/>
         </LinearLayout>
 
         <LinearLayout
@@ -67,6 +67,7 @@
                 android:padding="@dimen/dp_5">
 
                 <RadioButton
+                    android:buttonTint="@color/colorPrimary"
                     android:id="@+id/radio_pirates"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -75,11 +76,12 @@
                     android:textSize="12sp" />
 
                 <RadioButton
+                    android:buttonTint="@color/colorPrimary"
                     android:id="@+id/radio_ninjas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="More than 1 day"
-                    android:textSize="12sp"></RadioButton>
+                    android:textSize="12sp"/>
             </RadioGroup>
             <!-- <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
                  android:id="@+id/group"
@@ -163,31 +165,34 @@
                 android:padding="@dimen/dp_5"
                 android:text="Leave On:" />
 
-            <TextView
-                android:layout_marginLeft="70dp"
-                android:id="@+id/txt_from_date"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_filter_date_button"
-                android:drawableRight="@drawable/calender_icon"
-                android:hint="From"
-                android:padding="@dimen/dp_5"
-                android:textColor="@color/calender_text"
-                android:textSize="15sp" />
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/txt_from_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="70dp"
+                    android:background="@drawable/shape_filter_date_button"
+                    android:drawableRight="@drawable/calender_icon"
+                    android:hint="From"
+                    android:padding="@dimen/dp_5"
+                    android:textColor="@color/calender_text"
+                    android:textSize="15sp" />
 
-            <TextView
-                android:padding="@dimen/dp_5"
-                android:id="@+id/txt_to_date"
-                android:layout_marginLeft="70dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_filter_date_button"
-                android:drawableRight="@drawable/calender_icon"
-                android:hint="To"
-                android:textColor="@color/calender_text"
-                android:textSize="15sp"
-                android:layout_marginTop="10dp"
-                android:visibility="gone" />
+                <TextView
+                    android:padding="@dimen/dp_5"
+                    android:id="@+id/txt_to_date"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_filter_date_button"
+                    android:drawableRight="@drawable/calender_icon"
+                    android:hint="To"
+                    android:textColor="@color/calender_text"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
 
         <!--
@@ -301,7 +306,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp_5"
                 android:text="1"
-                android:textSize="15sp"></TextView>
+                android:textSize="15sp"/>
         </LinearLayout>
 
         <LinearLayout

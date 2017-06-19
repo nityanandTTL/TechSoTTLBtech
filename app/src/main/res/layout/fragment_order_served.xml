@@ -6,36 +6,42 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="0.2">
+        android:layout_weight="0.2"
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_weight="1"
+            android:padding="@dimen/dp_10"
             android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:drawableRight="@drawable/calendar_served_orders"
+            android:gravity="center"
+            android:text="11-09-1111"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/img_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="20sp"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
-            android:text="11-09-1111" />
-        <ImageView
-            android:id="@+id/img_search"
-           android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_search_black_36dp"/>
+            android:src="@drawable/ic_search_black_36dp" />
     </LinearLayout>
+
     <TextView
-        android:layout_marginTop="@dimen/dp_2"
         android:id="@+id/no_orders"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="No data to display"/>
+        android:layout_marginTop="@dimen/dp_2"
+        android:text="No data to display" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"

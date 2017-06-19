@@ -262,23 +262,19 @@ public class BeneficiaryDetailsDao {
 	}
 
 	public void deleteByOrderNo(String orderNo){
-		String query = "DELETE FROM " + TABLE_NAME + " WHERE " + ORDER_NO + " = ?";
-		Logger.debug("Query - " + query);
+		String query =  ORDER_NO + " = ?";
+		Logger.debug("Query - DELETE FROM " + TABLE_NAME + " WHERE " + query);
 		String[] whereParams = new String[]{orderNo};
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && !cursor.isClosed()){
-			cursor.close();
-		}
+		int deleteValue = db.delete(TABLE_NAME,query, whereParams);
+		Logger.debug("DeleteBeneficiaryDetailsByOrderNo: "+deleteValue);
 	}
 
 	public void deleteByBenId(String benId){
-		String query = "DELETE FROM " + TABLE_NAME + " WHERE " + BEN_ID + " = ?";
-		Logger.debug("Query - " + query);
-		String[] whereParams = new String[]{benId};
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && !cursor.isClosed()){
-			cursor.close();
-		}
+		String query = BEN_ID + " = "+Integer.parseInt(benId);
+		Logger.debug("Query -  DELETE FROM " + TABLE_NAME + " WHERE " + query);
+		String[] whereParams = new String[]{};
+		int deleteValue = this.db.delete(TABLE_NAME,query, whereParams);
+		Logger.debug("DeleteBeneficiaryDetailsByBenId: "+deleteValue);
 	}
 
 }

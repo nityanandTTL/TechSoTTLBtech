@@ -130,6 +130,9 @@ public class HubListDisplayFragment extends AbstractFragment {
                     Logger.error("else " + json);
                 }
             }
+            else{
+                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override

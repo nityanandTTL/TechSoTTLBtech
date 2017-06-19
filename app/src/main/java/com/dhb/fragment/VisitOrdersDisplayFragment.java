@@ -218,9 +218,9 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         if (orderDetailsResponseModels.size() > 0) {
             VisitOrderDisplayAdapter visitOrderDisplayRecyclerViewAdapter = new VisitOrderDisplayAdapter(activity, orderDetailsResponseModels, new VisitOrderDisplayRecyclerViewAdapterDelegateResult());
             recyclerView.setAdapter(visitOrderDisplayRecyclerViewAdapter);
+            recyclerView.setVisibility(View.VISIBLE);
             txtNoRecord.setVisibility(View.GONE);
         } else {
-            recyclerView.removeAllViews();
             recyclerView.setVisibility(View.GONE);
             txtNoRecord.setVisibility(View.VISIBLE);
         }

@@ -82,7 +82,7 @@ public class OrderServedFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
-        activity.toolbarHome.setTitle("Order Served");
+        activity.toolbarHome.setTitle("Orders Served");
         appPreferenceManager = new AppPreferenceManager(activity);
         if (getArguments() != null) {
 
