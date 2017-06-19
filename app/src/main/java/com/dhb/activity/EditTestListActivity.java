@@ -155,6 +155,7 @@ public class EditTestListActivity extends AbstractActivity{
                 intentFinish.putExtra(BundleConstants.SELECTED_TESTS_DISCOUNT,selectedTestsDiscount+restTestsDiscount);
                 intentFinish.putExtra(BundleConstants.SELECTED_TESTS_INCENTIVE,selectedTestsIncentive+restTestsIncentive);
                 intentFinish.putExtra(BundleConstants.SELECTED_TESTS_TOTAL_COST,selectedTestsTotalCost);
+                intentFinish.putExtra(BundleConstants.BRAND_ID,brandMasterModel.getBrandId());
                 setResult(BundleConstants.EDIT_TESTS_FINISH,intentFinish);
                 finish();
             }

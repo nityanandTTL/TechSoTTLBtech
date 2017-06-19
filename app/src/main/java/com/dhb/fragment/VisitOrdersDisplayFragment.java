@@ -220,6 +220,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             recyclerView.setAdapter(visitOrderDisplayRecyclerViewAdapter);
             txtNoRecord.setVisibility(View.GONE);
         } else {
+            recyclerView.removeAllViews();
+            recyclerView.setVisibility(View.GONE);
             txtNoRecord.setVisibility(View.VISIBLE);
         }
     }

@@ -811,7 +811,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             int selectedTestsTotalCost = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_TOTAL_COST);
             int selectedTestsDiscount = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_DISCOUNT);
             int selectedTestsIncentive = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_INCENTIVE);
-
+            int brandId = data.getExtras().getInt(BundleConstants.BRAND_ID,0);
+            orderDetailsModel.setBrandId(brandId);
             orderDetailsModel.setAmountDue(selectedTestsTotalCost);
             orderDetailsModel.setDiscount(selectedTestsDiscount);
             orderDetailsModel.setMargin(selectedTestsIncentive);
