@@ -169,6 +169,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, tempBeneficiaryDetailsModel);
                         intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, tempOrderDetailsModel);
                         intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_ADD, true);
+                        intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_EDIT, false);
                         startActivityForResult(intentEdit, BundleConstants.ADD_START);
                     }
                 }).show();
@@ -494,13 +495,13 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                     CartRequestBeneficiaryModel crbm = new CartRequestBeneficiaryModel();
                     crbm.setOrderNo(order.getOrderNo());
                     crbm.setAddben(order.isAddBen() ? true : false);
-                    //crbm.setTestEdit(order.isTestEdit()?true:false);
+                    crbm.setBenId(ben.getBenId()+"");
+                    crbm.setTestEdit(order.isTestEdit()?true:false);
                     if (!InputUtils.isNull(ben.getProjId())) {
                         crbm.setTests(ben.getProjId() + "," + ben.getTestsCode());
                         crbm.setProjId(ben.getProjId());
-                        //crbm.setBenId(String.valueOf(ben.getBenId()));
-
                     } else {
+                        crbm.setProjId("");
                         crbm.setTests(ben.getTestsCode());
                     }
                     beneficiariesArr.add(crbm);

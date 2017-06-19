@@ -21,6 +21,7 @@ import com.dhb.models.api.response.LoginResponseModel;
 import com.dhb.models.api.response.MaterialINVResponseModel;
 import com.dhb.models.api.response.MessageModel;
 import com.dhb.models.api.response.OrderBookingResponseVisitModel;
+import com.dhb.models.api.response.OrderServedResponseModel;
 import com.dhb.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.dhb.models.api.response.PaymentProcessAPIResponseModel;
 import com.dhb.models.api.response.PaymentStartTransactionAPIResponseModel;
@@ -711,6 +712,14 @@ public class ResponseParser implements AppConstants {
         dispatchHubDisplayDetailsResponseModel = gson.fromJson(json, DispatchHubDisplayDetailsResponseModel.class);
         //}
         return dispatchHubDisplayDetailsResponseModel;
+    }
+    //Order serverd details Response parse:
+    public OrderServedResponseModel getOrderServedDetailsResponseModel(String json, int statusCode) {
+        OrderServedResponseModel orderServedResponseModel = null;
+        //if (!parseIntoError(json, statusCode)){
+        orderServedResponseModel = gson.fromJson(json, OrderServedResponseModel.class);
+        //}
+        return orderServedResponseModel;
     }
 
     //Camp Order details Response parse:

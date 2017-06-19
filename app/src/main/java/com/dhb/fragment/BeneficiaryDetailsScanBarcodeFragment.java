@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -263,6 +265,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
                 intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
                 intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_EDIT, true);
+                intentEdit.putExtra(BundleConstants.IS_TEST_EDIT,true);
                 startActivityForResult(intentEdit, BundleConstants.EDIT_START);
             }
         });
@@ -373,10 +376,39 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 builder.show();
             }
         });
+        edtRemarks.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String remarks = s.toString();
+                if(InputUtils.isNull(remarks)){
+                    beneficiaryDetailsModel.setRemarks("");
+                }
+                else{
+                    beneficiaryDetailsModel.setRemarks(remarks);
+                }
+                beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+            }
+        });
         edtTests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tests = beneficiaryDetailsModel.getTestsCode();
+
+                Toast.makeText(getActivity(),"Feature Coming Soon Stay Tunned", Toast.LENGTH_SHORT).show();
+
+
+
+
+               /* String tests = beneficiaryDetailsModel.getTestsCode();
                 String projId = beneficiaryDetailsModel.getProjId();
                 final ArrayList<String> testCodesList = new ArrayList<>();
                 Collections.addAll(testCodesList, tests.split(","));
@@ -401,12 +433,12 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     public void onItemClick() {
 
                         Intent intentEdit = new Intent(activity, EditTestListActivity.class);
-
+                        intentEdit.putExtra(BundleConstants.IS_TEST_EDIT,true);
                         startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
 
                     }
                 });
-                etl.show();
+                etl.show();*/
 
 
          /*       AlertDialog.Builder builder = new AlertDialog.Builder(activity);

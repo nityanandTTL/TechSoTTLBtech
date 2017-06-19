@@ -49,6 +49,7 @@ public class BeneficiaryDetailsDao {
 	String CLINICAL_HISTORY = "clHistory";
 	String LAB_ALERT = "labAlert";
 	String SAMPLE_TYPE = "sampleType";
+	String REMARKS = "remarks";
 	String CREATED_AT = "createdAt";
 	String CREATED_BY = "createdBy";
 	String UPDATED_AT = "updatedAt";
@@ -83,6 +84,7 @@ public class BeneficiaryDetailsDao {
 		beneficiaryDetailsModel.setProjId(cursor.getString(cursor.getColumnIndex(PROJ_ID)));
 		beneficiaryDetailsModel.setTestsCode(cursor.getString(cursor.getColumnIndex(TESTS_CODE)));
 		beneficiaryDetailsModel.setFasting(cursor.getString(cursor.getColumnIndex(FASTING)));
+		beneficiaryDetailsModel.setRemarks(cursor.getString(cursor.getColumnIndex(REMARKS)));
 		beneficiaryDetailsModel.setVenepuncture(CommonUtils.encodeImage(cursor.getBlob(cursor.getColumnIndex(VENEPUNCTURE))));
 
 		TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>> tokenBarcode = new TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>>(){};
@@ -128,6 +130,7 @@ public class BeneficiaryDetailsDao {
 		values.put(PROJ_ID, orderDetailsModel.getProjId());
 		values.put(TESTS_CODE, orderDetailsModel.getTestsCode());
 		values.put(FASTING, orderDetailsModel.getFasting());
+		values.put(REMARKS, orderDetailsModel.getRemarks());
 		values.put(VENEPUNCTURE, CommonUtils.decodedImageBytes(InputUtils.isNull(orderDetailsModel.getVenepuncture())?"":orderDetailsModel.getVenepuncture()));
 		values.put(BARCODE_DTL, new Gson().toJson(orderDetailsModel.getBarcodedtl()));
 		values.put(SAMPLE_TYPE, new Gson().toJson(orderDetailsModel.getSampleType()));
@@ -221,7 +224,7 @@ public class BeneficiaryDetailsDao {
 		ContentValues contentValues = new ContentValues();
 		BeneficiaryDetailsModel barcodeDetailsModel;
 		if(model!=null && model.getBenId()!=0) {
-			barcodeDetailsModel = getModelFromId(model.getBenId());
+			barcodeDetailsModel = getModelFromId(oldBeneficiaryId);
 			if (barcodeDetailsModel!=null) {
 				contentValues = this.getContentValuesFromModel(model);
 				int updateValue = (int) db.update(TABLE_NAME, contentValues, BEN_ID + "="+oldBeneficiaryId, new String[] {});

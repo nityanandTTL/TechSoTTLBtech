@@ -25,6 +25,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> clHistory;
     private ArrayList<BeneficiaryLabAlertsModel> labAlert;
     private String ProjId;
+    private String remarks;
 
     public BeneficiaryDetailsModel() {
         super();
@@ -47,6 +48,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         clHistory = in.createTypedArrayList(BeneficiaryTestWiseClinicalHistoryModel.CREATOR);
         labAlert = in.createTypedArrayList(BeneficiaryLabAlertsModel.CREATOR);
         ProjId = in.readString();
+        remarks = in.readString();
     }
 
     @Override
@@ -67,6 +69,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         dest.writeTypedList(clHistory);
         dest.writeTypedList(labAlert);
         dest.writeString(ProjId);
+        dest.writeString(remarks);
     }
 
     @Override
@@ -206,4 +209,11 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         this.labAlert = labAlert;
     }
 
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 }

@@ -40,6 +40,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     private HashSet<Integer> unfoldedIndexes = new HashSet<>();
     private LayoutInflater layoutInflater;
     private AppPreferenceManager appPreferenceManager;
+
     private String MaskedPhoneNumber = "";
     private boolean isSelected;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -124,13 +125,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 }
             }
         });
-
-
     }
-
-
-
-
 
     private void initData(FoldingCellViewHolder holder, final int pos) {
 
@@ -199,8 +194,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
                     callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
                     callPatchRequestModel.setDestNumber(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getMobile());
-
-
                          Logger.error("orderVisitDetailsModelsArr"+orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getMobile());
                         callPatchRequestModel.setVisitID(orderVisitDetailsModelsArr.get(0).getVisitId());
                         ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);

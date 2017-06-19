@@ -269,8 +269,45 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                                     if((bdm.getBenId()+"").equals(obrbm.getOldBenIds())){
                                         bdm.setOrderNo(obrom.getNewOrderId());
                                         bdm.setBenId(Integer.parseInt(obrbm.getNewBenIds()));
-                                        //UPDATE old beneficiary Id with new Beneficiary Id
-                                        beneficiaryDetailsDao.updateBeneficiaryId(Integer.parseInt(obrbm.getNewBenIds()),bdm);
+                                        //UPDATE old beneficiary Id with new Beneficiary Id in Barcode Details
+                                        for (int i =0;bdm.getBarcodedtl()!=null && i<bdm.getBarcodedtl().size();i++) {
+                                            //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                            // AND API response old beneficiary Id not equals new beneficiary Id
+                                            if(bdm.getBarcodedtl().get(i).getBenId()==Integer.parseInt(obrbm.getOldBenIds())){
+                                                bdm.getBarcodedtl().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                                bdm.getBarcodedtl().get(i).setOrderNo(obrom.getNewOrderId());
+                                            }
+                                        }
+
+                                        //UPDATE old beneficiary Id with new Beneficiary Id in Sample Type Details
+                                        for (int i =0;bdm.getSampleType()!=null && i<bdm.getSampleType().size();i++) {
+                                            //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                            // AND API response old beneficiary Id not equals new beneficiary Id
+                                            if(bdm.getSampleType().get(i).getBenId()==Integer.parseInt(obrbm.getOldBenIds())){
+                                                bdm.getSampleType().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                            }
+                                        }
+
+
+                                        //UPDATE old beneficiary Id with new Beneficiary Id in Clinical History
+                                        for (int i =0;bdm.getClHistory()!=null && i<bdm.getClHistory().size();i++) {
+                                            //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                            // AND API response old beneficiary Id not equals new beneficiary Id
+                                            if(bdm.getClHistory().get(i).getBenId()==Integer.parseInt(obrbm.getOldBenIds())){
+                                                bdm.getClHistory().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                            }
+                                        }
+
+                                        //UPDATE old beneficiary Id with new Beneficiary Id in Lab Alerts
+                                        for (int i =0;bdm.getLabAlert()!=null && i<bdm.getLabAlert().size();i++) {
+                                            //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                            // AND API response old beneficiary Id not equals new beneficiary Id
+                                            if(bdm.getLabAlert().get(i).getBenId()==Integer.parseInt(obrbm.getOldBenIds())){
+                                                bdm.getLabAlert().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                            }
+                                        }
+
+                                        beneficiaryDetailsDao.updateBeneficiaryId(Integer.parseInt(obrbm.getOldBenIds()),bdm);
                                     }
                                 }
                             }
@@ -285,7 +322,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 if(isEdit) {
                     setResult(BundleConstants.EDIT_FINISH, intentFinish);
                 }
-                else{
+                else if(isAdd){
                     setResult(BundleConstants.ADD_FINISH, intentFinish);
                 }
                 finish();
@@ -310,6 +347,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
                     beneficiaryDetailsModel.setTestsCode(edtTests.getText().toString());
                     beneficiaryDetailsModel.setTests(edtTests.getText().toString());
+                    beneficiaryDetailsModel.setRemarks(edtRemarks.getText().toString());
                     beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
                     orderDetailsModel.setReportHC(isHC?1:0);
                     orderDetailsModel.setAddBen(isAdd);
@@ -384,6 +422,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST,restOfTestsList);
                     intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
                     intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                    intentEdit.putExtra(BundleConstants.IS_TEST_EDIT,isEdit);
                     startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
                 }
                 else{
@@ -412,6 +451,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                                 intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST, restOfTestsList);
                                 intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
                                 intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                                intentEdit.putExtra(BundleConstants.IS_TEST_EDIT,isEdit);
                                 startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
                                 dialog.dismiss();
                             }
@@ -492,6 +532,29 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 }
                 else{
                     beneficiaryDetailsModel.setName(benName);
+                }
+                beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+            }
+        });
+        edtRemarks.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String remarks = s.toString();
+                if(InputUtils.isNull(remarks)){
+                    beneficiaryDetailsModel.setRemarks("");
+                }
+                else{
+                    beneficiaryDetailsModel.setRemarks(remarks);
                 }
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             }
@@ -748,7 +811,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             int selectedTestsTotalCost = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_TOTAL_COST);
             int selectedTestsDiscount = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_DISCOUNT);
             int selectedTestsIncentive = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_INCENTIVE);
-
+            int brandId = data.getExtras().getInt(BundleConstants.BRAND_ID,0);
+            orderDetailsModel.setBrandId(brandId);
             orderDetailsModel.setAmountDue(selectedTestsTotalCost);
             orderDetailsModel.setDiscount(selectedTestsDiscount);
             orderDetailsModel.setMargin(selectedTestsIncentive);
