@@ -779,7 +779,7 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
-                    .getString(R.string.progress_message_fetching_dispatch_to_hub_details_please_wait));
+                    .getString(R.string.progress_message_fetching_order_serverd_details_please_wait));
             apiCallAsyncTask.setProgressBarVisible(true);
         } catch (Exception e) {
             e.printStackTrace();

@@ -219,8 +219,8 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                     txt_sample_type.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
                 }
 
-               // edt_barcode.setText(barcodeDetailsArr.get(i).getBarcode());
-
+                // edt_barcode.setText(barcodeDetailsArr.get(i).getBarcode());
+                Logger.error("clearText: " + clearText);
                 if (clearText == 0) {
                     edt_barcode.setText(barcodeDetailsArr.get(i).getBarcode());
                 } else if (clearText == 1) {
@@ -669,7 +669,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                 for (OrderBookingResponseOrderModel obrom :
                         orderBookingResponseVisitModel.getOrderids()) {
                     orderBookingResponseBeneficiaryModelArr.addAll(obrom.getBenfids());
-                    Logger.error("ben for woe "+obrom.getBenfids());
+                    Logger.error("ben for woe " + obrom.getBenfids());
                 }
 
                 callWoeApi();
@@ -706,10 +706,11 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
                 isSuceed = true;
                 clearEntries();
-                clearText=1;
+                clearText = 1;
+                initScanBarcodeView();
             } else {
-                 //if (IS_DEBUG)
-                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                //if (IS_DEBUG)
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
                 isSuceed = false;
             }
         }
