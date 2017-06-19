@@ -82,6 +82,11 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private ArrayList<OrderBookingResponseBeneficiaryModel> orderBookingResponseBeneficiaryModelArr = new ArrayList<>();
     private LinearLayout llAddBeneficiary;
 
+    //changes_17june2017
+    private TextView title_add_beneficiary;
+    //changes_17june2017
+
+
     public BeneficiariesDisplayFragment() {
         // Required empty public constructor
     }
@@ -172,6 +177,16 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         btnProceedPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //changes_17june2017
+                if (title_add_beneficiary.getText().equals("Next Beneficiary")) {
+                    title_add_beneficiary.setError("Proceed to next beneficiary...");
+                    //Toast.makeText(activity, "next ben.", Toast.LENGTH_SHORT).show();
+                } else {
+                    title_add_beneficiary.setError("test run");
+                    //Toast.makeText(activity, "add ben.", Toast.LENGTH_SHORT).show();
+                }
+                //changes_17june2017
 
                 OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
                 if (validate(orderBookingRequestModel)) {
@@ -393,6 +408,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         llAddBeneficiary = (LinearLayout) rootView.findViewById(R.id.ll_add_beneficiary);
         txtAmtPayable = (TextView) rootView.findViewById(R.id.title_amt_payable);
         pagerIndicator = (LinearLayout) rootView.findViewById(R.id.viewPagerCountDots);
+
+        //changes_17june2017
+        title_add_beneficiary = (TextView) rootView.findViewById(R.id.title_add_beneficiary);
+        //changes_17june2017
     }
 
     private void setUiPageViewController() {
@@ -400,7 +419,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         dotsCount = beneficiaryScreenSlidePagerAdapter.getCount();
         dots = new ImageView[dotsCount];
 
+        Logger.debug("dots_count" + String.valueOf(dotsCount));
+
         for (int i = 0; i < dotsCount; i++) {
+
             dots[i] = new ImageView(activity);
             dots[i].setImageDrawable(activity.getResources().getDrawable(R.drawable.non_selected_item_dot));
 
@@ -412,6 +434,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             params.setMargins(4, 0, 4, 0);
 
             pagerIndicator.addView(dots[i], params);
+
         }
         if (dots != null && dots.length > 0) {
             dots[0].setImageDrawable(activity.getResources().getDrawable(R.drawable.selected_item_dot));
@@ -428,6 +451,16 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         public void onPageSelected(int position) {
             for (int i = 0; i < dotsCount; i++) {
                 dots[i].setImageDrawable(activity.getResources().getDrawable(R.drawable.non_selected_item_dot));
+
+                Logger.debug("dots_counter" + dotsCount);
+
+                //changes_17june2017
+                if ((i + 1) < dotsCount) {
+                    title_add_beneficiary.setText("Next Beneficiary");
+                } else {
+                    title_add_beneficiary.setText("Add Beneficiary");
+                }
+                //changes_17june2017
             }
             dots[position].setImageDrawable(activity.getResources().getDrawable(R.drawable.selected_item_dot));
         }

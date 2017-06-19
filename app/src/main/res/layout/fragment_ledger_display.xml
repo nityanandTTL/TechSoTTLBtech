@@ -96,7 +96,7 @@
             <LinearLayout
                 android:id="@+id/sevendays_layout"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="40dp"
                 android:background="@drawable/circlebackground">
 
                 <TextView
@@ -116,14 +116,14 @@
             <LinearLayout
                 android:id="@+id/itembackground"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/circlebackgrounditem">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_horizontal|center_vertical"
                     android:text="Ledger"
                     android:textColor="#FFFFFF"
@@ -190,20 +190,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text="Deposit"
-                android:textColor="#FFFFFF"
                 android:textSize="14sp" />
 
             <LinearLayout
                 android:id="@+id/itembackground2"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/circlebackgrounditem">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_horizontal|center_vertical"
                     android:text="Earning Register"
                     android:textColor="#FFFFFF"
@@ -243,14 +242,14 @@
             <LinearLayout
                 android:id="@+id/itembackground3"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/circlebackgrounditem">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_horizontal|center_vertical"
                     android:text="Deposit Register"
                     android:textColor="#FFFFFF"

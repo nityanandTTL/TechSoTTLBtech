@@ -40,27 +40,24 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_10"
                     android:layout_marginTop="@dimen/dp_10"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:minEms="5"
                         android:padding="@dimen/dp_10"
-                        android:text="Name:\u0020\u0020\u0020\u0020"
+                        android:text="Name:"
                         android:textSize="18sp" />
 
                     <EditText
                         android:id="@+id/edt_name"
-                        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
                         android:background="@android:drawable/edit_text"
-                        android:minEms="11"
-                        android:paddingRight="@dimen/dp_5" />
+                        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz " />
                 </LinearLayout>
 
                 <LinearLayout
@@ -91,34 +88,31 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/dp_10"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:minEms="5"
                             android:padding="@dimen/dp_10"
-                            android:text="Age:\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020"
+                            android:text="Age:"
                             android:textSize="18sp" />
 
                         <EditText
                             android:id="@+id/edt_age"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_marginRight="@dimen/dp_10"
                             android:background="@android:drawable/edit_text"
                             android:inputType="number"
-                            android:maxLength="3"
-                            android:minEms="8" />
+                            android:maxLength="3" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -154,9 +148,9 @@
                             <View
                                 android:id="@+id/view_male"
                                 android:layout_width="35dp"
-                                android:visibility="gone"
                                 android:layout_height="2dp"
-                                android:background="@color/colorPrimary" />
+                                android:background="@color/colorPrimary"
+                                android:visibility="gone" />
                         </LinearLayout>
 
                         <ImageView
@@ -185,9 +179,9 @@
                             <View
                                 android:id="@+id/view_female"
                                 android:layout_width="35dp"
-                                android:visibility="gone"
                                 android:layout_height="2dp"
-                                android:background="@color/colorPrimary" />
+                                android:background="@color/colorPrimary"
+                                android:visibility="gone" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -196,36 +190,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_10"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:minEms="5"
                         android:padding="@dimen/dp_10"
-                        android:text="Mobile:\u0020\u0020\u0020"
+                        android:text="Mobile:"
                         android:textSize="18sp" />
 
                     <EditText
                         android:id="@+id/edt_mobile"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
                         android:background="@android:drawable/edit_text"
-                        android:minEms="11"
                         android:inputType="number"
-                        android:maxLength="10"
-                        android:paddingRight="@dimen/dp_5" />
+                        android:maxLength="10" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_10"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -250,9 +240,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:layout_marginBottom="@dimen/dp_10"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -273,12 +263,13 @@
                         android:minEms="11"
                         android:paddingRight="@dimen/dp_5" />
                 </LinearLayout>
+
                 <LinearLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_10"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -294,19 +285,20 @@
                         android:id="@+id/edt_ch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="@string/click_to_select_clinical_history"
                         android:layout_gravity="center"
-                        android:drawableEnd="@android:drawable/arrow_down_float"
                         android:background="@android:drawable/edit_text"
+                        android:drawableEnd="@android:drawable/arrow_down_float"
+                        android:hint="@string/click_to_select_clinical_history"
                         android:minEms="11"
                         android:paddingRight="@dimen/dp_5" />
                 </LinearLayout>
+
                 <LinearLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_10"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -323,18 +315,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:hint="Select Lab Alert"
-                        android:drawableEnd="@android:drawable/arrow_down_float"
                         android:background="@android:drawable/edit_text"
+                        android:drawableEnd="@android:drawable/arrow_down_float"
+                        android:hint="Select Lab Alert"
                         android:minEms="11"
                         android:paddingRight="@dimen/dp_5" />
                 </LinearLayout>
+
                 <LinearLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_10"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -350,11 +343,11 @@
                         android:id="@+id/edt_pincode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
                         android:layout_gravity="center"
                         android:background="@android:drawable/edit_text"
-                        android:minEms="11"
+                        android:inputType="number"
                         android:maxLength="6"
+                        android:minEms="11"
                         android:paddingRight="@dimen/dp_5" />
                 </LinearLayout>
 
@@ -362,74 +355,63 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_10"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:minEms="5"
                         android:padding="@dimen/dp_10"
-                        android:text="Email:\u0020\u0020\u0020\u0020\u0020"
+                        android:text="Email:"
                         android:textSize="18sp" />
 
                     <EditText
                         android:id="@+id/edt_email"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@android:drawable/edit_text"
-                        android:minEms="11"
-                        android:paddingRight="@dimen/dp_5" />
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:background="@android:drawable/edit_text" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_10"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:minEms="5"
                         android:padding="@dimen/dp_10"
                         android:text="Amount Due:"
                         android:textSize="18sp" />
 
                     <EditText
                         android:id="@+id/edt_amount"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@android:drawable/edit_text"
-                        android:minEms="11"
-                        android:paddingRight="@dimen/dp_5" />
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:background="@android:drawable/edit_text" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_tests"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:orientation="vertical"
+                    android:visibility="visible">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="start"
-                        android:minEms="5"
                         android:padding="@dimen/dp_10"
                         android:text="Tests:"
                         android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/edt_test"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:background="@android:drawable/edit_text"

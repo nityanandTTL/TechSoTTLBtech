@@ -173,6 +173,11 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 //Toast.makeText(activity, "inside", Toast.LENGTH_SHORT).show();
                 //Toast.makeText(activity, "inside", Toast.LENGTH_SHORT).show();
                 holder.imgCBAccept.setVisibility(View.VISIBLE);
+
+                //changes_16june2017
+                holder.txtSrNo.setVisibility(View.INVISIBLE);
+                //changes_16june2017
+
                 holder.imgCBAccept.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -181,6 +186,10 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 });
             }else {
                 holder.imgCBAccept.setVisibility(View.INVISIBLE);
+
+                //changes_16june2017
+                holder.txtSrNo.setVisibility(View.VISIBLE);
+                //changes_16june2017
             }
 
 

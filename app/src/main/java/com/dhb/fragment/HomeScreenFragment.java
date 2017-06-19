@@ -2,14 +2,7 @@ package com.dhb.fragment;
 
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +13,11 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.activity.PaymentsActivity;
-import com.dhb.customview.RoundedImageView;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.uiutils.AbstractFragment;
+import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.dhb.utils.app.CommonUtils;
@@ -33,10 +26,6 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 
 public class HomeScreenFragment extends AbstractFragment {
 
@@ -47,6 +36,10 @@ public class HomeScreenFragment extends AbstractFragment {
     private TextView txtUserName, txt_no_of_camps;
     private CircularImageView rvSelfie;
     private ImageView imgPayment, imgOrders, imgSchedule, imgMaterials, imgOLCPickup, imgHub, imgCamp, imgCommunication, imgLedger;
+
+    //bell_icon
+    private ImageView bellicon;
+    //bell_icon
 
     public HomeScreenFragment() {
         // Required empty public constructor
@@ -198,6 +191,19 @@ public class HomeScreenFragment extends AbstractFragment {
         imgMaterials = (ImageView) rootView.findViewById(R.id.materials_icon);
         imgOLCPickup = (ImageView) rootView.findViewById(R.id.olc_pickup_icon);
         txt_no_of_camps = (TextView) rootView.findViewById(R.id.txt_no_of_camps);
+
+        //bell_icon
+        bellicon = (ImageView) rootView.findViewById(R.id.bellicon);
+        Logger.debug("bellicon_counter"+appPreferenceManager.getScheduleCounter());
+
+        if(appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n"))
+        {
+            bellicon.setVisibility(View.VISIBLE);
+        }
+        else {
+            bellicon.setVisibility(View.INVISIBLE);
+        }
+        //bell_icon
     }
 
     private class CampDetailsCountApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
