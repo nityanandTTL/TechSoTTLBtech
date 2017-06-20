@@ -104,6 +104,13 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private IntentIntegrator intentIntegrator;
     private boolean isAdd = false;
     private boolean isFasting = false;
+
+    @Override
+    public void onBackPressed() {
+        orderDetailsDao.deleteByOrderNo(orderDetailsModel.getOrderNo());
+        super.onBackPressed();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -326,6 +333,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     setResult(BundleConstants.ADD_FINISH, intentFinish);
                 }
                 finish();
+            }
+            else{
+                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -903,24 +913,35 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
     private OrderBookingRequestModel generateOrderBookingRequestModel(OrderVisitDetailsModel orderVisitDetailsModel) {
         OrderBookingRequestModel orderBookingRequestModel = new OrderBookingRequestModel();
+        ArrayList<OrderDetailsModel> orderDetailsArr = new ArrayList<>();
+        orderDetailsArr = orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId());
+
+
+        //Fix for Setting AddBen = false for already added Beneficiaries to the server
+        for (int i =0;i<orderDetailsArr.size();i++) {
+            if(!orderDetailsArr.get(i).getOrderNo().startsWith("TEMP_") && orderDetailsArr.get(i).isAddBen()){
+                orderDetailsArr.get(i).setAddBen(false);
+            }
+        }
+        //End of Fix
 
         //SET Order Booking Details Model - START
         OrderBookingDetailsModel orderBookingDetailsModel = new OrderBookingDetailsModel();
         orderBookingDetailsModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
         orderBookingDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
-        orderBookingDetailsModel.setOrddtl(orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId()));
+        orderBookingDetailsModel.setOrddtl(orderDetailsArr);
         orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
         //SET Order Booking Details Model - END
 
         //SET Order Details Models Array - START
-        orderBookingRequestModel.setOrddtl(orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId()));
+        orderBookingRequestModel.setOrddtl(orderDetailsArr);
         //SET Order Details Models Array - END
 
 
         //SET BENEFICIARY Details Models Array - START
         ArrayList<BeneficiaryDetailsModel> benArr = new ArrayList<>();
         for (OrderDetailsModel orderDetailsModel:
-                orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId())) {
+                orderDetailsArr) {
             ArrayList<BeneficiaryDetailsModel> tempBenArr = new ArrayList<>();
             tempBenArr = beneficiaryDetailsDao.getModelsFromOrderNo(orderDetailsModel.getOrderNo());
             if(tempBenArr!=null) {

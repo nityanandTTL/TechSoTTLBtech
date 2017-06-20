@@ -676,8 +676,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
 
 
             } else {
-                if (IS_DEBUG)
-                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 

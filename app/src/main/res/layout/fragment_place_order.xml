@@ -25,12 +25,14 @@
                 android:layout_height="wrap_content"
                 android:text="Operational"
                 android:textSize="12sp"
-                android:checked="true"/>
+                android:checked="true"
+                android:buttonTint="@color/colorPrimary"/>
             <RadioButton android:id="@+id/promotional"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Promotional"
-                android:textSize="12sp"/>
+                android:textSize="12sp"
+                android:buttonTint="@color/colorPrimary"/>
         </RadioGroup>
     </LinearLayout>
     <ScrollView

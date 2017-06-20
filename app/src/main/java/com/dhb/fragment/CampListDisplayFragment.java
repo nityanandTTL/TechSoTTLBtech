@@ -289,6 +289,9 @@ public class CampListDisplayFragment extends AbstractFragment {
                     e.printStackTrace();
                 }
             }
+            else{
+                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
@@ -346,6 +349,9 @@ public class CampListDisplayFragment extends AbstractFragment {
                 Logger.error("campDetailModels after arrived "+campDetailModels.size());
                 intentOrderBooking.putExtra(BundleConstants.CAMP_ORDER_DETAILS_MODEL, campDetailModel);
                 startActivity(intentOrderBooking);
+            }
+            else{
+                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
             }
         }
 

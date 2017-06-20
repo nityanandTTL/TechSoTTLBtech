@@ -65,6 +65,7 @@
                 android:padding="@dimen/dp_5">
 
                 <RadioButton
+                    android:buttonTint="@color/colorPrimary"
                     android:id="@+id/radio_pirates"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -73,11 +74,12 @@
                     android:textSize="12sp" />
 
                 <RadioButton
+                    android:buttonTint="@color/colorPrimary"
                     android:id="@+id/radio_ninjas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="More than 1 day"
-                    android:textSize="12sp"></RadioButton>
+                    android:textSize="12sp"/>
             </RadioGroup>
             <!-- <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
                  android:id="@+id/group"
@@ -165,7 +167,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                
+
             <TextView
                 android:layout_marginLeft="@dimen/dp_5"
                 android:id="@+id/txt_from_date"
@@ -304,7 +306,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp_5"
                 android:text="1"
-                android:textSize="15sp"></TextView>
+                android:textSize="15sp"/>
         </LinearLayout>
 
         <LinearLayout

@@ -40,7 +40,7 @@ import com.dhb.delegate.SelectLabAlertsCheckboxDelegate;
 import com.dhb.dialog.AddSampleBarcodeDialog;
 import com.dhb.dialog.CancelOrderDialog;
 import com.dhb.dialog.ClinicalHistorySelectorDialog;
-import com.dhb.dialog.EditTestList;
+import com.dhb.dialog.EditTestListDailog;
 import com.dhb.dialog.LabAlertSelectorDialog;
 import com.dhb.dialog.RescheduleOrderDialog;
 import com.dhb.models.api.request.OrderBookingRequestModel;
@@ -108,7 +108,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private String currentScanBarcode;
     private RescheduleOrderDialog cdd;
     private CancelOrderDialog cod;
-    private EditTestList etl;
+    private EditTestListDailog etl;
     private boolean isCancelRequesGenereted = false;
     private ArrayList<TestRateMasterModel> restOfTestsList;
     private DhbDao dhbDao;
@@ -406,14 +406,15 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 Toast.makeText(getActivity(),"Feature Coming Soon Stay Tunned", Toast.LENGTH_SHORT).show();
 
 
+/*
 
 
-               /* String tests = beneficiaryDetailsModel.getTestsCode();
+                String tests = beneficiaryDetailsModel.getTestsCode();
                 String projId = beneficiaryDetailsModel.getProjId();
                 final ArrayList<String> testCodesList = new ArrayList<>();
                 Collections.addAll(testCodesList, tests.split(","));
                 beneficiaryDetailsModel.setTestsList(new TestRateMasterDao(dhbDao.getDb()).getModelsFromTestCodes(tests));
-                etl= new EditTestList(activity, testCodesList, new CancelButtonDailogDelegate() {
+                etl= new EditTestListDailog(activity, testCodesList, new CancelButtonDailogDelegate() {
                     @Override
                     public void onItemClick() {
 
@@ -438,7 +439,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
                     }
                 });
-                etl.show();*/
+                etl.show();
+*/
 
 
          /*       AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -553,6 +555,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     beneficiaryDetailsModel.getBarcodedtl()) {
                 TableRow tr = (TableRow) activity.getLayoutInflater().inflate(R.layout.item_scan_barcode, null);
                 TextView txtSampleType = (TextView) tr.findViewById(R.id.txt_sample_type);
+                txtSampleType.setSelected(true);
                 TextView edtBarcode = (TextView) tr.findViewById(R.id.edt_barcode);
                 ImageView imgScan = (ImageView) tr.findViewById(R.id.scan_barcode_button);
                 txtSampleType.setText(beneficiaryBarcodeDetailsModel.getSamplType());
@@ -873,8 +876,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     activity.finish();
                 }
             } else {
-                if (IS_DEBUG)
-                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -964,6 +966,9 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 intentFinish.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL,beneficiaryDetailsModel);
                 intentFinish.putExtra(BundleConstants.ORDER_DETAILS_MODEL,orderDetailsModel);
 
+            }
+            else{
+                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
             }
         }
 

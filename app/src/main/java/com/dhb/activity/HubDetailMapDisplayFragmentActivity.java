@@ -397,8 +397,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                 setResult(BundleConstants.HMD_ARRIVED,intentResult);
                 finish();
             } else {
-                if(IS_DEBUG)
-                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -663,6 +662,9 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                         //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
                         Uri.parse("google.navigation:q="+destlat+","+destlong));
                 startActivity(intent);
+            }
+            else{
+                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
             }
         }
 
