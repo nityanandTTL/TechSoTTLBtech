@@ -6,20 +6,21 @@
 
     <TextView
         android:id="@+id/txt_no_orders"
-        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
         android:padding="@dimen/dp_10"
         android:text="@string/no_allotted_orders_found"
         android:textSize="18sp"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:visibility="gone" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_visit_orders_display"
-        android:layout_above="@+id/ll_visit_orders_display_footer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ll_visit_orders_display_footer">
+
         <ListView
             android:id="@+id/rv_visit_orders_display"
             android:layout_width="match_parent"
@@ -29,19 +30,19 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
-        android:layout_alignParentBottom="true"
         android:id="@+id/ll_visit_orders_display_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:visibility="visible"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <LinearLayout
-            android:baselineAligned="false"
             android:layout_width="match_parent"
             android:layout_height="65sp"
             android:layout_gravity="bottom"
+            android:baselineAligned="false"
             android:gravity="bottom"
             android:orientation="horizontal"
             android:weightSum="3">
@@ -55,11 +56,11 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_gravity="center"
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20"
-                    android:src="@drawable/location_icon"
-                    android:layout_margin="@dimen/dp_5"/>
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/dp_5"
+                    android:src="@drawable/location_icon" />
 
                 <TextView
                     android:id="@+id/title_est_distance"
@@ -111,32 +112,32 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_margin="@dimen/dp_5"
-                    android:layout_gravity="center"
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/dp_5"
                     android:src="@drawable/kit_icon" />
 
-              <!--  <TextView
-                    android:id="@+id/title_est_kits"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:text="0 Kits"
+                <!--  <TextView
+                      android:id="@+id/title_est_kits"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center"
+                      android:ellipsize="marquee"
+                      android:fadingEdge="horizontal"
+                      android:focusable="true"
+                      android:focusableInTouchMode="true"
+                      android:freezesText="true"
+                      android:gravity="center"
+                      android:marqueeRepeatLimit="marquee_forever"
+                      android:scrollHorizontally="true"
+                      android:singleLine="true"
+                      android:text="0 Kits"
 
 
 
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp" />-->
+                      android:textColor="@color/colorPrimary"
+                      android:textSize="14sp" />-->
                 <TextView
                     android:id="@+id/title_est_kits"
                     android:layout_width="50dp"

@@ -24,7 +24,7 @@ import java.util.ArrayList;
  * Created by E4904 on 6/15/2017.
  */
 
-public class EditTestList extends Dialog {
+public class EditTestListDailog extends Dialog {
     private Activity activity;
     private TextView txt_names;
     private ImageView cancel_test;
@@ -35,7 +35,7 @@ public class EditTestList extends Dialog {
     private CancelOrderAdapter cancelAdap;
     private AddTestListDailogDelegate addTestListDailogDelegate;
 
-    public EditTestList(Activity activity, ArrayList<String> testCodesArr, CancelButtonDailogDelegate cancelButtonDailogDelegate,AddTestListDailogDelegate addTestListDailogDelegate) {
+    public EditTestListDailog(Activity activity, ArrayList<String> testCodesArr, CancelButtonDailogDelegate cancelButtonDailogDelegate, AddTestListDailogDelegate addTestListDailogDelegate) {
         super(activity);
         this.activity = activity;
         this.setCanceledOnTouchOutside(false);

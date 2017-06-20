@@ -28,6 +28,7 @@ import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
+import com.dhb.utils.app.InputUtils;
 
 import org.json.JSONException;
 
@@ -104,9 +105,13 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
                 Logger.error("barcode : "+btechOrderModel.getBtchBracodeDtl().get(i).getBarcode());
             }
             String listString="";
-            for (String s : mylist)
-            {
-                listString += s + ","+"\t";
+            for (String s : mylist){
+                if(InputUtils.isNull(listString)) {
+                    listString = s;
+                }
+                else{
+                    listString = listString+",\t"+s;
+                }
             }
             holder.tv_barcode.setText(""+ listString);
             if(btechOrderModel.getAmountCollected()==0){

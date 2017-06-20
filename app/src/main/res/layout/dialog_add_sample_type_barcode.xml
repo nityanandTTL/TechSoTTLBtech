@@ -37,7 +37,7 @@
         android:inputType="text"
         android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         android:hint="Enter Barcode"
-        android:background="@android:drawable/edit_text"
+        android:background="@drawable/edittext_modified_states"
         android:layout_below="@+id/txt_barcode_value"
         android:layout_marginTop="20dp" />
 
@@ -59,7 +59,7 @@
         android:inputType="textPassword"
         android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         android:hint="Confirm Barcode"
-        android:background="@android:drawable/edit_text"
+        android:background="@drawable/edittext_modified_states"
         android:layout_margin="10dp"
         android:layout_below="@+id/txt_confirm_barcode_value"
         android:layout_marginTop="20dp" />

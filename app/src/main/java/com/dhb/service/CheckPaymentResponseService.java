@@ -93,7 +93,7 @@ public class CheckPaymentResponseService extends Service {
     private class RecheckPaymentResponseAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-
+            Toast.makeText(context,""+json,Toast.LENGTH_SHORT).show();
         }
 
         @Override

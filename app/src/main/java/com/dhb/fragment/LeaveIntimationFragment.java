@@ -84,10 +84,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
-        activity.toolbarHome.setTitle("Leave Intimation");
-        activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
-
     }
 
     @Override
@@ -103,6 +100,8 @@ public class LeaveIntimationFragment extends AbstractFragment {
 
         setListners();
         if (appPreferenceManager.getCameFrom() == 1) {
+
+
             todate.setVisibility(View.VISIBLE);
 
             finalsetfromdate = appPreferenceManager.getLeaveFromDate();
@@ -138,7 +137,8 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 e.printStackTrace();
             }
         } else {
-
+            activity.toolbarHome.setTitle("Leave Intimation");
+            activity.isOnHome = false;
             defdate = getCalculatedDate("yyyy-MM-dd", 1);
             todate.setVisibility(View.INVISIBLE);
             fromdate.setText(defdate);
@@ -331,7 +331,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
         if (leaveNatureMasterModels != null && leaveNatureMasterModels.size() > 0) {
             for (LeaveNatureMasterModel leaveNatureMasterModel :
                     leaveNatureMasterModels) {
-                Nature.add(leaveNatureMasterModel.getNature());
+                Nature.add(leaveNatureMasterModel.getNature().toUpperCase());
             }
         }
 

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@color/contentDividerLine"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/contentDividerLine"
+    android:orientation="vertical">
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
         <LinearLayout
             android:id="@+id/ll_title"
             android:layout_width="match_parent"
@@ -31,8 +33,7 @@
                 <RelativeLayout
                     android:layout_width="5dp"
                     android:layout_height="155dp"
-                    android:background="@color/colorSecondary">
-                </RelativeLayout>
+                    android:background="@color/colorSecondary"></RelativeLayout>
 
                 <TextView
                     android:id="@+id/txt_sr_no"
@@ -89,10 +90,10 @@
                     android:textSize="18sp" />
 
                 <LinearLayout
-                    android:layout_below="@id/edt_ben_name"
                     android:id="@+id/title_to_address"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/edt_ben_name">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -111,10 +112,10 @@
                         android:fadingEdge="horizontal"
                         android:hint="50 "
                         android:inputType="number"
+                        android:maxLength="3"
                         android:singleLine="true"
                         android:textColor="@android:color/darker_gray"
-                        android:textSize="16sp"
-                        android:maxLength="3"/>
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:id="@+id/img_male"
@@ -153,7 +154,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="5dp"
                     android:src="@drawable/aadhar_icon"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <EditText
                     android:id="@+id/title_aadhar_no"
@@ -165,12 +166,12 @@
                     android:drawableEnd="@android:drawable/ic_menu_camera"
                     android:fadingEdge="horizontal"
                     android:hint="Enter Aadhar"
+                    android:maxLines="1"
                     android:minEms="10"
                     android:paddingTop="5dp"
-                    android:maxLines="1"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="16sp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -182,16 +183,16 @@
             android:src="@color/contentDividerLine" />
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
 
             <RelativeLayout
-                android:layout_marginBottom="20dp"
                 android:id="@+id/order_details_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:background="@color/bg_content"
@@ -200,7 +201,7 @@
                 <RelativeLayout
                     android:id="@+id/rl_left_marker"
                     android:layout_width="5dp"
-                    android:layout_height="385dp"
+                    android:layout_height="585dp"
                     android:background="@color/colorSecondary">
 
                 </RelativeLayout>
@@ -210,25 +211,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="start"
-                        android:minEms="5"
                         android:padding="@dimen/dp_10"
-                        android:text="Tests:"
-                         />
+                        android:text="Tests:" />
 
                     <TextView
-                        android:layout_marginLeft="50dp"
                         android:id="@+id/edt_test"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@android:drawable/edit_text"
+                        android:layout_marginLeft="70dp"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:layout_marginTop="-10dp"
+                        android:background="@drawable/edittext_modified_states"
                         android:drawableEnd="@android:drawable/arrow_down_float"
                         android:ellipsize="marquee"
                         android:focusable="true"
@@ -237,20 +235,20 @@
                         android:gravity="center"
                         android:hint="Click to view tests list"
                         android:marqueeRepeatLimit="marquee_forever"
-                        android:minEms="14"
                         android:scrollHorizontally="true"
                         android:singleLine="true"
                         android:textSize="14sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:id="@+id/ll_barcodes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_tests"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
                     <TableLayout
                         android:id="@+id/tl_barcodes"
                         android:layout_width="match_parent"
@@ -260,46 +258,58 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:gravity="start"
                     android:id="@+id/ll_vhc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_barcodes"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:gravity="start"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tv_venipuncture"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="start"
-                        android:padding="@dimen/dp_10"
-                        android:text="Venipuncture: " />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_marginLeft="10dp"
-                        android:layout_gravity="center"
-                        android:id="@+id/img_venipuncture"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/camera_icon" />
+                        <TextView
+                            android:id="@+id/tv_venipuncture"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dp_10"
+                            android:text="Venipuncture: " />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:text="Hard Copy: " />
+                        <ImageView
+                            android:id="@+id/img_venipuncture"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/camera_icon" />
 
-                    <ImageView
-                        android:layout_gravity="center"
-                        android:id="@+id/hard_copy_check"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/tick_icon" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_marginTop="-10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dp_10"
+                            android:text="Hard Copy: \u0020\u0020\u0020\u0020\u0020" />
+
+                        <ImageView
+                            android:id="@+id/hard_copy_check"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/tick_icon" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -311,118 +321,106 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_marginTop="@dimen/dp_10"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <TextView
-                            android:layout_marginLeft="-5dp"
+                            android:layout_marginLeft="-7dp"
                             android:id="@+id/clinical_history_text"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
                             android:padding="@dimen/dp_10"
-                            android:text="Clinical History:"
-                             />
+                            android:text="Clinical History:" />
 
                         <TextView
-                            android:drawableEnd="@android:drawable/arrow_down_float"
-                            android:hint="Select Clinical History"
                             android:id="@+id/edt_clinical_history"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:background="@android:drawable/edit_text"
-                            android:ellipsize="marquee"
-                            android:scrollHorizontally="true"
-                            android:marqueeRepeatLimit="marquee_forever"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
-                            android:freezesText="true"
-                            android:textSize="14sp"
-                            android:gravity="center"
-                            android:minEms="10"
-                            android:singleLine="true"
-                            android:paddingRight="@dimen/dp_5"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_marginTop="@dimen/dp_10"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
-
-                        <TextView
-                            android:id="@+id/lab_alerts_txt"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:minEms="5"
-                            android:padding="@dimen/dp_10"
-                            android:text="Lab Alerts:"
-                             />
-
-                        <TextView
-                            android:layout_marginLeft="25dp"
+                            android:layout_marginLeft="70dp"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:layout_marginTop="-10dp"
+                            android:background="@drawable/edittext_modified_states"
                             android:drawableEnd="@android:drawable/arrow_down_float"
-                            android:hint="Select Lab Alerts"
-                            android:editable="false"
-                            android:id="@+id/edt_lab_alerts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:background="@android:drawable/edit_text"
                             android:ellipsize="marquee"
-                            android:scrollHorizontally="true"
-                            android:marqueeRepeatLimit="marquee_forever"
                             android:focusable="true"
                             android:focusableInTouchMode="true"
                             android:freezesText="true"
-                            android:textSize="14sp"
                             android:gravity="center"
-                            android:minEms="13"
+                            android:hint="Select Clinical History"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:scrollHorizontally="true"
                             android:singleLine="true"
-                            android:paddingRight="@dimen/dp_5"/>
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_marginBottom="@dimen/dp_10"
-                        android:layout_marginTop="@dimen/dp_10"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_marginLeft="-7dp"
+                            android:id="@+id/lab_alerts_txt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/dp_10"
+                            android:text="Lab Alerts:" />
+
+                        <TextView
+                            android:layout_marginLeft="70dp"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:layout_marginTop="-10dp"
+                            android:id="@+id/edt_lab_alerts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edittext_modified_states"
+                            android:drawableEnd="@android:drawable/arrow_down_float"
+                            android:editable="false"
+                            android:ellipsize="marquee"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:freezesText="true"
+                            android:gravity="center"
+                            android:hint="Select Lab Alerts"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_10"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_marginLeft="-7dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:gravity="center"
-                            android:minEms="5"
                             android:padding="@dimen/dp_10"
-                            android:text="Remarks:"
-                             />
+                            android:text="Remarks:" />
 
                         <EditText
-                            android:layout_marginLeft="35dp"
-                            android:hint="Enter Remarks"
+                            android:layout_marginLeft="70dp"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:layout_marginTop="-10dp"
                             android:id="@+id/edt_customer_sign"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:background="@android:drawable/edit_text"
+                            android:background="@drawable/edittext_modified_states"
+                            android:hint="Enter Remarks"
                             android:inputType="textCapSentences|textMultiLine"
                             android:maxLength="2000"
                             android:maxLines="4"
                             android:minLines="2"
-                            android:minEms="11"
-                            android:paddingRight="@dimen/dp_5"/>
+                            android:paddingRight="@dimen/dp_5" />
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
+
             <Button
                 android:id="@+id/btn_save"
                 android:layout_width="wrap_content"

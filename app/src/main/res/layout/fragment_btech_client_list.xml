@@ -40,7 +40,6 @@
         android:weightSum="2">
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="65sp"
             android:layout_gravity="bottom"
@@ -68,7 +67,7 @@
                     android:layout_marginRight="@dimen/dp_5"
                     android:layout_marginStart="@dimen/dp_5"
                     android:layout_weight="0.5"
-                    android:src="@drawable/location_icon" />
+                    android:src="@drawable/number_of_pick_ups_icon" />
 
                 <TextView
                     android:id="@+id/tv_noof_pickup"
@@ -88,7 +87,6 @@
                 android:layout_marginLeft="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/footer_bg"
                 android:orientation="horizontal"
@@ -124,7 +122,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="invisible"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

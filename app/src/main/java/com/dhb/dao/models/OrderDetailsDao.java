@@ -308,15 +308,13 @@ public class OrderDetailsDao {
 	}
 
 	public void deleteByOrderNo(String orderNo){
-		String query = "DELETE FROM " + TABLE_NAME + " WHERE " + ORDER_NO + " = ?";
-		Logger.debug("Query - " + query);
+		String query = ORDER_NO + " = ?";
+		Logger.debug("Query - DELETE FROM "+TABLE_NAME+" WHERE " + query);
 		String[] whereParams = new String[]{orderNo};
 		BeneficiaryDetailsDao dao = new BeneficiaryDetailsDao(db);
 		dao.deleteByOrderNo(orderNo);
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && !cursor.isClosed()){
-			cursor.close();
-		}
+		int deleteValue = db.delete(TABLE_NAME,query ,whereParams);
+		Logger.debug("DeleteOrderDetailsByOrderNo: "+deleteValue);
 	}
 	public ArrayList<OrderVisitDetailsModel> getAllModels() {
 		ArrayList<OrderVisitDetailsModel> orderVisitDetailsModelsArr = new ArrayList<>();

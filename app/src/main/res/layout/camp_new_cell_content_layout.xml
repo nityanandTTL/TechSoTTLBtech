@@ -56,12 +56,12 @@
                     android:src="@drawable/user_profile" />
 
                 <TextView
-                    android:layout_marginLeft="-10dp"
                     android:id="@+id/txt_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:layout_gravity="center_vertical"
+
+                    android:layout_marginLeft="-10dp"
                     android:layout_toEndOf="@+id/title_from_to_dots"
                     android:editable="false"
                     android:ellipsize="marquee"
@@ -235,95 +235,77 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_marginLeft="-20dp"
+                    android:layout_marginLeft="-10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_5"
-                    android:layout_marginTop="@dimen/dp_5"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:minEms="5"
                         android:padding="@dimen/dp_10"
-                        android:text="Name:\u0020\u0020"
-                        android:textSize="12sp" />
+                        android:text="Name:"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/edt_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@android:drawable/edit_text"
-                        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
-                        android:minEms="11"
-                        android:paddingRight="@dimen/dp_5" />
+                        android:layout_marginLeft="70dp"
+                        android:layout_marginTop="-20dp"
+                        android:background="@drawable/edittext_modified_states"
+                        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz " />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginLeft="-20dp"
+                    android:layout_marginLeft="-10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_5"
-                        android:layout_marginTop="@dimen/dp_5"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:textStyle="bold"
+                            android:id="@+id/textView4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:minEms="5"
                             android:padding="@dimen/dp_10"
-                            android:text="Age:\u0020\u0020\u0020"
-                            android:textSize="12sp" />
+                            android:text="Age:"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
                         <EditText
-                            android:layout_marginLeft="8dp"
+                            android:layout_marginLeft="20dp"
                             android:id="@+id/edt_age"
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:background="@android:drawable/edit_text"
+                            android:background="@drawable/edittext_modified_states"
                             android:drawableRight="@drawable/vseparator_age"
                             android:inputType="number"
-                            android:maxLength="3"
-                            android:minEms="8" />
+                            android:maxLength="3" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_marginLeft="-15dp"
-                        android:layout_gravity="center_vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_5"
-                        android:layout_marginTop="@dimen/dp_5"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:paddingLeft="@dimen/dp_10"
+                            android:padding="@dimen/dp_10"
                             android:text="Gender:"
+                            android:textStyle="bold"
                             android:textSize="12sp" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
                             android:orientation="vertical">
 
                             <ImageView
@@ -354,8 +336,8 @@
 
                         <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
                             android:orientation="vertical">
 
                             <ImageView
@@ -377,20 +359,15 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginLeft="-20dp"
+                    android:layout_marginLeft="-10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_5"
-                    android:layout_marginTop="@dimen/dp_5"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textView"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:minEms="5"
                         android:padding="@dimen/dp_10"
                         android:text="Mobile:"
                         android:textSize="12sp"
@@ -400,66 +377,62 @@
                         android:id="@+id/edt_mobile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@android:drawable/edit_text"
+                        android:background="@drawable/edittext_modified_states"
                         android:inputType="number"
                         android:maxLength="10"
-                        android:minEms="11"
-                        android:paddingRight="@dimen/dp_5" />
+                        android:layout_marginLeft="70dp"
+                        android:layout_marginTop="-20dp" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginLeft="-20dp"
-                    android:layout_marginBottom="@dimen/dp_5"
-                    android:layout_marginTop="@dimen/dp_5"
+                    android:layout_marginLeft="-10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
 
                     <TextView
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:minEms="5"
                         android:padding="@dimen/dp_10"
-                        android:text="Test:\u0020\u0020"
-                        android:textSize="12sp" />
+                        android:text="Test:"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
                     <EditText
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="70dp"
+                        android:layout_marginTop="-20dp"
                         android:id="@+id/edt_test_alerts"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@android:drawable/edit_text"
+                        android:background="@drawable/edittext_modified_states"
                         android:drawableEnd="@android:drawable/arrow_down_float"
-                        android:minEms="11"
-                        android:paddingRight="@dimen/dp_5"
                         android:textSize="12sp" />
 
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_marginLeft="-10dp"
+                    android:layout_marginTop="@dimen/dp_10"
                     android:id="@+id/ll_test_scan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:visibility="visible"></LinearLayout>
+                    android:visibility="visible">
+
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/btn_next"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:elevation="10dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/dp_2"
                     android:background="@drawable/purple_btn_bg"
+                    android:elevation="10dp"
                     android:text="SUBMIT"
                     android:textColor="@android:color/white" />
 

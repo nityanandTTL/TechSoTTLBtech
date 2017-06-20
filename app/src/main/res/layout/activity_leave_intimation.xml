@@ -1,352 +1,359 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/title_leave_intmtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/dp_2"
-        android:text="Apply for Leave"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="19sp" />
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/ll_leave_nature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_5"
-        android:layout_marginBottom="@dimen/dp_5"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="@dimen/dp_5"
-        android:layout_marginTop="@dimen/dp_5"
-        android:orientation="horizontal">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/title_leave_nature"
-            android:layout_width="wrap_content"
+            android:id="@+id/title_leave_intmtn"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dp_5"
-            android:text="Nature:" />
+            android:padding="@dimen/dp_2"
+            android:text="Apply for Leave"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="19sp" />
 
-        <Spinner
-            android:id="@+id/sp_leave_nature"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/ll_leave_nature"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dp_5"></Spinner>
-    </LinearLayout>
+            android:layout_margin="@dimen/dp_5"
+            android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/title_leave_nature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_5"
+                android:text="Nature:" />
 
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Duration:"/>
+            <Spinner
+                android:layout_marginTop="-10dp"
+                android:id="@+id/sp_leave_nature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_5"></Spinner>
+        </LinearLayout>
 
-        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/group"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginTop="-10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_5"
+                android:text="Duration:" />
+
+            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_marginTop="-10dp"
+                android:id="@+id/group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/dp_5">
+
+                <RadioButton
+                    android:buttonTint="@color/colorPrimary"
+                    android:id="@+id/radio_pirates"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="One-Day"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:buttonTint="@color/colorPrimary"
+                    android:id="@+id/radio_ninjas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="More than 1 day"
+                    android:textSize="12sp"/>
+            </RadioGroup>
+            <!-- <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:id="@+id/group"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:orientation="horizontal">
+
+                 <RadioButton
+                     android:id="@+id/radio_pirates"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:checked="true"
+                     android:text="One-Day"
+                     android:textSize="12sp" />
+
+                 <RadioButton
+                     android:id="@+id/radio_ninjas"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="More than 1 day"
+                     android:textSize="12sp"></RadioButton>
+             </RadioGroup>-->
+        </LinearLayout>
+
+        <!--<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="3">
 
-            <RadioButton
-                android:id="@+id/radio_pirates"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="-0dp"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="One-Day"
-                android:textSize="12sp" />
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.75"
+                android:padding="5dp"
+                android:text="Duration:" />
 
-            <RadioButton
-                android:id="@+id/radio_ninjas"
-                android:layout_width="wrap_content"
+            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/group"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="More than 1 day"
-                android:textSize="12sp"></RadioButton>
-        </RadioGroup>
-       <!-- <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                android:layout_weight="2.25"
+                android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/radio_pirates"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="One-Day"
-                android:textSize="12sp" />
+                <RadioButton
+                    android:id="@+id/radio_pirates"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="One-Day"
+                    android:textSize="12sp" />
 
-            <RadioButton
-                android:id="@+id/radio_ninjas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="More than 1 day"
-                android:textSize="12sp"></RadioButton>
-        </RadioGroup>-->
-    </LinearLayout>
-
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:weightSum="3">
-
-        <TextView
-            android:layout_width="-0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.75"
-            android:padding="5dp"
-            android:text="Duration:" />
-
-        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/group"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2.25"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/radio_pirates"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="One-Day"
-                android:textSize="12sp" />
-
-            <RadioButton
-                android:id="@+id/radio_ninjas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="More than 1 day"
-                android:textSize="12sp"></RadioButton>
-        </RadioGroup>
-    </LinearLayout>-->
+                <RadioButton
+                    android:id="@+id/radio_ninjas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="More than 1 day"
+                    android:textSize="12sp"></RadioButton>
+            </RadioGroup>
+        </LinearLayout>-->
 
 
-    <LinearLayout
-        android:id="@+id/ll_leave_duration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_5"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/dp_5"
-        android:paddingLeft="@dimen/dp_2"
-        android:paddingTop="@dimen/dp_5"
-        android:visibility="visible">
-
-        <TextView
-            android:id="@+id/Calendertextview"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dp_3"
-            android:gravity="center_vertical"
-            android:text="Leave On:" />
-
-        <TextView
-            android:id="@+id/txt_from_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:background="@drawable/shape_filter_date_button"
-            android:drawableRight="@drawable/calender_icon"
-            android:gravity="center_vertical"
-            android:hint="From"
-            android:paddingBottom="@dimen/dp_5"
-            android:paddingLeft="@dimen/dp_5"
-            android:paddingRight="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_5"
-            android:textColor="@color/calender_text"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/txt_to_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:background="@drawable/shape_filter_date_button"
-            android:drawableRight="@drawable/calender_icon"
-            android:gravity="center_vertical"
-            android:hint="To"
-            android:paddingBottom="@dimen/dp_5"
-            android:paddingLeft="@dimen/dp_5"
-            android:paddingRight="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_5"
-            android:textColor="@color/calender_text"
-            android:textSize="15sp"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <!--
         <LinearLayout
             android:id="@+id/ll_leave_duration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_5"
-
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/dp_5"
-            android:paddingLeft="@dimen/dp_2"
-            android:paddingRight="@dimen/dp_2"
-            android:paddingTop="@dimen/dp_5"
-            android:visibility="visible"
-            android:weightSum="3">
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginTop="-10dp"
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/Calendertextview"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="@dimen/dp_5"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
+                android:padding="@dimen/dp_5"
                 android:text="Leave On:" />
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
             <TextView
-                android:id="@+id/txt_from_date"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/dp_5"
-                android:layout_weight="1"
+                android:id="@+id/txt_from_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/shape_filter_date_button"
                 android:drawableRight="@drawable/calender_icon"
-                android:gravity="center_vertical"
                 android:hint="From"
-                android:paddingBottom="@dimen/dp_5"
-                android:paddingLeft="@dimen/dp_5"
-                android:paddingRight="@dimen/dp_5"
-                android:paddingTop="@dimen/dp_5"
+                android:padding="@dimen/dp_5"
                 android:textColor="@color/calender_text"
                 android:textSize="15sp" />
 
             <TextView
+                android:padding="@dimen/dp_5"
                 android:id="@+id/txt_to_date"
-                android:layout_width="0dp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/dp_5"
-                android:layout_marginRight="@dimen/dp_5"
-                android:layout_weight="1"
                 android:background="@drawable/shape_filter_date_button"
                 android:drawableRight="@drawable/calender_icon"
-                android:gravity="center_vertical"
                 android:hint="To"
-                android:paddingBottom="@dimen/dp_5"
-                android:paddingLeft="@dimen/dp_5"
-                android:paddingRight="@dimen/dp_5"
-                android:paddingTop="@dimen/dp_5"
                 android:textColor="@color/calender_text"
                 android:textSize="15sp"
-                android:visibility="gone" />
+                android:visibility="visible" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--
+            <LinearLayout
+                android:id="@+id/ll_leave_duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_5"
+
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/dp_5"
+                android:paddingLeft="@dimen/dp_2"
+                android:paddingRight="@dimen/dp_2"
+                android:paddingTop="@dimen/dp_5"
+                android:visibility="visible"
+                android:weightSum="3">
+
+                <TextView
+                    android:id="@+id/Calendertextview"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/dp_5"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Leave On:" />
+
+                <TextView
+                    android:id="@+id/txt_from_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_filter_date_button"
+                    android:drawableRight="@drawable/calender_icon"
+                    android:gravity="center_vertical"
+                    android:hint="From"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:paddingLeft="@dimen/dp_5"
+                    android:paddingRight="@dimen/dp_5"
+                    android:paddingTop="@dimen/dp_5"
+                    android:textColor="@color/calender_text"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/txt_to_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:layout_marginRight="@dimen/dp_5"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_filter_date_button"
+                    android:drawableRight="@drawable/calender_icon"
+                    android:gravity="center_vertical"
+                    android:hint="To"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:paddingLeft="@dimen/dp_5"
+                    android:paddingRight="@dimen/dp_5"
+                    android:paddingTop="@dimen/dp_5"
+                    android:textColor="@color/calender_text"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
+            </LinearLayout>-->
+
+        <!--AS Per the Ganesh Sir ReQ-->
+        <!--<LinearLayout
+            android:id="@+id/ll_leave_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/dp_5"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/title_leave_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Leave Type:"
+                android:padding="@dimen/dp_5"
+                />
+            <EditText
+                android:id="@+id/et_leave_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_5"
+                android:textSize="15sp">
+            </EditText>
         </LinearLayout>-->
 
-    <!--AS Per the Ganesh Sir ReQ-->
-    <!--<LinearLayout
-        android:id="@+id/ll_leave_type"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="@dimen/dp_5"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/title_leave_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Leave Type:"
-            android:padding="@dimen/dp_5"
-            />
-        <EditText
-            android:id="@+id/et_leave_type"
+        <LinearLayout
+            android:id="@+id/ll_leave_days"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dp_5"
-            android:textSize="15sp">
-        </EditText>
-    </LinearLayout>-->
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginTop="-10dp"
+            android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/ll_leave_days"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_5"
-        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/title_leave_days"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_5"
+                android:text="Number of Days:" />
 
-        <TextView
-            android:id="@+id/title_leave_days"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/dp_5"
-            android:text="Number of Days:" />
+            <TextView
+                android:id="@+id/et_leave_days_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_5"
+                android:text="1"
+                android:textSize="15sp"/>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/et_leave_days_value"
+        <LinearLayout
+            android:id="@+id/ll_leave_remark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dp_5"
-            android:text="1"
-            android:textSize="15sp"></TextView>
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginTop="-10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title_leave_remark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_5"
+                android:text="Remark:" />
+
+            <EditText
+                android:layout_marginLeft="@dimen/dp_5"
+                android:id="@+id/et_leave_days_remark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/editbox_background"
+                android:gravity="start"
+                android:hint="Reason For Leave "
+                android:maxLength="250"
+                android:maxLines="5"
+                android:minLines="3"
+                android:padding="@dimen/dp_5"
+                android:textSize="15sp">
+
+            </EditText>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_leave_apply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/purple_btn_bg"
+            android:gravity="center"
+            android:minEms="8"
+            android:text="Submit"
+            android:textAlignment="center"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_leave_remark"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_5"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/title_leave_remark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:gravity="start"
-            android:padding="@dimen/dp_5"
-            android:text="Remark:" />
-
-        <EditText
-            android:id="@+id/et_leave_days_remark"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:background="@android:drawable/editbox_background"
-            android:gravity="start"
-            android:hint="Reason For Leave "
-            android:maxLength="250"
-            android:maxLines="5"
-            android:minLines="3"
-            android:padding="@dimen/dp_5"
-            android:textSize="15sp">
-
-        </EditText>
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_leave_apply"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/purple_btn_bg"
-        android:gravity="center"
-        android:minEms="8"
-        android:text="Submit"
-        android:textAlignment="center"
-        android:textColor="@android:color/white" />
-</LinearLayout>
+</ScrollView>

@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dhb.Manifest;
 import com.dhb.R;
@@ -238,6 +239,9 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
                 }catch (Exception e){
                     e.printStackTrace();
                 }
+            }
+            else{
+                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
             }
         }
 
