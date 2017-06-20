@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +57,7 @@ public class OrderServedFragment extends AbstractFragment {
     private ArrayList<BtechOrderModel> btechOrderModels = new ArrayList<>();
     OrderServedDisplayDetailsAdapter orderServedDisplayDetailsAdapter;
     private int mYear, mMonth, mDay;
-    private SearchView img_search;
+    private ImageView img_search;
     private String todate = "";
 
     public OrderServedFragment() {
@@ -105,7 +106,7 @@ public class OrderServedFragment extends AbstractFragment {
         recycler_view = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         tv_date = (TextView) rootView.findViewById(R.id.tv_date);
         tv_date.setText("" + todate);
-        img_search = (SearchView) rootView.findViewById(R.id.img_search);
+        img_search = (ImageView) rootView.findViewById(R.id.img_search);
         no_orders = (TextView) rootView.findViewById(R.id.no_orders);
     }
 
