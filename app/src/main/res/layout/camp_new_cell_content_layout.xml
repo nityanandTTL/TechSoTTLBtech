@@ -254,7 +254,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="70dp"
                         android:layout_marginTop="-20dp"
-                        android:background="@android:drawable/edit_text"
+                        android:background="@drawable/edittext_modified_states"
                         android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz " />
                 </LinearLayout>
 
@@ -283,7 +283,7 @@
                             android:id="@+id/edt_age"
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"
-                            android:background="@android:drawable/edit_text"
+                            android:background="@drawable/edittext_modified_states"
                             android:drawableRight="@drawable/vseparator_age"
                             android:inputType="number"
                             android:maxLength="3" />
@@ -377,7 +377,7 @@
                         android:id="@+id/edt_mobile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@android:drawable/edit_text"
+                        android:background="@drawable/edittext_modified_states"
                         android:inputType="number"
                         android:maxLength="10"
                         android:layout_marginLeft="70dp"
@@ -406,7 +406,7 @@
                         android:id="@+id/edt_test_alerts"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@android:drawable/edit_text"
+                        android:background="@drawable/edittext_modified_states"
                         android:drawableEnd="@android:drawable/arrow_down_float"
                         android:textSize="12sp" />
 

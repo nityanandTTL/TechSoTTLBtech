@@ -331,7 +331,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
         if (leaveNatureMasterModels != null && leaveNatureMasterModels.size() > 0) {
             for (LeaveNatureMasterModel leaveNatureMasterModel :
                     leaveNatureMasterModels) {
-                Nature.add(leaveNatureMasterModel.getNature());
+                Nature.add(leaveNatureMasterModel.getNature().toUpperCase());
             }
         }
 

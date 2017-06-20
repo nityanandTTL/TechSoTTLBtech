@@ -16,10 +16,10 @@
             android:title="Change Password" />
 
 
-        <item
+     <!--   <item
             android:id="@+id/nav_orderserved"
             android:icon="@drawable/communication"
-            android:title="Order Served" />
+            android:title="Order Served" />-->
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/logout"

@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,7 @@ public class OrderServedFragment extends AbstractFragment {
     private ArrayList<BtechOrderModel> btechOrderModels=new ArrayList<>();
     OrderServedDisplayDetailsAdapter orderServedDisplayDetailsAdapter;
     private int mYear, mMonth, mDay;
-    private ImageView img_search;
+    private SearchView img_search;
     private String fromdate = "", todate = "";
     public OrderServedFragment() {
         // Required empty public constructor
@@ -114,7 +115,7 @@ public class OrderServedFragment extends AbstractFragment {
         recycler_view = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         tv_date=(TextView)rootView.findViewById(R.id.tv_date);
         tv_date.setText(""+todate);
-        img_search=(ImageView)rootView.findViewById(R.id.img_search);
+        img_search=(SearchView)rootView.findViewById(R.id.img_search);
         no_orders=(TextView)rootView.findViewById(R.id.no_orders);
     }
 
@@ -146,6 +147,10 @@ public class OrderServedFragment extends AbstractFragment {
 
                                 tv_date.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" +year );
                                 todaysDate = year + "-" + (monthOfYear + 1) + "-" +dayOfMonth;
+
+                                //changes_20june2017
+                                initData(todaysDate);
+                                //changes_20june2017
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
@@ -156,7 +161,9 @@ public class OrderServedFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
 
-                initData(todaysDate);
+                //changes_20june2017
+                //initData(todaysDate);
+                //changes_20june2017
             }
         });
     }
