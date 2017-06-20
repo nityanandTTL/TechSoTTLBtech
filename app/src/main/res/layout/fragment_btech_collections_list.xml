@@ -61,7 +61,7 @@
                 <ImageView
                     android:layout_height="@dimen/dp_20"
                     android:layout_width="0dp"
-                    android:src="@drawable/centrifuge_icon"
+                    android:src="@drawable/scan_vial_barcode"
                     android:layout_weight="0.5"
                     android:layout_gravity="center_vertical"/>
 

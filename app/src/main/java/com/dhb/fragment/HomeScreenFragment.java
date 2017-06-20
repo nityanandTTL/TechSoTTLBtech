@@ -35,7 +35,7 @@ public class HomeScreenFragment extends AbstractFragment {
     private View rootView;
     private TextView txtUserName, txt_no_of_camps;
     private CircularImageView rvSelfie;
-    private ImageView imgPayment, imgOrders, imgSchedule, imgMaterials, imgOLCPickup, imgHub, imgCamp, imgCommunication, imgLedger;
+    private ImageView imgPayment, imgOrders, imgSchedule, imgMaterials, imgOLCPickup, imgHub, imgCamp, ordersserved, imgLedger;
 
     //bell_icon
     private ImageView bellicon;
@@ -161,10 +161,11 @@ public class HomeScreenFragment extends AbstractFragment {
                 pushFragments(CampListDisplayFragment.newInstance(), false, false, CampListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
-        imgCommunication.setOnClickListener(new View.OnClickListener() {
+        ordersserved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity, "Feature coming soon.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(activity, "Feature coming soon.", Toast.LENGTH_SHORT).show();
+                pushFragments(OrderServedFragment.newInstance(), false, false, OrderServedFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         imgLedger.setOnClickListener(new View.OnClickListener() {
@@ -185,7 +186,7 @@ public class HomeScreenFragment extends AbstractFragment {
         imgSchedule = (ImageView) rootView.findViewById(R.id.schedule_icon);
         imgHub = (ImageView) rootView.findViewById(R.id.hub_icon);
         imgOLCPickup = (ImageView) rootView.findViewById(R.id.olc_pickup_icon);
-        imgCommunication = (ImageView) rootView.findViewById(R.id.communication_icon);
+        ordersserved = (ImageView) rootView.findViewById(R.id.ordersserved);
         imgLedger = (ImageView) rootView.findViewById(R.id.Ledger_icon);
         imgCamp = (ImageView) rootView.findViewById(R.id.camp_icon);
         imgMaterials = (ImageView) rootView.findViewById(R.id.materials_icon);

@@ -396,7 +396,7 @@
                     android:background="@color/separator"></View>
 
                 <LinearLayout
-                    android:id="@+id/ll_communication_icon"
+                    android:id="@+id/ll_ordersserved_icon"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -405,17 +405,17 @@
                     android:padding="@dimen/dp_1">
 
                     <ImageView
-                        android:id="@+id/communication_icon"
+                        android:id="@+id/ordersserved"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/communication_icon" />
+                        android:src="@drawable/order_served" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Communication"
+                        android:text="Orders Served"
                         android:textAlignment="center"
                         android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>
