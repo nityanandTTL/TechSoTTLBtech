@@ -12,26 +12,40 @@
         android:layout_weight="0.2"
         android:orientation="horizontal">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        >
+
         <TextView
-            android:padding="@dimen/dp_10"
+
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:drawableRight="@drawable/calendar_served_orders"
+
+            android:drawablePadding="@dimen/dp_5"
             android:gravity="center"
+
             android:text="11-09-1111"
             android:textColor="@color/colorPrimary"
             android:textSize="14sp"
+            android:drawableLeft="@drawable/calendar_served_orders"
+            android:paddingLeft="@dimen/dp_5"
             android:textStyle="bold" />
 
+
         <ImageView
+
             android:id="@+id/img_search"
             android:layout_width="wrap_content"
+     android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_search_black_36dp" />
+
+
+            android:src="@drawable/orderserved_search" />
+    </LinearLayout>
     </LinearLayout>
 
     <TextView
