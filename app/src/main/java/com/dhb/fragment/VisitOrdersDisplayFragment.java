@@ -158,6 +158,13 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         super.onResume();
     }
 
+    @Override
+    public void onPause() {
+
+        fetchData();
+        super.onPause();
+    }
+
     private void fetchData() {
         beneficiaryDetailsDao.deleteAll();
         orderDetailsDao.deleteAll();
@@ -225,6 +232,10 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             txtNoRecord.setVisibility(View.VISIBLE);
         }
     }
+
+
+
+
 
     private class FetchOrderDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
 
