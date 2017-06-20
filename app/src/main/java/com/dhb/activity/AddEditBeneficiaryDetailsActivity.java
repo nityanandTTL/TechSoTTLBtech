@@ -249,90 +249,99 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if(statusCode==200) {
                 orderBookingResponseVisitModel = new ResponseParser(activity).getOrderBookingAPIResponse(json, statusCode);
-                for (OrderBookingResponseOrderModel obrom :
-                        orderBookingResponseVisitModel.getOrderids()) {
-                    orderBookingResponseBeneficiaryModelArr.addAll(obrom.getBenfids());
-                }
+               if(orderBookingResponseVisitModel.getOrderids()!=null && orderBookingResponseVisitModel.getOrderids().size()>0) {
+                   for (OrderBookingResponseOrderModel obrom :
+                           orderBookingResponseVisitModel.getOrderids()) {
+                       if(obrom.getBenfids()!=null) {
+                           orderBookingResponseBeneficiaryModelArr.addAll(obrom.getBenfids());
+                       }
+                       else{
+                           Toast.makeText(getApplicationContext(),"Invalid Order id ",Toast.LENGTH_SHORT);
+                       }
+                   }
 
-                OrderVisitDetailsModel orderVisitDetails = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
+                   OrderVisitDetailsModel orderVisitDetails = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
 
-                //UPDATE old Order No and Benficiary Id with New Order No and Beneficiary Id
-                for (OrderDetailsModel odm :
-                        orderVisitDetails.getAllOrderdetails()) {
-                    for (OrderBookingResponseOrderModel obrom:
-                            orderBookingResponseVisitModel.getOrderids()) {
-                        //CHECK if old ORDER NO from API response equals order no of local Order Detail Model
-                        // AND API response old order Id not equals new order Id
-                        if(odm.getOrderNo().equals(obrom.getOldOrderId()) && !obrom.getOldOrderId().equals(obrom.getNewOrderId())){
-                            odm.setOrderNo(obrom.getNewOrderId());
-                            //UPDATE old order no with new order no
-                            orderDetailsDao.updateOrderNo(obrom.getOldOrderId(),odm);
-                            for (BeneficiaryDetailsModel bdm:
-                                    odm.getBenMaster()) {
-                                for (OrderBookingResponseBeneficiaryModel obrbm:
-                                        orderBookingResponseBeneficiaryModelArr) {
-                                    //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
-                                    // AND API response old beneficiary Id not equals new beneficiary Id
-                                    if((bdm.getBenId()+"").equals(obrbm.getOldBenIds())){
-                                        bdm.setOrderNo(obrom.getNewOrderId());
-                                        bdm.setBenId(Integer.parseInt(obrbm.getNewBenIds()));
-                                        //UPDATE old beneficiary Id with new Beneficiary Id in Barcode Details
-                                        for (int i =0;bdm.getBarcodedtl()!=null && i<bdm.getBarcodedtl().size();i++) {
-                                            //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
-                                            // AND API response old beneficiary Id not equals new beneficiary Id
-                                            if(bdm.getBarcodedtl().get(i).getBenId()==Integer.parseInt(obrbm.getOldBenIds())){
-                                                bdm.getBarcodedtl().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
-                                                bdm.getBarcodedtl().get(i).setOrderNo(obrom.getNewOrderId());
-                                            }
-                                        }
+                   //UPDATE old Order No and Benficiary Id with New Order No and Beneficiary Id
+                   for (OrderDetailsModel odm :
+                           orderVisitDetails.getAllOrderdetails()) {
+                       for (OrderBookingResponseOrderModel obrom :
+                               orderBookingResponseVisitModel.getOrderids()) {
+                           //CHECK if old ORDER NO from API response equals order no of local Order Detail Model
+                           // AND API response old order Id not equals new order Id
+                           if (odm.getOrderNo().equals(obrom.getOldOrderId()) && !obrom.getOldOrderId().equals(obrom.getNewOrderId())) {
+                               odm.setOrderNo(obrom.getNewOrderId());
+                               //UPDATE old order no with new order no
+                               orderDetailsDao.updateOrderNo(obrom.getOldOrderId(), odm);
+                               for (BeneficiaryDetailsModel bdm :
+                                       odm.getBenMaster()) {
+                                   for (OrderBookingResponseBeneficiaryModel obrbm :
+                                           orderBookingResponseBeneficiaryModelArr) {
+                                       //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                       // AND API response old beneficiary Id not equals new beneficiary Id
+                                       if ((bdm.getBenId() + "").equals(obrbm.getOldBenIds())) {
+                                           bdm.setOrderNo(obrom.getNewOrderId());
+                                           bdm.setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                           //UPDATE old beneficiary Id with new Beneficiary Id in Barcode Details
+                                           for (int i = 0; bdm.getBarcodedtl() != null && i < bdm.getBarcodedtl().size(); i++) {
+                                               //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                               // AND API response old beneficiary Id not equals new beneficiary Id
+                                               if (bdm.getBarcodedtl().get(i).getBenId() == Integer.parseInt(obrbm.getOldBenIds())) {
+                                                   bdm.getBarcodedtl().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                                   bdm.getBarcodedtl().get(i).setOrderNo(obrom.getNewOrderId());
+                                               }
+                                           }
 
-                                        //UPDATE old beneficiary Id with new Beneficiary Id in Sample Type Details
-                                        for (int i =0;bdm.getSampleType()!=null && i<bdm.getSampleType().size();i++) {
-                                            //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
-                                            // AND API response old beneficiary Id not equals new beneficiary Id
-                                            if(bdm.getSampleType().get(i).getBenId()==Integer.parseInt(obrbm.getOldBenIds())){
-                                                bdm.getSampleType().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
-                                            }
-                                        }
+                                           //UPDATE old beneficiary Id with new Beneficiary Id in Sample Type Details
+                                           for (int i = 0; bdm.getSampleType() != null && i < bdm.getSampleType().size(); i++) {
+                                               //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                               // AND API response old beneficiary Id not equals new beneficiary Id
+                                               if (bdm.getSampleType().get(i).getBenId() == Integer.parseInt(obrbm.getOldBenIds())) {
+                                                   bdm.getSampleType().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                               }
+                                           }
 
 
-                                        //UPDATE old beneficiary Id with new Beneficiary Id in Clinical History
-                                        for (int i =0;bdm.getClHistory()!=null && i<bdm.getClHistory().size();i++) {
-                                            //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
-                                            // AND API response old beneficiary Id not equals new beneficiary Id
-                                            if(bdm.getClHistory().get(i).getBenId()==Integer.parseInt(obrbm.getOldBenIds())){
-                                                bdm.getClHistory().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
-                                            }
-                                        }
+                                           //UPDATE old beneficiary Id with new Beneficiary Id in Clinical History
+                                           for (int i = 0; bdm.getClHistory() != null && i < bdm.getClHistory().size(); i++) {
+                                               //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                               // AND API response old beneficiary Id not equals new beneficiary Id
+                                               if (bdm.getClHistory().get(i).getBenId() == Integer.parseInt(obrbm.getOldBenIds())) {
+                                                   bdm.getClHistory().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                               }
+                                           }
 
-                                        //UPDATE old beneficiary Id with new Beneficiary Id in Lab Alerts
-                                        for (int i =0;bdm.getLabAlert()!=null && i<bdm.getLabAlert().size();i++) {
-                                            //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
-                                            // AND API response old beneficiary Id not equals new beneficiary Id
-                                            if(bdm.getLabAlert().get(i).getBenId()==Integer.parseInt(obrbm.getOldBenIds())){
-                                                bdm.getLabAlert().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
-                                            }
-                                        }
+                                           //UPDATE old beneficiary Id with new Beneficiary Id in Lab Alerts
+                                           for (int i = 0; bdm.getLabAlert() != null && i < bdm.getLabAlert().size(); i++) {
+                                               //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                               // AND API response old beneficiary Id not equals new beneficiary Id
+                                               if (bdm.getLabAlert().get(i).getBenId() == Integer.parseInt(obrbm.getOldBenIds())) {
+                                                   bdm.getLabAlert().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                               }
+                                           }
 
-                                        beneficiaryDetailsDao.updateBeneficiaryId(Integer.parseInt(obrbm.getOldBenIds()),bdm);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                //END of UPDATE old Order No and Benficiary Id with New Order No and Beneficiary Id
+                                           beneficiaryDetailsDao.updateBeneficiaryId(Integer.parseInt(obrbm.getOldBenIds()), bdm);
+                                       }
+                                   }
+                               }
+                           }
+                       }
+                   }
+                   //END of UPDATE old Order No and Benficiary Id with New Order No and Beneficiary Id
 
-                Intent intentFinish = new Intent();
-                intentFinish.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL,beneficiaryDetailsModel);
-                intentFinish.putExtra(BundleConstants.ORDER_DETAILS_MODEL,orderDetailsModel);
-                if(isEdit) {
-                    setResult(BundleConstants.EDIT_FINISH, intentFinish);
-                }
-                else if(isAdd){
-                    setResult(BundleConstants.ADD_FINISH, intentFinish);
-                }
-                finish();
+                   Intent intentFinish = new Intent();
+                   intentFinish.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
+                   intentFinish.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                   if (isEdit) {
+                       setResult(BundleConstants.EDIT_FINISH, intentFinish);
+                   } else if (isAdd) {
+                       setResult(BundleConstants.ADD_FINISH, intentFinish);
+                   }
+                   finish();
+               }
+               else{
+                   Toast.makeText(getApplicationContext(),"Invalid Order id ",Toast.LENGTH_SHORT);
+               }
             }
             else{
                 Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();

@@ -124,7 +124,6 @@ public class AppPreferenceManager {
 	public void setSelectedSlotsArr(ArrayList<SlotModel> slotsArr) {
 		appPreference.putString(this.selectedSlotsArr, new Gson().toJson(slotsArr));
 	}
-
 	public AppPreference getAppPreference() {
 		return appPreference;
 	}
