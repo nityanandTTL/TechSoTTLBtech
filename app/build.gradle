@@ -1,4 +1,4 @@
- buildscript {
+buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
     }
@@ -84,6 +84,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
     compile 'com.mikhaellopez:circularimageview:3.0.2'
     compile 'com.ramotion.foldingcell:folding-cell:1.1.0'
     compile 'com.android.support:recyclerview-v7:25.3.1'
@@ -101,7 +104,4 @@ dependencies {
     compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
 }

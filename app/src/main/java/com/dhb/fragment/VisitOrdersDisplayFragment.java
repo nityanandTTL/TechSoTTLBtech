@@ -9,10 +9,13 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +35,8 @@ import com.dhb.delegate.VisitOrderDisplayRecyclerViewAdapterDelegate;
 import com.dhb.dialog.ConfirmOrderReleaseDialog;
 import com.dhb.models.api.request.CallPatchRequestModel;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
+import com.dhb.models.api.response.BtechEstEarningsResponseModel;
+import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.api.response.FetchOrderDetailsResponseModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.KitsCountModel;
@@ -42,6 +47,7 @@ import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
+import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
@@ -72,8 +78,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConfirmOrderReleaseDialog cdd;
     private boolean isToFromMap = false;
-
-
+    private String kits;
+    private String[] kits_arr;
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
     }
@@ -100,6 +106,20 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         if (getArguments() != null) {
 
         }
+        getBtechEstEarnings();
+    }
+
+    private void getBtechEstEarnings() {
+        Logger.error(TAG_FRAGMENT + "--fetchData: ");
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchBtechEstEarningsApiAsyncTask = asyncTaskForRequest.getBtechEstEarningsRequestAsyncTask();
+        fetchBtechEstEarningsApiAsyncTask.setApiCallAsyncTaskDelegate(new BtechEarningsApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            fetchBtechEstEarningsApiAsyncTask.execute(fetchBtechEstEarningsApiAsyncTask);
+        } else {
+            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            //  initData();
+        }
     }
 
     @Override
@@ -121,7 +141,23 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             }
         });
 
+txtTotalKitsRequired.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
+        builder.setView(dialogView);
+        ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
+        Button btn_edit = (Button) dialogView.findViewById(R.id.btn_edit);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, kits_arr);
+        lv_test_codes.setAdapter(adapter);
+        btn_edit.setVisibility(View.GONE);
+        builder.show();
+    }
+});
     }
 
 
@@ -203,9 +239,9 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 }
             }
         }
-        txtTotalDistance.setText(totalDistance + "");
+       // txtTotalDistance.setText(totalDistance + "");
         int amount_estIncome = Math.round(estIncome);
-        txtTotalEarnings.setText(amount_estIncome + "");
+        //txtTotalEarnings.setText(amount_estIncome + "");
         Iterator it = kitsCount.entrySet().iterator();
         while (it.hasNext()) {
             HashMap.Entry pair = (HashMap.Entry) it.next();
@@ -216,7 +252,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             }
             it.remove(); // avoids a ConcurrentModificationException
         }
-        txtTotalKitsRequired.setText(kitsReq);
+      //  txtTotalKitsRequired.setText(kitsReq);
         prepareRecyclerView();
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -286,6 +322,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
     @Override
     public void initUI() {
+
+
         recyclerView = (ListView) rootView.findViewById(R.id.rv_visit_orders_display);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.srl_visit_orders_display);
         txtTotalDistance = (TextView) rootView.findViewById(R.id.title_est_distance);
@@ -293,6 +331,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         txtTotalKitsRequired = (TextView) rootView.findViewById(R.id.title_est_kits);
         txtTotalKitsRequired.setSelected(true);
         txtNoRecord = (TextView) rootView.findViewById(R.id.txt_no_orders);
+
+
 
     }
 
@@ -416,4 +456,65 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         }
     }
 
+    private class BtechEarningsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            int totalEarning=0;
+            HashMap<String, Integer> kitsCount = new HashMap<>();
+            String kitsReq = "";
+            String kitsReq1 = "";
+
+            if(statusCode==200){
+                ResponseParser responseParser = new ResponseParser(activity);
+                BtechEstEarningsResponseModel btechEstEarningsResponseModel = new BtechEstEarningsResponseModel();
+                btechEstEarningsResponseModel = responseParser.getBtecheSTEarningResponseModel(json, statusCode);
+                if (btechEstEarningsResponseModel != null && btechEstEarningsResponseModel.getBtechEarnings().size() > 0) {
+                    txtTotalDistance.setText(""+btechEstEarningsResponseModel.getDistance());
+                    for (int i = 0; i < btechEstEarningsResponseModel.getBtechEarnings().size(); i++) {
+                        for (int j = 0; j < btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().size() ; j++) {
+                            totalEarning=totalEarning+btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getEstIncome();
+                            Logger.error("totaldistance: "+totalEarning);
+                            txtTotalEarnings.setText(""+totalEarning);
+
+                            for (KitsCountModel kt :
+                                    btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getKits()) {
+                                if (kitsCount.containsKey(kt.getKit())) {
+                                    kitsCount.put(kt.getKit(), kitsCount.get(kt.getKit()) + kt.getValue());
+                                } else {
+                                    kitsCount.put(kt.getKit(), kt.getValue());
+                                }
+                            }
+
+
+                            //=====
+                        }
+                    }
+                    Iterator it = kitsCount.entrySet().iterator();
+                    while (it.hasNext()) {
+                        HashMap.Entry pair = (HashMap.Entry) it.next();
+                        if (InputUtils.isNull(kitsReq)) {
+                            kitsReq = pair.getValue() + " " + pair.getKey();
+                            kitsReq1= pair.getValue() + " " + pair.getKey();
+                        } else {
+                            kitsReq = kitsReq + " | " + pair.getValue() + " " + pair.getKey();
+                            kitsReq1 = kitsReq1 + "," + pair.getValue() + " " + pair.getKey();
+                        }
+                        it.remove(); // avoids a ConcurrentModificationException
+                    }
+                    kits = kitsReq1;
+                    kits_arr = kits.split(",");
+                    Logger.error("arr: " + kits_arr.toString());
+                    Logger.error("test code string: " + kits);
+                  //  txtTotalKitsRequired.setText(kits_arr[0]);
+                    txtTotalKitsRequired.setText(kitsReq);
+                }
+
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
 }

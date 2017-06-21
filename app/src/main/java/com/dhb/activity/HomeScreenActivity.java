@@ -30,6 +30,7 @@ import com.crashlytics.android.Crashlytics;
 import com.dhb.R;
 import com.dhb.customview.RoundedImageView;
 import com.dhb.dao.DhbDao;
+import com.dhb.fragment.CreditFragment;
 import com.dhb.fragment.HomeScreenFragment;
 import com.dhb.fragment.LeaveIntimationFragment;
 import com.dhb.fragment.OrderServedFragment;
@@ -217,11 +218,11 @@ public class HomeScreenActivity extends AbstractActivity
         } else if (id == R.id.nav_change_password) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(ResetPasswordFragment.newInstance(), false, false, ResetPasswordFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-        } /*else if (id == R.id.nav_orderserved) {
+        } else if (id == R.id.nav_credit) {
             toolbarHome.setVisibility(View.VISIBLE);
-            pushFragments(OrderServedFragment.newInstance(), false, false, OrderServedFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            pushFragments(CreditFragment.newInstance(), false, false, CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             //  Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
-        }*/ else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_logout) {
             toolbarHome.setVisibility(View.VISIBLE);
 
 
