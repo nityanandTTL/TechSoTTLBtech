@@ -56,8 +56,4 @@
         android:textSize="22sp"
         android:textStyle="bold" />
 
-
-
-
-
 </RelativeLayout>

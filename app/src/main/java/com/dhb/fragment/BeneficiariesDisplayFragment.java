@@ -320,7 +320,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         vpBeneficiaries.removeAllViews();
         vpBeneficiaries.clearOnPageChangeListeners();
         totalAmountPayable = 0;
-
+        Logger.debug(orderVisitDetailsModel.getVisitId());
         orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
         for (OrderDetailsModel orderDetailsModel :
                 orderVisitDetailsModel.getAllOrderdetails()) {

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class DisplaySelectedTestsListForCancellationDialog extends Dialog {
     private Activity activity;
-    private Button btn_addtest, btn_cancel;
+    private Button btn_addtest, btn_close;
     private ArrayList<BeneficiaryTestDetailsModel> selectedTestsListArr;
     private ListView lvTestsDisplay;
     private CloseTestsDisplayDialogButtonDialogDelegate closeTestsDisplayDialogButtonDialogDelegate;
@@ -52,6 +52,12 @@ public class DisplaySelectedTestsListForCancellationDialog extends Dialog {
         setListners();
     }
 
+    @Override
+    public void onBackPressed() {
+        btn_close.performClick();
+        super.onBackPressed();
+    }
+
     private void setListners() {
         btn_addtest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +66,7 @@ public class DisplaySelectedTestsListForCancellationDialog extends Dialog {
                 addTestListDialogDelegate.onItemClick(selectedTestsListArr);
             }
         });
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
+        btn_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ArrayList<TestRateMasterModel> trmmArr =new ArrayList<TestRateMasterModel>();
@@ -87,7 +93,7 @@ public class DisplaySelectedTestsListForCancellationDialog extends Dialog {
 
     private void initUI() {
         btn_addtest = (Button) findViewById(R.id.btn_addtest);
-        btn_cancel = (Button) findViewById(R.id.btn_cancel);
+        btn_close = (Button) findViewById(R.id.btn_cancel);
         lvTestsDisplay = (ListView) findViewById(R.id.test_names);
         displayAdapter = new DisplaySelectedTestsListForCancellationAdapter(activity, selectedTestsListArr, new RemoveSelectedTestFromListDelegate() {
             @Override
