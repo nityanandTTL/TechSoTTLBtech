@@ -596,9 +596,9 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
                 Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show();
             /*    Bundle bundle = new Bundle();
                 bundle.putParcelable(BundleConstants.BTECH_CLIENTS_MODEL, btechClientsModel);
-                OlcMasterBarcodeScanFragment olcMasterBarcodeFragment = new OlcMasterBarcodeScanFragment();
+                OLCMasterBarcodeScanFragment olcMasterBarcodeFragment = new OLCMasterBarcodeScanFragment();
                 olcMasterBarcodeFragment.setArguments(bundle);
-                pushFragments(OlcMasterBarcodeScanFragment.newInstance(),false,false,OlcMasterBarcodeScanFragment.TAG_FRAGMENT,R.id.content_home_screen,TAG_FRAGMENT);*/
+                pushFragments(OLCMasterBarcodeScanFragment.newInstance(),false,false,OLCMasterBarcodeScanFragment.TAG_FRAGMENT,R.id.content_home_screen,TAG_FRAGMENT);*/
                 Intent intentResult = new Intent();
                 intentResult.putExtra(BundleConstants.BTECH_CLIENTS_MODEL, btechClientsModel);
                 setResult(BundleConstants.BCMD_ARRIVED, intentResult);

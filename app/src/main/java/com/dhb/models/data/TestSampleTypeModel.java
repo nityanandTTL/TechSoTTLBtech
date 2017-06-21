@@ -7,23 +7,21 @@ import android.os.Parcelable;
  * Created by Pratik Ambhore on 4/19/2017.
  */
 
-public class TestSampleTypeModel extends BaseModel implements Parcelable {
+public class TestSampleTypeModel implements Parcelable {
     private String id;
     private String sampleType;
 
     public TestSampleTypeModel() {
-        super();
+
     }
 
     protected TestSampleTypeModel(Parcel in) {
-        super(in);
         id = in.readString();
         sampleType = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
         dest.writeString(id);
         dest.writeString(sampleType);
     }

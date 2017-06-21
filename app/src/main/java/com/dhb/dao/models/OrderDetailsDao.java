@@ -163,8 +163,8 @@ public class OrderDetailsDao {
 	public ArrayList<OrderDetailsModel> getModelsFromOrderNo(String orderNo) {
 
 		ArrayList<OrderDetailsModel> orderDetailsModelArr = new ArrayList<>();
-		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ORDER_NO + "=? AND " + RECORD_STATUS + "=?";
-		String[] whereParams = new String[] {orderNo,"A"};
+		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + ORDER_NO + "=? ";
+		String[] whereParams = new String[] {orderNo};
 		Cursor cursor = this.db.rawQuery(query, whereParams);
 		if (cursor != null && (cursor.moveToFirst())){
 			do {
@@ -183,8 +183,8 @@ public class OrderDetailsDao {
 	public ArrayList<OrderDetailsModel> getModelsFromVisitId(String visitId) {
 
 		ArrayList<OrderDetailsModel> orderDetailsModelsArr = new ArrayList<>();
-		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + VISIT_ID + "=? AND " + RECORD_STATUS + "=?";
-		String[] whereParams = new String[] {visitId,"A"};
+		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + VISIT_ID + "=?";
+		String[] whereParams = new String[] {visitId};
 		Cursor cursor = this.db.rawQuery(query, whereParams);
 		if (cursor != null && (cursor.moveToFirst())){
 			do {
@@ -298,13 +298,11 @@ public class OrderDetailsDao {
 		if(cursorS!=null && !cursorS.isClosed()){
 			cursorS.close();
 		}
-		String query = "DELETE FROM " + TABLE_NAME + " WHERE " + VISIT_ID + " = ?";
-		Logger.debug("Query - " + query);
+		String query = "" + VISIT_ID + " = ?";
+		Logger.debug("Query - DELETE FROM " + TABLE_NAME + " WHERE " + query);
 		String[] whereParams = new String[]{visitId};
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && !cursor.isClosed()){
-			cursor.close();
-		}
+		int deleteValue = db.delete(TABLE_NAME,query, whereParams);
+		Logger.debug("DeleteOrderDetailsByVisitId: "+deleteValue);
 	}
 
 	public void deleteByOrderNo(String orderNo){
@@ -364,8 +362,7 @@ public class OrderDetailsDao {
             ArrayList<OrderDetailsModel> orderDetailsModels = orderDetailsModelsArr;
             for (OrderDetailsModel orderDetailsModel :
                     orderDetailsModels) {
-                if (orderDetailsModel.getStatus().equalsIgnoreCase("RESCHEDULED")
-                        ||orderDetailsModel.getStatus().equalsIgnoreCase("RELEASED")
+                if (orderDetailsModel.getStatus().equalsIgnoreCase("RELEASED")
                         || orderDetailsModel.getStatus().equalsIgnoreCase("CANCELLED")) {
                     orderDetailsModelsArr.remove(orderDetailsModel);
                     deleteByOrderNo(orderDetailsModel.getOrderNo());

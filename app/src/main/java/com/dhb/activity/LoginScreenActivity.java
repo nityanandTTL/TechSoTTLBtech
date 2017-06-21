@@ -104,18 +104,20 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
             if(statusCode==200){
                 ResponseParser responseParser=new ResponseParser(activity);
                 LoginResponseModel loginResponseModel=new LoginResponseModel();
-
                 loginResponseModel=responseParser.getLoginResponseModel(json,statusCode);
                 if(loginResponseModel!=null){
 
-                    appPreferenceManager.setLoginResponseModel(loginResponseModel);
-                    appPreferenceManager.setAPISessionKey(loginResponseModel.getAccess_token());
                    // switchToActivity(activity,SelfieUploadActivity.class,new Bundle());
 
-                    if (loginResponseModel.getRole().equals("4"))
+                    //change_7june2017...
+                    if (loginResponseModel.getRole().equals("4")) {
+                        appPreferenceManager.setLoginResponseModel(loginResponseModel);
+                        appPreferenceManager.setAPISessionKey(loginResponseModel.getAccess_token());
                         switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
+                    }
                     else
-                        Toast.makeText(activity, "You are not authorized to log in...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "Please use valid BTECH credentials to log in", Toast.LENGTH_SHORT).show();
+                    //change_7june2017...
                 }
             }
             else{

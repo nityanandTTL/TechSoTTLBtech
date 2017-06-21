@@ -1,6 +1,6 @@
 package com.dhb.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.delegate.EditTestExpandListAdapterCheckboxDelegate;
+import com.dhb.models.data.ChildTestsModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestTypeWiseTestRateMasterModelsList;
 import com.dhb.utils.app.InputUtils;
@@ -22,14 +24,14 @@ import java.util.ArrayList;
  * Created by vendor1 on 5/4/2017.
  */
 
-public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
-    private Context context;
+public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAdapter {
+    private Activity activity;
     private ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels;
     private ArrayList<TestRateMasterModel> selectedTests = new ArrayList<>();
     private EditTestExpandListAdapterCheckboxDelegate mcallback;
 
-    public EditTestExpandListAdapter(Context context, ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels1,ArrayList<TestRateMasterModel> selectedTests,EditTestExpandListAdapterCheckboxDelegate mcallback) {
-        this.context = context;
+    public ExpandableTestMasterListDisplayAdapter(Activity activity, ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels1, ArrayList<TestRateMasterModel> selectedTests, EditTestExpandListAdapterCheckboxDelegate mcallback) {
+        this.activity = activity;
         this.testRateMasterModels = testRateMasterModels1;
         this.mcallback=mcallback;
         this.selectedTests = selectedTests;
@@ -77,9 +79,8 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         ViewParentHolder holder = null;
         if (convertView == null) {
-            LayoutInflater inf = (LayoutInflater) context
-                    .getSystemService(context.LAYOUT_INFLATER_SERVICE);
-            convertView = inf.inflate(R.layout.item_select_test_header, null);
+            LayoutInflater inf = activity.getLayoutInflater();
+            convertView = inf.inflate(R.layout.item_select_test_header, parent,false);
             holder = new ViewParentHolder();
             holder.txtHeader = (TextView) convertView.findViewById(R.id.txt_header);
             convertView.setTag(holder);
@@ -94,26 +95,83 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         ViewChildHolder holder = null;
         if (convertView == null) {
-            LayoutInflater infalInflater = (LayoutInflater) context
-                    .getSystemService(context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.item_select_test_list_view, null);
+            LayoutInflater infalInflater = activity.getLayoutInflater();
+            convertView = infalInflater.inflate(R.layout.item_select_test_list_view, parent,false);
             holder = new ViewChildHolder();
             holder.txt_test = (TextView) convertView.findViewById(R.id.txt_test);
             holder.txt_dis_amt = (TextView) convertView.findViewById(R.id.txt_dis_amt);
             holder.img_test_type = (ImageView) convertView.findViewById(R.id.img_test_type);
             holder.imgCheck = (ImageView) convertView.findViewById(R.id.img_check);
             holder.imgChecked = (ImageView) convertView.findViewById(R.id.img_checked);
+            holder.isSelectedDueToParent = false;
+            holder.parentTestCode = "";
             convertView.setTag(holder);
         } else {
             holder = (ViewChildHolder) convertView.getTag();
         }
+        final boolean isSelectedDueToParent = holder.isSelectedDueToParent;
+        final String parentTestCode = holder.parentTestCode;
         final TestRateMasterModel testRateMasterModel = testRateMasterModels.get(groupPosition).getTestRateMasterModels().get(childPosition);
         holder.txt_dis_amt.setText("₹ " + testRateMasterModel.getRate()+"/-");
+
+        if(!InputUtils.isNull(testRateMasterModel.getTestType())&&(testRateMasterModel.getTestType().equals("TEST")||testRateMasterModel.getTestType().equals("OFFER"))
+                && !InputUtils.isNull(testRateMasterModel.getDescription())){
+            holder.txt_test.setText(testRateMasterModel.getDescription()+"("+testRateMasterModel.getTestCode()+")");
+        }
+        else{
+            holder.txt_test.setText(testRateMasterModel.getTestCode());
+        }
+
+        if (!InputUtils.isNull(testRateMasterModel.getTestType())&&testRateMasterModel.getTestType().equalsIgnoreCase("profile")) {
+            holder.img_test_type.setImageDrawable(activity.getResources().getDrawable(R.drawable.p));
+        }else if (!InputUtils.isNull(testRateMasterModel.getTestType())&&testRateMasterModel.getTestType().equalsIgnoreCase("test")) {
+            holder.img_test_type.setImageDrawable(activity.getResources().getDrawable(R.drawable.t));
+        } else {
+            holder.img_test_type.setImageDrawable(activity.getResources().getDrawable(R.drawable.o));
+        }
+        boolean isChecked = false;
+        holder.isSelectedDueToParent = false;
+        holder.parentTestCode = "";
+        if(selectedTests!=null && selectedTests.size()>0) {
+            for (int i = 0; !isChecked && i < selectedTests.size(); i++) {
+                TestRateMasterModel testRateMasterModel1 = selectedTests.get(i);
+                if (testRateMasterModel1.getTestCode().equals(testRateMasterModel.getTestCode())) {
+                    holder.imgChecked.setVisibility(View.VISIBLE);
+                    holder.imgCheck.setVisibility(View.GONE);
+                    holder.isSelectedDueToParent = false;
+                    holder.parentTestCode = "";
+                    isChecked = true;
+                } else {
+                    if (testRateMasterModel1.getChldtests() != null && testRateMasterModel1.getChldtests().size() > 0) {
+                        for (ChildTestsModel ctm :
+                                testRateMasterModel1.getChldtests()) {
+                            if (ctm.getChildTestCode().equals(testRateMasterModel.getTestCode())) {
+                                holder.imgChecked.setVisibility(View.VISIBLE);
+                                holder.imgCheck.setVisibility(View.GONE);
+                                holder.isSelectedDueToParent = true;
+                                holder.parentTestCode = testRateMasterModel1.getTestCode();
+                                isChecked = true;
+                                break;
+                            } else {
+                                holder.imgChecked.setVisibility(View.GONE);
+                                holder.imgCheck.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    } else {
+                        holder.imgChecked.setVisibility(View.GONE);
+                        holder.imgCheck.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }else{
+            holder.imgChecked.setVisibility(View.GONE);
+            holder.imgCheck.setVisibility(View.VISIBLE);
+        }
         holder.imgCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(testRateMasterModel.getTestType().equals("OFFER")&&checkIfOfferExists(selectedTests)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setTitle("Confirm Action")
                             .setMessage("Selecting an OFFER will replace previously selected OFFER. Do you still wish to proceed?")
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -143,34 +201,16 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
         holder.imgChecked.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedTests.remove(testRateMasterModel);
-                mcallback.onCheckChange(selectedTests);
+                if(!isSelectedDueToParent) {
+                    selectedTests.remove(testRateMasterModel);
+                    mcallback.onCheckChange(selectedTests);
+                }
+                else{
+                    Toast.makeText(activity,"This test was selected because of its parent. If you wish to remove this test please remove the parent: "+parentTestCode,Toast.LENGTH_SHORT).show();
+                }
             }
         });
-        if((testRateMasterModel.getTestType().equals("TEST")||testRateMasterModel.getTestType().equals("OFFER"))
-                && !InputUtils.isNull(testRateMasterModel.getDescription())){
-            holder.txt_test.setText(testRateMasterModel.getDescription()+"("+testRateMasterModel.getTestCode()+")");
-        }
-        else{
-            holder.txt_test.setText(testRateMasterModel.getTestCode());
-        }
-        if (testRateMasterModel.getChldtests() == null || testRateMasterModel.getChldtests().size() == 0) {
-            holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.t));
-        } else {
-            if (testRateMasterModel.getTestType().equalsIgnoreCase("profile")) {
-                holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.p));
-            } else {
-                holder.img_test_type.setImageDrawable(context.getResources().getDrawable(R.drawable.o));
-            }
-        }
-        if(selectedTests.contains(testRateMasterModel)){
-            holder.imgChecked.setVisibility(View.VISIBLE);
-            holder.imgCheck.setVisibility(View.GONE);
-        }
-        else{
-            holder.imgChecked.setVisibility(View.GONE);
-            holder.imgCheck.setVisibility(View.VISIBLE);
-        }
+
         return convertView;
     }
 
@@ -182,11 +222,13 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
         ImageView img_test_type;
         ImageView imgCheck, imgChecked;
         TextView txt_test, txt_dis_amt;
+        boolean isSelectedDueToParent;
+        String parentTestCode;
     }
     private boolean checkIfOfferExists(ArrayList<TestRateMasterModel> selTests){
         for (TestRateMasterModel trmm:
              selTests) {
-            if(trmm.getTestType().equals("OFFER")){
+            if(!InputUtils.isNull(trmm.getTestType())&&trmm.getTestType().equals("OFFER")){
                 return true;
             }
         }
@@ -195,7 +237,7 @@ public class EditTestExpandListAdapter extends BaseExpandableListAdapter {
 
     private ArrayList<TestRateMasterModel> replaceOffer(ArrayList<TestRateMasterModel> selTests,TestRateMasterModel newOffer){
         for (int i=0;i<selTests.size();i++) {
-            if(selTests.get(i).getTestType().equals("OFFER")){
+            if(!InputUtils.isNull(selTests.get(i).getTestType())&&selTests.get(i).getTestType().equals("OFFER")){
                 selTests.remove(i);
                 break;
             }

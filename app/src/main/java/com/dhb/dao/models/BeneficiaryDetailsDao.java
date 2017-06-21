@@ -8,6 +8,7 @@ import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
+import com.dhb.models.data.BeneficiaryTestDetailsModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.dhb.utils.api.Logger;
@@ -42,7 +43,7 @@ public class BeneficiaryDetailsDao {
 	String TESTS = "tests";
 	String PROJ_ID = "ProjId";
 	String TESTS_CODE = "testsCode";
-	String TESTS_LIST = "testsList";
+	String TEST_SAMPLE_TYPE = "testSampleType";
 	String FASTING = "Fasting";
 	String VENEPUNCTURE = "Venepuncture";
 	String BARCODE_DTL = "barcodedtl";
@@ -93,8 +94,8 @@ public class BeneficiaryDetailsDao {
 		TypeToken<ArrayList<BeneficiarySampleTypeDetailsModel>> tokenSampleTypes = new TypeToken<ArrayList<BeneficiarySampleTypeDetailsModel>>(){};
 		ArrayList<BeneficiarySampleTypeDetailsModel> bstArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(SAMPLE_TYPE)),tokenSampleTypes.getType());
 
-		TypeToken<ArrayList<TestRateMasterModel>> tokenTestsList = new TypeToken<ArrayList<TestRateMasterModel>>(){};
-		ArrayList<TestRateMasterModel> tstArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(TESTS_LIST)),tokenTestsList.getType());
+		TypeToken<ArrayList<BeneficiaryTestDetailsModel>> tokenTestsDetailsList = new TypeToken<ArrayList<BeneficiaryTestDetailsModel>>(){};
+		ArrayList<BeneficiaryTestDetailsModel> tstArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(TEST_SAMPLE_TYPE)),tokenTestsDetailsList.getType());
 
 		TypeToken<ArrayList<BeneficiaryTestWiseClinicalHistoryModel>> tokenCH = new TypeToken<ArrayList<BeneficiaryTestWiseClinicalHistoryModel>>(){};
 		ArrayList<BeneficiaryTestWiseClinicalHistoryModel> tCHArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(CLINICAL_HISTORY)),tokenCH.getType());
@@ -104,7 +105,7 @@ public class BeneficiaryDetailsDao {
 
 		beneficiaryDetailsModel.setBarcodedtl(bmArr);
 		beneficiaryDetailsModel.setSampleType(bstArr);
-		beneficiaryDetailsModel.setTestsList(tstArr);
+		beneficiaryDetailsModel.setTestSampleType(tstArr);
 		beneficiaryDetailsModel.setClHistory(tCHArr);
 		beneficiaryDetailsModel.setLabAlert(tLAArr);
 
@@ -134,7 +135,7 @@ public class BeneficiaryDetailsDao {
 		values.put(VENEPUNCTURE, CommonUtils.decodedImageBytes(InputUtils.isNull(orderDetailsModel.getVenepuncture())?"":orderDetailsModel.getVenepuncture()));
 		values.put(BARCODE_DTL, new Gson().toJson(orderDetailsModel.getBarcodedtl()));
 		values.put(SAMPLE_TYPE, new Gson().toJson(orderDetailsModel.getSampleType()));
-		values.put(TESTS_LIST, new Gson().toJson(orderDetailsModel.getTestsList()));
+		values.put(TEST_SAMPLE_TYPE, new Gson().toJson(orderDetailsModel.getTestSampleType()));
 		values.put(CLINICAL_HISTORY, new Gson().toJson(orderDetailsModel.getClHistory()));
 		values.put(LAB_ALERT, new Gson().toJson(orderDetailsModel.getLabAlert()));
 		values.put(CREATED_AT, orderDetailsModel.getCreatedAt());
@@ -157,12 +158,6 @@ public class BeneficiaryDetailsDao {
 			do {
 				BeneficiaryDetailsModel beneficiaryDetailsModel = getModelFromCursor(cursor);
 				if (beneficiaryDetailsModel != null){
-					TestRateMasterDao testRateMasterDao = new TestRateMasterDao(db);
-					ArrayList<TestRateMasterModel> testsList = testRateMasterDao.getModelsFromTestCodes(beneficiaryDetailsModel.getTestsCode());
-					if(!InputUtils.isNull(beneficiaryDetailsModel.getProjId())){
-						testsList.addAll(testRateMasterDao.getModelsFromTestCodes(beneficiaryDetailsModel.getProjId()));
-					}
-					beneficiaryDetailsModel.setTestsList(testsList);
 					beneficiaryDetailsModels.add(beneficiaryDetailsModel);
 				}
 			} while ((cursor.moveToNext()));
@@ -179,15 +174,8 @@ public class BeneficiaryDetailsDao {
 			String[] whereParams = new String[]{};
 			Cursor cursor = this.db.rawQuery(query, whereParams);
 			if (cursor != null && (cursor.moveToFirst())) {
-
 				do {
 					beneficiaryDetailsModel = getModelFromCursor(cursor);
-					TestRateMasterDao testRateMasterDao = new TestRateMasterDao(db);
-					ArrayList<TestRateMasterModel> testsList = testRateMasterDao.getModelsFromTestCodes(beneficiaryDetailsModel.getTestsCode());
-					if(!InputUtils.isNull(beneficiaryDetailsModel.getProjId())){
-						testsList.addAll(testRateMasterDao.getModelsFromTestCodes(beneficiaryDetailsModel.getProjId()));
-					}
-					beneficiaryDetailsModel.setTestsList(testsList);
 				}while ((cursor.moveToNext()));
 			}
 			if (cursor != null && !cursor.isClosed()){

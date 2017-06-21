@@ -194,13 +194,6 @@ txtTotalKitsRequired.setOnClickListener(new View.OnClickListener() {
         super.onResume();
     }
 
-    @Override
-    public void onPause() {
-
-        fetchData();
-        super.onPause();
-    }
-
     private void fetchData() {
         beneficiaryDetailsDao.deleteAll();
         orderDetailsDao.deleteAll();

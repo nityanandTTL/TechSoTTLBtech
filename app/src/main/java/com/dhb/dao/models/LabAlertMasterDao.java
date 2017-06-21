@@ -155,12 +155,10 @@ public class LabAlertMasterDao {
 	}
 
 	public void deleteById(String id){
-		String query = "DELETE FROM " + TABLE_NAME + " WHERE " + LAB_ALERT_ID + " = ?";
-		Logger.debug("Query - " + query);
+		String query = "" + LAB_ALERT_ID + " = ?";
+		Logger.debug("Query - DELETE FROM " + TABLE_NAME + " WHERE " + query);
 		String[] whereParams = new String[]{id};
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && !cursor.isClosed()){
-			cursor.close();
-		}
+		int deleteValue = db.delete(TABLE_NAME,query, whereParams);
+		Logger.debug("DeleteLabAlertById: "+deleteValue);
 	}
 }
