@@ -5,12 +5,11 @@ package com.dhb.fragment;
  */
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +20,9 @@ import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
-import com.dhb.activity.HubDetailMapDisplayFragmentActivity;
-import com.dhb.adapter.DispatchToHubDisplayDetailsAdapter;
 import com.dhb.adapter.OrderServedDisplayDetailsAdapter;
-import com.dhb.delegate.DispatchToHubAdapterOnItemClickedDelegate;
-import com.dhb.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.dhb.models.api.response.OrderServedResponseModel;
 import com.dhb.models.data.BtechOrderModel;
-import com.dhb.models.data.HUBBTechModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
@@ -36,7 +30,6 @@ import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
-import com.dhb.utils.app.BundleConstants;
 
 import org.json.JSONException;
 
@@ -58,15 +51,15 @@ public class OrderServedFragment extends AbstractFragment {
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
     private View rootView;
-    private TextView tv_date,no_orders;
-    SwipeRefreshLayout swipeRefreshLayout;
+    private TextView tv_date, no_orders;
     RecyclerView recycler_view;
     private String todaysDate;
-    private ArrayList<BtechOrderModel> btechOrderModels=new ArrayList<>();
+    private ArrayList<BtechOrderModel> btechOrderModels = new ArrayList<>();
     OrderServedDisplayDetailsAdapter orderServedDisplayDetailsAdapter;
     private int mYear, mMonth, mDay;
     private ImageView img_search;
-    private String fromdate = "", todate = "";
+    private String todate = "";
+
     public OrderServedFragment() {
         // Required empty public constructor
     }
@@ -99,7 +92,7 @@ public class OrderServedFragment extends AbstractFragment {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
         todaysDate = simpleDateFormat.format(jd);
-        todate=sdf.format(jd);
+        todate = sdf.format(jd);
         initUI();
 
         setListners();
@@ -110,24 +103,15 @@ public class OrderServedFragment extends AbstractFragment {
     @Override
     public void initUI() {
         super.initUI();
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         recycler_view = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        tv_date=(TextView)rootView.findViewById(R.id.tv_date);
-        tv_date.setText(""+todate);
-        img_search=(ImageView)rootView.findViewById(R.id.img_search);
-        no_orders=(TextView)rootView.findViewById(R.id.no_orders);
+        tv_date = (TextView) rootView.findViewById(R.id.tv_date);
+        tv_date.setText("" + todate);
+        img_search = (ImageView) rootView.findViewById(R.id.img_search);
+        no_orders = (TextView) rootView.findViewById(R.id.no_orders);
     }
 
     private void setListners() {
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (swipeRefreshLayout.isRefreshing()) {
-                    swipeRefreshLayout.setRefreshing(false);
-                    initData(todaysDate);
-                }
-            }
-        });
+
 
         tv_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,8 +128,12 @@ public class OrderServedFragment extends AbstractFragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                tv_date.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" +year );
-                                todaysDate = year + "-" + (monthOfYear + 1) + "-" +dayOfMonth;
+                                tv_date.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                todaysDate = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+
+                                //changes_20june2017
+                                initData(todaysDate);
+                                //changes_20june2017
                             }
                         }, mYear, mMonth, mDay);
                 datePickerDialog.show();
@@ -156,7 +144,9 @@ public class OrderServedFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
 
-                initData(todaysDate);
+                //changes_20june2017
+                //initData(todaysDate);
+                //changes_20june2017
             }
         });
     }
@@ -179,7 +169,7 @@ public class OrderServedFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-               // Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
 
                 ResponseParser responseParser = new ResponseParser(activity);
 
@@ -208,7 +198,7 @@ public class OrderServedFragment extends AbstractFragment {
     }
 
     private void prepareRecyclerView() {
-        orderServedDisplayDetailsAdapter=new OrderServedDisplayDetailsAdapter(btechOrderModels,activity);
+        orderServedDisplayDetailsAdapter = new OrderServedDisplayDetailsAdapter(btechOrderModels, activity);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
         recycler_view.setLayoutManager(mLayoutManager);
         recycler_view.setItemAnimator(new DefaultItemAnimator());

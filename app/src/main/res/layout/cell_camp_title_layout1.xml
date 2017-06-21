@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
+
         <!-- RIGHT TITLE PART -->
         <RelativeLayout
             android:id="@+id/rl_rtp"
@@ -170,7 +171,6 @@
                 android:id="@+id/imgedit"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/edit_order_icon"

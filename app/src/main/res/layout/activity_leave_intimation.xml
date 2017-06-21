@@ -2,11 +2,11 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
@@ -35,11 +35,10 @@
 
             <Spinner
                 android:layout_marginTop="-10dp"
-                android:layout_marginLeft="50dp"
                 android:id="@+id/sp_leave_nature"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dp_5"/>
+                android:padding="@dimen/dp_5"></Spinner>
         </LinearLayout>
 
         <LinearLayout
@@ -60,7 +59,6 @@
             <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_marginTop="-10dp"
                 android:id="@+id/group"
-                android:layout_marginLeft="50dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -166,32 +164,34 @@
                 android:text="Leave On:" />
 
             <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <TextView
-                    android:id="@+id/txt_from_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="70dp"
-                    android:background="@drawable/shape_filter_date_button"
-                    android:drawableRight="@drawable/calender_icon"
-                    android:hint="From"
-                    android:padding="@dimen/dp_5"
-                    android:textColor="@color/calender_text"
-                    android:textSize="15sp" />
 
-                <TextView
-                    android:padding="@dimen/dp_5"
-                    android:id="@+id/txt_to_date"
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_filter_date_button"
-                    android:drawableRight="@drawable/calender_icon"
-                    android:hint="To"
-                    android:textColor="@color/calender_text"
-                    android:textSize="15sp"
-                    android:visibility="gone" />
+            <TextView
+                android:layout_marginLeft="@dimen/dp_5"
+                android:id="@+id/txt_from_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_filter_date_button"
+                android:drawableRight="@drawable/calender_icon"
+                android:hint="From"
+                android:padding="@dimen/dp_5"
+                android:textColor="@color/calender_text"
+                android:textSize="15sp" />
+
+            <TextView
+                android:padding="@dimen/dp_5"
+                android:id="@+id/txt_to_date"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_filter_date_button"
+                android:drawableRight="@drawable/calender_icon"
+                android:hint="To"
+                android:textColor="@color/calender_text"
+                android:textSize="15sp"
+                android:visibility="visible" />
             </LinearLayout>
         </LinearLayout>
 
@@ -327,7 +327,7 @@
                 android:text="Remark:" />
 
             <EditText
-                android:layout_marginLeft="70dp"
+                android:layout_marginLeft="@dimen/dp_5"
                 android:id="@+id/et_leave_days_remark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

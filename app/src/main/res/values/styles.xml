@@ -6,6 +6,12 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="searchViewStyle">@style/MySearchViewStyle</item>
+    </style>
+
+    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <!-- Search button icon -->
+        <item name="searchIcon">@drawable/search_icon</item>
     </style>
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
         <!-- Customize your theme here. -->
