@@ -1,12 +1,10 @@
 package com.dhb.activity;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -24,12 +22,14 @@ import com.dhb.dao.DhbDao;
 import com.dhb.dao.models.BeneficiaryDetailsDao;
 import com.dhb.dao.models.LabAlertMasterDao;
 import com.dhb.dao.models.OrderDetailsDao;
-import com.dhb.dao.models.TestRateMasterDao;
 import com.dhb.delegate.AddSampleBarcodeDialogDelegate;
+import com.dhb.delegate.AddTestListDialogDelegate;
+import com.dhb.delegate.CloseTestsDisplayDialogButtonDialogDelegate;
 import com.dhb.delegate.SelectClinicalHistoryCheckboxDelegate;
 import com.dhb.delegate.SelectLabAlertsCheckboxDelegate;
 import com.dhb.dialog.AddSampleBarcodeDialog;
 import com.dhb.dialog.ClinicalHistorySelectorDialog;
+import com.dhb.dialog.DisplaySelectedTestsListForCancellationDialog;
 import com.dhb.dialog.LabAlertSelectorDialog;
 import com.dhb.models.api.request.OrderBookingRequestModel;
 import com.dhb.models.api.response.OrderBookingResponseBeneficiaryModel;
@@ -39,11 +39,14 @@ import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
 import com.dhb.models.data.BeneficiarySampleTypeDetailsModel;
+import com.dhb.models.data.BeneficiaryTestDetailsModel;
 import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
+import com.dhb.models.data.ChildTestsModel;
 import com.dhb.models.data.LabAlertMasterModel;
 import com.dhb.models.data.OrderBookingDetailsModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
+import com.dhb.models.data.TestClinicalHistoryModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestSampleTypeModel;
 import com.dhb.network.ApiCallAsyncTask;
@@ -61,7 +64,6 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import static com.dhb.utils.app.CommonUtils.encodeImage;
 
@@ -93,7 +95,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private OrderDetailsModel orderDetailsModel;
     private String currentScanSampleType;
     private boolean isCancelRequestGenereted=false;
-    private ArrayList<TestRateMasterModel> restOfTestsList;
     private DhbDao dhbDao;
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr;
     private ArrayList<BeneficiaryLabAlertsModel> benLAArr;
@@ -103,7 +104,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private LabAlertMasterDao labAlertMasterDao;
     private IntentIntegrator intentIntegrator;
     private boolean isAdd = false;
-    private boolean isFasting = false;
 
     @Override
     public void onBackPressed() {
@@ -425,64 +425,121 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         edtTests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tests = beneficiaryDetailsModel.getTestsCode();
-                String[] testsList = new String[]{};
-                if(InputUtils.isNull(tests)){
-                    Intent intentEdit = new Intent(activity, EditTestListActivity.class);
-                    intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST,restOfTestsList);
-                    intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
-                    intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
-                    intentEdit.putExtra(BundleConstants.IS_TEST_EDIT,isEdit);
-                    startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
-                }
-                else{
-                    final ArrayList<String> testCodesList = new ArrayList<String>();
-                    Collections.addAll(testCodesList, tests.split(","));
-                    beneficiaryDetailsModel.setTestsList(new TestRateMasterDao(dhbDao.getDb()).getModelsFromTestCodes(tests));
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setTitle("Tests List");
-                    builder.setItems(testCodesList.toArray(new String[testCodesList.size()]), new DialogInterface.OnClickListener() {
+                if(beneficiaryDetailsModel.getTestSampleType()!=null && beneficiaryDetailsModel.getTestSampleType().size()>0) {
+                    //TODO show edit tests and allow addition and removal
+                    DisplaySelectedTestsListForCancellationDialog dstlfcd = new DisplaySelectedTestsListForCancellationDialog(activity, beneficiaryDetailsModel.getTestSampleType(), new CloseTestsDisplayDialogButtonDialogDelegate() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onItemClick(ArrayList<TestRateMasterModel> selectedTestsList,boolean isTestEdit) {
+                            ArrayList<BeneficiaryTestDetailsModel> selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
+                            for (TestRateMasterModel trmm:
+                                    selectedTestsList) {
+                                BeneficiaryTestDetailsModel btdm = new BeneficiaryTestDetailsModel();
+                                btdm.setFasting(trmm.getFasting());
+                                btdm.setChldtests(trmm.getChldtests()!=null?trmm.getChldtests():new ArrayList<ChildTestsModel>());
+                                btdm.setTests(trmm.getTestCode());
+                                btdm.setTestType(trmm.getTestType());
+                                btdm.setSampleType(trmm.getSampltype()!=null?trmm.getSampltype():new ArrayList<TestSampleTypeModel>());
+                                btdm.setTstClinicalHistory(trmm.getTstClinicalHistory()!=null?trmm.getTstClinicalHistory():new ArrayList<TestClinicalHistoryModel>());
+                                if(!InputUtils.isNull(trmm.getTestType())&&trmm.getTestType().equalsIgnoreCase("offer")){
+                                    btdm.setProjId(trmm.getTestCode());
+                                    btdm.setTests(trmm.getDescription());
+                                }
+                                selectedTestDetailsArr.add(btdm);
+                            }
+                            beneficiaryDetailsModel.setTestSampleType(selectedTestDetailsArr);
+                            boolean isFasting = false;
+                            String testsCode = "";
+                            if(selectedTestsList!=null) {
+                                for (TestRateMasterModel testRateMasterModel :
+                                        selectedTestsList) {
+                                    if (InputUtils.isNull(testsCode)) {
+                                        if(!InputUtils.isNull(testRateMasterModel.getTestType())&&testRateMasterModel.getTestType().equals("OFFER")) {
+                                            testsCode = testRateMasterModel.getDescription();
+                                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
+                                        }
+                                        else{
+                                            testsCode = testRateMasterModel.getTestCode();
+                                        }
+                                    } else {
+                                        if(!InputUtils.isNull(testRateMasterModel.getTestType())&&testRateMasterModel.getTestType().equals("OFFER")) {
+                                            testsCode = testsCode + "," + testRateMasterModel.getDescription();
+                                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
+                                        }
+                                        else{
+                                            testsCode = testsCode + "," + testRateMasterModel.getTestCode();
 
-                        }
-                    }).setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-//                            Toast.makeText(activity, "Feature Coming Soon..", Toast.LENGTH_SHORT).show();
-//                            dialog.dismiss();
-                            if(testCodesList.size()==beneficiaryDetailsModel.getTestsList().size()) {
-                                Intent intentEdit = new Intent(activity, EditTestListActivity.class);
-                                intentEdit.putExtra(BundleConstants.REST_BEN_TESTS_LIST, restOfTestsList);
-                                intentEdit.putExtra(BundleConstants.SELECTED_TESTS_LIST, beneficiaryDetailsModel.getTestsList());
-                                intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
-                                intentEdit.putExtra(BundleConstants.IS_TEST_EDIT,isEdit);
-                                startActivityForResult(intentEdit, BundleConstants.EDIT_TESTS_START);
-                                dialog.dismiss();
+                                        }
+                                    }
+                                }
+                                if(InputUtils.isNull(beneficiaryDetailsModel.getProjId())){
+                                    beneficiaryDetailsModel.setProjId("");
+                                }
+                                ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
+                                for (TestRateMasterModel trmm :
+                                        selectedTestsList) {
+                                    for (TestSampleTypeModel tstm :
+                                            trmm.getSampltype()) {
+                                        BeneficiarySampleTypeDetailsModel bstdm = new BeneficiarySampleTypeDetailsModel();
+                                        bstdm.setBenId(beneficiaryDetailsModel.getBenId());
+                                        bstdm.setSampleType(tstm.getSampleType());
+                                        bstdm.setId(tstm.getId());
+                                        if(!samples.contains(bstdm)){
+                                            samples.add(bstdm);
+                                        }
+                                    }
+                                }
+                                beneficiaryDetailsModel.setSampleType(samples);
+                                for (TestRateMasterModel trmm:
+                                        selectedTestsList) {
+                                    if(!trmm.getFasting().toLowerCase().contains("non")){
+                                        isFasting = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            beneficiaryDetailsModel.setTestsCode(testsCode);
+                            beneficiaryDetailsModel.setTests(testsCode);
+                            if(isFasting) {
+                                beneficiaryDetailsModel.setFasting("Fasting");
                             }
                             else{
-                                Toast.makeText(activity,"Tests & Profiles cannot be edited for DSA Orders",Toast.LENGTH_SHORT).show();
+                                beneficiaryDetailsModel.setFasting("Non-Fasting");
                             }
+                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                            initData();
+                        }
+                    }, new AddTestListDialogDelegate() {
+                        @Override
+                        public void onItemClick(ArrayList<BeneficiaryTestDetailsModel> selectedTestsList) {
+                            Intent intentAddTests = new Intent(activity, DisplayTestsMasterListActivity.class);
+                            intentAddTests.putExtra(BundleConstants.SELECTED_TESTS_LIST, selectedTestsList);
+                            intentAddTests.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                            intentAddTests.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
+                            intentAddTests.putExtra(BundleConstants.IS_TEST_EDIT, isEdit);
+                            startActivityForResult(intentAddTests, BundleConstants.ADD_TESTS_START);
                         }
                     });
-                    builder.show();
+                    dstlfcd.show();
+                }
+                else{
+                    Intent intentAddTests = new Intent(activity, DisplayTestsMasterListActivity.class);
+                    intentAddTests.putExtra(BundleConstants.SELECTED_TESTS_LIST, new ArrayList<>());
+                    intentAddTests.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                    intentAddTests.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
+                    intentAddTests.putExtra(BundleConstants.IS_TEST_EDIT, isEdit);
+                    startActivityForResult(intentAddTests, BundleConstants.ADD_TESTS_START);
                 }
             }
         });
         edtCH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<TestRateMasterModel> forCHSelection = new ArrayList<>();
-                if(beneficiaryDetailsModel.getTestsList()!=null) {
-                    for (TestRateMasterModel testRateMasterModel :
-                            beneficiaryDetailsModel.getTestsList()) {
-                        if(testRateMasterModel.getTstClinicalHistory()!=null && testRateMasterModel.getTstClinicalHistory().size()>0){
-                            forCHSelection.add(testRateMasterModel);
+                ArrayList<BeneficiaryTestDetailsModel> forCHSelection = new ArrayList<>();
+                if(beneficiaryDetailsModel.getTestSampleType()!=null) {
+                    for (BeneficiaryTestDetailsModel btdm :
+                            beneficiaryDetailsModel.getTestSampleType()) {
+                        if(btdm.getTstClinicalHistory()!=null && btdm.getTstClinicalHistory().size()>0){
+                            forCHSelection.add(btdm);
                         }
                     }
                 }
@@ -639,12 +696,26 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             imgHC.setImageDrawable(getResources().getDrawable(R.drawable.green_tick_icon));
             isHC = true;
         }
+        boolean isBarcodeAndSampleListSame = false;
         if (beneficiaryDetailsModel != null
                 && beneficiaryDetailsModel.getBarcodedtl() != null
                 && beneficiaryDetailsModel.getSampleType() != null
                 && beneficiaryDetailsModel.getBarcodedtl().size() == beneficiaryDetailsModel.getSampleType().size()) {
-
-        } else {
+            int sameSampleTypeCnt = 0;
+            for (BeneficiaryBarcodeDetailsModel bbdm:
+                    beneficiaryDetailsModel.getBarcodedtl()) {
+                for (BeneficiarySampleTypeDetailsModel bstdm:
+                        beneficiaryDetailsModel.getSampleType()) {
+                    if(bbdm.getSamplType().equals(bstdm.getSampleType())){
+                        sameSampleTypeCnt++;
+                    }
+                }
+            }
+            if(sameSampleTypeCnt==beneficiaryDetailsModel.getBarcodedtl().size() && sameSampleTypeCnt==beneficiaryDetailsModel.getSampleType().size()){
+                isBarcodeAndSampleListSame = true;
+            }
+        }
+        if(!isBarcodeAndSampleListSame){
             if(beneficiaryDetailsModel!=null && beneficiaryDetailsModel.getBarcodedtl()==null){
                 beneficiaryDetailsModel.setBarcodedtl(new ArrayList<BeneficiaryBarcodeDetailsModel>());
             }
@@ -660,14 +731,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     beneficiaryDetailsModel.getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
                 }
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-            }
-        }
-        restOfTestsList = new ArrayList<>();
-        TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
-        for (BeneficiaryDetailsModel beneficiaryModel:
-                orderDetailsModel.getBenMaster()) {
-            if(beneficiaryDetailsModel.getBenId()!=beneficiaryModel.getBenId()){
-                restOfTestsList.addAll(testRateMasterDao.getModelsFromTestCodes(beneficiaryModel.getTestsCode()));
             }
         }
         if(beneficiaryDetailsModel!=null){
@@ -729,13 +792,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             }else{
                 imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.green_tick_icon));
                 isHC = true;
-            }
-            restOfTestsList = new ArrayList<>();
-            for (BeneficiaryDetailsModel beneficiaryModel:
-                    orderDetailsModel.getBenMaster()) {
-                if(beneficiaryDetailsModel.getBenId()!=beneficiaryModel.getBenId()){
-                    restOfTestsList.addAll(testRateMasterDao.getModelsFromTestCodes(beneficiaryModel.getTestsCode()));
-                }
             }
         }
         initScanBarcodeView();
@@ -813,99 +869,15 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 onCaptureImageResult(data);
             }
         }
-        if (requestCode == BundleConstants.EDIT_TESTS_START && resultCode == BundleConstants.EDIT_TESTS_FINISH) {
-            String testsCode = "";
-            ArrayList<TestRateMasterModel> selectedTests = new ArrayList<>();
-            selectedTests = data.getExtras().getParcelableArrayList(BundleConstants.SELECTED_TESTS_LIST);
-
-            int selectedTestsTotalCost = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_TOTAL_COST);
-            int selectedTestsDiscount = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_DISCOUNT);
-            int selectedTestsIncentive = data.getExtras().getInt(BundleConstants.SELECTED_TESTS_INCENTIVE);
-            int brandId = data.getExtras().getInt(BundleConstants.BRAND_ID,0);
-            orderDetailsModel.setBrandId(brandId);
-            orderDetailsModel.setAmountDue(selectedTestsTotalCost);
-            orderDetailsModel.setDiscount(selectedTestsDiscount);
-            orderDetailsModel.setMargin(selectedTestsIncentive);
-            orderDetailsDao.insertOrUpdate(orderDetailsModel);
-
-            if(selectedTests!=null) {
-                for (TestRateMasterModel testRateMasterModel :
-                        selectedTests) {
-                    if (InputUtils.isNull(testsCode)) {
-                        if(testRateMasterModel.getTestType().equals("OFFER")) {
-                            testsCode = testRateMasterModel.getDescription();
-                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
-                        }
-                        else{
-                            testsCode = testRateMasterModel.getTestCode();
-                        }
-                    } else {
-                        if(testRateMasterModel.getTestType().equals("OFFER")) {
-                            testsCode = testsCode + "," + testRateMasterModel.getDescription();
-                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
-                        }
-                        else{
-                            testsCode = testsCode + "," + testRateMasterModel.getTestCode();
-
-                        }
-                    }
-                }
-                if(InputUtils.isNull(beneficiaryDetailsModel.getProjId())){
-                    beneficiaryDetailsModel.setProjId("");
-                }
-                ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
-                for (TestRateMasterModel trmm :
-                        selectedTests) {
-                    for (TestSampleTypeModel tstm :
-                            trmm.getSampltype()) {
-                        BeneficiarySampleTypeDetailsModel bstdm = new BeneficiarySampleTypeDetailsModel();
-                        bstdm.setBenId(beneficiaryDetailsModel.getBenId());
-                        bstdm.setSampleType(tstm.getSampleType());
-                        bstdm.setId(tstm.getId());
-                        if(!samples.contains(bstdm)){
-                            samples.add(bstdm);
-                        }
-                    }
-                }
-                beneficiaryDetailsModel.setSampleType(samples);
-                for (TestRateMasterModel trmm:
-                     selectedTests) {
-                    if(!trmm.getFasting().toLowerCase().contains("non")){
-                        isFasting = true;
-                        break;
-                    }
-                }
-            }
-            beneficiaryDetailsModel.setTestsCode(testsCode);
-            beneficiaryDetailsModel.setTests(testsCode);
-            edtTests.setText(testsCode);
-            if(isFasting) {
-                beneficiaryDetailsModel.setFasting("Fasting");
-            }
-            else{
-                beneficiaryDetailsModel.setFasting("Non-Fasting");
-            }
-            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+        if (requestCode == BundleConstants.ADD_TESTS_START && resultCode == BundleConstants.ADD_TESTS_FINISH) {
             initData();
+            edtTests.performClick();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void onCaptureImageResult(Intent data) {
         thumbnail = (Bitmap) data.getExtras().get("data");
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        /*File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
-        FileOutputStream fo;
-        try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
         encodedVanipunctureImg = encodeImage(thumbnail);
         beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);

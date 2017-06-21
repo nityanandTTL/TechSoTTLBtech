@@ -88,7 +88,7 @@ public class DbAccessHelper {
         for (int i = 0; i < values.length; i++) {
             this.insertStmt.bindString(i + 1, values[i]);
         }
-        return this.insertStmt.executeInsert() > 0 ? true : false;
+        return this.insertStmt.executeInsert() > 0;
     }
 
     /**
@@ -112,8 +112,7 @@ public class DbAccessHelper {
             cv.put(columns[i], values[i]);
         }
 
-        return this.db.update(table, cv, whereClause, whereArgs) > 0 ? true
-                : false;
+        return this.db.update(table, cv, whereClause, whereArgs) > 0;
 
     }
 
@@ -129,7 +128,7 @@ public class DbAccessHelper {
 
     public boolean delete(String table, String whereClause, String whereArgs[]) {
 
-        return this.db.delete(table, whereClause, whereArgs) > 0 ? true : false;
+        return this.db.delete(table, whereClause, whereArgs) > 0;
     }
 
     /**

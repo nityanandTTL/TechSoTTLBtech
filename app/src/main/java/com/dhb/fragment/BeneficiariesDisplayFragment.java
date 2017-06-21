@@ -143,6 +143,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         Logger.debug("orderVisitDetailsModel 1 :" + new Gson().toJson(orderVisitDetailsModel));
                         tempOrderDetailsModel.setOrderNo("TEMP_"+DeviceUtils.randomString(8));
                         tempOrderDetailsModel.setAddBen(true);
+                        tempOrderDetailsModel.setTestEdit(false);
                         Logger.debug("tempOrderDetailsModel:" + new Gson().toJson(tempOrderDetailsModel));
                         Logger.debug("orderVisitDetailsModel 2 :" + new Gson().toJson(orderVisitDetailsModel));
                         ArrayList<BeneficiaryDetailsModel> beneficiaries = new ArrayList<BeneficiaryDetailsModel>();

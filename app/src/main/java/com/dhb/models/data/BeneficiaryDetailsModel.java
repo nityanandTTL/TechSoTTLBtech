@@ -2,6 +2,7 @@ package com.dhb.models.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.ArrayRes;
 
 import java.util.ArrayList;
 
@@ -19,9 +20,9 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     private String testsCode;
     private String Fasting;
     private String Venepuncture;
+    private ArrayList<BeneficiaryTestDetailsModel> testSampleType;
     private ArrayList<BeneficiaryBarcodeDetailsModel> barcodedtl;
     private ArrayList<BeneficiarySampleTypeDetailsModel> sampleType;
-    private ArrayList<TestRateMasterModel> testsList;
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> clHistory;
     private ArrayList<BeneficiaryLabAlertsModel> labAlert;
     private String ProjId;
@@ -42,9 +43,9 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         testsCode = in.readString();
         Fasting = in.readString();
         Venepuncture = in.readString();
+        testSampleType = in.createTypedArrayList(BeneficiaryTestDetailsModel.CREATOR);
         barcodedtl = in.createTypedArrayList(BeneficiaryBarcodeDetailsModel.CREATOR);
         sampleType = in.createTypedArrayList(BeneficiarySampleTypeDetailsModel.CREATOR);
-        testsList = in.createTypedArrayList(TestRateMasterModel.CREATOR);
         clHistory = in.createTypedArrayList(BeneficiaryTestWiseClinicalHistoryModel.CREATOR);
         labAlert = in.createTypedArrayList(BeneficiaryLabAlertsModel.CREATOR);
         ProjId = in.readString();
@@ -63,9 +64,9 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         dest.writeString(testsCode);
         dest.writeString(Fasting);
         dest.writeString(Venepuncture);
+        dest.writeTypedList(testSampleType);
         dest.writeTypedList(barcodedtl);
         dest.writeTypedList(sampleType);
-        dest.writeTypedList(testsList);
         dest.writeTypedList(clHistory);
         dest.writeTypedList(labAlert);
         dest.writeString(ProjId);
@@ -185,14 +186,6 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         this.testsCode = testsCode;
     }
 
-    public ArrayList<TestRateMasterModel> getTestsList() {
-        return testsList;
-    }
-
-    public void setTestsList(ArrayList<TestRateMasterModel> testsList) {
-        this.testsList = testsList;
-    }
-
     public ArrayList<BeneficiaryTestWiseClinicalHistoryModel> getClHistory() {
         return clHistory;
     }
@@ -215,5 +208,13 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public ArrayList<BeneficiaryTestDetailsModel> getTestSampleType() {
+        return testSampleType;
+    }
+
+    public void setTestSampleType(ArrayList<BeneficiaryTestDetailsModel> testSampleType) {
+        this.testSampleType = testSampleType;
     }
 }

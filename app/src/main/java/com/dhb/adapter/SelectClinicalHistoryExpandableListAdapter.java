@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.dhb.R;
 import com.dhb.delegate.SelectClinicalHistoryCheckboxDelegate;
+import com.dhb.models.data.BeneficiaryTestDetailsModel;
 import com.dhb.models.data.TestClinicalHistoryModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
@@ -22,11 +23,11 @@ import java.util.ArrayList;
 
 public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
-    private ArrayList<TestRateMasterModel> testsList = new ArrayList<>();
+    private ArrayList<BeneficiaryTestDetailsModel> testsList = new ArrayList<>();
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr;
     private int BenId;
     private SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate;
-    public SelectClinicalHistoryExpandableListAdapter(Context context, ArrayList<TestRateMasterModel> testsList, ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr, int benId, SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate) {
+    public SelectClinicalHistoryExpandableListAdapter(Context context, ArrayList<BeneficiaryTestDetailsModel> testsList, ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr, int benId, SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate) {
         this.context = context;
         this.testsList = testsList;
         this.BenId = benId;
@@ -82,7 +83,7 @@ public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableLi
         } else {
             holder = (ViewParentHolder) convertView.getTag();
         }
-        holder.txtHeader.setText(testsList.get(groupPosition).getTestCode());
+        holder.txtHeader.setText(testsList.get(groupPosition).getTests());
         return convertView;
     }
 
@@ -106,7 +107,7 @@ public class SelectClinicalHistoryExpandableListAdapter extends BaseExpandableLi
 
         final BeneficiaryTestWiseClinicalHistoryModel beneficiaryTestWiseClinicalHistoryModel = new BeneficiaryTestWiseClinicalHistoryModel();
         beneficiaryTestWiseClinicalHistoryModel.setBenId(BenId);
-        beneficiaryTestWiseClinicalHistoryModel.setTest(testsList.get(groupPosition).getTestCode());
+        beneficiaryTestWiseClinicalHistoryModel.setTest(testsList.get(groupPosition).getTests());
         beneficiaryTestWiseClinicalHistoryModel.setClinicalHistoryId(testClinicalHistoryModel.getClinicalHtrId());
         if(chArr!=null) {
             if (chArr.contains(beneficiaryTestWiseClinicalHistoryModel)) {

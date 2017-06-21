@@ -211,13 +211,11 @@ public class BrandMasterDao {
 	}
 
 	public void deleteByBrandId(String brandId){
-		String query = "DELETE FROM " + TABLE_NAME + " WHERE " + BRAND_ID + " = ?";
-		Logger.debug("Query - " + query);
+		String query = "" + BRAND_ID + " = ?";
+		Logger.debug("Query - DELETE FROM " + TABLE_NAME + " WHERE " + query);
 		String[] whereParams = new String[]{brandId};
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && !cursor.isClosed()){
-			cursor.close();
-		}
+		int deleteValue = this.db.delete(TABLE_NAME,query, whereParams);
+		Logger.debug("DeleteBrandMasterByBrandId: "+deleteValue);
 	}
 
 }

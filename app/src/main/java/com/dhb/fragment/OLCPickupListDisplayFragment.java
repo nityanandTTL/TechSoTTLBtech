@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.activity.OLCPickupDetailMapDisplayFragmentActivity;
 import com.dhb.activity.HomeScreenActivity;
-import com.dhb.activity.OlcPickupActivity;
+import com.dhb.activity.OLCPickupActivity;
 import com.dhb.adapter.BtechClientDetailsAdapter;
 import com.dhb.delegate.BtechClientDetailsAdapterOnItemClickDelegate;
 import com.dhb.models.api.response.BtechClientsResponseModel;
@@ -157,7 +157,7 @@ public class OLCPickupListDisplayFragment extends AbstractFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==BundleConstants.BCMD_START && resultCode==BundleConstants.BCMD_ARRIVED){
             BtechClientsModel btechClientsModel = data.getExtras().getParcelable(BundleConstants.BTECH_CLIENTS_MODEL);
-            Intent intentOrderBooking = new Intent(activity, OlcPickupActivity.class);
+            Intent intentOrderBooking = new Intent(activity, OLCPickupActivity.class);
             intentOrderBooking.putExtra(BundleConstants.BTECH_CLIENTS_MODEL,btechClientsModel);
             startActivity(intentOrderBooking);
         }

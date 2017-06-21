@@ -3,6 +3,7 @@ package com.dhb.dao.models;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.dhb.models.data.ChildTestsModel;
 import com.dhb.models.data.TestClinicalHistoryModel;
@@ -280,33 +281,27 @@ public class TestRateMasterDao {
 	}
 
 	public void deleteByTestId(String testId){
-		String query = "DELETE FROM " + TABLE_NAME + " WHERE " + TEST_ID + " = ?";
-		Logger.debug("Query - " + query);
+		String query = "" + TEST_ID + " = ?";
+		Logger.debug("Query - DELETE FROM " + TABLE_NAME + " WHERE " + query);
 		String[] whereParams = new String[]{testId};
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && !cursor.isClosed()){
-			cursor.close();
-		}
+		int deleteValue = db.delete(TABLE_NAME,query, whereParams);
+		Logger.debug("DeleteTestModelByTestId: "+deleteValue);
 	}
 
 	public void deleteByTestType(String testType){
-		String query = "DELETE FROM " + TABLE_NAME + " WHERE " + TEST_TYPE + " = ?";
-		Logger.debug("Query - " + query);
+		String query = "" + TEST_TYPE + " = ?";
+		Logger.debug("Query - DELETE FROM " + TABLE_NAME + " WHERE " + query);
 		String[] whereParams = new String[]{testType};
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && !cursor.isClosed()){
-			cursor.close();
-		}
+		int deleteValue = db.delete(TABLE_NAME,query, whereParams);
+		Logger.debug("DeleteTestModelByTestId: "+deleteValue);
 	}
 
 	public void deleteByBrandId(String brandId){
-		String query = "DELETE FROM " + TABLE_NAME + " WHERE " + BRAND_ID + " = ?";
-		Logger.debug("Query - " + query);
+		String query = "" + BRAND_ID + " = ?";
+		Logger.debug("Query - DELETE FROM " + TABLE_NAME + " WHERE " + query);
 		String[] whereParams = new String[]{brandId};
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && !cursor.isClosed()){
-			cursor.close();
-		}
+		int deleteValue = db.delete(TABLE_NAME,query, whereParams);
+		Logger.debug("DeleteTestModelByTestId: "+deleteValue);
 	}
 
 }

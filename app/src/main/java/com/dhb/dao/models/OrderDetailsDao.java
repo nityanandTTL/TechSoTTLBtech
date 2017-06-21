@@ -298,13 +298,11 @@ public class OrderDetailsDao {
 		if(cursorS!=null && !cursorS.isClosed()){
 			cursorS.close();
 		}
-		String query = "DELETE FROM " + TABLE_NAME + " WHERE " + VISIT_ID + " = ?";
-		Logger.debug("Query - " + query);
+		String query = "" + VISIT_ID + " = ?";
+		Logger.debug("Query - DELETE FROM " + TABLE_NAME + " WHERE " + query);
 		String[] whereParams = new String[]{visitId};
-		Cursor cursor = this.db.rawQuery(query, whereParams);
-		if (cursor != null && !cursor.isClosed()){
-			cursor.close();
-		}
+		int deleteValue = db.delete(TABLE_NAME,query, whereParams);
+		Logger.debug("DeleteOrderDetailsByVisitId: "+deleteValue);
 	}
 
 	public void deleteByOrderNo(String orderNo){

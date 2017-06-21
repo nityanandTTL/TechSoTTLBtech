@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
-import com.dhb.activity.OlcPickupActivity;
+import com.dhb.activity.OLCPickupActivity;
 import com.dhb.models.api.request.OlcScanPickUpRequestModel;
 import com.dhb.models.data.BtechClientsModel;
 import com.dhb.network.ApiCallAsyncTask;
@@ -28,21 +28,21 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
 
 
-public class OlcMasterBarcodeScanFragment extends AbstractFragment {
-    public static final String TAG_FRAGMENT = OlcMasterBarcodeScanFragment.class.getSimpleName();
+public class OLCMasterBarcodeScanFragment extends AbstractFragment {
+    public static final String TAG_FRAGMENT = OLCMasterBarcodeScanFragment.class.getSimpleName();
     private TextView txt_name, tv_distance;
-    private OlcPickupActivity activity;
+    private OLCPickupActivity activity;
     String scanned_barcode;
     BtechClientsModel btechClientsModel;
     IntentIntegrator integrator;
     ImageView btnScanBarcode, txt_call;
     EditText edtScannedBarcode;
-    public OlcMasterBarcodeScanFragment() {
+    public OLCMasterBarcodeScanFragment() {
         // Required empty public constructor
     }
 
-    public static OlcMasterBarcodeScanFragment newInstance(BtechClientsModel btechClientsModel) {
-        OlcMasterBarcodeScanFragment fragment = new OlcMasterBarcodeScanFragment();
+    public static OLCMasterBarcodeScanFragment newInstance(BtechClientsModel btechClientsModel) {
+        OLCMasterBarcodeScanFragment fragment = new OLCMasterBarcodeScanFragment();
         Bundle args = new Bundle();
         args.putParcelable("btechClientsModel",btechClientsModel);
         fragment.setArguments(args);
@@ -54,7 +54,7 @@ public class OlcMasterBarcodeScanFragment extends AbstractFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_olc_master_barcode, container, false);
-        activity = (OlcPickupActivity) getActivity();
+        activity = (OLCPickupActivity) getActivity();
         appPreferenceManager = new AppPreferenceManager(activity);
         integrator = new IntentIntegrator(activity);
         initUI(rootView);
@@ -87,7 +87,7 @@ public class OlcMasterBarcodeScanFragment extends AbstractFragment {
                 integrator = new IntentIntegrator(getActivity()) {
                     @Override
                     protected void startActivityForResult(Intent intent, int code) {
-                        OlcMasterBarcodeScanFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+                        OLCMasterBarcodeScanFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
                     }
                 };
                 integrator.initiateScan();

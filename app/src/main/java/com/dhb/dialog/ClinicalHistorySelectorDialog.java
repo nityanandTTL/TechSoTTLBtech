@@ -10,6 +10,7 @@ import android.widget.ExpandableListView;
 import com.dhb.R;
 import com.dhb.adapter.SelectClinicalHistoryExpandableListAdapter;
 import com.dhb.delegate.SelectClinicalHistoryCheckboxDelegate;
+import com.dhb.models.data.BeneficiaryTestDetailsModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 
@@ -23,12 +24,12 @@ public class ClinicalHistorySelectorDialog extends Dialog{
     private Activity activity;
     private Button btnSave;
     private ExpandableListView elvClinicalHistory;
-    private ArrayList<TestRateMasterModel> testsRateMasterModelsArr;
+    private ArrayList<BeneficiaryTestDetailsModel> testsRateMasterModelsArr;
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr;
     private int benId;
     private SelectClinicalHistoryExpandableListAdapter sCHELA;
     private SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate;
-    public ClinicalHistorySelectorDialog(Activity activity, ArrayList<TestRateMasterModel> testsRateMasterModelsArr, ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr, int benId, SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate) {
+    public ClinicalHistorySelectorDialog(Activity activity, ArrayList<BeneficiaryTestDetailsModel> testsRateMasterModelsArr, ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr, int benId, SelectClinicalHistoryCheckboxDelegate selectClinicalHistoryCheckboxDelegate) {
         super(activity);
         this.activity = activity;
         this.testsRateMasterModelsArr = testsRateMasterModelsArr;
