@@ -3,6 +3,7 @@ package com.dhb.fragment;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
@@ -18,34 +20,65 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
+import com.dhb.models.api.request.CashDepositEntryRequestModel;
+import com.dhb.models.api.response.BankMasterResponseModel;
+import com.dhb.models.api.response.CampScanQRResponseModel;
+import com.dhb.models.api.response.PaymentModeMasterResponseModel;
+import com.dhb.models.data.SlotModel;
+import com.dhb.network.ApiCallAsyncTask;
+import com.dhb.network.ApiCallAsyncTaskDelegate;
+import com.dhb.network.AsyncTaskForRequest;
+import com.dhb.network.ResponseParser;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.InputUtils;
 import com.google.android.gms.vision.text.Text;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
+
+import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
 
 
 public class CreditFragment extends Fragment {
     public static final String TAG_FRAGMENT = CreditFragment.class.getSimpleName();
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
+    ArrayList<String> paymentMode = new ArrayList<>();
+    ArrayList<String> bankName = new ArrayList<>();
     private Button btn_submit;
-    private TextView tv_no_file_chosen, tv_choose_file, tv_re_enter_cheque_no, tv_re_enter_remark, tv_re_enter_amount, tv_enter_amount, tv_branch_name, tv_select_instrument, tv_cheque_no, tv_date_of_deposit, tv_transaction_number, re_renter_transcation_number;
-    private EditText edt_re_enter_cheque_number, edt_deposit, edt_tsp, edt_branch_name, edt_instrument, edt_transaction_number, edt_re_enter_transcation_number, edt_cheque_number, edt_amount, edt_re_enter_amount, edt_remark;
+    private TextView edt_branch_name, edt_instrument, tv_no_file_chosen, tv_choose_file, tv_re_enter_cheque_no, tv_re_enter_remark, tv_re_enter_amount, tv_enter_amount, tv_branch_name, tv_select_instrument, tv_cheque_no, tv_date_of_deposit, tv_transaction_number, re_renter_transcation_number;
+    private EditText edt_re_enter_cheque_number, edt_deposit, edt_tsp, edt_transaction_number, edt_re_enter_transcation_number, edt_cheque_number, edt_amount, edt_re_enter_amount, edt_remark;
     private int mYear, mMonth, mDay;
     private int PICK_IMAGE_REQUEST = 1;
+    private String[] test_code_arr;
+    private ArrayList<PaymentModeMasterResponseModel> slotsArr;
+    private int paymentModePosition = 0;
+    private ArrayList<PaymentModeMasterResponseModel> selectedSlotsArr;
+    private ArrayList<BankMasterResponseModel> bankArr;
+    private String image = "";
+    private ArrayList<BankMasterResponseModel> selectedBankArr;
+    private String picturePath;
 
     public CreditFragment() {
         // Required empty public constructor
@@ -88,8 +121,8 @@ public class CreditFragment extends Fragment {
         setMandetory(tv_re_enter_cheque_no);
         setMandetory(tv_re_enter_amount);
         edt_tsp = (EditText) view.findViewById(R.id.edt_tsp);
-        edt_branch_name = (EditText) view.findViewById(R.id.edt_branch_name);
-        edt_instrument = (EditText) view.findViewById(R.id.edt_instrument);
+        edt_branch_name = (TextView) view.findViewById(R.id.edt_branch_name);
+        edt_instrument = (TextView) view.findViewById(R.id.edt_instrument);
         edt_transaction_number = (EditText) view.findViewById(R.id.edt_transaction_number);
         edt_re_enter_transcation_number = (EditText) view.findViewById(R.id.edt_re_enter_transcation_number);
         edt_cheque_number = (EditText) view.findViewById(R.id.edt_cheque_number);
@@ -114,9 +147,33 @@ public class CreditFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_credit, container, false);
         initUI(view);
-
         setListeners();
+
+        callPaymentModeMaster();
+        callBankmaster();
         return view;
+    }
+
+    private void callBankmaster() {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getBankMasterRequestAsyncTask();
+        fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new BankMasterApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
+        } else {
+            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void callPaymentModeMaster() {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getPaymentModeMasterRequestAsyncTask();
+        fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new PaymentModeMasterApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
+        } else {
+            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setListeners() {
@@ -124,11 +181,91 @@ public class CreditFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (validate()) {
-
+                    CashDepositEntryRequestModel cashDepositEntryRequestModel = generateCashDepositeEntryRequestModel();
+                    ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getCashDepositEntryRequestAsyncTask(cashDepositEntryRequestModel);
+                    orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new CashDepositEntryAPIAsyncTaskDelegateResult());
+                    if (isNetworkAvailable(activity)) {
+                        orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
+                    } else {
+                        Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
+        edt_branch_name.setText("--SELECT--");
+        edt_branch_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Bank Name")
+                        .setItems(bankName.toArray(new String[]{}), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                edt_branch_name.setText(bankName.get(which));
 
+                                dialog.dismiss();
+                            }
+                        }).show();
+            }
+        });
+        edt_instrument.setText("--SELECT--");
+
+        edt_instrument.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Select Payment Mode")
+                        .setItems(paymentMode.toArray(new String[]{}), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(activity, "" + paymentMode.get(which), Toast.LENGTH_SHORT).show();
+                                paymentModePosition = which;
+                                Logger.error(which + " which");
+                                dialog.dismiss();
+                                edt_instrument.setText("" + paymentMode.get(which));
+                                if (paymentMode.get(which).equals("Cash By ATM")) {
+                                    tv_transaction_number.setVisibility(View.VISIBLE);
+                                    edt_transaction_number.setVisibility(View.VISIBLE);
+                                    re_renter_transcation_number.setVisibility(View.VISIBLE);
+                                    edt_re_enter_transcation_number.setVisibility(View.VISIBLE);
+                                    tv_cheque_no.setVisibility(View.GONE);
+                                    edt_cheque_number.setVisibility(View.GONE);
+                                    tv_re_enter_cheque_no.setVisibility(View.GONE);
+                                    edt_re_enter_cheque_number.setVisibility(View.GONE);
+
+                                } else if (paymentMode.get(which).equals("Cash")) {
+                                    tv_transaction_number.setVisibility(View.GONE);
+                                    edt_transaction_number.setVisibility(View.GONE);
+                                    re_renter_transcation_number.setVisibility(View.GONE);
+                                    edt_re_enter_transcation_number.setVisibility(View.GONE);
+                                    tv_cheque_no.setVisibility(View.GONE);
+                                    edt_cheque_number.setVisibility(View.GONE);
+                                    tv_re_enter_cheque_no.setVisibility(View.GONE);
+                                    edt_re_enter_cheque_number.setVisibility(View.GONE);
+                                } else if (paymentMode.get(which).equals("Cheque")) {
+                                    tv_transaction_number.setVisibility(View.GONE);
+                                    edt_transaction_number.setVisibility(View.GONE);
+                                    re_renter_transcation_number.setVisibility(View.GONE);
+                                    edt_re_enter_transcation_number.setVisibility(View.GONE);
+                                    tv_cheque_no.setVisibility(View.VISIBLE);
+                                    edt_cheque_number.setVisibility(View.VISIBLE);
+                                    tv_re_enter_cheque_no.setVisibility(View.VISIBLE);
+                                    edt_re_enter_cheque_number.setVisibility(View.VISIBLE);
+                                } else if (paymentMode.get(which).equals("NEFT")) {
+                                    tv_transaction_number.setVisibility(View.VISIBLE);
+                                    edt_transaction_number.setVisibility(View.VISIBLE);
+                                    re_renter_transcation_number.setVisibility(View.VISIBLE);
+                                    edt_re_enter_transcation_number.setVisibility(View.VISIBLE);
+                                    tv_cheque_no.setVisibility(View.GONE);
+                                    edt_cheque_number.setVisibility(View.GONE);
+                                    tv_re_enter_cheque_no.setVisibility(View.GONE);
+                                    edt_re_enter_cheque_number.setVisibility(View.GONE);
+                                }
+                            }
+                        }).show();
+
+            }
+        });
         edt_deposit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,6 +291,8 @@ public class CreditFragment extends Fragment {
         tv_choose_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -163,46 +302,75 @@ public class CreditFragment extends Fragment {
 
     }
 
+    private CashDepositEntryRequestModel generateCashDepositeEntryRequestModel() {
+        CashDepositEntryRequestModel cashDepositEntryRequestModel = new CashDepositEntryRequestModel();
+        cashDepositEntryRequestModel.setBTechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+        cashDepositEntryRequestModel.setModeId(slotsArr.get(paymentModePosition).getModeId());
+        cashDepositEntryRequestModel.setBankId(bankArr.get(0).getBankId());
+        cashDepositEntryRequestModel.setTransactionId(edt_transaction_number.getText().toString());
+        cashDepositEntryRequestModel.setChequeNo(edt_cheque_number.getText().toString());
+        cashDepositEntryRequestModel.setAmount(Integer.parseInt(edt_amount.getText().toString()));
+        cashDepositEntryRequestModel.setRemarks(edt_remark.getText().toString());
+        cashDepositEntryRequestModel.setImage(image);
+        return cashDepositEntryRequestModel;
+    }
+
     private boolean validate() {
-        if (InputUtils.isNull(edt_branch_name.getText().toString())) {
-            edt_branch_name.setError("Enter Branch Name");
+        if (edt_branch_name.getText().toString().equals("--SELECT--")) {
+            edt_branch_name.setError("Select Branch Name");
             edt_branch_name.requestFocus();
-        } else if (InputUtils.isNull(edt_instrument.getText().toString())) {
+            return false;
+        } else if (edt_instrument.getText().toString().equals("--SELECT--")) {
             edt_instrument.setError("Select Instrument");
             edt_instrument.requestFocus();
+            return false;
         } else if (InputUtils.isNull(edt_deposit.getText().toString())) {
             edt_deposit.setError("Select Date of Deposit");
             edt_deposit.requestFocus();
-        } else if (InputUtils.isNull(edt_transaction_number.getText().toString())) {
+            return false;
+        } else if (edt_transaction_number.isShown() && InputUtils.isNull(edt_transaction_number.getText().toString())) {
             edt_transaction_number.setError("Enter Transaction Number");
             edt_transaction_number.requestFocus();
-        } else if (InputUtils.isNull(edt_re_enter_transcation_number.getText().toString())) {
+            return false;
+        } else if (edt_re_enter_transcation_number.isShown() && InputUtils.isNull(edt_re_enter_transcation_number.getText().toString())) {
             edt_re_enter_transcation_number.setError("Re-Enter Transaction Number");
             edt_re_enter_transcation_number.requestFocus();
+            return false;
         } else if (!edt_transaction_number.getText().toString().equals(edt_re_enter_transcation_number.getText().toString())) {
             edt_re_enter_transcation_number.setError("Transaction Number do not match");
             edt_re_enter_transcation_number.requestFocus();
-        } else if (InputUtils.isNull(edt_cheque_number.getText().toString())) {
+            return false;
+        } else if (edt_cheque_number.isShown() && InputUtils.isNull(edt_cheque_number.getText().toString())) {
             edt_cheque_number.setError("Enter Cheque Number");
             edt_cheque_number.requestFocus();
-        } else if (InputUtils.isNull(edt_re_enter_cheque_number.getText().toString())) {
+            return false;
+        } else if (edt_re_enter_cheque_number.isShown() && InputUtils.isNull(edt_re_enter_cheque_number.getText().toString())) {
             edt_re_enter_cheque_number.setError("Re-Enter Cheque Number");
             edt_re_enter_cheque_number.requestFocus();
-        } else if (!edt_cheque_number.getText().toString().equals(edt_re_enter_cheque_number.getText().toString())) {
+            return false;
+        } else if (edt_cheque_number.isShown() && !edt_cheque_number.getText().toString().equals(edt_re_enter_cheque_number.getText().toString())) {
             edt_re_enter_cheque_number.setError("Checque Number do not match");
             edt_re_enter_cheque_number.requestFocus();
+            return false;
         } else if (InputUtils.isNull(edt_amount.getText().toString())) {
             edt_amount.setError("Enter Amount Number");
             edt_amount.requestFocus();
+            return false;
         } else if (InputUtils.isNull(edt_re_enter_amount.getText().toString())) {
             edt_re_enter_amount.setError("Re-Enter Amount");
             edt_re_enter_amount.requestFocus();
+            return false;
         } else if (!edt_amount.getText().toString().equals(edt_re_enter_amount.getText().toString())) {
             edt_re_enter_amount.setError("Amount do not match");
             edt_re_enter_amount.requestFocus();
+            return false;
+        } else if (image.equals("")) {
+            Toast.makeText(activity, "Choose File", Toast.LENGTH_SHORT).show();
+            return false;
         } else if (InputUtils.isNull(edt_remark.getText().toString())) {
             edt_remark.setError("Enter Remark");
             edt_remark.requestFocus();
+            return false;
         }
 
         return true;
@@ -217,33 +385,18 @@ public class CreditFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-                //Display an error
-                Logger.error("data: " + data);
 
-                return;
-            } else {
-
+            Bitmap bm=null;
+            if (data != null) {
+                tv_no_file_chosen.setText("File attached");
                 try {
-                    InputStream inputStream = activity.getContentResolver().openInputStream(data.getData());
-                    Logger.error("inputStream: " + inputStream);
-                    Uri uri = data.getData();
-                    String[] projection = {MediaStore.Images.Media.DATA};
-
-                    Cursor cursor = activity.getContentResolver().query(uri, projection, null, null, null);
-                    cursor.moveToFirst();
-                    int columnIndex = cursor.getColumnIndex(projection[0]);
-                    String picturePath = cursor.getString(columnIndex); // returns null
-                    Logger.error("picturePath  :" + picturePath);
-                    tv_no_file_chosen.setText("" + picturePath);
-                    cursor.close();
-                } catch (FileNotFoundException e) {
+                    bm = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), data.getData());
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //https://stackoverflow.com/questions/35028251/android-how-to-select-an-image-from-a-file-manager-after-clicking-on-a-button
-                // Now you can do whatever you want with your inpustream, save it as file, upload to a server, decode a bitmap...
             }
-
+            image=encodeTobase64(bm);
+            Logger.error("image: "+image);
         }
     }
 
@@ -261,5 +414,76 @@ public class CreditFragment extends Fragment {
     public static Bitmap decodeBase64(String input) {
         byte[] decodedByte = Base64.decode(input, 0);
         return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+    }
+
+    private class PaymentModeMasterApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                slotsArr = new ResponseParser(activity).getPaymentModeMasterResponseModel(json, statusCode);
+                selectedSlotsArr = new ArrayList<>();
+                for (PaymentModeMasterResponseModel slotModel :
+                        slotsArr) {
+                    // if (slotModel.isMandatorySlot()) {
+                    selectedSlotsArr.add(slotModel);
+                    // }
+                }
+               /* if (paymentModeMasterResponseModel != null) {
+
+                }*/
+                JSONArray jsonArray = new JSONArray(json);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    paymentMode.add("" + jsonObject.get("ModeName"));
+                }
+
+
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    private class BankMasterApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                bankArr = new ResponseParser(activity).getBankMasterResponseModel(json, statusCode);
+                selectedBankArr = new ArrayList<>();
+                for (BankMasterResponseModel slotModel :
+                        bankArr) {
+                    selectedBankArr.add(slotModel);
+                }
+                JSONArray jsonArray = new JSONArray(json);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    bankName.add("" + jsonObject.get("BankName"));
+                }
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    private class CashDepositEntryAPIAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
     }
 }

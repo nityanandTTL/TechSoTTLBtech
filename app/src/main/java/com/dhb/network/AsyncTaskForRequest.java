@@ -12,6 +12,7 @@ import com.dhb.models.api.request.BtechsRequestModel;
 import com.dhb.models.api.request.CallPatchRequestModel;
 import com.dhb.models.api.request.CampStartedRequestModel;
 import com.dhb.models.api.request.CartAPIRequestModel;
+import com.dhb.models.api.request.CashDepositEntryRequestModel;
 import com.dhb.models.api.request.ChangePasswordRequestModel;
 import com.dhb.models.api.request.HubStartRequestModel;
 import com.dhb.models.api.request.LocusPushLocationRequestModel;
@@ -182,6 +183,42 @@ public class AsyncTaskForRequest {
             abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.ORDER_BOOKING);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_uploading_order_details_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+/*
+	 * Order Booking Api Integration*/
+
+    public ApiCallAsyncTask getCashDepositEntryRequestAsyncTask(CashDepositEntryRequestModel cashDepositEntryRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(cashDepositEntryRequestModel);
+            /*// Logging the response that is too large for logcat in multiple lines -- START
+            int maxLogSize = 500;
+            for (int i = 0; i <= postJson.length() / maxLogSize; i++) {
+                int start = i * maxLogSize;
+                int end = (i + 1) * maxLogSize;
+                end = end > postJson.length() ? postJson.length() : end;
+                Log.v(AddEditBeneficiaryDetailsActivity.class.getSimpleName(), postJson.substring(start, end));
+            }
+            // Logging the response that is too large for logcat in multiple lines -- END
+*/
+
+
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.CASH_DEPOSIT_ENTRY);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -388,6 +425,52 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
                     .getString(R.string.progress_message_sending_master_barcode_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }/*
+	 * PaymentModeMaster Api Integration*/
+
+    public ApiCallAsyncTask getPaymentModeMasterRequestAsyncTask() {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getPaymentModeMasterRequestAsyncTask: " );
+           // String postJson = new Gson().toJson(orderVisitDetailsModel);
+          //  abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.PAYMENT_MODE_MASTER/*"VISTT001109154"*/);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_getting_master_payment_mode_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }/*
+	 * PaymentModeMaster Api Integration*/
+
+    public ApiCallAsyncTask getBankMasterRequestAsyncTask() {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getBankMasterRequestAsyncTask: " );
+           // String postJson = new Gson().toJson(orderVisitDetailsModel);
+          //  abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BANK_MASTER/*"VISTT001109154"*/);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_getting_master_payment_mode_please_wait));
             apiCallAsyncTask.setProgressBarVisible(true);
         } catch (Exception e) {
             e.printStackTrace();

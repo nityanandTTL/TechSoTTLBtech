@@ -15,6 +15,7 @@
     <color name="bg_content">#ffffff</color>
     <color name="contentDividerLine">#e0e0e0</color>
     <color name="contentBadgeTitle">#a9a9a9</color>
+    <color name="gray">#FF8B8888</color>
     <color name="titleBadgeTitle">#adafb1</color>
     <color name="titleBadgeText">#adafb1</color>
     <color name="calender_text">#444444</color>
