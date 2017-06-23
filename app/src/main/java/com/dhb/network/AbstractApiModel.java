@@ -74,6 +74,8 @@ public class AbstractApiModel implements AppConstants {
     public String CAMP_COUNT = VERSION_API_URL + "/CampDetails/MyCampCount";
 
     public String CAMP_QR_DETAIL = VERSION_API_URL + "/CampDetails/OrderDetails";
+    public String PAYMENT_MODE_MASTER = VERSION_API_URL + "/Masters/PaymentModeMaster";
+    public String BANK_MASTER = VERSION_API_URL + "/Masters/BankMaster";
 
     public String FETCH_SLOT_DETAIL = VERSION_API_URL + "/ServingSlotDetails";
 
@@ -132,6 +134,7 @@ public class AbstractApiModel implements AppConstants {
     public String OLC_PICKUP_SUBMIT_SCAN_BARCODE = VERSION_API_URL + "/ScanPickup";
 
     public String ORDER_BOOKING = VERSION_API_URL + "/OrderBooking";
+    public String CASH_DEPOSIT_ENTRY = VERSION_API_URL + "/CashDeposit/CashDepositEntry";
 
     public String WOE = VERSION_API_URL + "/WOE";
 

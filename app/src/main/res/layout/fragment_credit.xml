@@ -41,7 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_5"
             android:layout_marginStart="@dimen/dp_5"
-            android:text="TSP" />
+            android:text="TSP"
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/edt_tsp"
@@ -49,7 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_branch_name"
@@ -59,12 +61,16 @@
             android:layout_marginStart="@dimen/dp_5"
             android:text="Enter Branch Name" />
 
-        <EditText
+        <TextView
+            style="@android:style/Widget.EditText"
             android:id="@+id/edt_branch_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
+            android:textSize="14sp"
+            android:textColor="@color/gray"
             android:background="@android:drawable/editbox_background"
+            android:drawableRight="@android:drawable/arrow_down_float"
             android:elevation="4dp" />
 
         <TextView
@@ -75,7 +81,10 @@
             android:layout_marginStart="@dimen/dp_5"
             android:text="Select Instrument" />
 
-        <EditText
+        <TextView
+            style="@android:style/Widget.EditText"
+            android:textSize="14sp"
+            android:textColor="@color/gray"
             android:id="@+id/edt_instrument"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,13 +102,13 @@
             android:text="Date of deposit" />
 
         <EditText
-
             android:id="@+id/edt_deposit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            android:textColor="@android:color/darker_gray" />
 
         <TextView
             android:id="@+id/tv_transaction_number"
@@ -107,15 +116,18 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_5"
             android:layout_marginStart="@dimen/dp_5"
-            android:text="Enter Transcation No." />
+            android:text="Enter Transcation No."
+            android:visibility="gone" />
 
         <EditText
+            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_transaction_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/re_renter_transcation_number"
@@ -123,16 +135,19 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_5"
             android:layout_marginStart="@dimen/dp_5"
-            android:text="Re-Enter Transcation No." />
+            android:text="Re-Enter Transcation No."
+            android:visibility="gone" />
 
         <EditText
+            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_re_enter_transcation_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
-
             android:background="@android:drawable/editbox_background"
-            android:elevation="4dp" />
+
+            android:elevation="4dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_cheque_no"
@@ -140,15 +155,18 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_5"
             android:layout_marginStart="@dimen/dp_5"
-            android:text="Enter Cheque No." />
+            android:text="Enter Cheque No."
+            android:visibility="gone" />
 
         <EditText
+            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_cheque_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_re_enter_cheque_no"
@@ -156,17 +174,19 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dp_5"
             android:layout_marginStart="@dimen/dp_5"
-            android:text="Re-Enter Cheque No." />
+            android:text="Re-Enter Cheque No."
+            android:visibility="gone" />
 
         <EditText
+            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_re_enter_cheque_number"
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
             android:elevation="4dp"
-            android:focusableInTouchMode="true" />
+            android:focusableInTouchMode="true"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_enter_amount"
@@ -177,6 +197,7 @@
             android:text="Enter Amount." />
 
         <EditText
+            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -194,6 +215,7 @@
             android:text="Re-Enter Amount." />
 
         <EditText
+            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_re_enter_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -258,6 +280,7 @@
             android:text="Remarks" />
 
         <EditText
+            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_remark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
