@@ -119,6 +119,7 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
             @Override
             public void onClick(View v) {
                 selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
+                benDetailsModel.setProjId("");
                 for (TestRateMasterModel trmm:
                         selectedTestsList) {
                     BeneficiaryTestDetailsModel btdm = new BeneficiaryTestDetailsModel();
@@ -126,11 +127,13 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
                     btdm.setChldtests(trmm.getChldtests()!=null?trmm.getChldtests():new ArrayList<ChildTestsModel>());
                     btdm.setTests(trmm.getTestCode());
                     btdm.setTestType(trmm.getTestType());
+                    btdm.setProjId("");
                     btdm.setSampleType(trmm.getSampltype()!=null?trmm.getSampltype():new ArrayList<TestSampleTypeModel>());
                     btdm.setTstClinicalHistory(trmm.getTstClinicalHistory()!=null?trmm.getTstClinicalHistory():new ArrayList<TestClinicalHistoryModel>());
                     if(!InputUtils.isNull(trmm.getTestType())&&trmm.getTestType().equalsIgnoreCase("offer")){
                         btdm.setProjId(trmm.getTestCode());
                         btdm.setTests(trmm.getDescription());
+                        benDetailsModel.setProjId(trmm.getTestCode());
                     }
                     selectedTestDetailsArr.add(btdm);
                 }

@@ -447,6 +447,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                                 btdm.setChldtests(trmm.getChldtests()!=null?trmm.getChldtests():new ArrayList<ChildTestsModel>());
                                 btdm.setTests(trmm.getTestCode());
                                 btdm.setTestType(trmm.getTestType());
+                                btdm.setProjId("");
                                 btdm.setSampleType(trmm.getSampltype()!=null?trmm.getSampltype():new ArrayList<TestSampleTypeModel>());
                                 btdm.setTstClinicalHistory(trmm.getTstClinicalHistory()!=null?trmm.getTstClinicalHistory():new ArrayList<TestClinicalHistoryModel>());
                                 if(!InputUtils.isNull(trmm.getTestType())&&trmm.getTestType().equalsIgnoreCase("offer")){

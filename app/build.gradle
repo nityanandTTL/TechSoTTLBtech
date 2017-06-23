@@ -55,8 +55,8 @@ android {
     productFlavors {
         BTECHdev {
             applicationId = "com.dhb.btech.dev"
-            versionCode 5
-            versionName "1.0.4"
+            versionCode 6
+            versionName "debug_1.0.5"
         }
         BTECHprod {
             applicationId = "com.dhb.btech"
