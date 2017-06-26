@@ -120,8 +120,10 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
             public void onClick(View v) {
                 selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
                 benDetailsModel.setProjId("");
+                int AmountDue = 0;
                 for (TestRateMasterModel trmm:
                         selectedTestsList) {
+                    AmountDue = AmountDue+trmm.getRate();
                     BeneficiaryTestDetailsModel btdm = new BeneficiaryTestDetailsModel();
                     btdm.setFasting(trmm.getFasting());
                     btdm.setChldtests(trmm.getChldtests()!=null?trmm.getChldtests():new ArrayList<ChildTestsModel>());
@@ -138,6 +140,9 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
                     selectedTestDetailsArr.add(btdm);
                 }
                 benDetailsModel.setTestSampleType(selectedTestDetailsArr);
+                if(!isEdit){
+                    orderDetailsModel.setAmountDue(AmountDue);
+                }
                 orderDetailsModel.setTestEdit(isEdit);
                 orderDetailsModel.setBrandId(brandMasterModel.getBrandId());
                 new OrderDetailsDao(dhbDao.getDb()).insertOrUpdate(orderDetailsModel);

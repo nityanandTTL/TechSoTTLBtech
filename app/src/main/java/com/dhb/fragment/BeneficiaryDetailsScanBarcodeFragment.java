@@ -413,7 +413,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             public void onClick(View v) {
                 //TODO show tests list for addition and removal
 //                Toast.makeText(getActivity(),"Feature Coming Soon Stay Tunned", Toast.LENGTH_SHORT).show();
-                if(beneficiaryDetailsModel.getTestSampleType()!=null && beneficiaryDetailsModel.getTestSampleType().size()>0) {
+//                if(beneficiaryDetailsModel.getTestSampleType()!=null && beneficiaryDetailsModel.getTestSampleType().size()>0) {
                     DisplaySelectedTestsListForCancellationDialog dstlfcd = new DisplaySelectedTestsListForCancellationDialog(activity, beneficiaryDetailsModel.getTestSampleType(), new CloseTestsDisplayDialogButtonDialogDelegate() {
                         @Override
                         public void onItemClick(ArrayList<TestRateMasterModel> selectedTestsList,boolean isTestEdit) {
@@ -512,7 +512,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         }
                     });
                     dstlfcd.show();
-                }
+                /*}
                 else{
                     Intent intentAddTests = new Intent(activity, DisplayTestsMasterListActivity.class);
                     intentAddTests.putExtra(BundleConstants.SELECTED_TESTS_LIST, new ArrayList<>());
@@ -520,7 +520,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     intentAddTests.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
                     intentAddTests.putExtra(BundleConstants.IS_TEST_EDIT, true);
                     startActivityForResult(intentAddTests, BundleConstants.ADD_TESTS_START);
-                }
+                }*/
             }
         });
         edtCH.setOnClickListener(new View.OnClickListener() {
