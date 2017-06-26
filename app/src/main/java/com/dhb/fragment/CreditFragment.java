@@ -479,6 +479,8 @@ public class CreditFragment extends Fragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+            activity.toolbarHome.setVisibility(View.VISIBLE);
+            activity.pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
         }
 
         @Override

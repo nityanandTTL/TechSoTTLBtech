@@ -216,23 +216,24 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
 
     private void initData() {
         selectedTestsList = new ArrayList<>();
-        for (BeneficiaryTestDetailsModel btdm:
-                selectedTestDetailsArr) {
-            TestRateMasterModel trmm = new TestRateMasterModel();
-            trmm.setFasting(btdm.getFasting());
-            trmm.setChldtests(btdm.getChldtests()!=null?btdm.getChldtests():new ArrayList<ChildTestsModel>());
-            trmm.setTestCode(btdm.getTests());
-            trmm.setTestType(btdm.getTestType());
-            trmm.setSampltype(btdm.getSampleType()!=null?btdm.getSampleType():new ArrayList<TestSampleTypeModel>());
-            trmm.setTstClinicalHistory(btdm.getTstClinicalHistory()!=null?btdm.getTstClinicalHistory():new ArrayList<TestClinicalHistoryModel>());
-            if(!InputUtils.isNull(btdm.getProjId())){
-                trmm.setTestCode(btdm.getProjId());
-                trmm.setDescription(btdm.getTests());
-                trmm.setTestType("OFFER");
+        if(selectedTestDetailsArr!=null) {
+            for (BeneficiaryTestDetailsModel btdm :
+                    selectedTestDetailsArr) {
+                TestRateMasterModel trmm = new TestRateMasterModel();
+                trmm.setFasting(btdm.getFasting());
+                trmm.setChldtests(btdm.getChldtests() != null ? btdm.getChldtests() : new ArrayList<ChildTestsModel>());
+                trmm.setTestCode(btdm.getTests());
+                trmm.setTestType(btdm.getTestType());
+                trmm.setSampltype(btdm.getSampleType() != null ? btdm.getSampleType() : new ArrayList<TestSampleTypeModel>());
+                trmm.setTstClinicalHistory(btdm.getTstClinicalHistory() != null ? btdm.getTstClinicalHistory() : new ArrayList<TestClinicalHistoryModel>());
+                if (!InputUtils.isNull(btdm.getProjId())) {
+                    trmm.setTestCode(btdm.getProjId());
+                    trmm.setDescription(btdm.getTests());
+                    trmm.setTestType("OFFER");
+                }
+                selectedTestsList.add(trmm);
             }
-            selectedTestsList.add(trmm);
         }
-
         BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
         final ArrayList<BrandMasterModel> brandMasterModels = brandMasterDao.getAllModels();
         ArrayAdapter<BrandMasterModel> adapter = new ArrayAdapter<BrandMasterModel>(this, android.R.layout.simple_spinner_item, brandMasterModels);

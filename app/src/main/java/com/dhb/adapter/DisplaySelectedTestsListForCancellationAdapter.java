@@ -30,6 +30,9 @@ public class DisplaySelectedTestsListForCancellationAdapter extends BaseAdapter 
         this.activity = activity;
         this.removeSelectedTestFromListDelegate = removeSelectedTestFromListDelegate;
         this.selectedTestsListArr = selectedTestsListArr;
+        if(this.selectedTestsListArr==null){
+            this.selectedTestsListArr=new ArrayList<>();
+        }
         layoutInflater = activity.getLayoutInflater();
     }
 

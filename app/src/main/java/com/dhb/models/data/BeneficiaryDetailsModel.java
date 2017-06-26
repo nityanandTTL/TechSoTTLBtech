@@ -30,6 +30,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
 
     public BeneficiaryDetailsModel() {
         super();
+        Age = 1;
     }
 
     protected BeneficiaryDetailsModel(Parcel in) {

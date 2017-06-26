@@ -775,8 +775,13 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private void onCaptureImageResult(Intent data) {
         thumbnail = (Bitmap) data.getExtras().get("data");
         encodedVanipunctureImg = encodeImage(thumbnail);
+        if(!InputUtils.isNull(encodedVanipunctureImg)) {
+            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
+        }
+        else{
+            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.cameraa));
+        }
         beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
-        imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
     }
 

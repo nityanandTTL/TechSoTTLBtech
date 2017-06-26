@@ -680,7 +680,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             Toast.makeText(activity, "Beneficiary Age is required", Toast.LENGTH_SHORT).show();
             return false;
         }
-        else if(!InputUtils.isNull(edtAge.getText().toString())&& Integer.parseInt(edtAge.getText().toString())>0 && Integer.parseInt(edtAge.getText().toString())<136){
+        else if(!InputUtils.isNull(edtAge.getText().toString())&& Integer.parseInt(edtAge.getText().toString())<1 && Integer.parseInt(edtAge.getText().toString())>135){
             Toast.makeText(activity, "Beneficiary Age should be between 1 and 135", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -883,7 +883,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             }
         }
         if (resultCode == Activity.RESULT_OK) {
-            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
             if (requestCode == REQUEST_CAMERA) {
                 onCaptureImageResult(data);
             }
@@ -898,6 +897,12 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private void onCaptureImageResult(Intent data) {
         thumbnail = (Bitmap) data.getExtras().get("data");
         encodedVanipunctureImg = encodeImage(thumbnail);
+        if(!InputUtils.isNull(encodedVanipunctureImg)) {
+            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
+        }
+        else{
+            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.cameraa));
+        }
         beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
     }
