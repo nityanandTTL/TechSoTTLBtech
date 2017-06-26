@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
-            android:gravity="right"
+            android:gravity="center"
             android:text="@string/note"
             android:textColor="@android:color/holo_red_dark" />
 
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
-            android:gravity="right"
+            android:gravity="center"
             android:text="*Please Select Cheque as a instrument for DD"
             android:textColor="@android:color/holo_red_dark" />
 
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
-            android:gravity="right"
+            android:gravity="center"
             android:text="*Please Select RTGS Hub Branch for NEFT payment"
             android:textColor="@android:color/holo_red_dark" />
 
@@ -231,7 +231,7 @@
             android:orientation="horizontal">
 
             <TextView
-
+android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_5"
@@ -261,8 +261,16 @@
                     android:text="Choose File"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
-
                 <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                  android:layout_marginTop="@dimen/dp_2"
+
+                    android:text="Paper Proof[File Type: .jpg,.png]"
+                    android:textColor="@android:color/darker_gray" />
+                <TextView
+                    android:visibility="gone"
                     android:id="@+id/tv_no_file_chosen"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
