@@ -132,24 +132,32 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
         boolean isChecked = false;
         holder.isSelectedDueToParent = false;
         holder.parentTestCode = "";
+        holder.imgChecked.setVisibility(View.GONE);
+        holder.imgCheck.setVisibility(View.VISIBLE);
         if(selectedTests!=null && selectedTests.size()>0) {
             for (int i = 0; !isChecked && i < selectedTests.size(); i++) {
-                TestRateMasterModel testRateMasterModel1 = selectedTests.get(i);
-                if (testRateMasterModel1.getTestCode().equals(testRateMasterModel.getTestCode())) {
+                TestRateMasterModel selectedTestModel = selectedTests.get(i);
+                if (selectedTestModel.getTestCode().equals(testRateMasterModel.getTestCode())) {
                     holder.imgChecked.setVisibility(View.VISIBLE);
                     holder.imgCheck.setVisibility(View.GONE);
                     holder.isSelectedDueToParent = false;
                     holder.parentTestCode = "";
                     isChecked = true;
-                } else {
-                    if (testRateMasterModel1.getChldtests() != null && testRateMasterModel1.getChldtests().size() > 0) {
+                }else if(selectedTestModel.getChldtests()!=null && testRateMasterModel.getChldtests()!=null && selectedTestModel.checkIfChildsContained(testRateMasterModel)) {
+                    holder.imgChecked.setVisibility(View.VISIBLE);
+                    holder.imgCheck.setVisibility(View.GONE);
+                    holder.isSelectedDueToParent = true;
+                    holder.parentTestCode = selectedTestModel.getTestCode();
+                    isChecked = true;
+                }else {
+                    if (selectedTestModel.getChldtests() != null && selectedTestModel.getChldtests().size() > 0) {
                         for (ChildTestsModel ctm :
-                                testRateMasterModel1.getChldtests()) {
+                                selectedTestModel.getChldtests()) {
                             if (ctm.getChildTestCode().equals(testRateMasterModel.getTestCode())) {
                                 holder.imgChecked.setVisibility(View.VISIBLE);
                                 holder.imgCheck.setVisibility(View.GONE);
                                 holder.isSelectedDueToParent = true;
-                                holder.parentTestCode = testRateMasterModel1.getTestCode();
+                                holder.parentTestCode = selectedTestModel.getTestCode();
                                 isChecked = true;
                                 break;
                             } else {

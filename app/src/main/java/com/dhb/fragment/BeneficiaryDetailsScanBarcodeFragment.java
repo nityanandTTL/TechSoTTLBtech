@@ -419,6 +419,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         public void onItemClick(ArrayList<TestRateMasterModel> selectedTestsList,boolean isTestEdit) {
                             orderDetailsModel.setTestEdit(true);
                             orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                            beneficiaryDetailsModel.setProjId("");
                             ArrayList<BeneficiaryTestDetailsModel> selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
                             for (TestRateMasterModel trmm:
                                     selectedTestsList) {
@@ -427,11 +428,13 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                 btdm.setChldtests(trmm.getChldtests()!=null?trmm.getChldtests():new ArrayList<ChildTestsModel>());
                                 btdm.setTests(trmm.getTestCode());
                                 btdm.setTestType(trmm.getTestType());
+                                btdm.setProjId("");
                                 btdm.setSampleType(trmm.getSampltype()!=null?trmm.getSampltype():new ArrayList<TestSampleTypeModel>());
                                 btdm.setTstClinicalHistory(trmm.getTstClinicalHistory()!=null?trmm.getTstClinicalHistory():new ArrayList<TestClinicalHistoryModel>());
                                 if(!InputUtils.isNull(trmm.getTestType())&&trmm.getTestType().equalsIgnoreCase("offer")){
                                     btdm.setProjId(trmm.getTestCode());
                                     btdm.setTests(trmm.getDescription());
+                                    beneficiaryDetailsModel.setProjId(trmm.getTestCode());
                                 }
                                 selectedTestDetailsArr.add(btdm);
                             }

@@ -230,7 +230,7 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
                     }
                 }
             }
-            if (commonChildsSize == ttChildSize) {
+            if (commonChildsSize>0 && commonChildsSize == ttChildSize) {
                 isChilds = true;
             }
         }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dhb.R;
 import com.dhb.delegate.RemoveSelectedTestFromListDelegate;
@@ -66,8 +67,13 @@ public class DisplaySelectedTestsListForCancellationAdapter extends BaseAdapter 
         holder.imgRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedTestsListArr.remove(pos);
-                removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr);
+                if(selectedTestsListArr.size()>1) {
+                    selectedTestsListArr.remove(pos);
+                    removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr);
+                }
+                else{
+                    Toast.makeText(activity,"Cannot empty the test list",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
