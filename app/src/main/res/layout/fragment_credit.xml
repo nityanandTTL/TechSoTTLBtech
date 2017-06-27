@@ -11,30 +11,79 @@
         tools:context="com.dhb.fragment.CreditFragment">
 
         <!-- TODO: Update blank fragment layout -->
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_2"
-            android:gravity="center"
-            android:text="@string/note"
-            android:textColor="@android:color/holo_red_dark" />
+            android:orientation="horizontal">
 
-        <TextView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:layout_weight="0.8"
+                android:gravity="center"
+                android:text="Note:"
+                android:textColor="@android:color/holo_red_dark" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:text="@string/note"
+                android:textColor="@android:color/holo_red_dark" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_2"
-            android:gravity="center"
-            android:text="*Please Select Cheque as a instrument for DD"
-            android:textColor="@android:color/holo_red_dark" />
+            android:orientation="horizontal">
 
-        <TextView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:layout_weight="0.8"
+                android:gravity="center"
+                android:text="Note:"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="invisible" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:text="*Please Select Cheque as a instrument for DD"
+                android:textColor="@android:color/holo_red_dark" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_2"
-            android:gravity="center"
-            android:text="*Please Select RTGS Hub Branch for NEFT payment"
-            android:textColor="@android:color/holo_red_dark" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:layout_weight="0.8"
+                android:gravity="center"
+                android:text="Note:"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="invisible" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:text="*Please Select RTGS Hub Branch for NEFT payment"
+                android:textColor="@android:color/holo_red_dark" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -62,16 +111,16 @@
             android:text="Enter Branch Name" />
 
         <TextView
-            style="@android:style/Widget.EditText"
             android:id="@+id/edt_branch_name"
+            style="@android:style/Widget.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
-            android:textSize="14sp"
-            android:textColor="@color/gray"
             android:background="@android:drawable/editbox_background"
             android:drawableRight="@android:drawable/arrow_down_float"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            android:textColor="@color/gray"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tv_select_instrument"
@@ -82,16 +131,16 @@
             android:text="Select Instrument" />
 
         <TextView
-            style="@android:style/Widget.EditText"
-            android:textSize="14sp"
-            android:textColor="@color/gray"
             android:id="@+id/edt_instrument"
+            style="@android:style/Widget.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
             android:drawableRight="@android:drawable/arrow_down_float"
-            android:elevation="4dp" />
+            android:elevation="4dp"
+            android:textColor="@color/gray"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tv_date_of_deposit"
@@ -120,13 +169,13 @@
             android:visibility="gone" />
 
         <EditText
-            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_transaction_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
             android:elevation="4dp"
+            android:textColor="@android:color/darker_gray"
             android:visibility="gone" />
 
         <TextView
@@ -139,14 +188,14 @@
             android:visibility="gone" />
 
         <EditText
-            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_re_enter_transcation_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
-
             android:elevation="4dp"
+
+            android:textColor="@android:color/darker_gray"
             android:visibility="gone" />
 
         <TextView
@@ -159,13 +208,13 @@
             android:visibility="gone" />
 
         <EditText
-            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_cheque_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
             android:elevation="4dp"
+            android:textColor="@android:color/darker_gray"
             android:visibility="gone" />
 
         <TextView
@@ -178,7 +227,6 @@
             android:visibility="gone" />
 
         <EditText
-            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_re_enter_cheque_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -186,6 +234,7 @@
             android:background="@android:drawable/editbox_background"
             android:elevation="4dp"
             android:focusableInTouchMode="true"
+            android:textColor="@android:color/darker_gray"
             android:visibility="gone" />
 
         <TextView
@@ -197,14 +246,14 @@
             android:text="Enter Amount." />
 
         <EditText
-            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
             android:elevation="4dp"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textColor="@android:color/darker_gray" />
 
         <TextView
             android:id="@+id/tv_re_enter_amount"
@@ -215,14 +264,14 @@
             android:text="Re-Enter Amount." />
 
         <EditText
-            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_re_enter_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
             android:elevation="4dp"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textColor="@android:color/darker_gray" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -231,14 +280,14 @@
             android:orientation="horizontal">
 
             <TextView
-android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_5"
                 android:layout_marginStart="@dimen/dp_5"
                 android:layout_weight="1"
                 android:text="Paper Proof[File Type: .jpg,.png]"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@android:color/darker_gray"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -261,21 +310,23 @@ android:visibility="gone"
                     android:text="Choose File"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
-                <TextView
 
+                <TextView
+                    android:id="@+id/tv_file_selected"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                  android:layout_marginTop="@dimen/dp_2"
+                    android:layout_marginTop="@dimen/dp_2"
 
                     android:text="Paper Proof[File Type: .jpg,.png]"
                     android:textColor="@android:color/darker_gray" />
+
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/tv_no_file_chosen"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_2"
-                    android:text="No file chosen" />
+                    android:text="No file chosen"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
 
@@ -288,7 +339,6 @@ android:visibility="gone"
             android:text="Remarks" />
 
         <EditText
-            android:textColor="@android:color/darker_gray"
             android:id="@+id/edt_remark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -296,7 +346,8 @@ android:visibility="gone"
             android:background="@android:drawable/editbox_background"
             android:elevation="8dp"
             android:lines="5"
-            android:maxLength="700" />
+            android:maxLength="700"
+            android:textColor="@android:color/darker_gray" />
 
         <Button
             android:id="@+id/btn_submit"

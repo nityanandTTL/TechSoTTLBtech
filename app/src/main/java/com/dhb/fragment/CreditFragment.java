@@ -79,6 +79,7 @@ public class CreditFragment extends Fragment {
     private String image = "";
     private ArrayList<BankMasterResponseModel> selectedBankArr;
     private String picturePath;
+    private TextView tv_file_selected;
 
     public CreditFragment() {
         // Required empty public constructor
@@ -97,6 +98,7 @@ public class CreditFragment extends Fragment {
     }
 
     private void initUI(View view) {
+        tv_file_selected=(TextView)view.findViewById(R.id.tv_file_selected);
         tv_no_file_chosen = (TextView) view.findViewById(R.id.tv_no_file_chosen);
         tv_branch_name = (TextView) view.findViewById(R.id.tv_branch_name);
         tv_select_instrument = (TextView) view.findViewById(R.id.tv_select_instrument);
@@ -386,8 +388,10 @@ public class CreditFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
 
-            Bitmap bm=null;
+            Bitmap bm = null;
             if (data != null) {
+                tv_file_selected.setText("Paper Proof[File Type: .jpg,.png]");
+                tv_file_selected.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 tv_no_file_chosen.setText("File attached");
                 try {
                     bm = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), data.getData());
@@ -395,8 +399,8 @@ public class CreditFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-            image=encodeTobase64(bm);
-            Logger.error("image: "+image);
+            image = encodeTobase64(bm);
+            Logger.error("image: " + image);
         }
     }
 
