@@ -106,7 +106,7 @@
     <string name="submit">Submit</string>
     <string name="click_to_select_clinical_history">Select Clinical History</string>
     <string name="re_enter_barcode">Re-enter barcode</string>
-    <string name="note">Note: *Please Select Vashi branch for Cash by ATM</string>
+    <string name="note">*Please Select Vashi branch for Cash by ATM</string>
     <string-array name="payment_mode">
         <item>Cash By ATM</item>
         <item>Cash</item>
