@@ -55,24 +55,11 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     private VisitOrderDisplayRecyclerViewAdapterDelegate visitOrderDisplayRecyclerViewAdapterDelegate;
     private HashSet<Integer> unfoldedIndexes = new HashSet<>();
     private LayoutInflater layoutInflater;
-    private AppPreferenceManager appPreferenceManager;
-
-    private boolean isCancelRequesGenereted = false;
-
-    private String MaskedPhoneNumber = "";
-    private boolean isSelected;
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    private RescheduleOrderDialog cdd;
-    private String userChoosenReleaseTask;
-    private DhbDao dhbDao;
-    //private refreshDelegate refreshDelegate;
     public VisitOrderDisplayAdapter(HomeScreenActivity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels, VisitOrderDisplayRecyclerViewAdapterDelegate visitOrderDisplayRecyclerViewAdapterDelegate) {
         this.activity = activity;
         this.orderVisitDetailsModelsArr = orderDetailsResponseModels;
         this.visitOrderDisplayRecyclerViewAdapterDelegate = visitOrderDisplayRecyclerViewAdapterDelegate;
         layoutInflater = LayoutInflater.from(activity);
-        appPreferenceManager = new AppPreferenceManager(activity);
-        dhbDao = new DhbDao(activity);
     }
 
 
@@ -112,9 +99,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         holder.imgRelease2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-
                 final CharSequence[] items = {"Order Reschedule",
                         "Order Release"};
                 final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -123,12 +107,9 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Order Reschedule")) {
-                            userChoosenReleaseTask = "Order Reschedule";
-                            cdd = new RescheduleOrderDialog(activity, new VisitOrderDisplayAdapter.OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0));
-                            cdd.show();
+                            visitOrderDisplayRecyclerViewAdapterDelegate.onItemReschedule(orderVisitDetailsModelsArr.get(pos));
                         }
                         else if (items[item].equals("Order Release")){
-
                             visitOrderDisplayRecyclerViewAdapterDelegate.onItemRelease(orderVisitDetailsModelsArr.get(pos));
                         }
                     }}).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -210,8 +191,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.cell.fold(true);
             }
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment") || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equals("ASSIGNED")) {
-                //Toast.makeText(activity, "inside", Toast.LENGTH_SHORT).show();
-                //Toast.makeText(activity, "inside", Toast.LENGTH_SHORT).show();
                 holder.imgCBAccept.setVisibility(View.VISIBLE);
 
                 //changes_16june2017
@@ -236,113 +215,13 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             holder.imgcall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
-                    callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
-                    callPatchRequestModel.setDestNumber(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getMobile());
-                         Logger.error("orderVisitDetailsModelsArr"+orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getMobile());
-                        callPatchRequestModel.setVisitID(orderVisitDetailsModelsArr.get(0).getVisitId());
-                        ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
-                        callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-                        callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
-
-
+                    visitOrderDisplayRecyclerViewAdapterDelegate.onCallCustomer(orderVisitDetailsModelsArr.get(pos));
                 }
             });
         }
 
 
     }
-
-    class CallPatchRequestAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
-        @Override
-        public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode == 200) {
-                try {
-                    Intent intent = new Intent(Intent.ACTION_CALL);
-                    MaskedPhoneNumber = json;
-                    intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
-                    Logger.error("MaskedPhoneNumber"+MaskedPhoneNumber);
-
-                    appPreferenceManager.setMaskNumber(MaskedPhoneNumber);
-                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(activity,
-                                new String[]{
-                                        Manifest.permission.CALL_PHONE},
-                                AppConstants.APP_PERMISSIONS);
-                    } else {
-                        activity.startActivity(intent);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        @Override
-        public void onApiCancelled() {
-
-        }
-
-    }
-
-
-    private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
-
-        @Override
-        public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark, String date) {
-            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
-            orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
-            orderStatusChangeRequestModel.setRemarks(remark);
-            orderStatusChangeRequestModel.setStatus(11);
-            orderStatusChangeRequestModel.setAppointmentDate(date);
-            ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
-            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new VisitOrderDisplayAdapter.OrderStatusChangeApiAsyncTaskDelegateResult(orderDetailsModel));
-            if (isNetworkAvailable(activity)) {
-                orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
-            } else {
-                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onCancelButtonClicked() {
-
-        }
-    }
-
-    private class OrderStatusChangeApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
-        OrderDetailsModel orderDetailsModel;
-
-        public OrderStatusChangeApiAsyncTaskDelegateResult(OrderDetailsModel orderDetailsModel) {
-            this.orderDetailsModel = orderDetailsModel;
-        }
-
-        @Override
-        public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode == 200) {
-                if (userChoosenReleaseTask.equals("Visit Cancellation")) {
-                    if (!isCancelRequesGenereted) {
-                        isCancelRequesGenereted = true;
-                        orderDetailsModel.setStatus("RESCHEDULED");
-                        OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
-                        orderDetailsDao.insertOrUpdate(orderDetailsModel);
-                        Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
-                      // refreshDelegate.onRefreshClicked();
-                        activity.finish();
-                    }
-                }
-            } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onApiCancelled() {
-            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
-        }
-    }
-
 
     private class FoldingCellViewHolder {
         TextView tvSrNo, tvName, tvAge, txtAddress, txtorderno, txtKits, timedata, timetitle, txt_distance, pintitle, pindata;//tvAadharNo,

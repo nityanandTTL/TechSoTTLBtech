@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.delegate.DispatchToHubAdapterOnItemClickedDelegate;
+import com.dhb.delegate.OrderServedDisplayDetailsAdapterClickedDelegate;
 import com.dhb.models.api.request.CallPatchRequestModel;
 import com.dhb.models.data.BtechOrderModel;
 import com.dhb.models.data.HUBBTechModel;
@@ -39,11 +40,8 @@ import java.util.List;
 public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<OrderServedDisplayDetailsAdapter.MyViewHolder> {
 
     private List<BtechOrderModel> btechOrderModels;
-    HomeScreenActivity activity;
-
-    private String MaskedPhoneNumber = "";
-    private AppPreferenceManager appPreferenceManager;
-    //DispatchToHubAdapterOnItemClickedDelegate mcallback;
+    private HomeScreenActivity activity;
+    private OrderServedDisplayDetailsAdapterClickedDelegate orderServedDisplayDetailsAdapterClickedDelegate;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tv_orderno, tv_barcode, tv_status, txt_amount, txt_name, txt_title, txt_sr_no,tv_amount,amount_title;
@@ -72,11 +70,10 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
     }
 
 
-    public OrderServedDisplayDetailsAdapter(List<BtechOrderModel> btechOrderModels, HomeScreenActivity activity/*, DispatchToHubAdapterOnItemClickedDelegate mCallback*/) {
-        // this.mcallback = mCallback;
+    public OrderServedDisplayDetailsAdapter(List<BtechOrderModel> btechOrderModels, HomeScreenActivity activity, OrderServedDisplayDetailsAdapterClickedDelegate orderServedDisplayDetailsAdapterClickedDelegate) {
         this.btechOrderModels = btechOrderModels;
         this.activity = activity;
-        appPreferenceManager = new AppPreferenceManager(activity);
+        this.orderServedDisplayDetailsAdapterClickedDelegate = orderServedDisplayDetailsAdapterClickedDelegate;
     }
 
     @Override
@@ -88,9 +85,8 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, int position) {
         final BtechOrderModel btechOrderModel = btechOrderModels.get(position);
-
         final int pos = position;
         if (btechOrderModels != null) {
 
@@ -126,52 +122,13 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
             holder.call.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
-                    callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
-                    callPatchRequestModel.setDestNumber(btechOrderModel.getMobile());
-                    callPatchRequestModel.setVisitID(btechOrderModel.getOrderNo());
-                    ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
-                    callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-                    callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
-
+                orderServedDisplayDetailsAdapterClickedDelegate.onCallCustomer(btechOrderModel.getMobile(),btechOrderModel.getOrderNo());
                 }
             });
 
         } else {
             Logger.error("btechOrderModels is null ");
         }
-    }
-    class CallPatchRequestAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
-        @Override
-        public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode == 200) {
-                try {
-                    Intent intent = new Intent(Intent.ACTION_CALL);
-                    MaskedPhoneNumber = json;
-                    intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
-                    Logger.error("MaskedPhoneNumber"+MaskedPhoneNumber);
-
-                    appPreferenceManager.setMaskNumber(MaskedPhoneNumber);
-                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(activity,
-                                new String[]{
-                                        Manifest.permission.CALL_PHONE},
-                                AppConstants.APP_PERMISSIONS);
-                    } else {
-                        activity.startActivity(intent);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        @Override
-        public void onApiCancelled() {
-
-        }
-
     }
     @Override
     public int getItemCount() {

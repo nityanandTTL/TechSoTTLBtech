@@ -31,8 +31,10 @@ import com.dhb.dao.models.BeneficiaryDetailsDao;
 import com.dhb.dao.models.OrderDetailsDao;
 import com.dhb.dao.models.TestRateMasterDao;
 import com.dhb.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
+import com.dhb.delegate.OrderRescheduleDialogButtonClickedDelegate;
 import com.dhb.delegate.VisitOrderDisplayRecyclerViewAdapterDelegate;
 import com.dhb.dialog.ConfirmOrderReleaseDialog;
+import com.dhb.dialog.RescheduleOrderDialog;
 import com.dhb.models.api.request.CallPatchRequestModel;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
 import com.dhb.models.api.response.BtechEstEarningsResponseModel;
@@ -59,6 +61,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
+
 public class VisitOrdersDisplayFragment extends AbstractFragment {
 
     public static final String TAG_FRAGMENT = "VISIT_ORDERS_DISPLAY_FRAGMENT";
@@ -80,6 +84,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private boolean isToFromMap = false;
     private String kits;
     private String[] kits_arr;
+    private RescheduleOrderDialog rod;
+    private String MaskedPhoneNumber = "";
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
     }
@@ -141,23 +147,23 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             }
         });
 
-txtTotalKitsRequired.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
+        txtTotalKitsRequired.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflater = activity.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
-        builder.setView(dialogView);
-        ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
-        Button btn_edit = (Button) dialogView.findViewById(R.id.btn_edit);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, kits_arr);
-        lv_test_codes.setAdapter(adapter);
-        btn_edit.setVisibility(View.GONE);
-        builder.show();
-    }
-});
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflater = activity.getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
+                builder.setView(dialogView);
+                ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
+                Button btn_edit = (Button) dialogView.findViewById(R.id.btn_edit);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_list_item_1, kits_arr);
+                lv_test_codes.setAdapter(adapter);
+                btn_edit.setVisibility(View.GONE);
+                builder.show();
+            }
+        });
     }
 
 
@@ -170,8 +176,6 @@ txtTotalKitsRequired.setOnClickListener(new View.OnClickListener() {
         if (grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Intent intent = new Intent(Intent.ACTION_CALL);
-
-            String MaskedPhoneNumber = appPreferenceManager.getMaskNumber();
             intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
             startActivity(intent);
         } else {
@@ -232,7 +236,7 @@ txtTotalKitsRequired.setOnClickListener(new View.OnClickListener() {
                 }
             }
         }
-       // txtTotalDistance.setText(totalDistance + "");
+        // txtTotalDistance.setText(totalDistance + "");
         int amount_estIncome = Math.round(estIncome);
         //txtTotalEarnings.setText(amount_estIncome + "");
         Iterator it = kitsCount.entrySet().iterator();
@@ -245,7 +249,7 @@ txtTotalKitsRequired.setOnClickListener(new View.OnClickListener() {
             }
             it.remove(); // avoids a ConcurrentModificationException
         }
-      //  txtTotalKitsRequired.setText(kitsReq);
+        //  txtTotalKitsRequired.setText(kitsReq);
         prepareRecyclerView();
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -261,10 +265,6 @@ txtTotalKitsRequired.setOnClickListener(new View.OnClickListener() {
             txtNoRecord.setVisibility(View.VISIBLE);
         }
     }
-
-
-
-
 
     private class FetchOrderDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
 
@@ -329,11 +329,59 @@ txtTotalKitsRequired.setOnClickListener(new View.OnClickListener() {
 
     }
 
+    private class CallPatchRequestAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_CALL);
+                    MaskedPhoneNumber = json;
+                    intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
+                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(activity,
+                                new String[]{
+                                        Manifest.permission.CALL_PHONE},
+                                AppConstants.APP_PERMISSIONS);
+                    } else {
+                        activity.startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+
+    }
+
     private class VisitOrderDisplayRecyclerViewAdapterDelegateResult implements VisitOrderDisplayRecyclerViewAdapterDelegate {
         @Override
         public void onItemRelease(OrderVisitDetailsModel orderVisitDetailsModel) {
             cdd = new ConfirmOrderReleaseDialog(activity, new ConfirmOrderReleaseDialogButtonClickedDelegateResult(), orderVisitDetailsModel);
             cdd.show();
+        }
+
+        @Override
+        public void onCallCustomer(OrderVisitDetailsModel orderVisitDetailsModel) {
+            CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
+            callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
+            callPatchRequestModel.setDestNumber(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+            Logger.error("orderVisitDetailsModelsArr"+orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+            callPatchRequestModel.setVisitID(orderVisitDetailsModel.getVisitId());
+            ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
+            callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
+            callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
+
+        }
+
+        @Override
+        public void onItemReschedule(OrderVisitDetailsModel orderVisitDetailsModel) {
+            rod = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(),orderVisitDetailsModel.getAllOrderdetails().get(0));
+            rod.show();
         }
 
         @Override
@@ -372,7 +420,7 @@ txtTotalKitsRequired.setOnClickListener(new View.OnClickListener() {
         }
     }
 
-   public class ConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
+    public class ConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
         @Override
         public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
             AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
@@ -498,7 +546,7 @@ txtTotalKitsRequired.setOnClickListener(new View.OnClickListener() {
                     kits_arr = kits.split(",");
                     Logger.error("arr: " + kits_arr.toString());
                     Logger.error("test code string: " + kits);
-                  //  txtTotalKitsRequired.setText(kits_arr[0]);
+                    //  txtTotalKitsRequired.setText(kits_arr[0]);
                     txtTotalKitsRequired.setText(kitsReq);
                 }
 
@@ -510,4 +558,56 @@ txtTotalKitsRequired.setOnClickListener(new View.OnClickListener() {
 
         }
     }
+
+    private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
+
+        @Override
+        public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark, String date) {
+            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
+            orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
+            orderStatusChangeRequestModel.setRemarks(remark);
+            orderStatusChangeRequestModel.setStatus(11);
+            orderStatusChangeRequestModel.setAppointmentDate(date);
+            ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
+            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeRescheduledApiAsyncTaskDelegateResult(orderDetailsModel));
+            if (isNetworkAvailable(activity)) {
+                orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
+    }
+
+    private class OrderStatusChangeRescheduledApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        OrderDetailsModel orderDetailsModel;
+
+        public OrderStatusChangeRescheduledApiAsyncTaskDelegateResult(OrderDetailsModel orderDetailsModel) {
+            this.orderDetailsModel = orderDetailsModel;
+        }
+
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                orderDetailsModel.setStatus("RESCHEDULED");
+                OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
+                orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+            }
+            fetchData();
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

@@ -16,10 +16,8 @@ import java.util.ArrayList;
 public class AppPreferenceManager {
 
 	private AppPreference appPreference;
-	private String maskNumber = "maskNumber";
 	private String AppVersion = "app_version";
 	private String APISessionKey = "ApiSessionKey";
-	private String userId = "userId";
 	private String totalDistance = "totalDistance";
 	private String totalEarnings = "totalEarnings";
 	private String totalKits = "totalKits";
@@ -39,14 +37,6 @@ public class AppPreferenceManager {
 	//changes_5june2017--START
 	private String scheduleCounter = "scheduleCounter";
 	private String scheduleDate = "scheduleDate";
-
-	public String getMaskNumber() {
-		return appPreference.getString(maskNumber, "");
-	}
-
-	public void setMaskNumber(String maskNumber) {
-		appPreference.putString(this.maskNumber, maskNumber);
-	}
 
 	public String getScheduleDate() {
 		return appPreference.getString(scheduleDate, "");
