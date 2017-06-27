@@ -95,6 +95,7 @@ public class DisplaySelectedTestsListForCancellationDialog extends Dialog {
         btn_addtest = (Button) findViewById(R.id.btn_addtest);
         btn_close = (Button) findViewById(R.id.btn_cancel);
         lvTestsDisplay = (ListView) findViewById(R.id.test_names);
+
         displayAdapter = new DisplaySelectedTestsListForCancellationAdapter(activity, selectedTestsListArr, new RemoveSelectedTestFromListDelegate() {
             @Override
             public void onRemoveButtonClicked(ArrayList<BeneficiaryTestDetailsModel> selectedTests) {

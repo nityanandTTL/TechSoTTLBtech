@@ -1,6 +1,8 @@
 package com.dhb.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -35,6 +37,25 @@ public class OrderBookingActivity extends AbstractActivity {
     private Toolbar tbOBA;
     private OrderVisitDetailsModel orderVisitDetailsModel;
     public ArrayList<BeneficiaryBarcodeDetailsModel> scannedBarcodes = new ArrayList<>();
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Confirm Action")
+                .setMessage("All changes made by you will get reset, do you want confirm.")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        OrderBookingActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

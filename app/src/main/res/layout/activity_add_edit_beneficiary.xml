@@ -110,7 +110,7 @@
                         android:digits="0123456789"
                         android:drawableEnd="@drawable/vseparator_age"
                         android:fadingEdge="horizontal"
-                        android:hint="50 "
+                        android:hint="age"
                         android:inputType="number"
                         android:maxLength="3"
                         android:singleLine="true"
