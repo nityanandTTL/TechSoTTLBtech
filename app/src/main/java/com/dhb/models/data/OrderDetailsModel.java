@@ -29,7 +29,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private ArrayList<BeneficiaryDetailsModel> benMaster;
     private String VisitId;
     private String Slot;
-    private String  CampId;
+    private String CampId;
     private String Response;
     private int SlotId;
     private float Distance;
@@ -38,7 +38,17 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private String Status;
     private String Servicetype;
     private float EstIncome;
+    private String AppointmentDate;
+
     private ArrayList<KitsCountModel> kits;
+
+    public String getAppointmentDate() {
+        return AppointmentDate;
+    }
+
+    public void setAppointmentDate(String appointmentDate) {
+        AppointmentDate = appointmentDate;
+    }
 
     protected OrderDetailsModel(Parcel in) {
         super(in);
@@ -70,6 +80,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         Status = in.readString();
         Servicetype = in.readString();
         EstIncome = in.readFloat();
+        AppointmentDate = in.readString();
         kits = in.createTypedArrayList(KitsCountModel.CREATOR);
     }
 
@@ -104,6 +115,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeString(Status);
         dest.writeString(Servicetype);
         dest.writeFloat(EstIncome);
+        dest.writeString(AppointmentDate);
         dest.writeTypedList(kits);
     }
 

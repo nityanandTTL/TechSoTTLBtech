@@ -89,7 +89,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
-        if(activity.toolbarHome!=null) {
+        if (activity.toolbarHome != null) {
             activity.toolbarHome.setTitle("Visit Orders");
         }
         activity.isOnHome = false;
@@ -151,6 +151,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
     @Override
     public void onResume() {
+
         if (!isToFromMap) {
             fetchData();
         }
@@ -174,6 +175,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
     private void initData() {
         orderDetailsResponseModels = orderDetailsDao.getAllModels();
+
         float totalDistance = 0;
         float estIncome = 0;
         HashMap<String, Integer> kitsCount = new HashMap<>();
@@ -215,6 +217,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     }
 
     private void prepareRecyclerView() {
+
         if (orderDetailsResponseModels.size() > 0) {
             VisitOrderDisplayAdapter visitOrderDisplayRecyclerViewAdapter = new VisitOrderDisplayAdapter(activity, orderDetailsResponseModels, new VisitOrderDisplayRecyclerViewAdapterDelegateResult());
             recyclerView.setAdapter(visitOrderDisplayRecyclerViewAdapter);
@@ -225,9 +228,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             txtNoRecord.setVisibility(View.VISIBLE);
         }
     }
-
-
-
 
 
     private class FetchOrderDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -251,6 +251,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                                 orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
                                 orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
                                 orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
+                                orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
                                 if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
                                     for (BeneficiaryDetailsModel beneficiaryDetailsModel :
                                             orderDetailsModel.getBenMaster()) {
@@ -332,7 +333,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         }
     }
 
-   public class ConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
+    public class ConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
         @Override
         public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
             AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.dao.DhbDao;
@@ -38,8 +39,11 @@ import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
+import com.dhb.utils.app.InputUtils;
 import com.ramotion.foldingcell.FoldingCell;
+
 import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -65,6 +69,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     private RescheduleOrderDialog cdd;
     private String userChoosenReleaseTask;
     private DhbDao dhbDao;
+
     //private refreshDelegate refreshDelegate;
     public VisitOrderDisplayAdapter(HomeScreenActivity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels, VisitOrderDisplayRecyclerViewAdapterDelegate visitOrderDisplayRecyclerViewAdapterDelegate) {
         this.activity = activity;
@@ -73,6 +78,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         layoutInflater = LayoutInflater.from(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
         dhbDao = new DhbDao(activity);
+
     }
 
 
@@ -113,8 +119,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-
-
                 final CharSequence[] items = {"Order Reschedule",
                         "Order Release"};
                 final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -126,12 +130,12 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                             userChoosenReleaseTask = "Order Reschedule";
                             cdd = new RescheduleOrderDialog(activity, new VisitOrderDisplayAdapter.OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0));
                             cdd.show();
-                        }
-                        else if (items[item].equals("Order Release")){
+                        } else if (items[item].equals("Order Release")) {
 
                             visitOrderDisplayRecyclerViewAdapterDelegate.onItemRelease(orderVisitDetailsModelsArr.get(pos));
                         }
-                    }}).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    }
+                }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -149,7 +153,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         holder.btnStartNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Logger.error("status***"+orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus());
+                Logger.error("status***" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus());
 
                 if (!orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED") && !orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")) {
 
@@ -186,6 +190,17 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             holder.tvSrNo.setText(pos + 1 + "");
             holder.txtorderno.setSelected(true);
 
+            Logger.debug("apptDate" + String.valueOf(orderVisitDetailsModelsArr.get(pos).getVisitId() + orderVisitDetailsModelsArr.get(pos).getAppointmentDate()));
+
+            if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAppointmentDate())) {
+                holder.apptDateValue.setVisibility(View.VISIBLE);
+                holder.apptDate.setVisibility(View.VISIBLE);
+                holder.apptDateValue.setText(orderVisitDetailsModelsArr.get(pos).getAppointmentDate());
+            } else {
+                holder.apptDateValue.setVisibility(View.INVISIBLE);
+                holder.apptDate.setVisibility(View.INVISIBLE);
+            }
+
             holder.pindata.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getPincode());
             holder.timedata.setText(orderVisitDetailsModelsArr.get(pos).getSlot() + "  HRS");
             holder.txtorderno.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
@@ -193,7 +208,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             holder.txtName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
             holder.txtName.setSelected(true);
             holder.txtSrNo.setText(pos + 1 + "");
-
 
             holder.txt_distance.setText(String.valueOf(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getDistance()) + "KM");
             holder.txtKits.setText(String.valueOf(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits().get(0).getKit()));
@@ -214,9 +228,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 //Toast.makeText(activity, "inside", Toast.LENGTH_SHORT).show();
                 holder.imgCBAccept.setVisibility(View.VISIBLE);
 
-                //changes_16june2017
                 holder.txtSrNo.setVisibility(View.INVISIBLE);
-                //changes_16june2017
 
                 holder.imgCBAccept.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -224,12 +236,10 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         visitOrderDisplayRecyclerViewAdapterDelegate.onOrderAccepted(orderVisitDetailsModelsArr.get(pos));
                     }
                 });
-            }else {
+            } else {
                 holder.imgCBAccept.setVisibility(View.INVISIBLE);
 
-                //changes_16june2017
                 holder.txtSrNo.setVisibility(View.VISIBLE);
-                //changes_16june2017
             }
 
 
@@ -239,11 +249,11 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
                     callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
                     callPatchRequestModel.setDestNumber(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getMobile());
-                         Logger.error("orderVisitDetailsModelsArr"+orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getMobile());
-                        callPatchRequestModel.setVisitID(orderVisitDetailsModelsArr.get(0).getVisitId());
-                        ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
-                        callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-                        callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
+                    Logger.error("orderVisitDetailsModelsArr" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getMobile());
+                    callPatchRequestModel.setVisitID(orderVisitDetailsModelsArr.get(0).getVisitId());
+                    ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
+                    callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
+                    callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
 
 
                 }
@@ -261,7 +271,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     Intent intent = new Intent(Intent.ACTION_CALL);
                     MaskedPhoneNumber = json;
                     intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
-                    Logger.error("MaskedPhoneNumber"+MaskedPhoneNumber);
+                    Logger.error("MaskedPhoneNumber" + MaskedPhoneNumber);
 
                     appPreferenceManager.setMaskNumber(MaskedPhoneNumber);
                     if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -292,10 +302,12 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark, String date) {
             AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
             OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
+
             orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
             orderStatusChangeRequestModel.setRemarks(remark);
             orderStatusChangeRequestModel.setStatus(11);
             orderStatusChangeRequestModel.setAppointmentDate(date);
+
             ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
             orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new VisitOrderDisplayAdapter.OrderStatusChangeApiAsyncTaskDelegateResult(orderDetailsModel));
             if (isNetworkAvailable(activity)) {
@@ -328,7 +340,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
                         orderDetailsDao.insertOrUpdate(orderDetailsModel);
                         Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
-                      // refreshDelegate.onRefreshClicked();
+                        // refreshDelegate.onRefreshClicked();
                         activity.finish();
                     }
                 }
@@ -345,10 +357,10 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
 
     private class FoldingCellViewHolder {
-        TextView tvSrNo, tvName, tvAge, txtAddress, txtorderno, txtKits, timedata, timetitle, txt_distance, pintitle, pindata;//tvAadharNo,
+        TextView tvSrNo, tvName, tvAge, txtAddress, txtorderno, txtKits, timedata, timetitle, txt_distance, pintitle, pindata, apptDate, apptDateValue;//tvAadharNo,
         ImageView imgCBAccept;
         TextView txtSrNo, txtName, txtAge, txtAadharNo;
-        ImageView imgRelease, imgRelease2,imgcall;
+        ImageView imgRelease, imgRelease2, imgcall;
         Button btnStartNavigation;
         FoldingCell cell;
 
@@ -358,7 +370,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
         private void initUI(View itemView) {
 
-            imgcall=(ImageView) itemView.findViewById(R.id.call);
+            imgcall = (ImageView) itemView.findViewById(R.id.call);
             imgcall.setVisibility(View.VISIBLE);
             pintitle = (TextView) itemView.findViewById(R.id.pincode_title);
             pindata = (TextView) itemView.findViewById(R.id.pincode_data);
@@ -383,6 +395,10 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
             txt_distance = (TextView) itemView.findViewById(R.id.txt_distance_1);
 
+            //change22june2017
+            apptDateValue = (TextView) itemView.findViewById(R.id.apptdateValue);
+            apptDate = (TextView) itemView.findViewById(R.id.apptdate);
+            //change22june2017
 
             timedata.setVisibility(View.VISIBLE);
             timetitle.setVisibility(View.VISIBLE);

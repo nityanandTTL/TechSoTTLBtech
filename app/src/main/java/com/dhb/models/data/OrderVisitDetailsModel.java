@@ -18,6 +18,7 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
     private ArrayList<OrderDetailsModel> allOrderdetails;
     private float Distance;
     private float EstIncome;
+    private String AppointmentDate;
 
     public OrderVisitDetailsModel() {
         super();
@@ -32,6 +33,7 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
         allOrderdetails = in.createTypedArrayList(OrderDetailsModel.CREATOR);
         Distance = in.readFloat();
         EstIncome = in.readFloat();
+        AppointmentDate = in.readString();
     }
 
     @Override
@@ -44,6 +46,7 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
         dest.writeTypedList(allOrderdetails);
         dest.writeFloat(Distance);
         dest.writeFloat(EstIncome);
+        dest.writeString(AppointmentDate);
     }
 
     @Override
@@ -119,4 +122,13 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
     public void setEstIncome(float estIncome) {
         EstIncome = estIncome;
     }
+
+    public String getAppointmentDate() {
+        return AppointmentDate;
+    }
+
+    public void setAppointmentDate(String appointmentDate) {
+        AppointmentDate = appointmentDate;
+    }
+
 }

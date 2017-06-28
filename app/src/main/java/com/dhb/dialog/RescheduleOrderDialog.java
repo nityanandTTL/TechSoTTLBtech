@@ -20,6 +20,7 @@ import com.dhb.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.dhb.delegate.OrderRescheduleDialogButtonClickedDelegate;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
+import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.InputUtils;
 
 import java.util.Calendar;
@@ -38,6 +39,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
     private int sampleCollectedYear;
     private int sampleCollectedMonth;
     private int sampleCollectedDay;
+    AppPreferenceManager appPreferenceManager;
 
     private OrderRescheduleDialogButtonClickedDelegate orderRescheduleDialogButtonClickedDelegate;
     private OrderDetailsModel orderDetailsModel;
@@ -74,10 +76,10 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
     }
 
     private boolean valtdate() {
-        if(InputUtils.isNull(edt_remark.getText().toString().trim())){
+        if (InputUtils.isNull(edt_remark.getText().toString().trim())) {
             Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
             return false;
-        }else if(txt_from_date.getText().toString().equals("")){
+        } else if (txt_from_date.getText().toString().equals("")) {
             Toast.makeText(activity, "Select date and time", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -88,7 +90,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
             if (valtdate()) {
-                orderRescheduleDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_remark.getText().toString().trim(),txt_from_date.getText().toString());
+                orderRescheduleDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_remark.getText().toString().trim(), txt_from_date.getText().toString());
                 dismiss();
             }
         }
@@ -117,12 +119,11 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
                             String mm = minute < 10 ? "0" + minute : minute + "";
                             String sampleCollectedTime = yyyy + "-" + MM + "-" + dd + " " + HH + ":" + mm;
                             Calendar cl = Calendar.getInstance();
-                            cl.set(sampleCollectedYear,sampleCollectedMonth,sampleCollectedDay,hourOfDay,minute);
-                            if(cl.getTimeInMillis()> Calendar.getInstance().getTimeInMillis()) {
+                            cl.set(sampleCollectedYear, sampleCollectedMonth, sampleCollectedDay, hourOfDay, minute);
+                            if (cl.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
                                 txt_from_date.setText(sampleCollectedTime);
-                            }
-                            else{
-                                Toast.makeText(activity,"Past time cannot be selected",Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(activity, "Past time cannot be selected", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), DateFormat.is24HourFormat(activity));
@@ -133,12 +134,13 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
             datePickerDialog.show();
         }
     }
-    private int getRoundedMinute(int minute){
-        if(minute % TIME_PICKER_INTERVAL != 0){
+
+    private int getRoundedMinute(int minute) {
+        if (minute % TIME_PICKER_INTERVAL != 0) {
             int minuteFloor = minute - (minute % TIME_PICKER_INTERVAL);
             minute = minuteFloor + (minute == minuteFloor + 1 ? TIME_PICKER_INTERVAL : 0);
             if (minute == 60)
-                minute=0;
+                minute = 0;
         }
 
         return minute;
