@@ -2,6 +2,8 @@ package com.dhb.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,7 @@ public class ResetPasswordFragment extends AbstractFragment implements View.OnCl
     public static final String TAG_FRAGMENT = ResetPasswordFragment.class.getSimpleName();
     private EditText edt_old_password, edt_new_password, edt_confirm_password;
     private Button btn_reset_password;
-    String regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!-_]).{6,12})";
+    String regexp = ".{6,12}";
     HomeScreenActivity activity;
 
     public ResetPasswordFragment() {
@@ -64,14 +66,14 @@ public class ResetPasswordFragment extends AbstractFragment implements View.OnCl
     private boolean validate() {
         if (!edt_old_password.getText().toString().matches(regexp)) {
             edt_old_password.setError(getString(R.string.password_criteria));
-          edt_old_password.requestFocus();
+            edt_old_password.requestFocus();
             return false;
         } else if (!edt_new_password.getText().toString().matches(regexp)) {
             edt_new_password.setError(getString(R.string.password_criteria));
             edt_new_password.requestFocus();
             return false;
         } else if (!edt_confirm_password.getText().toString().matches(regexp)) {
-          edt_confirm_password.setError(getString(R.string.password_criteria));
+            edt_confirm_password.setError(getString(R.string.password_criteria));
             edt_confirm_password.requestFocus();
             return false;
         } else if (!edt_new_password.getText().toString().equals(edt_confirm_password.getText().toString())) {
@@ -116,7 +118,7 @@ public class ResetPasswordFragment extends AbstractFragment implements View.OnCl
                 Toast.makeText(activity, R.string.password_changed_successfully, Toast.LENGTH_SHORT).show();
                 Fragment mFragment = new HomeScreenFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fl_homeScreen, mFragment ).commit();
+                        .replace(R.id.fl_homeScreen, mFragment).commit();
 
             } else {
                 Toast.makeText(activity, json, Toast.LENGTH_SHORT).show();

@@ -26,7 +26,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
     Button btn_send_otp, btn_verify_otp;
     LinearLayout ll_send_otp, ll_verify_otp;
     private String code;
-    String regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!-_]).{6,12})";
+    String regexp = ".{6,12}";
     String str;
 
     @Override
