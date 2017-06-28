@@ -30,6 +30,7 @@ import com.dhb.dialog.RescheduleOrderDialog;
 import com.dhb.fragment.BeneficiaryDetailsScanBarcodeFragment;
 import com.dhb.models.api.request.CallPatchRequestModel;
 import com.dhb.models.api.request.OrderStatusChangeRequestModel;
+import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.OrderDetailsModel;
 import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.network.ApiCallAsyncTask;
@@ -250,9 +251,56 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     visitOrderDisplayRecyclerViewAdapterDelegate.onCallCustomer(orderVisitDetailsModelsArr.get(pos));
                 }
             });
+            boolean isFasting = false;
+            boolean isNonFasting = false;
+            final ArrayList<String> benFastingDetails = new ArrayList<>();
+            for (OrderDetailsModel odm:
+                 orderVisitDetailsModelsArr.get(pos).getAllOrderdetails()) {
+                for (BeneficiaryDetailsModel bdm :
+                        odm.getBenMaster()) {
+                    if(bdm.getFasting().equalsIgnoreCase("Fasting")){
+                        isFasting = true;
+                    }else if(bdm.getFasting().equalsIgnoreCase("Non-Fasting")){
+                        isNonFasting = true;
+                    }
+                    benFastingDetails.add(""+bdm.getName()+" : "+bdm.getFasting());
+                }
+            }
+            if(isFasting&&isNonFasting){
+                holder.imgFastingStatus.setVisibility(View.VISIBLE);
+                holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.t));
+            }
+            else if(isFasting&&!isNonFasting){
+                holder.imgFastingStatus.setVisibility(View.VISIBLE);
+                holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.p));
+            }
+            else if(!isFasting&&isNonFasting){
+                holder.imgFastingStatus.setVisibility(View.VISIBLE);
+                holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.o));
+            }
+            else{
+                holder.imgFastingStatus.setVisibility(View.INVISIBLE);
+            }
+            holder.imgFastingStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setTitle("Fasting Details")
+                                .setItems(benFastingDetails.toArray(new String[benFastingDetails.size()]), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                })
+                                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).show();
+                }
+            });
         }
-
-
     }
 
     class CallPatchRequestAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -353,6 +401,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         ImageView imgCBAccept;
         TextView txtSrNo, txtName, txtAge, txtAadharNo;
         ImageView imgRelease, imgRelease2, imgcall;
+        ImageView imgFastingStatus;
         Button btnStartNavigation;
         FoldingCell cell;
 
@@ -361,7 +410,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         }
 
         private void initUI(View itemView) {
-
+            imgFastingStatus = (ImageView) itemView.findViewById(R.id.title_fasting);
             imgcall = (ImageView) itemView.findViewById(R.id.call);
             imgcall.setVisibility(View.VISIBLE);
             pintitle = (TextView) itemView.findViewById(R.id.pincode_title);
