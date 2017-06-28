@@ -191,7 +191,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
     @Override
     public void onResume() {
-
         if (!isToFromMap) {
             fetchData();
         }
@@ -393,6 +392,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         public void onNavigationStart(OrderVisitDetailsModel orderVisitDetailsModel) {
             Intent intentNavigate = new Intent(activity, VisitOrderDetailMapDisplayFragmentActivity.class);
             intentNavigate.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+            isToFromMap = true;
             startActivityForResult(intentNavigate, BundleConstants.VOMD_START);
         }
 
@@ -417,7 +417,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == BundleConstants.VOMD_START && resultCode == BundleConstants.VOMD_ARRIVED) {
-            isToFromMap = true;
+            isToFromMap = false;
             OrderVisitDetailsModel orderVisitDetailsModel = data.getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
             Intent intentOrderBooking = new Intent(activity, OrderBookingActivity.class);
             intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);

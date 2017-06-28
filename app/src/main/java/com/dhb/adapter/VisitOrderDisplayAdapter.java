@@ -268,15 +268,15 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             }
             if(isFasting&&isNonFasting){
                 holder.imgFastingStatus.setVisibility(View.VISIBLE);
-                holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.t));
+                holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_fasting_mix));
             }
             else if(isFasting&&!isNonFasting){
                 holder.imgFastingStatus.setVisibility(View.VISIBLE);
-                holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.p));
+                holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_fasting));
             }
             else if(!isFasting&&isNonFasting){
                 holder.imgFastingStatus.setVisibility(View.VISIBLE);
-                holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.o));
+                holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_non_fasting));
             }
             else{
                 holder.imgFastingStatus.setVisibility(View.INVISIBLE);
