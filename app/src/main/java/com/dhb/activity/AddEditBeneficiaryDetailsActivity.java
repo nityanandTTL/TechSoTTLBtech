@@ -434,7 +434,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         edtTests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(beneficiaryDetailsModel.getTestSampleType()!=null && beneficiaryDetailsModel.getTestSampleType().size()>0) {
+//                if(beneficiaryDetailsModel.getTestSampleType()!=null && beneficiaryDetailsModel.getTestSampleType().size()>0) {
                     //TODO show edit tests and allow addition and removal
                     DisplaySelectedTestsListForCancellationDialog dstlfcd = new DisplaySelectedTestsListForCancellationDialog(activity, beneficiaryDetailsModel.getTestSampleType(), new CloseTestsDisplayDialogButtonDialogDelegate() {
                         @Override
@@ -447,6 +447,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                                 btdm.setChldtests(trmm.getChldtests()!=null?trmm.getChldtests():new ArrayList<ChildTestsModel>());
                                 btdm.setTests(trmm.getTestCode());
                                 btdm.setTestType(trmm.getTestType());
+                                btdm.setProjId("");
                                 btdm.setSampleType(trmm.getSampltype()!=null?trmm.getSampltype():new ArrayList<TestSampleTypeModel>());
                                 btdm.setTstClinicalHistory(trmm.getTstClinicalHistory()!=null?trmm.getTstClinicalHistory():new ArrayList<TestClinicalHistoryModel>());
                                 if(!InputUtils.isNull(trmm.getTestType())&&trmm.getTestType().equalsIgnoreCase("offer")){
@@ -529,7 +530,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                         }
                     });
                     dstlfcd.show();
-                }
+                /*}
                 else{
                     Intent intentAddTests = new Intent(activity, DisplayTestsMasterListActivity.class);
                     intentAddTests.putExtra(BundleConstants.SELECTED_TESTS_LIST, new ArrayList<>());
@@ -537,7 +538,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     intentAddTests.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
                     intentAddTests.putExtra(BundleConstants.IS_TEST_EDIT, isEdit);
                     startActivityForResult(intentAddTests, BundleConstants.ADD_TESTS_START);
-                }
+                }*/
             }
         });
         edtCH.setOnClickListener(new View.OnClickListener() {
@@ -650,10 +651,15 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             public void afterTextChanged(Editable s) {
                 String benAge = s.toString();
                 if(InputUtils.isNull(benAge)){
-                    beneficiaryDetailsModel.setAge(0);
+                    beneficiaryDetailsModel.setAge(1);
+                }
+                else if(Integer.parseInt(benAge)>0 && Integer.parseInt(benAge)<136){
+                    beneficiaryDetailsModel.setAge(Integer.parseInt(benAge));
                 }
                 else{
-                    beneficiaryDetailsModel.setAge(Integer.parseInt(benAge));
+                    edtAge.setText("1");
+                    beneficiaryDetailsModel.setAge(1);
+                    Toast.makeText(activity,"Age should be between 1 and 135",Toast.LENGTH_SHORT).show();
                 }
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             }
@@ -672,6 +678,10 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         }
         else if(InputUtils.isNull(edtAge.getText().toString())){
             Toast.makeText(activity, "Beneficiary Age is required", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(!InputUtils.isNull(edtAge.getText().toString())&& Integer.parseInt(edtAge.getText().toString())<1 && Integer.parseInt(edtAge.getText().toString())>135){
+            Toast.makeText(activity, "Beneficiary Age should be between 1 and 135", Toast.LENGTH_SHORT).show();
             return false;
         }
         else if(InputUtils.isNull(edtTests.getText().toString())){
@@ -873,7 +883,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             }
         }
         if (resultCode == Activity.RESULT_OK) {
-            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
             if (requestCode == REQUEST_CAMERA) {
                 onCaptureImageResult(data);
             }
@@ -888,6 +897,12 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private void onCaptureImageResult(Intent data) {
         thumbnail = (Bitmap) data.getExtras().get("data");
         encodedVanipunctureImg = encodeImage(thumbnail);
+        if(!InputUtils.isNull(encodedVanipunctureImg)) {
+            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
+        }
+        else{
+            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.cameraa));
+        }
         beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
     }

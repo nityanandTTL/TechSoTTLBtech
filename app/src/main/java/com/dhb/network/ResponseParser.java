@@ -5,8 +5,10 @@ import android.content.Context;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dhb.models.api.response.BankMasterResponseModel;
 import com.dhb.models.api.response.BtechClientsResponseModel;
 import com.dhb.models.api.response.BtechCollectionsResponseModel;
+import com.dhb.models.api.response.BtechEstEarningsResponseModel;
 import com.dhb.models.api.response.BusinessErrorModel;
 import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
@@ -23,6 +25,7 @@ import com.dhb.models.api.response.MessageModel;
 import com.dhb.models.api.response.OrderBookingResponseVisitModel;
 import com.dhb.models.api.response.OrderServedResponseModel;
 import com.dhb.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
+import com.dhb.models.api.response.PaymentModeMasterResponseModel;
 import com.dhb.models.api.response.PaymentProcessAPIResponseModel;
 import com.dhb.models.api.response.PaymentStartTransactionAPIResponseModel;
 import com.dhb.models.api.response.SelfieUploadResponseModel;
@@ -637,6 +640,26 @@ public class ResponseParser implements AppConstants {
 //		}
         return slotModels;
     }
+    //Fetch Bank Master Response parse:
+    public ArrayList<BankMasterResponseModel> getBankMasterResponseModel(String json, int statusCode) {
+        ArrayList<BankMasterResponseModel> slotModels = null;
+//		if (!parseIntoError(json, statusCode)){
+        TypeToken<ArrayList<BankMasterResponseModel>> token = new TypeToken<ArrayList<BankMasterResponseModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+//		}
+        return slotModels;
+    }
+    //payment mode Response parse:
+    public ArrayList<PaymentModeMasterResponseModel> getPaymentModeMasterResponseModel(String json, int statusCode) {
+        ArrayList<PaymentModeMasterResponseModel> slotModels = null;
+//		if (!parseIntoError(json, statusCode)){
+        TypeToken<ArrayList<PaymentModeMasterResponseModel>> token = new TypeToken<ArrayList<PaymentModeMasterResponseModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+//		}
+        return slotModels;
+    }
 
     public ArrayList<BrandMasterModel> getBrandMaster(String json, int statusCode) {
         ArrayList<BrandMasterModel> brandMasters = null;
@@ -720,6 +743,22 @@ public class ResponseParser implements AppConstants {
         orderServedResponseModel = gson.fromJson(json, OrderServedResponseModel.class);
         //}
         return orderServedResponseModel;
+    }
+    //Btech EST Earning Response parse:
+    public BtechEstEarningsResponseModel getBtecheSTEarningResponseModel(String json, int statusCode) {
+        BtechEstEarningsResponseModel btechEstEarningsResponseModel = null;
+        //if (!parseIntoError(json, statusCode)){
+        btechEstEarningsResponseModel = gson.fromJson(json, BtechEstEarningsResponseModel.class);
+        //}
+        return btechEstEarningsResponseModel;
+    }
+    //payment Mode Master Response parse:
+    public PaymentModeMasterResponseModel getPaymentModemasterResponseModel(String json, int statusCode) {
+        PaymentModeMasterResponseModel paymentModeMasterResponseModel = null;
+        //if (!parseIntoError(json, statusCode)){
+        paymentModeMasterResponseModel = gson.fromJson(json, PaymentModeMasterResponseModel.class);
+        //}
+        return paymentModeMasterResponseModel;
     }
 
     //Camp Order details Response parse:

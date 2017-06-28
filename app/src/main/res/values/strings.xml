@@ -28,6 +28,7 @@
     <string name="progress_message_fetching_order_details_please_wait">Fetching Order Details,\n Please wait ....</string>
     <string name="progress_message_camp_count_details_please_wait">Loading,\n Please wait ....</string>
     <string name="progress_message_sending_master_barcode_please_wait">Sending Master barcode  Details,\n Please wait ....</string>
+    <string name="progress_message_getting_master_payment_mode_please_wait">Getting Master payment Mode,\n Please wait ....</string>
     <string name="progress_message_fetching_slot_details_please_wait">Fetching Slot Details,\n Please wait ....</string>
     <string name="progress_message_fetching_brand_master_please_wait">Fetching Brand Master,\n Please wait ....</string>
     <string name="progress_message_fetching_test_master_please_wait">Please wait\n while we update your Tests List</string>
@@ -41,6 +42,7 @@
     <string name="progress_message_fetching_order_serverd_details_please_wait">Fetching Order Served Details,\n Please wait ....</string>
     <string name="progress_message_fetchingolc_picup_details_details_please_wait">Fetching OLC pickup details Details,\n Please wait ....</string>
     <string name="progress_message_fetching_camp_details_please_wait">Fetching Camp Details,\n Please wait ....</string>
+    <string name="progress_btech_est_earning_please_wait">Fetching Btech EST Earnings ,\n Please wait ....</string>
     <string name="progress_message_scan_barcode_check_for_duplicate_please_wait">Scanning Barcode,\n Please wait ....</string>
     <string name="progress_message_fetching_btech_collections_please_wait">Fetching BTech Collections,\n Please wait ....</string>
     <string name="progress_message_change_password_please_wait">Changing Password, Please wait ....</string>
@@ -104,4 +106,11 @@
     <string name="submit">Submit</string>
     <string name="click_to_select_clinical_history">Select Clinical History</string>
     <string name="re_enter_barcode">Re-enter barcode</string>
+    <string name="note">*Please Select Vashi branch for Cash by ATM</string>
+    <string-array name="payment_mode">
+        <item>Cash By ATM</item>
+        <item>Cash</item>
+        <item>Cheque</item>
+        <item>NEFT</item>
+    </string-array>
 </resources>

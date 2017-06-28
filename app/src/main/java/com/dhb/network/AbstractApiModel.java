@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AbstractApiModel implements AppConstants {
 
-	public static final String FILE_UPLOAD = "file_upload";
+    public static final String FILE_UPLOAD = "file_upload";
 
     /* Requset urlt_layout of api call */
     private String requestUrl;
@@ -25,14 +25,13 @@ public class AbstractApiModel implements AppConstants {
 
     private UrlEncodedFormEntity entity;
 
-//   public static String appEnvironment = "DEVELOPMENT";
+    //   public static String appEnvironment = "DEVELOPMENT";
     //public static String appEnvironment = "DEMO";
-	public static String appEnvironment = "PRODUCTION";
+    public static String appEnvironment = "PRODUCTION";
 
 
-
-	// New DB changes Amazon Dev
-	public static String SERVER_BASE_API_URL_DEV = "http://apibeta.thyrocare.com";
+    // New DB changes Amazon Dev
+    public static String SERVER_BASE_API_URL_DEV = "http://apibeta.thyrocare.com";
 
 
     // New DB changes Demo Amazon
@@ -62,21 +61,23 @@ public class AbstractApiModel implements AppConstants {
 
     public String LOG_OUT = VERSION_API_URL + "/Account/Logout";
 
-	public String CHANGE_PASSWORD = VERSION_API_URL + "/Account/ChangePassword";
+    public String CHANGE_PASSWORD = VERSION_API_URL + "/Account/ChangePassword";
 
     public String RESET_PASSWORD = VERSION_API_URL + "/Account/ResetPassword";
 
-	public String SELFIE_UPLOAD = VERSION_API_URL+"/SelfiUpload";
+    public String SELFIE_UPLOAD = VERSION_API_URL + "/SelfiUpload";
 
-	public String FETCH_ORDER_DETAIL = VERSION_API_URL+"/OrderVisitDetails";
+    public String FETCH_ORDER_DETAIL = VERSION_API_URL + "/OrderVisitDetails";
 
-    public String SET_MATERIALORDER_DETAIL = VERSION_API_URL+"/MaterialOrderHome/PostMaterialOrderApprove";
+    public String SET_MATERIALORDER_DETAIL = VERSION_API_URL + "/MaterialOrderHome/PostMaterialOrderApprove";
 
-    public String CAMP_COUNT = VERSION_API_URL+"/CampDetails/MyCampCount";
+    public String CAMP_COUNT = VERSION_API_URL + "/CampDetails/MyCampCount";
 
-    public String CAMP_QR_DETAIL = VERSION_API_URL+"/CampDetails/OrderDetails";
+    public String CAMP_QR_DETAIL = VERSION_API_URL + "/CampDetails/OrderDetails";
+    public String PAYMENT_MODE_MASTER = VERSION_API_URL + "/Masters/PaymentModeMaster";
+    public String BANK_MASTER = VERSION_API_URL + "/Masters/BankMaster";
 
-	public String FETCH_SLOT_DETAIL = VERSION_API_URL+"/ServingSlotDetails";
+    public String FETCH_SLOT_DETAIL = VERSION_API_URL + "/ServingSlotDetails";
 
     public String ORDER_STATUS_CHANGE = VERSION_API_URL + "/OrderStatusChange";
 
@@ -90,29 +91,31 @@ public class AbstractApiModel implements AppConstants {
 
     public String LOGOUT = VERSION_API_URL + "/Account/Logout";
 
-    public String FETCH_LEDGER_DETAIL=VERSION_API_URL+"/Ledger/CashRegister";
+    public String FETCH_LEDGER_DETAIL = VERSION_API_URL + "/Ledger/CashRegister";
 
-    public String SET_BTECH_MATERIAL_INV=VERSION_API_URL+"/Inventory/DailyInvUpdate";
+    public String SET_BTECH_MATERIAL_INV = VERSION_API_URL + "/Inventory/DailyInvUpdate";
 
-    public String FETCH_EARNINGREGISTER_DETAIL=VERSION_API_URL+"/Ledger/EarningRegister";
+    public String FETCH_EARNINGREGISTER_DETAIL = VERSION_API_URL + "/Ledger/EarningRegister";
 
-    public String FETCH_DEPOSITREGISTER_DETAIL=VERSION_API_URL+"/Ledger/DepositPayments";
+    public String FETCH_DEPOSITREGISTER_DETAIL = VERSION_API_URL + "/Ledger/DepositPayments";
 
-    public String FETCH_VERSION_CONTROL_DETAIL=VERSION_API_URL+"/VersionControl";
+    public String FETCH_VERSION_CONTROL_DETAIL = VERSION_API_URL + "/VersionControl";
 
-    public String FETCH_MATERIALMASTER_DETAIL=VERSION_API_URL+"/Masters/CategoryWiseMaterialMaster";
+    public String FETCH_MATERIALMASTER_DETAIL = VERSION_API_URL + "/Masters/CategoryWiseMaterialMaster";
 
-    public String FETCH_MATERIALINV_DETAIL=VERSION_API_URL+"/Inventory/StockInHand";
+    public String FETCH_MATERIALINV_DETAIL = VERSION_API_URL + "/Inventory/StockInHand";
 
-    public String BTECH_COLLECTIONS=VERSION_API_URL+"/BtechCollections";
+    public String BTECH_COLLECTIONS = VERSION_API_URL + "/BtechCollections";
 
-    public String BTECH_HUB_DETAILS_DISPLAY=VERSION_API_URL+"/BtechHubs";
+    public String BTECH_HUB_DETAILS_DISPLAY = VERSION_API_URL + "/BtechHubs";
 
-    public String ORDER_SERVED_DETAILS_DISPLAY=VERSION_API_URL+"/BtechOrderSummary/BtechServedOrders";
+    public String ORDER_SERVED_DETAILS_DISPLAY = VERSION_API_URL + "/BtechOrderSummary/BtechServedOrders";
 
-    public String BTECH_CLIENTS_DETAILS_DISPLAY=VERSION_API_URL+"/BtechClients";
+    public String BTECH_CLIENTS_DETAILS_DISPLAY = VERSION_API_URL + "/BtechClients";
 
-    public String CAMPS_DETAILS_DISPLAY=VERSION_API_URL+"/CampDetails/MyCampDetails";
+    public String CAMPS_DETAILS_DISPLAY = VERSION_API_URL + "/CampDetails/MyCampDetails";
+
+    public String BTECH_EST_EARNINGS = VERSION_API_URL + "/BtechEstEarning";
 
     public String HUBSTART = VERSION_API_URL + "/HubStart";
 
@@ -122,29 +125,30 @@ public class AbstractApiModel implements AppConstants {
 
     public String LAB_ALERT_MASTER = VERSION_API_URL + "/LabAlerts";
 
-    public String FETCH_LEAVE_NATURE_MASTER=VERSION_API_URL+"/Masters/LeaveNatureMaster/L1";
+    public String FETCH_LEAVE_NATURE_MASTER = VERSION_API_URL + "/Masters/LeaveNatureMaster/L1";
 
-    public String SET_APPLY_LEAVE=VERSION_API_URL+"/ManageBtechLeave/ApplyLeave";
+    public String SET_APPLY_LEAVE = VERSION_API_URL + "/ManageBtechLeave/ApplyLeave";
 
-    public String REMOVE_BENEFICIARY=VERSION_API_URL+"/RemoveBeneficiary";
+    public String REMOVE_BENEFICIARY = VERSION_API_URL + "/RemoveBeneficiary";
 
-    public String OLC_PICKUP_SUBMIT_SCAN_BARCODE=VERSION_API_URL+"/ScanPickup";
+    public String OLC_PICKUP_SUBMIT_SCAN_BARCODE = VERSION_API_URL + "/ScanPickup";
 
-    public String ORDER_BOOKING=VERSION_API_URL+"/OrderBooking";
+    public String ORDER_BOOKING = VERSION_API_URL + "/OrderBooking";
+    public String CASH_DEPOSIT_ENTRY = VERSION_API_URL + "/CashDeposit/CashDepositEntry";
 
-    public String WOE = VERSION_API_URL+"/WOE";
+    public String WOE = VERSION_API_URL + "/WOE";
 
-    public String CART = VERSION_API_URL+"/Cart";
+    public String CART = VERSION_API_URL + "/Cart";
 
-    public String PAYMENT_NARRATION_MASTER = VERSION_API_URL+"/Masters/NarrationMaster";
+    public String PAYMENT_NARRATION_MASTER = VERSION_API_URL + "/Masters/NarrationMaster";
 
-    public String PAYMENT_SELECT_MODE = VERSION_API_URL+"/PayThyrocare/SelectMode";
+    public String PAYMENT_SELECT_MODE = VERSION_API_URL + "/PayThyrocare/SelectMode";
 
-    public String PAYMENT_PASS_INPUTS = VERSION_API_URL+"/PayThyrocare/PassInputs";
+    public String PAYMENT_PASS_INPUTS = VERSION_API_URL + "/PayThyrocare/PassInputs";
 
-    public String PAYMENT_START_TRANSACTION = VERSION_API_URL+"/PayThyrocare/StartTransaction";
+    public String PAYMENT_START_TRANSACTION = VERSION_API_URL + "/PayThyrocare/StartTransaction";
 
-    public String PATCH_CALL_REQUEST = VERSION_API_URL+"/CallPatchSrcDest/CallPatchRequest";
+    public String PATCH_CALL_REQUEST = VERSION_API_URL + "/CallPatchSrcDest/CallPatchRequest";
 
     public String LOCUS_PUSH_LOCATIONS_API = "https://api.locus.sh/v1/client/thyrocare/user/";
 

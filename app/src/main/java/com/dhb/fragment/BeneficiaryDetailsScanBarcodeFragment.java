@@ -413,12 +413,13 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             public void onClick(View v) {
                 //TODO show tests list for addition and removal
 //                Toast.makeText(getActivity(),"Feature Coming Soon Stay Tunned", Toast.LENGTH_SHORT).show();
-                if(beneficiaryDetailsModel.getTestSampleType()!=null && beneficiaryDetailsModel.getTestSampleType().size()>0) {
+//                if(beneficiaryDetailsModel.getTestSampleType()!=null && beneficiaryDetailsModel.getTestSampleType().size()>0) {
                     DisplaySelectedTestsListForCancellationDialog dstlfcd = new DisplaySelectedTestsListForCancellationDialog(activity, beneficiaryDetailsModel.getTestSampleType(), new CloseTestsDisplayDialogButtonDialogDelegate() {
                         @Override
                         public void onItemClick(ArrayList<TestRateMasterModel> selectedTestsList,boolean isTestEdit) {
                             orderDetailsModel.setTestEdit(true);
                             orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                            beneficiaryDetailsModel.setProjId("");
                             ArrayList<BeneficiaryTestDetailsModel> selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
                             for (TestRateMasterModel trmm:
                                     selectedTestsList) {
@@ -427,11 +428,13 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                 btdm.setChldtests(trmm.getChldtests()!=null?trmm.getChldtests():new ArrayList<ChildTestsModel>());
                                 btdm.setTests(trmm.getTestCode());
                                 btdm.setTestType(trmm.getTestType());
+                                btdm.setProjId("");
                                 btdm.setSampleType(trmm.getSampltype()!=null?trmm.getSampltype():new ArrayList<TestSampleTypeModel>());
                                 btdm.setTstClinicalHistory(trmm.getTstClinicalHistory()!=null?trmm.getTstClinicalHistory():new ArrayList<TestClinicalHistoryModel>());
                                 if(!InputUtils.isNull(trmm.getTestType())&&trmm.getTestType().equalsIgnoreCase("offer")){
                                     btdm.setProjId(trmm.getTestCode());
                                     btdm.setTests(trmm.getDescription());
+                                    beneficiaryDetailsModel.setProjId(trmm.getTestCode());
                                 }
                                 selectedTestDetailsArr.add(btdm);
                             }
@@ -509,7 +512,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         }
                     });
                     dstlfcd.show();
-                }
+                /*}
                 else{
                     Intent intentAddTests = new Intent(activity, DisplayTestsMasterListActivity.class);
                     intentAddTests.putExtra(BundleConstants.SELECTED_TESTS_LIST, new ArrayList<>());
@@ -517,7 +520,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     intentAddTests.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
                     intentAddTests.putExtra(BundleConstants.IS_TEST_EDIT, true);
                     startActivityForResult(intentAddTests, BundleConstants.ADD_TESTS_START);
-                }
+                }*/
             }
         });
         edtCH.setOnClickListener(new View.OnClickListener() {
@@ -772,8 +775,13 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private void onCaptureImageResult(Intent data) {
         thumbnail = (Bitmap) data.getExtras().get("data");
         encodedVanipunctureImg = encodeImage(thumbnail);
+        if(!InputUtils.isNull(encodedVanipunctureImg)) {
+            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
+        }
+        else{
+            imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.cameraa));
+        }
         beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
-        imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
     }
 

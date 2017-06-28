@@ -4,8 +4,13 @@ package com.dhb.fragment;
  * Created by E4904 on 6/14/2017.
  */
 
+import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +26,8 @@ import android.widget.Toast;
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.adapter.OrderServedDisplayDetailsAdapter;
+import com.dhb.delegate.OrderServedDisplayDetailsAdapterClickedDelegate;
+import com.dhb.models.api.request.CallPatchRequestModel;
 import com.dhb.models.api.response.OrderServedResponseModel;
 import com.dhb.models.data.BtechOrderModel;
 import com.dhb.network.ApiCallAsyncTask;
@@ -29,6 +36,7 @@ import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
+import com.dhb.utils.app.AppConstants;
 import com.dhb.utils.app.AppPreferenceManager;
 
 import org.json.JSONException;
@@ -55,10 +63,11 @@ public class OrderServedFragment extends AbstractFragment {
     RecyclerView recycler_view;
     private String todaysDate;
     private ArrayList<BtechOrderModel> btechOrderModels = new ArrayList<>();
-    OrderServedDisplayDetailsAdapter orderServedDisplayDetailsAdapter;
+    private OrderServedDisplayDetailsAdapter orderServedDisplayDetailsAdapter;
     private int mYear, mMonth, mDay;
     private ImageView img_search;
     private String todate = "";
+    private String MaskedPhoneNumber = "";
 
     public OrderServedFragment() {
         // Required empty public constructor
@@ -169,24 +178,20 @@ public class OrderServedFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                // Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
-
                 ResponseParser responseParser = new ResponseParser(activity);
 
                 OrderServedResponseModel orderServedResponseModel = new OrderServedResponseModel();
                 orderServedResponseModel = responseParser.getOrderServedDetailsResponseModel(json, statusCode);
                 if (orderServedResponseModel != null && orderServedResponseModel.getBtchOrd().size() > 0) {
                     btechOrderModels = orderServedResponseModel.getBtchOrd();
-                    Logger.error("btechOrderModels size " + orderServedResponseModel.getBtchOrd().size());
                     no_orders.setVisibility(View.GONE);
                 } else {
                     btechOrderModels = new ArrayList<>();
-                    Logger.error("else " + json);
                     no_orders.setVisibility(View.VISIBLE);
                 }
                 prepareRecyclerView();
             } else {
-                Toast.makeText(activity, "" + statusCode, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -198,11 +203,51 @@ public class OrderServedFragment extends AbstractFragment {
     }
 
     private void prepareRecyclerView() {
-        orderServedDisplayDetailsAdapter = new OrderServedDisplayDetailsAdapter(btechOrderModels, activity);
+        orderServedDisplayDetailsAdapter = new OrderServedDisplayDetailsAdapter(btechOrderModels, activity, new OrderServedDisplayDetailsAdapterClickedDelegate() {
+            @Override
+            public void onCallCustomer(String customerMobile, String orderNo) {
+                CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
+                callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
+                callPatchRequestModel.setDestNumber(customerMobile);
+                callPatchRequestModel.setVisitID(orderNo);
+                ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
+                callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
+                callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
+            }
+        });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
         recycler_view.setLayoutManager(mLayoutManager);
         recycler_view.setItemAnimator(new DefaultItemAnimator());
         recycler_view.setAdapter(orderServedDisplayDetailsAdapter);
+
+    }
+
+    private class CallPatchRequestAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_CALL);
+                    MaskedPhoneNumber = json;
+                    intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
+                    if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(activity,
+                                new String[]{
+                                        Manifest.permission.CALL_PHONE},
+                                AppConstants.APP_PERMISSIONS);
+                    } else {
+                        activity.startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
 
     }
 }

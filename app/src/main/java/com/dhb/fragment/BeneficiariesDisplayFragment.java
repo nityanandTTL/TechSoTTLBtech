@@ -144,6 +144,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         tempOrderDetailsModel.setOrderNo("TEMP_"+DeviceUtils.randomString(8));
                         tempOrderDetailsModel.setAddBen(true);
                         tempOrderDetailsModel.setTestEdit(false);
+                        tempOrderDetailsModel.setAmountDue(0);
+                        tempOrderDetailsModel.setAmountPayable(0);
                         Logger.debug("tempOrderDetailsModel:" + new Gson().toJson(tempOrderDetailsModel));
                         Logger.debug("orderVisitDetailsModel 2 :" + new Gson().toJson(orderVisitDetailsModel));
                         ArrayList<BeneficiaryDetailsModel> beneficiaries = new ArrayList<BeneficiaryDetailsModel>();

@@ -132,6 +132,9 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                             cdd.show();
                         } else if (items[item].equals("Order Release")) {
 
+                            visitOrderDisplayRecyclerViewAdapterDelegate.onItemReschedule(orderVisitDetailsModelsArr.get(pos));
+                        }
+                        else if (items[item].equals("Order Release")){
                             visitOrderDisplayRecyclerViewAdapterDelegate.onItemRelease(orderVisitDetailsModelsArr.get(pos));
                         }
                     }
@@ -224,8 +227,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.cell.fold(true);
             }
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment") || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equals("ASSIGNED")) {
-                //Toast.makeText(activity, "inside", Toast.LENGTH_SHORT).show();
-                //Toast.makeText(activity, "inside", Toast.LENGTH_SHORT).show();
                 holder.imgCBAccept.setVisibility(View.VISIBLE);
 
                 holder.txtSrNo.setVisibility(View.INVISIBLE);
@@ -246,16 +247,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             holder.imgcall.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
-                    callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
-                    callPatchRequestModel.setDestNumber(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getMobile());
-                    Logger.error("orderVisitDetailsModelsArr" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getMobile());
-                    callPatchRequestModel.setVisitID(orderVisitDetailsModelsArr.get(0).getVisitId());
-                    ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
-                    callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-                    callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
-
-
+                    visitOrderDisplayRecyclerViewAdapterDelegate.onCallCustomer(orderVisitDetailsModelsArr.get(pos));
                 }
             });
         }
