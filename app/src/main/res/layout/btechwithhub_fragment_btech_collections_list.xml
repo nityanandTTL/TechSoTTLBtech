@@ -122,12 +122,12 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btn_dispatch"
+                android:id="@+id/btn_receive"
                 style="@style/button_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/purple_btn_bg"
-                android:text="@string/dispatch"
+                android:text="@string/receiveButton"
                 android:visibility="visible"
                 android:minEms="9"/>
         </LinearLayout>

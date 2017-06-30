@@ -122,6 +122,7 @@ public class AbstractApiModel implements AppConstants {
     public String OLCSTART = VERSION_API_URL + "/ClientPickup";
 
     public String MASTER_BARCODE_MAPPING = VERSION_API_URL + "/MasterBarcodeMapping";
+    public String BTECHWITHHUB_MASTER_BARCODE_MAPPING = VERSION_API_URL + "/SpecimenTrack/ReceiveBarcodes";
 
     public String LAB_ALERT_MASTER = VERSION_API_URL + "/LabAlerts";
 
@@ -149,6 +150,8 @@ public class AbstractApiModel implements AppConstants {
     public String PAYMENT_START_TRANSACTION = VERSION_API_URL + "/PayThyrocare/StartTransaction";
 
     public String PATCH_CALL_REQUEST = VERSION_API_URL + "/CallPatchSrcDest/CallPatchRequest";
+
+    public String BTECHWITH_HUB_BARCODE = VERSION_API_URL + "/SpecimenTrack/ReceiveScannedBarcode";
 
     public String LOCUS_PUSH_LOCATIONS_API = "https://api.locus.sh/v1/client/thyrocare/user/";
 

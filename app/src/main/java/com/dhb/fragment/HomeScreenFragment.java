@@ -1,12 +1,15 @@
 package com.dhb.fragment;
 
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,10 +39,12 @@ public class HomeScreenFragment extends AbstractFragment {
     private TextView txtUserName, txt_no_of_camps;
     private CircularImageView rvSelfie;
     private ImageView imgPayment, imgOrders, imgSchedule, imgMaterials, imgOLCPickup, imgHub, imgCamp, ordersserved, imgLedger;
-
-    //bell_icon
     private ImageView bellicon;
-    //bell_icon
+    private String loginRole;
+    Dialog MainDailog;
+
+    //btech_tsp
+    ImageView send_icon, receive_icon, earning_icon;
 
     public HomeScreenFragment() {
         // Required empty public constructor
@@ -50,8 +55,6 @@ public class HomeScreenFragment extends AbstractFragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-
-
     }
 
     @Override
@@ -61,21 +64,69 @@ public class HomeScreenFragment extends AbstractFragment {
         activity.toolbarHome.setTitle("Home");
         appPreferenceManager = new AppPreferenceManager(activity);
         activity.isOnHome = true;
+
         if (getArguments() != null) {
 
         }
+
+        if (!appPreferenceManager.getLoginRole().isEmpty()) {
+            Logger.debug("loginrole" + appPreferenceManager.getLoginRole());
+            loginRole = appPreferenceManager.getLoginRole();
+        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_home_screen, container, false);
-        initUI();
-        initData();
-        getCampDetailCount();
-        initListeners();
+
+        //btech_tsp
+        if (loginRole.equalsIgnoreCase("7")) {//loginRole.equalsIgnoreCase("7")
+            rootView = inflater.inflate(R.layout.tsp_fragment_home_screen, container, false);
+            initUI_BtechwithHub();
+            initData();
+            initListeners_BtechwithHub();
+        } else {
+            rootView = inflater.inflate(R.layout.fragment_home_screen, container, false);
+            initUI();
+            initData();
+            getCampDetailCount();
+            initListeners();
+
+        }
         return rootView;
+    }
+
+    private void initListeners_BtechwithHub() {
+        send_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pushFragments(TSP_SendFragment.newInstance(), false, false, TSP_SendFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+            }
+        });
+
+        receive_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pushFragments(BtechwithHub_HubMasterBarcodeScanFragment.newInstance(), false, false, BtechwithHub_HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+            }
+        });
+
+        earning_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(activity, "Coming soon...", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void initUI_BtechwithHub() {
+        rvSelfie = (CircularImageView) rootView.findViewById(R.id.img_user_picture);
+        txtUserName = (TextView) rootView.findViewById(R.id.txt_username);
+        send_icon = (ImageView) rootView.findViewById(R.id.send_icon);
+        receive_icon = (ImageView) rootView.findViewById(R.id.receive_icon);
+        earning_icon = (ImageView) rootView.findViewById(R.id.earning_icon);
     }
 
     private void getCampDetailCount() {
@@ -122,9 +173,41 @@ public class HomeScreenFragment extends AbstractFragment {
         imgHub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(HubListDisplayFragment.newInstance(), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                //btech_hub
+                //for btech with hub login...role will be 6 for this
+                if (loginRole.equalsIgnoreCase("6")) {//loginRole.equalsIgnoreCase("6")
+                    MainDailog = new Dialog(getActivity());
+                    MainDailog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    MainDailog.setContentView(R.layout.btech_dialog_btechwithhub);
+
+                    LinearLayout send, receive;
+                    send = (LinearLayout) MainDailog.findViewById(R.id.send);
+                    receive = (LinearLayout) MainDailog.findViewById(R.id.receive);
+
+                    send.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            MainDailog.dismiss();
+                            pushFragments(HubListDisplayFragment.newInstance(), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                        }
+                    });
+
+                    receive.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            pushFragments(BtechwithHub_HubMasterBarcodeScanFragment.newInstance(), false, false, BtechwithHub_HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                            MainDailog.dismiss();
+                        }
+                    });
+
+                    MainDailog.show();
+                } else {//for normal btech login...
+                    pushFragments(HubListDisplayFragment.newInstance(), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                }
+
             }
         });
+
         imgPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,13 +278,11 @@ public class HomeScreenFragment extends AbstractFragment {
 
         //bell_icon
         bellicon = (ImageView) rootView.findViewById(R.id.bellicon);
-        Logger.debug("bellicon_counter"+appPreferenceManager.getScheduleCounter());
+        Logger.debug("bellicon_counter" + appPreferenceManager.getScheduleCounter());
 
-        if(appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n"))
-        {
+        if (appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {
             bellicon.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             bellicon.setVisibility(View.INVISIBLE);
         }
         //bell_icon
@@ -212,6 +293,11 @@ public class HomeScreenFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
                 JSONObject jsonObject = new JSONObject(json);
+
+                //btech_hub
+                String btechID = jsonObject.getString("BtechId");
+                appPreferenceManager.setBtechID(btechID);
+
                 txt_no_of_camps.setText("" + jsonObject.getString("CampCount"));
             } else {
                 Toast.makeText(activity, "Failed to Fetch Camp Count", Toast.LENGTH_SHORT).show();

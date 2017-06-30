@@ -9,6 +9,7 @@ import com.dhb.models.api.response.BankMasterResponseModel;
 import com.dhb.models.api.response.BtechClientsResponseModel;
 import com.dhb.models.api.response.BtechCollectionsResponseModel;
 import com.dhb.models.api.response.BtechEstEarningsResponseModel;
+import com.dhb.models.api.response.BtechwithHubResponseModel;
 import com.dhb.models.api.response.BusinessErrorModel;
 import com.dhb.models.api.response.CampScanQRResponseModel;
 import com.dhb.models.api.response.CampListDisplayResponseModel;
@@ -573,6 +574,14 @@ public class ResponseParser implements AppConstants {
         return true;
     }
 
+    public BtechwithHubResponseModel getBtechwithHubBarcodeResponseModel(String json, int statusCode) {
+        BtechwithHubResponseModel btechwithHubResponseModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            btechwithHubResponseModel = gson.fromJson(json, BtechwithHubResponseModel.class);
+        }
+        return btechwithHubResponseModel;
+    }
+
     private class DialogOkButtonListener implements AlertDialogMessage.AlertDialogOkListener {
 
         @Override
@@ -640,6 +649,7 @@ public class ResponseParser implements AppConstants {
 //		}
         return slotModels;
     }
+
     //Fetch Bank Master Response parse:
     public ArrayList<BankMasterResponseModel> getBankMasterResponseModel(String json, int statusCode) {
         ArrayList<BankMasterResponseModel> slotModels = null;
@@ -650,6 +660,7 @@ public class ResponseParser implements AppConstants {
 //		}
         return slotModels;
     }
+
     //payment mode Response parse:
     public ArrayList<PaymentModeMasterResponseModel> getPaymentModeMasterResponseModel(String json, int statusCode) {
         ArrayList<PaymentModeMasterResponseModel> slotModels = null;
@@ -736,6 +747,7 @@ public class ResponseParser implements AppConstants {
         //}
         return dispatchHubDisplayDetailsResponseModel;
     }
+
     //Order serverd details Response parse:
     public OrderServedResponseModel getOrderServedDetailsResponseModel(String json, int statusCode) {
         OrderServedResponseModel orderServedResponseModel = null;
@@ -744,6 +756,7 @@ public class ResponseParser implements AppConstants {
         //}
         return orderServedResponseModel;
     }
+
     //Btech EST Earning Response parse:
     public BtechEstEarningsResponseModel getBtecheSTEarningResponseModel(String json, int statusCode) {
         BtechEstEarningsResponseModel btechEstEarningsResponseModel = null;
@@ -752,6 +765,7 @@ public class ResponseParser implements AppConstants {
         //}
         return btechEstEarningsResponseModel;
     }
+
     //payment Mode Master Response parse:
     public PaymentModeMasterResponseModel getPaymentModemasterResponseModel(String json, int statusCode) {
         PaymentModeMasterResponseModel paymentModeMasterResponseModel = null;
@@ -794,7 +808,7 @@ public class ResponseParser implements AppConstants {
                 campAllOrderDetailsModel1.setLatitude(jsonObject1.getDouble("Latitude"));
                 campAllOrderDetailsModel1.setLongitude(jsonObject1.getDouble("Longitude"));
                 JSONArray benMasterArray = jsonObject1.getJSONArray("benMaster");
-                ArrayList<CampDetailsBenMasterModel> campBenArr =  new ArrayList<>();
+                ArrayList<CampDetailsBenMasterModel> campBenArr = new ArrayList<>();
                 for (int j = 0; j < benMasterArray.length(); j++) {
                     CampDetailsBenMasterModel campDetailsBenMasterModel = new CampDetailsBenMasterModel();
                     JSONObject jsonObject2 = benMasterArray.getJSONObject(j);

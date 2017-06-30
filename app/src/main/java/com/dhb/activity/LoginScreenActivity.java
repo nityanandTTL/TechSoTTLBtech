@@ -38,7 +38,7 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
         activity = this;
-        appPreferenceManager=new AppPreferenceManager(activity);
+        appPreferenceManager = new AppPreferenceManager(activity);
         initUi();
         setListeners();
     }
@@ -61,7 +61,7 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.forget_password) {
-            Intent intentForgotPassword = new Intent(activity,ForgetPasswordActivity.class);
+            Intent intentForgotPassword = new Intent(activity, ForgetPasswordActivity.class);
             startActivity(intentForgotPassword);
         } else if (v.getId() == R.id.login_button) {
             if (validate()) {
@@ -76,7 +76,7 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
                 logiApiAsyncTask.setApiCallAsyncTaskDelegate(new LoginApiAsyncTaskDelegateResult());
                 if (isNetworkAvailable(activity)) {
                     logiApiAsyncTask.execute(logiApiAsyncTask);
-                }else {
+                } else {
                     Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -101,27 +101,25 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
     private class LoginApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if(statusCode==200){
-                ResponseParser responseParser=new ResponseParser(activity);
-                LoginResponseModel loginResponseModel=new LoginResponseModel();
-                loginResponseModel=responseParser.getLoginResponseModel(json,statusCode);
-                if(loginResponseModel!=null){
+            if (statusCode == 200) {
+                ResponseParser responseParser = new ResponseParser(activity);
+                LoginResponseModel loginResponseModel = new LoginResponseModel();
+                loginResponseModel = responseParser.getLoginResponseModel(json, statusCode);
+                if (loginResponseModel != null) {
 
-                   // switchToActivity(activity,SelfieUploadActivity.class,new Bundle());
+                    //btech_hub
+                    appPreferenceManager.setLoginRole(loginResponseModel.getRole());
 
-                    //change_7june2017...
                     if (loginResponseModel.getRole().equals("4")) {
                         appPreferenceManager.setLoginResponseModel(loginResponseModel);
                         appPreferenceManager.setAPISessionKey(loginResponseModel.getAccess_token());
                         switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
-                    }
-                    else
+                    } else
                         Toast.makeText(activity, "Please use valid BTECH credentials to log in", Toast.LENGTH_SHORT).show();
                     //change_7june2017...
                 }
-            }
-            else{
-                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 

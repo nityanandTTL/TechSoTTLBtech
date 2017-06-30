@@ -28,6 +28,7 @@
     <string name="progress_message_fetching_order_details_please_wait">Fetching Order Details,\n Please wait ....</string>
     <string name="progress_message_camp_count_details_please_wait">Loading,\n Please wait ....</string>
     <string name="progress_message_sending_master_barcode_please_wait">Sending Master barcode  Details,\n Please wait ....</string>
+    <string name="progress_message_fetcihng_btechwithhub_barcode_please_wait">Fetcihng Barcode Details,\n Please wait ....</string>
     <string name="progress_message_getting_master_payment_mode_please_wait">Getting Master payment Mode,\n Please wait ....</string>
     <string name="progress_message_fetching_slot_details_please_wait">Fetching Slot Details,\n Please wait ....</string>
     <string name="progress_message_fetching_brand_master_please_wait">Fetching Brand Master,\n Please wait ....</string>
@@ -107,6 +108,7 @@
     <string name="click_to_select_clinical_history">Select Clinical History</string>
     <string name="re_enter_barcode">Re-enter barcode</string>
     <string name="note">*Please Select Vashi branch for Cash by ATM</string>
+    <string name="receiveButton">Receive</string>
     <string-array name="payment_mode">
         <item>Cash By ATM</item>
         <item>Cash</item>

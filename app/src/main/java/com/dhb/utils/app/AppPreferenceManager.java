@@ -36,9 +36,28 @@ public class AppPreferenceManager {
     private String leaveToDate = "leaveToDate";
     private String cameFrom = "cameFrom";
 
-    //changes_5june2017--START
+
     private String scheduleCounter = "scheduleCounter";
     private String scheduleDate = "scheduleDate";
+
+    private String loginRole = "loginRole";
+    private String btechID = "btechID";
+
+    public String getBtechID() {
+        return appPreference.getString(btechID, "");
+    }
+
+    public void setBtechID(String btechID) {
+        appPreference.putString(this.btechID, btechID);
+    }
+
+    public String getLoginRole() {
+        return appPreference.getString(loginRole, "");
+    }
+
+    public void setLoginRole(String loginRole) {
+        appPreference.putString(this.loginRole, loginRole);
+    }
 
     public String getMaskNumber() {
         return appPreference.getString(maskNumber, "");
@@ -63,7 +82,6 @@ public class AppPreferenceManager {
     public void setScheduleCounter(String scheduleCounter) {
         appPreference.putString(this.scheduleCounter, scheduleCounter);
     }
-    //changes_5june2017--END
 
     public AppPreferenceManager(Activity activity) {
         super();
