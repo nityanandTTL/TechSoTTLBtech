@@ -105,6 +105,7 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
             holder.imgChecked = (ImageView) convertView.findViewById(R.id.img_checked);
             holder.isSelectedDueToParent = false;
             holder.parentTestCode = "";
+            holder.imgTestFasting = (ImageView) convertView.findViewById(R.id.test_fasting);
             convertView.setTag(holder);
         } else {
             holder = (ViewChildHolder) convertView.getTag();
@@ -128,6 +129,17 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
             holder.img_test_type.setImageDrawable(activity.getResources().getDrawable(R.drawable.t));
         } else {
             holder.img_test_type.setImageDrawable(activity.getResources().getDrawable(R.drawable.o));
+        }
+        if(testRateMasterModel.getFasting().equalsIgnoreCase("fasting")){
+            holder.imgTestFasting.setVisibility(View.VISIBLE);
+            holder.imgTestFasting.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_fasting));
+        }
+        else if(testRateMasterModel.getFasting().equalsIgnoreCase("non-fasting")){
+            holder.imgTestFasting.setVisibility(View.VISIBLE);
+            holder.imgTestFasting.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_non_fasting));
+        }
+        else{
+            holder.imgTestFasting.setVisibility(View.INVISIBLE);
         }
         boolean isChecked = false;
         holder.isSelectedDueToParent = false;
@@ -232,6 +244,7 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
         TextView txt_test, txt_dis_amt;
         boolean isSelectedDueToParent;
         String parentTestCode;
+        ImageView imgTestFasting;
     }
     private boolean checkIfOfferExists(ArrayList<TestRateMasterModel> selTests){
         for (TestRateMasterModel trmm:
