@@ -39,6 +39,7 @@ import com.dhb.models.data.CampDetailsKitsModel;
 import com.dhb.models.data.CampDetailsSampleTypeModel;
 import com.dhb.models.data.DepositRegisterModel;
 import com.dhb.models.data.EarningRegisterModel;
+import com.dhb.models.data.Earning_NewRegisterModel;
 import com.dhb.models.data.LeaveNatureMasterModel;
 import com.dhb.models.data.MaterialDetailsModel;
 import com.dhb.models.data.NarrationMasterModel;
@@ -582,6 +583,27 @@ public class ResponseParser implements AppConstants {
         return btechwithHubResponseModel;
     }
 
+    public Earning_NewRegisterModel getEarningRegisterResponseModel(String json, int statusCode) {
+        Earning_NewRegisterModel earning_newRegisterModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            earning_newRegisterModel = gson.fromJson(json, Earning_NewRegisterModel.class);
+        }
+        return earning_newRegisterModel;
+    }
+
+
+
+   /* public ArrayList<EarningRegisterModel> getEarningRegisterResponseModel(String json, int statusCode) {
+        ArrayList<EarningRegisterModel> earningRegisterModels = null;
+//		if (!parseIntoError(json, statusCode)){
+        TypeToken<ArrayList<EarningRegisterModel>> token = new TypeToken<ArrayList<EarningRegisterModel>>() {
+        };
+        earningRegisterModels = gson.fromJson(json, token.getType());
+//		}
+        return earningRegisterModels;
+    }*/
+
+
     private class DialogOkButtonListener implements AlertDialogMessage.AlertDialogOkListener {
 
         @Override
@@ -717,16 +739,6 @@ public class ResponseParser implements AppConstants {
         return fetchledgerDetailsResponseModel;
     }
 
-    ////Fetch Earning details Response parse:
-    public ArrayList<EarningRegisterModel> getEarningRegisterResponseModel(String json, int statusCode) {
-        ArrayList<EarningRegisterModel> earningRegisterModels = null;
-//		if (!parseIntoError(json, statusCode)){
-        TypeToken<ArrayList<EarningRegisterModel>> token = new TypeToken<ArrayList<EarningRegisterModel>>() {
-        };
-        earningRegisterModels = gson.fromJson(json, token.getType());
-//		}
-        return earningRegisterModels;
-    }
 
     ////Fetch Earning details Response parse:
     public ArrayList<DepositRegisterModel> getDepositRegisterResponseModel(String json, int statusCode) {

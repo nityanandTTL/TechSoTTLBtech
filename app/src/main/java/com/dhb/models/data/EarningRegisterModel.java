@@ -72,8 +72,4 @@ public class EarningRegisterModel extends BaseModel implements Parcelable {
         }
     };
 
-
-
-
-
 }

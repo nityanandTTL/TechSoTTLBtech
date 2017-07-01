@@ -7,11 +7,37 @@ import android.os.Parcelable;
  * Created by E4904 on 5/2/2017.
  */
 
-public class DepositRegisterModel extends BaseModel implements Parcelable {
+public class DepositRegisterModel implements Parcelable {
 
     String Date;
     Integer Amount;
     String Remarks;
+
+    protected DepositRegisterModel(Parcel in) {
+        Date = in.readString();
+        Remarks = in.readString();
+    }
+
+    public static final Creator<DepositRegisterModel> CREATOR = new Creator<DepositRegisterModel>() {
+        @Override
+        public DepositRegisterModel createFromParcel(Parcel in) {
+            return new DepositRegisterModel(in);
+        }
+
+        @Override
+        public DepositRegisterModel[] newArray(int size) {
+            return new DepositRegisterModel[size];
+        }
+    };
+
+    @Override
+    public String toString() {
+        return "DepositRegisterModel{" +
+                "Date='" + Date + '\'' +
+                ", Amount=" + Amount +
+                ", Remarks='" + Remarks + '\'' +
+                '}';
+    }
 
     public String getDate() {
         return Date;
@@ -37,44 +63,14 @@ public class DepositRegisterModel extends BaseModel implements Parcelable {
         Remarks = remarks;
     }
 
-    public DepositRegisterModel() {
-        super();
-    }
-
-    protected DepositRegisterModel(Parcel in) {
-        super(in);
-        Date = in.readString();
-        Amount=in.readInt();
-        Remarks = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeString(Date);
-        dest.writeInt(Amount);
-        dest.writeString(Remarks);
-    }
-
     @Override
     public int describeContents() {
         return 0;
     }
 
-    public static final Creator<DepositRegisterModel> CREATOR = new Creator<DepositRegisterModel>() {
-        @Override
-        public DepositRegisterModel createFromParcel(Parcel in) {
-            return new DepositRegisterModel(in);
-        }
-
-        @Override
-        public DepositRegisterModel[] newArray(int size) {
-            return new DepositRegisterModel[size];
-        }
-    };
-
-
-
-
-
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(Date);
+        dest.writeString(Remarks);
+    }
 }

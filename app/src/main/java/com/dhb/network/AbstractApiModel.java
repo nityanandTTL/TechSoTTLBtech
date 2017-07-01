@@ -95,9 +95,10 @@ public class AbstractApiModel implements AppConstants {
 
     public String SET_BTECH_MATERIAL_INV = VERSION_API_URL + "/Inventory/DailyInvUpdate";
 
-    public String FETCH_EARNINGREGISTER_DETAIL = VERSION_API_URL + "/Ledger/EarningRegister";
+   // public String FETCH_EARNINGREGISTER_DETAIL = VERSION_API_URL + "/Ledger/EarningRegister";
 
     public String FETCH_DEPOSITREGISTER_DETAIL = VERSION_API_URL + "/Ledger/DepositPayments";
+    public String FETCH_EARNINGREGISTER_DETAIL = VERSION_API_URL + "/OrdersCredit/BtechEarnings";
 
     public String FETCH_VERSION_CONTROL_DETAIL = VERSION_API_URL + "/VersionControl";
 

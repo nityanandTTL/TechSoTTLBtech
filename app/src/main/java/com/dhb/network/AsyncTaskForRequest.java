@@ -136,7 +136,7 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
     /*
-	 * Selfie Upload Api Integration*/
+     * Selfie Upload Api Integration*/
 
     public ApiCallAsyncTask getSelfieUploadRequestAsyncTask(SelfieUploadRequestModel selfieUploadRequestModel) {
         apiCallAsyncTask = null;
@@ -160,7 +160,7 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
     /*
-	 * Order Booking Api Integration*/
+     * Order Booking Api Integration*/
 
     public ApiCallAsyncTask getOrderBookingRequestAsyncTask(OrderBookingRequestModel orderBookingRequestModel) {
         apiCallAsyncTask = null;
@@ -596,12 +596,30 @@ public class AsyncTaskForRequest {
 	 * Fetch Earning Register Api Integration*/
 
     public ApiCallAsyncTask getFetchEarningDetailsRequestAsyncTask(String fromdate, String todate) {
+
+       /* apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_DEPOSITREGISTER_DETAIL + "/" + appPreferenceManager.getBtechID());
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetching_Earning_details_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;*/
+
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_DEPOSITREGISTER_DETAIL + "/" + appPreferenceManager.getLoginResponseModel().getUserID() + "/" + fromdate + "/" + todate);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_EARNINGREGISTER_DETAIL + "/" + appPreferenceManager.getBtechID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -624,12 +642,13 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_EARNINGREGISTER_DETAIL + "/" + appPreferenceManager.getLoginResponseModel().getUserID() + "/" + fromdate + "/" + todate);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_DEPOSITREGISTER_DETAIL + "/" + appPreferenceManager.getLoginResponseModel().getUserID() + "/" + fromdate + "/" + todate);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
                     .getString(R.string.progress_message_fetching_Deposit_details_please_wait));
+
             apiCallAsyncTask.setProgressBarVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
