@@ -82,7 +82,7 @@ public class HomeScreenFragment extends AbstractFragment {
         // Inflate the layout for this fragment
 
         //btech_tsp
-        if (loginRole.equalsIgnoreCase("7")) {//loginRole.equalsIgnoreCase("7")
+        if (loginRole.equalsIgnoreCase("9")) {//loginRole.equalsIgnoreCase("9")
             rootView = inflater.inflate(R.layout.tsp_fragment_home_screen, container, false);
             initUI_BtechwithHub();
             initData();
