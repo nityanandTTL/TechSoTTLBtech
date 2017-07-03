@@ -110,13 +110,12 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
                     //btech_hub
                     appPreferenceManager.setLoginRole(loginResponseModel.getRole());
 
-                    if (loginResponseModel.getRole().equals("4")) {
+                    if (loginResponseModel.getRole().equals("4") || loginResponseModel.getRole().equals("9")) {
                         appPreferenceManager.setLoginResponseModel(loginResponseModel);
                         appPreferenceManager.setAPISessionKey(loginResponseModel.getAccess_token());
                         switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
                     } else
                         Toast.makeText(activity, "Please use valid BTECH credentials to log in", Toast.LENGTH_SHORT).show();
-                    //change_7june2017...
                 }
             } else {
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
