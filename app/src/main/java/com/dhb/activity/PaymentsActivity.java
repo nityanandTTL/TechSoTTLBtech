@@ -340,7 +340,7 @@ public class PaymentsActivity extends AbstractActivity {
             LinearLayout llPaymentPassInputs = (LinearLayout) v.findViewById(R.id.ll_payments_pass_inputs_data);
             final EditText editAmount = (EditText) v.findViewById(R.id.amount1);
             TextView textAmount = (TextView) v.findViewById(R.id.amount);
-
+            final Button btnPaymentInputsSubmit = new Button(activity);
             for (int i = 0; i < paymentPassInputsModel.getNameValueCollection().size(); i++) {
                 final int currentPosition = i;
                 if (paymentPassInputsModel.getNameValueCollection().get(i).getRequired().equals("User")) {
@@ -423,13 +423,15 @@ public class PaymentsActivity extends AbstractActivity {
                             public void afterTextChanged(Editable s) {
                                 if (!InputUtils.isNull(s.toString())) {
                                     try {
+                                        btnPaymentInputsSubmit.setEnabled(false);
                                         int amountPayable = Integer.parseInt(s.toString());
                                         if (amountPayable > 0) {
-                                            if(NarrationId == 3 && amountPayable<2000){
+                                            if(NarrationId == 3 && amountPayable<2000){//amounPayable<2000
                                                 editAmount.requestFocus();
                                                 editAmount.setError("Amount Should be greater than Rs 2000/-");
                                             }
                                             else {
+                                                btnPaymentInputsSubmit.setEnabled(true);
                                                 paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(amountPayable + "");
                                             }
                                         } else {
@@ -502,7 +504,6 @@ public class PaymentsActivity extends AbstractActivity {
                     }
                 }
             }
-            Button btnPaymentInputsSubmit = new Button(activity);
             LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             //btnParams.setMargins(10, 5, 5, 10);
             //changes_7june2017
@@ -559,7 +560,22 @@ public class PaymentsActivity extends AbstractActivity {
             if (statusCode == 200) {
                 paymentStartTransactionAPIResponseModel = responseParser.getPaymentStartTransactionResponse(json, statusCode);
                 if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
-                    if (NarrationId == 1 || NarrationId == 3 || (NarrationId == 2 && ModeId == 1)) {
+                    if(NarrationId == 1 || NarrationId == 3 ){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setTitle("UPI Payment")
+                                .setMessage("Your Payment request has been initiated. Please access your UPI banking app to complete the process.")
+                                .setCancelable(false)
+                                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent();
+                                intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                finish();
+                            }
+                        }).show();
+                    }
+                    else if (NarrationId == 2 && ModeId == 1) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                         builder.setTitle("Verify Payment")
                                 .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
