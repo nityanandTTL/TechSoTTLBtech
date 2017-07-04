@@ -171,9 +171,15 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (pos == 0) {
-                    registerToggle(pos);
-                    holder.cell.toggle(false);
-                    initData(holder, pos);
+                    if (!orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED") && !orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment"))
+                        {
+
+                            registerToggle(pos);
+                            holder.cell.toggle(false);
+                            initData(holder, pos);
+                        } else {
+                            Toast.makeText(activity, "Please accept the order first", Toast.LENGTH_SHORT).show();
+                        }
                 } else {
                     Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
                 }
@@ -231,7 +237,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.imgCBAccept.setVisibility(View.VISIBLE);
 
                 holder.txtSrNo.setVisibility(View.INVISIBLE);
-
+                holder.imgcall.setVisibility(View.GONE);
+                holder.imgRelease2.setVisibility(View.INVISIBLE);
                 holder.imgCBAccept.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -240,8 +247,9 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 });
             } else {
                 holder.imgCBAccept.setVisibility(View.INVISIBLE);
-
+                holder.imgcall.setVisibility(View.GONE);
                 holder.txtSrNo.setVisibility(View.VISIBLE);
+                holder.imgRelease2.setVisibility(View.VISIBLE);
             }
 
 
@@ -412,7 +420,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         private void initUI(View itemView) {
             imgFastingStatus = (ImageView) itemView.findViewById(R.id.title_fasting);
             imgcall = (ImageView) itemView.findViewById(R.id.call);
-            imgcall.setVisibility(View.VISIBLE);
+
             pintitle = (TextView) itemView.findViewById(R.id.pincode_title);
             pindata = (TextView) itemView.findViewById(R.id.pincode_data);
             cell = (FoldingCell) itemView.findViewById(R.id.item_folding_cell);

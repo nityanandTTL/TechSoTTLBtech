@@ -599,9 +599,9 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                orderDetailsModel.setStatus("RESCHEDULED");
+               /* orderDetailsModel.setStatus("RESCHEDULED");
                 OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
-                orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                orderDetailsDao.insertOrUpdate(orderDetailsModel);*/
                 Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();

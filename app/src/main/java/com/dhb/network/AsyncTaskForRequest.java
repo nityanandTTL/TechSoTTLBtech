@@ -467,7 +467,7 @@ public class AsyncTaskForRequest {
             // String postJson = new Gson().toJson(orderVisitDetailsModel);
             //  abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BANK_MASTER/*"VISTT001109154"*/);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BANK_MASTER+"/"+appPreferenceManager.getLoginResponseModel().getUserID()/*"VISTT001109154"*/);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);

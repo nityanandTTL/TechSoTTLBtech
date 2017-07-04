@@ -1,16 +1,11 @@
 package com.dhb.fragment;
 
 
-import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,7 +16,6 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
@@ -43,7 +37,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -118,7 +111,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 toDt.add(Calendar.HOUR, 24);
 
 
-               fromdate.setEnabled(false);
+                fromdate.setEnabled(false);
                 fromdate.setClickable(false);
 
                 todate.setEnabled(false);
@@ -131,13 +124,15 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 appPreferenceManager.setCameFrom(3);
                 sp.setEnabled(false);
                 sp.setClickable(false);
-                calNumDays(toDt.getTimeInMillis(),fromDt.getTimeInMillis());
+                calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
                 days.setText(daysdiff + "");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         } else {
-            activity.toolbarHome.setTitle("Leave Intimation");
+            if (activity.toolbarHome != null) {
+                activity.toolbarHome.setTitle("Leave Intimation");
+            }
             activity.isOnHome = false;
             defdate = getCalculatedDate("yyyy-MM-dd", 1);
             todate.setVisibility(View.INVISIBLE);
@@ -201,15 +196,14 @@ public class LeaveIntimationFragment extends AbstractFragment {
                                                   int monthOfYear, int dayOfMonth) {
                                 Calendar td = Calendar.getInstance();
                                 td.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
-                                if(fromDt.getTimeInMillis()<=td.getTimeInMillis()) {
+                                if (fromDt.getTimeInMillis() <= td.getTimeInMillis()) {
                                     todate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                                     toDt.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
                                     toDt.add(Calendar.HOUR, 24);
                                     calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
                                     days.setText(daysdiff + "");
-                                }
-                                else{
-                                    Toast.makeText(activity,"From Date cannot be greater than To Date",LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(activity, "From Date cannot be greater than To Date", LENGTH_SHORT).show();
                                 }
                             }
                         }, mYear, mMonth, mDay);
@@ -225,9 +219,8 @@ public class LeaveIntimationFragment extends AbstractFragment {
         Applyleave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calNumDays(toDt.getTimeInMillis(),fromDt.getTimeInMillis());
+                calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
 
-                days.setText(daysdiff + "");
 //                Toast.makeText(getActivity(), "Days:" + daysdiff, LENGTH_SHORT).show();
 
 
@@ -238,10 +231,18 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 applyLeaveRequestModel.setFromdate(fromdate.getText().toString());
                 applyLeaveRequestModel.setTodate(todate.getText().toString());
                 applyLeaveRequestModel.setRemarks(leaveremark.getText().toString());
-                applyLeaveRequestModel.setDays(daysdiff);
                 applyLeaveRequestModel.setEnteredBy(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
 
-
+                if (one.isChecked()) {
+                    daysdiff = 1;
+                    days.setText("1");
+                    applyLeaveRequestModel.setTodate(fromdate.getText().toString());
+                    applyLeaveRequestModel.setDays(daysdiff);
+                } else {
+                    days.setText(daysdiff + "");
+                    applyLeaveRequestModel.setTodate(todate.getText().toString());
+                    applyLeaveRequestModel.setDays(daysdiff);
+                }
                 AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
                 ApiCallAsyncTask setApplyLeaveDetailApiAsyncTask = asyncTaskForRequest.getPostApplyLeaveRequestAsyncTask(applyLeaveRequestModel);
                 setApplyLeaveDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new LeaveIntimationFragment.setApplyLeaveDetailsApiAsyncTaskDelegateResult());
@@ -256,7 +257,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
     }
 
     private void calNumDays(long toTime, long fromTime) {
-        long diffTime =  toTime - fromTime;
+        long diffTime = toTime - fromTime;
         daysdiff = (int) (diffTime / (1000 * 60 * 60 * 24));
     }
 
@@ -313,7 +314,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 appPreferenceManager.setLeaveFlag(0);
                 appPreferenceManager.setCameFrom(0);
                 activity.toolbarHome.setVisibility(View.VISIBLE);
-                pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_FRAGMENT);
+                pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         }
 
@@ -375,9 +376,12 @@ public class LeaveIntimationFragment extends AbstractFragment {
                     textcalender.setText("Leave From:");
                     Toast.makeText(getActivity(), text, LENGTH_SHORT).show();
                 } else {
+
                     todate.setVisibility(View.INVISIBLE);
                     textcalender.setText("Leave On:");
-
+                    daysdiff = 1;
+                    days.setText(daysdiff + "");
+                    todate.setText("");
                 }
 
 
@@ -403,8 +407,8 @@ public class LeaveIntimationFragment extends AbstractFragment {
         Applyleave = (Button) rootView.findViewById(R.id.btn_leave_apply);
         /*leavetype = (EditText) rootView.findViewById(R.id.et_leave_type);*/
         leaveremark = (EditText) rootView.findViewById(R.id.et_leave_days_remark);
-        one = (RadioButton) rootView.findViewById(R.id.radio_pirates);
-        more = (RadioButton) rootView.findViewById(R.id.radio_ninjas);
+        one = (RadioButton) rootView.findViewById(R.id.radio_one);
+        more = (RadioButton) rootView.findViewById(R.id.radio_more);
         group = (RadioGroup) rootView.findViewById(R.id.group);
         textcalender = (TextView) rootView.findViewById(R.id.Calendertextview);
         days = (TextView) rootView.findViewById(R.id.et_leave_days_value);

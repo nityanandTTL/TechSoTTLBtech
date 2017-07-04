@@ -89,7 +89,10 @@ public class CreditFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
-        activity.toolbarHome.setTitle("Credit");
+
+        if (activity.toolbarHome != null) {
+            activity.toolbarHome.setTitle("Credit");
+        }
         appPreferenceManager = new AppPreferenceManager(activity);
         if (getArguments() != null) {
 
@@ -199,7 +202,7 @@ public class CreditFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Bank Name")
+                builder.setTitle("Branch Name")
                         .setItems(bankName.toArray(new String[]{}), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
