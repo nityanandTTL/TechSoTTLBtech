@@ -72,7 +72,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private OrderDetailsDao orderDetailsDao;
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
     private View rootView;
-
     private ListView recyclerView;
     private TextView txtTotalDistance;
     private TextView txtTotalEarnings;
@@ -86,6 +85,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private String[] kits_arr;
     private RescheduleOrderDialog rod;
     private String MaskedPhoneNumber = "";
+    private boolean isFetchingOrders = false;
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
     }
@@ -205,7 +205,10 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask();
         fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
-            fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
+            if(!isFetchingOrders) {
+                isFetchingOrders = true;
+                fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
+            }
         } else {
             Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             initData();
@@ -308,11 +311,13 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                     }
                 }
             }
+            isFetchingOrders = false;
             initData();
         }
 
         @Override
         public void onApiCancelled() {
+            isFetchingOrders = false;
             Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
@@ -417,7 +422,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == BundleConstants.VOMD_START && resultCode == BundleConstants.VOMD_ARRIVED) {
-            isToFromMap = false;
             OrderVisitDetailsModel orderVisitDetailsModel = data.getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
             Intent intentOrderBooking = new Intent(activity, OrderBookingActivity.class);
             intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
