@@ -28,6 +28,7 @@ import com.dhb.models.api.request.RemoveBeneficiaryAPIRequestModel;
 import com.dhb.models.api.request.ResetPasswordRequestModel;
 import com.dhb.models.api.request.SelfieUploadRequestModel;
 import com.dhb.models.api.request.SetBtechAvailabilityAPIRequestModel;
+import com.dhb.models.api.request.Tsp_Send_RequestModel;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.google.gson.Gson;
 
@@ -196,7 +197,7 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
 /*
-	 * Order Booking Api Integration*/
+     * Order Booking Api Integration*/
 
     public ApiCallAsyncTask getCashDepositEntryRequestAsyncTask(CashDepositEntryRequestModel cashDepositEntryRequestModel) {
         apiCallAsyncTask = null;
@@ -266,7 +267,7 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
     /*
-	 * Work Order Entry Api Integration*/
+     * Work Order Entry Api Integration*/
 
     public ApiCallAsyncTask getWorkOrderEntryRequestAsyncTask(OrderBookingRequestModel orderBookingRequestModel) {
         apiCallAsyncTask = null;
@@ -290,7 +291,7 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
     /*
-	 * Order Status Change Api Integration*/
+     * Order Status Change Api Integration*/
 
     public ApiCallAsyncTask getOrderStatusChangeRequestAsyncTask(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
         apiCallAsyncTask = null;
@@ -1345,7 +1346,7 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BTECHWITH_HUB_BARCODE + "/" + 5);//appPreferenceManager.getBtechID() instead of 5
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BTECHWITH_HUB_BARCODE + "/" + appPreferenceManager.getBtechID());//appPreferenceManager.getBtechID() instead of 5
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -1375,6 +1376,90 @@ public class AsyncTaskForRequest {
                     .getString(R.string.progress_message_mapping_master_barcode_please_wait));
             apiCallAsyncTask.setProgressBarVisible(true);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getTspBarcodeApiAsyncTaskRequestAsyncTask() {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.TSP_BARCODE + "/" + appPreferenceManager.getUserID());
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetcihng_btechwithhub_barcode_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getTSP_MasterBarcodeMapRequestAsyncTask(BtechwithHub_MasterBarcodeMappingRequestModel masterBarcodeMappingRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(masterBarcodeMappingRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.TSP_MASTER_BARCODE_MAPPING);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_mapping_master_barcode_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getTspSendConsignmentRequestAsyncTask(Tsp_Send_RequestModel tsp_send_requestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(tsp_send_requestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.TSP_SEND_CONSIGNMENT);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_mapping_master_barcode_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getTspModeDataApiAsyncTaskRequestAsyncTask() {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.TSP_SEND_MODES);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetcihngtsp_modes_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
         }

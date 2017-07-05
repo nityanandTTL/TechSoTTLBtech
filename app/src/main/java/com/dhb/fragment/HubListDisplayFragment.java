@@ -3,6 +3,7 @@ package com.dhb.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhb.R;
@@ -42,6 +44,8 @@ public class HubListDisplayFragment extends AbstractFragment {
     DispatchToHubDisplayDetailsAdapter dispatchToHubDisplayDetailsAdapter;
     public static final String TAG_FRAGMENT = HubListDisplayFragment.class.getSimpleName();
 
+    public static int flowDecider = 0;//for btech_hub flow
+
     public HubListDisplayFragment() {
     }
 
@@ -49,6 +53,10 @@ public class HubListDisplayFragment extends AbstractFragment {
         return new HubListDisplayFragment();
     }
 
+    public static Fragment newInstance(int i) {//for btech_hub flow
+        flowDecider = i;
+        return new HubListDisplayFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,14 +88,15 @@ public class HubListDisplayFragment extends AbstractFragment {
             Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
         }
     }
+
     private void prepareRecyclerView() {
         dispatchToHubDisplayDetailsAdapter = new DispatchToHubDisplayDetailsAdapter(hubbTechModels, activity, new DispatchToHubAdapterOnItemClickedDelegate() {
             @Override
             public void onItemClicked(HUBBTechModel hubbTechModel) {
                 Logger.error("item clicked");
                 Intent intentMapDisplay = new Intent(activity, HubDetailMapDisplayFragmentActivity.class);
-                intentMapDisplay.putExtra(BundleConstants.HUB_BTECH_MODEL,hubbTechModel);
-                startActivityForResult(intentMapDisplay,BundleConstants.HMD_START);
+                intentMapDisplay.putExtra(BundleConstants.HUB_BTECH_MODEL, hubbTechModel);
+                startActivityForResult(intentMapDisplay, BundleConstants.HMD_START);
             }
         });
 
@@ -100,7 +109,7 @@ public class HubListDisplayFragment extends AbstractFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==BundleConstants.HMD_START&&resultCode==BundleConstants.HMD_ARRIVED){
+        if (requestCode == BundleConstants.HMD_START && resultCode == BundleConstants.HMD_ARRIVED) {
             HUBBTechModel hubbTechModel = data.getExtras().getParcelable(BundleConstants.HUB_BTECH_MODEL);
             pushFragments(HubMasterBarcodeScanFragment.newInstance(hubbTechModel), false, false, HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
         }
@@ -112,7 +121,6 @@ public class HubListDisplayFragment extends AbstractFragment {
         ll_hub_display_footer = (LinearLayout) rootview.findViewById(R.id.ll_hub_display_footer);
         ll_hub_display_footer.setVisibility(View.GONE);
     }
-
 
     private class DispatchToHubDetailDisplayApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
@@ -129,9 +137,8 @@ public class HubListDisplayFragment extends AbstractFragment {
                 } else {
                     Logger.error("else " + json);
                 }
-            }
-            else{
-                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 

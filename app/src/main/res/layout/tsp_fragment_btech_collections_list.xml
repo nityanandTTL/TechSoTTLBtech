@@ -73,7 +73,7 @@
                     android:layout_gravity="center"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
-                    android:text="Scan Barcode"
+                    android:text="Scan Chillar Barcode"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     android:layout_weight="1.5"/>

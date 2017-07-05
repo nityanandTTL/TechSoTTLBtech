@@ -73,6 +73,8 @@ public class AbstractApiModel implements AppConstants {
 
     public String CAMP_COUNT = VERSION_API_URL + "/CampDetails/MyCampCount";
 
+    public String TSP_SEND_CONSIGNMENT = VERSION_API_URL + "/SpecimenTrack/SendConsignment";
+
     public String CAMP_QR_DETAIL = VERSION_API_URL + "/CampDetails/OrderDetails";
     public String PAYMENT_MODE_MASTER = VERSION_API_URL + "/Masters/PaymentModeMaster";
     public String BANK_MASTER = VERSION_API_URL + "/Masters/BankMaster";
@@ -95,7 +97,7 @@ public class AbstractApiModel implements AppConstants {
 
     public String SET_BTECH_MATERIAL_INV = VERSION_API_URL + "/Inventory/DailyInvUpdate";
 
-   // public String FETCH_EARNINGREGISTER_DETAIL = VERSION_API_URL + "/Ledger/EarningRegister";
+    // public String FETCH_EARNINGREGISTER_DETAIL = VERSION_API_URL + "/Ledger/EarningRegister";
 
     public String FETCH_DEPOSITREGISTER_DETAIL = VERSION_API_URL + "/Ledger/DepositPayments";
     public String FETCH_EARNINGREGISTER_DETAIL = VERSION_API_URL + "/OrdersCredit/BtechEarnings";
@@ -123,7 +125,10 @@ public class AbstractApiModel implements AppConstants {
     public String OLCSTART = VERSION_API_URL + "/ClientPickup";
 
     public String MASTER_BARCODE_MAPPING = VERSION_API_URL + "/MasterBarcodeMapping";
+
     public String BTECHWITHHUB_MASTER_BARCODE_MAPPING = VERSION_API_URL + "/SpecimenTrack/ReceiveBarcodes";
+
+    public String TSP_MASTER_BARCODE_MAPPING = VERSION_API_URL + "/SpecimenTrack/ReceiveHubBarcodes";
 
     public String LAB_ALERT_MASTER = VERSION_API_URL + "/LabAlerts";
 
@@ -153,6 +158,11 @@ public class AbstractApiModel implements AppConstants {
     public String PATCH_CALL_REQUEST = VERSION_API_URL + "/CallPatchSrcDest/CallPatchRequest";
 
     public String BTECHWITH_HUB_BARCODE = VERSION_API_URL + "/SpecimenTrack/ReceiveScannedBarcode";
+
+    public String TSP_SEND_MODES = VERSION_API_URL + "/SpecimenTrack/CourierModes";
+
+
+    public String TSP_BARCODE = VERSION_API_URL + "/SpecimenTrack/ReceiveHubBarcode";
 
     public String LOCUS_PUSH_LOCATIONS_API = "https://api.locus.sh/v1/client/thyrocare/user/";
 
