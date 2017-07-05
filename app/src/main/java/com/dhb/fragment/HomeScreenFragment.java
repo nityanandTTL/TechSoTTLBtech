@@ -40,7 +40,7 @@ public class HomeScreenFragment extends AbstractFragment {
     private CircularImageView rvSelfie;
     private ImageView imgPayment, imgOrders, imgSchedule, imgMaterials, imgOLCPickup, imgHub, imgCamp, ordersserved, imgLedger;
     private ImageView bellicon;
-    private String loginRole;
+    private String loginRole = "4";
     Dialog MainDailog;
 
     //tsp
