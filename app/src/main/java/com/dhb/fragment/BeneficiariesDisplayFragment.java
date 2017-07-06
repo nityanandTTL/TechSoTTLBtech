@@ -324,8 +324,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         totalAmountPayable = 0;
         Logger.debug(orderVisitDetailsModel.getVisitId());
         orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
-        for (OrderDetailsModel orderDetailsModel :
-                orderVisitDetailsModel.getAllOrderdetails()) {
+        for (OrderDetailsModel orderDetailsModel :orderVisitDetailsModel.getAllOrderdetails()) {
             totalAmountPayable = totalAmountPayable + orderDetailsModel.getAmountPayable();
         }
 
