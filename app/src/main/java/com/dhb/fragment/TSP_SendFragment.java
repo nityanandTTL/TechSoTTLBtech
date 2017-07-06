@@ -1,14 +1,17 @@
 package com.dhb.fragment;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +25,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.dhb.R;
+import com.dhb.activity.HomeScreenActivity;
+import com.dhb.adapter.Tsp_HubScanBarcodeListAdapter;
 import com.dhb.models.api.request.Tsp_Send_RequestModel;
-import com.dhb.models.api.response.BtechwithHubResponseModel;
-import com.dhb.models.api.response.Tsp_SendConsignment_Modes_ResponseModel;
-import com.dhb.models.data.LeaveNatureMasterModel;
+import com.dhb.models.api.response.Tsp_ScanBarcodeResponseModel;
+import com.dhb.models.data.Tsp_ScanBarcodeDataModel;
 import com.dhb.models.data.Tsp_SendMode_DataModel;
 import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
@@ -36,17 +39,17 @@ import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractFragment;
 import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
-
+import com.dhb.utils.app.BundleConstants;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TSP_SendFragment extends AbstractFragment {
-
+public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBarcodeListAdapter.CallbackInterface {
 
     public static final String TAG_FRAGMENT = TSP_SendFragment.class.getSimpleName();
     View rootview;
@@ -56,12 +59,20 @@ public class TSP_SendFragment extends AbstractFragment {
     private int sampleCollectedDay;
     private Calendar now;
     private int TIME_PICKER_INTERVAL = 30;
-    EditText edt_cid, edt_rpl, edt_cpl, edt_barcode, edt_routingmode, edt_remarks;
+    EditText edt_cid, edt_rpl, edt_cpl, edt_routingmode, edt_remarks;//edt_barcode;
     Button btn_send;
     Spinner spinnerMode;
     private ArrayList<Tsp_SendMode_DataModel> tsp_sendMode_dataModelsArr;
     private ArrayList<String> Modes;
     Tsp_SendMode_DataModel tsp_sendMode_dataModel1;
+    String regexp = ".{1,7}";
+
+    /*barcode*/
+    private HomeScreenActivity activity;
+    private IntentIntegrator intentIntegrator;
+    private RecyclerView recyclerView;
+    private ArrayList<Tsp_ScanBarcodeDataModel> barcodeModels = new ArrayList<>();
+    private Tsp_HubScanBarcodeListAdapter hubScanBarcodeListAdapter;
 
     public TSP_SendFragment() {
         // Required empty public constructor
@@ -75,7 +86,8 @@ public class TSP_SendFragment extends AbstractFragment {
         getActivity().setTitle("TSP");
 
         initUI();
-        fetchModeData();
+        fetchBarcodeData();/***Barcode***/
+        //fetchModeData();
         listeners();
         return rootview;
     }
@@ -138,35 +150,78 @@ public class TSP_SendFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
 
-                View view = getActivity().getCurrentFocus();
-                if (view != null) {
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
+                if (validate()) {
+                    View view = getActivity().getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
 
-                Tsp_Send_RequestModel tsp_send_requestModel = new Tsp_Send_RequestModel();
+                    Tsp_Send_RequestModel tsp_send_requestModel = new Tsp_Send_RequestModel();
 
-                tsp_send_requestModel.setConsignId(edt_cid.getText().toString().trim());
-                tsp_send_requestModel.setRoutingMode(edt_routingmode.getText().toString().trim());
-                tsp_send_requestModel.setConsignTime(edt_datetimepicker.getText().toString().trim());
-                tsp_send_requestModel.setBarcode(edt_barcode.getText().toString().trim());
-                tsp_send_requestModel.setRPL(Integer.parseInt(edt_rpl.getText().toString().trim()));
-                tsp_send_requestModel.setCPL(Integer.parseInt(edt_cpl.getText().toString().trim()));
-                tsp_send_requestModel.setRemarks(edt_remarks.getText().toString().trim());
-                tsp_send_requestModel.setInstructions("");
-                tsp_send_requestModel.setTSP(Integer.parseInt(appPreferenceManager.getBtechID()));
-                tsp_send_requestModel.setMode(tsp_sendMode_dataModel1.getMode());
+                    tsp_send_requestModel.setConsignId(edt_cid.getText().toString().trim());
+                    tsp_send_requestModel.setRoutingMode(edt_routingmode.getText().toString().trim());
+                    tsp_send_requestModel.setConsignTime(edt_datetimepicker.getText().toString().trim());
+                    //tsp_send_requestModel.setBarcode(edt_barcode.getText().toString().trim());
+                    /***/
+                    ArrayList<Tsp_ScanBarcodeDataModel> scannedBarcodesArr = new ArrayList<>();
+                    for (Tsp_ScanBarcodeDataModel hbm :
+                            barcodeModels) {
+                        if (hbm.isReceived()) {
+                            scannedBarcodesArr.add(hbm);
+                        }
+                    }
+                    tsp_send_requestModel.setTstBarcode(scannedBarcodesArr);
 
-                AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getActivity());
-                ApiCallAsyncTask tspSendConsignmentApiAsyncTask = asyncTaskForRequest.getTspSendConsignmentRequestAsyncTask(tsp_send_requestModel);
-                tspSendConsignmentApiAsyncTask.setApiCallAsyncTaskDelegate(new tspSendConsignmentApiAsyncTaskDelegateResult());
-                if (isNetworkAvailable(getActivity())) {
-                    tspSendConsignmentApiAsyncTask.execute(tspSendConsignmentApiAsyncTask);
-                } else {
-                    Toast.makeText(getActivity(), R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                    tsp_send_requestModel.setRPL(Integer.parseInt(edt_rpl.getText().toString().trim()));
+                    tsp_send_requestModel.setCPL(Integer.parseInt(edt_cpl.getText().toString().trim()));
+                    tsp_send_requestModel.setRemarks(edt_remarks.getText().toString().trim());
+                    tsp_send_requestModel.setInstructions("");
+                    tsp_send_requestModel.setTSP(Integer.parseInt(appPreferenceManager.getBtechID()));
+                    tsp_send_requestModel.setMode(tsp_sendMode_dataModel1.getMode());
+
+                    AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getActivity());
+                    ApiCallAsyncTask tspSendConsignmentApiAsyncTask = asyncTaskForRequest.getTspSendConsignmentRequestAsyncTask(tsp_send_requestModel);
+                    tspSendConsignmentApiAsyncTask.setApiCallAsyncTaskDelegate(new tspSendConsignmentApiAsyncTaskDelegateResult());
+                    if (isNetworkAvailable(getActivity())) {
+                        tspSendConsignmentApiAsyncTask.execute(tspSendConsignmentApiAsyncTask);
+                    } else {
+                        Toast.makeText(getActivity(), R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
+
         });
+    }
+
+    private boolean validate() {
+
+        if (edt_cid.getText().toString().length() == 0) {
+            edt_cid.setError(getString(R.string.tsp_empty_criteria));
+            edt_cid.requestFocus();
+            return false;
+        } else if (edt_rpl.getText().toString().length() == 0) {
+            edt_rpl.setError(getString(R.string.tsp_empty_criteria));
+            edt_rpl.requestFocus();
+            return false;
+        } else if (edt_cpl.getText().toString().length() == 0) {
+            edt_cpl.setError(getString(R.string.tsp_empty_criteria));
+            edt_cpl.requestFocus();
+            return false;
+        } else if (edt_routingmode.getText().toString().length() == 0) {
+            edt_routingmode.setError(getString(R.string.tsp_empty_criteria));
+            edt_routingmode.requestFocus();
+            return false;
+        } else if (!edt_routingmode.getText().toString().matches(regexp)) {
+            edt_routingmode.setError(getString(R.string.tsp_routemode_criteria));
+            edt_routingmode.requestFocus();
+            return false;
+        } else if (edt_remarks.getText().toString().length() == 0) {
+            edt_remarks.setError(getString(R.string.tsp_empty_criteria));
+            edt_remarks.requestFocus();
+            return false;
+        }
+        return true;
     }
 
     private int getRoundedMinute(int minute) {
@@ -187,12 +242,14 @@ public class TSP_SendFragment extends AbstractFragment {
         edt_cid = (EditText) rootview.findViewById(R.id.edt_cid);
         edt_rpl = (EditText) rootview.findViewById(R.id.edt_rpl);
         edt_cpl = (EditText) rootview.findViewById(R.id.edt_cpl);
-        edt_barcode = (EditText) rootview.findViewById(R.id.edt_barcode);
+        //edt_barcode = (EditText) rootview.findViewById(R.id.edt_barcode);
         edt_routingmode = (EditText) rootview.findViewById(R.id.edt_routingmode);
         edt_remarks = (EditText) rootview.findViewById(R.id.edt_remarks);
         btn_send = (Button) rootview.findViewById(R.id.btn_send);
         spinnerMode = (Spinner) rootview.findViewById(R.id.spnr_mode);
         now = Calendar.getInstance();
+
+        recyclerView = (RecyclerView) rootview.findViewById(R.id.recycler_view);
     }
 
     public static Fragment newInstance() {
@@ -206,13 +263,25 @@ public class TSP_SendFragment extends AbstractFragment {
 
             System.out.println("@---->\n" + json);
             if (statusCode == 200) {
-                Toast.makeText(getActivity(), "" + json, Toast.LENGTH_SHORT).show();
+               /* Toast.makeText(getActivity(), "" + json, Toast.LENGTH_SHORT).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                     }
-                }, 2000);
+                }, 2000);*/
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                alertDialogBuilder.setMessage("Dispatched Successfully.");
+                alertDialogBuilder.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
 
             } else {
                 if (IS_DEBUG)
@@ -281,5 +350,117 @@ public class TSP_SendFragment extends AbstractFragment {
         public void onApiCancelled() {
             Toast.makeText(getActivity(), "api cancelled ", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    /*barcode**************************************************************************************/
+
+    /***barcode***/
+    private void fetchBarcodeData() {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getActivity());
+        ApiCallAsyncTask fetchTspScanBarcodeApiAsyncTask = asyncTaskForRequest.getTspScanBarcodeApiAsyncTaskRequestAsyncTask();
+        fetchTspScanBarcodeApiAsyncTask.setApiCallAsyncTaskDelegate(new TspBarcodeScanApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(getActivity())) {
+            fetchTspScanBarcodeApiAsyncTask.execute(fetchTspScanBarcodeApiAsyncTask);
+        } else {
+            Toast.makeText(getActivity(), R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /*barcode*/
+    private class TspBarcodeScanApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            System.out.println("@---->\n" + json);
+            if (statusCode == 200) {
+                ResponseParser responseParser = new ResponseParser(getActivity());
+
+                Tsp_ScanBarcodeResponseModel tsp_scanBarcodeResponseModel;
+                tsp_scanBarcodeResponseModel = responseParser.getTspScanBarcodeResponseModel(json, statusCode);
+
+                if (tsp_scanBarcodeResponseModel != null && tsp_scanBarcodeResponseModel.getTspBarcodes().size() > 0) {
+                    barcodeModels = tsp_scanBarcodeResponseModel.getTspBarcodes();
+                    prepareRecyclerView();
+
+                    fetchModeData();
+                } else {
+                    //Toast.makeText(getActivity(), "No records found", Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                    alertDialogBuilder.setMessage("No Barcode Records Found.");
+                    alertDialogBuilder.setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                                }
+                            });
+
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
+            } else {
+                if (IS_DEBUG)
+                    Toast.makeText(getActivity(), "" + json, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(getActivity(), "api cancelled ", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /*barcode*/
+    private void prepareRecyclerView() {
+        Logger.debug("onsode prepareRecyclerView" + "true");
+        hubScanBarcodeListAdapter = new Tsp_HubScanBarcodeListAdapter(barcodeModels, activity);
+        hubScanBarcodeListAdapter.setOnShareClickedListener(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(hubScanBarcodeListAdapter);
+    }
+
+    /*barcode*/
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (scanningResult != null && scanningResult.getContents() != null) {
+            String scanned_barcode = scanningResult.getContents();
+            Logger.debug("result***" + "scanned" + scanned_barcode);
+
+            for (int i = 0; i < barcodeModels.size(); i++) {
+                if (barcodeModels.get(i).getBarcode().equals(scanned_barcode)) {
+                    Logger.debug("inside loop" + "1");
+
+                    if (barcodeModels.get(i).isReceived()) {
+                        Logger.debug("inside loop" + "true");
+                        Toast.makeText(getActivity(), "Same Barcode is Already Scanned", Toast.LENGTH_SHORT).show();
+                        break;
+                    } else {
+                        barcodeModels.get(i).setReceived(true);
+                        break;
+                    }
+
+                }
+            }
+
+            hubScanBarcodeListAdapter.notifyDataSetChanged();
+        } else {
+            Logger.error("Cancelled from fragment");
+        }
+    }
+
+    /*barcode*/
+    @Override
+    public void onHandleSelection(int position) {
+        intentIntegrator = new IntentIntegrator(getActivity()) {
+            @Override
+            protected void startActivityForResult(Intent intent, int code) {
+                TSP_SendFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+            }
+        };
+        intentIntegrator.initiateScan();
     }
 }

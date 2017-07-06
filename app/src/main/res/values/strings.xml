@@ -93,6 +93,10 @@
     <string name="sync_no_data">No Data to Sync</string>
     <string name="enter_remarks">Please enter remarks</string>
     <string name="password_criteria">Password should be minimum 6 character  and maximum 12 character long</string>
+
+    <string name="tsp_routemode_criteria">Route mode should be maximum 7 character long</string>
+    <string name="tsp_empty_criteria">The field can not be empty</string>
+
     <string name="password_do_not_match">New Password and confirm Password do not match</string>
     <string name="progress_message_Applying_Leave_please_wait">Applying Leave, Please wait ....</string>
     <string name="progress_message_fetching_Leave_details_please_wait">Fetching Leave  Details, Please wait ....</string>

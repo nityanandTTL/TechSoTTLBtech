@@ -211,12 +211,20 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
         if (scanningResult != null && scanningResult.getContents() != null) {
             if (!isMasterBarcode) {
                 String scanned_barcode = scanningResult.getContents();
+
                 for (int i = 0; i < barcodeModels.size(); i++) {
                     if (barcodeModels.get(i).getBarcode().equals(scanned_barcode)) {
-                        barcodeModels.get(i).setScanned(true);
-                        break;
+                        if (barcodeModels.get(i).isScanned()) {
+                            Toast.makeText(activity, "Same Barcode is Already Scanned", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        else {
+                            barcodeModels.get(i).setScanned(true);
+                            break;
+                        }
                     }
                 }
+
                 hubScanBarcodeListAdapter.notifyDataSetChanged();
             } else {
                 master_scanned_barcode = scanningResult.getContents();
@@ -271,13 +279,25 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+               /* Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                     }
-                }, 3000);
+                }, 3000);*/
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                alertDialogBuilder.setMessage("Dispatched Successfully.");
+                alertDialogBuilder.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             } else {
                 if (IS_DEBUG)
                     Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();

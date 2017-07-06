@@ -315,7 +315,7 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
   /*
-	 *Camp Started Api Integration*/
+     *Camp Started Api Integration*/
 
     public ApiCallAsyncTask getCampStartedRequestAsyncTask(CampStartedRequestModel campStartedRequestModel) {
         apiCallAsyncTask = null;
@@ -1454,6 +1454,25 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.TSP_SEND_MODES);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetcihngtsp_modes_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getTspScanBarcodeApiAsyncTaskRequestAsyncTask() {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.TSP_BARCODE_SCAN + "/" + appPreferenceManager.getBtechID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);

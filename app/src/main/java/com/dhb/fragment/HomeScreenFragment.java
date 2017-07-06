@@ -4,7 +4,9 @@ package com.dhb.fragment;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -40,7 +42,6 @@ public class HomeScreenFragment extends AbstractFragment {
     private CircularImageView rvSelfie;
     private ImageView imgPayment, imgOrders, imgSchedule, imgMaterials, imgOLCPickup, imgHub, imgCamp, ordersserved, imgLedger;
     private ImageView bellicon;
-    private String loginRole = "4";
     Dialog MainDailog;
 
     //tsp
@@ -69,11 +70,6 @@ public class HomeScreenFragment extends AbstractFragment {
 
         }
 
-        if (!appPreferenceManager.getLoginRole().isEmpty()) {
-            Logger.debug("loginrole" + appPreferenceManager.getLoginRole());
-            loginRole = appPreferenceManager.getLoginRole();
-        }
-
     }
 
     @Override
@@ -82,7 +78,7 @@ public class HomeScreenFragment extends AbstractFragment {
         // Inflate the layout for this fragment
 
         //tsp
-        if (loginRole.equalsIgnoreCase("9")) {//loginRole.equalsIgnoreCase("9")
+        if (appPreferenceManager.getLoginRole().equalsIgnoreCase("9")) {//loginRole.equalsIgnoreCase("9")
             rootView = inflater.inflate(R.layout.tsp_fragment_home_screen, container, false);
             initUI_TSP();
             initData();
@@ -176,7 +172,7 @@ public class HomeScreenFragment extends AbstractFragment {
             public void onClick(View v) {
                 //btech_hub
                 //for btech with hub login...role will be 6 for this
-                if (loginRole.equalsIgnoreCase("6")) {//loginRole.equalsIgnoreCase("6")
+                if (appPreferenceManager.getLoginRole().equalsIgnoreCase("6")) {//loginRole.equalsIgnoreCase("6")
                     MainDailog = new Dialog(getActivity());
                     MainDailog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     MainDailog.setContentView(R.layout.btech_dialog_btechwithhub);
@@ -300,11 +296,11 @@ public class HomeScreenFragment extends AbstractFragment {
                 appPreferenceManager.setBtechID(btechID);
 
                 //tsp
-                if (!loginRole.equalsIgnoreCase("9"))
+                if (!appPreferenceManager.getLoginRole().equalsIgnoreCase("9"))
                     txt_no_of_camps.setText("" + jsonObject.getString("CampCount"));
             } else {
                 //tsp
-                if (!loginRole.equalsIgnoreCase("9"))
+                if (!appPreferenceManager.getLoginRole().equalsIgnoreCase("9"))
                     Toast.makeText(activity, "Failed to Fetch Camp Count", Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(activity, "Failed to Fetch Hub ID", Toast.LENGTH_SHORT).show();

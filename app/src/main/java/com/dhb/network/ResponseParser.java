@@ -31,6 +31,7 @@ import com.dhb.models.api.response.PaymentProcessAPIResponseModel;
 import com.dhb.models.api.response.PaymentStartTransactionAPIResponseModel;
 import com.dhb.models.api.response.SelfieUploadResponseModel;
 import com.dhb.models.api.response.SessionExpireModel;
+import com.dhb.models.api.response.Tsp_ScanBarcodeResponseModel;
 import com.dhb.models.api.response.Tsp_SendConsignment_Modes_ResponseModel;
 import com.dhb.models.data.BrandMasterModel;
 import com.dhb.models.data.BrandTestMasterModel;
@@ -599,6 +600,14 @@ public class ResponseParser implements AppConstants {
             tsp_sendMode_dataModel = gson.fromJson(json, Tsp_SendConsignment_Modes_ResponseModel.class);
         }
         return tsp_sendMode_dataModel;
+    }
+
+    public Tsp_ScanBarcodeResponseModel getTspScanBarcodeResponseModel(String json, int statusCode) {
+        Tsp_ScanBarcodeResponseModel tsp_scanBarcodeResponseModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            tsp_scanBarcodeResponseModel = gson.fromJson(json, Tsp_ScanBarcodeResponseModel.class);
+        }
+        return tsp_scanBarcodeResponseModel;
     }
 
 

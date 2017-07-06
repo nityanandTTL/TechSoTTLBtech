@@ -111,7 +111,7 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
                     appPreferenceManager.setLoginRole(loginResponseModel.getRole());
                     appPreferenceManager.setUserID(loginResponseModel.getUserID());
 
-                    if (loginResponseModel.getRole().equals("4")) {//4 is for btech login
+                    if (loginResponseModel.getRole().equals("4") || loginResponseModel.getRole().equals("6")) {//4 is for btech login & 6 is for hub
                         appPreferenceManager.setLoginResponseModel(loginResponseModel);
                         appPreferenceManager.setAPISessionKey(loginResponseModel.getAccess_token());
                         switchToActivity(activity, SelfieUploadActivity.class, new Bundle());

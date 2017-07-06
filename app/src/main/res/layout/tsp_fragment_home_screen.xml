@@ -111,6 +111,39 @@
                 android:orientation="horizontal"
                 android:weightSum="3">
 
+
+
+                <LinearLayout
+                    android:id="@+id/ll_schedule_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_1">
+
+                    <ImageView
+                        android:id="@+id/receive_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/orders_booked_icon" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Receive"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimaryDark" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/separator"></View>
+
                 <LinearLayout
                     android:id="@+id/ll_payment_icon"
                     android:layout_width="0dp"
@@ -140,37 +173,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="Send"
-                        android:textAlignment="center"
-                        android:textColor="@color/colorPrimaryDark" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/separator"></View>
-
-                <LinearLayout
-                    android:id="@+id/ll_schedule_icon"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:padding="@dimen/dp_1">
-
-                    <ImageView
-                        android:id="@+id/receive_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/orders_booked_icon" />
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Receive"
                         android:textAlignment="center"
                         android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>

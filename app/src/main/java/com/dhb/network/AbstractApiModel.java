@@ -161,6 +161,7 @@ public class AbstractApiModel implements AppConstants {
 
     public String TSP_SEND_MODES = VERSION_API_URL + "/SpecimenTrack/CourierModes";
 
+    public String TSP_BARCODE_SCAN = VERSION_API_URL + "/SpecimenTrack/TSPScannedBarcode";
 
     public String TSP_BARCODE = VERSION_API_URL + "/SpecimenTrack/ReceiveHubBarcode";
 
