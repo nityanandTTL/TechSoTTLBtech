@@ -19,6 +19,7 @@ import com.dhb.R;
 import com.dhb.customview.CustomUpdateDailog;
 import com.dhb.dao.CreateOrUpgradeDbTask;
 import com.dhb.dao.DbHelper;
+import com.dhb.dao.DhbDao;
 import com.dhb.delegate.CustomUpdateDialogOkButtonOnClickedDelegate;
 import com.dhb.models.data.VersionControlMasterModel;
 import com.dhb.network.ApiCallAsyncTask;
@@ -149,9 +150,14 @@ public class SplashScreenActivity extends AbstractActivity {
                     cudd = new CustomUpdateDailog(activity, new CustomUpdateDialogOkButtonOnClickedDelegate() {
                         @Override
                         public void onClicked() {
-                           Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.sbm.bc.smartbooksmobile"));
-                            startActivity(intent);
-
+                            ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
+                            logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
+                            if (isNetworkAvailable(activity)) {
+                                logoutAsyncTask.execute(logoutAsyncTask);
+                            } else {
+                                Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
+                                System.exit(0);
+                            }
                         }
                     });
                     cudd.show();
@@ -174,6 +180,26 @@ public class SplashScreenActivity extends AbstractActivity {
         }
 
 
+    }
+
+    private class LogoutAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                appPreferenceManager.clearAllPreferences();
+                new DhbDao(activity).deleteTablesonLogout();
+                finish();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.dhb.btech"));
+                startActivity(intent);
+            } else {
+                Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
     }
 
 
