@@ -12,6 +12,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
 import com.dhb.R;
 import com.dhb.activity.HomeScreenActivity;
 import com.dhb.adapter.Tsp_HubScanBarcodeListAdapter;
@@ -42,7 +45,9 @@ import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
 import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -192,6 +197,25 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
             }
 
         });
+
+        edt_routingmode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (edt_routingmode.getText().toString().trim().length() > 7) {
+                    edt_routingmode.setError(getString(R.string.tsp_routemode_criteria));
+                }
+            }
+        });
     }
 
     private boolean validate() {
@@ -208,19 +232,11 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
             edt_cpl.setError(getString(R.string.tsp_empty_criteria));
             edt_cpl.requestFocus();
             return false;
-        } else if (edt_routingmode.getText().toString().length() == 0) {
-            edt_routingmode.setError(getString(R.string.tsp_empty_criteria));
-            edt_routingmode.requestFocus();
-            return false;
-        } else if (!edt_routingmode.getText().toString().matches(regexp)) {
+        } /* else if (!edt_routingmode.getText().toString().matches(regexp)) {
             edt_routingmode.setError(getString(R.string.tsp_routemode_criteria));
             edt_routingmode.requestFocus();
             return false;
-        } else if (edt_remarks.getText().toString().length() == 0) {
-            edt_remarks.setError(getString(R.string.tsp_empty_criteria));
-            edt_remarks.requestFocus();
-            return false;
-        }
+        } */
         return true;
     }
 

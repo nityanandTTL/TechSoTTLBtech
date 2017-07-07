@@ -34,9 +34,7 @@ import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-
 import org.json.JSONException;
-
 import java.util.ArrayList;
 
 
@@ -52,7 +50,6 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
     private BtechwithHub_HubScanBarcodeListAdapter hubScanBarcodeListAdapter;
 
     private String master_scanned_barcode = "";
-    HUBBTechModel hubbTechModel;
     private boolean isMasterBarcode;
     private IntentIntegrator intentIntegrator;
     private Button btn_receive;
