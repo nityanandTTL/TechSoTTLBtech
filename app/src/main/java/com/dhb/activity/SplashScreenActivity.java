@@ -88,8 +88,9 @@ public class SplashScreenActivity extends AbstractActivity {
             }
         }, AppConstants.SPLASH_SCREEN_TIMEOUT);
         //Call Service
-        locationUpdateIntent= new Intent(this,LocationUpdateService.class);
+        locationUpdateIntent = new Intent(this, LocationUpdateService.class);
     }
+
     void StartLocationUpdateService() {
         try {
 
@@ -102,7 +103,7 @@ public class SplashScreenActivity extends AbstractActivity {
                             locationUpdateIntent, 0);
                     AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                     alarm.setRepeating(AlarmManager.RTC_WAKEUP,
-                            cal.getTimeInMillis(),15000L,
+                            cal.getTimeInMillis(), 15000L,
                             pintent);
                 }
             } catch (Exception e) {
@@ -113,10 +114,12 @@ public class SplashScreenActivity extends AbstractActivity {
             e.printStackTrace();
         }
     }
+
     boolean IsAlarmSet() {
         return PendingIntent.getBroadcast(this, 0, locationUpdateIntent,
                 PendingIntent.FLAG_NO_CREATE) != null;
     }
+
     private void goAhead() {
         DbHelper.init(activity.getApplicationContext());
         new CreateOrUpgradeDbTask(new DhbDbDelegate(), getApplicationContext()).execute();
@@ -258,11 +261,16 @@ public class SplashScreenActivity extends AbstractActivity {
                 c.set(Calendar.SECOND, 0);
                 c.set(Calendar.MINUTE, 0);
                 c.set(Calendar.HOUR_OF_DAY, 0);
-                if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+                if (appPreferenceManager.getLoginRole().equalsIgnoreCase("9")) {
                     switchToActivity(activity, HomeScreenActivity.class, new Bundle());
                 } else {
-                    switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
+                    if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+                        switchToActivity(activity, HomeScreenActivity.class, new Bundle());
+                    } else {
+                        switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
+                    }
                 }
+
             }
         }
     }

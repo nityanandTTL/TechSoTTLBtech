@@ -29,6 +29,9 @@
     <string name="progress_message_camp_count_details_please_wait">Loading,\n Please wait ....</string>
     <string name="progress_message_sending_master_barcode_please_wait">Sending Master barcode  Details,\n Please wait ....</string>
     <string name="progress_message_fetcihng_btechwithhub_barcode_please_wait">Fetcihng Barcode Details,\n Please wait ....</string>
+
+    <string name="progress_message_fetcihngtsp_modes_please_wait">Fetcihng Mode Details,\n Please wait ....</string>
+
     <string name="progress_message_getting_master_payment_mode_please_wait">Getting Master payment Mode,\n Please wait ....</string>
     <string name="progress_message_fetching_slot_details_please_wait">Fetching Slot Details,\n Please wait ....</string>
     <string name="progress_message_fetching_brand_master_please_wait">Fetching Brand Master,\n Please wait ....</string>
@@ -39,6 +42,9 @@
     <string name="progress_message_hub_start_please_wait">Starting for Hub,\n Please wait ....</string>
     <string name="progress_message_olc_start_please_wait">Starting for OLC,\n Please wait ....</string>
     <string name="progress_message_mapping_master_barcode_please_wait">Mapping Master Barcode,\n Please wait ....</string>
+
+    <string name="progress_message_tsp_send_consignment_please_wait">Sending Consignment,\n Please wait ....</string>
+
     <string name="progress_message_fetching_dispatch_to_hub_details_please_wait">Fetching Hub Details,\n Please wait ....</string>
     <string name="progress_message_fetching_order_serverd_details_please_wait">Fetching Order Served Details,\n Please wait ....</string>
     <string name="progress_message_fetchingolc_picup_details_details_please_wait">Fetching OLC pickup details Details,\n Please wait ....</string>
@@ -87,6 +93,10 @@
     <string name="sync_no_data">No Data to Sync</string>
     <string name="enter_remarks">Please enter remarks</string>
     <string name="password_criteria">Password should be minimum 6 character  and maximum 12 character long</string>
+
+    <string name="tsp_routemode_criteria">Route mode should be maximum 7 character long</string>
+    <string name="tsp_empty_criteria">The field can not be empty</string>
+
     <string name="password_do_not_match">New Password and confirm Password do not match</string>
     <string name="progress_message_Applying_Leave_please_wait">Applying Leave, Please wait ....</string>
     <string name="progress_message_fetching_Leave_details_please_wait">Fetching Leave  Details, Please wait ....</string>

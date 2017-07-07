@@ -4,7 +4,9 @@ package com.dhb.fragment;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -40,10 +42,9 @@ public class HomeScreenFragment extends AbstractFragment {
     private CircularImageView rvSelfie;
     private ImageView imgPayment, imgOrders, imgSchedule, imgMaterials, imgOLCPickup, imgHub, imgCamp, ordersserved, imgLedger;
     private ImageView bellicon;
-    private String loginRole;
     Dialog MainDailog;
 
-    //btech_tsp
+    //tsp
     ImageView send_icon, receive_icon, earning_icon;
 
     public HomeScreenFragment() {
@@ -69,11 +70,6 @@ public class HomeScreenFragment extends AbstractFragment {
 
         }
 
-        if (!appPreferenceManager.getLoginRole().isEmpty()) {
-            Logger.debug("loginrole" + appPreferenceManager.getLoginRole());
-            loginRole = appPreferenceManager.getLoginRole();
-        }
-
     }
 
     @Override
@@ -81,13 +77,14 @@ public class HomeScreenFragment extends AbstractFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        //btech_tsp
-        if (loginRole.equalsIgnoreCase("9")) {//loginRole.equalsIgnoreCase("9")
+        //tsp
+        if (appPreferenceManager.getLoginRole().equalsIgnoreCase("9")) {//loginRole.equalsIgnoreCase("9")
             rootView = inflater.inflate(R.layout.tsp_fragment_home_screen, container, false);
-            initUI_BtechwithHub();
+            initUI_TSP();
             initData();
-            initListeners_BtechwithHub();
-        } else {
+            getCampDetailCount();
+            initListeners_TSP();
+        } else {//for btech & hub login
             rootView = inflater.inflate(R.layout.fragment_home_screen, container, false);
             initUI();
             initData();
@@ -98,7 +95,7 @@ public class HomeScreenFragment extends AbstractFragment {
         return rootView;
     }
 
-    private void initListeners_BtechwithHub() {
+    private void initListeners_TSP() {
         send_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +106,7 @@ public class HomeScreenFragment extends AbstractFragment {
         receive_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(BtechwithHub_HubMasterBarcodeScanFragment.newInstance(), false, false, BtechwithHub_HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                pushFragments(TSP_HubMasterBarcodeScanFragment.newInstance(), false, false, TSP_HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
 
@@ -121,7 +118,7 @@ public class HomeScreenFragment extends AbstractFragment {
         });
     }
 
-    private void initUI_BtechwithHub() {
+    private void initUI_TSP() {
         rvSelfie = (CircularImageView) rootView.findViewById(R.id.img_user_picture);
         txtUserName = (TextView) rootView.findViewById(R.id.txt_username);
         send_icon = (ImageView) rootView.findViewById(R.id.send_icon);
@@ -175,7 +172,7 @@ public class HomeScreenFragment extends AbstractFragment {
             public void onClick(View v) {
                 //btech_hub
                 //for btech with hub login...role will be 6 for this
-                if (loginRole.equalsIgnoreCase("6")) {//loginRole.equalsIgnoreCase("6")
+                if (appPreferenceManager.getLoginRole().equalsIgnoreCase("6")) {//loginRole.equalsIgnoreCase("6")
                     MainDailog = new Dialog(getActivity());
                     MainDailog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     MainDailog.setContentView(R.layout.btech_dialog_btechwithhub);
@@ -188,7 +185,7 @@ public class HomeScreenFragment extends AbstractFragment {
                         @Override
                         public void onClick(View v) {
                             MainDailog.dismiss();
-                            pushFragments(HubListDisplayFragment.newInstance(), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                            pushFragments(HubListDisplayFragment.newInstance(1), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                         }
                     });
 
@@ -298,9 +295,15 @@ public class HomeScreenFragment extends AbstractFragment {
                 String btechID = jsonObject.getString("BtechId");
                 appPreferenceManager.setBtechID(btechID);
 
-                txt_no_of_camps.setText("" + jsonObject.getString("CampCount"));
+                //tsp
+                if (!appPreferenceManager.getLoginRole().equalsIgnoreCase("9"))
+                    txt_no_of_camps.setText("" + jsonObject.getString("CampCount"));
             } else {
-                Toast.makeText(activity, "Failed to Fetch Camp Count", Toast.LENGTH_SHORT).show();
+                //tsp
+                if (!appPreferenceManager.getLoginRole().equalsIgnoreCase("9"))
+                    Toast.makeText(activity, "Failed to Fetch Camp Count", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(activity, "Failed to Fetch Hub ID", Toast.LENGTH_SHORT).show();
             }
         }
 

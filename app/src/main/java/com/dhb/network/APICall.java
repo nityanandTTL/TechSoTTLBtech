@@ -372,7 +372,14 @@ public class APICall implements AppConstants {
 
                 }
             }
-            Logger.debug("Post data:-" + requestModel.getPostData());
+            int maxLogSize = 1000;
+            for (int i = 0; i <= requestModel.getPostData().length() / maxLogSize; i++) {
+                int start = i * maxLogSize;
+                int end = (i + 1) * maxLogSize;
+                end = end > requestModel.getPostData().length() ? requestModel.getPostData().length() : end;
+                Logger.debug("Post data:-" + requestModel.getPostData().substring(start, end));
+            }
+            //Logger.debug("Post data:-" + requestModel.getPostData());
             entity = new StringEntity(requestModel.getPostData(),
                     HTTP.UTF_8);
 
@@ -622,7 +629,15 @@ public class APICall implements AppConstants {
 
                 }
             }
-            Logger.debug("Post data:-" + requestModel.getPostData());
+            int maxLogSize = 1000;
+            for (int i = 0; i <= requestModel.getPostData().length() / maxLogSize; i++) {
+                int start = i * maxLogSize;
+                int end = (i + 1) * maxLogSize;
+                end = end > requestModel.getPostData().length() ? requestModel.getPostData().length() : end;
+                Logger.debug("Post data:-" + requestModel.getPostData().substring(start, end));
+            }
+            //Logger.debug("Post data:-" + requestModel.getPostData());
+
             entity = new StringEntity(requestModel.getPostData(),
                     HTTP.UTF_8);
 
