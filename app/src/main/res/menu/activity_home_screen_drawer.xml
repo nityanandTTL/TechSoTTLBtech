@@ -18,7 +18,7 @@
 
         <item
             android:id="@+id/nav_credit"
-            android:icon="@drawable/communication"
+            android:icon="@drawable/icon_nav_credit"
             android:title="Credit" />
         <item
             android:id="@+id/nav_logout"

@@ -16,6 +16,7 @@ import com.dhb.delegate.EditTestExpandListAdapterCheckboxDelegate;
 import com.dhb.models.data.ChildTestsModel;
 import com.dhb.models.data.TestRateMasterModel;
 import com.dhb.models.data.TestTypeWiseTestRateMasterModelsList;
+import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.InputUtils;
 
 import java.util.ArrayList;
@@ -27,12 +28,14 @@ import java.util.ArrayList;
 public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAdapter {
     private Activity activity;
     private ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels;
+    private ArrayList<TestTypeWiseTestRateMasterModelsList> filteredList;
     private ArrayList<TestRateMasterModel> selectedTests = new ArrayList<>();
     private EditTestExpandListAdapterCheckboxDelegate mcallback;
 
     public ExpandableTestMasterListDisplayAdapter(Activity activity, ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels1, ArrayList<TestRateMasterModel> selectedTests, EditTestExpandListAdapterCheckboxDelegate mcallback) {
         this.activity = activity;
         this.testRateMasterModels = testRateMasterModels1;
+        this.filteredList = testRateMasterModels1;
         this.mcallback=mcallback;
         this.selectedTests = selectedTests;
         if(this.selectedTests==null){
@@ -42,22 +45,22 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
 
     @Override
     public int getGroupCount() {
-        return testRateMasterModels.size();
+        return filteredList.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return testRateMasterModels.get(groupPosition).getTestRateMasterModels().size();
+        return filteredList.get(groupPosition).getTestRateMasterModels().size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return testRateMasterModels.get(groupPosition);
+        return filteredList.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return testRateMasterModels.get(groupPosition).getTestRateMasterModels().get(childPosition);
+        return filteredList.get(groupPosition).getTestRateMasterModels().get(childPosition);
     }
 
     @Override
@@ -87,7 +90,7 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
         } else {
             holder = (ViewParentHolder) convertView.getTag();
         }
-        holder.txtHeader.setText(testRateMasterModels.get(groupPosition).getTestType());
+        holder.txtHeader.setText(filteredList.get(groupPosition).getTestType());
         return convertView;
     }
 
@@ -112,7 +115,7 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
         }
         final boolean isSelectedDueToParent = holder.isSelectedDueToParent;
         final String parentTestCode = holder.parentTestCode;
-        final TestRateMasterModel testRateMasterModel = testRateMasterModels.get(groupPosition).getTestRateMasterModels().get(childPosition);
+        final TestRateMasterModel testRateMasterModel = filteredList.get(groupPosition).getTestRateMasterModels().get(childPosition);
         holder.txt_dis_amt.setText("₹ " + testRateMasterModel.getRate()+"/-");
 
         if(!InputUtils.isNull(testRateMasterModel.getTestType())&&(testRateMasterModel.getTestType().equals("TEST")||testRateMasterModel.getTestType().equals("OFFER"))
@@ -272,4 +275,37 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
         return true;
     }
 
+    public void filterData(String query){
+
+        query = query.toLowerCase();
+        Logger.verbose("FilteredListSizeBeforeFilter: "+ String.valueOf(filteredList.size()));
+
+        if(query.isEmpty()){
+            filteredList = new ArrayList<>();
+            filteredList.addAll(testRateMasterModels);
+            Logger.verbose("FilteredListSizeAfterFilerQueryEmpty: "+ String.valueOf(filteredList.size()));
+        }
+        else {
+            filteredList = new ArrayList<>();
+            for(TestTypeWiseTestRateMasterModelsList testTypeModel: testRateMasterModels){
+
+                ArrayList<TestRateMasterModel> oldList = testTypeModel.getTestRateMasterModels();
+                ArrayList<TestRateMasterModel> newList = new ArrayList<TestRateMasterModel>();
+                for(TestRateMasterModel testModel: oldList){
+                    if(testModel.getTestCode().toLowerCase().contains(query) ||
+                            testModel.getDescription().toLowerCase().contains(query)){
+                        newList.add(testModel);
+                    }
+                }
+                if(newList.size() > 0){
+                    TestTypeWiseTestRateMasterModelsList nContinent = new TestTypeWiseTestRateMasterModelsList(testTypeModel.getTestType(),newList);
+                    filteredList.add(nContinent);
+                }
+            }
+        }
+
+        Logger.verbose("FilteredListSizeAfterFilter: "+ String.valueOf(filteredList.size()));
+        notifyDataSetChanged();
+
+    }
 }
