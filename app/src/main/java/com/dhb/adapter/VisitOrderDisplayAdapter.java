@@ -129,13 +129,9 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Order Reschedule")) {
                             userChoosenReleaseTask = "Order Reschedule";
-                            cdd = new RescheduleOrderDialog(activity, new VisitOrderDisplayAdapter.OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0));
+                            cdd = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0));
                             cdd.show();
                         } else if (items[item].equals("Order Release")) {
-
-                            visitOrderDisplayRecyclerViewAdapterDelegate.onItemReschedule(orderVisitDetailsModelsArr.get(pos));
-                        }
-                        else if (items[item].equals("Order Release")){
                             visitOrderDisplayRecyclerViewAdapterDelegate.onItemRelease(orderVisitDetailsModelsArr.get(pos));
                         }
                     }
@@ -151,7 +147,28 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         holder.imgRelease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                visitOrderDisplayRecyclerViewAdapterDelegate.onItemRelease(orderVisitDetailsModelsArr.get(pos));
+                final CharSequence[] items = {"Order Reschedule",
+                        "Order Release"};
+                final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle("Select Action");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        if (items[item].equals("Order Reschedule")) {
+                            userChoosenReleaseTask = "Order Reschedule";
+                            cdd = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0));
+                            cdd.show();
+                        } else if (items[item].equals("Order Release")) {
+                            visitOrderDisplayRecyclerViewAdapterDelegate.onItemRelease(orderVisitDetailsModelsArr.get(pos));
+                        }
+                    }
+                }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
             }
         });
         holder.btnStartNavigation.setOnClickListener(new View.OnClickListener() {
