@@ -287,6 +287,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
                     }
                 }, 2000);*/
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                alertDialogBuilder.setCancelable(false);
                 alertDialogBuilder.setMessage("Dispatched Successfully.");
                 alertDialogBuilder.setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
