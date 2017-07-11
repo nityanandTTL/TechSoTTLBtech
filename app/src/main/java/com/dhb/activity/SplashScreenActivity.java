@@ -45,6 +45,8 @@ public class SplashScreenActivity extends AbstractActivity {
     private AppPreferenceManager appPreferenceManager;
     public static final String TAG_FRAGMENT = "SPLASH_SCREEN_ACTIVITY";
     CustomUpdateDailog cudd;
+    private int AppId;
+
     private static Intent locationUpdateIntent;
 
     @Override
@@ -52,6 +54,7 @@ public class SplashScreenActivity extends AbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         activity = this;
+        AppId= AppConstants.BTECH_APP_ID;
         appPreferenceManager = new AppPreferenceManager(activity);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -124,7 +127,7 @@ public class SplashScreenActivity extends AbstractActivity {
     private void fetchVersionControlDetails() {
         Logger.error(TAG_FRAGMENT + "--fetchData: ");
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchVersionDetailApiAsyncTask = asyncTaskForRequest.getVersionControlDetailsRequestAsyncTask();
+        ApiCallAsyncTask fetchVersionDetailApiAsyncTask = asyncTaskForRequest.getVersionControlDetailsRequestAsyncTask(AppId);
         fetchVersionDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchVersionDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
             fetchVersionDetailApiAsyncTask.execute(fetchVersionDetailApiAsyncTask);
@@ -149,7 +152,7 @@ public class SplashScreenActivity extends AbstractActivity {
                     cudd = new CustomUpdateDailog(activity, new CustomUpdateDialogOkButtonOnClickedDelegate() {
                         @Override
                         public void onClicked() {
-                           Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.sbm.bc.smartbooksmobile"));
+                           Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/apps/testing/com.dhb.btech"));
                             startActivity(intent);
 
                         }

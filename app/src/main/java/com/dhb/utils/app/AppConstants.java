@@ -17,6 +17,11 @@ public interface AppConstants {
 
 	public static final int PUT_METHOD = 2;
 
+	public static final int BTECH_APP_ID = 1;
+
+
+
+
 	public static final int DELETE_METHOD = 3;
 
 	public static final String ERROR_MESSAGE = "Error";
