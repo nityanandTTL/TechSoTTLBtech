@@ -42,6 +42,15 @@ public class AppPreferenceManager {
 
     private String loginRole = "loginRole";
     private String btechID = "btechID";
+    private String userID = "userID";
+
+    public String getUserID() {
+        return appPreference.getString(userID, "");
+    }
+
+    public void setUserID(String userID) {
+        appPreference.putString(this.userID, userID);
+    }
 
     public String getBtechID() {
         return appPreference.getString(btechID, "");

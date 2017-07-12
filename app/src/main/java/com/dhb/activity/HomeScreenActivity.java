@@ -40,6 +40,7 @@ import com.dhb.network.ApiCallAsyncTask;
 import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.uiutils.AbstractActivity;
+import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.CommonUtils;
 import com.dhb.utils.app.InputUtils;
@@ -141,6 +142,15 @@ public class HomeScreenActivity extends AbstractActivity
         drawer.setEnabled(false);
         toggle.syncState();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        /**/
+        if (appPreferenceManager.getLoginRole().equalsIgnoreCase("9")) {
+            Menu nav_Menu = navigationView.getMenu();
+            nav_Menu.findItem(R.id.nav_leave).setVisible(false);
+        }
+
+        /**/
+
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
         View NavHeaderHomeScreen = LayoutInflater.from(activity).inflate(R.layout.nav_header_home_screen, null);
@@ -208,11 +218,10 @@ public class HomeScreenActivity extends AbstractActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-       if (id == R.id.nav_home) {
+        if (id == R.id.nav_home) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-        }
-        else if (id == R.id.nav_leave) {
+        } else if (id == R.id.nav_leave) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         } else if (id == R.id.nav_change_password) {
@@ -220,9 +229,9 @@ public class HomeScreenActivity extends AbstractActivity
             pushFragments(ResetPasswordFragment.newInstance(), false, false, ResetPasswordFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         } else if (id == R.id.nav_credit) {
 
-         toolbarHome.setVisibility(View.VISIBLE);
+            toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(CreditFragment.newInstance(), false, false, CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-           //   Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
+            //   Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_logout) {
             toolbarHome.setVisibility(View.VISIBLE);
 

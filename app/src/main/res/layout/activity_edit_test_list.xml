@@ -39,12 +39,22 @@
         android:layout_marginTop="@dimen/dp_10"
         android:layout_below="@+id/ll_spinner"
         android:id="@+id/exp_list"
+        android:layout_above="@+id/sv_testsList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_save"
         android:layout_marginBottom="@dimen/dp_10">
 
     </ExpandableListView>
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/sv_testsList"
+        android:iconifiedByDefault="false"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.SearchView>
 
     <Button
         android:layout_alignParentBottom="true"

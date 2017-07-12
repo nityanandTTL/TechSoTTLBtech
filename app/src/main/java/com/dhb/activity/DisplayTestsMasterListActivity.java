@@ -1,9 +1,12 @@
 package com.dhb.activity;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -46,6 +49,7 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
     private ExpandableListView expandList;
     private ExpandableTestMasterListDisplayAdapter expAdapter;
     private Button btnSave;
+    private SearchView svTestsList;
     private OrderDetailsModel orderDetailsModel;
     private BeneficiaryDetailsModel benDetailsModel;
     private BeneficiaryDetailsDao bdd;
@@ -260,6 +264,30 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
         spBrandMasters = (Spinner) findViewById(R.id.sp_tests);
         expandList = (ExpandableListView) findViewById(R.id.exp_list);
         btnSave = (Button) findViewById(R.id.btn_save);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        svTestsList = (SearchView) findViewById(R.id.sv_testsList);
+        svTestsList.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        svTestsList.setIconifiedByDefault(false);
+        svTestsList.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                expAdapter.filterData(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                expAdapter.filterData(query);
+                return false;
+            }
+        });
+        svTestsList.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                expAdapter.filterData("");
+                return false;
+            }
+        });
     }
 
     private class PopulateTestDataAsyncTask extends AsyncTask<Void,Void,Void>{

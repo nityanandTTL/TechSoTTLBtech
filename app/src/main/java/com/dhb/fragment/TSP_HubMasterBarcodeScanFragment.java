@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,41 +33,42 @@ import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
 import org.json.JSONException;
+
 import java.util.ArrayList;
 
 
-public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment implements View.OnClickListener {
+public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implements View.OnClickListener {
 
-    public static final String TAG_FRAGMENT = BtechwithHub_HubMasterBarcodeScanFragment.class.getSimpleName();
+    public static final String TAG_FRAGMENT = TSP_HubMasterBarcodeScanFragment.class.getSimpleName();
     private LinearLayout ll_hub_display_footer, ll_scan_master_barcode, ll_scan_vial_barcode;
     private HomeScreenActivity activity;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
-
     private ArrayList<BtechwithHub_BarcodeDataModel> barcodeModels = new ArrayList<>();
     private BtechwithHub_HubScanBarcodeListAdapter hubScanBarcodeListAdapter;
-
     private String master_scanned_barcode = "";
+    HUBBTechModel hubbTechModel;
     private boolean isMasterBarcode;
     private IntentIntegrator intentIntegrator;
     private Button btn_receive;
     private boolean isCentrifuged = false;
 
-    public BtechwithHub_HubMasterBarcodeScanFragment() {
+    public TSP_HubMasterBarcodeScanFragment() {
     }
 
     //btech_hub
-    public static BtechwithHub_HubMasterBarcodeScanFragment newInstance() {
-        return new BtechwithHub_HubMasterBarcodeScanFragment();
+    public static TSP_HubMasterBarcodeScanFragment newInstance() {
+        return new TSP_HubMasterBarcodeScanFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.btechwithhub_fragment_btech_collections_list, container, false);
+        View view = inflater.inflate(R.layout.tsp_fragment_btech_collections_list, container, false);
         activity = (HomeScreenActivity) getActivity();
-        activity.toolbarHome.setTitle("Hub Scan");
+        activity.toolbarHome.setTitle("TSP Scan");
         appPreferenceManager = new AppPreferenceManager(activity);
 
         initUI(view);
@@ -92,10 +92,10 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
 
     private void fetchData() {
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchBtechwithHubBarcodeApiAsyncTask = asyncTaskForRequest.getfetchBtechwithHubBarcodeApiAsyncTaskRequestAsyncTask();
-        fetchBtechwithHubBarcodeApiAsyncTask.setApiCallAsyncTaskDelegate(new BtechwithHubBarcodeApiAsyncTaskDelegateResult());
+        ApiCallAsyncTask fetchTspBarcodeApiAsyncTask = asyncTaskForRequest.getTspBarcodeApiAsyncTaskRequestAsyncTask();
+        fetchTspBarcodeApiAsyncTask.setApiCallAsyncTaskDelegate(new TspBarcodeApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
-            fetchBtechwithHubBarcodeApiAsyncTask.execute(fetchBtechwithHubBarcodeApiAsyncTask);
+            fetchTspBarcodeApiAsyncTask.execute(fetchTspBarcodeApiAsyncTask);
         } else {
             Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
         }
@@ -138,15 +138,14 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
                 scannedBarcodesArr.add(hbm);
             }
         }
-
         masterBarcodeMappingRequestModel.setBarcodes(scannedBarcodesArr);
         masterBarcodeMappingRequestModel.setMasterBarcode(master_scanned_barcode);
 
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask bTECHWITHhUB_postMasterBarcodeMapDetailApiAsyncTask = asyncTaskForRequest.getbTECHWITHhUB_MasterBarcodeMapRequestAsyncTask(masterBarcodeMappingRequestModel);
-        bTECHWITHhUB_postMasterBarcodeMapDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new bTECHWITHhUB_MasterBarcodeMappingApiAsyncTaskDelegateResult());
+        ApiCallAsyncTask TSP_postMasterBarcodeMapDetailApiAsyncTask = asyncTaskForRequest.getTSP_MasterBarcodeMapRequestAsyncTask(masterBarcodeMappingRequestModel);
+        TSP_postMasterBarcodeMapDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new TSP_MasterBarcodeMappingApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
-            bTECHWITHhUB_postMasterBarcodeMapDetailApiAsyncTask.execute(bTECHWITHhUB_postMasterBarcodeMapDetailApiAsyncTask);
+            TSP_postMasterBarcodeMapDetailApiAsyncTask.execute(TSP_postMasterBarcodeMapDetailApiAsyncTask);
         } else {
             Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
         }
@@ -187,6 +186,7 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
                 hubScanBarcodeListAdapter.notifyDataSetChanged();
             } else {
                 master_scanned_barcode = scanningResult.getContents();
+                Logger.debug("result***" + master_scanned_barcode);
             }
         } else {
             Logger.error("Cancelled from fragment");
@@ -198,7 +198,7 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
         intentIntegrator = new IntentIntegrator(activity) {
             @Override
             protected void startActivityForResult(Intent intent, int code) {
-                BtechwithHub_HubMasterBarcodeScanFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+                TSP_HubMasterBarcodeScanFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
             }
         };
         intentIntegrator.initiateScan();
@@ -237,7 +237,7 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
         }*/
     }
 
-    private class BtechwithHubBarcodeApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+    private class TspBarcodeApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
 
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
@@ -267,18 +267,18 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
         }
     }
 
-    private class bTECHWITHhUB_MasterBarcodeMappingApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+    private class TSP_MasterBarcodeMappingApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
 
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                //Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
-                   /* new Handler().postDelayed(new Runnable() {
+              /*  Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                     }
-                }, 3000);*/
+                }, 2000);*/
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                 alertDialogBuilder.setMessage("Received Successfully.");
@@ -292,6 +292,7 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
 
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
+
             } else {
                 if (IS_DEBUG)
                     Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();

@@ -58,7 +58,6 @@ public class CustomUpdateDailog extends Dialog implements View.OnClickListener {
             dismiss();
         }
         else if (v.getId() == R.id.btn_ok) {
-
             System.exit(0);
         }
     }
