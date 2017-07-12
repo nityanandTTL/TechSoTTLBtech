@@ -51,7 +51,7 @@
             android:layout_height="30dp"
             android:background="@color/colorSecondary"
             android:clickable="true"
-            android:text="OK"
+            android:text="EXIT"
             android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold" />
     </LinearLayout>

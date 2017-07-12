@@ -7,85 +7,51 @@ import android.os.Parcelable;
  * Created by E4904 on 5/11/2017.
  */
 
-public class VersionControlMasterModel extends BaseModel implements Parcelable {
-    public int getId() {
-        return Id;
-    }
+public class VersionControlMasterModel implements Parcelable {
 
-    public void setId(int id) {
-        Id = id;
-    }
-
-    public int getCurrentVirson() {
-        return CurrentVirson;
-    }
-
-    public void setCurrentVirson(int currentVirson) {
-        CurrentVirson = currentVirson;
-    }
-
-    public int getMinVirson() {
-        return MinVirson;
-    }
-
-    public void setMinVirson(int minVirson) {
-        MinVirson = minVirson;
-    }
-
-    public String getStatus() {
-        return Status;
-    }
-
-    public void setStatus(String status) {
-        Status = status;
-    }
-
-    public String getEntryDate() {
-        return EntryDate;
-    }
-
-    public void setEntryDate(String entryDate) {
-        EntryDate = entryDate;
-    }
 
     int Id;
-    int CurrentVirson;
-    int MinVirson;
-    String Status;
+    int APICurrentVerson;
+    int APIMinVerson;
+    boolean Status;
     String EntryDate;
+    String LastUpdated;
+    String AppUrl;
+    String PlaystoreVersonName;
+    int PlaystoreVerson;
 
     public VersionControlMasterModel() {
-        super ();
     }
 
-/*   protected VersionControlMasterModel(Parcel in) {
-        super(in);
-
-    }*/
 
     protected VersionControlMasterModel(Parcel in) {
-        super(in);
-        CurrentVirson = in.readInt();
-        MinVirson = in.readInt();
         Id = in.readInt();
-        Status=in.readString();
+        APICurrentVerson = in.readInt();
+        APIMinVerson = in.readInt();
+        Status = in.readByte() != 0;
         EntryDate = in.readString();
-
+        LastUpdated = in.readString();
+        AppUrl = in.readString();
+        PlaystoreVersonName = in.readString();
+        PlaystoreVerson = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
         dest.writeInt(Id);
-        dest.writeInt(MinVirson);
-        dest.writeInt(CurrentVirson);
-        dest.writeString(Status);
+        dest.writeInt(APICurrentVerson);
+        dest.writeInt(APIMinVerson);
+        dest.writeByte((byte) (Status ? 1 : 0));
         dest.writeString(EntryDate);
+        dest.writeString(LastUpdated);
+        dest.writeString(AppUrl);
+        dest.writeString(PlaystoreVersonName);
+        dest.writeInt(PlaystoreVerson);
     }
 
     @Override
     public int describeContents() {
-        return super.describeContents();
+        return 0;
     }
 
     public static final Creator<VersionControlMasterModel> CREATOR = new Creator<VersionControlMasterModel>() {
@@ -99,4 +65,80 @@ public class VersionControlMasterModel extends BaseModel implements Parcelable {
             return new VersionControlMasterModel[size];
         }
     };
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int id) {
+        Id = id;
+    }
+
+    public int getAPICurrentVerson() {
+        return APICurrentVerson;
+    }
+
+    public void setAPICurrentVerson(int APICurrentVerson) {
+        this.APICurrentVerson = APICurrentVerson;
+    }
+
+    public int getAPIMinVerson() {
+        return APIMinVerson;
+    }
+
+    public void setAPIMinVerson(int APIMinVerson) {
+        this.APIMinVerson = APIMinVerson;
+    }
+
+
+
+    public String getEntryDate() {
+        return EntryDate;
+    }
+
+    public void setEntryDate(String entryDate) {
+        EntryDate = entryDate;
+    }
+
+    public String getLastUpdated() {
+        return LastUpdated;
+    }
+
+    public void setLastUpdated(String lastUpdated) {
+        LastUpdated = lastUpdated;
+    }
+
+    public String getAppUrl() {
+        return AppUrl;
+    }
+
+    public void setAppUrl(String appUrl) {
+        AppUrl = appUrl;
+    }
+
+    public String getPlaystoreVersonName() {
+        return PlaystoreVersonName;
+    }
+
+    public void setPlaystoreVersonName(String playstoreVersonName) {
+        PlaystoreVersonName = playstoreVersonName;
+    }
+
+
+
+    public int getPlaystoreVerson() {
+        return PlaystoreVerson;
+    }
+
+    public void setPlaystoreVerson(int playstoreVerson) {
+        PlaystoreVerson = playstoreVerson;
+    }
+
+    public boolean isStatus() {
+        return Status;
+    }
+
+    public void setStatus(boolean status) {
+        Status = status;
+    }
 }
