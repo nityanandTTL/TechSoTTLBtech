@@ -200,9 +200,11 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             txtAge.setText(beneficiaryDetailsModel.getAge() + " | " + beneficiaryDetailsModel.getGender());
             if(InputUtils.isNull(beneficiaryDetailsModel.getAadhar())) {
                 txtAadharNo.setVisibility(View.GONE);
+                imgAadhar.setVisibility(View.GONE);
             }
             else{
                 txtAadharNo.setVisibility(View.VISIBLE);
+                imgAadhar.setVisibility(View.VISIBLE);
                 txtAadharNo.setText(beneficiaryDetailsModel.getAadhar());
             }
             edtTests.setText(beneficiaryDetailsModel.getTestsCode());

@@ -779,15 +779,15 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             }
             /*end set data from aadhar details*/
-            if(!InputUtils.isNull(beneficiaryDetailsModel.getAadhar())) {
+//            if(!InputUtils.isNull(beneficiaryDetailsModel.getAadhar())) {
                 edtAadhar.setText(!InputUtils.isNull(beneficiaryDetailsModel.getAadhar()) ? beneficiaryDetailsModel.getAadhar() : "");
                 edtAadhar.setVisibility(View.VISIBLE);
                 imgAadhar.setVisibility(View.VISIBLE);
-            }
+            /*}
             else{
                 edtAadhar.setVisibility(View.GONE);
                 imgAadhar.setVisibility(View.GONE);
-            }
+            }*/
             edtBenName.setText(!InputUtils.isNull(beneficiaryDetailsModel.getName()) ? beneficiaryDetailsModel.getName() : "");
             edtAge.setText(!InputUtils.isNull(beneficiaryDetailsModel.getAge()+"") ? beneficiaryDetailsModel.getAge()+"" : "");
             edtTests.setText(!InputUtils.isNull(beneficiaryDetailsModel.getTestsCode()) ? beneficiaryDetailsModel.getTestsCode() : "");

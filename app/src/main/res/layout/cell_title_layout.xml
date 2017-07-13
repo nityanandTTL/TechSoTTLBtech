@@ -127,7 +127,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginTop="5dp"
             android:src="@drawable/aadhar_icon"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <TextView
             android:gravity="center"
@@ -144,7 +144,7 @@
             android:text=""
             android:textColor="@android:color/darker_gray"
             android:textSize="16sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/title_distance_icon"
