@@ -110,6 +110,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private boolean isAdd = false;
     private boolean isScanAadhar = false;
     private AadharDataModel aadharDataModel=new AadharDataModel();
+    private ImageView imgAadhar;
 
     @Override
     public void onBackPressed() {
@@ -770,12 +771,23 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         }
         if(beneficiaryDetailsModel!=null){
             /*set Data from aadhar details*/
-            beneficiaryDetailsModel.setName(!InputUtils.isNull(aadharDataModel.getName())?aadharDataModel.getName():"");
-            beneficiaryDetailsModel.setAge(DateUtils.getAgeFromDOBString(aadharDataModel.getDob()));
-            beneficiaryDetailsModel.setGender(!InputUtils.isNull(aadharDataModel.getGender())?aadharDataModel.getGender():"");
-            edtAadhar.setText(!InputUtils.isNull(aadharDataModel.getAadharNumber())?aadharDataModel.getAadharNumber():"");
+            if(isScanAadhar) {
+                beneficiaryDetailsModel.setName(!InputUtils.isNull(aadharDataModel.getName()) ? aadharDataModel.getName() : "");
+                beneficiaryDetailsModel.setAge(DateUtils.getAgeFromDOBString(aadharDataModel.getDob()));
+                beneficiaryDetailsModel.setGender(!InputUtils.isNull(aadharDataModel.getGender()) ? aadharDataModel.getGender() : "");
+                beneficiaryDetailsModel.setAadhar(aadharDataModel.getAadharNumber());
+                beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+            }
             /*end set data from aadhar details*/
-
+            if(!InputUtils.isNull(beneficiaryDetailsModel.getAadhar())) {
+                edtAadhar.setText(!InputUtils.isNull(beneficiaryDetailsModel.getAadhar()) ? beneficiaryDetailsModel.getAadhar() : "");
+                edtAadhar.setVisibility(View.VISIBLE);
+                imgAadhar.setVisibility(View.VISIBLE);
+            }
+            else{
+                edtAadhar.setVisibility(View.GONE);
+                imgAadhar.setVisibility(View.GONE);
+            }
             edtBenName.setText(!InputUtils.isNull(beneficiaryDetailsModel.getName()) ? beneficiaryDetailsModel.getName() : "");
             edtAge.setText(!InputUtils.isNull(beneficiaryDetailsModel.getAge()+"") ? beneficiaryDetailsModel.getAge()+"" : "");
             edtTests.setText(!InputUtils.isNull(beneficiaryDetailsModel.getTestsCode()) ? beneficiaryDetailsModel.getTestsCode() : "");
@@ -850,6 +862,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         edtLA = (TextView) findViewById(R.id.edt_lab_alerts);
         edtRemarks = (EditText) findViewById(R.id.edt_customer_sign);
         imgMale = (ImageView) findViewById(R.id.img_male);
+        imgAadhar = (ImageView) findViewById(R.id.title_aadhar_icon);
         imgFemale = (ImageView) findViewById(R.id.img_female);
         imgVenipuncture = (ImageView) findViewById(R.id.img_venipuncture);
         llBarcodes = (LinearLayout) findViewById(R.id.ll_barcodes);
