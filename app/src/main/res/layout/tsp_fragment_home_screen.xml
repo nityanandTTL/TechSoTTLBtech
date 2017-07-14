@@ -184,7 +184,7 @@
         android:layout_centerInParent="true">
 
         <ImageView
-            android:layout_marginLeft="10dp`"
+            android:layout_marginLeft="10dp"
             android:id="@+id/receive_icon"
             android:layout_width="150dp"
             android:layout_height="150dp"
