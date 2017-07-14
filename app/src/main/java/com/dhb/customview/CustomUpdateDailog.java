@@ -54,11 +54,12 @@ public class CustomUpdateDailog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_Update) {
-            customupdateDialogOkButtonOnClickedDelegate.onClicked();
+            customupdateDialogOkButtonOnClickedDelegate.onUpdateClicked();
             dismiss();
         }
         else if (v.getId() == R.id.btn_ok) {
-            System.exit(0);
+            customupdateDialogOkButtonOnClickedDelegate.onOkClicked();
+            dismiss();
         }
     }
 }

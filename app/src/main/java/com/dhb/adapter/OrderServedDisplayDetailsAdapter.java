@@ -44,7 +44,7 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
     private OrderServedDisplayDetailsAdapterClickedDelegate orderServedDisplayDetailsAdapterClickedDelegate;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_orderno, tv_barcode, tv_status, txt_amount, txt_name, txt_title, txt_sr_no,tv_amount,amount_title;
+        TextView tv_orderno, tv_barcode, tv_status, txt_amount, txt_name, txt_title, txt_sr_no,tv_amount,amount_title,txt_benCount,txt_fasting;
         public ImageView call;
         View itemView;
 
@@ -66,6 +66,8 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
             txt_sr_no = (TextView) view.findViewById(R.id.txt_sr_no);
             tv_amount=(TextView)view.findViewById(R.id.tv_amount);
             amount_title=(TextView)view.findViewById(R.id.amount_title);
+            txt_benCount=(TextView)view.findViewById(R.id.tv_beneficiary_count);
+            txt_fasting=(TextView)view.findViewById(R.id.tv_fasting);
         }
     }
 
@@ -87,14 +89,13 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final BtechOrderModel btechOrderModel = btechOrderModels.get(position);
-        final int pos = position;
-        if (btechOrderModels != null) {
-
+        if (btechOrderModel!= null) {
             holder.txt_name.setText("" + btechOrderModel.getOrderBy());
             holder.tv_orderno.setText("" + btechOrderModel.getOrderNo());
             holder.tv_status.setText("" + btechOrderModel.getStatus());
-            int sr_no=pos+1;
+            int sr_no= position +1;
             holder.txt_sr_no.setText(""+sr_no);
+            holder.txt_benCount.setText(""+btechOrderModel.getBenCount());
             ArrayList<String> mylist = new ArrayList<String>();
             for (int i = 0; i < btechOrderModel.getBtchBracodeDtl().size(); i++) {
                 mylist.add(btechOrderModel.getBtchBracodeDtl().get(i).getBarcode());

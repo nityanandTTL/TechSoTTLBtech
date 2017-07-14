@@ -117,6 +117,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private TableLayout tlBarcodes;
     private IntentIntegrator intentIntegrator;
     private static RefreshBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegateResult;
+    private ImageView imgAadhar;
 
     public BeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
@@ -197,7 +198,15 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             txtName.setText(beneficiaryDetailsModel.getName());
             tv_orderno.setText(beneficiaryDetailsModel.getOrderNo());
             txtAge.setText(beneficiaryDetailsModel.getAge() + " | " + beneficiaryDetailsModel.getGender());
-            txtAadharNo.setVisibility(View.GONE);
+            if(InputUtils.isNull(beneficiaryDetailsModel.getAadhar())) {
+                txtAadharNo.setVisibility(View.GONE);
+                imgAadhar.setVisibility(View.GONE);
+            }
+            else{
+                txtAadharNo.setVisibility(View.VISIBLE);
+                imgAadhar.setVisibility(View.VISIBLE);
+                txtAadharNo.setText(beneficiaryDetailsModel.getAadhar());
+            }
             edtTests.setText(beneficiaryDetailsModel.getTestsCode());
             txtSrNo.setText(beneficiaryDetailsModel.getBenId() + "");
             if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
@@ -586,6 +595,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         txtSrNo = (TextView) rootview.findViewById(R.id.txt_sr_no);
         btnEdit = (ImageView) rootview.findViewById(R.id.img_edit);
         btnRelease = (ImageView) rootview.findViewById(R.id.img_release2);
+        imgAadhar = (ImageView) rootview.findViewById(R.id.title_aadhar_icon);
         edtTests = (TextView) rootview.findViewById(R.id.edt_test);
         edtCH = (TextView) rootview.findViewById(R.id.clinical_history);
         edtLA = (TextView) rootview.findViewById(R.id.edt_lab_alerts);

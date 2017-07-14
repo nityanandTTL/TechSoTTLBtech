@@ -15,6 +15,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     private String OrderNo;
     private String Name;
     private int Age;
+    private String aadhar;
     private String Gender;
     private String tests;
     private String testsCode;
@@ -39,6 +40,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         OrderNo = in.readString();
         Name = in.readString();
         Age = in.readInt();
+        aadhar = in.readString();
         Gender = in.readString();
         tests = in.readString();
         testsCode = in.readString();
@@ -60,6 +62,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         dest.writeString(OrderNo);
         dest.writeString(Name);
         dest.writeInt(Age);
+        dest.writeString(aadhar);
         dest.writeString(Gender);
         dest.writeString(tests);
         dest.writeString(testsCode);
@@ -217,5 +220,13 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
 
     public void setTestSampleType(ArrayList<BeneficiaryTestDetailsModel> testSampleType) {
         this.testSampleType = testSampleType;
+    }
+
+    public String getAadhar() {
+        return aadhar;
+    }
+
+    public void setAadhar(String aadhar) {
+        this.aadhar = aadhar;
     }
 }

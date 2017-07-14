@@ -35,6 +35,7 @@ import com.dhb.models.api.request.OrderBookingRequestModel;
 import com.dhb.models.api.response.OrderBookingResponseBeneficiaryModel;
 import com.dhb.models.api.response.OrderBookingResponseOrderModel;
 import com.dhb.models.api.response.OrderBookingResponseVisitModel;
+import com.dhb.models.data.AadharDataModel;
 import com.dhb.models.data.BeneficiaryBarcodeDetailsModel;
 import com.dhb.models.data.BeneficiaryDetailsModel;
 import com.dhb.models.data.BeneficiaryLabAlertsModel;
@@ -54,8 +55,10 @@ import com.dhb.network.ApiCallAsyncTaskDelegate;
 import com.dhb.network.AsyncTaskForRequest;
 import com.dhb.network.ResponseParser;
 import com.dhb.uiutils.AbstractActivity;
+import com.dhb.utils.app.AadharUtils;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.dhb.utils.app.BundleConstants;
+import com.dhb.utils.app.DateUtils;
 import com.dhb.utils.app.DeviceUtils;
 import com.dhb.utils.app.InputUtils;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -64,6 +67,7 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static com.dhb.utils.app.CommonUtils.encodeImage;
 
@@ -104,6 +108,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private LabAlertMasterDao labAlertMasterDao;
     private IntentIntegrator intentIntegrator;
     private boolean isAdd = false;
+    private boolean isScanAadhar = false;
+    private AadharDataModel aadharDataModel=new AadharDataModel();
+    private ImageView imgAadhar;
 
     @Override
     public void onBackPressed() {
@@ -170,6 +177,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                         intentIntegrator = new IntentIntegrator(activity){
                             @Override
                             protected void startActivityForResult(Intent intent, int code) {
+                                isScanAadhar = false;
                                 AddEditBeneficiaryDetailsActivity.this.startActivityForResult(intent,BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
                             }
                         };
@@ -355,6 +363,15 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     }
 
     private void initListeners() {
+
+        edtAadhar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isScanAadhar = true;
+                new IntentIntegrator(activity).initiateScan();
+            }
+        });
+
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -753,6 +770,24 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             }
         }
         if(beneficiaryDetailsModel!=null){
+            /*set Data from aadhar details*/
+            if(isScanAadhar) {
+                beneficiaryDetailsModel.setName(!InputUtils.isNull(aadharDataModel.getName()) ? aadharDataModel.getName() : "");
+                beneficiaryDetailsModel.setAge(DateUtils.getAgeFromDOBString(aadharDataModel.getDob()));
+                beneficiaryDetailsModel.setGender(!InputUtils.isNull(aadharDataModel.getGender()) ? aadharDataModel.getGender() : "");
+                beneficiaryDetailsModel.setAadhar(aadharDataModel.getAadharNumber());
+                beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+            }
+            /*end set data from aadhar details*/
+//            if(!InputUtils.isNull(beneficiaryDetailsModel.getAadhar())) {
+                edtAadhar.setText(!InputUtils.isNull(beneficiaryDetailsModel.getAadhar()) ? beneficiaryDetailsModel.getAadhar() : "");
+                edtAadhar.setVisibility(View.VISIBLE);
+                imgAadhar.setVisibility(View.VISIBLE);
+            /*}
+            else{
+                edtAadhar.setVisibility(View.GONE);
+                imgAadhar.setVisibility(View.GONE);
+            }*/
             edtBenName.setText(!InputUtils.isNull(beneficiaryDetailsModel.getName()) ? beneficiaryDetailsModel.getName() : "");
             edtAge.setText(!InputUtils.isNull(beneficiaryDetailsModel.getAge()+"") ? beneficiaryDetailsModel.getAge()+"" : "");
             edtTests.setText(!InputUtils.isNull(beneficiaryDetailsModel.getTestsCode()) ? beneficiaryDetailsModel.getTestsCode() : "");
@@ -827,59 +862,65 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         edtLA = (TextView) findViewById(R.id.edt_lab_alerts);
         edtRemarks = (EditText) findViewById(R.id.edt_customer_sign);
         imgMale = (ImageView) findViewById(R.id.img_male);
+        imgAadhar = (ImageView) findViewById(R.id.title_aadhar_icon);
         imgFemale = (ImageView) findViewById(R.id.img_female);
         imgVenipuncture = (ImageView) findViewById(R.id.img_venipuncture);
         llBarcodes = (LinearLayout) findViewById(R.id.ll_barcodes);
         tlBarcodes = (TableLayout) findViewById(R.id.tl_barcodes);
         imgHC = (ImageView) findViewById(R.id.hard_copy_check);
         btnSave = (Button) findViewById(R.id.btn_save);
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if ((scanningResult != null) && (scanningResult.getContents() != null)) {
-            String scanned_barcode = scanningResult.getContents();
-            if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                if(beneficiaryDetailsModel.getBarcodedtl()!=null) {
-                    for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
-                        if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
-                                && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
-                            //CHECK for duplicate barcode scanned for the same visit
-                            OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
-                            for (OrderDetailsModel odm :
-                                    orderVisitDetailsModel.getAllOrderdetails()) {
-                                for (BeneficiaryDetailsModel bdm :
-                                        odm.getBenMaster()) {
-                                    if(bdm.getBarcodedtl()!=null && bdm.getBarcodedtl().size()>0) {
-                                        for (BeneficiaryBarcodeDetailsModel bbdm :
-                                                bdm.getBarcodedtl()) {
-                                            if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
-                                                if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
+            if(!isScanAadhar) {
+                String scanned_barcode = scanningResult.getContents();
+                if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                    if (beneficiaryDetailsModel.getBarcodedtl() != null) {
+                        for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                            if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                    && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
+                                //CHECK for duplicate barcode scanned for the same visit
+                                OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
+                                for (OrderDetailsModel odm :
+                                        orderVisitDetailsModel.getAllOrderdetails()) {
+                                    for (BeneficiaryDetailsModel bdm :
+                                            odm.getBenMaster()) {
+                                        if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
+                                            for (BeneficiaryBarcodeDetailsModel bbdm :
+                                                    bdm.getBarcodedtl()) {
+                                                if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
+                                                    if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
 
-                                                } else {
-                                                    Toast.makeText(activity, "Same Barcode Already Scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
-                                                    return;
+                                                    } else {
+                                                        Toast.makeText(activity, "Same Barcode Already Scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                        return;
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
+                                beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                                beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                                break;
                             }
-                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
-                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
-                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                            break;
                         }
+                        initData();
+                    } else {
+                        Toast.makeText(activity, "Failed to Update Scanned Barcode Value", Toast.LENGTH_SHORT).show();
                     }
-                    initData();
+                } else {
+                    Toast.makeText(activity, "Failed to Scan Barcode", Toast.LENGTH_SHORT).show();
                 }
-                else{
-                    Toast.makeText(activity,"Failed to Update Scanned Barcode Value",Toast.LENGTH_SHORT).show();
-                }
-            }
-            else{
-                Toast.makeText(activity,"Failed to Scan Barcode",Toast.LENGTH_SHORT).show();
+            }else{
+                String scanContentBarcode = scanningResult.getContents();
+                aadharDataModel= AadharUtils.getAadharDataModelFromXML(scanContentBarcode);
+                initData();
             }
         }
         if (resultCode == Activity.RESULT_OK) {

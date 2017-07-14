@@ -5,5 +5,6 @@ package com.dhb.delegate;
  */
 
 public interface CustomUpdateDialogOkButtonOnClickedDelegate {
-    void onClicked();
+    void onUpdateClicked();
+    void onOkClicked();
 }

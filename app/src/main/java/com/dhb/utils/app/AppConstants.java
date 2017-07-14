@@ -7,7 +7,7 @@ public interface AppConstants {
 
 	// ------------ CONSTANTS -------------
 
-	public static final int ANDROID_APP_VERSION = 1;
+	public static final int ANDROID_APP_VERSION = 2;
 
     public static final boolean IS_DEBUG = true;
 
@@ -16,6 +16,11 @@ public interface AppConstants {
 	public static final int POST_METHOD = 1;
 
 	public static final int PUT_METHOD = 2;
+
+	public static final int BTECH_APP_ID = 1;
+
+
+
 
 	public static final int DELETE_METHOD = 3;
 

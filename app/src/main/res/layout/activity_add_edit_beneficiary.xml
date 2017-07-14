@@ -24,7 +24,7 @@
             <RelativeLayout
                 android:id="@+id/benf_number_queue"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="155dp"
                 android:layout_weight="3"
                 android:background="@color/bgTitleRight"
                 android:gravity="center_horizontal"
@@ -33,7 +33,9 @@
                 <RelativeLayout
                     android:layout_width="5dp"
                     android:layout_height="155dp"
-                    android:background="@color/colorSecondary"></RelativeLayout>
+                    android:background="@color/colorSecondary">
+
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/txt_sr_no"
@@ -154,9 +156,11 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="5dp"
                     android:src="@drawable/aadhar_icon"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <EditText
+
+                    android:editable="false"
                     android:id="@+id/title_aadhar_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -171,7 +175,7 @@
                     android:paddingTop="5dp"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="16sp"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
             </RelativeLayout>
         </LinearLayout>
 

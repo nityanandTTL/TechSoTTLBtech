@@ -1,9 +1,11 @@
 package com.dhb.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -270,13 +272,30 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
             if (statusCode == 200) {
                 Toast.makeText(getActivity(), "Success", LENGTH_SHORT).show();
                 JSONObject jsonResponse = new JSONObject(json);
-                int orderNo = jsonResponse.getInt("OrderId");
-                Intent intentPayments = new Intent(activity, PaymentsActivity.class);
-                intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderNo+"");
-                intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT,Grandtotal+"");
-                intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-                intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,1);
-                startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                final int orderNo = jsonResponse.getInt("OrderId");
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle("")
+                        .setMessage("Your Order has been Placed Successfully. Your Order No is "+orderNo+". Please Proceed with Payment in Case you want to pay Material Payment.")
+
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                               dialog.dismiss();
+                                int totalAMount = Math.round(Grandtotal);
+                                Intent intentPayments = new Intent(activity, PaymentsActivity.class);
+                                intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO,orderNo+"");
+                                intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT,totalAMount+"");
+                                intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE,Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID,1);
+                                startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
+
+
+
             }
         }
         @Override

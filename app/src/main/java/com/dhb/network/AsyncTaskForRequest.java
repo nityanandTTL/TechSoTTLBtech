@@ -468,7 +468,7 @@ public class AsyncTaskForRequest {
             // String postJson = new Gson().toJson(orderVisitDetailsModel);
             //  abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BANK_MASTER/*"VISTT001109154"*/);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BANK_MASTER+"/"+appPreferenceManager.getLoginResponseModel().getUserID()/*"VISTT001109154"*/);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -1005,13 +1005,13 @@ public class AsyncTaskForRequest {
      /*
 	 * Fetch VersionControl Details  Api Integration*/
 
-    public ApiCallAsyncTask getVersionControlDetailsRequestAsyncTask() {
+    public ApiCallAsyncTask getVersionControlDetailsRequestAsyncTask(int Appnameid) {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_VERSION_CONTROL_DETAIL);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_VERSION_CONTROL_DETAIL+"/"+Appnameid);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);

@@ -15,7 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.dhb.R;
 import com.dhb.customview.CustomUpdateDailog;
 import com.dhb.dao.CreateOrUpgradeDbTask;
@@ -42,18 +41,20 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 
 public class SplashScreenActivity extends AbstractActivity {
-    private VersionControlMasterModel versionControlMasterModels;
     private Activity activity;
     private AppPreferenceManager appPreferenceManager;
     public static final String TAG_FRAGMENT = "SPLASH_SCREEN_ACTIVITY";
     CustomUpdateDailog cudd;
-    private static Intent locationUpdateIntent;
+    private int AppId;
 
+    private static Intent locationUpdateIntent;
+    VersionControlMasterModel versionControlMasterModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         activity = this;
+        AppId= AppConstants.BTECH_APP_ID;
         appPreferenceManager = new AppPreferenceManager(activity);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -94,9 +95,7 @@ public class SplashScreenActivity extends AbstractActivity {
 
     void StartLocationUpdateService() {
         try {
-
             try {
-
                 Calendar cal = Calendar.getInstance();
                 cal.add(Calendar.SECOND, 1);
                 if (!IsAlarmSet()) {
@@ -130,7 +129,7 @@ public class SplashScreenActivity extends AbstractActivity {
         Log.d("result***","start");
         Logger.error(TAG_FRAGMENT + "--fetchData: ");
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchVersionDetailApiAsyncTask = asyncTaskForRequest.getVersionControlDetailsRequestAsyncTask();
+        ApiCallAsyncTask fetchVersionDetailApiAsyncTask = asyncTaskForRequest.getVersionControlDetailsRequestAsyncTask(AppId);
         fetchVersionDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchVersionDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
             fetchVersionDetailApiAsyncTask.execute(fetchVersionDetailApiAsyncTask);
@@ -146,22 +145,39 @@ public class SplashScreenActivity extends AbstractActivity {
             Logger.debug(TAG_FRAGMENT + "--apiCallResult: ");
             if (statusCode == 200) {
                 ResponseParser responseParser = new ResponseParser(activity);
-                VersionControlMasterModel versionControlMasterModel = new VersionControlMasterModel();
-
                 versionControlMasterModel = responseParser.getVersionControlMasterResponse(json, statusCode);
-                versionControlMasterModels = versionControlMasterModel;
 
-                if (AppConstants.ANDROID_APP_VERSION < versionControlMasterModel.getCurrentVirson()) {
+                if (AppConstants.ANDROID_APP_VERSION < versionControlMasterModel.getAPICurrentVerson()) {
                     cudd = new CustomUpdateDailog(activity, new CustomUpdateDialogOkButtonOnClickedDelegate() {
                         @Override
-                        public void onClicked() {
-                            ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
-                            logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
-                            if (isNetworkAvailable(activity)) {
-                                logoutAsyncTask.execute(logoutAsyncTask);
-                            } else {
-                                Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
-                                System.exit(0);
+                        public void onUpdateClicked() {
+                            if(!InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
+                                ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
+                                logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
+                                if (isNetworkAvailable(activity)) {
+                                    logoutAsyncTask.execute(logoutAsyncTask);
+                                } else {
+                                    Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
+                                    finishAffinity();
+                                }
+                            }
+                            else{
+                                appPreferenceManager.clearAllPreferences();
+                                new DhbDao(activity).deleteTablesonLogout();
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionControlMasterModel.getAppUrl()));
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onOkClicked() {
+                            if (AppConstants.ANDROID_APP_VERSION < versionControlMasterModel.getAPIMinVerson()) {
+//                                System.exit(0);
+                                finishAffinity();
+                            }
+                            else{
+                                goAhead();
                             }
                         }
                     });
@@ -193,11 +209,12 @@ public class SplashScreenActivity extends AbstractActivity {
             if (statusCode == 200) {
                 appPreferenceManager.clearAllPreferences();
                 new DhbDao(activity).deleteTablesonLogout();
-                finish();
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.dhb.btech"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionControlMasterModel.getAppUrl()));
                 startActivity(intent);
+                finish();
             } else {
                 Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
+                finishAffinity();
             }
         }
 

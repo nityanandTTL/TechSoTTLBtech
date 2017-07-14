@@ -40,6 +40,7 @@ public class BeneficiaryDetailsDao {
 	String NAME = "Name";
 	String AGE = "Age";
 	String GENDER = "Gender";
+	String AADHAR = "Aadhar";
 	String TESTS = "tests";
 	String PROJ_ID = "ProjId";
 	String TESTS_CODE = "testsCode";
@@ -80,6 +81,7 @@ public class BeneficiaryDetailsDao {
 		beneficiaryDetailsModel.setName(cursor.getString(cursor.getColumnIndex(NAME)));
 		beneficiaryDetailsModel.setAge(cursor.getInt(cursor.getColumnIndex(AGE)));
 		beneficiaryDetailsModel.setGender(cursor.getString(cursor.getColumnIndex(GENDER)));
+		beneficiaryDetailsModel.setAadhar(cursor.getString(cursor.getColumnIndex(AADHAR)));
 		beneficiaryDetailsModel.setOrderNo(cursor.getString(cursor.getColumnIndex(ORDER_NO)));
 		beneficiaryDetailsModel.setTests(cursor.getString(cursor.getColumnIndex(TESTS)));
 		beneficiaryDetailsModel.setProjId(cursor.getString(cursor.getColumnIndex(PROJ_ID)));
@@ -127,6 +129,7 @@ public class BeneficiaryDetailsDao {
 		values.put(NAME, orderDetailsModel.getName());
 		values.put(AGE, orderDetailsModel.getAge());
 		values.put(GENDER, orderDetailsModel.getGender());
+		values.put(AADHAR, orderDetailsModel.getAadhar());
 		values.put(TESTS, orderDetailsModel.getTests());
 		values.put(PROJ_ID, orderDetailsModel.getProjId());
 		values.put(TESTS_CODE, orderDetailsModel.getTestsCode());

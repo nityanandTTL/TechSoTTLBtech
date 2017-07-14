@@ -44,6 +44,9 @@ public class ResetPasswordFragment extends AbstractFragment implements View.OnCl
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reset_password, container, false);
         activity = (HomeScreenActivity) getActivity();
+        if (activity.toolbarHome != null) {
+            activity.toolbarHome.setTitle("Reset Password");
+        }
         activity.isOnHome = false;
         initUI(view);
         setListeners();
