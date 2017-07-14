@@ -172,7 +172,7 @@ public class HomeScreenFragment extends AbstractFragment {
             public void onClick(View v) {
                 //btech_hub
                 //for btech with hub login...role will be 6 for this
-                if (appPreferenceManager.getLoginRole().equalsIgnoreCase("6")) {//loginRole.equalsIgnoreCase("6")
+                if (appPreferenceManager.getLoginRole().equalsIgnoreCase("4")) {//loginRole.equalsIgnoreCase("6")
                     MainDailog = new Dialog(getActivity());
                     MainDailog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     MainDailog.setContentView(R.layout.btech_dialog_btechwithhub);

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.dhb.R;
@@ -126,6 +127,7 @@ public class SplashScreenActivity extends AbstractActivity {
     }
 
     private void fetchVersionControlDetails() {
+        Log.d("result***","start");
         Logger.error(TAG_FRAGMENT + "--fetchData: ");
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         ApiCallAsyncTask fetchVersionDetailApiAsyncTask = asyncTaskForRequest.getVersionControlDetailsRequestAsyncTask();
@@ -138,9 +140,9 @@ public class SplashScreenActivity extends AbstractActivity {
     }
 
     private class FetchVersionDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
-
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
+            Log.d("result***","stop");
             Logger.debug(TAG_FRAGMENT + "--apiCallResult: ");
             if (statusCode == 200) {
                 ResponseParser responseParser = new ResponseParser(activity);
