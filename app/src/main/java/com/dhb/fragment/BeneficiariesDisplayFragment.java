@@ -73,7 +73,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private BeneficiaryScreenSlidePagerAdapter beneficiaryScreenSlidePagerAdapter;
     private LinearLayout pagerIndicator;
     private BeneficiaryDetailsModel tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
-    private OrderDetailsModel tempOrderDetailsModel = new OrderDetailsModel();
+//    private OrderDetailsModel tempOrderDetailsModel = new OrderDetailsModel();
     private DhbDao dhbDao;
     private OrderDetailsDao orderDetailsDao;
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
@@ -140,7 +140,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         }).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Logger.debug("orderVisitDetailsModel 1 :" + new Gson().toJson(orderVisitDetailsModel));
+                        /*Logger.debug("orderVisitDetailsModel 1 :" + new Gson().toJson(orderVisitDetailsModel));
                         tempOrderDetailsModel.setOrderNo("TEMP_"+DeviceUtils.randomString(8));
                         tempOrderDetailsModel.setAddBen(true);
                         tempOrderDetailsModel.setTestEdit(false);
@@ -150,27 +150,37 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         Logger.debug("orderVisitDetailsModel 2 :" + new Gson().toJson(orderVisitDetailsModel));
                         ArrayList<BeneficiaryDetailsModel> beneficiaries = new ArrayList<BeneficiaryDetailsModel>();
 
-                        tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
+                        */tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
 
                         //**********************
 
 
                         tempBeneficiaryDetailsModel.setFasting("");
+                        tempBeneficiaryDetailsModel.setAddBen(true);
+                        tempBeneficiaryDetailsModel.setTestEdit(false);
 
                         //**************************
-                        tempBeneficiaryDetailsModel.setOrderNo(tempOrderDetailsModel.getOrderNo());
+                        tempBeneficiaryDetailsModel.setOrderNo(orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderNo());
                         tempBeneficiaryDetailsModel.setBenId((int) (Math.random() * 999));
-                        Logger.debug("tempOrderDetailsModel:" + new Gson().toJson(tempOrderDetailsModel));
                         beneficiaryDetailsDao.insertOrUpdate(tempBeneficiaryDetailsModel);
-
+                        /*
                         beneficiaries.add(tempBeneficiaryDetailsModel);
 
                         tempOrderDetailsModel.setBenMaster(beneficiaries);
-                        orderDetailsDao.insertOrUpdate(tempOrderDetailsModel);
+                        orderDetailsDao.insertOrUpdate(tempOrderDetailsModel);*/
 
+                        OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
+                        orderDetailsModel = orderVisitDetailsModel.getAllOrderdetails().get(0);
+                        orderDetailsModel.setAddBen(true);
+                        orderDetailsModel.setTestEdit(false);
+                        orderDetailsDao.insertOrUpdate(orderDetailsModel);
+
+                        orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().add(tempBeneficiaryDetailsModel);
+                        orderVisitDetailsModel.getAllOrderdetails().get(0).setAddBen(true);
+                        orderVisitDetailsModel.getAllOrderdetails().get(0).setTestEdit(false);
                         Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
                         intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, tempBeneficiaryDetailsModel);
-                        intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, tempOrderDetailsModel);
+                        intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderVisitDetailsModel.getAllOrderdetails().get(0));
                         intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_ADD, true);
                         intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_EDIT, false);
                         startActivityForResult(intentEdit, BundleConstants.ADD_START);
@@ -267,6 +277,13 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 benArr.addAll(tempBenArr);
             }
         }
+
+        if (from.equals("Button_proceed_payment")) {
+            for (int i = 0; i < benArr.size(); i++) {
+                benArr.get(i).setAddBen(false);
+            }
+        }
+
         orderBookingRequestModel.setBendtl(benArr);
         //SET BENEFICIARY Details Models Array - END
 
@@ -362,10 +379,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                     for (BeneficiaryDetailsModel ben : order.getBenMaster()) {
                         CartRequestBeneficiaryModel crbm = new CartRequestBeneficiaryModel();
                         crbm.setOrderNo(order.getOrderNo());
-                        crbm.setAddben(order.isAddBen() ? true : false);
-
-                        ////////Changes kele amhi sarve khavayi
-                        crbm.setTestEdit(order.isTestEdit() ? true : false);
+                        crbm.setAddben(ben.isAddBen());
+                        crbm.setTestEdit(ben.isTestEdit());
                         if (!InputUtils.isNull(ben.getProjId())) {
                             crbm.setTests(ben.getProjId() + "," + ben.getTestsCode());
                             crbm.setProjId(ben.getProjId());
@@ -394,13 +409,13 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         vpBeneficiaries.setOnPageChangeListener(new BeneficiaryScreenPageChangeListener());
         setUiPageViewController();
 
-        if (orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+        /*if (orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
             for (OrderDetailsModel orderDetailsModel :
                     orderVisitDetailsModel.getAllOrderdetails()) {
                 tempOrderDetailsModel = orderDetailsModel;
                 break;
             }
-        }
+        }*/
     }
 
     @Override
@@ -478,9 +493,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BundleConstants.ADD_START && resultCode == BundleConstants.ADD_FINISH) {
             tempBeneficiaryDetailsModel = data.getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
-            tempOrderDetailsModel = data.getExtras().getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
+            OrderDetailsModel orderDetailsModel = data.getExtras().getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
 
-            OrderVisitDetailsModel orderVisitDetails = orderDetailsDao.getOrderVisitModel(tempOrderDetailsModel.getVisitId());
+            OrderVisitDetailsModel orderVisitDetails = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
 
             CartAPIRequestModel cartAPIRequestModel = new CartAPIRequestModel();
             ArrayList<CartRequestOrderModel> ordersArr = new ArrayList<>();
@@ -496,9 +511,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 for (BeneficiaryDetailsModel ben : order.getBenMaster()) {
                     CartRequestBeneficiaryModel crbm = new CartRequestBeneficiaryModel();
                     crbm.setOrderNo(order.getOrderNo());
-                    crbm.setAddben(order.isAddBen() ? true : false);
+                    crbm.setAddben(ben.isAddBen());
                     crbm.setBenId(ben.getBenId()+"");
-                    crbm.setTestEdit(order.isTestEdit()?true:false);
+                    crbm.setTestEdit(ben.isTestEdit());
                     if (!InputUtils.isNull(ben.getProjId())) {
                         crbm.setTests(ben.getProjId() + "," + ben.getTestsCode());
                         crbm.setProjId(ben.getProjId());
@@ -520,13 +535,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             } else {
                 Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
             }
-//          initData();
         }
         if (requestCode == BundleConstants.PAYMENTS_START && resultCode == BundleConstants.PAYMENTS_FINISH) {
             boolean isPaymentSuccess = data.getBooleanExtra(BundleConstants.PAYMENT_STATUS, false);
             if (isPaymentSuccess) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
                 OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_digital");
                 orderBookingRequestModel = fixForAddBeneficiary(orderBookingRequestModel);
                 ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);

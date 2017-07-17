@@ -98,7 +98,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private TableLayout tlBarcodes;
     private OrderDetailsModel orderDetailsModel;
     private String currentScanSampleType;
-    private boolean isCancelRequestGenereted=false;
     private DhbDao dhbDao;
     private ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr;
     private ArrayList<BeneficiaryLabAlertsModel> benLAArr;
@@ -114,7 +113,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
     @Override
     public void onBackPressed() {
-        orderDetailsDao.deleteByOrderNo(orderDetailsModel.getOrderNo());
+        if(isAdd) {
+            beneficiaryDetailsDao.deleteByBenId(beneficiaryDetailsModel.getBenId() + "");
+        }
         super.onBackPressed();
     }
 
@@ -126,6 +127,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         appPreferenceManager = new AppPreferenceManager(activity);
         dhbDao = new DhbDao(activity);
         beneficiaryDetailsDao = new BeneficiaryDetailsDao(dhbDao.getDb());
+        orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
         orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
         labAlertMasterDao = new LabAlertMasterDao(dhbDao.getDb());
 
@@ -277,7 +279,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                                orderBookingResponseVisitModel.getOrderids()) {
                            //CHECK if old ORDER NO from API response equals order no of local Order Detail Model
                            // AND API response old order Id not equals new order Id
-                           if (odm.getOrderNo().equals(obrom.getOldOrderId()) && !obrom.getOldOrderId().equals(obrom.getNewOrderId())) {
+                           if (odm.getOrderNo().equals(obrom.getOldOrderId())){ //&& !obrom.getOldOrderId().equals(obrom.getNewOrderId())) {
                                odm.setOrderNo(obrom.getNewOrderId());
                                //UPDATE old order no with new order no
                                orderDetailsDao.updateOrderNo(obrom.getOldOrderId(), odm);
@@ -869,7 +871,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         tlBarcodes = (TableLayout) findViewById(R.id.tl_barcodes);
         imgHC = (ImageView) findViewById(R.id.hard_copy_check);
         btnSave = (Button) findViewById(R.id.btn_save);
-
     }
 
     @Override
@@ -882,6 +883,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     if (beneficiaryDetailsModel.getBarcodedtl() != null) {
                         for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
                             if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                    && !InputUtils.isNull(currentScanSampleType)
                                     && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
                                 //CHECK for duplicate barcode scanned for the same visit
                                 OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
@@ -956,7 +958,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
         //Fix for Setting AddBen = false for already added Beneficiaries to the server
         for (int i =0;i<orderDetailsArr.size();i++) {
-            if(!orderDetailsArr.get(i).getOrderNo().startsWith("TEMP_") && orderDetailsArr.get(i).isAddBen()){
+            if(!orderDetailsArr.get(i).getOrderNo().equals(orderDetailsModel.getOrderNo()) && orderDetailsArr.get(i).isAddBen()){
                 orderDetailsArr.get(i).setAddBen(false);
             }
         }
@@ -985,6 +987,15 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 benArr.addAll(tempBenArr);
             }
         }
+
+        //Fix for Setting AddBen = false for already added Beneficiaries to the server
+        for(int i=0;i<benArr.size();i++){
+            if(benArr.get(i).getBenId()!=beneficiaryDetailsModel.getBenId() && beneficiaryDetailsModel.isAddBen()){
+                benArr.get(i).setAddBen(false);
+            }
+        }
+        //End of Fix
+
         orderBookingRequestModel.setBendtl(benArr);
         //SET BENEFICIARY Details Models Array - END
 

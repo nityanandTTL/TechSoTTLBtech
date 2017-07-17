@@ -145,7 +145,7 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
                 }
                 benDetailsModel.setTestSampleType(selectedTestDetailsArr);
                 if(!isEdit){
-                    orderDetailsModel.setAmountDue(AmountDue);
+                    orderDetailsModel.setAmountDue(orderDetailsModel.getAmountDue()+AmountDue);
                 }
                 orderDetailsModel.setTestEdit(isEdit);
                 orderDetailsModel.setBrandId(brandMasterModel.getBrandId());

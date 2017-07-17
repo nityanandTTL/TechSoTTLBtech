@@ -233,39 +233,6 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
 
-
-    public ApiCallAsyncTask getAddBeneficiaryRequestAsyncTask(OrderBookingRequestModel orderBookingRequestModel) {
-        apiCallAsyncTask = null;
-        try {
-            apiCallAsyncTask = new ApiCallAsyncTask(context);
-            abstractApiModel = new AbstractApiModel();
-
-            String postJson = new Gson().toJson(orderBookingRequestModel);
-           /* // Logging the response that is too large for logcat in multiple lines -- START
-            int maxLogSize = 500;
-            for (int i = 0; i <= postJson.length() / maxLogSize; i++) {
-                int start = i * maxLogSize;
-                int end = (i + 1) * maxLogSize;
-                end = end > postJson.length() ? postJson.length() : end;
-                Log.v(AddEditBeneficiaryDetailsActivity.class.getSimpleName(), postJson.substring(start, end));
-            }
-            // Logging the response that is too large for logcat in multiple lines -- END
-
-*/
-            abstractApiModel.setPostData(postJson);
-            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.ADD_BENEFICIARY);
-            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
-            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
-            apiCallAsyncTask.setApiModel(abstractApiModel);
-            apiCallAsyncTask.setProgressBarMessage(context.getResources()
-                    .getString(R.string.progress_message_uploading_order_details_please_wait));
-            apiCallAsyncTask.setProgressBarVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return apiCallAsyncTask;
-    }
     /*
      * Work Order Entry Api Integration*/
 

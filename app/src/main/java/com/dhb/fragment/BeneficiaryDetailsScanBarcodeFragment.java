@@ -427,6 +427,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         @Override
                         public void onItemClick(ArrayList<TestRateMasterModel> selectedTestsList,boolean isTestEdit) {
                             orderDetailsModel.setTestEdit(true);
+                            beneficiaryDetailsModel.setTestEdit(true);
                             orderDetailsDao.insertOrUpdate(orderDetailsModel);
                             beneficiaryDetailsModel.setProjId("");
                             ArrayList<BeneficiaryTestDetailsModel> selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
@@ -726,6 +727,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
                             //size 4
                             if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                    && !InputUtils.isNull(currentScanSampleType)
                                     && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType()) /*&& currentScanBarcode.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())*/) {
 
                                 //CHECK for duplicate barcode scanned for the same visit

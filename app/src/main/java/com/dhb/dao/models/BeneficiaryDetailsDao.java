@@ -35,30 +35,32 @@ public class BeneficiaryDetailsDao {
 
 	// DB TABLE COLUMN INFO
 
-	String ORDER_NO = "OrderNo";
-	String BEN_ID = "benId";
-	String NAME = "Name";
-	String AGE = "Age";
-	String GENDER = "Gender";
-	String AADHAR = "Aadhar";
-	String TESTS = "tests";
-	String PROJ_ID = "ProjId";
-	String TESTS_CODE = "testsCode";
-	String TEST_SAMPLE_TYPE = "testSampleType";
-	String FASTING = "Fasting";
-	String VENEPUNCTURE = "Venepuncture";
-	String BARCODE_DTL = "barcodedtl";
-	String CLINICAL_HISTORY = "clHistory";
-	String LAB_ALERT = "labAlert";
-	String SAMPLE_TYPE = "sampleType";
-	String REMARKS = "remarks";
-	String CREATED_AT = "createdAt";
-	String CREATED_BY = "createdBy";
-	String UPDATED_AT = "updatedAt";
-	String UPDATED_BY = "updatedBy";
-	String RECORD_STATUS = "recordStatus";
-	String SYNC_STATUS = "syncStatus";
-	String SYNC_ACTION = "syncAction";
+	private String ORDER_NO = "OrderNo";
+	private String BEN_ID = "benId";
+	private String NAME = "Name";
+	private String AGE = "Age";
+	private String GENDER = "Gender";
+	private String AADHAR = "Aadhar";
+	private String TESTS = "tests";
+	private String PROJ_ID = "ProjId";
+	private String TESTS_CODE = "testsCode";
+	private String TEST_SAMPLE_TYPE = "testSampleType";
+	private String FASTING = "Fasting";
+	private String VENEPUNCTURE = "Venepuncture";
+	private String BARCODE_DTL = "barcodedtl";
+	private String IS_TEST_EDIT = "isTestEdit";
+	private String IS_ADD_BEN = "isAddBen";
+	private String CLINICAL_HISTORY = "clHistory";
+	private String LAB_ALERT = "labAlert";
+	private String SAMPLE_TYPE = "sampleType";
+	private String REMARKS = "remarks";
+	private String CREATED_AT = "createdAt";
+	private String CREATED_BY = "createdBy";
+	private String UPDATED_AT = "updatedAt";
+	private String UPDATED_BY = "updatedBy";
+	private String RECORD_STATUS = "recordStatus";
+	private String SYNC_STATUS = "syncStatus";
+	private String SYNC_ACTION = "syncAction";
 
 
 	// Constructors
@@ -89,6 +91,8 @@ public class BeneficiaryDetailsDao {
 		beneficiaryDetailsModel.setFasting(cursor.getString(cursor.getColumnIndex(FASTING)));
 		beneficiaryDetailsModel.setRemarks(cursor.getString(cursor.getColumnIndex(REMARKS)));
 		beneficiaryDetailsModel.setVenepuncture(CommonUtils.encodeImage(cursor.getBlob(cursor.getColumnIndex(VENEPUNCTURE))));
+		beneficiaryDetailsModel.setTestEdit(cursor.getString(cursor.getColumnIndex(IS_TEST_EDIT)).equals("1"));
+		beneficiaryDetailsModel.setAddBen(cursor.getString(cursor.getColumnIndex(IS_ADD_BEN)).equals("1"));
 
 		TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>> tokenBarcode = new TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>>(){};
 		ArrayList<BeneficiaryBarcodeDetailsModel> bmArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(BARCODE_DTL)),tokenBarcode.getType());
@@ -122,32 +126,34 @@ public class BeneficiaryDetailsDao {
 		return beneficiaryDetailsModel;
 	}
 
-	public ContentValues getContentValuesFromModel(BeneficiaryDetailsModel orderDetailsModel) {
+	public ContentValues getContentValuesFromModel(BeneficiaryDetailsModel beneficiaryDetailsModel) {
 		ContentValues values = new ContentValues();
-		values.put(ORDER_NO, orderDetailsModel.getOrderNo());
-		values.put(BEN_ID, orderDetailsModel.getBenId());
-		values.put(NAME, orderDetailsModel.getName());
-		values.put(AGE, orderDetailsModel.getAge());
-		values.put(GENDER, orderDetailsModel.getGender());
-		values.put(AADHAR, orderDetailsModel.getAadhar());
-		values.put(TESTS, orderDetailsModel.getTests());
-		values.put(PROJ_ID, orderDetailsModel.getProjId());
-		values.put(TESTS_CODE, orderDetailsModel.getTestsCode());
-		values.put(FASTING, orderDetailsModel.getFasting());
-		values.put(REMARKS, orderDetailsModel.getRemarks());
-		values.put(VENEPUNCTURE, CommonUtils.decodedImageBytes(InputUtils.isNull(orderDetailsModel.getVenepuncture())?"":orderDetailsModel.getVenepuncture()));
-		values.put(BARCODE_DTL, new Gson().toJson(orderDetailsModel.getBarcodedtl()));
-		values.put(SAMPLE_TYPE, new Gson().toJson(orderDetailsModel.getSampleType()));
-		values.put(TEST_SAMPLE_TYPE, new Gson().toJson(orderDetailsModel.getTestSampleType()));
-		values.put(CLINICAL_HISTORY, new Gson().toJson(orderDetailsModel.getClHistory()));
-		values.put(LAB_ALERT, new Gson().toJson(orderDetailsModel.getLabAlert()));
-		values.put(CREATED_AT, orderDetailsModel.getCreatedAt());
-		values.put(CREATED_BY, orderDetailsModel.getCreatedBy());
-		values.put(UPDATED_AT, orderDetailsModel.getUpdatedAt());
-		values.put(UPDATED_BY, orderDetailsModel.getUpdatedBy());
-		values.put(RECORD_STATUS, orderDetailsModel.getRecordStatus());
-		values.put(SYNC_STATUS, orderDetailsModel.getSyncStatus());
-		values.put(SYNC_ACTION, orderDetailsModel.getSyncAction());
+		values.put(ORDER_NO, beneficiaryDetailsModel.getOrderNo());
+		values.put(BEN_ID, beneficiaryDetailsModel.getBenId());
+		values.put(NAME, beneficiaryDetailsModel.getName());
+		values.put(AGE, beneficiaryDetailsModel.getAge());
+		values.put(GENDER, beneficiaryDetailsModel.getGender());
+		values.put(AADHAR, beneficiaryDetailsModel.getAadhar());
+		values.put(TESTS, beneficiaryDetailsModel.getTests());
+		values.put(PROJ_ID, beneficiaryDetailsModel.getProjId());
+		values.put(TESTS_CODE, beneficiaryDetailsModel.getTestsCode());
+		values.put(FASTING, beneficiaryDetailsModel.getFasting());
+		values.put(REMARKS, beneficiaryDetailsModel.getRemarks());
+        values.put(IS_TEST_EDIT, beneficiaryDetailsModel.isTestEdit() ? "1" : "0");
+        values.put(IS_ADD_BEN, beneficiaryDetailsModel.isAddBen() ? "1" : "0");
+		values.put(VENEPUNCTURE, CommonUtils.decodedImageBytes(InputUtils.isNull(beneficiaryDetailsModel.getVenepuncture())?"":beneficiaryDetailsModel.getVenepuncture()));
+		values.put(BARCODE_DTL, new Gson().toJson(beneficiaryDetailsModel.getBarcodedtl()));
+		values.put(SAMPLE_TYPE, new Gson().toJson(beneficiaryDetailsModel.getSampleType()));
+		values.put(TEST_SAMPLE_TYPE, new Gson().toJson(beneficiaryDetailsModel.getTestSampleType()));
+		values.put(CLINICAL_HISTORY, new Gson().toJson(beneficiaryDetailsModel.getClHistory()));
+		values.put(LAB_ALERT, new Gson().toJson(beneficiaryDetailsModel.getLabAlert()));
+		values.put(CREATED_AT, beneficiaryDetailsModel.getCreatedAt());
+		values.put(CREATED_BY, beneficiaryDetailsModel.getCreatedBy());
+		values.put(UPDATED_AT, beneficiaryDetailsModel.getUpdatedAt());
+		values.put(UPDATED_BY, beneficiaryDetailsModel.getUpdatedBy());
+		values.put(RECORD_STATUS, beneficiaryDetailsModel.getRecordStatus());
+		values.put(SYNC_STATUS, beneficiaryDetailsModel.getSyncStatus());
+		values.put(SYNC_ACTION, beneficiaryDetailsModel.getSyncAction());
 		return values;
 	}
 

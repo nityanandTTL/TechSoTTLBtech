@@ -29,6 +29,9 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     private String ProjId;
     private String remarks;
 
+    private boolean isTestEdit;
+    private boolean isAddBen;
+
     public BeneficiaryDetailsModel() {
         super();
         Age = 1;
@@ -53,6 +56,8 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         labAlert = in.createTypedArrayList(BeneficiaryLabAlertsModel.CREATOR);
         ProjId = in.readString();
         remarks = in.readString();
+        isTestEdit = in.readByte() != 0;
+        isAddBen = in.readByte() != 0;
     }
 
     @Override
@@ -75,6 +80,8 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         dest.writeTypedList(labAlert);
         dest.writeString(ProjId);
         dest.writeString(remarks);
+        dest.writeByte((byte) (isTestEdit ? 1 : 0));
+        dest.writeByte((byte) (isAddBen ? 1 : 0));
     }
 
     @Override
@@ -228,5 +235,21 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
 
     public void setAadhar(String aadhar) {
         this.aadhar = aadhar;
+    }
+
+    public boolean isTestEdit() {
+        return isTestEdit;
+    }
+
+    public void setTestEdit(boolean testEdit) {
+        isTestEdit = testEdit;
+    }
+
+    public boolean isAddBen() {
+        return isAddBen;
+    }
+
+    public void setAddBen(boolean addBen) {
+        isAddBen = addBen;
     }
 }
