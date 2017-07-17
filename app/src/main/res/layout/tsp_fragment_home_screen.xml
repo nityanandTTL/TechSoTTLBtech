@@ -3,58 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/home_nav_bg_gradient"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:background="@android:color/white">
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/home_nav_bg_gradient">
-
-        </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/solid_circle"
-        android:gravity="center"
-        android:padding="@dimen/dp_5">
-
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/img_user_picture"
-            android:layout_width="@dimen/dp_80"
-            android:layout_height="@dimen/dp_80"
-            android:layout_gravity="center_horizontal" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="3"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
-
         <LinearLayout
+            android:layout_marginTop="120dp"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
@@ -89,7 +50,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <!--<LinearLayout
             android:id="@+id/nav_grid_menu"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -110,8 +71,6 @@
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:weightSum="3">
-
-
 
                 <LinearLayout
                     android:id="@+id/ll_schedule_icon"
@@ -214,9 +173,40 @@
                 android:layout_height="1dp"
                 android:background="@color/separator"></View>
 
-        </LinearLayout>
-
-
+        </LinearLayout>-->
     </LinearLayout>
 
+
+    <LinearLayout
+        android:id="@+id/llIcons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/receive_icon"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/tsp_home_screen_receive" />
+
+        <ImageView
+            android:layout_marginRight="10dp"
+            android:id="@+id/send_icon"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/tsp_home_screen_send" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/earning_icon"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/llIcons"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-90dp"
+        android:src="@drawable/tsp_home_screen_earning" />
 </RelativeLayout>
