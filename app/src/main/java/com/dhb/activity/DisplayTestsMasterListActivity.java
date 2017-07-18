@@ -250,12 +250,12 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
                 }
             }
         }
-        if(isEdit){
+//        if(isEdit){
             spBrandMasters.setEnabled(false);
-        }
-        else{
-            spBrandMasters.setEnabled(true);
-        }
+//        }
+//        else{
+//            spBrandMasters.setEnabled(true);
+//        }
     }
 
     @Override
