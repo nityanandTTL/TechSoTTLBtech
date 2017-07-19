@@ -69,6 +69,9 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
+/**
+ * /ClientPickup
+ */
 
 
 public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {

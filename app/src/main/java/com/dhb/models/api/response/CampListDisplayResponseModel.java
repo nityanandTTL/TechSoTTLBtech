@@ -8,7 +8,8 @@ import com.dhb.models.data.CampDetailModel;
 import java.util.ArrayList;
 
 /**
- * Created by Orion on 5/11/2017.
+ * Created by Orion on 5/11/2017.<br/>
+ * /CampDetails/MyCampDetails<br/>
  */
 
 public class CampListDisplayResponseModel implements Parcelable{

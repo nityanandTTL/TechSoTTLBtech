@@ -31,7 +31,10 @@ import com.dhb.utils.app.BundleConstants;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-
+/**
+ * for getting olc list<br/>
+ *  http://bts.dxscloud.com/btsapi/api/BtechClients/884543107<br/>
+ */
 
 public class OLCPickupListDisplayFragment extends AbstractFragment {
 

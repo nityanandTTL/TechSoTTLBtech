@@ -40,7 +40,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
+/**
+ * API used<br/>
+ * /Ledger/CashRegister<br/>
+ *  http://bts.dxscloud.com/btsapi/api/OrdersCredit/BtechEarnings/884543107<br/>
+ *  http://bts.dxscloud.com/btsapi/api/PayThyrocare/SelectMode/3<br/>
+ */
 public class LedgerDisplayFragment extends AbstractFragment {
 
     public static final String TAG_FRAGMENT = "LEDGER_DISPLAY_FRAGMENT";

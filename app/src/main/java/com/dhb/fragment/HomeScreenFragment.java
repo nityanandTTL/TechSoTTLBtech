@@ -31,7 +31,9 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
+/**
+ *  http://bts.dxscloud.com/btsapi/api/CampDetails/MyCampCount/884543107
+ */
 public class HomeScreenFragment extends AbstractFragment {
 
     public static final String TAG_FRAGMENT = "HOME_SCREEN_FRAGMENT";

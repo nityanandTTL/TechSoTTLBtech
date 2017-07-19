@@ -64,7 +64,11 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Random;
-
+/**
+ * API USED<br/>
+ * For submit<br/>
+ * /OrderBooking<br/>
+ */
 public class CampManualWOEFragment extends AbstractFragment implements View.OnClickListener {
     public static final String TAG_FRAGMENT = CampManualWOEFragment.class.getSimpleName();
     private static final String TAG_ACTIVITY = CampManualWOEFragment.class.getSimpleName();
