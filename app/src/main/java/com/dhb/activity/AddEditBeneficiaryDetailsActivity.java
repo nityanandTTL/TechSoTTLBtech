@@ -72,7 +72,7 @@ import java.util.Calendar;
 import static com.dhb.utils.app.CommonUtils.encodeImage;
 
 /**
- * Created by ISRO on 5/4/2017.
+ * Created by Orion on 5/4/2017.
  */
 
 public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {

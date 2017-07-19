@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- * Created by Vendor3 on 5/25/2017.
+ * Created by Orion on 5/25/2017.
  */
 
 public class CartAPIResponseOrderModel implements Parcelable {

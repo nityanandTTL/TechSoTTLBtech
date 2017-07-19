@@ -16,7 +16,7 @@ import com.dhb.R;
 import com.dhb.delegate.CustomOkDialogOkButtonOnClickedDelegate;
 
 /**
- * Created by vendor1 on 4/24/2017.
+ * Created by Orion on 4/24/2017.
  */
 
 public class CustomOKDialog extends Dialog implements View.OnClickListener {

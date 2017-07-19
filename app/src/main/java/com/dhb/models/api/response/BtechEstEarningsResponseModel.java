@@ -8,7 +8,7 @@ import com.dhb.models.data.BtechEarningsModel;
 import java.util.ArrayList;
 
 /**
- * Created by vendor1 on 6/21/2017.
+ * Created by Orion on 6/21/2017.
  */
 
 public class BtechEstEarningsResponseModel implements Parcelable{

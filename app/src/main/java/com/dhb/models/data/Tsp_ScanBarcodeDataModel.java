@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by E4991 on 7/6/2017.
+ * Created by Orion on 7/6/2017.
  */
 
 public class Tsp_ScanBarcodeDataModel implements Parcelable {

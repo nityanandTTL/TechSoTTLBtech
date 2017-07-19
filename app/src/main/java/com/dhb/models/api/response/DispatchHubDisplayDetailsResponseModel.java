@@ -5,7 +5,7 @@ import com.dhb.models.data.HUBBTechModel;
 import java.util.ArrayList;
 
 /**
- * Created by vendor1 on 4/27/2017.
+ * Created by Orion on 4/27/2017.
  */
 
 public class DispatchHubDisplayDetailsResponseModel {

@@ -56,7 +56,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by Vendor3 on 5/16/2017.
+ * Created by Orion on 5/16/2017.
  */
 
 public class PaymentsActivity extends AbstractActivity {

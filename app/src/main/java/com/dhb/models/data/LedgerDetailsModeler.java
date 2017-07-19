@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by E4904 on 4/26/2017.
+ * Created by Orion on 4/26/2017.
  */
 
 public class LedgerDetailsModeler extends BaseModel implements Parcelable {

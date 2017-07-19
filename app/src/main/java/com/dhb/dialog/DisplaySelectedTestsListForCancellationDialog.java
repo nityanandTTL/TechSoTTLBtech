@@ -20,7 +20,7 @@ import com.dhb.utils.app.InputUtils;
 import java.util.ArrayList;
 
 /**
- * Created by E4904 on 6/15/2017.
+ * Created by Orion on 6/15/2017.
  */
 
 public class DisplaySelectedTestsListForCancellationDialog extends Dialog {

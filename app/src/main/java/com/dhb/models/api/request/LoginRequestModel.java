@@ -1,7 +1,7 @@
 package com.dhb.models.api.request;
 
 /**
- * Created by Pratik Ambhore on 4/20/2017.
+ * Created by Orion on 4/20/2017.
  */
 
 public class LoginRequestModel {

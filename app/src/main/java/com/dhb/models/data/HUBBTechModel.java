@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by vendor1 on 4/27/2017.
+ * Created by Orion on 4/27/2017.
  */
 
 public class HUBBTechModel extends BaseModel implements Parcelable{

@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- * Created by vendor1 on 5/10/2017.
+ * Created by Orion on 5/10/2017.
  */
 
 public class CampDetailModel implements Parcelable {

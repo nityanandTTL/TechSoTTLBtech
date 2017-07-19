@@ -1,7 +1,7 @@
 package com.dhb.models.data;
 
 /**
- * Created by vendor1 on 6/16/2017.
+ * Created by Orion on 6/16/2017.
  */
 
 public class BtechBarcodeDetailModel {

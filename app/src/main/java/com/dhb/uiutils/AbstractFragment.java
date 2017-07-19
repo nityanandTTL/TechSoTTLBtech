@@ -22,7 +22,7 @@ import com.dhb.utils.app.AppPreferenceManager;
 import java.util.regex.Pattern;
 
 /**
- * Created by Pratik Ambhore on 18/3/15.
+ * Created by Orion on 18/3/15.
  */
 public class AbstractFragment extends Fragment implements
 		ActivityHelper {

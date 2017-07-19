@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Pratik Ambhore on 4/20/2017.
+ * Created by Orion on 4/20/2017.
  */
 
 public class SlotModel extends BaseModel implements Parcelable {

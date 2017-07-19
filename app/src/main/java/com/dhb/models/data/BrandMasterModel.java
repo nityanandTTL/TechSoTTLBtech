@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- * Created by ISRO on 4/28/2017.
+ * Created by Orion on 4/28/2017.
  */
 
 public class BrandMasterModel extends BaseModel implements Parcelable {

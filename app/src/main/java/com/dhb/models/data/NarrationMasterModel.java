@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Vendor3 on 5/16/2017.
+ * Created by Orion on 5/16/2017.
  */
 
 public class NarrationMasterModel implements Parcelable{

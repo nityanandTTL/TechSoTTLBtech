@@ -19,7 +19,7 @@ import org.json.JSONException;
 import java.util.Calendar;
 
 /**
- * Created by Vendor3 on 5/26/2017.
+ * Created by Orion on 5/26/2017.
  */
 
 public class LocationUpdateService extends IntentService{

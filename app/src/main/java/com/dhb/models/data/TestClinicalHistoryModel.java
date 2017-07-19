@@ -1,7 +1,7 @@
 package com.dhb.models.data;
 
 /**
- * Created by ISRO on 5/5/2017.
+ * Created by Orion on 5/5/2017.
  */
 public class TestClinicalHistoryModel {
     private int ClinicalHtrId;

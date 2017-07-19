@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by vendor1 on 5/23/2017.
+ * Created by Orion on 5/23/2017.
  */
 
 class SampleTypeModel implements Parcelable {

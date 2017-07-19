@@ -13,7 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 
 /**
- * Created by Pratik Ambhore on 24/11/15.
+ * Created by Orion on 24/11/15.
  */
 public class BrandMasterDao {
 

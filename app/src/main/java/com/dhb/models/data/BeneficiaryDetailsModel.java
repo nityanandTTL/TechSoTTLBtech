@@ -7,7 +7,7 @@ import android.support.annotation.ArrayRes;
 import java.util.ArrayList;
 
 /**
- * Created by Pratik Ambhore on 4/19/2017.
+ * Created by Orion on 4/19/2017.
  */
 
 public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {

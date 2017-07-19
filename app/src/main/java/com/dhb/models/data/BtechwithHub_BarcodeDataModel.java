@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by E4991 on 6/30/2017.
+ * Created by Orion on 6/30/2017.
  */
 
 public class BtechwithHub_BarcodeDataModel implements Parcelable {

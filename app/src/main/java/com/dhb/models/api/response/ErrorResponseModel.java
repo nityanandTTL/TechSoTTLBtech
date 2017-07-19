@@ -1,7 +1,7 @@
 package com.dhb.models.api.response;
 
 /**
- * Created by Pratik Ambhore on 9/11/15.
+ * Created by Orion on 9/11/15.
  */
 public class ErrorResponseModel {
 	private String CustomErrorCode;

@@ -15,7 +15,7 @@ import com.dhb.models.data.SlotModel;
 import java.util.ArrayList;
 
 /**
- * Created by ISRO on 5/2/2017.
+ * Created by Orion on 5/2/2017.
  */
 public class SlotsDisplayAdapter extends BaseAdapter{
     private ArrayList<SlotModel> slotsArr;

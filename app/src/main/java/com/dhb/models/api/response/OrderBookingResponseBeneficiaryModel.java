@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Vendor3 on 5/24/2017.
+ * Created by Orion on 5/24/2017.
  */
 
 public class OrderBookingResponseBeneficiaryModel implements Parcelable {

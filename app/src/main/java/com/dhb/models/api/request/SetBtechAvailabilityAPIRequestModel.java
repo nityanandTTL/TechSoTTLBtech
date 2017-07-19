@@ -1,7 +1,7 @@
 package com.dhb.models.api.request;
 
 /**
- * Created by ISRO on 5/2/2017.
+ * Created by Orion on 5/2/2017.
  */
 public class SetBtechAvailabilityAPIRequestModel {
     private int ID;

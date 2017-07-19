@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Pratik Ambhore on 4/19/2017.
+ * Created by Orion on 4/19/2017.
  */
 
 public class BeneficiarySampleTypeDetailsModel extends BaseModel implements Parcelable {

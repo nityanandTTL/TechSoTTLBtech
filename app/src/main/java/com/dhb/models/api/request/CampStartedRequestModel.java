@@ -1,7 +1,7 @@
 package com.dhb.models.api.request;
 
 /**
- * Created by vendor1 on 5/12/2017.
+ * Created by Orion on 5/12/2017.
  */
 
 public class CampStartedRequestModel {

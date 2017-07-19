@@ -1,7 +1,7 @@
 package com.dhb.fragment;
 
 /**
- * Created by E4904 on 6/14/2017.
+ * Created by Orion on 6/14/2017.
  */
 
 import android.Manifest;
@@ -49,7 +49,7 @@ import java.util.Locale;
 
 
 /**
- * Created by E4904 on 5/2/2017.
+ * Created by Orion on 5/2/2017.
  */
 
 public class OrderServedFragment extends AbstractFragment {

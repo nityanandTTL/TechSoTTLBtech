@@ -3,7 +3,7 @@ package com.dhb.models.api.response;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Pratik Ambhore on 19/8/15.
+ * Created by Orion on 19/8/15.
  */
 public class SessionExpireModel {
 

@@ -1,7 +1,7 @@
 package com.dhb.models.api.response;
 
 /**
- * Created by vendor1 on 6/22/2017.
+ * Created by Orion on 6/22/2017.
  */
 
 public class BankMasterResponseModel {

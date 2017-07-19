@@ -16,7 +16,7 @@ import com.dhb.models.data.OrderVisitDetailsModel;
 import com.dhb.utils.app.InputUtils;
 
 /**
- * Created by vendor1 on 4/24/2017.
+ * Created by Orion on 4/24/2017.
  */
 
 public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickListener {

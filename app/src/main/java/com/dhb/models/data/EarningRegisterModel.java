@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by E4904 on 4/28/2017.
+ * Created by Orion on 4/28/2017.
  */
 
 public class EarningRegisterModel extends BaseModel implements Parcelable {

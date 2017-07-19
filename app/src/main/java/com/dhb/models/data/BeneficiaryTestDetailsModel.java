@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- * Created by Vendor3 on 6/20/2017.
+ * Created by Orion on 6/20/2017.
  */
 
 public class BeneficiaryTestDetailsModel implements Parcelable {

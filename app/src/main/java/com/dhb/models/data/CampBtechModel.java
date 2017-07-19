@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by vendor1 on 5/10/2017.
+ * Created by Orion on 5/10/2017.
  */
 
 public class CampBtechModel implements Parcelable{

@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- * Created by Pratik Ambhore on 4/19/2017.
+ * Created by Orion on 4/19/2017.
  */
 
 public class TestRateMasterModel extends BaseModel implements Parcelable {

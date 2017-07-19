@@ -18,7 +18,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 /**
- * Created by Pratik Ambhore on 21/9/15.
+ * Created by Orion on 21/9/15.
  */
 public class GeoLocationUtils {
 	private static GeoLocationUtils instance;
