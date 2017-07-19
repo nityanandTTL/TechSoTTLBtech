@@ -52,7 +52,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * A simple {@link Fragment} subclass.
+ * i)/SpecimenTrack/TSPScannedBarcode/Btechid<br/>
+ *ii)/SpecimenTrack/SendConsignment<br/>
+ *iii)/SpecimenTrack/CourierModes<br/>
  */
 public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBarcodeListAdapter.CallbackInterface {
 

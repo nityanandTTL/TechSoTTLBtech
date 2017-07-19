@@ -36,8 +36,11 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
 import java.util.ArrayList;
-
-
+/**
+ *　APi Used 　　　i)/SpecimenTrack/ReceiveScannedBarcode/Btechid<br/>
+ 　*　ii)/SpecimenTrack/ReceiveBarcodes
+ * Created by Orion on 7/4/2017.
+ */
 public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment implements View.OnClickListener {
 
     public static final String TAG_FRAGMENT = BtechwithHub_HubMasterBarcodeScanFragment.class.getSimpleName();

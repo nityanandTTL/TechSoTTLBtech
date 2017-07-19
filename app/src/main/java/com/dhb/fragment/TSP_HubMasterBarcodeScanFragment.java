@@ -36,7 +36,12 @@ import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 
-import java.util.ArrayList;
+import java.util.ArrayList;/**
+ *　APi Used 　　i)/SpecimenTrack/ReceiveHubBarcode/Userid<br/>
+ *ii)/SpecimenTrack/ReceiveHubBarcodes
+
+ * Created by Orion on 7/4/2017.
+ */
 
 
 public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implements View.OnClickListener {

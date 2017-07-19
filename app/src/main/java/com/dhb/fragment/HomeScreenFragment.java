@@ -31,7 +31,62 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+/**
+ * <br/> <b>*TITLE:-HUB</b><br/>
+ * HomescreenFragment.java
 
+* #For Send Functionality :<br/>
+ * HubListDisplayFragment.java<br/>
+ *HubMasterBarcodeScanFragment.java<br/>
+ *DispatchtoHubDisplayDetailsAdapter.java<br/>
+ *HubScanBarcodeListAdapter.java<br/>
+ *DispatchHubDisplayDetailsResponseModel.java<br/>
+ *HubBtechModel.java<br/>
+ *BtechCollectionsResponseModel.java<br/>
+ *MasterBarcodeMappingRequestModel.java<br/>
+ *HubBarcodeModel.java<br/>
+
+ *For Receive Functionality :<br/>
+ *BtechwithHub_HubMasterBarcodeScanFragment.java<br/>
+ *BtechwithHub_HubScanBarcodeListAdapter.java<br/>
+ *BtechwithHubResponseModel.java<br/>
+ *BtechwithHubBarcodeDataModel.java<br/>
+ *BtechwithHub_MasterBarcodeMappingRequestModel.java<br/>
+
+ *Details :<br/>
+ *Btech with hub login has a login role of 6 & the flow goes through selfieupload screen.<br/>
+ *2)When we click on the Hub icon on the homescreen then depending upon the role the flow changes between btech & btech_with_hub.<br/>
+ *If the role is 6 then btech_with_hub flow starts else normal btech flow executes.<br/>
+ *When the login is btech with hub then on the click of hub icon on the homescreen a popup<br/>
+ *Appears with two options : 1)send , 2) receive<br/>
+ *When we click on the send option then the flow is exactly same as the normal btech hub<br/>
+
+ <br/> <b>*TITLE:-TSP</b><br/>
+ * #For Send Functionality :<br/>
+ * TSP_SendFragment.java<br/>
+ * Tsp_HubScanBarcodeListAdapter.java<br/>
+ * Tsp_SendMode_DataModel.java<br/>
+ *Tsp_ScanBarcodeResponseModel.java<br/>
+ *Tsp_Send_RequestModel.java<br/>
+ * Tsp_ScanBarcodeDataModel.java<br/>
+ *#For Receive Functionality :<br/>
+ * Tsp_HubMasterBarcodeScanFragment.java<br/>
+ *BtechwithHub_HubScanBarcodeListAdapter.java<br/>
+ *BtechwithHubResponseModel.java<br/>
+ *BtechwithHub_MasterBarcodeMappingRequestModel.java<br/>
+ * BtechwithHub_BarcodeDataModel.java<br/>
+
+ *Details :<br/>
+ *TSP module has a role of 9 and the flow does not flow through selfieupload screen.After login the user is redirected to Homescreen directly.<br/>
+ *TSP module has a different layout(tsp_fragment_home_screen.xml) file but the java code is written in HomescreenFragment.java only.<br/>
+ *On the HomescreenFragment the flow varies from TSP module and Btech/Btech_with_Hub module according to the ROLE.<br/>
+ *If the role is 9 (tsp) then tsp_fragment_home_screen.xml is used else (btech & btech_with_hub) fragment_home_screen.xml is used.<br/>
+ *There are 3 modules inside tsp : 1)Receive, 2)Send, 3)Earning.<br/>
+ * The Earning module is coming soon.<br/>
+ * When we click on the receive icon then the page opens which fetches the barcode details from the api.The tsp has to scan those barcodes and the master barcodes and then has to click the receive to submit.<br/>
+ *When we click on the send icon then a page with a form opens which fetches the barcode details as well as the the modes of transfer from the api.The tsp has to scan those barcodes, select the mode of transfer and then fill the rest of the form and the click the send to dispatch the result.<br/>
+ *Once this is done the tsp is redirected to the homescreen on the successful response.<br/>
+* */
 public class HomeScreenFragment extends AbstractFragment {
 
     public static final String TAG_FRAGMENT = "HOME_SCREEN_FRAGMENT";

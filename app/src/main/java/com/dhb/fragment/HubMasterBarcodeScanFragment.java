@@ -40,7 +40,11 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-
+/**
+ *　APi Used 　　BtechCollections/userid<br/>
+ 　　* /MasterBarcodeMapping/
+ * Created by Orion on 7/4/2017.
+ */
 
 public class HubMasterBarcodeScanFragment extends AbstractFragment implements View.OnClickListener {
 
