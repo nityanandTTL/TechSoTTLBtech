@@ -49,7 +49,9 @@ import java.util.Locale;
 
 
 /**
- * Created by Orion on 5/2/2017.
+ * Created by Orion on 5/2/2017.<br/>
+ * for getting orders<br/>
+ *  http://bts.dxscloud.com/btsapi/api/BtechOrderSummary/BtechServedOrders/884543107/2017-07-19<br/>
  */
 
 public class OrderServedFragment extends AbstractFragment {

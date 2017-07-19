@@ -6,7 +6,8 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 /**
- * Created by Orion on 4/21/2017.
+ * Created by Orion on 4/21/2017.<br/>
+ * http://bts.dxscloud.com/btsapi/api/OrderVisitDetails/884543107<br/>
  */
 
 public class OrderVisitDetailsModel extends BaseModel implements Parcelable {

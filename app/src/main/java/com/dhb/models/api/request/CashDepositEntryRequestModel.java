@@ -1,7 +1,8 @@
 package com.dhb.models.api.request;
 
 /**
- * Created by Orion on 6/22/2017.
+ * Created by Orion on 6/22/2017.<br/>
+ * /CashDeposit/CashDepositEntry<br/>
  */
 
 public class CashDepositEntryRequestModel {

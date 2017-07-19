@@ -60,7 +60,9 @@ import java.util.ArrayList;
 
 import static com.dhb.utils.app.CommonUtils.encodeImage;
 
-
+/**
+ * /OrderBooking
+ */
 public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment implements View.OnClickListener {
     public static final String TAG_FRAGMENT = CampBeneficiaryDetailsScanBarcodeFragment.class.getSimpleName();
     private OrderBookingResponseVisitModel orderBookingResponseVisitModel = new OrderBookingResponseVisitModel();

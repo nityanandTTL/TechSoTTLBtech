@@ -59,7 +59,14 @@ import java.util.Calendar;
 
 import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
 
-
+/**
+ * to get payment mode<br/>
+ * http://bts.dxscloud.com/btsapi/api/Masters/PaymentModeMaster<br/>
+ * to get bank names<br/>
+ * http://bts.dxscloud.com/btsapi/api/Masters/BankMaster/884543107<br/>
+ * on submit<br/>
+ * /CashDeposit/CashDepositEntry<br/>
+ */
 public class CreditFragment extends Fragment {
     public static final String TAG_FRAGMENT = CreditFragment.class.getSimpleName();
     HomeScreenActivity activity;

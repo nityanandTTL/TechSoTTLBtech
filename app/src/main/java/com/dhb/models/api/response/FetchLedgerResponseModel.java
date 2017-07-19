@@ -6,7 +6,8 @@ import com.dhb.models.data.LedgerDetailsModeler;
 import java.util.ArrayList;
 
 /**
- * Created by Orion on 4/26/2017.
+ * Created by Orion on 4/26/2017.<br/>
+ * /Ledger/CashRegister<br/>
  */
 
 public class FetchLedgerResponseModel {

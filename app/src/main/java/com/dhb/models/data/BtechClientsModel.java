@@ -4,7 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Orion on 5/8/2017.
+ * Created by Orion on 5/8/2017.<br/>
+ *  http://bts.dxscloud.com/btsapi/api/BtechClients/884543107<br/>
  */
 
 public class BtechClientsModel implements Parcelable {

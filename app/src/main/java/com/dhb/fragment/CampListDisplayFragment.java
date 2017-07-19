@@ -58,7 +58,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-
+/**
+ * API used<br/>
+ * /CampDetails/MyCampDetails<br/>
+ * /CampDetails/CampStarted<br/>
+ */
 public class CampListDisplayFragment extends AbstractFragment {
 
     public static final String TAG_FRAGMENT = CampListDisplayFragment.class.getSimpleName();

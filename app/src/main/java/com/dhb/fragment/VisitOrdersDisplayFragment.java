@@ -62,7 +62,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import static com.dhb.utils.api.NetworkUtils.isNetworkAvailable;
-
+/**
+ * http://bts.dxscloud.com/btsapi/api/OrderVisitDetails/884543107
+ */
 public class VisitOrdersDisplayFragment extends AbstractFragment {
 
     public static final String TAG_FRAGMENT = "VISIT_ORDERS_DISPLAY_FRAGMENT";
