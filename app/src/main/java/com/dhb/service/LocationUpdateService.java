@@ -50,7 +50,7 @@ public class LocationUpdateService extends IntentService {
             public void run() {
                 while (true) {
                     startJob();
-                    Logger.error("THread is Executing ");
+                    Logger.error("THread is Executingsdsd ");
                     try {
                         Thread.sleep(15000);
                     } catch (InterruptedException e) {
