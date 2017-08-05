@@ -117,7 +117,7 @@ public class HomeScreenFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
-        activity.toolbarHome.setTitle("Home");
+       activity.toolbarHome.setTitle("Home");
         appPreferenceManager = new AppPreferenceManager(activity);
         activity.isOnHome = true;
 

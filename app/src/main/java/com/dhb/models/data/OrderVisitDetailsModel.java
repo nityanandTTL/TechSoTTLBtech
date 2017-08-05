@@ -1,5 +1,7 @@
 package com.dhb.models.data;
 
+
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -26,7 +28,6 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
     }
 
     protected OrderVisitDetailsModel(Parcel in) {
-        super(in);
         VisitId = in.readString();
         Slot = in.readString();
         Response = in.readString();
@@ -35,24 +36,6 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
         Distance = in.readFloat();
         EstIncome = in.readFloat();
         AppointmentDate = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeString(VisitId);
-        dest.writeString(Slot);
-        dest.writeString(Response);
-        dest.writeInt(SlotId);
-        dest.writeTypedList(allOrderdetails);
-        dest.writeFloat(Distance);
-        dest.writeFloat(EstIncome);
-        dest.writeString(AppointmentDate);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<OrderVisitDetailsModel> CREATOR = new Creator<OrderVisitDetailsModel>() {
@@ -132,4 +115,20 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
         AppointmentDate = appointmentDate;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(VisitId);
+        dest.writeString(Slot);
+        dest.writeString(Response);
+        dest.writeInt(SlotId);
+        dest.writeTypedList(allOrderdetails);
+        dest.writeFloat(Distance);
+        dest.writeFloat(EstIncome);
+        dest.writeString(AppointmentDate);
+    }
 }

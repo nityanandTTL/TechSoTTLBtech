@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by Orion on 4/19/2017.
  */
 
-public class OrderDetailsModel extends BaseModel implements Parcelable {
+public class OrderDetailsModel extends BaseModel implements Parcelable{
     private int BrandId;//
     private String OrderNo;//
     private String Address;
@@ -20,6 +20,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private int AmountDue;//
     private int AmountPayable;
     private int Margin;//
+    private String Location;
     private int Discount;//
     private String Refcode;
     private String ProjId;//
@@ -42,16 +43,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     private ArrayList<KitsCountModel> kits;
 
-    public String getAppointmentDate() {
-        return AppointmentDate;
-    }
-
-    public void setAppointmentDate(String appointmentDate) {
-        AppointmentDate = appointmentDate;
-    }
-
     protected OrderDetailsModel(Parcel in) {
-        super(in);
         BrandId = in.readInt();
         OrderNo = in.readString();
         Address = in.readString();
@@ -62,6 +54,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         AmountDue = in.readInt();
         AmountPayable = in.readInt();
         Margin = in.readInt();
+        Location = in.readString();
         Discount = in.readInt();
         Refcode = in.readString();
         ProjId = in.readString();
@@ -86,7 +79,6 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
         dest.writeInt(BrandId);
         dest.writeString(OrderNo);
         dest.writeString(Address);
@@ -97,6 +89,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeInt(AmountDue);
         dest.writeInt(AmountPayable);
         dest.writeInt(Margin);
+        dest.writeString(Location);
         dest.writeInt(Discount);
         dest.writeString(Refcode);
         dest.writeString(ProjId);
@@ -135,6 +128,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
             return new OrderDetailsModel[size];
         }
     };
+
+    public String getAppointmentDate() {
+        return AppointmentDate;
+    }
+
+    public void setAppointmentDate(String appointmentDate) {
+        AppointmentDate = appointmentDate;
+    }
 
     public String getCampId() {
         return CampId;
@@ -371,6 +372,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setAmountPayable(int amountPayable) {
         AmountPayable = amountPayable;
+    }
+
+    public String getLocation() {
+        return Location;
+    }
+
+    public void setLocation(String location) {
+        Location = location;
     }
 
     @Override

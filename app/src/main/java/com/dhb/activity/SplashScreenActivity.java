@@ -90,11 +90,14 @@ public class SplashScreenActivity extends AbstractActivity {
             }
         }, AppConstants.SPLASH_SCREEN_TIMEOUT);
         //Call Service
+        Logger.error("locationUpdateIntent Executed 1");
         locationUpdateIntent = new Intent(this, LocationUpdateService.class);
-    }
 
-    void StartLocationUpdateService() {
-        try {
+
+        Logger.error("locationUpdateIntent Executed 2");
+    }
+  /*void StartLocationUpdateService() {
+       try {
             try {
                 Calendar cal = Calendar.getInstance();
                 cal.add(Calendar.SECOND, 1);
@@ -102,13 +105,19 @@ public class SplashScreenActivity extends AbstractActivity {
                     PendingIntent pintent = PendingIntent.getService(this, 0,
                             locationUpdateIntent, 0);
                     AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                    alarm.setRepeating(AlarmManager.RTC_WAKEUP,
-                            cal.getTimeInMillis(), 15000L,
+                    Logger.error("locationUpdateIntent Executed 1");
+                    alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000*5L,
                             pintent);
+                    Logger.error("locationUpdateIntent Executed 2");
+                   *//**//* alarm.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis()+6000 ,
+                            pintent);*//**//*
+                       //Initially it was 5 min and change to 1 minute//
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            Logger.error("locationUpdateIntent Executed 3");
             startService(locationUpdateIntent);
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,11 +127,12 @@ public class SplashScreenActivity extends AbstractActivity {
     boolean IsAlarmSet() {
         return PendingIntent.getBroadcast(this, 0, locationUpdateIntent,
                 PendingIntent.FLAG_NO_CREATE) != null;
-    }
+    }*/
 
     private void goAhead() {
         DbHelper.init(activity.getApplicationContext());
         new CreateOrUpgradeDbTask(new DhbDbDelegate(), getApplicationContext()).execute();
+        Logger.error("locationUpdateIntent Executed 3");
     }
 
     private void fetchVersionControlDetails() {
@@ -271,7 +281,8 @@ public class SplashScreenActivity extends AbstractActivity {
     private class DhbDbDelegate implements CreateOrUpgradeDbTask.DbTaskDelegate {
         @Override
         public void dbTaskCompletedWithResult(Boolean result) {
-            StartLocationUpdateService();
+         //   StartLocationUpdateService();
+            startService(locationUpdateIntent);
             if (InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
                 switchToActivity(activity, LoginScreenActivity.class, new Bundle());
             } else {

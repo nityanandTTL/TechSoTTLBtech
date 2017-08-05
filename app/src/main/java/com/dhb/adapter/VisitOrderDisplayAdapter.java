@@ -188,15 +188,14 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (pos == 0) {
-                    if (!orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED") && !orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment"))
-                        {
+                    if (!orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED") && !orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")) {
 
-                            registerToggle(pos);
-                            holder.cell.toggle(false);
-                            initData(holder, pos);
-                        } else {
-                            Toast.makeText(activity, "Please accept the order first", Toast.LENGTH_SHORT).show();
-                        }
+                        registerToggle(pos);
+                        holder.cell.toggle(false);
+                        initData(holder, pos);
+                    } else {
+                        Toast.makeText(activity, "Please accept the order first", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
                 }
@@ -235,6 +234,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             holder.txtName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
             holder.txtName.setSelected(true);
             holder.txtSrNo.setText(pos + 1 + "");
+            holder.locationdata.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getLocation());
 
             holder.txt_distance.setText(String.valueOf(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getDistance()) + "KM");
             holder.txtKits.setText(String.valueOf(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits().get(0).getKit()));
@@ -279,50 +279,47 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             boolean isFasting = false;
             boolean isNonFasting = false;
             final ArrayList<String> benFastingDetails = new ArrayList<>();
-            for (OrderDetailsModel odm:
-                 orderVisitDetailsModelsArr.get(pos).getAllOrderdetails()) {
+            for (OrderDetailsModel odm :
+                    orderVisitDetailsModelsArr.get(pos).getAllOrderdetails()) {
                 for (BeneficiaryDetailsModel bdm :
                         odm.getBenMaster()) {
-                    if(bdm.getFasting().equalsIgnoreCase("Fasting")){
+                    if (bdm.getFasting().equalsIgnoreCase("Fasting")) {
                         isFasting = true;
-                    }else if(bdm.getFasting().equalsIgnoreCase("Non-Fasting")){
+                    } else if (bdm.getFasting().equalsIgnoreCase("Non-Fasting")) {
                         isNonFasting = true;
                     }
-                    benFastingDetails.add(""+bdm.getName()+" : "+bdm.getFasting());
+                    benFastingDetails.add("" + bdm.getName() + " : " + bdm.getFasting());
                 }
             }
-            if(isFasting&&isNonFasting){
+            if (isFasting && isNonFasting) {
                 holder.imgFastingStatus.setVisibility(View.VISIBLE);
                 holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_fasting_mix));
-            }
-            else if(isFasting&&!isNonFasting){
+            } else if (isFasting && !isNonFasting) {
                 holder.imgFastingStatus.setVisibility(View.VISIBLE);
                 holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_fasting));
-            }
-            else if(!isFasting&&isNonFasting){
+            } else if (!isFasting && isNonFasting) {
                 holder.imgFastingStatus.setVisibility(View.VISIBLE);
                 holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_non_fasting));
-            }
-            else{
+            } else {
                 holder.imgFastingStatus.setVisibility(View.INVISIBLE);
             }
             holder.imgFastingStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setTitle("Fasting Details")
-                                .setItems(benFastingDetails.toArray(new String[benFastingDetails.size()]), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setTitle("Fasting Details")
+                            .setItems(benFastingDetails.toArray(new String[benFastingDetails.size()]), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                    }
-                                })
-                                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).show();
+                                }
+                            })
+                            .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
                 }
             });
         }
@@ -422,7 +419,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
 
     private class FoldingCellViewHolder {
-        TextView tvSrNo, tvName, tvAge, txtAddress, txtorderno, txtKits, timedata, timetitle, txt_distance, pintitle, pindata, apptDate, apptDateValue;//tvAadharNo,
+        TextView tvSrNo, tvName, tvAge, txtAddress, txtorderno, txtKits, timedata, timetitle, txt_distance, pintitle, pindata, apptDate, apptDateValue,locationtitle,locationdata;//tvAadharNo,
         ImageView imgCBAccept;
         TextView txtSrNo, txtName, txtAge, txtAadharNo;
         ImageView imgRelease, imgRelease2, imgcall;
@@ -437,7 +434,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         private void initUI(View itemView) {
             imgFastingStatus = (ImageView) itemView.findViewById(R.id.title_fasting);
             imgcall = (ImageView) itemView.findViewById(R.id.call);
-
+            locationtitle = (TextView) itemView.findViewById(R.id.location_title);
+            locationdata = (TextView) itemView.findViewById(R.id.location_data);
             pintitle = (TextView) itemView.findViewById(R.id.pincode_title);
             pindata = (TextView) itemView.findViewById(R.id.pincode_data);
             cell = (FoldingCell) itemView.findViewById(R.id.item_folding_cell);
@@ -468,7 +466,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
             timedata.setVisibility(View.VISIBLE);
             timetitle.setVisibility(View.VISIBLE);
-
+            locationtitle.setVisibility(View.VISIBLE);
+            locationdata.setVisibility(View.VISIBLE);
             pintitle.setVisibility(View.VISIBLE);
             pindata.setVisibility(View.VISIBLE);
         }

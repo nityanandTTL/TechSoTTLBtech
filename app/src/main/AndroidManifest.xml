@@ -126,7 +126,9 @@
             android:name=".service.CheckPaymentResponseService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name=".service.LocationUpdateService" />
+        <service android:name=".service.LocationUpdateService"
+            android:enabled="true"
+            android:exported="true"/>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4612bbfb1ca95fe8479cf9d3baac76030f78672e" />
