@@ -143,7 +143,7 @@ public class HomeScreenFragment extends AbstractFragment {
             rootView = inflater.inflate(R.layout.fragment_home_screen, container, false);
             initUI();
             initData();
-            getCampDetailCount();
+          //  getCampDetailCount();
             initListeners();
 
         }

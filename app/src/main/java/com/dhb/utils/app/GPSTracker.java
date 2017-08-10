@@ -14,16 +14,19 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.dhb.R;
 import com.dhb.fragment.OLCPickupListDisplayFragment;
 import com.dhb.uiutils.AbstractActivity;
 import com.dhb.uiutils.AbstractFragment;
+import com.dhb.utils.api.Logger;
 
 import java.net.InetAddress;
 
@@ -54,10 +57,16 @@ public class GPSTracker extends Service implements LocationListener {
 
     public GPSTracker(Context context) {
         this.mContext = context;
+
         getLocation();
     }
 
     public Location getLocation() {
+        Logger.error("Thread is Executing2 ");
+        if ( Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission( mContext, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission( mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        }
         try {
             locationManager = (LocationManager) mContext
                     .getSystemService(LOCATION_SERVICE);
@@ -83,7 +92,9 @@ public class GPSTracker extends Service implements LocationListener {
                         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                         if (location != null) {
                             latitude = location.getLatitude();
+                            Logger.error("latitude"+latitude +"");
                             longitude = location.getLongitude();
+                            Logger.error("longitude"+longitude +"");
                         }
                     }
                 }

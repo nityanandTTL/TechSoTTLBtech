@@ -140,6 +140,9 @@ public class AbstractApiModel implements AppConstants {
 
     public String OLC_PICKUP_SUBMIT_SCAN_BARCODE = VERSION_API_URL + "/ScanPickup";
 
+    public String REMARKS = VERSION_API_URL + "/Masters/ReleaseRemarksMaster";
+
+
     public String ORDER_BOOKING = VERSION_API_URL + "/OrderBooking";
     public String CASH_DEPOSIT_ENTRY = VERSION_API_URL + "/CashDeposit/CashDepositEntry";
 

@@ -29,6 +29,7 @@ import com.dhb.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.dhb.models.api.response.PaymentModeMasterResponseModel;
 import com.dhb.models.api.response.PaymentProcessAPIResponseModel;
 import com.dhb.models.api.response.PaymentStartTransactionAPIResponseModel;
+import com.dhb.models.api.response.RemarksResponseModel;
 import com.dhb.models.api.response.SelfieUploadResponseModel;
 import com.dhb.models.api.response.SessionExpireModel;
 import com.dhb.models.api.response.Tsp_ScanBarcodeResponseModel;
@@ -689,6 +690,18 @@ public class ResponseParser implements AppConstants {
         slotModels = gson.fromJson(json, token.getType());
 //		}
         return slotModels;
+    }
+
+
+
+    public ArrayList<RemarksResponseModel> getRemarksResponseModel(String json, int statusCode) {
+        ArrayList<RemarksResponseModel> remarksResponseModels = null;
+//		if (!parseIntoError(json, statusCode)){
+        TypeToken<ArrayList<RemarksResponseModel>> token = new TypeToken<ArrayList<RemarksResponseModel>>() {
+        };
+        remarksResponseModels = gson.fromJson(json, token.getType());
+//		}
+        return remarksResponseModels;
     }
 
     //Fetch Bank Master Response parse:

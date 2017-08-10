@@ -29,6 +29,7 @@ import com.dhb.models.api.request.ResetPasswordRequestModel;
 import com.dhb.models.api.request.SelfieUploadRequestModel;
 import com.dhb.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.dhb.models.api.request.Tsp_Send_RequestModel;
+import com.dhb.utils.api.Logger;
 import com.dhb.utils.app.AppPreferenceManager;
 import com.google.gson.Gson;
 
@@ -1130,6 +1131,26 @@ public class AsyncTaskForRequest {
         }
         return apiCallAsyncTask;
     }
+
+
+    public ApiCallAsyncTask getremarksRequestAsyncTask() {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.REMARKS);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetching_payment_modes_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
     /*
 	 * Fetch Payment Pass Inputs Api Integration*/
 
@@ -1249,16 +1270,20 @@ public class AsyncTaskForRequest {
     public ApiCallAsyncTask getLocusPushGeoLocationRequestAsyncTask(LocusPushLocationRequestModel locusPushLocationRequestModel) {
         apiCallAsyncTask = null;
         try {
+            Logger.error("LOCUS");
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             String postJson = new Gson().toJson(locusPushLocationRequestModel);
             abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeaderLocus(AbstractApiModel.APPLICATION_JSON));
+            Logger.error("LOCUS2");
             abstractApiModel.setRequestUrl(abstractApiModel.LOCUS_PUSH_LOCATIONS_API + appPreferenceManager.getLoginResponseModel().getUserID() + "/location");
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+
+            Logger.error("LOCUS3");
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
-            apiCallAsyncTask.setProgressBarVisible(false);
+            apiCallAsyncTask.setProgressBarVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -16,12 +16,9 @@
         android:textSize="18sp"
         android:textStyle="bold"/>
 
-    <EditText
-        android:textSize="14sp"
-        android:hint="Please enter reason to release"
-        android:singleLine="true"
+    <Spinner
         android:padding="10dp"
-        android:id="@+id/edt_emark"
+        android:id="@+id/sp_remark"
         android:layout_weight="1"
         android:layout_margin="10dp"
         android:background="@android:color/white"
