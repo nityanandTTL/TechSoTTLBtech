@@ -228,17 +228,17 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             }
 
             holder.pindata.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getPincode());
+            holder.locationdata.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getLocation());
             holder.timedata.setText(orderVisitDetailsModelsArr.get(pos).getSlot() + "  HRS");
             holder.txtorderno.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
             holder.txtAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
             holder.txtName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
             holder.txtName.setSelected(true);
             holder.txtSrNo.setText(pos + 1 + "");
-            holder.locationdata.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getLocation());
+            Logger.error("LOcationnnn" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getLocation());
 
             holder.txt_distance.setText(String.valueOf(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getDistance()) + "KM");
             holder.txtKits.setText(String.valueOf(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits().get(0).getKit()));
-
             holder.txtAddress.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress());
 //            holder.tvAadharNo.setVisibility(View.GONE);
             holder.txtAadharNo.setVisibility(View.GONE);
@@ -419,7 +419,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
 
     private class FoldingCellViewHolder {
-        TextView tvSrNo, tvName, tvAge, txtAddress, txtorderno, txtKits, timedata, timetitle, txt_distance, pintitle, pindata, apptDate, apptDateValue,locationtitle,locationdata;//tvAadharNo,
+        TextView tvSrNo, tvName, tvAge, txtAddress, txtorderno, txtKits, timedata, timetitle, txt_distance, pintitle, pindata, apptDate, apptDateValue, locationtitle, locationdata;//tvAadharNo,
         ImageView imgCBAccept;
         TextView txtSrNo, txtName, txtAge, txtAadharNo;
         ImageView imgRelease, imgRelease2, imgcall;
@@ -435,7 +435,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             imgFastingStatus = (ImageView) itemView.findViewById(R.id.title_fasting);
             imgcall = (ImageView) itemView.findViewById(R.id.call);
             locationtitle = (TextView) itemView.findViewById(R.id.location_title);
-            locationdata = (TextView) itemView.findViewById(R.id.location_data);
+            locationdata = (TextView) itemView.findViewById(R.id.location_datas);
             pintitle = (TextView) itemView.findViewById(R.id.pincode_title);
             pindata = (TextView) itemView.findViewById(R.id.pincode_data);
             cell = (FoldingCell) itemView.findViewById(R.id.item_folding_cell);

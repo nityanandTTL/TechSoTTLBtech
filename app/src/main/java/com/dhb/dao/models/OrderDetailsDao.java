@@ -63,6 +63,7 @@ public class OrderDetailsDao {
     private String RECORD_STATUS = "recordStatus";
     private String SYNC_STATUS = "syncStatus";
     private String SYNC_ACTION = "syncAction";
+    private String LOCATION = "Location";
 
 
     //changes_22june2017
@@ -116,6 +117,7 @@ public class OrderDetailsDao {
         orderDetailsModel.setReportHC(cursor.getInt(cursor.getColumnIndex(REPORT_HC)));
         orderDetailsModel.setTestEdit(cursor.getString(cursor.getColumnIndex(IS_TEST_EDIT)).equals("1"));
         orderDetailsModel.setAddBen(cursor.getString(cursor.getColumnIndex(IS_ADD_BEN)).equals("1"));
+        orderDetailsModel.setLocation(cursor.getString(cursor.getColumnIndex(LOCATION)));
 
         TypeToken<ArrayList<KitsCountModel>> tokenBarcode = new TypeToken<ArrayList<KitsCountModel>>() {
         };
@@ -175,6 +177,7 @@ public class OrderDetailsDao {
         values.put(RECORD_STATUS, orderDetailsModel.getRecordStatus());
         values.put(SYNC_STATUS, orderDetailsModel.getSyncStatus());
         values.put(SYNC_ACTION, orderDetailsModel.getSyncAction());
+        values.put(LOCATION, orderDetailsModel.getLocation());
         return values;
     }
 
