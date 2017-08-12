@@ -19,7 +19,7 @@ android {
     buildToolsVersion '25.0.2'
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
-        applicationId "com.dhb"
+        applicationId "com.thyrocare"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 12
@@ -53,12 +53,12 @@ android {
     }
     productFlavors {
         BTECHdev {
-            applicationId = "com.dhb.btech.dev"
+            applicationId = "com.thyrocare.btech.dev"
             versionCode 12
             versionName "debug_1.0.10"
         }
         BTECHprod {
-            applicationId = "com.dhb.btech"
+            applicationId = "com.thyrocare.btech"
             versionCode 12
             versionName "1.0.10"
         }
