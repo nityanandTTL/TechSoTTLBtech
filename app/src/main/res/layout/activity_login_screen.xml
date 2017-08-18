@@ -10,7 +10,7 @@
     android:padding="@dimen/dp_10"
     android:gravity="center"
     android:weightSum="10"
-    tools:context="com.dhb.activity.LoginScreenActivity">
+    tools:context="com.thyrocare.activity.LoginScreenActivity">
     <ImageView
         android:layout_weight="5"
         android:id="@+id/logo"

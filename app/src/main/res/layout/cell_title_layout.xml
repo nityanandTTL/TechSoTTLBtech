@@ -237,7 +237,7 @@
             android:layout_toEndOf="@+id/title_from_to_dots"
             android:text="Pincode:"
             android:textSize="12sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/pincode_data"
@@ -251,7 +251,7 @@
             android:text="000000"
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/location_title"
@@ -263,7 +263,7 @@
             android:layout_toEndOf="@+id/title_from_to_dots"
             android:text="Location:"
             android:textSize="12sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/location_datas"
@@ -277,10 +277,10 @@
             android:text="Indiaaaaaaaaaaaaaaaaaaaaaa"
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
 
-      <!--  <TextView
+ <TextView
             android:id="@+id/tv_distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -293,7 +293,7 @@
             android:text="3KM"
             android:textColor="@android:color/darker_gray"
             android:textSize="18sp"
-            android:visibility="gone" />-->
+            android:visibility="gone" />
 
         <!-- 22june2017-->
         <TextView

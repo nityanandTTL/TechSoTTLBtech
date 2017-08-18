@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.dhb.activity.SelfieUploadActivity">
+    tools:context="com.thyrocare.activity.SelfieUploadActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -107,7 +107,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="0dp"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -115,7 +115,7 @@
                     android:id="@+id/btn_takePhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                   android:layout_centerHorizontal="true"
                     android:layout_margin="4dp"
                     android:background="@drawable/purple_btn_bg"
                     android:gravity="center"
@@ -129,7 +129,7 @@
                     android:id="@+id/btn_uploadPhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_margin="4dp"
                     android:background="@drawable/purple_btn_bg"
                     android:gravity="center"
@@ -139,6 +139,22 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
+                <Button
+                    android:id="@+id/btn_Logout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/purple_btn_bg"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/btn_takePhoto"
+                    android:minEms="8"
+                    android:text="Logout"
+                    android:layout_marginTop="30dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
