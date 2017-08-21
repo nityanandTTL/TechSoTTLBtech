@@ -1,6 +1,7 @@
 package com.thyrocare.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.thyrocare.adapter.SlotsDisplayAdapter;
 import com.thyrocare.delegate.SlotsSelectionDelegate;
 import com.thyrocare.fragment.HomeScreenFragment;
 import com.thyrocare.fragment.LeaveIntimationFragment;
+import com.thyrocare.fragment.TSP_SendFragment;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.data.SlotModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -135,6 +137,13 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
 
         }
     }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+        i.putExtra("LEAVEINTIMATION", "0");
+        startActivity(i);
+        activity.finish();
+    }
     //changes_5june2017
 
     private void initListeners() {
@@ -142,16 +151,16 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 //changes_5june2017
-                if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {
+             /*   if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
                     txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
                     txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                     llSlotsDisplay.setVisibility(View.VISIBLE);
                     isAvailable = true;
                     btnProceed.setVisibility(View.VISIBLE);
                     fetchData();
-                } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
+              /*  } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
                     Toast.makeText(activity, "User can schedule only once per day...Please try again later.", Toast.LENGTH_SHORT).show();
-                }
+                }*/
                 //changes_5june2017
             }
         });
@@ -313,13 +322,14 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
                 if (isAvailable) {
 
                     //changes_5june2017
-                    appPreferenceManager.setScheduleCounter("y");
+                  /*  appPreferenceManager.setScheduleCounter("y");
                     String scheduledDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                    appPreferenceManager.setScheduleDate(scheduledDate);
+                    appPreferenceManager.setScheduleDate(scheduledDate);*/
                     //changes_5june2017
-                    switchToActivity(activity, ScheduleYourDayActivity2.class, new Bundle());
-                    appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json, SetBtechAvailabilityAPIRequestModel.class));
+
+                  //  appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json, SetBtechAvailabilityAPIRequestModel.class));
                     appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
+                    switchToActivity(activity, ScheduleYourDaySecondIntentActivity.class, new Bundle());
 
                 }
 

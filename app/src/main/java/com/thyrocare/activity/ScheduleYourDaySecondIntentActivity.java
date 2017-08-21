@@ -1,6 +1,7 @@
 package com.thyrocare.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -68,7 +69,7 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_schedule_your_day1);
+        setContentView(R.layout.fragment_schedule_your_day2);
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
         today = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
@@ -323,8 +324,10 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
                         Logger.error("LOgeeererereeereMIllis" + String.valueOf(c.getTimeInMillis()));
 
 
-                        // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
-                        switchToActivity(activity, HomeScreenActivity.class, new Bundle());
+
+                        Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
                     } else {
                         switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
                     }
