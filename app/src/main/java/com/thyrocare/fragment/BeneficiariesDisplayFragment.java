@@ -1,11 +1,19 @@
 package com.thyrocare.fragment;
 
 
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +23,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.AddEditBeneficiaryDetailsActivity;
 import com.thyrocare.activity.OrderBookingActivity;
 import com.thyrocare.activity.PaymentsActivity;
 import com.thyrocare.adapter.BeneficiaryScreenSlidePagerAdapter;
+import com.thyrocare.adapter.VisitOrderDisplayAdapter;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.BeneficiaryDetailsDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
 import com.thyrocare.delegate.RefreshBeneficiariesSliderDelegate;
 import com.thyrocare.models.api.request.CartAPIRequestModel;
+import com.thyrocare.models.api.request.OrderAllocationTrackLocationRequestModel;
 import com.thyrocare.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.models.api.response.CartAPIResponseModel;
+import com.thyrocare.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.models.api.response.OrderBookingResponseBeneficiaryModel;
 import com.thyrocare.models.api.response.OrderBookingResponseOrderModel;
 import com.thyrocare.models.api.response.OrderBookingResponseVisitModel;
@@ -43,16 +55,28 @@ import com.thyrocare.models.data.OrderVisitDetailsModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
+import com.thyrocare.network.MyBroadcastReceiver;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.api.Logger;
+import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.InputUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import static android.R.attr.format;
+import static com.thyrocare.utils.api.NetworkUtils.isNetworkAvailable;
 
 public class BeneficiariesDisplayFragment extends AbstractFragment {
 
@@ -65,12 +89,13 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private Button btnProceedPayment;
     private OrderVisitDetailsModel orderVisitDetailsModel;
     private int totalAmountPayable = 0;
+    String newTimeaddTwoHrs, newTimeaddTwoHalfHrs;
     private int dotsCount;
     private ImageView[] dots;
     private BeneficiaryScreenSlidePagerAdapter beneficiaryScreenSlidePagerAdapter;
     private LinearLayout pagerIndicator;
     private BeneficiaryDetailsModel tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
-//    private OrderDetailsModel tempOrderDetailsModel = new OrderDetailsModel();
+    //    private OrderDetailsModel tempOrderDetailsModel = new OrderDetailsModel();
     private DhbDao dhbDao;
     private OrderDetailsDao orderDetailsDao;
     private BeneficiaryDetailsDao beneficiaryDetailsDao;
@@ -78,12 +103,20 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private OrderBookingResponseVisitModel orderBookingResponseVisitModel = new OrderBookingResponseVisitModel();
     private ArrayList<OrderBookingResponseBeneficiaryModel> orderBookingResponseBeneficiaryModelArr = new ArrayList<>();
     private LinearLayout llAddBeneficiary;
-
+    private String test;
+    public static String isPPBSTestRemoved = "normal";
+    public static String isINSPPTestRemoved = "normal";
+    public static String isFBSTestRemoved = "normal";
+    public static String isINSFATestRemoved = "normal";
+    boolean isOnlyWOE=false;
+    //neha g -----------
+    String datefrom_model = "";
+    //neha g -------------
     //changes_17june2017
     //private TextView title_add_beneficiary;
     //changes_17june2017
-
-
+    Date apitimeinHHMMFormat;
+    private boolean isFetchingOrders = false;
     public BeneficiariesDisplayFragment() {
         // Required empty public constructor
     }
@@ -115,28 +148,79 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_beneficiaries_display, container, false);
         initUI();
+
         initData();
+        if(totalAmountPayable>0){
+            Logger.error("totalAmountPayable if1 "+totalAmountPayable);
+            fetchOrderDetailByVisitRefreshAmountDue();
+        }else {
+            Logger.error("totalAmountPayable else1 "+totalAmountPayable);
+        }
+
+       // fetchDataOfVisitOrderForRefreshAmountDue();
         initListeners();
+
         return rootView;
     }
 
+    private void fetchOrderDetailByVisitRefreshAmountDue() {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsByVisitRequestAsyncTask(orderVisitDetailsModel.getVisitId());
+        fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsByVisitIdApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            if(!isFetchingOrders) {
+                isFetchingOrders = true;
+                fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
+            }
+        } else {
+            TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+
+        }
+    }
+
+    private void fetchDataOfVisitOrderForRefreshAmountDue() {
+
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask();
+        fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            if(!isFetchingOrders) {
+                isFetchingOrders = true;
+                fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
+            }
+        } else {
+            TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+
+        }
+    }
+
     private void initListeners() {
+
+
         llAddBeneficiary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
 
-                //   Toast.makeText(getActivity(),"Feature Coming Soon Stay tuned...... ",Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setTitle("Confirm Action")
-                        .setMessage("Do you want to add a new beneficiary?")
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                if (orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS)
+                        || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.INSPP)
+                        || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)) {
+                    //llAddBeneficiary.setEnabled(false);
+                    Toast.makeText(activity, "This "+orderBookingRequestModel.getBendtl().get(0).getTests()+" Test Here you cannot Add Benificary  ", Toast.LENGTH_SHORT).show();
+                    isOnlyWOE=true;
+                }else {
+                    //0   Toast.makeText(getActivity(),"Feature Coming Soon Stay tuned...... ",Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setTitle("Confirm Action")
+                            .setMessage("Do you want to add a new beneficiary?")
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
                         /*Logger.debug("orderVisitDetailsModel 1 :" + new Gson().toJson(orderVisitDetailsModel));
                         tempOrderDetailsModel.setOrderNo("TEMP_"+DeviceUtils.randomString(8));
                         tempOrderDetailsModel.setAddBen(true);
@@ -147,47 +231,51 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         Logger.debug("orderVisitDetailsModel 2 :" + new Gson().toJson(orderVisitDetailsModel));
                         ArrayList<BeneficiaryDetailsModel> beneficiaries = new ArrayList<BeneficiaryDetailsModel>();
 
-                        */tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
+                        */
+                            tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
 
-                        //**********************
+                            //**********************
 
 
-                        tempBeneficiaryDetailsModel.setFasting("");
-                        tempBeneficiaryDetailsModel.setAddBen(true);
-                        tempBeneficiaryDetailsModel.setTestEdit(false);
+                            tempBeneficiaryDetailsModel.setFasting("");
+                            tempBeneficiaryDetailsModel.setAddBen(true);
+                            tempBeneficiaryDetailsModel.setTestEdit(false);
 
-                        //**************************
-                        tempBeneficiaryDetailsModel.setOrderNo(orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderNo());
-                        tempBeneficiaryDetailsModel.setBenId((int) (Math.random() * 999));
-                        beneficiaryDetailsDao.insertOrUpdate(tempBeneficiaryDetailsModel);
+                            //**************************
+                            tempBeneficiaryDetailsModel.setOrderNo(orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderNo());
+                            tempBeneficiaryDetailsModel.setBenId((int) (Math.random() * 999));
+                            beneficiaryDetailsDao.insertOrUpdate(tempBeneficiaryDetailsModel);
                         /*
                         beneficiaries.add(tempBeneficiaryDetailsModel);
 
                         tempOrderDetailsModel.setBenMaster(beneficiaries);
                         orderDetailsDao.insertOrUpdate(tempOrderDetailsModel);*/
 
-                        OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
-                        orderDetailsModel = orderVisitDetailsModel.getAllOrderdetails().get(0);
-                        orderDetailsModel.setAddBen(true);
-                        orderDetailsModel.setTestEdit(false);
-                        orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                            OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
+                            orderDetailsModel = orderVisitDetailsModel.getAllOrderdetails().get(0);
+                            orderDetailsModel.setAddBen(true);
+                            orderDetailsModel.setTestEdit(false);
+                            orderDetailsDao.insertOrUpdate(orderDetailsModel);
 
-                        orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().add(tempBeneficiaryDetailsModel);
-                        orderVisitDetailsModel.getAllOrderdetails().get(0).setAddBen(true);
-                        orderVisitDetailsModel.getAllOrderdetails().get(0).setTestEdit(false);
-                        Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
-                        intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, tempBeneficiaryDetailsModel);
-                        intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderVisitDetailsModel.getAllOrderdetails().get(0));
-                        intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_ADD, true);
-                        intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_EDIT, false);
-                        startActivityForResult(intentEdit, BundleConstants.ADD_START);
-                    }
-                }).show();
+                            orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().add(tempBeneficiaryDetailsModel);
+                            orderVisitDetailsModel.getAllOrderdetails().get(0).setAddBen(true);
+                            orderVisitDetailsModel.getAllOrderdetails().get(0).setTestEdit(false);
+                            Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
+                            intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, tempBeneficiaryDetailsModel);
+                            intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderVisitDetailsModel.getAllOrderdetails().get(0));
+                            intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_ADD, true);
+                            intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_EDIT, false);
+                            startActivityForResult(intentEdit, BundleConstants.ADD_START);
+                        }
+                    }).show();
+                }
+
             }
         });
         btnProceedPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            Logger.error("btn proceed coming");
 
                 //changes_17june2017
                /* if (title_add_beneficiary.getText().equals("Next Beneficiary")) {
@@ -201,19 +289,86 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
                 OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
                 if (validate(orderBookingRequestModel)) {
-                    ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(orderBookingRequestModel);
-                    orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new OrderBookingAPIAsyncTaskDelegateResult());
-                    if (isNetworkAvailable(activity)) {
-                        orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
+                    Logger.error("Selcted testssssssss" + orderBookingRequestModel.getBendtl().get(0).getTests());
+
+
+
+                    if (orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS)
+                            || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.INSPP)
+                            || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP) ){
+
+                        //llAddBeneficiary.setEnabled(false);
+                        //Toast.makeText(activity, "This"+orderBookingRequestModel.getBendtl().get(0).getTests()+" Test Here you cannot Add Benificary  ", Toast.LENGTH_SHORT).show();
+                        Logger.error("for PPBS");
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setMessage("Payment already received. Please proceed")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        PaymentMode = 1;
+                                        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
+                                        ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
+
+                                        Logger.error("isINSPPTestRemoved status : " + isINSPPTestRemoved);
+                                        Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
+
+
+                                        workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
+                                        if (isNetworkAvailable(activity)) {
+                                            workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
+                                        } else {
+                                            Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).show();
+                        //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
+
+
+                        //neha g -----------------------------------
+                        CheckDelay();
+
+                        if(BundleConstants.delay!=0) {
+                            System.out.println("notify enter");
+                            showNotiication();
+
+//neha g---------------------
+                        }
                     } else {
-                        Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                        Logger.error("Other than PPBS");
+
+                        if (validate(orderBookingRequestModel)) {
+                            ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(orderBookingRequestModel);
+                            orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new OrderBookingAPIAsyncTaskDelegateResult());
+                            if (isNetworkAvailable(activity)) {
+                                orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
+                            } else {
+                                Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 }
+
+
             }
         });
     }
 
     private boolean validate(OrderBookingRequestModel orderBookingRequestModel) {
+        Logger.error("on btn proceed: "+AddEditBeneficiaryDetailsActivity.testEdit);
+
+
+
+
+
+
+
         for (BeneficiaryBarcodeDetailsModel barcodesModel :
                 orderBookingRequestModel.getBarcodedtl()) {
             if (InputUtils.isNull(barcodesModel.getBarcode())) {
@@ -230,12 +385,90 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 Toast.makeText(activity, "Please select atleast one test for " + bdm.getName(), Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if (bdm.getVenepuncture() == null) {
-                Toast.makeText(activity, "Please capture venepuncture image for " + bdm.getName(), Toast.LENGTH_SHORT).show();
+            if (bdm.getVenepuncture() == null
+                    ||bdm.getVenepuncture().toString().equalsIgnoreCase("null")||bdm.getVenepuncture().isEmpty()) {
+                Toast.makeText(activity, "Please capture Beneficiary Barcode image for " + bdm.getName(), Toast.LENGTH_SHORT).show();
                 return false;
+            }else {
+                Logger.error("bdm not null "+bdm.getVenepuncture());
             }
         }
         return true;
+    }
+    // neha g --------------------
+
+    private void showNotiication() { //TODO CHANGE MSG
+        AlarmManager alarmMgr = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(activity, MyBroadcastReceiver.class);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(activity, 0, intent, 0);
+        alarmMgr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), alarmIntent);
+    }
+
+    //neha g---------------------------
+
+    //neha g---------------------------
+
+    private void CheckDelay() {
+        int apptime= 0;
+        int hours = new Time(System.currentTimeMillis()).getHours();
+        int min = new Time(System.currentTimeMillis()).getMinutes();
+        String currTime = hours+":"+min;
+        System.out.println("currtime"+currTime); //17:39
+        datefrom_model=  BundleConstants.ShowTimeInNotificatn; //17:30
+        System.out.println();
+        try {
+            String[] timesplit = datefrom_model.split(":");
+
+            int slothr = Integer.parseInt(timesplit[0]);
+            int slotmin = Integer.parseInt(timesplit[1]);
+
+            int subhr = hours - slothr;
+            int submin = min - slotmin;
+            if(slotmin==00){
+                subhr= subhr-1;
+                submin=30;
+            }
+
+
+
+
+
+            System.out.println("sub min" + submin);
+            BundleConstants.delay = subhr + submin;
+            BundleConstants.DoneworkOrder=1;
+            appPreferenceManager.setDelay(subhr+submin);
+
+
+            System.out.println("dealy in order" + BundleConstants.delay);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //neha g ---------------------
+
+    private void dateCheck() {
+        //jai
+        //minus 30 min
+        Date strDate = null;
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("hh:mm:a");
+            Calendar cal = Calendar.getInstance();
+            Date currentTime = cal.getTime();
+            Logger.error(">> " + currentTime);
+            Calendar cal1 = Calendar.getInstance();
+            cal1.setTime(currentTime);
+            cal1.add(Calendar.HOUR, +2);
+            Calendar cal2 = Calendar.getInstance();
+            cal2.setTime(currentTime);
+            cal2.add(Calendar.MINUTE, +150);
+            newTimeaddTwoHrs = df.format(cal1.getTime());
+            newTimeaddTwoHalfHrs = df.format(cal2.getTime());
+            Logger.error(">> ....." + newTimeaddTwoHrs);
+            Logger.error(">> ....." + newTimeaddTwoHalfHrs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private OrderBookingRequestModel generateOrderBookingRequestModel(String from) {
@@ -248,11 +481,19 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         orderBookingDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
         ArrayList<OrderDetailsModel> ordtl = new ArrayList<>();
         ordtl = orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId());
+        String Slot = orderVisitDetailsModel.getSlot();
+        Logger.error("Slot" + Slot);
+        dateCheck();
         if (from.equals("Button_proceed_payment")) {
             for (int i = 0; i < ordtl.size(); i++) {
                 ordtl.get(i).setAddBen(false);
 
             }
+        }
+        Logger.error("tejas Amount when order booking "+totalAmountPayable);
+        for (int i = 0; i < ordtl.size(); i++) {
+            ordtl.get(i).setAmountDue(totalAmountPayable);
+            ordtl.get(i).setAmountPayable(totalAmountPayable);
         }
         orderBookingDetailsModel.setOrddtl(ordtl);
         orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
@@ -333,16 +574,24 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
 
         // Here #############################################################################################
+
+
+
         vpBeneficiaries.removeAllViews();
         vpBeneficiaries.clearOnPageChangeListeners();
         totalAmountPayable = 0;
         Logger.debug(orderVisitDetailsModel.getVisitId());
         orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
-        for (OrderDetailsModel orderDetailsModel :orderVisitDetailsModel.getAllOrderdetails()) {
+        for (OrderDetailsModel orderDetailsModel : orderVisitDetailsModel.getAllOrderdetails()) {
             totalAmountPayable = totalAmountPayable + orderDetailsModel.getAmountPayable();
         }
 
-        txtAmtPayable.setText("" + totalAmountPayable + "/-");
+        if(isOnlyWOE){
+            txtAmtPayable.setText("0/-");
+        }else {
+            txtAmtPayable.setText("" + totalAmountPayable + "/-");
+        }
+
         if (totalAmountPayable == 0) {
             btnProceedPayment.setText("Submit Work Order");
         } else {
@@ -359,7 +608,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             Toast.makeText(activity, "No beneficiaries found", Toast.LENGTH_SHORT).show();
             activity.finish();
         }
-        beneficiaryScreenSlidePagerAdapter = new BeneficiaryScreenSlidePagerAdapter(getFragmentManager(), activity, beneficiariesArr, orderVisitDetailsModel.getAllOrderdetails(), new RefreshBeneficiariesSliderDelegate() {
+        beneficiaryScreenSlidePagerAdapter = new BeneficiaryScreenSlidePagerAdapter(getFragmentManager(), activity, beneficiariesArr,
+                orderVisitDetailsModel.getAllOrderdetails(), new RefreshBeneficiariesSliderDelegate() {
             @Override
             public void onRefreshActionCallbackReceived(OrderVisitDetailsModel orderVisitDetails) {
                 CartAPIRequestModel cartAPIRequestModel = new CartAPIRequestModel();
@@ -413,6 +663,20 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 break;
             }
         }*/
+
+
+        //jai
+        OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
+        orderDetailsModel = orderVisitDetailsModel.getAllOrderdetails().get(0);
+        if (orderDetailsModel.isEditOrder()){
+            llAddBeneficiary.setEnabled(true);
+            Logger.error("isEditOrder "+orderDetailsModel.isEditOrder());
+        }else {
+            llAddBeneficiary.setEnabled(false);
+            Logger.error("isEditOrder "+orderDetailsModel.isEditOrder());
+        }
+        //jai
+
     }
 
     @Override
@@ -423,7 +687,23 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         llAddBeneficiary = (LinearLayout) rootView.findViewById(R.id.ll_add_beneficiary);
         txtAmtPayable = (TextView) rootView.findViewById(R.id.title_amt_payable);
         pagerIndicator = (LinearLayout) rootView.findViewById(R.id.viewPagerCountDots);
+        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
 
+        Logger.error("Selcted testssssssss" + orderBookingRequestModel.getBendtl().get(0).getTests());
+
+        for (int i = 0; i <orderBookingRequestModel.getBendtl().size() ; i++) {
+            test=test+orderBookingRequestModel.getBendtl().get(i).getTests().toString();
+        }
+        Logger.error("string test "+test);
+       // test = orderBookingRequestModel.getBendtl().get(0).getTests().toString();
+
+        if (orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS)||
+                orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.INSPP)||
+                orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)) {
+            llAddBeneficiary.setEnabled(false);
+            isOnlyWOE=true;
+
+        }
         //changes_17june2017
         //title_add_beneficiary = (TextView) rootView.findViewById(R.id.title_add_beneficiary);
         //changes_17june2017
@@ -509,7 +789,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                     CartRequestBeneficiaryModel crbm = new CartRequestBeneficiaryModel();
                     crbm.setOrderNo(order.getOrderNo());
                     crbm.setAddben(ben.isAddBen());
-                    crbm.setBenId(ben.getBenId()+"");
+                    crbm.setBenId(ben.getBenId() + "");
                     crbm.setTestEdit(ben.isTestEdit());
                     if (!InputUtils.isNull(ben.getProjId())) {
                         crbm.setTests(ben.getProjId() + "," + ben.getTestsCode());
@@ -621,10 +901,47 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         return orderBookingRequestModel;
     }
 
+    private void SendinglatlongOrderAllocation() {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        OrderAllocationTrackLocationRequestModel orderAllocationTrackLocationRequestModel = new OrderAllocationTrackLocationRequestModel();
+
+        orderAllocationTrackLocationRequestModel.setVisitId(orderVisitDetailsModel.getVisitId());
+        orderAllocationTrackLocationRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
+        orderAllocationTrackLocationRequestModel.setStatus(5);
+        orderAllocationTrackLocationRequestModel.setLatitude(appPreferenceManager.getLatitude());
+        orderAllocationTrackLocationRequestModel.setLongitude(appPreferenceManager.getLongitude());
+
+        ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderAllocationpost(orderAllocationTrackLocationRequestModel);
+        orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderAllocationTrackLocationiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
+
+        } else {
+            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class OrderAllocationTrackLocationiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                Logger.error("" + json);
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
     private class OrderBookingAPIAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
+
+                SendinglatlongOrderAllocation();
+
                 orderBookingResponseVisitModel = new ResponseParser(activity).getOrderBookingAPIResponse(json, statusCode);
                 for (OrderBookingResponseOrderModel obrom :
                         orderBookingResponseVisitModel.getOrderids()) {
@@ -636,6 +953,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (btnProceedPayment.getText().equals("Proceed for Payment")) {
+
                                     final String[] paymentItems = new String[]{"Cash", "Digital"};
                                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                                     builder.setTitle("Choose Payment Mode")
@@ -643,6 +961,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     if (paymentItems[which].equals("Cash")) {
+
                                                         AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
                                                         builder1.setMessage("Confirm Amount Received ₹ " + totalAmountPayable + "")
                                                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -651,6 +970,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                                         PaymentMode = 1;
                                                                         OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
                                                                         ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
+
+                                                                        Logger.error("isINSPPTestRemoved status : " + isINSPPTestRemoved);
+                                                                        Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
+
+
+
                                                                         workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
                                                                         if (isNetworkAvailable(activity)) {
                                                                             workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
@@ -669,6 +994,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                     } else {
                                                         PaymentMode = 2;
                                                         Intent intentPayments = new Intent(activity, PaymentsActivity.class);
+                                                        Logger.error("tejastotalAmountPayableatsending "+totalAmountPayable);
                                                         intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
                                                         intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 2);
                                                         intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO, orderVisitDetailsModel.getVisitId());
@@ -722,19 +1048,138 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
+
+                //show notification
+
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Order Status")
                         .setMessage("Work Order Entry Successful!\nPlease note Ref Id - " + orderVisitDetailsModel.getVisitId() + " for future references.")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                activity.finish();
+
+                             /*   if (test.toUpperCase().contains("PPBS") && test.toUpperCase().contains("FBS"))  {*/
+                                //  llAddBeneficiary.setEnabled(false);
+                                Logger.error("isPPBSTestRemoved status : " + isPPBSTestRemoved);
+                                Logger.error("isINSPPTestRemoved status : " + isINSPPTestRemoved);
+                                Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
+                                Logger.error("test123 : " + test.toUpperCase());
+
+                                if(test.toUpperCase().contains(AppConstants.PPBS)){
+                                    Logger.error("contains PPBS : " );
+                                }else {
+                                    Logger.error("not contains PPBS : " );
+                                }
+                                if(test.toUpperCase().contains(AppConstants.FBS)){
+                                    Logger.error("contains FBS : " );
+                                }else {
+                                    Logger.error("not contains FBS : " );
+                                }
+
+
+                               if(test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
+                                       && /*jai*/isPPBSTestRemoved.equals("normal")&&test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA")
+                                       && /*jai*/isINSPPTestRemoved.equals("normal"))
+
+                               {
+                                   if (!isINSFATestRemoved.equals("removed")&&!isFBSTestRemoved.equals("removed")){
+                                       Logger.error("should print revisit dialog for both: " );
+                                       Logger.error("for both");
+                                       AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                       builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS and INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                               .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                   @Override
+                                                   public void onClick(DialogInterface dialog, int which) {
+
+                                                       activity.finish();
+
+
+                                                   }
+                                               })
+                                               .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                   @Override
+                                                   public void onClick(DialogInterface dialog, int which) {
+                                                       dialog.dismiss();
+                                                   }
+                                               })
+                                               .setCancelable(false)
+                                               .show();
+                                   }
+
+                               }
+
+                                  else if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
+                                        && /*jai*/isPPBSTestRemoved.equals("normal")) {
+
+                                    Logger.error("isFBSTestRemoved status : " + isFBSTestRemoved);
+                                    if (!isFBSTestRemoved.equals("removed")){
+
+                                        Logger.error("should print revisit dialog for fbs: " );
+
+                                        Logger.error("for PPBS");
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                        builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                        activity.finish();
+
+
+                                                    }
+                                                })
+                                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                })
+                                                .setCancelable(false)
+                                                .show();
+                                    }
+                                    //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
+                                } else if (test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA")
+                                        && /*jai*/isINSPPTestRemoved.equals("normal")) {
+
+                                    Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
+                                    if (!isINSFATestRemoved.equals("removed")){
+
+                                        Logger.error("should print revisit dialog for insfa: " );
+
+                                        Logger.error("for INSPP");
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                        builder.setMessage("Please note you have to revisit at customer place to collect sample for INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                        activity.finish();
+
+
+                                                    }
+                                                })
+                                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                })
+                                                .setCancelable(false)
+                                                .show();
+                                    }
+                                    //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
+                                } else {
+                                    Logger.error("testcode in else "+test.toUpperCase());
+                                    activity.finish();
+                                }
+
                             }
                         })
                         .create()
                         .show();
             } else {
-                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Order Status")
                         .setMessage("Work Order Entry Failed!")
@@ -792,13 +1237,145 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 Toast.makeText(activity, "Failed to fetch updated Payment Details", Toast.LENGTH_SHORT).show();
             }
             initData();
+            if(totalAmountPayable>0){
+                Logger.error("totalAmountPayable if2 "+totalAmountPayable);
+                fetchOrderDetailByVisitRefreshAmountDue();
+            }else {
+                Logger.error("totalAmountPayable else2 "+totalAmountPayable);
+            }
+
+           // fetchDataOfVisitOrderForRefreshAmountDue();
         }
 
         @Override
         public void onApiCancelled() {
             Toast.makeText(activity, "Failed to fetch updated Payment Details", Toast.LENGTH_SHORT).show();
             initData();
+            if(totalAmountPayable>0){
+                Logger.error("totalAmountPayable if3 "+totalAmountPayable);
+                fetchOrderDetailByVisitRefreshAmountDue();
+            }else {
+                Logger.error("totalAmountPayable else3 "+totalAmountPayable);
+            }
+
+           // fetchDataOfVisitOrderForRefreshAmountDue();
         }
     }
 
+    private class FetchOrderDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+
+            if (statusCode == 200) {
+
+                //jai
+                JSONObject jsonObject=new JSONObject(json);
+
+                Logger.error("tejas0");
+
+                ResponseParser responseParser = new ResponseParser(activity);
+                FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = new FetchOrderDetailsResponseModel();
+                fetchOrderDetailsResponseModel = responseParser.getFetchOrderDetailsResponseModel(json, statusCode);
+                if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
+                    Logger.error("tejas1");
+                    for (OrderVisitDetailsModel orderVisitDetailsModel :
+                            fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
+                        Logger.error("tejas2");
+
+                        if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+                            Logger.error("tejas3");
+                            Logger.error("tejas4 "+VisitOrderDisplayAdapter.posForAmountDue);
+
+                            for (OrderDetailsModel orderDetailsModel :
+                                    orderVisitDetailsModel.getAllOrderdetails()) {
+                                Logger.error("tejas5 "+orderDetailsModel.getAmountDue());
+                            }
+
+
+                            totalAmountPayable=orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue();
+                            Logger.error("tttejas1 "+orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
+
+
+
+
+                            txtAmtPayable.setText(""+orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
+
+
+/*
+ totalAmountPayable=orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue-1).getAmountDue();
+                            Logger.error("tttejas1 "+orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue-1).getAmountDue());
+                            txtAmtPayable.setText(""+orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue-1).getAmountDue());
+*/
+
+                            for (OrderDetailsModel orderDetailsModel :
+                                    orderVisitDetailsModel.getAllOrderdetails()) {
+                                orderDetailsModel.setAmountPayable(orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue).getAmountDue());
+                                Logger.error("tttejas2 "+orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue).getAmountDue());
+                                txtAmtPayable.setText(""+orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue).getAmountDue());
+                            }
+
+                            /*txtAmtPayable.setText("" + totalAmountPayable + "/-");
+                            if (totalAmountPayable == 0) {
+                                btnProceedPayment.setText("Submit Work Order");
+                            } else {
+                                btnProceedPayment.setText("Proceed for Payment");
+                            }
+*/
+
+
+
+                        }
+                    }
+                }
+
+
+            }
+            //  isFetchingOrders = false;
+            //initData();
+        }
+
+        @Override
+        public void onApiCancelled() {
+            // isFetchingOrders = false;
+            TastyToast.makeText(activity, getString(R.string.network_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            //  Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+        }
+        /*
+
+         */
+    }
+
+    private class FetchOrderDetailsByVisitIdApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            Logger.error("OrderDetailsByVisitIdApiAsyncTaskDelegateResult "+json);
+            JSONObject jsonObject =new JSONObject(json);
+
+            JSONArray orderVisitDetailsArray=jsonObject.getJSONArray("orderVisitDetails");
+            JSONObject orderVisitDetailsObject=orderVisitDetailsArray.getJSONObject(0);
+            JSONArray allOrderdetailsArray=orderVisitDetailsObject.getJSONArray("allOrderdetails");
+            JSONObject allOrderdetailsObject=allOrderdetailsArray.getJSONObject(0);
+           // Logger.error("a123mount "+allOrderdetailsObject.getString("AmountDue"));
+
+            Logger.error("a123mount int "+allOrderdetailsObject.getInt("AmountDue"));
+
+            totalAmountPayable=jsonObject.getInt("AmountDue");
+
+            Logger.error("tttejas1 "+totalAmountPayable);
+            if(isOnlyWOE){
+                txtAmtPayable.setText("0/-");
+            }else {
+                txtAmtPayable.setText(""+totalAmountPayable);
+            }
+
+
+
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
 }

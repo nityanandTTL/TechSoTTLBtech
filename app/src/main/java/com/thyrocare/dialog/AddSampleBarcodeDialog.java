@@ -3,15 +3,19 @@ package com.thyrocare.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thyrocare.R;
 import com.thyrocare.delegate.AddSampleBarcodeDialogDelegate;
+import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.InputUtils;
 
 
@@ -25,13 +29,16 @@ public class AddSampleBarcodeDialog extends Dialog {
 	private Button btnDone;
 	private AddSampleBarcodeDialog addSampleBarcodeDialog;
 	private AddSampleBarcodeDialogDelegate addSampleBarcodeDialogDelegate;
+	private LinearLayout ll_test_color;
+	private String  sampleType;
 
-	public AddSampleBarcodeDialog(Activity activity, AddSampleBarcodeDialogDelegate addSampleBarcodeDialogDelegate) {
+	public AddSampleBarcodeDialog(String currentScanSampleType,Activity activity, AddSampleBarcodeDialogDelegate addSampleBarcodeDialogDelegate) {
 		super(activity);
 		this.activity = activity;
 		addSampleBarcodeDialog = this;
 		this.addSampleBarcodeDialogDelegate = addSampleBarcodeDialogDelegate;
 		this.setCanceledOnTouchOutside(false);
+		this.sampleType=currentScanSampleType;
 	}
 
 	@Override
@@ -49,23 +56,52 @@ public class AddSampleBarcodeDialog extends Dialog {
 		txtConfirmBarcodeValue = (TextView) findViewById(R.id.txt_confirm_barcode_value);
 		txtTitle = (TextView) findViewById(R.id.txt_title);
 		btnDone = (Button) findViewById(R.id.btn_done);
+		ll_test_color=(LinearLayout)findViewById(R.id.ll_test_color);
+
+		if(sampleType.equals("SERUM")){
+			ll_test_color.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.bg_sample_type_serum));
+		}else if(sampleType.equals("EDTA")){
+			ll_test_color.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.bg_sample_type_edta));
+		}else if(sampleType.equals("FLUORIDE")){
+			ll_test_color.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+		}else if(sampleType.equals("HEPARIN")){
+			ll_test_color.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.bg_sample_type_heparin));
+		}else if(sampleType.equals("URINE")){
+			ll_test_color.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.bg_sample_type_urine));
+		}else if(sampleType.equals("FLUORIDE-F")){
+			ll_test_color.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+		}else if(sampleType.equals("FLUORIDE-PP")){
+			ll_test_color.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+		}
+
 		setListener();
 	}
 
 	private void setListener() {
 		btnDone.setOnClickListener(new DoneBtnClickListener());
+
+
+
+
 	}
 
 	private class DoneBtnClickListener implements View.OnClickListener {
 		@Override
 		public void onClick(View v) {
-			if (!isFieldValid(etBarcodeValue.getText().toString())){
+
+
+
+
+			if (!isFieldValid(etBarcodeValue.getText().toString()) ||etBarcodeValue.getText().toString().startsWith("0") || etBarcodeValue.getText().toString().startsWith("$")){
 				Toast.makeText(activity, activity.getResources().getString(R.string.alert_invalid_barcode_value), Toast.LENGTH_SHORT).show();
-			}else if ( !isFieldValid(etConfirmBarcodeValue.getText().toString())){
+			}else if ( !isFieldValid(etConfirmBarcodeValue.getText().toString())||etConfirmBarcodeValue.getText().toString().startsWith("0") || etConfirmBarcodeValue.getText().toString().startsWith("$")){
 				Toast.makeText(activity,  activity.getResources().getString(R.string.re_enter_barcode), Toast.LENGTH_SHORT).show();
-			} else if (!etBarcodeValue.getText().toString().equalsIgnoreCase(etConfirmBarcodeValue.getText().toString())){
+			} else if (!etBarcodeValue.getText().toString().equals(etConfirmBarcodeValue.getText().toString())){
 				Toast.makeText(activity, activity.getResources().getString(R.string.alert_unmatched_barcode_values), Toast.LENGTH_SHORT).show();
-			}  else {
+			}
+
+
+			else {
 				InputUtils.hideKeyboard(activity,v);
 				addSampleBarcodeDialog.dismiss();
 				addSampleBarcodeDialogDelegate.onSampleBarcodeAdded(etBarcodeValue.getText().toString());
@@ -75,8 +111,14 @@ public class AddSampleBarcodeDialog extends Dialog {
 }
 
 	private boolean isFieldValid(String text) {
-		if (!InputUtils.isNull(text)&&text.length()==8)
+
+
+
+
+		if (!InputUtils.isNull(text)&&text.length()==8){
 			return true;
+		}
+
 		return false;
 	}
 

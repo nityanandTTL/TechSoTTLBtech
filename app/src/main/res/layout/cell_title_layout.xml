@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,6 +13,7 @@
 
     <!-- LEFT TITLE PART -->
     <RelativeLayout
+        android:id="@+id/mainleft"
         android:layout_width="match_parent"
         android:layout_height="175dp"
         android:layout_weight="3"
@@ -67,313 +69,331 @@
 
     </RelativeLayout>
     <!-- RIGHT TITLE PART -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@color/bgTitleRight"
-        android:paddingBottom="@dimen/dp_5"
-        android:paddingEnd="@dimen/dp_5"
-        android:paddingStart="@dimen/dp_5"
-        android:paddingTop="@dimen/dp_10">
-
-        <ImageView
-            android:id="@+id/title_from_to_dots"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="-8dp"
-            android:src="@drawable/user_profile" />
-
-        <TextView
-            android:id="@+id/txt_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/title_from_to_dots"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:freezesText="true"
-            android:gravity="center"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="Rehan Khan"
-            android:textColor="@color/colorPrimary"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txt_age"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title_from_to_dots"
-            android:layout_toEndOf="@+id/title_from_to_dots"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:singleLine="true"
-            android:text="50 Y | Male"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/title_aadhar_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/oderno_title"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/aadhar_icon"
-            android:visibility="gone" />
-
-        <TextView
-            android:gravity="center"
-            android:id="@+id/txt_aadhar_no"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/oderno_title"
-            android:layout_marginTop="@dimen/dp_5"
-            android:layout_toEndOf="@+id/title_aadhar_icon"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:paddingTop="5dp"
-            android:singleLine="true"
-            android:text=""
-            android:textColor="@android:color/darker_gray"
-            android:textSize="16sp"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/title_distance_icon"
-            android:layout_width="@dimen/dp_20"
-            android:layout_height="@dimen/dp_20"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/txt_age"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/location_track_icon"
-            android:visibility="invisible" />
-
-        <ImageView
-            android:id="@+id/title_fasting"
-            android:layout_width="@dimen/dp_15"
-            android:layout_height="@dimen/dp_15"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/txt_age"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/location_track_icon"
-            android:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/oderno_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/txt_age"
-            android:layout_marginLeft="50dp"
-            android:layout_toEndOf="@+id/title_from_to_dots"
-            android:text="Order-No"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/tv_orderno"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/oderno_title"
-            android:layout_below="@+id/txt_age"
-            android:layout_marginLeft="70dp"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:freezesText="true"
-            android:gravity="center"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="12345678"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"
-            android:visibility="visible" />
-
-        <TextView
-            android:id="@+id/time_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/oderno_title"
-            android:layout_marginLeft="50dp"
-            android:layout_toEndOf="@+id/title_from_to_dots"
-            android:text="Appt.Slot"
-            android:textSize="12sp"
-            android:visibility="gone"
-
-            />
-
-        <TextView
-            android:id="@+id/time_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/time_title"
-            android:layout_below="@+id/tv_orderno"
-            android:layout_marginLeft="70dp"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:text="00:00"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"
-            android:visibility="gone" />
 
 
-        <TextView
-            android:id="@+id/pincode_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/time_data"
-            android:layout_marginLeft="50dp"
-            android:layout_toEndOf="@+id/title_from_to_dots"
-            android:text="Pincode:"
-            android:textSize="12sp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/pincode_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/time_title"
-            android:layout_below="@+id/time_data"
-            android:layout_marginLeft="70dp"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:text="000000"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/location_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/pincode_data"
-            android:layout_marginLeft="50dp"
-            android:layout_toEndOf="@+id/title_from_to_dots"
-            android:text="Location:"
-            android:textSize="12sp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/location_datas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/time_title"
-            android:layout_below="@+id/pincode_data"
-            android:layout_marginLeft="70dp"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:text="Indiaaaaaaaaaaaaaaaaaaaaaa"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"
-            android:visibility="gone" />
-
-
- <TextView
-            android:id="@+id/tv_distance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_age"
-            android:layout_toEndOf="@+id/title_distance_icon"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:paddingTop="15dp"
-            android:singleLine="true"
-            android:text="3KM"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="18sp"
-            android:visibility="gone" />
-
-        <!-- 22june2017-->
-        <TextView
-            android:id="@+id/apptdate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/location_datas"
-            android:layout_marginLeft="50dp"
-            android:layout_toEndOf="@+id/title_from_to_dots"
-            android:text="Appt.Date"
-            android:textSize="12sp"
-            android:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/apptdateValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/location_datas"
-            android:layout_marginLeft="120dp"
-            android:layout_toRightOf="@+id/apptdate"
-            android:text="dd/MM/yyyy"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"
-            android:visibility="invisible" />
-        <!--22june2017-->
-
-        <ImageView
-            android:id="@+id/title_svSeparator"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/mainright"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/txt_aadhar_no"
-            android:layout_toEndOf="@+id/tv_distance"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
-            android:src="@drawable/vseparator"
-            android:visibility="gone" />
+            android:background="@color/bgTitleRight"
+            android:paddingBottom="@dimen/dp_5"
+            android:layout_weight="1"
+            android:paddingEnd="@dimen/dp_5"
+            android:paddingStart="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_10">
 
-        <ImageView
-            android:id="@+id/title_kits_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@+id/title_aadhar_icon"
-            android:layout_marginEnd="10dp"
-            android:layout_toEndOf="@+id/title_svSeparator"
-            android:src="@drawable/kit_icon"
-            android:visibility="gone" />
+            <ImageView
+                android:id="@+id/title_from_to_dots"
+                android:layout_width="20dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="-8dp"
+                android:src="@drawable/userprofile" />
 
-        <TextView
-            android:id="@+id/tv_kits"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_aadhar_no"
-            android:layout_toEndOf="@+id/title_kits_icon"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:paddingTop="15dp"
-            android:singleLine="true"
-            android:text="BSV Kit"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="18sp"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/title_from_to_dots"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:freezesText="true"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Rehan Khan"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/img_edit"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/edit_order_icon"
-            android:visibility="invisible" />
+            <TextView
+                android:id="@+id/txt_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title_from_to_dots"
+                android:layout_toEndOf="@+id/title_from_to_dots"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:singleLine="true"
+                android:text="50 Y | Male"
+                android:textColor="@color/celltext"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/img_release2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/release_order"
-            android:layout_alignParentBottom="true"
-            android:layout_toEndOf="@+id/tv_kits" />
+            <ImageView
+                android:id="@+id/title_aadhar_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/oderno_title"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/aadhar_icon"
+                android:visibility="gone" />
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/txt_aadhar_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/oderno_title"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_toEndOf="@+id/title_aadhar_icon"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/celltext"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/title_distance_icon"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/txt_age"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/location_track_icon"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/title_fasting"
+                android:layout_width="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/txt_age"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/location_track_icon"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/oderno_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/txt_age"
+                android:layout_marginLeft="50dp"
+                android:layout_toEndOf="@+id/title_from_to_dots"
+                android:text="Order-No"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_orderno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/oderno_title"
+                android:layout_below="@+id/txt_age"
+                android:layout_marginLeft="70dp"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:freezesText="true"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="12345678"
+                android:textColor="@color/celltext"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/time_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/oderno_title"
+                android:layout_marginLeft="50dp"
+                android:layout_toEndOf="@+id/title_from_to_dots"
+                android:text="Appt.Slot"
+                android:textSize="12sp"
+                android:visibility="gone"
+
+                />
+
+            <TextView
+                android:id="@+id/time_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/time_title"
+                android:layout_below="@+id/tv_orderno"
+                android:layout_marginLeft="70dp"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:text="00:00"
+                android:textColor="@color/celltext"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+
+            <TextView
+                android:id="@+id/pincode_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/time_data"
+                android:layout_marginLeft="50dp"
+                android:layout_toEndOf="@+id/title_from_to_dots"
+                android:text="Pincode:"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/pincode_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/time_title"
+                android:layout_below="@+id/time_data"
+                android:layout_marginLeft="70dp"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:text="000000"
+                android:textColor="@color/celltext"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/location_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/pincode_data"
+                android:layout_marginLeft="50dp"
+                android:layout_toEndOf="@+id/title_from_to_dots"
+                android:text="Address:"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/location_datas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/time_title"
+                android:layout_below="@+id/pincode_data"
+                android:layout_marginLeft="70dp"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:fadingEdge="horizontal"
+                android:text="Indiaaaaaaaaaaaaaaaaaaaaaa"
+                android:textColor="@color/celltext"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+
+            <TextView
+                android:id="@+id/tv_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_age"
+                android:layout_toEndOf="@+id/title_distance_icon"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:paddingTop="15dp"
+                android:singleLine="true"
+                android:text="3KM"
+                android:textColor="@color/celltext"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <!-- 22june2017-->
+            <TextView
+                android:id="@+id/apptdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/location_datas"
+                android:layout_marginLeft="50dp"
+                android:layout_toEndOf="@+id/title_from_to_dots"
+                android:text="Appt.Date"
+                android:textSize="12sp"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/apptdateValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/location_datas"
+                android:layout_marginLeft="120dp"
+                android:layout_toRightOf="@+id/apptdate"
+                android:text="dd/MM/yyyy"
+                android:textColor="@color/celltext"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+            <!--22june2017-->
+
+            <ImageView
+                android:id="@+id/title_svSeparator"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/txt_aadhar_no"
+                android:layout_toEndOf="@+id/tv_distance"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp"
+                android:src="@drawable/vseparator"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/title_kits_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/title_aadhar_icon"
+                android:layout_marginEnd="10dp"
+                android:layout_toEndOf="@+id/title_svSeparator"
+                android:src="@drawable/kit_icon"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_kits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_aadhar_no"
+                android:layout_toEndOf="@+id/title_kits_icon"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:paddingTop="15dp"
+                android:singleLine="true"
+                android:text="BSV Kit"
+                android:textColor="@color/celltext"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/img_edit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/edit_order_icon"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/img_release2"
+                android:layout_width="40dp"
+                android:layout_height="20dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toEndOf="@+id/tv_kits"
+                android:src="@drawable/trash" />
+
+        </RelativeLayout>
+
+
+
 </LinearLayout>

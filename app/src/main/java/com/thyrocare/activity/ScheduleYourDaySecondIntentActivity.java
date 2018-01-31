@@ -1,5 +1,8 @@
 package com.thyrocare.activity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.adapter.SlotsDisplayAdapter;
 import com.thyrocare.delegate.SlotsSelectionDelegate;
@@ -20,14 +24,17 @@ import com.thyrocare.models.data.SlotModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
+import com.thyrocare.network.MyBroadcastReceiver;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
 
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -161,10 +168,28 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
                 btnProceed.setVisibility(View.INVISIBLE);
                 isAvailable = false;
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setMessage("Are you sure you are not available tomorrow ?")
+                builder.setMessage("Are you sure you are not available Day After  tomorrow?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
+
+
+                                dialog.dismiss();
+                                Intent intent=new Intent(activity,SelfieUploadActivity.class);
+                                startActivity(intent);
+                                finish();
+                                //neha g ---------------------
+                                appPreferenceManager.setDay_aftr_tom(2);
+                                BundleConstants.Day_aftr_tom=2;
+                                //TODO NEHA
+                                StartAlarm();
+
+                                //neha g-----------------------
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
                                 SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
                                 setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
                                 setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
@@ -175,7 +200,7 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
 
                                 setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
                                 setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
-                                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                                calendar.add(Calendar.DAY_OF_MONTH, 2);
                                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
@@ -186,17 +211,12 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
                                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                 }
                             }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
                         });
                 builder.create().
                         show();
             }
         });
+
         btnProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,7 +240,7 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
 
                 setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
                 setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
-                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                calendar.add(Calendar.DAY_OF_MONTH, 2);
                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
@@ -243,6 +263,21 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
             Toast.makeText(activity, getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
         }
     }
+    //TODO NEHA
+    private void StartAlarm() {
+        int hours = new Time(System.currentTimeMillis()).getHours();
+        System.out.println("hours"+hours);
+
+        if (hours < 12&& hours>5) {
+
+            AlarmManager alarmMgr = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(activity, MyBroadcastReceiver.class);
+            PendingIntent alarmIntent = PendingIntent.getBroadcast(activity, 0, intent, 0);
+            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
+                    1000 * 60*60, alarmIntent);
+        }
+    }
+    //TODO NEHA
 
     @Override
     public void initUI() {
@@ -305,7 +340,8 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200 || statusCode == 201) {
-                Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity,  "Availability set Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+               // Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
                 if (isAvailable) {
 
                     //changes_5june2017
@@ -337,13 +373,15 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
                 }
 
             } else {
-                Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity,  "Failed to set Availability", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+               // Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onApiCancelled() {
-            Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity,  "Failed to set Availability", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            //Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -1,6 +1,10 @@
 package com.thyrocare.activity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,24 +23,38 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.thyrocare.R;
+import com.thyrocare.adapter.VisitOrderDisplayAdapter;
 import com.thyrocare.dao.DhbDao;
+import com.thyrocare.dialog.RescheduleOrderDialog;
 import com.thyrocare.fragment.CreditFragment;
 import com.thyrocare.fragment.HomeScreenFragment;
 import com.thyrocare.fragment.LeaveIntimationFragment;
 import com.thyrocare.fragment.ResetPasswordFragment;
+import com.thyrocare.network.AbstractApiModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
+import com.thyrocare.service.Timecheckservice;
 import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
+import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.InputUtils;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
 
 public class HomeScreenActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -56,7 +75,11 @@ public class HomeScreenActivity extends AbstractActivity
     public boolean isOnHome = false;
     ActionBarDrawerToggle toggle;
     private String value="";
-
+    private Object mCurrentFragment;
+    public static boolean isFromPayment=false;
+    private static Intent TImeCheckerIntent;
+    String y="";
+    CharSequence[] items;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +87,7 @@ public class HomeScreenActivity extends AbstractActivity
         activity = this;
         dhbDao = new DhbDao(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
+
         try {
             value = getIntent().getExtras().getString("LEAVEINTIMATION");
         } catch (Exception e) {
@@ -74,21 +98,36 @@ public class HomeScreenActivity extends AbstractActivity
 
 
         } else {
+
             Crashlytics.setUserIdentifier(appPreferenceManager.getLoginResponseModel().getUserID());
             Crashlytics.setUserName(appPreferenceManager.getLoginResponseModel().getUserName());
             initUI();
-            if (appPreferenceManager.getLeaveFlag() != 0) {
-                pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-                appPreferenceManager.setCameFrom(1);
-                toolbarHome.setVisibility(View.GONE);
 
-            } else {
+            if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
                 toolbarHome.setVisibility(View.VISIBLE);
                 pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            } else {
+                if (appPreferenceManager.getLeaveFlag() != 0) {
+                    pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+                    appPreferenceManager.setCameFrom(1);
+                    toolbarHome.setVisibility(View.GONE);
+
+                } else {
+                    toolbarHome.setVisibility(View.VISIBLE);
+                    pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+                }
             }
+
+
             initData();
             // pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         }
+       /* TImeCheckerIntent = new Intent(this, Timecheckservice.class);
+        startService(TImeCheckerIntent);*/
+       if(isFromPayment){
+           pushFragments(CreditFragment.newInstance(), false, false,
+                   CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+       }
     }
 
     public void setTitle(String title) {
@@ -99,7 +138,11 @@ public class HomeScreenActivity extends AbstractActivity
         if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserName()))
             txtUserName.setText(appPreferenceManager.getLoginResponseModel().getUserName());
         if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()))
-            txtUserId.setText(appPreferenceManager.getLoginResponseModel().getUserID());
+            y=appPreferenceManager.getLoginResponseModel().getUserID();
+            y = y.substring(y.length() - 4);
+            txtUserId.setText(y);
+           // txtUserId.setText(appPreferenceManager.getLoginResponseModel().getUserID());
+
         if (appPreferenceManager.getSelfieResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
 
             //changed_for_selfie_2june_2017
@@ -141,9 +184,11 @@ public class HomeScreenActivity extends AbstractActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         /**/
-        if (appPreferenceManager.getLoginRole().equalsIgnoreCase("9")) {
+        if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID) || appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
             Menu nav_Menu = navigationView.getMenu();
             nav_Menu.findItem(R.id.nav_leave).setVisible(false);
+            Menu nav_Menu1 = navigationView.getMenu();
+            nav_Menu1.findItem(R.id.nav_credit).setVisible(false);
         }
 
         /**/
@@ -156,28 +201,54 @@ public class HomeScreenActivity extends AbstractActivity
         txtUserId = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_id);
         txtUserName = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_name);
         txt_version_code = (TextView) findViewById(R.id.txt_version_code);
-        txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
+        txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity)/*+"("+ AbstractApiModel.SERVER_BASE_API_URL_PROD+")"*/);
         navigationView.addHeaderView(NavHeaderHomeScreen);
         super.initUI();
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        //stopService(TImeCheckerIntent);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopService(TImeCheckerIntent);
+    }
+
+    @Override
     public void onBackPressed() {
+        List fragments = getSupportFragmentManager().getFragments();
+        mCurrentFragment = fragments.get(fragments.size() - 1);
+        Logger.error("mCurrentFragment: "+mCurrentFragment);
+        if (mCurrentFragment==null){
+            //stopService(TImeCheckerIntent);
+            finishAffinity();
+        }else
+        if (mCurrentFragment.toString().contains("HomeScreenFragment")){
+          //  stopService(TImeCheckerIntent);
+            finishAffinity();
+        }
+
 
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
+          //  stopService(TImeCheckerIntent);
             return;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if (isOnHome) {
+           /* if (isOnHome) {
                 this.doubleBackToExitPressedOnce = true;
                 Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-            } else {
+            } else {*/
                 pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-            }
+        /*    }*/
         }
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -227,7 +298,8 @@ public class HomeScreenActivity extends AbstractActivity
         } else if (id == R.id.nav_credit) {
 
             toolbarHome.setVisibility(View.VISIBLE);
-            pushFragments(CreditFragment.newInstance(), false, false, CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            pushFragments(CreditFragment.newInstance(), false, false,
+                    CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             //   Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_logout) {
             toolbarHome.setVisibility(View.VISIBLE);
@@ -247,12 +319,102 @@ public class HomeScreenActivity extends AbstractActivity
             }
         } else if (id == R.id.nav_communication) {
             toolbarHome.setVisibility(View.VISIBLE);
+            // Toast.makeText(activity, "Coming Soon..", Toast.LENGTH_SHORT).show();
+
+            showOptionsinAlert();
+
+
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    private void showOptionsinAlert() {
+        items = new String[]{"Chat","WhatsApp","Training"};
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Select Action");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Chat")) {
+                    //  loginChat();//anand sir requirement
+                   Toast.makeText(activity, "Coming soon", Toast.LENGTH_SHORT).show();
+                } else if (items[item].equals("WhatsApp")) {
+                    onClickWhatsApp();
+                }else {
+                    Toast.makeText(activity, "Coming soon", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.show();
+    }
+    public void onClickWhatsApp() {
+
+        PackageManager pm=getPackageManager();
+        try {
+
+            Intent waIntent = new Intent(Intent.ACTION_SEND);
+            waIntent.setType("text/plain");
+            String text = "YOUR TEXT HERE";
+
+            PackageInfo info=pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+            //Check if package exists or not. If not then code
+            //in catch block will be called
+            waIntent.setPackage("com.whatsapp");
+
+            waIntent.putExtra(Intent.EXTRA_TEXT, text);
+            startActivity(Intent.createChooser(waIntent, "Share with"));
+
+        } catch (PackageManager.NameNotFoundException e) {
+            Toast.makeText(this, "WhatsApp not Installed", Toast.LENGTH_SHORT)
+                    .show();
+        }
+
+    }
+    private void loginChat() {
+        String url = "https://finalchat-df79b.firebaseio.com/users.json";
+        final ProgressDialog pd = new ProgressDialog(HomeScreenActivity.this);
+        pd.setMessage("Loading...");
+        pd.show();
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (s.equals("null")) {
+                    Toast.makeText(HomeScreenActivity.this, "user not found", Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        JSONObject obj = new JSONObject(s);
+
+                        if (!obj.has(appPreferenceManager.getLoginResponseModel().getUserName())) {
+                            Toast.makeText(HomeScreenActivity.this, "user not found", Toast.LENGTH_LONG).show();
+                        } else if (obj.getJSONObject(appPreferenceManager.getLoginResponseModel().getUserName()).getString("password").equals(appPreferenceManager.getLoginResponseModel().getUserName())) {
+                            UserDetails.username = appPreferenceManager.getLoginResponseModel().getUserName();
+                            UserDetails.password = appPreferenceManager.getLoginResponseModel().getUserName();
+                            startActivity(new Intent(HomeScreenActivity.this, Users.class).putExtra("comeFrom","Pre"));
+                            //startActivity(new Intent(HomeScreenActivity.this, Users.class));
+                        } else {
+                            Toast.makeText(HomeScreenActivity.this, "incorrect password", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                pd.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println("" + volleyError);
+                pd.dismiss();
+            }
+        });
+
+        RequestQueue rQueue = Volley.newRequestQueue(HomeScreenActivity.this);
+        rQueue.add(request);
+    }
     private class LogoutAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
@@ -263,7 +425,10 @@ public class HomeScreenActivity extends AbstractActivity
                 homeIntent.addCategory(Intent.CATEGORY_HOME);
                 homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(homeIntent);
+               // stopService(TImeCheckerIntent);
                 finish();
+                finishAffinity();
+
             } else {
                 Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
             }

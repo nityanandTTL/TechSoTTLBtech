@@ -7,7 +7,7 @@ public interface AppConstants {
 
 	// ------------ CONSTANTS -------------
 
-	public static final int ANDROID_APP_VERSION = 2;
+	public static final int ANDROID_APP_VERSION = 16;
 
     public static final boolean IS_DEBUG = true;
 
@@ -19,8 +19,17 @@ public interface AppConstants {
 
 	public static final int BTECH_APP_ID = 1;
 
+//===================================================
+	public static final String  BTECH_ROLE_ID = "4";
 
+	public static final String NBT_ROLE_ID = "13";
 
+	public static final String TSP_ROLE_ID = "9";
+
+	public static final String NBTTSP_ROLE_ID = "12";
+
+	public static final String HUB_ROLE_ID = "6";
+	//=================================================
 
 	public static final int DELETE_METHOD = 3;
 
@@ -82,4 +91,8 @@ public interface AppConstants {
 	public static final String CHECK_PAYMENT_RESPONSE_ISSUE_FOUND = "check_payment_response_issue_found";
 
 	public static final int APP_PERMISSIONS = 1001;
+	public static final String PPBS = "PPBS";
+	public static final String INSPP = "INSPP";
+	public static final String  FBS ="FBS" ;
+    public static final String INSFA = "INSFA";
 }

@@ -151,16 +151,16 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 //changes_5june2017
-                if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {
+              /*  if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
                     txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
                     txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                     llSlotsDisplay.setVisibility(View.VISIBLE);
                     isAvailable = true;
                     btnProceed.setVisibility(View.VISIBLE);
                     fetchData();
-                } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
+              /*  } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
                     Toast.makeText(activity, "User can schedule only once per day...Please try again later.", Toast.LENGTH_SHORT).show();
-                }
+                }*/
                 //changes_5june2017
             }
         });
@@ -173,7 +173,7 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
                 btnProceed.setVisibility(View.INVISIBLE);
                 isAvailable = false;
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setMessage("Are you sure you are not available tomorrow ?")
+                builder.setMessage("Are you sure you are not available Day After tomorrow?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
@@ -203,6 +203,7 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+
                             }
                         });
                 builder.create().
@@ -321,13 +322,13 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200 || statusCode == 201) {
                 Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
-                if (isAvailable) {
+             /*   if (isAvailable) {
 
                     //changes_5june2017
                     appPreferenceManager.setScheduleCounter("y");
                     String scheduledDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
                     appPreferenceManager.setScheduleDate(scheduledDate);
-                    //changes_5june2017
+                    //changes_5june2017*/
 
                     //appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json, SetBtechAvailabilityAPIRequestModel.class));
                     appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
@@ -356,10 +357,11 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
                         i.putExtra("LEAVEINTIMATION", "0");
                         startActivity(i);
                     }
-                } else {
-                    pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
-                }
+                /*} else {
+
+                }*/
             } else {
+                pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                 Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
             }
         }

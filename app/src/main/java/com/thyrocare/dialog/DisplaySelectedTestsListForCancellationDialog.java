@@ -9,12 +9,15 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.thyrocare.R;
+import com.thyrocare.activity.AddEditBeneficiaryDetailsActivity;
 import com.thyrocare.adapter.DisplaySelectedTestsListForCancellationAdapter;
 import com.thyrocare.delegate.AddTestListDialogDelegate;
 import com.thyrocare.delegate.CloseTestsDisplayDialogButtonDialogDelegate;
 import com.thyrocare.delegate.RemoveSelectedTestFromListDelegate;
+import com.thyrocare.fragment.BeneficiaryDetailsScanBarcodeFragment;
 import com.thyrocare.models.data.BeneficiaryTestDetailsModel;
 import com.thyrocare.models.data.TestRateMasterModel;
+import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.InputUtils;
 
 import java.util.ArrayList;
@@ -33,7 +36,10 @@ public class DisplaySelectedTestsListForCancellationDialog extends Dialog {
     private AddTestListDialogDelegate addTestListDialogDelegate;
     private boolean isTestEdit = false;
 
-    public DisplaySelectedTestsListForCancellationDialog(Activity activity, ArrayList<BeneficiaryTestDetailsModel> selectedTestsListArr, CloseTestsDisplayDialogButtonDialogDelegate closeTestsDisplayDialogButtonDialogDelegate, AddTestListDialogDelegate addTestListDialogDelegate) {
+    public DisplaySelectedTestsListForCancellationDialog(Activity activity,
+                                                         ArrayList<BeneficiaryTestDetailsModel> selectedTestsListArr,
+                                                         CloseTestsDisplayDialogButtonDialogDelegate closeTestsDisplayDialogButtonDialogDelegate,
+                                                         AddTestListDialogDelegate addTestListDialogDelegate) {
         super(activity);
         this.activity = activity;
         this.setCanceledOnTouchOutside(false);
@@ -69,24 +75,43 @@ public class DisplaySelectedTestsListForCancellationDialog extends Dialog {
         btn_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<TestRateMasterModel> trmmArr =new ArrayList<TestRateMasterModel>();
-                for (BeneficiaryTestDetailsModel btdm:
-                     selectedTestsListArr) {
-                    TestRateMasterModel trmm = new TestRateMasterModel();
-                    trmm.setSampltype(btdm.getSampleType());
-                    trmm.setTstClinicalHistory(btdm.getTstClinicalHistory());
-                    trmm.setFasting(btdm.getFasting());
-                    trmm.setTestType(btdm.getTestType());
-                    trmm.setTestCode(InputUtils.isNull(btdm.getProjId())?btdm.getTests():btdm.getProjId());
-                    if(!InputUtils.isNull(btdm.getProjId())){
-                        trmm.setTestType("OFFER");
+                ArrayList<TestRateMasterModel> trmmArr = new ArrayList<TestRateMasterModel>();
+
+                try {
+                    for (BeneficiaryTestDetailsModel btdm :
+                            selectedTestsListArr) {
+                        TestRateMasterModel trmm = new TestRateMasterModel();
+                        trmm.setSampltype(btdm.getSampleType());
+                        trmm.setTstClinicalHistory(btdm.getTstClinicalHistory());
+                        trmm.setFasting(btdm.getFasting());
+                        trmm.setTestType(btdm.getTestType());
+                        trmm.setTestCode(InputUtils.isNull(btdm.getProjId()) ? btdm.getTests() : btdm.getProjId());
+                        if (!InputUtils.isNull(btdm.getProjId())) {
+                            trmm.setTestType("OFFER");
+                        }
+                        trmm.setDescription(btdm.getTests());
+                        trmm.setChldtests(btdm.getChldtests());
+                        trmmArr.add(trmm);
                     }
-                    trmm.setDescription(btdm.getTests());
-                    trmm.setChldtests(btdm.getChldtests());
-                    trmmArr.add(trmm);
+
+                } catch (Exception e) {
+                    dismiss();
+                    e.printStackTrace();
                 }
                 dismiss();
-                closeTestsDisplayDialogButtonDialogDelegate.onItemClick(trmmArr,isTestEdit);
+
+
+                if (isTestEdit) {
+                    AddEditBeneficiaryDetailsActivity.testEdit = "yes";
+                    Logger.error("test edited");
+                    BeneficiaryDetailsScanBarcodeFragment.isTestListEdited = "yes";
+                } else {
+                    AddEditBeneficiaryDetailsActivity.testEdit = "no";
+                    Logger.error("test not edited");
+                    BeneficiaryDetailsScanBarcodeFragment.isTestListEdited = "no";
+                }
+
+                closeTestsDisplayDialogButtonDialogDelegate.onItemClick(trmmArr, isTestEdit);
             }
         });
     }
@@ -99,6 +124,8 @@ public class DisplaySelectedTestsListForCancellationDialog extends Dialog {
         displayAdapter = new DisplaySelectedTestsListForCancellationAdapter(activity, selectedTestsListArr, new RemoveSelectedTestFromListDelegate() {
             @Override
             public void onRemoveButtonClicked(ArrayList<BeneficiaryTestDetailsModel> selectedTests) {
+                BeneficiaryDetailsScanBarcodeFragment.isTestListEdited = "yes";
+                AddEditBeneficiaryDetailsActivity.testEdit = "yes";
                 isTestEdit = true;
                 selectedTestsListArr = selectedTests;
                 displayAdapter.notifyDataSetChanged();

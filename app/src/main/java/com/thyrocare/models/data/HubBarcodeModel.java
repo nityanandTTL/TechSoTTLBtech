@@ -6,7 +6,27 @@ package com.thyrocare.models.data;
 
 public class HubBarcodeModel {
     private String Barcode;
-    private String SampleType,SCT;
+    private String SampleType;
+    private String SCT;
+    private String Latitude;
+
+    public String getLatitude() {
+        return Latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        Latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return Longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        Longitude = longitude;
+    }
+
+    private String Longitude;
     private boolean IsScanned;
 
     public HubBarcodeModel() {

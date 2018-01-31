@@ -20,6 +20,6 @@
     <include layout="@layout/cell_content_layout"/>
 
     <!-- TITLE (FOLDED) LAYOUT (MUST BE AT LEAST 2x times SMALLER than content layout above) -->
-    <include layout="@layout/cell_title_layout"/>
+    <include layout="@layout/cell_title_modified"/>
 
 </com.ramotion.foldingcell.FoldingCell>

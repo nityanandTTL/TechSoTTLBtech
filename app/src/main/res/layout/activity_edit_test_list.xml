@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:visibility="invisible"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,6 +21,7 @@
         android:textStyle="bold" />
 
     <LinearLayout
+        android:visibility="invisible"
         android:layout_below="@+id/txt_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,6 +29,7 @@
         android:id="@+id/ll_spinner"
         android:background="@drawable/custom_border">
         <Spinner
+
             android:padding="@dimen/dp_3"
             android:id="@+id/sp_tests"
             style="@style/Animation.AppCompat.DropDownUp"

@@ -1,13 +1,18 @@
 package com.thyrocare.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,7 +36,9 @@ import com.thyrocare.dialog.AddSampleBarcodeDialog;
 import com.thyrocare.dialog.ClinicalHistorySelectorDialog;
 import com.thyrocare.dialog.DisplaySelectedTestsListForCancellationDialog;
 import com.thyrocare.dialog.LabAlertSelectorDialog;
+import com.thyrocare.fragment.BeneficiaryDetailsScanBarcodeFragment;
 import com.thyrocare.models.api.request.OrderBookingRequestModel;
+import com.thyrocare.models.api.response.GetTestListResponseModel;
 import com.thyrocare.models.api.response.OrderBookingResponseBeneficiaryModel;
 import com.thyrocare.models.api.response.OrderBookingResponseOrderModel;
 import com.thyrocare.models.api.response.OrderBookingResponseVisitModel;
@@ -48,6 +55,7 @@ import com.thyrocare.models.data.OrderBookingDetailsModel;
 import com.thyrocare.models.data.OrderDetailsModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
 import com.thyrocare.models.data.TestClinicalHistoryModel;
+import com.thyrocare.models.data.TestGroupListModel;
 import com.thyrocare.models.data.TestRateMasterModel;
 import com.thyrocare.models.data.TestSampleTypeModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -55,6 +63,7 @@ import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.uiutils.AbstractActivity;
+import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AadharUtils;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
@@ -84,7 +93,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private ImageView imgMale,imgFemale;
     private TextView edtTests;
     private LinearLayout llBarcodes;
-    private TextView edtCH,edtLA;
+    private TextView edtCH,edtLA, textView3;
     private EditText edtRemarks;
     private ImageView imgVenipuncture, imgHC;
     private Button btnSave;
@@ -109,7 +118,10 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private boolean isScanAadhar = false;
     private AadharDataModel aadharDataModel=new AadharDataModel();
     private ImageView imgAadhar;
-
+    ImageView img_view_test;
+    ArrayList<TestGroupListModel> testGroupListModelArrayList;
+    public static String testEdit="no";
+    GetTestListResponseModel TestListResponseModel;
     @Override
     public void onBackPressed() {
         if(isAdd) {
@@ -155,6 +167,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 TextView edtBarcode = (TextView)tr.findViewById(R.id.edt_barcode);
                 ImageView imgScan = (ImageView) tr.findViewById(R.id.scan_barcode_button);
                 txtSampleType.setText(beneficiaryBarcodeDetailsModel.getSamplType());
+
                 if(beneficiaryBarcodeDetailsModel.getSamplType().equals("SERUM")){
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
                 }
@@ -170,7 +183,13 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("URINE")){
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
                 }
-                edtBarcode.setText(beneficiaryBarcodeDetailsModel.getBarcode());
+
+                if(edtBarcode.getText().toString().startsWith("0") || edtBarcode.getText().toString().startsWith("$")){
+                    Toast.makeText(activity, "Invalid barcode", Toast.LENGTH_SHORT).show();
+                }else {
+                    edtBarcode.setText(beneficiaryBarcodeDetailsModel.getBarcode());
+                }
+
                 imgScan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -189,50 +208,55 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     @Override
                     public void onClick(View v) {
                         currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
-                        AddSampleBarcodeDialog sampleBarcodeDialog = new AddSampleBarcodeDialog(activity, new AddSampleBarcodeDialogDelegate() {
+                        AddSampleBarcodeDialog sampleBarcodeDialog = new AddSampleBarcodeDialog(""+currentScanSampleType,activity, new AddSampleBarcodeDialogDelegate() {
                             @Override
                             public void onSampleBarcodeAdded(String scanned_barcode) {
-                            if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                                if(beneficiaryDetailsModel.getBarcodedtl()!=null) {
-                                    for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
-                                        if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
-                                                && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
-                                            //CHECK for duplicate barcode scanned for the same visit
-                                            OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
-                                            for (OrderDetailsModel odm :
-                                                    orderVisitDetailsModel.getAllOrderdetails()) {
-                                                for (BeneficiaryDetailsModel bdm :
-                                                        odm.getBenMaster()) {
-                                                    if(bdm.getBarcodedtl()!=null && bdm.getBarcodedtl().size()>0) {
-                                                        for (BeneficiaryBarcodeDetailsModel bbdm :
-                                                                bdm.getBarcodedtl()) {
-                                                            if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
-                                                                if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
+                                if(scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")){
+                                    Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+                                }else {
+                                    if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8 ) {
+                                        if(beneficiaryDetailsModel.getBarcodedtl()!=null) {
+                                            for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                                                if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                                        && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
+                                                    //CHECK for duplicate barcode scanned for the same visit
+                                                    OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
+                                                    for (OrderDetailsModel odm :
+                                                            orderVisitDetailsModel.getAllOrderdetails()) {
+                                                        for (BeneficiaryDetailsModel bdm :
+                                                                odm.getBenMaster()) {
+                                                            if(bdm.getBarcodedtl()!=null && bdm.getBarcodedtl().size()>0) {
+                                                                for (BeneficiaryBarcodeDetailsModel bbdm :
+                                                                        bdm.getBarcodedtl()) {
+                                                                    if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
+                                                                        if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
 
-                                                                } else {
-                                                                    Toast.makeText(activity, "Same Barcode Already Scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
-                                                                    return;
+                                                                        } else {
+                                                                            Toast.makeText(activity, "Same Barcode Already Scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                                            return;
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
                                                         }
                                                     }
+                                                    beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                                                    beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                                    beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                                                    break;
                                                 }
                                             }
-                                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
-                                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
-                                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                                            break;
+                                            initData();
+                                        }
+                                        else{
+                                            Toast.makeText(activity,"Failed to Update Barcode Value",Toast.LENGTH_SHORT).show();
                                         }
                                     }
-                                    initData();
+                                    else{
+                                        Toast.makeText(activity,"Failed to Update Barcode Value",Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                                else{
-                                    Toast.makeText(activity,"Failed to Update Barcode Value",Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                            else{
-                                Toast.makeText(activity,"Failed to Update Barcode Value",Toast.LENGTH_SHORT).show();
-                            }
+
                             }
                         });
                         sampleBarcodeDialog.show();
@@ -257,6 +281,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if(statusCode==200) {
+
+
                 orderBookingResponseVisitModel = new ResponseParser(activity).getOrderBookingAPIResponse(json, statusCode);
                if(orderBookingResponseVisitModel.getOrderids()!=null && orderBookingResponseVisitModel.getOrderids().size()>0) {
                    for (OrderBookingResponseOrderModel obrom :
@@ -388,7 +414,20 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
                     orderDetailsModel.setReportHC(isHC?1:0);
                     orderDetailsModel.setAddBen(isAdd);
+                    //jai
+/*
 
+                    if(testEdit.equals("no")){
+                        orderDetailsModel.setTestEdit(false);
+                        beneficiaryDetailsModel.setTestEdit(false);
+                    }else {
+                        orderDetailsModel.setTestEdit(true);
+                        beneficiaryDetailsModel.setTestEdit(true);
+                    }
+*/
+
+
+                 //jai
                     /********************/
 
                     /********************/
@@ -449,14 +488,57 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 orderDetailsDao.insertOrUpdate(orderDetailsModel);
             }
         });
+        img_view_test.setVisibility(View.GONE);
+        img_view_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Toast.makeText(activity, "img_view_test", Toast.LENGTH_SHORT).show();
+
+
+                if(beneficiaryDetailsModel.getLeadId()==null){
+                    Logger.error("Lead ID null" );
+                }else {
+                    Logger.error("Lead ID " + beneficiaryDetailsModel.getLeadId());
+                    getviewTestData(beneficiaryDetailsModel.getLeadId());
+
+
+                }
+
+            }
+        });
         edtTests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                if(beneficiaryDetailsModel.getTestSampleType()!=null && beneficiaryDetailsModel.getTestSampleType().size()>0) {
                     //TODO show edit tests and allow addition and removal
-                    DisplaySelectedTestsListForCancellationDialog dstlfcd = new DisplaySelectedTestsListForCancellationDialog(activity, beneficiaryDetailsModel.getTestSampleType(), new CloseTestsDisplayDialogButtonDialogDelegate() {
+                    DisplaySelectedTestsListForCancellationDialog dstlfcd = new DisplaySelectedTestsListForCancellationDialog(activity,
+                            beneficiaryDetailsModel.getTestSampleType(), new CloseTestsDisplayDialogButtonDialogDelegate() {
                         @Override
                         public void onItemClick(ArrayList<TestRateMasterModel> selectedTestsList,boolean isTestEdit) {
+
+                            //jai
+
+/*
+
+                            if(testEdit.equals("yes")){
+                                Logger.error("isTestListEdited");
+                                orderDetailsModel.setTestEdit(true);
+                                beneficiaryDetailsModel.setTestEdit(true);
+                            }else {
+                                Logger.error("isTestListEdited not edited");
+                                orderDetailsModel.setTestEdit(false);
+                                beneficiaryDetailsModel.setTestEdit(false);
+                            }
+*/
+
+
+
+                            //jai
+
+
+
+
                             ArrayList<BeneficiaryTestDetailsModel> selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
                             for (TestRateMasterModel trmm:
                                     selectedTestsList) {
@@ -684,6 +766,42 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         });
     }
 
+    private void getviewTestData(String leadId) {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchAssignedDetailApiAsyncTask = asyncTaskForRequest.getTestListAsyncTask(leadId);
+        fetchAssignedDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new GetTestListApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            fetchAssignedDetailApiAsyncTask.execute(fetchAssignedDetailApiAsyncTask);
+        } else {
+            Toast.makeText(activity, "No Internet", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private class GetTestListApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                Logger.error("" + json);
+
+                ResponseParser responseParser = new ResponseParser(activity);
+                testGroupListModelArrayList = new ArrayList<>();
+                TestListResponseModel = new GetTestListResponseModel();
+                TestListResponseModel = responseParser.getTestListResponseModel(json, statusCode);
+                CustomDialogClass cdd = new CustomDialogClass(activity);
+                cdd.show();
+
+            } else {
+                Logger.error("" + json);
+            }
+
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
@@ -706,10 +824,13 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             Toast.makeText(activity, "Beneficiary Tests List is required", Toast.LENGTH_SHORT).show();
             return false;
         }
-        else if(InputUtils.isNull(encodedVanipunctureImg)){
-            Toast.makeText(activity, "Venepuncture Image is required", Toast.LENGTH_SHORT).show();
+       /* else if(InputUtils.isNull(encodedVanipunctureImg)){
+            Toast.makeText(activity, "Beneficiary Barcode Image is required", Toast.LENGTH_SHORT).show();
             return false;
-        }
+        }  else if(encodedVanipunctureImg.equals("")){
+            Toast.makeText(activity, "Beneficiary Barcode Image is required", Toast.LENGTH_SHORT).show();
+            return false;
+        }*/
         if(beneficiaryDetailsModel.getBarcodedtl()!=null && beneficiaryDetailsModel.getBarcodedtl().size()>0){
             for (BeneficiaryBarcodeDetailsModel benBarcode:
                  beneficiaryDetailsModel.getBarcodedtl()) {
@@ -733,6 +854,22 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             imgHC.setImageDrawable(getResources().getDrawable(R.drawable.green_tick_icon));
             isHC = true;
         }
+
+        if(orderDetailsModel.isEditHC())
+        {
+            imgHC.setVisibility(View.VISIBLE);
+            textView3.setVisibility(View.VISIBLE);
+        }else{
+            imgHC.setVisibility(View.GONE);
+            textView3.setVisibility(View.GONE);
+        }
+        //jai
+        if(orderDetailsModel.isEditOrder()){
+            edtTests.setEnabled(true);
+        }else {
+            edtTests.setEnabled(false);
+        }
+//jai
         boolean isBarcodeAndSampleListSame = false;
         if (beneficiaryDetailsModel != null
                 && beneficiaryDetailsModel.getBarcodedtl() != null
@@ -789,7 +926,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 edtAadhar.setVisibility(View.GONE);
                 imgAadhar.setVisibility(View.GONE);
             }*/
-            edtBenName.setText(!InputUtils.isNull(beneficiaryDetailsModel.getName()) ? beneficiaryDetailsModel.getName() : "");
+            edtBenName.setText(!InputUtils.isNull(beneficiaryDetailsModel.getName().toString().trim()) ? beneficiaryDetailsModel.getName().toString().trim() : "");
             edtAge.setText(!InputUtils.isNull(beneficiaryDetailsModel.getAge()+"") ? beneficiaryDetailsModel.getAge()+"" : "");
             edtTests.setText(!InputUtils.isNull(beneficiaryDetailsModel.getTestsCode()) ? beneficiaryDetailsModel.getTestsCode() : "");
             //TODO get clinical History and set it in edtCH
@@ -858,6 +995,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         edtBenName = (EditText) findViewById(R.id.edt_ben_name);
         edtAge = (EditText) findViewById(R.id.edt_age);
         edtTests = (TextView) findViewById(R.id.edt_test);
+        img_view_test = (ImageView) findViewById(R.id.img_view_test);
         edtAadhar = (EditText) findViewById(R.id.title_aadhar_no);
         edtCH = (TextView) findViewById(R.id.edt_clinical_history);
         edtLA = (TextView) findViewById(R.id.edt_lab_alerts);
@@ -869,6 +1007,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         llBarcodes = (LinearLayout) findViewById(R.id.ll_barcodes);
         tlBarcodes = (TableLayout) findViewById(R.id.tl_barcodes);
         imgHC = (ImageView) findViewById(R.id.hard_copy_check);
+        textView3 = (TextView) findViewById(R.id.textView3);
         btnSave = (Button) findViewById(R.id.btn_save);
     }
 
@@ -1041,5 +1180,77 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
         return orderBookingRequestModel;
     }
+    private class CustomDialogClass extends Dialog {
 
+        private Activity c;
+        private Dialog d;
+        private Button yes, no;
+        private TextView tv_test;
+        private LinearLayout ll_tests;
+
+        public CustomDialogClass(Activity a) {
+            super(a);
+            // TODO Auto-generated constructor stub
+            this.c = a;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.item_test_list_display);
+            ll_tests = (LinearLayout) findViewById(R.id.ll_tests);
+            iflateTestGroupName(ll_tests);
+
+
+        }
+
+    }
+    private void iflateTestGroupName(LinearLayout ll_tests) {
+        if (TestListResponseModel.getTestGroupList().size() > 0) {
+            // Logger.error("if ");
+            ll_tests.removeAllViews();
+            for (int i = 0; i < TestListResponseModel.getTestGroupList().size(); i++) {
+                LayoutInflater vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v = vi.inflate(R.layout.item_view_test, null);
+                final TextView tv_test = (TextView) v.findViewById(R.id.tv_test);
+                final LinearLayout ll_child = (LinearLayout) v.findViewById(R.id.ll_child);
+                tv_test.setText("" + TestListResponseModel.getTestGroupList().get(i).getGroupName() + " (" + TestListResponseModel.getTestGroupList().get(i).getTestCount() + ")");
+                tv_test.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_group_collapse_15, 0);
+
+                tv_test.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (ll_child.getVisibility() == View.VISIBLE) {
+                            ll_child.setVisibility(View.GONE);
+                            tv_test.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_group_collapse_15, 0);
+                        } else {
+                            ll_child.setVisibility(View.VISIBLE);
+                            tv_test.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_group_expand_15, 0);
+
+                        }
+                    }
+                });
+                ll_child.removeAllViews();
+                for (int j = 0; j < TestListResponseModel.getTestGroupList().get(i).getTestDetails().size(); j++) {
+                    LayoutInflater vj = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View v1 = vj.inflate(R.layout.item_view_test, null);
+                    TextView tv_test1 = (TextView) v1.findViewById(R.id.tv_test);
+                    tv_test1.setBackgroundColor(Color.parseColor("#ffffff"));
+                    tv_test1.setTextColor(Color.parseColor("#000000"));
+                    tv_test1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    tv_test1.setText(">> Description:  " + TestListResponseModel.getTestGroupList().get(i).getTestDetails().get(j).getDescription() + " \n     Test Code: " + TestListResponseModel.getTestGroupList().get(i).getTestDetails().get(j).getTestCode() + "\n     Unit: " + TestListResponseModel.getTestGroupList().get(i).getTestDetails().get(j).getUnit());
+
+                    ll_child.addView(v1);
+
+                    ll_child.invalidate();
+                }
+
+                ll_tests.addView(v);
+                ll_tests.invalidate();
+            }
+
+
+        }
+    }
 }

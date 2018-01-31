@@ -1,8 +1,11 @@
 package com.thyrocare.fragment;
 
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +14,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.models.api.request.ApplyLeaveRequestModel;
@@ -48,7 +54,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
     TextView fromdate, todate, leavetype, leaveremark, days, textcalender;
     int daysdiff;
     String defdate;
-    Button Applyleave;
+    Button Applyleave,showHistory;
     RadioButton one, more;
     RadioGroup group;
     private int mYear, mMonth, mDay;
@@ -60,8 +66,9 @@ public class LeaveIntimationFragment extends AbstractFragment {
     String finalsetfromdate, finalsettodate;
     String fromdate1, todate2;
     Spinner sp;
-
-
+    private ScrollView sc_leave;
+    private FrameLayout Fl_list_history;
+    private FloatingActionButton apply_leave;
     public LeaveIntimationFragment() {
         // Required empty public constructor
     }
@@ -148,7 +155,13 @@ public class LeaveIntimationFragment extends AbstractFragment {
 
 
     private void setListners() {
-
+        apply_leave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sc_leave.setVisibility(View.VISIBLE);
+                Fl_list_history.setVisibility(View.GONE);
+            }
+        });
 
         fromdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,45 +228,93 @@ public class LeaveIntimationFragment extends AbstractFragment {
             }
         });
 
-
+        showHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pushFragments(LeaveHistoryFragment.newInstance(), false, false, LeaveHistoryFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+            }
+        });
         Applyleave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
+                if(validate()){
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    //Yes button clicked
+                                    leaveApply();
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    //No button clicked
+                                    dialog.dismiss();
+                                    break;
+                            }
+                        }
+                    };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setMessage("Are you sure you want to apply for leave?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
+
+
+                }
+
+
+            }
+        });
+    }
+
+    private void leaveApply() {
+        if(validate()){
+            calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
 
 //                Toast.makeText(getActivity(), "Days:" + daysdiff, LENGTH_SHORT).show();
 
 
-                ApplyLeaveRequestModel applyLeaveRequestModel = new ApplyLeaveRequestModel();
+            ApplyLeaveRequestModel applyLeaveRequestModel = new ApplyLeaveRequestModel();
+            if(sp.getSelectedItem().equals("CANCEL")){
+                applyLeaveRequestModel.setNature(7);
+            }else {
                 applyLeaveRequestModel.setNature(leaveNatureModel.getId());
-                applyLeaveRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-                applyLeaveRequestModel.setLeaveType("NA");//As Per Ganesh Sir Remarks
-                applyLeaveRequestModel.setFromdate(fromdate.getText().toString());
-                applyLeaveRequestModel.setTodate(todate.getText().toString());
-                applyLeaveRequestModel.setRemarks(leaveremark.getText().toString());
-                applyLeaveRequestModel.setEnteredBy(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-
-                if (one.isChecked()) {
-                    daysdiff = 1;
-                    days.setText("1");
-                    applyLeaveRequestModel.setTodate(fromdate.getText().toString());
-                    applyLeaveRequestModel.setDays(daysdiff);
-                } else {
-                    days.setText(daysdiff + "");
-                    applyLeaveRequestModel.setTodate(todate.getText().toString());
-                    applyLeaveRequestModel.setDays(daysdiff);
-                }
-                AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-                ApiCallAsyncTask setApplyLeaveDetailApiAsyncTask = asyncTaskForRequest.getPostApplyLeaveRequestAsyncTask(applyLeaveRequestModel);
-                setApplyLeaveDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new LeaveIntimationFragment.setApplyLeaveDetailsApiAsyncTaskDelegateResult());
-                if (isNetworkAvailable(activity)) {
-                    setApplyLeaveDetailApiAsyncTask.execute(setApplyLeaveDetailApiAsyncTask);
-                } else {
-                    Toast.makeText(activity, R.string.internet_connetion_error, LENGTH_SHORT).show();
-                }
-
             }
-        });
+
+            applyLeaveRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+            applyLeaveRequestModel.setLeaveType("NA");//As Per Ganesh Sir Remarks
+            applyLeaveRequestModel.setFromdate(fromdate.getText().toString());
+            applyLeaveRequestModel.setTodate(todate.getText().toString());
+            applyLeaveRequestModel.setRemarks(leaveremark.getText().toString());
+            applyLeaveRequestModel.setEnteredBy(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+
+            if (one.isChecked()) {
+                daysdiff = 1;
+                days.setText("1");
+                applyLeaveRequestModel.setTodate(fromdate.getText().toString());
+                applyLeaveRequestModel.setDays(daysdiff);
+            } else {
+                days.setText(daysdiff + "");
+                applyLeaveRequestModel.setTodate(todate.getText().toString());
+                applyLeaveRequestModel.setDays(daysdiff);
+            }
+            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+            ApiCallAsyncTask setApplyLeaveDetailApiAsyncTask = asyncTaskForRequest.getPostApplyLeaveRequestAsyncTask(applyLeaveRequestModel);
+            setApplyLeaveDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new setApplyLeaveDetailsApiAsyncTaskDelegateResult());
+            if (isNetworkAvailable(activity)) {
+                setApplyLeaveDetailApiAsyncTask.execute(setApplyLeaveDetailApiAsyncTask);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private boolean validate() {
+        if(sp.getSelectedItem().equals("--SELECT--")){
+            TastyToast.makeText(activity, "Select Nature", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+            return false;
+        }
+        return true;
     }
 
     private void calNumDays(long toTime, long fromTime) {
@@ -310,12 +371,27 @@ public class LeaveIntimationFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             Logger.debug(TAG_FRAGMENT + "--apiCallResult: ");
             if (statusCode == 200) {
-                Toast.makeText(getActivity(), "Success", LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), ""+json, LENGTH_SHORT).show();
                 appPreferenceManager.setLeaveFlag(0);
                 appPreferenceManager.setCameFrom(0);
                 activity.toolbarHome.setVisibility(View.VISIBLE);
                 pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
 
+
+            }else {
+
+                  AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+
+                                              alertDialog.setMessage(""+json);
+                                              alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                                                      new DialogInterface.OnClickListener() {
+                                                          public void onClick(DialogInterface dialog, int which) {
+                                                              dialog.dismiss();
+
+                                                          }
+                                                      });
+
+                                              alertDialog.show();
 
             }
         }
@@ -334,6 +410,9 @@ public class LeaveIntimationFragment extends AbstractFragment {
     private void initData() {
 
         Nature = new ArrayList<>();
+
+        Nature.add(0,"--SELECT--");
+
         if (leaveNatureMasterModels != null && leaveNatureMasterModels.size() > 0) {
             for (LeaveNatureMasterModel leaveNatureMasterModel :
                     leaveNatureMasterModels) {
@@ -350,6 +429,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
                 String selection = Nature.get(position);
                 for (LeaveNatureMasterModel leaveNatureMasterModel :
                         leaveNatureMasterModels) {
@@ -392,6 +472,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
         });
     }
 
+
     public static String getCalculatedDate(String dateFormat, int days) {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat s = new SimpleDateFormat(dateFormat);
@@ -408,6 +489,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
         sp = (Spinner) rootView.findViewById(R.id.sp_leave_nature);
         todate = (TextView) rootView.findViewById(R.id.txt_to_date);
         Applyleave = (Button) rootView.findViewById(R.id.btn_leave_apply);
+        showHistory = (Button) rootView.findViewById(R.id.btn_show_history);
         /*leavetype = (EditText) rootView.findViewById(R.id.et_leave_type);*/
         leaveremark = (EditText) rootView.findViewById(R.id.et_leave_days_remark);
         one = (RadioButton) rootView.findViewById(R.id.radio_one);
@@ -415,7 +497,9 @@ public class LeaveIntimationFragment extends AbstractFragment {
         group = (RadioGroup) rootView.findViewById(R.id.group);
         textcalender = (TextView) rootView.findViewById(R.id.Calendertextview);
         days = (TextView) rootView.findViewById(R.id.et_leave_days_value);
-
+        apply_leave=(FloatingActionButton)rootView.findViewById(R.id.apply_leave);
+        Fl_list_history=(FrameLayout)rootView.findViewById(R.id.Fl_list_history);
+        sc_leave=(ScrollView)rootView.findViewById(R.id.sc_leave);
         /*String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String defdate = (today).toString();*/
 

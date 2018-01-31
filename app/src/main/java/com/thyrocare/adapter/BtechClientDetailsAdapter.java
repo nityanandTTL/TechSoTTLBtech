@@ -45,7 +45,8 @@ public class BtechClientDetailsAdapter extends RecyclerView.Adapter<BtechClientD
     }
 
 
-    public BtechClientDetailsAdapter(List<BtechClientsModel> btechClientsModels, HomeScreenActivity activity, BtechClientDetailsAdapterOnItemClickDelegate mCallback) {
+    public BtechClientDetailsAdapter(List<BtechClientsModel> btechClientsModels, HomeScreenActivity activity,
+                                     BtechClientDetailsAdapterOnItemClickDelegate mCallback) {
         this.mcallback = mCallback;
         this.btechClientsModels = btechClientsModels;
         this.activity = activity;

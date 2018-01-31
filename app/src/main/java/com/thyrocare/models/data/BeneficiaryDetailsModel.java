@@ -14,6 +14,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     private int benId;
     private String OrderNo;
     private String Name;
+    private String BtechName;
     private int Age;
     private String aadhar;
     private String Gender;
@@ -28,6 +29,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     private ArrayList<BeneficiaryLabAlertsModel> labAlert;
     private String ProjId;
     private String remarks;
+    private String LeadId;
 
     private boolean isTestEdit;
     private boolean isAddBen;
@@ -42,6 +44,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         benId = in.readInt();
         OrderNo = in.readString();
         Name = in.readString();
+        BtechName = in.readString();
         Age = in.readInt();
         aadhar = in.readString();
         Gender = in.readString();
@@ -56,6 +59,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         labAlert = in.createTypedArrayList(BeneficiaryLabAlertsModel.CREATOR);
         ProjId = in.readString();
         remarks = in.readString();
+        LeadId = in.readString();
         isTestEdit = in.readByte() != 0;
         isAddBen = in.readByte() != 0;
     }
@@ -66,6 +70,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         dest.writeInt(benId);
         dest.writeString(OrderNo);
         dest.writeString(Name);
+        dest.writeString(BtechName);
         dest.writeInt(Age);
         dest.writeString(aadhar);
         dest.writeString(Gender);
@@ -80,6 +85,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         dest.writeTypedList(labAlert);
         dest.writeString(ProjId);
         dest.writeString(remarks);
+        dest.writeString(LeadId);
         dest.writeByte((byte) (isTestEdit ? 1 : 0));
         dest.writeByte((byte) (isAddBen ? 1 : 0));
     }
@@ -101,6 +107,21 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         }
     };
 
+    public String getLeadId() {
+        return LeadId;
+    }
+
+    public void setLeadId(String leadId) {
+        LeadId = leadId;
+    }
+
+    public String getBtechName() {
+        return BtechName;
+    }
+
+    public void setBtechName(String btechName) {
+        BtechName = btechName;
+    }
     public String getProjId() {
         return ProjId;
     }

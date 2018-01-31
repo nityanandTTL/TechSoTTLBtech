@@ -1,6 +1,7 @@
 package com.thyrocare.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -399,35 +400,52 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        final IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null && scanningResult.getContents() != null) {
-            String scanned_barcode = scanningResult.getContents();
+         final    String scanned_barcode = scanningResult.getContents();
             Logger.error("" + scanningResult);
             Logger.error("scanned_barcode " + scanningResult.getContents());
-           // Toast.makeText(activity, "" + scanningResult, Toast.LENGTH_SHORT).show();
-            if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+            // Toast.makeText(activity, "" + scanningResult, Toast.LENGTH_SHORT).show();
 
-                Logger.error("barcodeDetailsArr size: " + barcodeDetailsArr.size());
-                for (int i = 0; i < barcodeDetailsArr.size(); i++) {
-                    Logger.error("barcodeDetailsArr tostring: " + barcodeDetailsArr.toArray().toString());
-                    if (barcodeDetailsArr.get(i).getSamplType().equals(currentSampleType)) {
-                        for (BeneficiaryBarcodeDetailsModel benBarcode :
-                                barcodeDetailsArr) {
-                            if (!InputUtils.isNull(benBarcode.getBarcode()) && benBarcode.getBarcode().equals(scanned_barcode)) {
-                                if (benBarcode.getSamplType().equals(currentSampleType)) {
-
-                                } else {
-                                    Toast.makeText(activity, "Barcode Already Scanned for Sample Type " + currentSampleType, Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                            }
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+            builder1.setTitle("Check the Barcode ")
+                    .setMessage("Do you want to Proceed with this barcode entry " + scanned_barcode + "?")
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
                         }
+                    }).setPositiveButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                  //  dialog.dismiss();
 
-                        barcodeDetailsArr.get(i).setBarcode(scanningResult.getContents());
-                        Logger.debug(barcodeDetailsArr.toString());
-                        break;
-                    }
-                } /*for (int i = 0; i < beneficiaryDetailsArr.getSampleType().size(); i++) {
+                    if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")) {
+                        Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+
+                            Logger.error("barcodeDetailsArr size: " + barcodeDetailsArr.size());
+                            for (int i = 0; i < barcodeDetailsArr.size(); i++) {
+                                Logger.error("barcodeDetailsArr tostring: " + barcodeDetailsArr.toArray().toString());
+                                if (barcodeDetailsArr.get(i).getSamplType().equals(currentSampleType)) {
+                                    for (BeneficiaryBarcodeDetailsModel benBarcode :
+                                            barcodeDetailsArr) {
+                                        if (!InputUtils.isNull(benBarcode.getBarcode()) && benBarcode.getBarcode().equals(scanned_barcode)) {
+                                            if (benBarcode.getSamplType().equals(currentSampleType)) {
+
+                                            } else {
+                                                Toast.makeText(activity, "Barcode Already Scanned for Sample Type " + currentSampleType, Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+                                        }
+                                    }
+
+                                    barcodeDetailsArr.get(i).setBarcode(scanningResult.getContents());
+                                    Logger.debug(barcodeDetailsArr.toString());
+                                    break;
+                                }
+                            } /*for (int i = 0; i < beneficiaryDetailsArr.getSampleType().size(); i++) {
                     Logger.error("barcodeDetailsArr tostring: "+ barcodeDetailsArr.toArray().toString());
 
                     if ( beneficiaryDetailsArr.getSampleType().get(i).getSampleType().equals(currentSampleType)) {
@@ -446,8 +464,14 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
                         break;
                     }
                 }*/
-                initScanBarcodeView();
-            }
+                            initScanBarcodeView();
+                        }
+                    }
+                }
+            });
+
+
+
         } else {
             super.onActivityResult(requestCode, resultCode, data);
             Toast.makeText(activity, "No result", Toast.LENGTH_SHORT).show();

@@ -22,6 +22,7 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
     private float Distance;
     private float EstIncome;
     private String AppointmentDate;
+    private String BtechName;
 
     public OrderVisitDetailsModel() {
         super();
@@ -36,6 +37,7 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
         Distance = in.readFloat();
         EstIncome = in.readFloat();
         AppointmentDate = in.readString();
+        BtechName = in.readString();
     }
 
     public static final Creator<OrderVisitDetailsModel> CREATOR = new Creator<OrderVisitDetailsModel>() {
@@ -49,6 +51,14 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
             return new OrderVisitDetailsModel[size];
         }
     };
+
+    public String getBtechName() {
+        return BtechName;
+    }
+
+    public void setBtechName(String btechName) {
+        BtechName = btechName;
+    }
 
     public String getResponse() {
         return Response;
@@ -130,5 +140,6 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
         dest.writeFloat(Distance);
         dest.writeFloat(EstIncome);
         dest.writeString(AppointmentDate);
+        dest.writeString(BtechName);
     }
 }

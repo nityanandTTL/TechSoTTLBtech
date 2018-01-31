@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+android:layout_marginTop="@dimen/dp_2"
+    android:layout_marginBottom="@dimen/dp_2"
+    android:elevation="@dimen/dp_10"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+<LinearLayout
+    android:id="@+id/ll_leave"
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical">
+
+<LinearLayout
+
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tv_sr"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginStart="@dimen/dp_5"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:text="1"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:background="@drawable/counter_icon"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:src="@android:drawable/ic_menu_my_calendar"/>
+    <TextView
+        android:layout_marginTop="@dimen/dp_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="Date:"/>
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_marginTop="@dimen/dp_3"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="yyyy-dd-mm"/>
+</LinearLayout>
+    <LinearLayout
+
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_remark"
+        android:layout_marginLeft="@dimen/dp_40"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_2"
+        android:text="Remark:"/>
+</LinearLayout>
+    <View
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:background="@color/black_overlay"
+        android:layout_height="2dp"/>
+</LinearLayout>
+</android.support.v7.widget.CardView>

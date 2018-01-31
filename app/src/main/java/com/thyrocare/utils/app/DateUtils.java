@@ -60,7 +60,7 @@ public class DateUtils {
 		return date;
 	}
 
-	public Date dateFromString(String dateStr, SimpleDateFormat dateFormat) {
+	public static Date dateFromString(String dateStr, SimpleDateFormat dateFormat) {
 
 		Date date = null;
 
@@ -923,6 +923,24 @@ public class DateUtils {
 			return true;
 		}
 		return false;
+	}
+
+	public static String Req_Date_Req(String time, String inputPattern, String outputPattern) {
+		SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+		SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+		Date date = null;
+		String str = null;
+
+		try {
+			date = inputFormat.parse(time);
+			str = outputFormat.format(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return str;
 	}
 
 }

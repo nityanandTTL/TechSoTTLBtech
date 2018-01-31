@@ -13,6 +13,8 @@ public class BtechwithHub_BarcodeDataModel implements Parcelable {
     private String BtechName;
     private String Barcode;
     private String BarcodeType;
+    private String Latitude;
+    private String Longitude;
     private boolean IsReceived;
 
     protected BtechwithHub_BarcodeDataModel(Parcel in) {
@@ -20,7 +22,25 @@ public class BtechwithHub_BarcodeDataModel implements Parcelable {
         BtechName = in.readString();
         Barcode = in.readString();
         BarcodeType = in.readString();
+        Latitude = in.readString();
+        Longitude = in.readString();
         IsReceived = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(BtechID);
+        dest.writeString(BtechName);
+        dest.writeString(Barcode);
+        dest.writeString(BarcodeType);
+        dest.writeString(Latitude);
+        dest.writeString(Longitude);
+        dest.writeByte((byte) (IsReceived ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<BtechwithHub_BarcodeDataModel> CREATOR = new Creator<BtechwithHub_BarcodeDataModel>() {
@@ -34,6 +54,22 @@ public class BtechwithHub_BarcodeDataModel implements Parcelable {
             return new BtechwithHub_BarcodeDataModel[size];
         }
     };
+
+    public String getLatitude() {
+        return Latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        Latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return Longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        Longitude = longitude;
+    }
 
     @Override
     public String toString() {
@@ -86,17 +122,4 @@ public class BtechwithHub_BarcodeDataModel implements Parcelable {
         IsReceived = received;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(BtechID);
-        dest.writeString(BtechName);
-        dest.writeString(Barcode);
-        dest.writeString(BarcodeType);
-        dest.writeByte((byte) (IsReceived ? 1 : 0));
-    }
 }

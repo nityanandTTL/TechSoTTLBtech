@@ -249,7 +249,12 @@ public class CampListDisplayFragment extends AbstractFragment {
             }
         }
         if (i == 0) {
-            if (isNetworkAvailable(activity)) {
+
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" + campDetailModel.getLeaderContactNo()));
+            activity.startActivity(intent);
+
+     /*       if (isNetworkAvailable(activity)) {
                 CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
                 callPatchRequestModel.setSrcnumber(new AppPreferenceManager(activity).getLoginResponseModel().getUserID());
                 callPatchRequestModel.setDestNumber(campDetailModel.getLeaderContactNo()+"");
@@ -258,7 +263,7 @@ public class CampListDisplayFragment extends AbstractFragment {
                 callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
             } else {
                 Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-            }
+            }*/
 
         }
 
@@ -366,11 +371,16 @@ public class CampListDisplayFragment extends AbstractFragment {
 
         }
         if (scanningResult != null && scanningResult.getContents() != null) {
-            //  String scanned_barcode = scanningResult.getContents();
-            Logger.error("" + scanningResult);
-            Logger.error("scanned_barcode " + scanningResult.getContents());
-            Toast.makeText(activity, "" + scanningResult, Toast.LENGTH_SHORT).show();
-            callsendQRCodeApi(scanningResult.getContents());
+            if (scanningResult.getContents().startsWith("0")|| scanningResult.getContents().startsWith("$")){
+                Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+            }else {
+                //  String scanned_barcode = scanningResult.getContents();
+                Logger.error("" + scanningResult);
+                Logger.error("scanned_barcode " + scanningResult.getContents());
+                Toast.makeText(activity, "" + scanningResult, Toast.LENGTH_SHORT).show();
+                callsendQRCodeApi(scanningResult.getContents());
+            }
+
 
         } else {
             super.onActivityResult(requestCode, resultCode, data);

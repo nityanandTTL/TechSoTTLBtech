@@ -57,4 +57,14 @@ public class BundleConstants {
     public static final String BRAND_ID = "brandId";
     public static final String SELECTED_TESTS_LIST = "selectedTestsList";
     public static final String WHEREFROM = "cameFrom";
+
+    // neha G --------------------------
+    public static int DataInVisitModel=0;
+    public static int OrderAccept=0;
+    public static int not_avail_tom=0;
+    public static int Day_aftr_tom=0;
+    public static String ShowTimeInNotificatn="";
+    public static int DoneworkOrder=0;
+    public static int delay=0;
+    //neha G---------------------------------
 }

@@ -59,6 +59,8 @@ public class BeneficiaryDetailsDao {
 	private String RECORD_STATUS = "recordStatus";
 	private String SYNC_STATUS = "syncStatus";
 	private String SYNC_ACTION = "syncAction";
+	private String LEADID = "LeadId";
+
 
 
 	// Constructors
@@ -120,6 +122,7 @@ public class BeneficiaryDetailsDao {
 		beneficiaryDetailsModel.setRecordStatus(cursor.getString(cursor.getColumnIndex(RECORD_STATUS)));
 		beneficiaryDetailsModel.setSyncStatus(cursor.getString(cursor.getColumnIndex(SYNC_STATUS)));
 		beneficiaryDetailsModel.setSyncAction((cursor.getString(cursor.getColumnIndex(SYNC_ACTION))));
+		beneficiaryDetailsModel.setLeadId(cursor.getString(cursor.getColumnIndex(LEADID)));
 
 		return beneficiaryDetailsModel;
 	}
@@ -152,6 +155,11 @@ public class BeneficiaryDetailsDao {
 		values.put(RECORD_STATUS, beneficiaryDetailsModel.getRecordStatus());
 		values.put(SYNC_STATUS, beneficiaryDetailsModel.getSyncStatus());
 		values.put(SYNC_ACTION, beneficiaryDetailsModel.getSyncAction());
+		values.put(LEADID, beneficiaryDetailsModel.getLeadId());
+
+
+
+
 		return values;
 	}
 

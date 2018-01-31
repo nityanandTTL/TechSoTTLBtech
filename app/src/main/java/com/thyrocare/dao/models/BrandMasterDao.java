@@ -47,6 +47,7 @@ public class BrandMasterDao {
 	String SYNC_ACTION = "syncAction";
 
 
+
 	// Constructors
 
 	public BrandMasterDao() {

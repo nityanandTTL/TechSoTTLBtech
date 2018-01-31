@@ -79,7 +79,7 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
             holder.tv_status.setText("" + btechOrderModel.getStatus());
             int sr_no= position +1;
             holder.txt_sr_no.setText(""+sr_no);
-            holder.txt_benCount.setText(""+btechOrderModel.getBenCount());
+            holder.txt_benCount.setText("   "+btechOrderModel.getBenCount());
             ArrayList<String> mylist = new ArrayList<String>();
             for (int i = 0; i < btechOrderModel.getBtchBracodeDtl().size(); i++) {
                 mylist.add(btechOrderModel.getBtchBracodeDtl().get(i).getBarcode());

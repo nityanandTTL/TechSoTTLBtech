@@ -207,13 +207,23 @@ public class OrderServedFragment extends AbstractFragment {
         orderServedDisplayDetailsAdapter = new OrderServedDisplayDetailsAdapter(btechOrderModels, activity, new OrderServedDisplayDetailsAdapterClickedDelegate() {
             @Override
             public void onCallCustomer(String customerMobile, String orderNo) {
+
+
+
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + customerMobile));
+                activity.startActivity(intent);
+
+
+
+/*
                 CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
                 callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
                 callPatchRequestModel.setDestNumber(customerMobile);
                 callPatchRequestModel.setVisitID(orderNo);
                 ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
                 callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-                callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
+                callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);*/
             }
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);

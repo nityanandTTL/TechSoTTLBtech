@@ -81,7 +81,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
          value = getIntent().getExtras().getString("WHEREFROM");
         Logger.error("value "+value );
 
-        Toast.makeText(activity, "WHere", Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(activity, "WHere", Toast.LENGTH_SHORT).show();
         today = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
         savedModel = appPreferenceManager.getBtechAvailabilityAPIRequestModel();
         selectedSlotsArr = appPreferenceManager.getSelectedSlotsArr();

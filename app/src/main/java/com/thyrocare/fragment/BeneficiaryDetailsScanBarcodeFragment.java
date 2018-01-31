@@ -1,9 +1,12 @@
 package com.thyrocare.fragment;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +15,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,6 +50,7 @@ import com.thyrocare.dialog.RescheduleOrderDialog;
 import com.thyrocare.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.models.api.request.RemoveBeneficiaryAPIRequestModel;
+import com.thyrocare.models.api.response.GetTestListResponseModel;
 import com.thyrocare.models.api.response.OrderBookingResponseBeneficiaryModel;
 import com.thyrocare.models.api.response.OrderBookingResponseOrderModel;
 import com.thyrocare.models.api.response.OrderBookingResponseVisitModel;
@@ -60,6 +66,7 @@ import com.thyrocare.models.data.OrderBookingDetailsModel;
 import com.thyrocare.models.data.OrderDetailsModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
 import com.thyrocare.models.data.TestClinicalHistoryModel;
+import com.thyrocare.models.data.TestGroupListModel;
 import com.thyrocare.models.data.TestRateMasterModel;
 import com.thyrocare.models.data.TestSampleTypeModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -68,6 +75,7 @@ import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.api.Logger;
+import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.DeviceUtils;
@@ -83,15 +91,16 @@ import java.util.ArrayList;
 import static com.thyrocare.utils.app.CommonUtils.encodeImage;
 
 
-public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
+public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     public static final String TAG_FRAGMENT = BeneficiaryDetailsScanBarcodeFragment.class.getSimpleName();
     private ImageView imgVenipuncture, imgHC;
-    private TextView txtSrNo,tv_orderno;
+    private TextView txtSrNo, tv_orderno;
     private TextView txtName;
     private TextView txtAge;
     private TextView txtAadharNo;
     private ImageView btnRelease, btnEdit;
-    private TextView edtTests;
+    private TextView edtTests, textView3;
+    ImageView img_view_test;
     private LinearLayout llBarcodes;
     private TextView edtCH, edtLA;
     private EditText edtRemarks;
@@ -119,6 +128,12 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private IntentIntegrator intentIntegrator;
     private static RefreshBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegateResult;
     private ImageView imgAadhar;
+    public static String isTestListEdited = "no";
+    public static String isTestListEditedFromAddBen = "no";
+    ArrayList<TestGroupListModel> testGroupListModelArrayList;
+
+    GetTestListResponseModel TestListResponseModel;
+    CharSequence[] items;
 
     public BeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
@@ -199,18 +214,36 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             txtName.setText(beneficiaryDetailsModel.getName());
             tv_orderno.setText(beneficiaryDetailsModel.getOrderNo());
             txtAge.setText(beneficiaryDetailsModel.getAge() + " | " + beneficiaryDetailsModel.getGender());
-            if(InputUtils.isNull(beneficiaryDetailsModel.getAadhar())) {
+            if (InputUtils.isNull(beneficiaryDetailsModel.getAadhar())) {
                 txtAadharNo.setVisibility(View.GONE);
                 imgAadhar.setVisibility(View.GONE);
-            }
-            else{
+            } else {
                 txtAadharNo.setVisibility(View.VISIBLE);
                 imgAadhar.setVisibility(View.VISIBLE);
                 txtAadharNo.setText(beneficiaryDetailsModel.getAadhar());
             }
+            Logger.error("test code "+beneficiaryDetailsModel.getTestsCode());
             edtTests.setText(beneficiaryDetailsModel.getTestsCode());
-            txtSrNo.setText(beneficiaryDetailsModel.getBenId() + "");
+
+            if (beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.PPBS)
+                    || beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.INSPP)
+                    || beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)) {
+Logger.error("");
+                edtTests.setEnabled(false);
+                imgHC.setEnabled(false);
+                btnRelease.setVisibility(View.GONE);
+                btnEdit.setVisibility(View.INVISIBLE);
+            } else {
+                edtTests.setEnabled(true);
+                imgHC.setEnabled(true);
+                btnRelease.setVisibility(View.VISIBLE);
+                btnEdit.setVisibility(View.VISIBLE);
+            }
+            //here to add
+            txtSrNo.setText("1");
+           // txtSrNo.setText(beneficiaryDetailsModel.getBenId() + "");
             if (orderDetailsModel != null && orderDetailsModel.getReportHC() == 0) {
+
                 imgHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
                 isHC = false;
             } else {
@@ -218,26 +251,50 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 isHC = true;
             }
 
+            if (orderDetailsModel.isEditHC()) {
+                imgHC.setVisibility(View.VISIBLE);
+                textView3.setVisibility(View.VISIBLE);
+            } else {
+                imgHC.setVisibility(View.GONE);
+                textView3.setVisibility(View.GONE);
+            }
+//jai
+            if(beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.PPBS)
+                    || beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.INSPP)
+                    || beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)){
+
+            }else {
+                Logger.error("not pp insp");
+                if(orderDetailsModel.isEditOrder()){
+                    edtTests.setEnabled(true);
+                    Logger.error("isEditOrder scan "+orderDetailsModel.isEditOrder());
+                }else {
+                    edtTests.setEnabled(false);
+                    Logger.error("isEditOrder scan "+orderDetailsModel.isEditOrder());
+                }
+            }
+
+            //jai
             boolean isBarcodeAndSampleListSame = false;
             if (beneficiaryDetailsModel != null
                     && beneficiaryDetailsModel.getBarcodedtl() != null
                     && beneficiaryDetailsModel.getSampleType() != null
                     && beneficiaryDetailsModel.getBarcodedtl().size() == beneficiaryDetailsModel.getSampleType().size()) {
                 int sameSampleTypeCnt = 0;
-                for (BeneficiaryBarcodeDetailsModel bbdm:
+                for (BeneficiaryBarcodeDetailsModel bbdm :
                         beneficiaryDetailsModel.getBarcodedtl()) {
-                    for (BeneficiarySampleTypeDetailsModel bstdm:
-                         beneficiaryDetailsModel.getSampleType()) {
-                        if(bbdm.getSamplType().equals(bstdm.getSampleType())){
+                    for (BeneficiarySampleTypeDetailsModel bstdm :
+                            beneficiaryDetailsModel.getSampleType()) {
+                        if (bbdm.getSamplType().equals(bstdm.getSampleType())) {
                             sameSampleTypeCnt++;
                         }
                     }
                 }
-                if(sameSampleTypeCnt==beneficiaryDetailsModel.getBarcodedtl().size() && sameSampleTypeCnt==beneficiaryDetailsModel.getSampleType().size()){
+                if (sameSampleTypeCnt == beneficiaryDetailsModel.getBarcodedtl().size() && sameSampleTypeCnt == beneficiaryDetailsModel.getSampleType().size()) {
                     isBarcodeAndSampleListSame = true;
                 }
             }
-            if(!isBarcodeAndSampleListSame){
+            if (!isBarcodeAndSampleListSame) {
                 if (beneficiaryDetailsModel.getBarcodedtl() == null) {
                     beneficiaryDetailsModel.setBarcodedtl(new ArrayList<BeneficiaryBarcodeDetailsModel>());
                 } else {
@@ -245,7 +302,7 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 }
                 for (BeneficiarySampleTypeDetailsModel sampleTypes :
                         beneficiaryDetailsModel.getSampleType()) {
-                    Logger.error("sample type: "+beneficiaryDetailsModel.getSampleType());
+                    Logger.error("sample type: " + beneficiaryDetailsModel.getSampleType());
                     BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
                     beneficiaryBarcodeDetailsModel.setBenId(beneficiaryDetailsModel.getBenId());
                     beneficiaryBarcodeDetailsModel.setId(DeviceUtils.getRandomUUID());
@@ -255,8 +312,7 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 }
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             }
-            if(!InputUtils.isNull(beneficiaryDetailsModel.getVenepuncture()))
-            {
+            if (!InputUtils.isNull(beneficiaryDetailsModel.getVenepuncture())) {
                 imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
             }
             initScanBarcodeView();
@@ -277,7 +333,7 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
                 intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
                 intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_EDIT, true);
-                intentEdit.putExtra(BundleConstants.IS_TEST_EDIT,true);
+                intentEdit.putExtra(BundleConstants.IS_TEST_EDIT, true);
                 startActivityForResult(intentEdit, BundleConstants.EDIT_START);
             }
         });
@@ -300,8 +356,33 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         btnRelease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] items = {"Order Reschedule",
-                        "Visit Cancellation", "Remove Beneficiary"};
+                if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
+//jai
+                    if (orderDetailsModel.isEditOrder()){
+                        items = new String[]{
+                                "Remove Beneficiary"};
+                        Logger.error("isEditOrder Remove Beneficiary "+orderDetailsModel.isEditOrder());
+                    }else {
+                        items = new String[]{
+                                "Cannot Remove Beneficiary"};
+                        Logger.error("isEditOrder Remove Beneficiary "+orderDetailsModel.isEditOrder());
+                    }
+
+//jai
+
+
+                } else {
+
+                    if(orderDetailsModel.isEditOrder()){
+                        items = new String[]{"Order Reschedule",
+                                "Visit Cancellation", "Remove Beneficiary"};
+                    }else {
+                        items = new String[]{"Order Reschedule",
+                                "Visit Cancellation"};
+                    }
+
+                }
+
                 final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Select Action");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -327,6 +408,7 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                             rb.setBenId(beneficiaryDetailsModel.getBenId());
                                             rb.setOrderNo(beneficiaryDetailsModel.getOrderNo());
                                             rb.setIsAdded(orderDetailsModel.isAddBen() ? "1" : "0");
+
                                             ApiCallAsyncTask removeBeneficiaryAsyncTask = new AsyncTaskForRequest(activity).getRemoveBeneficiaryRequestAsyncTask(rb);
                                             removeBeneficiaryAsyncTask.setApiCallAsyncTaskDelegate(new ApiCallAsyncTaskDelegate() {
                                                 @Override
@@ -345,6 +427,12 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                                                 orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
                                                                 orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
                                                                 orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
+                                                                //jai
+                                                               // orderDetailsModel.setEditOrder(orderVisitDetailsModel.get());
+                                                                // jai
+
+
+
                                                                 if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
                                                                     for (BeneficiaryDetailsModel beneficiaryDetailsModel :
                                                                             orderDetailsModel.getBenMaster()) {
@@ -409,13 +497,25 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String remarks = s.toString();
-                if(InputUtils.isNull(remarks)){
+                if (InputUtils.isNull(remarks)) {
                     beneficiaryDetailsModel.setRemarks("");
-                }
-                else{
+                } else {
                     beneficiaryDetailsModel.setRemarks(remarks);
                 }
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+            }
+        });
+        img_view_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(activity, "img_view_test1", Toast.LENGTH_SHORT).show();
+                if (beneficiaryDetailsModel.getLeadId() == null) {
+                    Logger.error("Lead ID null");
+                   /* getviewTestData("SP33337413");*/
+                } else {
+                    Logger.error("Lead ID " + beneficiaryDetailsModel.getLeadId());
+                    getviewTestData(beneficiaryDetailsModel.getLeadId());
+                }
             }
         });
         edtTests.setOnClickListener(new View.OnClickListener() {
@@ -424,105 +524,124 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 //TODO show tests list for addition and removal
 //                Toast.makeText(getActivity(),"Feature Coming Soon Stay Tunned", Toast.LENGTH_SHORT).show();
 //                if(beneficiaryDetailsModel.getTestSampleType()!=null && beneficiaryDetailsModel.getTestSampleType().size()>0) {
-                    DisplaySelectedTestsListForCancellationDialog dstlfcd = new DisplaySelectedTestsListForCancellationDialog(activity, beneficiaryDetailsModel.getTestSampleType(), new CloseTestsDisplayDialogButtonDialogDelegate() {
-                        @Override
-                        public void onItemClick(ArrayList<TestRateMasterModel> selectedTestsList, boolean isTestEdit) {
-                            orderDetailsModel.setTestEdit(true);
-                            beneficiaryDetailsModel.setTestEdit(true);
-                            orderDetailsDao.insertOrUpdate(orderDetailsModel);
-                            beneficiaryDetailsModel.setProjId("");
-                            ArrayList<BeneficiaryTestDetailsModel> selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
-                            for (TestRateMasterModel trmm:
-                                    selectedTestsList) {
-                                BeneficiaryTestDetailsModel btdm = new BeneficiaryTestDetailsModel();
-                                btdm.setFasting(trmm.getFasting());
-                                btdm.setChldtests(trmm.getChldtests()!=null?trmm.getChldtests():new ArrayList<ChildTestsModel>());
-                                btdm.setTests(trmm.getTestCode());
-                                btdm.setTestType(trmm.getTestType());
-                                btdm.setProjId("");
-                                btdm.setSampleType(trmm.getSampltype()!=null?trmm.getSampltype():new ArrayList<TestSampleTypeModel>());
-                                btdm.setTstClinicalHistory(trmm.getTstClinicalHistory()!=null?trmm.getTstClinicalHistory():new ArrayList<TestClinicalHistoryModel>());
-                                if(!InputUtils.isNull(trmm.getTestType())&&trmm.getTestType().equalsIgnoreCase("offer")){
-                                    btdm.setProjId(trmm.getTestCode());
-                                    btdm.setTests(trmm.getDescription());
-                                    beneficiaryDetailsModel.setProjId(trmm.getTestCode());
-                                }
-                                selectedTestDetailsArr.add(btdm);
-                            }
-                            beneficiaryDetailsModel.setTestSampleType(selectedTestDetailsArr);
-                            boolean isFasting = false;
-                            String testsCode = "";
-                            if(selectedTestsList!=null) {
-                                for (TestRateMasterModel testRateMasterModel :
-                                        selectedTestsList) {
-                                    if (InputUtils.isNull(testsCode)) {
-                                        if(!InputUtils.isNull(testRateMasterModel.getTestType())&&testRateMasterModel.getTestType().equals("OFFER")) {
-                                            testsCode = testRateMasterModel.getDescription();
-                                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
-                                        }
-                                        else{
-                                            testsCode = testRateMasterModel.getTestCode();
-                                        }
-                                    } else {
-                                        if(!InputUtils.isNull(testRateMasterModel.getTestType())&&testRateMasterModel.getTestType().equals("OFFER")) {
-                                            testsCode = testsCode + "," + testRateMasterModel.getDescription();
-                                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
-                                        }
-                                        else{
-                                            testsCode = testsCode + "," + testRateMasterModel.getTestCode();
+                DisplaySelectedTestsListForCancellationDialog dstlfcd = new DisplaySelectedTestsListForCancellationDialog(activity,
+                        beneficiaryDetailsModel.getTestSampleType(),
+                        new CloseTestsDisplayDialogButtonDialogDelegate() {
+                            @Override
+                            public void onItemClick(ArrayList<TestRateMasterModel> selectedTestsList, boolean isTestEdit) {
+                                //  beneficiaryDetailsModel.setTestEdit(true);
+                                Logger.error("isTestEditedt " + isTestEdit);
+                                //jai
 
-                                        }
-                                    }
+                               /* Logger.error("list status " + isTestListEdited);
+                                if (isTestListEdited.equals("yes")) {
+                                    orderDetailsModel.setTestEdit(true);
+                                    beneficiaryDetailsModel.setTestEdit(true);
+                                } else {
+                                    orderDetailsModel.setTestEdit(false);
+                                    beneficiaryDetailsModel.setTestEdit(false);
+                                }*/
+
+                                //jai
+                                if (isTestEdit) {
+                                    orderDetailsModel.setTestEdit(isTestEdit);
+                                    beneficiaryDetailsModel.setTestEdit(isTestEdit);
                                 }
-                                if(InputUtils.isNull(beneficiaryDetailsModel.getProjId())){
-                                    beneficiaryDetailsModel.setProjId("");
-                                }
-                                ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
+
+
+                                orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                                beneficiaryDetailsModel.setProjId("");
+                                ArrayList<BeneficiaryTestDetailsModel> selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
                                 for (TestRateMasterModel trmm :
                                         selectedTestsList) {
-                                    for (TestSampleTypeModel tstm :
-                                            trmm.getSampltype()) {
-                                        BeneficiarySampleTypeDetailsModel bstdm = new BeneficiarySampleTypeDetailsModel();
-                                        bstdm.setBenId(beneficiaryDetailsModel.getBenId());
-                                        bstdm.setSampleType(tstm.getSampleType());
-                                        bstdm.setId(tstm.getId());
-                                        if(!samples.contains(bstdm)){
-                                            samples.add(bstdm);
+                                    BeneficiaryTestDetailsModel btdm = new BeneficiaryTestDetailsModel();
+                                    btdm.setFasting(trmm.getFasting());
+                                    btdm.setChldtests(trmm.getChldtests() != null ? trmm.getChldtests() : new ArrayList<ChildTestsModel>());
+                                    btdm.setTests(trmm.getTestCode());
+                                    btdm.setTestType(trmm.getTestType());
+                                    btdm.setProjId("");
+                                    btdm.setSampleType(trmm.getSampltype() != null ? trmm.getSampltype() : new ArrayList<TestSampleTypeModel>());
+                                    btdm.setTstClinicalHistory(trmm.getTstClinicalHistory() != null ? trmm.getTstClinicalHistory() : new ArrayList<TestClinicalHistoryModel>());
+                                    if (!InputUtils.isNull(trmm.getTestType()) && trmm.getTestType().equalsIgnoreCase("offer")) {
+                                        btdm.setProjId(trmm.getTestCode());
+                                        btdm.setTests(trmm.getDescription());
+                                        beneficiaryDetailsModel.setProjId(trmm.getTestCode());
+                                    }
+                                    selectedTestDetailsArr.add(btdm);
+                                }
+                                beneficiaryDetailsModel.setTestSampleType(selectedTestDetailsArr);
+                                boolean isFasting = false;
+                                String testsCode = "";
+                                if (selectedTestsList != null) {
+                                    for (TestRateMasterModel testRateMasterModel :
+                                            selectedTestsList) {
+                                        if (InputUtils.isNull(testsCode)) {
+                                            if (!InputUtils.isNull(testRateMasterModel.getTestType()) && testRateMasterModel.getTestType().equals("OFFER")) {
+                                                testsCode = testRateMasterModel.getDescription();
+                                                beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
+                                            } else {
+                                                testsCode = testRateMasterModel.getTestCode();
+                                            }
+                                        } else {
+                                            if (!InputUtils.isNull(testRateMasterModel.getTestType()) && testRateMasterModel.getTestType().equals("OFFER")) {
+                                                testsCode = testsCode + "," + testRateMasterModel.getDescription();
+                                                beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
+                                            } else {
+                                                testsCode = testsCode + "," + testRateMasterModel.getTestCode();
+
+                                            }
+                                        }
+                                    }
+                                    if (InputUtils.isNull(beneficiaryDetailsModel.getProjId())) {
+                                        beneficiaryDetailsModel.setProjId("");
+                                    }
+                                    ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
+                                    for (TestRateMasterModel trmm :
+                                            selectedTestsList) {
+                                        for (TestSampleTypeModel tstm :
+                                                trmm.getSampltype()) {
+                                            BeneficiarySampleTypeDetailsModel bstdm = new BeneficiarySampleTypeDetailsModel();
+                                            bstdm.setBenId(beneficiaryDetailsModel.getBenId());
+                                            bstdm.setSampleType(tstm.getSampleType());
+                                            bstdm.setId(tstm.getId());
+                                            if (!samples.contains(bstdm)) {
+                                                samples.add(bstdm);
+                                            }
+                                        }
+                                    }
+                                    beneficiaryDetailsModel.setSampleType(samples);
+                                    for (TestRateMasterModel trmm :
+                                            selectedTestsList) {
+                                        if (!trmm.getFasting().toLowerCase().contains("non")) {
+                                            isFasting = true;
+                                            break;
                                         }
                                     }
                                 }
-                                beneficiaryDetailsModel.setSampleType(samples);
-                                for (TestRateMasterModel trmm:
-                                        selectedTestsList) {
-                                    if(!trmm.getFasting().toLowerCase().contains("non")){
-                                        isFasting = true;
-                                        break;
-                                    }
+                                beneficiaryDetailsModel.setTestsCode(testsCode);
+                                beneficiaryDetailsModel.setTests(testsCode);
+                                if (isFasting) {
+                                    beneficiaryDetailsModel.setFasting("Fasting");
+                                } else {
+                                    beneficiaryDetailsModel.setFasting("Non-Fasting");
                                 }
+                                beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                                refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
                             }
-                            beneficiaryDetailsModel.setTestsCode(testsCode);
-                            beneficiaryDetailsModel.setTests(testsCode);
-                            if(isFasting) {
-                                beneficiaryDetailsModel.setFasting("Fasting");
-                            }
-                            else{
-                                beneficiaryDetailsModel.setFasting("Non-Fasting");
-                            }
-                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                            refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
-                        }
-                    }, new AddTestListDialogDelegate() {
-                        @Override
-                        public void onItemClick(ArrayList<BeneficiaryTestDetailsModel> selectedTestsList) {
-                            Intent intentAddTests = new Intent(activity, DisplayTestsMasterListActivity.class);
-                            intentAddTests.putExtra(BundleConstants.SELECTED_TESTS_LIST, selectedTestsList);
-                            intentAddTests.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
-                            intentAddTests.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
-                            intentAddTests.putExtra(BundleConstants.IS_TEST_EDIT, true);
-                            startActivityForResult(intentAddTests, BundleConstants.ADD_TESTS_START);
-                        }
-                    });
-                    dstlfcd.show();
+                        }, new AddTestListDialogDelegate() {
+                    @Override
+                    public void onItemClick(ArrayList<BeneficiaryTestDetailsModel> selectedTestsList) {
+                        Intent intentAddTests = new Intent(activity, DisplayTestsMasterListActivity.class);
+                        intentAddTests.putExtra(BundleConstants.SELECTED_TESTS_LIST, selectedTestsList);
+                        intentAddTests.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                        intentAddTests.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
+
+                        // intentAddTests.putExtra(BundleConstants.IS_TEST_EDIT, true);
+
+                        startActivityForResult(intentAddTests, BundleConstants.ADD_TESTS_START);
+                    }
+                });
+                dstlfcd.show();
                 /*}
                 else{
                     Intent intentAddTests = new Intent(activity, DisplayTestsMasterListActivity.class);
@@ -584,12 +703,24 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         });
     }
 
+    private void getviewTestData(String leadId) {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchAssignedDetailApiAsyncTask = asyncTaskForRequest.getTestListAsyncTask(leadId);
+        fetchAssignedDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new GetTestListApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            fetchAssignedDetailApiAsyncTask.execute(fetchAssignedDetailApiAsyncTask);
+        } else {
+            Toast.makeText(activity, "No Internet", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void initUI() {
         imgVenipuncture = (ImageView) rootview.findViewById(R.id.img_venipuncture);
-        tv_orderno = (TextView)rootview.findViewById(R.id.tv_orderno);
+        tv_orderno = (TextView) rootview.findViewById(R.id.tv_orderno);
         tv_orderno.setSelected(true);
         imgHC = (ImageView) rootview.findViewById(R.id.hard_copy_check);
+        textView3 = (TextView) rootview.findViewById(R.id.textView3);
         txtName = (TextView) rootview.findViewById(R.id.txt_name);
         txtName.setSelected(true);
         txtAge = (TextView) rootview.findViewById(R.id.txt_age);
@@ -599,12 +730,13 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         btnRelease = (ImageView) rootview.findViewById(R.id.img_release2);
         imgAadhar = (ImageView) rootview.findViewById(R.id.title_aadhar_icon);
         edtTests = (TextView) rootview.findViewById(R.id.edt_test);
+        img_view_test = (ImageView) rootview.findViewById(R.id.img_view_test);
         edtCH = (TextView) rootview.findViewById(R.id.clinical_history);
         edtLA = (TextView) rootview.findViewById(R.id.edt_lab_alerts);
         edtRemarks = (EditText) rootview.findViewById(R.id.customer_sign);
         llBarcodes = (LinearLayout) rootview.findViewById(R.id.ll_barcodes);
         tlBarcodes = (TableLayout) rootview.findViewById(R.id.tl_barcodes);
-        btnEdit.setVisibility(View.VISIBLE);
+        //
     }
 
     private void initScanBarcodeView() {
@@ -631,12 +763,10 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("URINE")) {
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
-                }
-                else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE-F")) {
+                } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE-F")) {
 
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
-                }
-                else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE-PP")) {
+                } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE-PP")) {
 
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
                 }
@@ -648,7 +778,7 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 imgScan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Logger.error("sample type img scan click "+beneficiaryBarcodeDetailsModel.getSamplType());
+                        Logger.error("sample type img scan click " + beneficiaryBarcodeDetailsModel.getSamplType());
                         currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
 
                         intentIntegrator = new IntentIntegrator(activity) {
@@ -664,45 +794,53 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     @Override
                     public void onClick(View v) {
                         currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
-                        AddSampleBarcodeDialog sampleBarcodeDialog = new AddSampleBarcodeDialog(activity, new AddSampleBarcodeDialogDelegate() {
+                        Logger.error("currentScanSampleType "+currentScanSampleType);
+                        //jai
+                        AddSampleBarcodeDialog sampleBarcodeDialog = new AddSampleBarcodeDialog(currentScanSampleType,activity, new AddSampleBarcodeDialogDelegate() {
                             @Override
                             public void onSampleBarcodeAdded(String scanned_barcode) {
                                 if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                                    if (beneficiaryDetailsModel.getBarcodedtl() != null) {
-                                        for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
-                                            if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
-                                                    && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
-                                                //CHECK for duplicate barcode scanned for the same visit
-                                                OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
-                                                for (OrderDetailsModel odm :
-                                                        orderVisitDetailsModel.getAllOrderdetails()) {
-                                                    for (BeneficiaryDetailsModel bdm :
-                                                            odm.getBenMaster()) {
-                                                        if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
-                                                            for (BeneficiaryBarcodeDetailsModel bbdm :
-                                                                    bdm.getBarcodedtl()) {
-                                                                if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
-                                                                    if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
+                                    if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")) {
+                                        Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        if (beneficiaryDetailsModel.getBarcodedtl() != null) {
+                                            for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                                                if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                                        && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
+                                                    //CHECK for duplicate barcode scanned for the same visit
+                                                    OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
+                                                    for (OrderDetailsModel odm :
+                                                            orderVisitDetailsModel.getAllOrderdetails()) {
+                                                        for (BeneficiaryDetailsModel bdm :
+                                                                odm.getBenMaster()) {
+                                                            if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
+                                                                for (BeneficiaryBarcodeDetailsModel bbdm :
+                                                                        bdm.getBarcodedtl()) {
+                                                                    if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
+                                                                        if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
 
-                                                                    } else {
-                                                                        Toast.makeText(activity, "Same Barcode Already Scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
-                                                                        return;
+                                                                        } else {
+                                                                            Toast.makeText(activity, "Same Barcode Already Scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                                            return;
+                                                                        }
                                                                     }
                                                                 }
                                                             }
                                                         }
                                                     }
+                                                    beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                                                    beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                                    beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                                                    break;
                                                 }
-                                                beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
-                                                beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
-                                                beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                                                break;
                                             }
+                                            initData();
+                                        } else {
+                                            Toast.makeText(activity, "Failed to Update Barcode Value", Toast.LENGTH_SHORT).show();
                                         }
-                                        initData();
-                                    } else {
-                                        Toast.makeText(activity, "Failed to Update Barcode Value", Toast.LENGTH_SHORT).show();
                                     }
+
+
                                 } else {
                                     Toast.makeText(activity, "Failed to Update Barcode Value", Toast.LENGTH_SHORT).show();
                                 }
@@ -719,62 +857,88 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BundleConstants.START_BARCODE_SCAN) {
-            IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-            if ((scanningResult != null) && (scanningResult.getContents() != null)) {
-                String scanned_barcode = scanningResult.getContents();
-                if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                    if (beneficiaryDetailsModel.getBarcodedtl() != null) {
-                        for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
-                            //size 4
-                            if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
-                                    && !InputUtils.isNull(currentScanSampleType)
-                                    && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType()) /*&& currentScanBarcode.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())*/) {
 
-                                //CHECK for duplicate barcode scanned for the same visit
-                                OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
-                                for (OrderDetailsModel odm :
-                                        orderVisitDetailsModel.getAllOrderdetails()) {
-                                    for (BeneficiaryDetailsModel bdm :
-                                            odm.getBenMaster()) {
-                                        if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
-                                            for (BeneficiaryBarcodeDetailsModel bbdm :
-                                                    bdm.getBarcodedtl()) {
+            if (requestCode == BundleConstants.START_BARCODE_SCAN) {
+                IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+                if ((scanningResult != null) && (scanningResult.getContents() != null)) {
+                    final String scanned_barcode = scanningResult.getContents();
 
-                                                if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
-                                                    if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
 
-                                                    } else {
-                                                        Toast.makeText(activity, "Same Barcode Already Scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
-                                                        return;
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+                    builder1.setTitle("Check the Barcode ")
+                            .setMessage("Do you want to Proceed with this barcode entry "+scanned_barcode+"?")
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+                            if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")) {
+                                Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+                            } else {
+                                if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                                    if (beneficiaryDetailsModel.getBarcodedtl() != null) {
+                                        for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                                            //size 4
+                                            if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                                    && !InputUtils.isNull(currentScanSampleType)
+                                                    && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType()) /*&& currentScanBarcode.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())*/) {
+
+                                                //CHECK for duplicate barcode scanned for the same visit
+                                                OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
+                                                for (OrderDetailsModel odm :
+                                                        orderVisitDetailsModel.getAllOrderdetails()) {
+                                                    for (BeneficiaryDetailsModel bdm :
+                                                            odm.getBenMaster()) {
+                                                        if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
+                                                            for (BeneficiaryBarcodeDetailsModel bbdm :
+                                                                    bdm.getBarcodedtl()) {
+
+                                                                if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
+                                                                    if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
+
+                                                                    } else {
+                                                                        Toast.makeText(activity, "Same Barcode Already Scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                                        return;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
+                                                beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                                                //   Logger.error("getBarcodedtl "+beneficiaryDetailsModel);
+                                                beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                                beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                                                break;
                                             }
                                         }
+                                        initData();
+                                    } else {
+                                        Toast.makeText(activity, "Failed to Update Scanned Barcode Value", Toast.LENGTH_SHORT).show();
                                     }
+                                } else {
+                                    Toast.makeText(activity, "Failed to Scan Barcode", Toast.LENGTH_SHORT).show();
                                 }
-                                beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
-                             //   Logger.error("getBarcodedtl "+beneficiaryDetailsModel);
-                                beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
-                                beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                                break;
                             }
+
+
+
                         }
-                        initData();
-                    } else {
-                        Toast.makeText(activity, "Failed to Update Scanned Barcode Value", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(activity, "Failed to Scan Barcode", Toast.LENGTH_SHORT).show();
-                }
+                    }).show();
             }
+
         }
         if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
             onCaptureImageResult(data);
         }
         if (requestCode == BundleConstants.ADD_TESTS_START && resultCode == BundleConstants.ADD_TESTS_FINISH) {
-           initData();
-           edtTests.performClick();
+            initData();
+            edtTests.performClick();
 //            refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
         }
         if (requestCode == BundleConstants.EDIT_START && resultCode == BundleConstants.EDIT_FINISH) {
@@ -788,10 +952,9 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private void onCaptureImageResult(Intent data) {
         thumbnail = (Bitmap) data.getExtras().get("data");
         encodedVanipunctureImg = CommonUtils.encodeImage(thumbnail);
-        if(!InputUtils.isNull(encodedVanipunctureImg)) {
+        if (!InputUtils.isNull(encodedVanipunctureImg)) {
             imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
-        }
-        else{
+        } else {
             imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.cameraa));
         }
         beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
@@ -895,6 +1058,7 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
         }
     }
+
     private class AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
 
         private OrderBookingResponseVisitModel orderBookingResponseVisitModel = new OrderBookingResponseVisitModel();
@@ -907,7 +1071,7 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if(statusCode==200) {
+            if (statusCode == 200) {
                 orderBookingResponseVisitModel = new ResponseParser(activity).getOrderBookingAPIResponse(json, statusCode);
                 for (OrderBookingResponseOrderModel obrom :
                         orderBookingResponseVisitModel.getOrderids()) {
@@ -919,25 +1083,25 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 //UPDATE old Order No and Benficiary Id with New Order No and Beneficiary Id
                 for (OrderDetailsModel odm :
                         orderVisitDetails.getAllOrderdetails()) {
-                    for (OrderBookingResponseOrderModel obrom:
+                    for (OrderBookingResponseOrderModel obrom :
                             orderBookingResponseVisitModel.getOrderids()) {
                         //CHECK if old ORDER NO from API response equals order no of local Order Detail Model
                         // AND API response old order Id not equals new order Id
-                        if(odm.getOrderNo().equals(obrom.getOldOrderId()) && !obrom.getOldOrderId().equals(obrom.getNewOrderId())){
+                        if (odm.getOrderNo().equals(obrom.getOldOrderId()) && !obrom.getOldOrderId().equals(obrom.getNewOrderId())) {
                             odm.setOrderNo(obrom.getNewOrderId());
                             //UPDATE old order no with new order no
-                            orderDetailsDao.updateOrderNo(obrom.getOldOrderId(),odm);
-                            for (BeneficiaryDetailsModel bdm:
+                            orderDetailsDao.updateOrderNo(obrom.getOldOrderId(), odm);
+                            for (BeneficiaryDetailsModel bdm :
                                     odm.getBenMaster()) {
-                                for (OrderBookingResponseBeneficiaryModel obrbm:
+                                for (OrderBookingResponseBeneficiaryModel obrbm :
                                         orderBookingResponseBeneficiaryModelArr) {
                                     //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
                                     // AND API response old beneficiary Id not equals new beneficiary Id
-                                    if((bdm.getBenId()+"").equals(obrbm.getOldBenIds())){
+                                    if ((bdm.getBenId() + "").equals(obrbm.getOldBenIds())) {
                                         bdm.setOrderNo(obrom.getNewOrderId());
                                         bdm.setBenId(Integer.parseInt(obrbm.getNewBenIds()));
                                         //UPDATE old beneficiary Id with new Beneficiary Id
-                                        beneficiaryDetailsDao.updateBeneficiaryId(Integer.parseInt(obrbm.getNewBenIds()),bdm);
+                                        beneficiaryDetailsDao.updateBeneficiaryId(Integer.parseInt(obrbm.getNewBenIds()), bdm);
                                     }
                                 }
                             }
@@ -947,12 +1111,11 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 //END of UPDATE old Order No and Benficiary Id with New Order No and Beneficiary Id
 
                 Intent intentFinish = new Intent();
-                intentFinish.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL,beneficiaryDetailsModel);
-                intentFinish.putExtra(BundleConstants.ORDER_DETAILS_MODEL,orderDetailsModel);
+                intentFinish.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
+                intentFinish.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
 
-            }
-            else{
-                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -980,11 +1143,11 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
         //SET BENEFICIARY Details Models Array - START
         ArrayList<BeneficiaryDetailsModel> benArr = new ArrayList<>();
-        for (OrderDetailsModel orderDetailsModel:
+        for (OrderDetailsModel orderDetailsModel :
                 orderDetailsDao.getModelsFromVisitId(orderVisitDetailsModel.getVisitId())) {
             ArrayList<BeneficiaryDetailsModel> tempBenArr = new ArrayList<>();
             tempBenArr = beneficiaryDetailsDao.getModelsFromOrderNo(orderDetailsModel.getOrderNo());
-            if(tempBenArr!=null) {
+            if (tempBenArr != null) {
                 benArr.addAll(tempBenArr);
             }
         }
@@ -1003,18 +1166,18 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         //SET BENEFICIARY Lab Alerts Models Array - START
         ArrayList<BeneficiaryLabAlertsModel> benLAArr = new ArrayList<>();
 
-        for (BeneficiaryDetailsModel beneficiaryDetailsModel:
+        for (BeneficiaryDetailsModel beneficiaryDetailsModel :
                 benArr) {
-            if(beneficiaryDetailsModel.getBarcodedtl()!=null) {
+            if (beneficiaryDetailsModel.getBarcodedtl() != null) {
                 benBarcodeArr.addAll(beneficiaryDetailsModel.getBarcodedtl());
             }
-            if(beneficiaryDetailsModel.getSampleType()!=null) {
+            if (beneficiaryDetailsModel.getSampleType() != null) {
                 benSTArr.addAll(beneficiaryDetailsModel.getSampleType());
             }
-            if(beneficiaryDetailsModel.getClHistory()!=null) {
+            if (beneficiaryDetailsModel.getClHistory() != null) {
                 benCHArr.addAll(beneficiaryDetailsModel.getClHistory());
             }
-            if(beneficiaryDetailsModel.getLabAlert()!=null) {
+            if (beneficiaryDetailsModel.getLabAlert() != null) {
                 benLAArr.addAll(beneficiaryDetailsModel.getLabAlert());
             }
             //*******
@@ -1035,4 +1198,104 @@ public class  BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         return orderBookingRequestModel;
     }
 
+    private class GetTestListApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                Logger.error("" + json);
+
+                ResponseParser responseParser = new ResponseParser(activity);
+                testGroupListModelArrayList = new ArrayList<>();
+                TestListResponseModel = new GetTestListResponseModel();
+                TestListResponseModel = responseParser.getTestListResponseModel(json, statusCode);
+
+                CustomDialogClass cdd = new CustomDialogClass(activity);
+                cdd.show();
+
+            } else {
+                Logger.error("" + json);
+            }
+
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    private class CustomDialogClass extends Dialog {
+
+        private Activity c;
+        private Dialog d;
+        private Button yes, no;
+        private TextView tv_test;
+        private LinearLayout ll_tests;
+
+        public CustomDialogClass(Activity a) {
+            super(a);
+            // TODO Auto-generated constructor stub
+            this.c = a;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.item_test_list_display);
+            ll_tests = (LinearLayout) findViewById(R.id.ll_tests);
+            iflateTestGroupName(ll_tests);
+
+
+        }
+
+    }
+
+    private void iflateTestGroupName(LinearLayout ll_tests) {
+        if (TestListResponseModel.getTestGroupList().size() > 0) {
+            // Logger.error("if ");
+            ll_tests.removeAllViews();
+            for (int i = 0; i < TestListResponseModel.getTestGroupList().size(); i++) {
+                LayoutInflater vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v = vi.inflate(R.layout.item_view_test, null);
+                final TextView tv_test = (TextView) v.findViewById(R.id.tv_test);
+                final LinearLayout ll_child = (LinearLayout) v.findViewById(R.id.ll_child);
+                tv_test.setText("" + TestListResponseModel.getTestGroupList().get(i).getGroupName() + " (" + TestListResponseModel.getTestGroupList().get(i).getTestCount() + ")");
+                tv_test.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_group_collapse_15, 0);
+
+                tv_test.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (ll_child.getVisibility() == View.VISIBLE) {
+                            ll_child.setVisibility(View.GONE);
+                            tv_test.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_group_collapse_15, 0);
+                        } else {
+                            ll_child.setVisibility(View.VISIBLE);
+                            tv_test.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_group_expand_15, 0);
+
+                        }
+                    }
+                });
+                ll_child.removeAllViews();
+                for (int j = 0; j < TestListResponseModel.getTestGroupList().get(i).getTestDetails().size(); j++) {
+                    LayoutInflater vj = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View v1 = vj.inflate(R.layout.item_view_test, null);
+                    TextView tv_test1 = (TextView) v1.findViewById(R.id.tv_test);
+                    tv_test1.setBackgroundColor(Color.parseColor("#ffffff"));
+                    tv_test1.setTextColor(Color.parseColor("#000000"));
+                    tv_test1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    tv_test1.setText(">> Description:  " + TestListResponseModel.getTestGroupList().get(i).getTestDetails().get(j).getDescription() + " \n     Test Code: " + TestListResponseModel.getTestGroupList().get(i).getTestDetails().get(j).getTestCode() + "\n     Unit: " + TestListResponseModel.getTestGroupList().get(i).getTestDetails().get(j).getUnit());
+
+                    ll_child.addView(v1);
+
+                    ll_child.invalidate();
+                }
+
+                ll_tests.addView(v);
+                ll_tests.invalidate();
+            }
+
+
+        }
+    }
 }

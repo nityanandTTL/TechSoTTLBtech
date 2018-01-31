@@ -81,6 +81,10 @@ public class ResetPasswordFragment extends AbstractFragment implements View.OnCl
             edt_confirm_password.setError(getString(R.string.password_do_not_match));
             edt_confirm_password.requestFocus();
             return false;
+        }else if (edt_old_password.getText().toString().equals(edt_new_password.getText().toString())) {
+            edt_new_password.setError(getString(R.string.old_pwd_and_new_pwd_should_not_be_same));
+            edt_new_password.requestFocus();
+            return false;
         }
         return true;
     }

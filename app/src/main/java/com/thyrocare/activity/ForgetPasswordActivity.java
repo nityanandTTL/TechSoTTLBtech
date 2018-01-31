@@ -133,6 +133,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
     private class ResetPasswordApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
+
             if (statusCode == 200) {
                 Toast.makeText(ForgetPasswordActivity.this, "OTP sent Successfully", Toast.LENGTH_SHORT).show();
                 code = json;
@@ -143,6 +144,8 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
             } else {
                 Toast.makeText(ForgetPasswordActivity.this, "" + json, Toast.LENGTH_SHORT).show();
             }
+
+
         }
 
         @Override

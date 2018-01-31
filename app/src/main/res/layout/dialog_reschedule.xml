@@ -43,11 +43,23 @@
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         android:textStyle="bold"/>
+    <Spinner
+        android:textSize="14sp"
+        android:hint="Please enter reason to reschedule"
+        android:singleLine="true"
+        android:padding="10dp"
+        android:id="@+id/spn_remark"
+        android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <EditText
         android:textSize="14sp"
         android:hint="Please enter reason to reschedule"
         android:singleLine="true"
+        android:visibility="gone"
         android:padding="10dp"
         android:id="@+id/edt_remark"
         android:layout_weight="1"

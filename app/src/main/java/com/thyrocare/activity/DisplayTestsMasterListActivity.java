@@ -148,6 +148,10 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
                     orderDetailsModel.setAmountDue(orderDetailsModel.getAmountDue()+AmountDue);
                 }
                 orderDetailsModel.setTestEdit(isEdit);
+
+                //jai
+                benDetailsModel.setTestEdit(isEdit);
+                //jai
                 orderDetailsModel.setBrandId(brandMasterModel.getBrandId());
                 new OrderDetailsDao(dhbDao.getDb()).insertOrUpdate(orderDetailsModel);
 

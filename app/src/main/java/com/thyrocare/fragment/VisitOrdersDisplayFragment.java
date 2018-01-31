@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.activity.OrderBookingActivity;
@@ -27,10 +28,14 @@ import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.BeneficiaryDetailsDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
 import com.thyrocare.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
+import com.thyrocare.delegate.OrderPassRecyclerViewAdapterDelegate;
 import com.thyrocare.delegate.OrderRescheduleDialogButtonClickedDelegate;
 import com.thyrocare.delegate.VisitOrderDisplayRecyclerViewAdapterDelegate;
+import com.thyrocare.delegate.VisitOrderDisplayyRecyclerViewAdapterDelegate;
 import com.thyrocare.delegate.refreshDelegate;
+import com.thyrocare.dialog.ConfirmOrderPassDialog;
 import com.thyrocare.dialog.ConfirmOrderReleaseDialog;
+import com.thyrocare.dialog.ConfirmRequestReleaseDialog;
 import com.thyrocare.dialog.RescheduleOrderDialog;
 import com.thyrocare.models.api.request.CallPatchRequestModel;
 import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
@@ -52,6 +57,7 @@ import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,12 +83,15 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private TextView txtNoRecord;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConfirmOrderReleaseDialog cdd;
+    private ConfirmRequestReleaseDialog crr;
+    private ConfirmOrderPassDialog Cop;
     private boolean isToFromMap = false;
     private String kits;
     private String[] kits_arr;
     private RescheduleOrderDialog rod;
     private String MaskedPhoneNumber = "";
     private boolean isFetchingOrders = false;
+    public static boolean edit;
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
     }
@@ -98,6 +107,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
+
         if (activity.toolbarHome != null) {
             activity.toolbarHome.setTitle("Visit Orders");
         }
@@ -120,7 +130,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         if (isNetworkAvailable(activity)) {
             fetchBtechEstEarningsApiAsyncTask.execute(fetchBtechEstEarningsApiAsyncTask);
         } else {
-            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity,  "Check internet connection", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+           // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             //  initData();
         }
     }
@@ -140,7 +151,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Toast.makeText(activity, "refresh on realease", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "View Refreshed", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+               // Toast.makeText(activity, "refresh on realease", Toast.LENGTH_SHORT).show();
                 fetchData();
             }
         });
@@ -179,7 +191,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         } else {
 
             // Permission denied, Disable the functionality that depends on activity permission.
-            Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
+            TastyToast.makeText(activity, "permission denied", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+           // Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -208,7 +221,9 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
             }
         } else {
-            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+
+           // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             initData();
         }
     }
@@ -264,6 +279,35 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 public void onRefreshClicked() {
                     fetchData();
                 }
+            }, new VisitOrderDisplayyRecyclerViewAdapterDelegate() {
+
+                @Override
+                public void onItemRelease(OrderVisitDetailsModel orderVisitDetailsModel) {
+                    crr = new ConfirmRequestReleaseDialog(activity, new CConfirmOrderReleaseDialogButtonClickedDelegateResult(), orderVisitDetailsModel);
+                    crr.show();
+                }
+            }, new OrderPassRecyclerViewAdapterDelegate() {
+                @Override
+                public void onItemRelease(OrderVisitDetailsModel orderVisitDetailsModel) {
+                   /* Cop = new ConfirmOrderPassDialog(activity, new ConfirmOrderPassDialogButtonClickedDelegateResult(), orderVisitDetailsModel);
+                    Cop.show();*/
+                }
+
+                @Override
+                public void onItemReleaseto(String Pincode, OrderVisitDetailsModel orderVisitDetailsModel) {
+                   /* Cop = new ConfirmOrderPassDialog(activity, new ConfirmOrderPassDialogButtonClickedDelegateResult(),Pincode,orderVisitDetailsModel );*/
+                    Cop = new ConfirmOrderPassDialog(activity, new refreshDelegate() {
+                        @Override
+                        public void onRefreshClicked() {
+                            fetchData();
+                            swipeRefreshLayout.setRefreshing(true);
+                            pushFragments(VisitOrdersDisplayFragment.newInstance(), false, false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment.TAG_FRAGMENT);
+                        }
+                    }, Pincode, orderVisitDetailsModel);
+                    Cop.show();
+                }
+
+
             });
             recyclerView.setAdapter(visitOrderDisplayRecyclerViewAdapter);
             recyclerView.setVisibility(View.VISIBLE);
@@ -281,6 +325,12 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
 
             if (statusCode == 200) {
+
+                //jai
+                JSONObject jsonObject=new JSONObject(json);
+
+
+
                 ResponseParser responseParser = new ResponseParser(activity);
                 FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = new FetchOrderDetailsResponseModel();
                 fetchOrderDetailsResponseModel = responseParser.getFetchOrderDetailsResponseModel(json, statusCode);
@@ -321,7 +371,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         @Override
         public void onApiCancelled() {
             isFetchingOrders = false;
-            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, getString(R.string.network_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+          //  Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -379,14 +430,21 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
         @Override
         public void onCallCustomer(OrderVisitDetailsModel orderVisitDetailsModel) {
-            CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
+
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile()));
+            activity.startActivity(intent);
+
+
+
+            /*CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
             callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
             callPatchRequestModel.setDestNumber(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
             Logger.error("orderVisitDetailsModelsArr"+orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
             callPatchRequestModel.setVisitID(orderVisitDetailsModel.getVisitId());
             ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
             callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-            callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
+            callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);*/
 
         }
 
@@ -416,7 +474,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             if (isNetworkAvailable(activity)) {
                 orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
             } else {
-                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+              //  Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -445,7 +504,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             if (isNetworkAvailable(activity)) {
                 orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
             } else {
-                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+             //   Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -455,6 +515,51 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         }
     }
 
+    public class CConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
+        @Override
+        public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
+            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
+            orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId() + "");
+            orderStatusChangeRequestModel.setRemarks(remarks);
+            orderStatusChangeRequestModel.setStatus(27);
+            ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
+            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeApiAsyncTaskDelegateResult(orderVisitDetailsModel));
+            if (isNetworkAvailable(activity)) {
+                orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
+            } else {
+                TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+              //  Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
+    }
+    public class ConfirmOrderPassDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
+        @Override
+        public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
+           /* AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
+            orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId() + "");
+            orderStatusChangeRequestModel.setRemarks(remarks);
+            orderStatusChangeRequestModel.setStatus(27);
+            ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
+            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeApiAsyncTaskDelegateResult(orderVisitDetailsModel));
+            if (isNetworkAvailable(activity)) {
+                orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }*/
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
+    }
 
     private class OrderStatusChangeApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         OrderVisitDetailsModel orderVisitDetailsModel;
@@ -466,16 +571,19 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 204 || statusCode == 200) {
-                Toast.makeText(activity, "Order Released Successfully", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+               // Toast.makeText(activity, "Order Released Successfully", Toast.LENGTH_SHORT).show();
                 fetchData();
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, ""+json, TastyToast.LENGTH_LONG, TastyToast.INFO);
+               // Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onApiCancelled() {
-            Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, "Network Error", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+         //   Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -490,7 +598,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 204 || statusCode == 200) {
-                Toast.makeText(activity, "Order Accepted Successfully", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "Order Accepted Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+               // Toast.makeText(activity, "Order Accepted Successfully", Toast.LENGTH_SHORT).show();
                 OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
                 for (OrderDetailsModel orderDetailsModel :
                         orderVisitDetailsModel.getAllOrderdetails()) {
@@ -499,13 +608,15 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 }
                 initData();
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, ""+json, TastyToast.LENGTH_LONG, TastyToast.INFO);
+              //  Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onApiCancelled() {
-            Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, "Network Error", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            //Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -586,7 +697,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             if (isNetworkAvailable(activity)) {
                 orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
             } else {
-                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+               // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -609,16 +721,19 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                /* orderDetailsModel.setStatus("RESCHEDULED");
                 OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
                 orderDetailsDao.insertOrUpdate(orderDetailsModel);*/
-                Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "Order rescheduled successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                //Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, ""+json, TastyToast.LENGTH_LONG, TastyToast.INFO);
+               // Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
             fetchData();
         }
 
         @Override
         public void onApiCancelled() {
-            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, "Network Error", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+          //  Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
 

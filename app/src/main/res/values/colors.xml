@@ -7,7 +7,11 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorBackground">#E6E6E6</color>
     <color name="btn_layout_btech_camp">#61bee0</color>
-
+    <color name="test2">#FFAB91</color>
+    <color name="test1">#A5D6A7</color>
+    <color name="blue_shade">#2196F3</color>
+    <color name="status_level_10">#FF2A00</color>
+    <color name="status_level_1">#00FF00</color>
     <color name="bgBackSideColor">#f4f0ff</color>
     <color name="bgTitleLeft">#594691</color>
     <color name="bgTitleRight">#ffffff</color>
@@ -15,6 +19,7 @@
     <color name="bg_content">#ffffff</color>
     <color name="contentDividerLine">#e0e0e0</color>
     <color name="contentBadgeTitle">#a9a9a9</color>
+    <color name="celltext">#4d4646</color>
     <color name="gray">#FF8B8888</color>
     <color name="titleBadgeTitle">#adafb1</color>
     <color name="titleBadgeText">#adafb1</color>

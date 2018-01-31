@@ -32,13 +32,16 @@ import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.thyrocare.utils.app.GPSTracker;
 
 import org.json.JSONException;
 
-import java.util.ArrayList;/**
- *　APi Used 　　i)/SpecimenTrack/ReceiveHubBarcode/Userid<br/>
- *ii)/SpecimenTrack/ReceiveHubBarcodes
+import java.util.ArrayList;
 
+/**
+ * 　APi Used 　　i)/SpecimenTrack/ReceiveHubBarcode/Userid<br/>
+ * ii)/SpecimenTrack/ReceiveHubBarcodes
+ * <p>
  * Created by Orion on 7/4/2017.
  */
 
@@ -57,6 +60,7 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
     private boolean isMasterBarcode;
     private IntentIntegrator intentIntegrator;
     private Button btn_receive;
+    private GPSTracker gpsTracker;
     private boolean isCentrifuged = false;
 
     public TSP_HubMasterBarcodeScanFragment() {
@@ -131,17 +135,27 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
     }
 
     private void callMasterBarcodeMapApi() {
+        gpsTracker = new GPSTracker(activity);
         BtechwithHub_MasterBarcodeMappingRequestModel masterBarcodeMappingRequestModel = new BtechwithHub_MasterBarcodeMappingRequestModel();
 
         masterBarcodeMappingRequestModel.setHubId(appPreferenceManager.getBtechID());
         masterBarcodeMappingRequestModel.setBtechId("");
         ArrayList<BtechwithHub_BarcodeDataModel> scannedBarcodesArr = new ArrayList<>();
+
         for (BtechwithHub_BarcodeDataModel hbm :
                 barcodeModels) {
             if (hbm.isReceived()) {
+                if (gpsTracker != null) {
+                    hbm.setLatitude("" + String.valueOf(gpsTracker.getLatitude()));
+                    hbm.setLongitude("" + String.valueOf(gpsTracker.getLongitude()));
+                }else {
+                    hbm.setLatitude("");
+                    hbm.setLongitude("");
+                }
                 scannedBarcodesArr.add(hbm);
             }
         }
+
         masterBarcodeMappingRequestModel.setBarcodes(scannedBarcodesArr);
         masterBarcodeMappingRequestModel.setMasterBarcode(master_scanned_barcode);
 
@@ -186,8 +200,12 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
 
                     }
                 }
+                try {
+                    hubScanBarcodeListAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-                hubScanBarcodeListAdapter.notifyDataSetChanged();
             } else {
                 master_scanned_barcode = scanningResult.getContents();
                 Logger.debug("result***" + master_scanned_barcode);

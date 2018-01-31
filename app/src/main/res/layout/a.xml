@@ -355,7 +355,7 @@
                 android:layout_below="@+id/no_of_days"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="2dp"
-                android:background="@drawable/purple_btn_bg"
+                android:background1="@drawable/purple_btn_bg"
                 android:text="Accept"
                 android:textColor="@android:color/white" />
 
@@ -366,7 +366,7 @@
                 android:layout_below="@+id/no_of_days"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="2dp"
-                android:background="@drawable/purple_btn_bg"
+                android:background1="@drawable/purple_btn_bg"
                 android:text="Start"
                 android:minEms="5"
                 android:textColor="@android:color/white"
@@ -380,7 +380,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="2dp"
                 android:minEms="5"
-                android:background="@drawable/purple_btn_bg"
+                android:background1="@drawable/purple_btn_bg"
                 android:text="Arrived"
                 android:textColor="@android:color/white"
                 android:visibility="gone" />-->

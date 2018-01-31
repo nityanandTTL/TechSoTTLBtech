@@ -14,6 +14,8 @@ String BTechId;
     String BTTransactionCode;
     String OrderId;
     String FinalStatus;
+    String Remarks;
+    private ArrayList<MaterialOrderDataModel> MaterialDetails;
 
     public String getBTechId() {
         return BTechId;
@@ -63,7 +65,6 @@ String BTechId;
         MaterialDetails = materialDetails;
     }
 
-    String Remarks;
-    private ArrayList<MaterialOrderDataModel> MaterialDetails;
+
 
 }

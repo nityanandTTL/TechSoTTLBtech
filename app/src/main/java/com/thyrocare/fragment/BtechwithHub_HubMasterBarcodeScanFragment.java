@@ -133,6 +133,7 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
         masterBarcodeMappingRequestModel.setHubId(appPreferenceManager.getBtechID());
         masterBarcodeMappingRequestModel.setBtechId("");
         ArrayList<BtechwithHub_BarcodeDataModel> scannedBarcodesArr = new ArrayList<>();
+
         for (BtechwithHub_BarcodeDataModel hbm :
                 barcodeModels) {
             if (hbm.isReceived()) {

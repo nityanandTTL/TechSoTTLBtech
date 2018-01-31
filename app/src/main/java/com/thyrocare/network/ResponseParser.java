@@ -5,6 +5,7 @@ import android.content.Context;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.thyrocare.models.api.request.ChatRequestModel;
 import com.thyrocare.models.api.response.BankMasterResponseModel;
 import com.thyrocare.models.api.response.BtechAvaliabilityResponseModel;
 import com.thyrocare.models.api.response.BtechClientsResponseModel;
@@ -21,10 +22,13 @@ import com.thyrocare.models.api.response.ErrorResponseModel;
 import com.thyrocare.models.api.response.FetchLabAlertMasterAPIResponseModel;
 import com.thyrocare.models.api.response.FetchLedgerResponseModel;
 import com.thyrocare.models.api.response.FetchOrderDetailsResponseModel;
+import com.thyrocare.models.api.response.GetTestListResponseModel;
+import com.thyrocare.models.api.response.LeaveAppliedResponseModel;
 import com.thyrocare.models.api.response.LoginResponseModel;
 import com.thyrocare.models.api.response.MaterialINVResponseModel;
 import com.thyrocare.models.api.response.MessageModel;
 import com.thyrocare.models.api.response.OrderBookingResponseVisitModel;
+import com.thyrocare.models.api.response.OrderPassresponseModel;
 import com.thyrocare.models.api.response.OrderServedResponseModel;
 import com.thyrocare.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.thyrocare.models.api.response.PaymentModeMasterResponseModel;
@@ -33,6 +37,7 @@ import com.thyrocare.models.api.response.PaymentStartTransactionAPIResponseModel
 import com.thyrocare.models.api.response.RemarksResponseModel;
 import com.thyrocare.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.models.api.response.SessionExpireModel;
+import com.thyrocare.models.api.response.SubSlotMasterResponseModel;
 import com.thyrocare.models.api.response.Tsp_ScanBarcodeResponseModel;
 import com.thyrocare.models.api.response.Tsp_SendConsignment_Modes_ResponseModel;
 import com.thyrocare.models.data.BrandMasterModel;
@@ -48,6 +53,7 @@ import com.thyrocare.models.data.MaterialDetailsModel;
 import com.thyrocare.models.data.NarrationMasterModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
 import com.thyrocare.models.data.SlotModel;
+import com.thyrocare.models.data.TSPNBT_AvilModel;
 import com.thyrocare.models.data.VersionControlMasterModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AlertDialogMessage;
@@ -577,6 +583,33 @@ public class ResponseParser implements AppConstants {
         return true;
     }
 
+    public GetTestListResponseModel getTestListResponseModel(String json, int statusCode) {
+        GetTestListResponseModel getTestListResponseModel = null;
+        //if (!parseIntoError(json, statusCode)){
+        getTestListResponseModel = gson.fromJson(json, GetTestListResponseModel.class);
+        //}
+        return getTestListResponseModel;
+    }
+    public OrderPassresponseModel getOrderPassresponseModel(String json, int statusCode) {
+        OrderPassresponseModel orderPassresponseModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            orderPassresponseModel = gson.fromJson(json, OrderPassresponseModel.class);
+        }
+        return orderPassresponseModel;
+    }
+    // Nityanand Start
+    //Fetch TSP NBT Response parse:
+    public ArrayList<TSPNBT_AvilModel> getTSPNBTDetailsResponseModel(String json, int statusCode) {
+        ArrayList<TSPNBT_AvilModel> slotModels = null;
+//		if (!parseIntoError(json, statusCode)){
+        TypeToken<ArrayList<TSPNBT_AvilModel>> token = new TypeToken<ArrayList<TSPNBT_AvilModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+//		}
+        return slotModels;
+    }
+    // Nityanand End
+
     public BtechwithHubResponseModel getBtechwithHubBarcodeResponseModel(String json, int statusCode) {
         BtechwithHubResponseModel btechwithHubResponseModel = null;
         if (!parseIntoError(json, statusCode)) {
@@ -591,6 +624,16 @@ public class ResponseParser implements AppConstants {
             earning_newRegisterModel = gson.fromJson(json, Earning_NewRegisterModel.class);
         }
         return earning_newRegisterModel;
+    }
+
+    public ArrayList<SubSlotMasterResponseModel> getSubSlotMasterResponseModel(String json, int statusCode) {
+        ArrayList<SubSlotMasterResponseModel> subSlotMasterResponseModels = null;
+//		if (!parseIntoError(json, statusCode)){
+        TypeToken<ArrayList<SubSlotMasterResponseModel>> token = new TypeToken<ArrayList<SubSlotMasterResponseModel>>() {
+        };
+        subSlotMasterResponseModels = gson.fromJson(json, token.getType());
+//		}
+        return subSlotMasterResponseModels;
     }
 
     public Tsp_SendConsignment_Modes_ResponseModel getTspModesResponseModel(String json, int statusCode) {
@@ -965,6 +1008,28 @@ public class ResponseParser implements AppConstants {
         }
         return orderVisitDetailsModel;
     }
+
+
+
+    ////Fetch Leave  details Response parse:
+    public ArrayList<ChatRequestModel> getchatMasterResponse(String json, int statusCode) {
+        ArrayList<ChatRequestModel> chatRequestModels = null;
+        TypeToken<ArrayList<ChatRequestModel>> token = new TypeToken<ArrayList<ChatRequestModel>>() {
+        };
+        chatRequestModels = gson.fromJson(json, token.getType());
+        return chatRequestModels;
+    }
+
+    ////Fetch Leave  Applied details Response parse:
+    public ArrayList<LeaveAppliedResponseModel> getLeaveAppliedResponse(String json, int statusCode) {
+        ArrayList<LeaveAppliedResponseModel> leaveAppliedResponseModels = null;
+        TypeToken<ArrayList<LeaveAppliedResponseModel>> token = new TypeToken<ArrayList<LeaveAppliedResponseModel>>() {
+        };
+        leaveAppliedResponseModels = gson.fromJson(json, token.getType());
+        return leaveAppliedResponseModels;
+    }
+
+
 
     ////Fetch Leave  details Response parse:
     public ArrayList<LeaveNatureMasterModel> getLeaveNatureMasterResponse(String json, int statusCode) {

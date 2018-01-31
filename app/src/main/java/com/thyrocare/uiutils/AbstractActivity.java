@@ -26,6 +26,8 @@ import com.thyrocare.utils.app.AppPreferenceManager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+
 public class AbstractActivity extends AppCompatActivity implements ActivityHelper {
 
 	private ActivityHelper ah = new ActivityHelperImpl(this);
@@ -44,6 +46,7 @@ public class AbstractActivity extends AppCompatActivity implements ActivityHelpe
 		appPreferenceManager = new AppPreferenceManager(this);
 		appPreferenceManager.setIsAppInBackground(false);
 		setFont();
+
 		super.onCreate(savedInstanceState);
 
 

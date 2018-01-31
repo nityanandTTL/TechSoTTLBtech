@@ -193,10 +193,10 @@
             <ImageView
                 android:id="@+id/img_release"
                 android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_height="20dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/release_order" />
+                android:src="@drawable/trash" />
 
         </RelativeLayout>
     </LinearLayout>

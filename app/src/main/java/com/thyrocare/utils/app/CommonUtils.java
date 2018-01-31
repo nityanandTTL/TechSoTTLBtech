@@ -41,6 +41,7 @@ public class CommonUtils {
 
 	private static CommonUtils instance = null;
 	private MessageModel messageModel;
+	public static String TSP_NBT_Str = "tsp_nbt_list";
 
 	protected CommonUtils() {
 		// Exists only to defeat instantiation.

@@ -33,13 +33,15 @@ import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.thyrocare.utils.app.GPSTracker;
 
 import org.json.JSONException;
 
 import java.util.ArrayList;
+
 /**
- *　APi Used 　　BtechCollections/userid<br/>
- 　　* /MasterBarcodeMapping/
+ * 　APi Used 　　BtechCollections/userid<br/>
+ * 　　* /MasterBarcodeMapping/
  * Created by Orion on 7/4/2017.
  */
 
@@ -157,6 +159,11 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
                 scannedBarcodesArr.add(hbm);
             }
         }
+        GPSTracker gpsTracker = new GPSTracker(activity);
+        for (int i = 0; i < scannedBarcodesArr.size(); i++) {
+            scannedBarcodesArr.get(i).setLatitude(String.valueOf(gpsTracker.getLatitude()));
+            scannedBarcodesArr.get(i).setLongitude(String.valueOf(gpsTracker.getLongitude()));
+        }
         masterBarcodeMappingRequestModel.setBarcodes(scannedBarcodesArr);
         masterBarcodeMappingRequestModel.setMasterBarcode(master_scanned_barcode);
 
@@ -190,7 +197,10 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
                 if (btechCollectionsResponseModel != null && btechCollectionsResponseModel.getBarcode() != null && btechCollectionsResponseModel.getBarcode().size() > 0) {
                     barcodeModels = btechCollectionsResponseModel.getBarcode();
                     isCentrifuged = false;
-                    prepareRecyclerView();
+
+                        prepareRecyclerView();
+
+
                 } else {
                     Toast.makeText(activity, "No records found", Toast.LENGTH_SHORT).show();
                 }
@@ -208,28 +218,63 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        final IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null && scanningResult.getContents() != null) {
-            if (!isMasterBarcode) {
-                String scanned_barcode = scanningResult.getContents();
 
-                for (int i = 0; i < barcodeModels.size(); i++) {
-                    if (barcodeModels.get(i).getBarcode().equals(scanned_barcode)) {
-                        if (barcodeModels.get(i).isScanned()) {
-                            Toast.makeText(activity, "Same Barcode is Already Scanned", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                        else {
-                            barcodeModels.get(i).setScanned(true);
-                            break;
-                        }
-                    }
-                }
 
-                hubScanBarcodeListAdapter.notifyDataSetChanged();
-            } else {
-                master_scanned_barcode = scanningResult.getContents();
-            }
+          /*  AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+            builder1.setTitle("Check the Barcode ")
+                    .setMessage("Do you want to Proceed with this barcode entry " + scanningResult + "?")
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).setPositiveButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+*/
+                            if (scanningResult.getContents().startsWith("0") || scanningResult.getContents().startsWith("$")) {
+                                Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                if (!isMasterBarcode) {
+
+                                    String scanned_barcode = scanningResult.getContents();
+                                    if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")) {
+                                        Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        for (int i = 0; i < barcodeModels.size(); i++) {
+                                            if (barcodeModels.get(i).getBarcode().equals(scanned_barcode)) {
+                                                if (barcodeModels.get(i).isScanned()) {
+                                                    Toast.makeText(activity, "Same Barcode is Already Scanned", Toast.LENGTH_SHORT).show();
+                                                    break;
+                                                } else {
+                                                    barcodeModels.get(i).setScanned(true);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        try {
+                                            hubScanBarcodeListAdapter.notifyDataSetChanged();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                } else {
+
+                                    master_scanned_barcode = scanningResult.getContents();
+                                }
+                            }
+                       // }
+                   // });
+
+
+
+
+
+
         } else {
             Logger.error("Cancelled from fragment");
         }

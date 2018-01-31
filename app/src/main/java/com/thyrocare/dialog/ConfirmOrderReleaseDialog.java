@@ -10,6 +10,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
@@ -19,6 +20,7 @@ import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
+import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
@@ -42,6 +44,7 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
     private ArrayList<String> remarks;
     private ConfirmOrderReleaseDialogButtonClickedDelegate confirmOrderReleaseDialogButtonClickedDelegate;
     private OrderVisitDetailsModel orderVisitDetailsModel;
+
     public ConfirmOrderReleaseDialog(HomeScreenActivity activity, ConfirmOrderReleaseDialogButtonClickedDelegate confirmOrderReleaseDialogButtonClickedDelegate, OrderVisitDetailsModel orderVisitDetailsModel) {
         super(activity);
         this.activity = activity;
@@ -64,12 +67,13 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
         btn_yes.setOnClickListener(this);
 
     }
+
     private void fetchremarks() {
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchLeaveDetailApiAsyncTask = asyncTaskForRequest.getremarksRequestAsyncTask();
+        ApiCallAsyncTask fetchLeaveDetailApiAsyncTask = asyncTaskForRequest.getremarksRequestAsyncTask(6);
         fetchLeaveDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchRemarksDetailsApiAsyncTaskDelegateResult());
 
-            fetchLeaveDetailApiAsyncTask.execute(fetchLeaveDetailApiAsyncTask);
+        fetchLeaveDetailApiAsyncTask.execute(fetchLeaveDetailApiAsyncTask);
 
 
     }
@@ -85,7 +89,8 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
                 remarksResponseModelsarr = responseParser.getRemarksResponseModel(json, statusCode);
                 if (remarksResponseModelsarr != null) {
                     remarks = new ArrayList<>();
-                    for (final RemarksResponseModel remarksResponseModelss:
+                    remarks.add(0, "--SELECT--");
+                    for (final RemarksResponseModel remarksResponseModelss :
                             remarksResponseModelsarr) {
                         remarks.add(remarksResponseModelss.getReason().toUpperCase());
                         remarksResponseModelmain = new RemarksResponseModel();
@@ -98,14 +103,19 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
                         edt_remark.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                remarksResponseModelmain = remarksResponseModelsarr.get(position);
-                                String Remarksstr = remarks.get(position);
-                                for (RemarksResponseModel RRM :
-                                        remarksResponseModelsarr) {
-                                    if (RRM.getReason().equals(Remarksstr)) {
-                                        remarksResponseModelmain = RRM;
+                                //jai
+                               /* remarksResponseModelmain = remarksResponseModelsarr.get(position);
+                                String Remarksstr = remarks.get(position);*/
+                                if (position > 0) {
+                                    remarksResponseModelmain = remarksResponseModelsarr.get(position - 1);
+                                    String Remarksstr = remarks.get(position - 1);
+                                    for (RemarksResponseModel RRM :
+                                            remarksResponseModelsarr) {
+                                        if (RRM.getReason().equals(Remarksstr)) {
+                                            remarksResponseModelmain = RRM;
 
-                                        break;
+                                            break;
+                                        }
                                     }
                                 }
 
@@ -117,12 +127,7 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
                             }
                         });
                     }
-
-
-
                 }
-
-
             }
 
         }
@@ -137,7 +142,6 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
     }
 
 
-
     private void initUI() {
         btn_yes = (Button) findViewById(R.id.btn_yes);
         btn_no = (Button) findViewById(R.id.btn_no);
@@ -149,16 +153,28 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
-            if(!InputUtils.isNull(remarksResponseModelmain.getReason().trim())) {
-                confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel,remarksResponseModelmain.getReason().trim());
-                dismiss();
-            }else{
-                Toast.makeText(activity, R.string.enter_remarks,Toast.LENGTH_SHORT).show();
+            if (!InputUtils.isNull(remarksResponseModelmain.getReason().trim())) {
+                if (validate()) {
+                    Logger.error("reason: " + remarksResponseModelmain.getReason().trim());
+                   confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel, remarksResponseModelmain.getReason().trim());
+                    dismiss();
+                }
+
+            } else {
+                Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
             }
         }
-        if(v.getId()==R.id.btn_no){
+        if (v.getId() == R.id.btn_no) {
             confirmOrderReleaseDialogButtonClickedDelegate.onCancelButtonClicked();
             dismiss();
         }
+    }
+
+    private boolean validate() {
+        if (edt_remark.getSelectedItem().equals("--SELECT--")) {
+            TastyToast.makeText(activity, "Select Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+            return false;
+        }
+        return true;
     }
 }
