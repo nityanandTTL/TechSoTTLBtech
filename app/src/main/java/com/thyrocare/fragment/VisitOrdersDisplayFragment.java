@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
@@ -37,7 +36,6 @@ import com.thyrocare.dialog.ConfirmOrderPassDialog;
 import com.thyrocare.dialog.ConfirmOrderReleaseDialog;
 import com.thyrocare.dialog.ConfirmRequestReleaseDialog;
 import com.thyrocare.dialog.RescheduleOrderDialog;
-import com.thyrocare.models.api.request.CallPatchRequestModel;
 import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.models.api.response.BtechEstEarningsResponseModel;
 import com.thyrocare.models.api.response.FetchOrderDetailsResponseModel;

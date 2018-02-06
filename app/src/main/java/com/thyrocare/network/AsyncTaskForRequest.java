@@ -1161,7 +1161,7 @@ public class AsyncTaskForRequest {
     }
 
     //Chat get api
-    public ApiCallAsyncTask getChatAPi () {
+    public ApiCallAsyncTask getChatAPi() {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);

@@ -373,12 +373,19 @@ Logger.error("");
 
                 } else {
 
-                    if(orderDetailsModel.isEditOrder()){
+                    /*if(orderDetailsModel.isEditOrder()){
                         items = new String[]{"Order Reschedule",
                                 "Visit Cancellation", "Remove Beneficiary"};
                     }else {
                         items = new String[]{"Order Reschedule",
                                 "Visit Cancellation"};
+                    }*/
+
+                    //TODO Visit Cancellation Removed
+                    if(orderDetailsModel.isEditOrder()){
+                        items = new String[]{"Order Reschedule", "Remove Beneficiary"};
+                    }else {
+                        items = new String[]{"Order Reschedule"};
                     }
 
                 }
