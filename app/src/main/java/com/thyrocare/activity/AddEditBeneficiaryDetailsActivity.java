@@ -926,9 +926,29 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 edtAadhar.setVisibility(View.GONE);
                 imgAadhar.setVisibility(View.GONE);
             }*/
-            edtBenName.setText(!InputUtils.isNull(beneficiaryDetailsModel.getName().toString().trim()) ? beneficiaryDetailsModel.getName().toString().trim() : "");
+           /* edtBenName.setText(!InputUtils.isNull(beneficiaryDetailsModel.getName().toString().trim()) ? beneficiaryDetailsModel.getName().toString().trim() : "");
             edtAge.setText(!InputUtils.isNull(beneficiaryDetailsModel.getAge()+"") ? beneficiaryDetailsModel.getAge()+"" : "");
             edtTests.setText(!InputUtils.isNull(beneficiaryDetailsModel.getTestsCode()) ? beneficiaryDetailsModel.getTestsCode() : "");
+*/
+            if (beneficiaryDetailsModel.getName() != null){
+                edtBenName.setText(beneficiaryDetailsModel.getName().toString().trim());
+            }else{
+                edtBenName.setText("");
+            }
+
+            if (beneficiaryDetailsModel.getAge()+"" != null){
+                edtAge.setText(beneficiaryDetailsModel.getAge()+"");
+            }else{
+                edtAge.setText("");
+            }
+
+            if (beneficiaryDetailsModel.getTestsCode() != null){
+                edtTests.setText(beneficiaryDetailsModel.getTestsCode());
+            }else{
+                edtTests.setText("");
+            }
+
+
             //TODO get clinical History and set it in edtCH
             //TODO on click of edtCH open a Dialog box and allow multi selection of clinical histories
             if(!InputUtils.isNull(beneficiaryDetailsModel.getGender())){
