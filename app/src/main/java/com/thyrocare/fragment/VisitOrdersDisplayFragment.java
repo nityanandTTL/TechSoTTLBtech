@@ -211,7 +211,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         beneficiaryDetailsDao.deleteAll();
         orderDetailsDao.deleteAll();
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask();
+        ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask(true);
         fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
             if(!isFetchingOrders) {

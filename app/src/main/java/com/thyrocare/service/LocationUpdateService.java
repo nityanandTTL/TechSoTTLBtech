@@ -470,7 +470,7 @@ public class LocationUpdateService extends IntentService {
                 }
                 if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
                     AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
-                    ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask();
+                    ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask(false);
                     fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsApiAsyncTaskDelegateResult());
                     System.out.println("delegate called");
 

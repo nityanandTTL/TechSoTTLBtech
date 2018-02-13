@@ -172,7 +172,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private void fetchDataOfVisitOrderForRefreshAmountDue() {
 
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask();
+        ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask(true);
         fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
             if(!isFetchingOrders) {

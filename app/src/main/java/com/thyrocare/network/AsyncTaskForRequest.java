@@ -308,7 +308,7 @@ public class AsyncTaskForRequest {
             Logger.error("LOCUS3");
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
-            apiCallAsyncTask.setProgressBarVisible(true);
+            apiCallAsyncTask.setProgressBarVisible(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -463,7 +463,7 @@ public class AsyncTaskForRequest {
 	/*
 	 * Fetch Order Detail Api Integration*/
 
-    public ApiCallAsyncTask getFetchOrderDetailsRequestAsyncTask() {
+    public ApiCallAsyncTask getFetchOrderDetailsRequestAsyncTask(boolean b) {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
@@ -478,7 +478,7 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
                     .getString(R.string.progress_message_fetching_order_details_please_wait));
-            apiCallAsyncTask.setProgressBarVisible(true);
+            apiCallAsyncTask.setProgressBarVisible(b);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -888,6 +888,26 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_EARNINGREGISTER_DETAIL + "/" + appPreferenceManager.getLoginResponseModel().getUserID());
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetching_Earning_details_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getFetchEarningDetailsRequestAsyncTask_new(String fromdate, String todate) {
+
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_EARNINGREGISTER_DETAIL + "/" + appPreferenceManager.getLoginResponseModel().getUserID() + "/" + fromdate + "/" + todate);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);

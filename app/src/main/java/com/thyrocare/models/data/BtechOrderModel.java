@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 
 public class BtechOrderModel {
-    private String OrderNo, OrderBy, Status, Mobile;
+    private String OrderNo, OrderBy, Status, Mobile, Fasting;
     private int benCount, AmountCollected;
     private ArrayList<BtechBarcodeDetailModel> btchBracodeDtl;
 
@@ -17,6 +17,14 @@ public class BtechOrderModel {
 
     public void setOrderNo(String orderNo) {
         OrderNo = orderNo;
+    }
+
+    public String getFasting() {
+        return Fasting;
+    }
+
+    public void setFasting(String fasting) {
+        Fasting = fasting;
     }
 
     public String getOrderBy() {

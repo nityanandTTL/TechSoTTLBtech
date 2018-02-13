@@ -840,8 +840,8 @@ public class PaymentsActivity extends AbstractActivity {
     private void fetchTransactionResponseOnStartTransaction() {
         JSONObject jsonRequest = new JSONObject();
         try {
-            // TODO Removable only for testing
-            paymentPassInputsModel.getNameValueCollection().get(2).setValue("1");
+            // TODO only for testing
+           /* paymentPassInputsModel.getNameValueCollection().get(2).setValue("1");*/
 
             jsonRequest.put("URLId", paymentPassInputsModel.getURLId());
             for (PaymentNameValueModel pnvm :

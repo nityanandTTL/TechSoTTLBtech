@@ -77,6 +77,7 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
             holder.txt_name.setText("" + btechOrderModel.getOrderBy());
             holder.tv_orderno.setText("" + btechOrderModel.getOrderNo());
             holder.tv_status.setText("" + btechOrderModel.getStatus());
+            holder.txt_fasting.setText("" + btechOrderModel.getFasting());
             int sr_no= position +1;
             holder.txt_sr_no.setText(""+sr_no);
             holder.txt_benCount.setText("   "+btechOrderModel.getBenCount());
