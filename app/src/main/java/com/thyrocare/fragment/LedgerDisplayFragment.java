@@ -236,7 +236,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
     private void fetchEarningRegister() {
         Logger.error(TAG_FRAGMENT + "--fetchData: ");
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchEarningDetailApiAsyncTask = asyncTaskForRequest.getFetchEarningDetailsRequestAsyncTask_new(fromdate, todate);
+        ApiCallAsyncTask fetchEarningDetailApiAsyncTask = asyncTaskForRequest.getFetchEarningDetailsRequestAsyncTask(fromdate, todate);
         fetchEarningDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchEarningDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
             fetchEarningDetailApiAsyncTask.execute(fetchEarningDetailApiAsyncTask);

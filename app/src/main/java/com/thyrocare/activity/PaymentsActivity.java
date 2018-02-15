@@ -174,7 +174,7 @@ public class PaymentsActivity extends AbstractActivity {
     private void fetchEarningRegister() {
         Logger.error(TAG_ACTIVITY + "--fetchData: ");
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchEarningDetailApiAsyncTask = asyncTaskForRequest.getFetchEarningDetailsRequestAsyncTask();
+        ApiCallAsyncTask fetchEarningDetailApiAsyncTask = asyncTaskForRequest.getFetchEarningDetailsRequestAsyncTask(fromdate, todate);
         fetchEarningDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchEarningDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
             fetchEarningDetailApiAsyncTask.execute(fetchEarningDetailApiAsyncTask);
@@ -841,7 +841,7 @@ public class PaymentsActivity extends AbstractActivity {
         JSONObject jsonRequest = new JSONObject();
         try {
             // TODO only for testing
-           /* paymentPassInputsModel.getNameValueCollection().get(2).setValue("1");*/
+//           /* paymentPassInputsModel.getNameValueCollection().get(2).setValue("1");*/
 
             jsonRequest.put("URLId", paymentPassInputsModel.getURLId());
             for (PaymentNameValueModel pnvm :

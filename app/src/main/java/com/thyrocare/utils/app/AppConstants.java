@@ -7,7 +7,7 @@ public interface AppConstants {
 
 	// ------------ CONSTANTS -------------
 
-	public static final int ANDROID_APP_VERSION = 18;
+	public static final int ANDROID_APP_VERSION = 19;
 
     public static final boolean IS_DEBUG = true;
 
