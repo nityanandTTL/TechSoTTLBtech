@@ -35,6 +35,7 @@ import com.thyrocare.adapter.VisitOrderDisplayAdapter;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dialog.RescheduleOrderDialog;
 import com.thyrocare.fragment.CreditFragment;
+import com.thyrocare.fragment.FeedbackFragment;
 import com.thyrocare.fragment.HomeScreenFragment;
 import com.thyrocare.fragment.LeaveIntimationFragment;
 import com.thyrocare.fragment.ResetPasswordFragment;
@@ -300,6 +301,12 @@ public class HomeScreenActivity extends AbstractActivity
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(CreditFragment.newInstance(), false, false,
                     CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            //   Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_feedback) {
+
+            toolbarHome.setVisibility(View.VISIBLE);
+            pushFragments(FeedbackFragment.newInstance(), false, false,
+                    FeedbackFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             //   Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_logout) {
             toolbarHome.setVisibility(View.VISIBLE);

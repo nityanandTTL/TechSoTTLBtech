@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -384,6 +385,24 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 Logger.error("bdm not null "+bdm.getVenepuncture());
             }
         }
+
+
+        for (BeneficiaryDetailsModel bdm : orderBookingRequestModel.getBendtl()) {
+
+            Log.e(BeneficiariesDisplayFragment.class.getSimpleName(), "validateeeeee: "+bdm.getTests() );
+            Log.e(BeneficiariesDisplayFragment.class.getSimpleName(), "genderrr: "+bdm.getGender() );
+
+            if (bdm.getGender().equalsIgnoreCase("F")&&(bdm.getTests().contains("PSA"))) {
+
+                if(bdm.getTests().contains("FPSA")){
+                    Toast.makeText(activity, "FPSA test is not for Womens. Please change it for " + bdm.getName(), Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(activity, "PSA test is not for Womens. Please change it for " + bdm.getName(), Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        }
+
         return true;
     }
     // neha g --------------------

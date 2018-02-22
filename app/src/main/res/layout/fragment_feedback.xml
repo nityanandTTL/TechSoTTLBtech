@@ -1,0 +1,232 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.thyrocare.fragment.FeedbackFragment"
+    android:orientation="vertical">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView5" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Related To*"
+                    android:textColor="@color/primary_color"
+                    android:textSize="15dp"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_layout"
+                    android:padding="1dp">
+
+                    <Spinner
+                        android:id="@+id/spinType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:visibility="visible"
+                        android:popupBackground="@color/white"
+                        android:drawSelectorOnTop="true"
+                        android:spinnerMode="dropdown" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/dd_arrow" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:id="@+id/edtName"
+                    android:background="@drawable/border_layout"
+                    android:textSize="15sp"
+                    android:textColor="@color/secondary_color"
+                    android:layout_gravity="center_vertical"
+                    android:padding="10dp"
+                    android:hint="Name"
+                    android:inputType="textCapWords|textPersonName"
+                    android:textColorHint="@color/tertiary_color"
+                    android:layout_marginTop="10dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:id="@+id/edtEmail"
+                    android:padding="10dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/secondary_color"
+                    android:inputType="textEmailAddress"
+                    android:background="@drawable/border_layout"
+                    android:hint="Email"
+                    android:textColorHint="@color/tertiary_color"
+                    android:layout_marginTop="10dp" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:id="@+id/edtMobile"
+                    android:padding="10dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/secondary_color"
+                    android:inputType="phone"
+                    android:maxEms="10"
+                    android:background="@drawable/border_layout"
+                    android:hint="Contact Number"
+                    android:layout_marginTop="10dp"
+                    android:textColorHint="@color/tertiary_color" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:id="@+id/edtQuery"
+                    android:background="@drawable/border_layout"
+                    android:textSize="15sp"
+                    android:textColor="@color/secondary_color"
+                    android:layout_gravity="center_vertical"
+                    android:padding="10dp"
+                    android:lines="5"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:hint="Query"
+                    android:layout_marginTop="15dp"
+                    android:gravity="left|top"
+                    android:textColorHint="@color/tertiary_color" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/imgHappy"
+                        android:src="@drawable/s10" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Happy"
+                        android:id="@+id/txtHappy"
+                        android:textColor="@color/tertiary_color"
+                        android:textSize="15sp"
+                        android:layout_marginTop="5dp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/imgNeutral"
+                        android:src="@drawable/s6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Neutral"
+                        android:id="@+id/txtNeutral"
+                        android:textColor="@color/tertiary_color"
+                        android:textSize="15sp"
+                        android:layout_marginTop="5dp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/imgSad"
+                        android:src="@drawable/s1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Sad"
+                        android:id="@+id/txtSad"
+                        android:textColor="@color/tertiary_color"
+                        android:textSize="15sp"
+                        android:layout_marginTop="5dp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:id="@+id/btnSubmit"
+                android:background="@drawable/button_bg"
+                android:text="SUBMIT"
+                android:textColor="@color/bgTitleRight"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

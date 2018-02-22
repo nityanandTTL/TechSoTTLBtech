@@ -95,4 +95,5 @@ public interface AppConstants {
 	public static final String INSPP = "INSPP";
 	public static final String  FBS ="FBS" ;
     public static final String INSFA = "INSFA";
+	public static final String API_KEY = "bp)fMp6ZBXjiT84cNXmRDYGgfHsuym9y9gnfuK1S6tqO0fYdZvSRrDvN13WGwCSS";
 }
