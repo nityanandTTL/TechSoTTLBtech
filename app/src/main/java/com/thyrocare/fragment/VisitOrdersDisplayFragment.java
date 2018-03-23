@@ -323,12 +323,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
 
             if (statusCode == 200) {
-
                 //jai
                 JSONObject jsonObject=new JSONObject(json);
-
-
-
                 ResponseParser responseParser = new ResponseParser(activity);
                 FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = new FetchOrderDetailsResponseModel();
                 fetchOrderDetailsResponseModel = responseParser.getFetchOrderDetailsResponseModel(json, statusCode);

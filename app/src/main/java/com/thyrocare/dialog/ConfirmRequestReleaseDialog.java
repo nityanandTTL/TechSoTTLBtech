@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,8 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
     private Dialog d;
     private Button btn_yes, btn_no;
     private TextView tv_title;
+
+    private EditText edt__release_remark;
     private Spinner edt_remark;
     private RemarksResponseModel remarksResponseModelmain;
     private ArrayList<RemarksResponseModel> remarksResponseModelsarr;
@@ -147,6 +150,7 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
 
 
     private void initUI() {
+        edt__release_remark = (EditText) findViewById(R.id.edt__release_remark);
         btn_yes = (Button) findViewById(R.id.btn_yes);
         btn_no = (Button) findViewById(R.id.btn_no);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -157,19 +161,21 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
-            if(!InputUtils.isNull(remarksResponseModelmain.getReason().trim())
-                    || remarksResponseModelmain.getReason().trim()!="--SELECT--") {
-                Logger.error("reason "+remarksResponseModelmain.getReason());
+            if (/*!InputUtils.isNull(remarksResponseModelmain.getReason().trim())
+                || remarksResponseModelmain.getReason().trim()!="--SELECT--"*/!edt__release_remark.getText().toString().equals("")) {
+                //  Logger.error("reason "+remarksResponseModelmain.getReason());
+                Logger.error("reason " + edt__release_remark.getText().toString());
 
-               confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel,remarksResponseModelmain.getReason().trim());
+                confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel, edt__release_remark.getText().toString().trim());
+                //   confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel,remarksResponseModelmain.getReason().trim());
                 confirmOrderReleaseDialogButtonClickedDelegate.onCancelButtonClicked();
                 dismiss();
 
-            }else{
-                Toast.makeText(activity, R.string.enter_remarks,Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
             }
         }
-        if(v.getId()==R.id.btn_no){
+        if (v.getId() == R.id.btn_no) {
             confirmOrderReleaseDialogButtonClickedDelegate.onCancelButtonClicked();
             dismiss();
         }

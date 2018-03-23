@@ -64,7 +64,7 @@ import static com.thyrocare.utils.api.NetworkUtils.isNetworkAvailable;
  */
 
 public class LocationUpdateService extends IntentService {
-    private static final String TAG = LocationUpdateService.class.getSimpleName() ;
+    private static final String TAG = LocationUpdateService.class.getSimpleName();
     public Handler mHandler;
     private static final String TAG_CHAT = "TAG_CHAT";
     private ArrayList<ChatRequestModel> chatRequestModels;
@@ -81,13 +81,13 @@ public class LocationUpdateService extends IntentService {
     //neha g--------------
 
     private boolean isFetchingOrders = false;
-    int firtTime= 0;
+    int firtTime = 0;
     private OrderDetailsDao orderDetailsDao;
     private DhbDao dhbDao;
     Long time, currenttime;
-    String finaltime ="";
-    int hr=0;
-    int minnew =0;
+    String finaltime = "";
+    int hr = 0;
+    int minnew = 0;
     ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels;
     private String todate = "";
 
@@ -131,7 +131,7 @@ public class LocationUpdateService extends IntentService {
                     Logger.error("Thread is Executing 2 ");
                     try {
                         Thread.sleep(4 * 60 * 60 * 1000);
-                        //  Thread.sleep(60 * 1000);
+//                        Thread.sleep(20 * 1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -149,7 +149,7 @@ public class LocationUpdateService extends IntentService {
                     AcceptOrderNotification(); //todo tejas
                     Logger.error("Thread is Executing 3 ");
                     try {
-                       Thread.sleep(30 * 60 * 1000);
+                        Thread.sleep(30 * 60 * 1000);
                         //  Thread.sleep(30 * 1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -297,30 +297,30 @@ public class LocationUpdateService extends IntentService {
                 chatRequestModels = responseParser.getchatMasterResponse(json, statusCode);
                 Logger.error("test json " + json);
                 JSONArray jsonArray = new JSONArray(json);
-             //for (int i = 0; i < jsonArray.length(); i++) {
-                 int Counter =jsonArray.length()-1;
-                 Logger.error("Counter"+Counter);
-                    String flag = jsonArray.getJSONObject(Counter).getString("code");
-                    String name = jsonArray.getJSONObject(Counter).getString("lastName");
+                //for (int i = 0; i < jsonArray.length(); i++) {
+                int Counter = jsonArray.length() - 1;
+                Logger.error("Counter" + Counter);
+                String flag = jsonArray.getJSONObject(Counter).getString("code");
+                String name = jsonArray.getJSONObject(Counter).getString("lastName");
                 String from = jsonArray.getJSONObject(Counter).getString("firstName");
-                    Logger.error("code "+flag);
-                    Logger.error("name "+name);
+                Logger.error("code " + flag);
+                Logger.error("name " + name);
 
-                    if (flag.equals("1")) {
-                        Logger.error("notification");
-                        if(name.equalsIgnoreCase(""+appPreferenceManager.getLoginResponseModel().getUserName())){
-                            Logger.error("notification send kaara");
+                if (flag.equals("1")) {
+                    Logger.error("notification");
+                    if (name.equalsIgnoreCase("" + appPreferenceManager.getLoginResponseModel().getUserName())) {
+                        Logger.error("notification send kaara");
 
-                            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
-                                    0 /* request code */, new Intent(getApplicationContext(), Users.class).putExtra("Comeform",from).putExtra("comeFrom","service"), PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+                                0 /* request code */, new Intent(getApplicationContext(), Users.class).putExtra("Comeform", from).putExtra("comeFrom", "service"), PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-                            sendNotify(pendingIntent,jsonArray,Counter);
-                            Chatpostapi(jsonArray);
-                        }
-
+                        sendNotify(pendingIntent, jsonArray, Counter);
+                        Chatpostapi(jsonArray);
                     }
-             //  }
+
+                }
+                //  }
 
             }
 
@@ -337,17 +337,17 @@ public class LocationUpdateService extends IntentService {
     private void Chatpostapi(JSONArray jsonArray) {
         ChatRequestModel chatRequestModel = new ChatRequestModel();
         try {
-            chatRequestModel.setFirstName(jsonArray.getJSONObject(jsonArray.length()-1).getString("firstName"));
-            chatRequestModel.setLastName(jsonArray.getJSONObject(jsonArray.length()-1).getString("lastName"));
-            chatRequestModel.setPhone(jsonArray.getJSONObject(jsonArray.length()-1).getString("phone"));
-            chatRequestModel.setEmail(jsonArray.getJSONObject(jsonArray.length()-1).getString("email"));
+            chatRequestModel.setFirstName(jsonArray.getJSONObject(jsonArray.length() - 1).getString("firstName"));
+            chatRequestModel.setLastName(jsonArray.getJSONObject(jsonArray.length() - 1).getString("lastName"));
+            chatRequestModel.setPhone(jsonArray.getJSONObject(jsonArray.length() - 1).getString("phone"));
+            chatRequestModel.setEmail(jsonArray.getJSONObject(jsonArray.length() - 1).getString("email"));
             chatRequestModel.setCode("0");
             chatRequestModel.setPassword("Null");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        Logger.error("model "+chatRequestModel.toString());
+        Logger.error("model " + chatRequestModel.toString());
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
         Logger.error("test1 ");
         ApiCallAsyncTask setchatDetailApiAsyncTask = asyncTaskForRequest.ChatPostapi(chatRequestModel);
@@ -360,12 +360,12 @@ public class LocationUpdateService extends IntentService {
         }
     }
 
-    private void sendNotify(PendingIntent pendingIntent,JSONArray jsonArray,int i) {
+    private void sendNotify(PendingIntent pendingIntent, JSONArray jsonArray, int i) {
         String message = null;
         String from = null;
         try {
-             message=jsonArray.getJSONObject(i).getString("phone");
-             from=jsonArray.getJSONObject(i).getString("firstName");
+            message = jsonArray.getJSONObject(i).getString("phone");
+            from = jsonArray.getJSONObject(i).getString("firstName");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -374,7 +374,7 @@ public class LocationUpdateService extends IntentService {
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.drawable.app_logo)
                 .setContentTitle("Oms App Notification")
-                .setContentText(""+message+"from "+from)
+                .setContentText("" + message + "from " + from)
                 .setAutoCancel(true).setVibrate(pattern)
                 .setLights(Color.BLUE, 1, 1)
                 .setSound(defaultSoundUri)
@@ -382,6 +382,7 @@ public class LocationUpdateService extends IntentService {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
+
     //set Deleagte
     private class setApplyLeaveDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
 
@@ -415,26 +416,23 @@ public class LocationUpdateService extends IntentService {
         public void apiCallResult(String json, int statusCode) throws JSONException {
 
             if (statusCode == 200) {
-                System.out.println("statuscode"+statusCode);
+                System.out.println("statuscode" + statusCode);
 
                 //jai
                 JSONObject jsonObject = new JSONObject(json);
 
-
                 ResponseParser responseParser = new ResponseParser(getApplicationContext());
                 FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = new FetchOrderDetailsResponseModel();
                 fetchOrderDetailsResponseModel = responseParser.getFetchOrderDetailsResponseModel(json, statusCode);
-                System.out.println("fetchorderdetailsmodel"+fetchOrderDetailsResponseModel.toString());
-                System.out.println("fetchorderdetailsmodelordervisit"+fetchOrderDetailsResponseModel.getOrderVisitDetails().size());
-
+                System.out.println("fetchorderdetailsmodel" + fetchOrderDetailsResponseModel.toString());
+                System.out.println("fetchorderdetailsmodelordervisit" + fetchOrderDetailsResponseModel.getOrderVisitDetails().size());
 
                 mHandler = new Handler();
 
                 isFetchingOrders = false;
                 initData();
-            }
-            else {
-                firtTime= 0;
+            } else {
+                firtTime = 0;
 
             }
         }
@@ -449,90 +447,56 @@ public class LocationUpdateService extends IntentService {
 
     //todo neha
     private void VisitOderDEtails1() {
+        if (Looper.myLooper() == null) {
+            Looper.myLooper().prepare();
+        }
 
+        if (Looper.myLooper() != null) {
+            appPreferenceManager = new AppPreferenceManager(getApplicationContext());
 
-        {
-
-            if (Looper.myLooper() == null) {
-                Logger.error("Lopper Exist ");
-                Looper.myLooper().prepare();
+            if (!appPreferenceManager.getUserDetailUserName().equals("") && !appPreferenceManager.getUserDetailChatWith().equals("")) {
+                Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
 
             }
-
-            if (Looper.myLooper() != null) {
-
-                Logger.error("check1");
-                appPreferenceManager = new AppPreferenceManager(getApplicationContext());
-
-                if (!appPreferenceManager.getUserDetailUserName().equals("") && !appPreferenceManager.getUserDetailChatWith().equals("")) {
-                    Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
-
+            if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
+                AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
+                ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask(false);
+                fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsApiAsyncTaskDelegateResult());
+                if (!isFetchingOrders) {
+                    isFetchingOrders = true;
+                    fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
+                } else {
+                    dhbDao = new DhbDao(getApplicationContext());
+                    orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
+                    TastyToast.makeText(getApplicationContext(), getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                    initData();
                 }
-                if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
-                    AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
-                    ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask(false);
-                    fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsApiAsyncTaskDelegateResult());
-                    System.out.println("delegate called");
-
-                    if (!isFetchingOrders) {
-                        isFetchingOrders = true;
-                        System.out.println("if");
-                        fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
-                    } else {
-                        System.out.println("else");
-                        dhbDao = new DhbDao(getApplicationContext());
-                        orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
-                        TastyToast.makeText(getApplicationContext(), getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-                        initData();
-                    }
-                }
-
             }
         }
     }
+
     private void initData() {
-        System.out.println("init called");
         dhbDao = new DhbDao(getApplicationContext());
         orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
         orderDetailsResponseModels = orderDetailsDao.getAllModels();
-        System.out.println("model sizeserv "+orderDetailsResponseModels.size());
-
-        System.out.println("apppref orderacpt"+appPreferenceManager.getOrderAccept());
-        //  if(appPreferenceManager.getOrderAccept()==2){
-        System.out.println("condition inserv");
-        // startAlert15();
-        // }
         int currenthour = new Time(System.currentTimeMillis()).getHours();
         int currentmin = new Time(System.currentTimeMillis()).getMinutes();
-        System.out.println("Current hour18"+currenthour);
-
-        if (currenthour==16&&currentmin==00){
+        if (currenthour == 16 && currentmin == 00) {
             startAlertn("Please update your material stock as on day to avoid any inconvenience in serving the orders.");
         }
-        if(currenthour==12&&currentmin==00||currenthour==14&& currentmin==0||currenthour==17&&currentmin==00){
+        if (currenthour == 12 && currentmin == 00 || currenthour == 14 && currentmin == 0 || currenthour == 17 && currentmin == 00) {
             startAlertn("Please clear the outstanding to avoid suspension, Update bank receipt in the App. Ignore if already done.");
         }
-        if(currenthour==18&&currentmin==00&&orderDetailsResponseModels.size()==0){
-            System.out.println("in condition 1818"+currenthour);
+        if (currenthour == 18 && currentmin == 00 && orderDetailsResponseModels.size() == 0) {
             appPreferenceManager.setDataInVisitModel(2);
-            BundleConstants.DataInVisitModel=2;
+            BundleConstants.DataInVisitModel = 2;
             startAlertn("You have completed today's collection.\nEnsure to complete HUB scan and submission of sample in HUB");//TODO neha
         }
     }
 
     //todo neha
-
-
-
-
-
-
-    public void startAlertn(String  msg) {
-
-
+    public void startAlertn(String msg) {
         int mNotificationId = 002;
-
-      //  CharSequence msg = "You have completed today's collection.\nEnsure to complete HUB scan and submission of sample in HUB";
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 getApplicationContext());
         Notification notification = mBuilder.setSmallIcon(R.drawable.app_logo).setTicker("Btech App").setWhen(0)
@@ -545,31 +509,9 @@ public class LocationUpdateService extends IntentService {
 
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(mNotificationId, notification);
-
-
-
-
-        /*NotificationCompat.Builder builder =
-                (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.app_logo)
-                        .setContentTitle("BTech")
-                        .setContentText("You have completed today's collection.\nEnsure to complete HUB scan and submission of sample in HUB");
-
-        //   Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
-        //  PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-        //      PendingIntent.FLAG_UPDATE_CURRENT);
-        ///  builder.setContentIntent(contentIntent);
-
-        // Add as notification
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(0, builder.build());*/
     }
 
     //todo neha
-
-
-
-
     //tejas t----------------------------------------------------------------------
 
     class BtechBlockDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -582,24 +524,21 @@ public class LocationUpdateService extends IntentService {
 
                 if (json != null || !TextUtils.isEmpty(json)) {
                     JSONObject jsonObject = new JSONObject(json);
-                    boolean Status = jsonObject.getBoolean("Status");
+                    int Status = jsonObject.getInt("Status");
 
                     boolean isAppInBackground = isAppIsInBackground(getApplicationContext());
 
-                    if (!Status) {
+                    if (Status == 1) {
+                        Log.e(TAG, "CBT/NBT is Active");
+                    } else {
                         Log.e(TAG, "CBT/NBT is NOT Active");
                         if (!isAppInBackground) {
 
                             Log.e(TAG, "APP is running, hence no notification needs to be send");
-                        }else
-                        {
+                        } else {
                             startBlockBtechnotification();
                         }
-                    }else{
-                        Log.e(TAG, "CBT/NBT is Active");
                     }
-
-
                 } else {
                     Log.e(TAG, "No data Found, Btech Block Status");
                 }
@@ -608,167 +547,104 @@ public class LocationUpdateService extends IntentService {
 
         @Override
         public void onApiCancelled() {
-
         }
-
     }
 
     class AcceptOrderNotificationApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
 
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-
             if (statusCode == 200) {
                 System.out.println("statuscode" + statusCode);
-
-
-                if (json != null && !TextUtils.isEmpty(json)&&!json.trim().equalsIgnoreCase("[]")) {
+                if (json != null && !TextUtils.isEmpty(json) && !json.trim().equalsIgnoreCase("[]")) {
                     JSONArray jsonArray = new JSONArray(json);
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
-                    String data1= jsonObject.getString("VisitId");
+                    String data1 = jsonObject.getString("VisitId");
 
                     boolean isAppInBackground = isAppIsInBackground(getApplicationContext());
 
-                    if (jsonObject !=null||jsonObject.equals("")) {
+                    if (jsonObject != null || jsonObject.equals("")) {
                         Log.e(TAG, "CBT/NBT Has Orders Assigned Under him/her...");
                         if (!isAppInBackground) {
-
                             Log.e(TAG, "APP is running, hence no notification needs to be send");
-                        }else
-                        {
+                        } else {
                             startAcceptordernotification();
                         }
-                    }else{
+                    } else {
                         Log.e(TAG, "CBT/NBT Has NO Orders Assigned Under him/her...");
                     }
-
-
                 } else {
                     Log.e(TAG, "CBT/NBT Has NO Orders Assigned Under him/her...");
                 }
-            }
-            else
-            {
+            } else {
                 Log.e(TAG, "CBT/NBT Has NO Orders Assigned Under him/her...");
             }
         }
 
         @Override
         public void onApiCancelled() {
-
         }
-
     }
-
 
     //todo neha
     private void BlockBtechNotification() {
-
-
-        {
-
-            try {
-
-
-                if (Looper.myLooper() == null) {
-                    Logger.error("Lopper Exist ");
-                    Looper.myLooper().prepare();
-
-                }
-
-                if (Looper.myLooper() != null) {
-                    if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
-
-                        Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
-
-
-                        if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBT_ROLE_ID)) {
-                            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
-                            ApiCallAsyncTask BtechBlockDetailsApiAsyncTask = asyncTaskForRequest.getBtechBlockDetails();
-                            BtechBlockDetailsApiAsyncTask.setApiCallAsyncTaskDelegate(new BtechBlockDetailsApiAsyncTaskDelegateResult());
-                            BtechBlockDetailsApiAsyncTask.execute();
-                        }
-                    } else {
-                        Logger.error("Not login, please login ");
-                    }
-
-                }
-            }catch (Exception e){
-                // TODO: handle exception
-                e.printStackTrace();
+        try {
+            if (Looper.myLooper() == null) {
+                Logger.error("Lopper Exist ");
+                Looper.myLooper().prepare();
             }
+
+            if (Looper.myLooper() != null) {
+                if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
+                    Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
+                    if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBT_ROLE_ID)) {
+                        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
+                        ApiCallAsyncTask BtechBlockDetailsApiAsyncTask = asyncTaskForRequest.getBtechBlockDetails();
+                        BtechBlockDetailsApiAsyncTask.setApiCallAsyncTaskDelegate(new BtechBlockDetailsApiAsyncTaskDelegateResult());
+                        BtechBlockDetailsApiAsyncTask.execute();
+                    }
+                } else {
+                    Logger.error("Not login, please login ");
+                }
+
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
         }
         mHandler = new Handler();
-
     }
 
     private void AcceptOrderNotification() {
-
-
-        {
-
-            try {
-
-
-                if (Looper.myLooper() == null) {
-                    Logger.error("Lopper Exist ");
-                    Looper.myLooper().prepare();
-
-                }
-
-                if (Looper.myLooper() != null) {
-                    if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
-
-                        Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
-
-
-                        if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBT_ROLE_ID)) {
-                            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
-                            ApiCallAsyncTask AcceptOrderNotificationApiAsyncTask = asyncTaskForRequest.getAcceptOrderNotification();
-                            AcceptOrderNotificationApiAsyncTask.setApiCallAsyncTaskDelegate(new AcceptOrderNotificationApiAsyncTaskDelegateResult());
-                            AcceptOrderNotificationApiAsyncTask.execute();
-                        }
-                    } else {
-                        Logger.error("Not login, please login ");
-                    }
-
-                }
-            }catch (Exception e){
-                // TODO: handle exception
-                e.printStackTrace();
+        try {
+            if (Looper.myLooper() == null) {
+                Logger.error("Lopper Exist ");
+                Looper.myLooper().prepare();
             }
+            if (Looper.myLooper() != null) {
+                if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
+                    Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
+                    if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBT_ROLE_ID)) {
+                        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
+                        ApiCallAsyncTask AcceptOrderNotificationApiAsyncTask = asyncTaskForRequest.getAcceptOrderNotification();
+                        AcceptOrderNotificationApiAsyncTask.setApiCallAsyncTaskDelegate(new AcceptOrderNotificationApiAsyncTaskDelegateResult());
+                        AcceptOrderNotificationApiAsyncTask.execute();
+                    }
+                } else {
+                    Logger.error("Not login, please login ");
+                }
+
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
         }
+
         mHandler = new Handler();
 
     }
 
     public void startBlockBtechnotification() {
-
-
-// prepare intent which is triggered if the
-// notification is selected
-
-       /* Intent intent = new Intent(this, SplashScreenActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-// build notification
-// the addAction re-use the same intent to keep the example short
-        Notification n = new Notification.Builder(this)
-                .setContentText("YOUR ACCESS HAS BEEN BLOCKED DUE TO OPERATIONAL REASONS. PLEASE CONTACT YOUR SUPERVISOR.")
-                .setContentTitle("Btech App")
-                .setSmallIcon(R.drawable.app_logo)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true)
-                .addAction(R.drawable.app_logo, "Go to App", pIntent).build();
-
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        notificationManager.notify(0, n);
-*/
-
-
         Intent intent = new Intent(this, SplashScreenActivity.class);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
@@ -796,10 +672,7 @@ public class LocationUpdateService extends IntentService {
 
     }
 
-
     public void startAcceptordernotification() {
-
-
         Intent intent = new Intent(this, SplashScreenActivity.class);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
@@ -824,7 +697,6 @@ public class LocationUpdateService extends IntentService {
 
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(mNotificationId, notification);
-
     }
 
     private boolean isAppIsInBackground(Context context) {
@@ -851,9 +723,6 @@ public class LocationUpdateService extends IntentService {
 
         return isInBackground;
     }
-
-//tejas t ----------------------------------------------------------------------------------
-
 }
 
 

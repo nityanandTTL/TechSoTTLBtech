@@ -2,11 +2,13 @@ package com.thyrocare.adapter;
 
 import android.Manifest;
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -15,12 +17,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,17 +48,21 @@ import com.thyrocare.fragment.VisitOrdersDisplayFragment;
 import com.thyrocare.models.api.request.OrderAllocationTrackLocationRequestModel;
 import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.models.api.request.ServiceUpdateRequestModel;
+import com.thyrocare.models.api.response.GetTestListResponseModel;
 import com.thyrocare.models.data.BeneficiaryDetailsModel;
+import com.thyrocare.models.data.KitsCountModel;
 import com.thyrocare.models.data.OrderDetailsModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.MyBroadcastReceiver;
+import com.thyrocare.network.ResponseParser;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
+import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DateUtils;
 import com.thyrocare.utils.app.InputUtils;
 
@@ -81,9 +93,9 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private AppPreferenceManager appPreferenceManager;
     private String apiPlusFif, apiMinusFif;
-    String newTimeAfterMinusSixty1,cancelVisit = "n",apiTime,MaskedPhoneNumber = "";
+    String newTimeAfterMinusSixty1, cancelVisit = "n", apiTime, MaskedPhoneNumber = "";
     private refreshDelegate refreshDelegate1;
-    Date  strDate;
+    Date strDate;
     int fastingFlagInt = 0;
     Date apitimeinHHMMFormat;
 
@@ -103,15 +115,20 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     private int apihours;
     private int apiminutes;
     private Date strDate3;
-    public static int posForAmountDue=0;
+    public static int posForAmountDue = 0;
 
     //neha g------------
-    String finaltime ="";
+    String finaltime = "";
     Long time, currenttime;
-    int hr=0;
-    int minnew =0;
-
+    int hr = 0;
+    int minnew = 0;
     //neha g----------------------
+
+    //Nityanand
+    private ArrayList<String> DDLListArr;
+    GetTestListResponseModel TestListResponseModel;
+    LinearLayout ll_tests, ll_selectben, ll_kits;
+    TextView txt_msg_ben;
 
     //private refreshDelegate refreshDelegate;
     public VisitOrderDisplayAdapter(HomeScreenActivity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels, VisitOrderDisplayRecyclerViewAdapterDelegate visitOrderDisplayRecyclerViewAdapterDelegate, refreshDelegate refreshDelegate, VisitOrderDisplayyRecyclerViewAdapterDelegate visitOrderDisplayyRecyclerViewAdapterDelegate, OrderPassRecyclerViewAdapterDelegate orderPassRecyclerViewAdapterDelegate) {
@@ -154,7 +171,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         } else {
             holder = (FoldingCellViewHolder) convertView.getTag();
         }
-        posForAmountDue=position;
+        posForAmountDue = position;
         initData(holder, position);
         initListeners(holder, position);
         return convertView;
@@ -178,8 +195,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     } else {*/
 
                     if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.PPBS)
-                            ||orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
-                            ||orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)) {
+                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
+                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
                         items = new String[]{"Do you want to cancel the visit?"};
                         cancelVisit = "y";
 
@@ -203,7 +220,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     }else {*/
                     if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.PPBS)
                             || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
-                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)) {
+                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
                         items = new String[]{"Do you want to cancel the visit?"};
                         cancelVisit = "y";
 
@@ -226,17 +243,12 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Order Reschedule")) {
 
-
-                            Logger.error("Order Reschedule");
                             userChoosenReleaseTask = "Order Reschedule";
                             cdd = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0));
                             cdd.show();
 
 
                         } else if (items[item].equals("Order Release")) {
-
-
-                            Logger.error(" Order Release dialog");
 
                             final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
                             builder1.setTitle("Warning ")
@@ -273,11 +285,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
 
                         } else if (items[item].equals("Order Pass")) {
-
                             orderPassRecyclerViewAdapterDelegate.onItemReleaseto(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getPincode(), orderVisitDetailsModelsArr.get(pos));
-
-                            Logger.error("pincode " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getPincode());
-
                         } else if (items[item].equals("Do you want to cancel the visit?")) {
 
                         }
@@ -302,7 +310,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                                 } else {
                                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                 }
-                                Logger.error("cancel visit");
 
                             } else {
                                 dialog.dismiss();
@@ -310,7 +317,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
                         }
                     });
-                }else {
+                } else {
                     builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -327,7 +334,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                                 } else {
                                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                 }
-                                Logger.error("cancel visit");
 
                             } else {
                                 dialog.dismiss();
@@ -362,8 +368,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
                     } else {*/
                     if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.PPBS)
-                            ||orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
-                            ||orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)) {
+                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
+                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
                         items = new String[]{"Do you want to cancel the visit?"};
                         cancelVisit = "y";
                     } else {
@@ -383,8 +389,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     }else {*/
 
                     if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.PPBS)
-                            ||orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
-                            ||orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)) {
+                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
+                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
                         items = new String[]{"Do you want to cancel the visit?"};
                         cancelVisit = "y";
                     } else {
@@ -449,7 +455,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                                 } else {
                                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                 }
-                                Logger.error("cancel visit");
 
                             } else {
                                 dialog.dismiss();
@@ -475,7 +480,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                                     Toast.makeText(activity,
                                             activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                 }
-                                Logger.error("cancel visit");
 
                             } else {
                                 dialog.dismiss();
@@ -501,8 +505,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             public void onClick(View v) {
 
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.PPBS)
-                        ||orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
-                        ||orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)) {
+                        || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
+                        || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
                     isAutoTimeSelected();
                     if (isAutoTimeSelected == true) {
                         if (timeCheckPPBS(pos)) {
@@ -511,7 +515,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
                         } else {
                             AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
-                            alertDialog.setMessage(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode()+" test can be served in between " + apiMinusFifdisp + " to " + apiPlusFifdisp);
+                            alertDialog.setMessage(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode() + " test can be served in between " + apiMinusFifdisp + " to " + apiPlusFifdisp);
                             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
@@ -531,7 +535,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
                     Calendar cal = Calendar.getInstance();
                     Date currentTime = cal.getTime();
-                    Logger.error(">> " + currentTime);
                     String CurrentStr = currentTime.toString();
                     strDate = null;
                     try {
@@ -543,26 +546,18 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         calendar.setTime(strDate2);
                         apihours = calendar.get(Calendar.HOUR_OF_DAY);
                         apiminutes = calendar.get(Calendar.MINUTE);
-                        Logger.error(">>apihours ....." + apihours);
-                        Logger.error(">>apiminutes ....." + apiminutes);
 
 
                     } catch (ParseException e) {
                         e.printStackTrace();
-                        Logger.error(">> " + e.getMessage());
                     }
 
-
-                    Logger.error(">> " + orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot());
                     Calendar cal7 = Calendar.getInstance();
-                    Logger.error("strDate3   " + strDate3);
                     cal7.setTime(strDate3);
 
                     cal7.add(Calendar.MINUTE, +360);
                     int hours = cal7.get(Calendar.HOUR_OF_DAY);
                     int Minutes = cal7.get(Calendar.MINUTE);
-                    Logger.error(">>hours ....." + hours);
-                    Logger.error(">>Minutes ....." + Minutes);
                     apiPlusTwoPBBS = sdf.format(cal7.getTime());
                     apiPlusTwoPBBS2 = sdf.format(cal7.getTime());
 
@@ -580,7 +575,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
 
                 } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains("INSPP")
-                        && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains("INSFA")){
+                        && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains("INSFA")) {
                     goAheadWithNormalFlow();
                 } else {
                     goAheadWithNormalFlow();
@@ -608,8 +603,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             private void goAheadWithNormalFlow() {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.ENGLISH);
                 Date date = DateUtils.dateFromString(newTimeAfterMinusSixty1, sdf);
-                Logger.error("strDate btnStartNavigation " + date);
-                Logger.error("new Date() " + new Date());
 
                 if (new Date().before(date)) {
                     //  Toast.makeText(activity, "is After", Toast.LENGTH_SHORT).show();
@@ -656,8 +649,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
             private void assigned() {
 
-                Logger.error("status***" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus());
-
                 if (!orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED") && !orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")) {
 
                     visitOrderDisplayRecyclerViewAdapterDelegate.onNavigationStart(orderVisitDetailsModelsArr.get(pos));
@@ -683,6 +674,334 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 }
             }
         });
+
+        if (orderVisitDetailsModelsArr != null) {
+            if (orderVisitDetailsModelsArr.size() != 0) {
+                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null) {
+                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits() != null) {
+                        if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits().size() != 0) {
+                            holder.bs_kit.setText("" + CallViewKitsstr(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits()));
+                        } else {
+                            holder.bs_kit.setText("");
+                        }
+                    } else {
+                        holder.bs_kit.setText("");
+                    }
+                } else {
+                    holder.bs_kit.setText("");
+                }
+            } else {
+                holder.bs_kit.setText("");
+            }
+        } else {
+            holder.bs_kit.setText("");
+        }
+
+
+        holder.img_view_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (orderVisitDetailsModelsArr != null) {
+                        if (orderVisitDetailsModelsArr.size() != 0) {
+                            if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null) {
+                                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster() != null) {
+                                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() != 0) {
+                                        CallViewTestDialog(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster(), orderVisitDetailsModelsArr.get(pos).getVisitId());
+                                    } else {
+
+                                    }
+                                } else {
+
+                                }
+                            } else {
+
+                            }
+                        } else {
+
+                        }
+                    } else {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void CallViewKitsDialog(ArrayList<KitsCountModel> kits) {
+
+        final Dialog CallKitsDialog = new Dialog(activity);
+        CallKitsDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        CallKitsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        CallKitsDialog.setContentView(R.layout.dailog_viewkits);
+        CallKitsDialog.setCanceledOnTouchOutside(false);
+
+        ImageView img_cncdil = (ImageView) CallKitsDialog.findViewById(R.id.img_cncdil);
+        img_cncdil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CallKitsDialog.dismiss();
+            }
+        });
+
+        ll_kits = (LinearLayout) CallKitsDialog.findViewById(R.id.ll_kits);
+
+        if (kits != null) {
+            if (kits.size() > 0) {
+                // Logger.error("if ");
+                ll_kits.removeAllViews();
+                for (int i = 0; i < kits.size(); i++) {
+                    LayoutInflater vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View v = vi.inflate(R.layout.item_view_kits, null);
+
+                    TextView txt_sr = (TextView) v.findViewById(R.id.txt_sr);
+                    TextView txt_kitname = (TextView) v.findViewById(R.id.txt_kitname);
+                    TextView txt_kitval = (TextView) v.findViewById(R.id.txt_kitval);
+
+                    txt_sr.setText("" + (i + 1));
+                    txt_kitname.setText("" + kits.get(i).getKit());
+                    txt_kitval.setText("" + kits.get(i).getValue());
+
+
+                    ll_kits.addView(v);
+                    ll_kits.invalidate();
+                }
+
+            }
+        }
+
+
+        CallKitsDialog.show();
+    }
+
+    private String CallViewKitsstr(ArrayList<KitsCountModel> kits) {
+        ArrayList<String> testTypesArr = new ArrayList<String>();
+
+        try {
+            for (int i = 0; i < kits.size(); i++) {
+                testTypesArr.add(kits.get(i).getKit());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<String> testTypesNew = new ArrayList<>();
+        testTypesNew = removeDuplicates(testTypesArr);
+
+        ArrayList<KitsCountModel> kits_new = new ArrayList<>();
+        for (int j = 0; j < testTypesNew.size(); j++) {
+            for (int k = 0; k < kits.size(); k++) {
+                if (testTypesNew.get(j).toString().trim().equals(kits.get(k).getKit().toString().trim())) {
+                    if (kits_new.size() != 0) {
+                        for (int m = 0; m < kits_new.size(); m++) {
+                            if (kits_new.get(m).getKit().equals(testTypesNew.get(j).toString())) {
+                                int setVal = kits_new.get(m).getValue();
+                                kits_new.get(m).setValue(setVal + (kits.get(k).getValue()));
+
+                            } else {
+                                kits_new.add(kits.get(k));
+                            }
+                        }
+                    } else {
+                        kits_new.add(kits.get(k));
+                    }
+                }
+            }
+        }
+
+
+        String str = "";
+        if (kits_new != null) {
+            if (kits_new.size() > 0) {
+                for (int i = 0; i < kits_new.size(); i++) {
+                    str = str + kits_new.get(i).getValue() + " " + kits_new.get(i).getKit() + " |";
+                }
+                str = str.substring(0, str.length() - 1);
+
+            } else {
+                str = "";
+            }
+        } else {
+            str = "";
+        }
+
+
+        return str;
+    }
+
+
+    static ArrayList<String> removeDuplicates(ArrayList<String> list) {
+
+        // Store unique items in result.
+        ArrayList<String> result = new ArrayList<>();
+
+        // Record encountered Strings in HashSet.
+        HashSet<String> set = new HashSet<>();
+
+        // Loop over argument list.
+        for (String item : list) {
+
+            // If String is not in set, add it to the list and the set.
+            if (!set.contains(item)) {
+                result.add(item);
+                set.add(item);
+            }
+        }
+        return result;
+    }
+
+
+    private void CallViewTestDialog(final ArrayList<BeneficiaryDetailsModel> benMaster, String visitId) {
+
+        final Dialog CallViewTestDialog = new Dialog(activity);
+        CallViewTestDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        CallViewTestDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        CallViewTestDialog.setContentView(R.layout.dailog_viewbentests);
+        CallViewTestDialog.setCanceledOnTouchOutside(false);
+
+        TextView txt_ordno = (TextView) CallViewTestDialog.findViewById(R.id.txt_ordno);
+        if(visitId != null) {
+            txt_ordno.setText(" : " + visitId);
+        }
+
+        ll_tests = (LinearLayout) CallViewTestDialog.findViewById(R.id.ll_tests);
+        ll_selectben = (LinearLayout) CallViewTestDialog.findViewById(R.id.ll_selectben);
+        txt_msg_ben = (TextView) CallViewTestDialog.findViewById(R.id.txt_msg_ben);
+        ImageView img_cnc = (ImageView) CallViewTestDialog.findViewById(R.id.img_cnc);
+        img_cnc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CallViewTestDialog.dismiss();
+            }
+        });
+
+        Spinner ben_names = (Spinner) CallViewTestDialog.findViewById(R.id.ben_names);
+        DDLListArr = new ArrayList<>();
+        DDLListArr.add("" + BundleConstants.statusBen);
+        for (BeneficiaryDetailsModel btsCodeDataModell :
+                benMaster) {
+            DDLListArr.add(btsCodeDataModell.getName());
+        }
+
+        if (DDLListArr.size() != 0) {
+            ArrayAdapter<String> spinneradapter51 = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, DDLListArr);
+            spinneradapter51.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ben_names.setAdapter(spinneradapter51);
+
+            ben_names.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position == 0) {
+                        ll_selectben.setVisibility(View.VISIBLE);
+                        txt_msg_ben.setText("Select Beneficiary to view test list.");
+                        ll_tests.setVisibility(View.GONE);
+                    } else {
+                        ll_selectben.setVisibility(View.GONE);
+                        ll_tests.setVisibility(View.VISIBLE);
+                        getviewTestData(benMaster.get(position - 1).getLeadId());
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+
+        CallViewTestDialog.show();
+    }
+
+    private void getviewTestData(String leadId) {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchAssignedDetailApiAsyncTask = asyncTaskForRequest.getTestListAsyncTask(leadId);
+        fetchAssignedDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new GetTestListApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            fetchAssignedDetailApiAsyncTask.execute(fetchAssignedDetailApiAsyncTask);
+        } else {
+            Toast.makeText(activity, "No Internet", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class GetTestListApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                Logger.error("" + json);
+
+                ResponseParser responseParser = new ResponseParser(activity);
+                TestListResponseModel = new GetTestListResponseModel();
+                TestListResponseModel = responseParser.getTestListResponseModel(json, statusCode);
+
+                iflateTestGroupName();
+
+            } else {
+                Logger.error("" + json);
+            }
+
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    private void iflateTestGroupName() {
+        if (TestListResponseModel != null) {
+            if (TestListResponseModel.getTestGroupList() != null) {
+                if (TestListResponseModel.getTestGroupList().size() > 0) {
+                    // Logger.error("if ");
+                    ll_tests.removeAllViews();
+                    for (int i = 0; i < TestListResponseModel.getTestGroupList().size(); i++) {
+                        LayoutInflater vi = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View v = vi.inflate(R.layout.item_view_test, null);
+                        final TextView tv_test = (TextView) v.findViewById(R.id.tv_test);
+                        final LinearLayout ll_child = (LinearLayout) v.findViewById(R.id.ll_child);
+                        tv_test.setText("" + TestListResponseModel.getTestGroupList().get(i).getGroupName() + " (" + TestListResponseModel.getTestGroupList().get(i).getTestCount() + ")");
+                        tv_test.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_group_collapse_15, 0);
+
+                        tv_test.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (ll_child.getVisibility() == View.VISIBLE) {
+                                    ll_child.setVisibility(View.GONE);
+                                    tv_test.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_group_collapse_15, 0);
+                                } else {
+                                    ll_child.setVisibility(View.VISIBLE);
+                                    tv_test.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_group_expand_15, 0);
+                                }
+                            }
+                        });
+                        ll_child.removeAllViews();
+                        for (int j = 0; j < TestListResponseModel.getTestGroupList().get(i).getTestDetails().size(); j++) {
+                            LayoutInflater vj = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            View v1 = vj.inflate(R.layout.item_view_test, null);
+                            TextView tv_test1 = (TextView) v1.findViewById(R.id.tv_test);
+                            tv_test1.setBackgroundColor(Color.parseColor("#ffffff"));
+                            tv_test1.setTextColor(Color.parseColor("#000000"));
+                            tv_test1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                            tv_test1.setText(">> Description:  " + TestListResponseModel.getTestGroupList().get(i).getTestDetails().get(j).getDescription() + " \n     Test Code: " + TestListResponseModel.getTestGroupList().get(i).getTestDetails().get(j).getTestCode() + "\n     Unit: " + TestListResponseModel.getTestGroupList().get(i).getTestDetails().get(j).getUnit());
+                            ll_child.addView(v1);
+                            ll_child.invalidate();
+                        }
+                        ll_tests.addView(v);
+                        ll_tests.invalidate();
+                    }
+
+                } else {
+                    ll_selectben.setVisibility(View.VISIBLE);
+                    txt_msg_ben.setText("Tests list not available.");
+                    ll_tests.setVisibility(View.GONE);
+                }
+            } else {
+                ll_selectben.setVisibility(View.VISIBLE);
+                txt_msg_ben.setText("Tests list not available.");
+                ll_tests.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void initData(final FoldingCellViewHolder holder, final int pos) {
@@ -691,15 +1010,12 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() > 0
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0) != null) {
-            Logger.error("allloy bua");
             if (orderVisitDetailsModelsArr.get(pos).getAppointmentDate().equals(todate)) {
-                Logger.error("allloy bua1");
                 holder.mainright.setBackgroundColor(activity.getResources().getColor(R.color.test1));
                 holder.mainleft.setBackgroundColor(activity.getResources().getColor(R.color.test1));
                 holder.main.setBackgroundColor(activity.getResources().getColor(R.color.test1));
 
             } else {
-                Logger.error("allloy bua2");
                 holder.mainright.setBackgroundColor(activity.getResources().getColor(R.color.test2));
                 holder.mainleft.setBackgroundColor(activity.getResources().getColor(R.color.test2));
                 holder.main.setBackgroundColor(activity.getResources().getColor(R.color.test2));
@@ -729,6 +1045,32 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             holder.locationdata.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress());
             holder.timedata.setText(orderVisitDetailsModelsArr.get(pos).getSlot() + "  HRS");
 
+            try {
+                if (orderVisitDetailsModelsArr != null) {
+                    if (orderVisitDetailsModelsArr.size() != 0) {
+                        if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null) {
+                            if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster() != null) {
+                                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() != 0) {
+                                    holder.ben_cnt.setText("| " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() + "");
+                                } else {
+                                    holder.ben_cnt.setText("");
+                                }
+                            } else {
+                                holder.ben_cnt.setText("");
+                            }
+                        } else {
+                            holder.ben_cnt.setText("");
+                        }
+                    } else {
+                        holder.ben_cnt.setText("");
+                    }
+                } else {
+                    holder.ben_cnt.setText("");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             dateCheck(pos);
 
 
@@ -737,7 +1079,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             holder.txtName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
             holder.txtName.setSelected(true);
             holder.txtSrNo.setText(pos + 1 + "");
-            Logger.error("LOcationnnn" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getLocation());
 //jai
 
             holder.txt_distance.setText(String.valueOf(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getDistance()) + "KM");
@@ -752,7 +1093,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             //jai
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.PPBS)
                     || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
-                    || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)) {
+                    || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
                 holder.imgRelease.setVisibility(View.VISIBLE);
                 holder.imgRelease2.setVisibility(View.VISIBLE);
             }
@@ -814,7 +1155,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.tvAge.setVisibility(View.INVISIBLE);
                 holder.imgcall.setVisibility(View.INVISIBLE);
                 holder.imgFastingStatus.setVisibility(View.INVISIBLE);
-                Logger.error("IMGCALL2 INVISIBLE");
 
                 //  holder.txtSrNo.setVisibility(View.INVISIBLE);
                 holder.txtSrNo.setVisibility(View.GONE);
@@ -823,7 +1163,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
 //jai
-                        Logger.error("clicked items test: " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode());
+
                        /* if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals("PPBS")) {
                             SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
                             test = null;
@@ -881,7 +1221,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                             public void onClick(DialogInterface dialog, int which) {
                                 //neha g ---------------------
 
-                                BundleConstants.OrderAccept=2;
+                                BundleConstants.OrderAccept = 2;
                                 appPreferenceManager.setOrderAccept(2);
                                 startAlert();
 
@@ -910,8 +1250,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                                     holder.imgRelease2.setVisibility(View.VISIBLE);
                                 }*/
 
-
-                                Logger.error("IMGCALL3 VISIBLE");
                                 visitOrderDisplayRecyclerViewAdapterDelegate.onOrderAccepted(orderVisitDetailsModelsArr.get(pos));
                                 SendinglatlongOrderAllocation(pos);
                             }
@@ -936,7 +1274,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.txtAge.setVisibility(View.VISIBLE);
                 holder.tvAge.setVisibility(View.VISIBLE);
                 holder.imgcall.setVisibility(View.VISIBLE);
-                Logger.error("IMGCALL4 VISIBLE");
 
 
                 //   holder.imgcall.setVisibility(View.GONE);
@@ -969,19 +1306,15 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             if (fastingFlagInt == 1) {
                 fastingFlagInt = 0;
                 if (isFasting && isNonFasting) {
-                    Logger.error("isFasting && isNonFasting");
                     holder.imgFastingStatus.setVisibility(View.VISIBLE);
                     holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_fasting_mix));
                 } else if (isFasting && !isNonFasting) {
-                    Logger.error("isFasting && !isNonFasting");
                     holder.imgFastingStatus.setVisibility(View.VISIBLE);
                     holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_fasting));
                 } else if (!isFasting && isNonFasting) {
-                    Logger.error("!isFasting && isNonFasting");
                     holder.imgFastingStatus.setVisibility(View.VISIBLE);
                     holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_non_fasting));
                 } else {
-                    Logger.error("else");
                     holder.imgFastingStatus.setVisibility(View.INVISIBLE);
                 }
             }
@@ -1007,6 +1340,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             });
         }
     }
+
     public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
         double earthRadius = 6371000; //meters
         double dLat = Math.toRadians(lat2 - lat1);
@@ -1016,7 +1350,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         Math.sin(dLng / 2) * Math.sin(dLng / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         float dist = (float) (earthRadius * c);
-        float distkm=(float)(dist/ 1000);
+        float distkm = (float) (dist / 1000);
 
         return distkm;
     }
@@ -1057,15 +1391,15 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     public void startAlert() {
         String pattern = "dd-MM-yyyy HH:mm:ss.S";
         String datefrom_model = "";
-        String notifyTime="";
-        String AMPM="";
-        String AppointmentDate="";
+        String notifyTime = "";
+        String AMPM = "";
+        String AppointmentDate = "";
         // SimpleDateFormat format = new SimpleDateFormat(pattern);
 
         try {
             SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.S");
-            for(int i=0;i<orderVisitDetailsModelsArr.size();i++) {
-                System.out.println("ordervisitdetailsmodelsarr"+orderVisitDetailsModelsArr.size());
+            for (int i = 0; i < orderVisitDetailsModelsArr.size(); i++) {
+                System.out.println("ordervisitdetailsmodelsarr" + orderVisitDetailsModelsArr.size());
                 datefrom_model = orderVisitDetailsModelsArr.get(i).getSlot();
                 AppointmentDate = orderVisitDetailsModelsArr.get(i).getAppointmentDate();
                 System.out.println("slot " + datefrom_model); //01:00 PM
@@ -1074,22 +1408,22 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 AMPM = spl[1];
                 String[] timesplit = notifyTime.split(":");
                 String time1 = timesplit[0];
-                System.out.println("AMPM"+AMPM);
+                System.out.println("AMPM" + AMPM);
 
                 CheckDayOrEve(time1, AMPM);
-                hr=Integer.parseInt(finaltime);
-                minnew= Integer.parseInt(timesplit[1]);
-                appPreferenceManager.setShowTimeInNotificatn(finaltime+":"+timesplit[1]);
-                BundleConstants.ShowTimeInNotificatn=finaltime+":"+timesplit[1];
+                hr = Integer.parseInt(finaltime);
+                minnew = Integer.parseInt(timesplit[1]);
+                appPreferenceManager.setShowTimeInNotificatn(finaltime + ":" + timesplit[1]);
+                BundleConstants.ShowTimeInNotificatn = finaltime + ":" + timesplit[1];
 
-                System.out.println(" BundleConstants.ShowTimeInNotificatn"+ BundleConstants.ShowTimeInNotificatn);
-                Get15MinEarly(hr,minnew);
-                System.out.println("final time "+finaltime);
+                System.out.println(" BundleConstants.ShowTimeInNotificatn" + BundleConstants.ShowTimeInNotificatn);
+                Get15MinEarly(hr, minnew);
+                System.out.println("final time " + finaltime);
 
 
                 Date date = format.parse(AppointmentDate + " " + hr + ":" + minnew + ":" + "00.0");
                 //    Date date = format.parse("27-12-2017 14:02:00.0");//TODO TEST
-                System.out.println("date"+date);
+                System.out.println("date" + date);
                 time = date.getTime();
 
 
@@ -1109,12 +1443,12 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
             //TODO neha
             int currenthour = new Time(System.currentTimeMillis()).getHours();
-            System.out.println("Current hour18"+currenthour);
+            System.out.println("Current hour18" + currenthour);
 
-            if(currenthour==18&&orderVisitDetailsModelsArr.size()==0){
-                System.out.println("in condition 1818"+currenthour);
+            if (currenthour == 18 && orderVisitDetailsModelsArr.size() == 0) {
+                System.out.println("in condition 1818" + currenthour);
                 appPreferenceManager.setDataInVisitModel(2);
-                BundleConstants.DataInVisitModel=2;
+                BundleConstants.DataInVisitModel = 2;
                 Notify();//TODO neha
             }
         } catch (ParseException e) {
@@ -1123,56 +1457,55 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
     }
 
-    private void Get15MinEarly( int a,int b) {
-        System.out.println("hour"+a+" "+"min"+b);
-        if(b<15) {
+    private void Get15MinEarly(int a, int b) {
+        System.out.println("hour" + a + " " + "min" + b);
+        if (b < 15) {
             hr = a - 1;
             minnew = b + 45;
-            System.out.println("hr less"+hr+" "+"minnew"+minnew);
-        } else if(b>15){
-            hr=a;
-            minnew= b-15;
-            System.out.println("hr "+hr+" "+"minnew"+minnew);
+            System.out.println("hr less" + hr + " " + "minnew" + minnew);
+        } else if (b > 15) {
+            hr = a;
+            minnew = b - 15;
+            System.out.println("hr " + hr + " " + "minnew" + minnew);
         }
     }
 
 
+    private void CheckDayOrEve(String time1, String AMPM) {
 
-    private void CheckDayOrEve(String time1,String AMPM) {
-
-        System.out.println("time1 "+time1);
-        System.out.println("AMPM1"+AMPM);
-        if(AMPM.equals("PM")){
-            if( time1.equals("01")){
-                finaltime ="13";
-            }else if(time1.equals("02")){
+        System.out.println("time1 " + time1);
+        System.out.println("AMPM1" + AMPM);
+        if (AMPM.equals("PM")) {
+            if (time1.equals("01")) {
+                finaltime = "13";
+            } else if (time1.equals("02")) {
                 finaltime = "14";
-            }else if(time1.equals("03")){
+            } else if (time1.equals("03")) {
                 finaltime = "15";
-            }else if(time1.equals("04")){
+            } else if (time1.equals("04")) {
                 finaltime = "16";
-                System.out.println("finaltime04 : "+finaltime);
-            }else if(time1.equals("05")){
-                finaltime= "17";
-            }else if(time1.equals("02")){
-                finaltime= "14";
-            }else if(time1.equals("06")){
-                finaltime= "18";
-            }else if(time1.equals("07")){
-                finaltime= "19";
-            }else if(time1.equals("08")){
-                finaltime= "20";
-            }else if(time1.equals("09")){
-                finaltime= "21";
-            }else if(time1.equals("10")){
-                finaltime= "22";
-            }else if(time1.equals("11")){
-                finaltime= "23";
-            }else if(time1.equals("12")){
-                finaltime= "24";
+                System.out.println("finaltime04 : " + finaltime);
+            } else if (time1.equals("05")) {
+                finaltime = "17";
+            } else if (time1.equals("02")) {
+                finaltime = "14";
+            } else if (time1.equals("06")) {
+                finaltime = "18";
+            } else if (time1.equals("07")) {
+                finaltime = "19";
+            } else if (time1.equals("08")) {
+                finaltime = "20";
+            } else if (time1.equals("09")) {
+                finaltime = "21";
+            } else if (time1.equals("10")) {
+                finaltime = "22";
+            } else if (time1.equals("11")) {
+                finaltime = "23";
+            } else if (time1.equals("12")) {
+                finaltime = "24";
             }
-        }else{
-            finaltime=time1;
+        } else {
+            finaltime = time1;
         }
     }
 
@@ -1211,15 +1544,12 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         strDate = null;
         try {
 
-            Logger.error("newTimeAfterMinusSixty " + newTimeAfterMinusSixty);
             // strDate = sdf.parse("" + orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + apitimeinHHMMFormat);
             strDate = sdf.parse("" + orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot());
-            Logger.error(">> " + orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot());
             Calendar cal1 = Calendar.getInstance();
             cal1.setTime(strDate);
             cal1.add(Calendar.HOUR, -1);
             newTimeAfterMinusSixty1 = sdf.format(cal1.getTime());
-            Logger.error(">> ....." + newTimeAfterMinusSixty1);
             strDate = sdf.parse("28-08-2017 19:42");
 
         } catch (ParseException e) {
@@ -1252,9 +1582,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             strDate2 = sdf.parse("" + orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot());
             Calendar cal = Calendar.getInstance();
             Date currentTime = cal.getTime();
-            Logger.error(">> " + currentTime);
             strDate = currentTime;
-            Logger.error(">> " + orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot());
             Calendar cal1 = Calendar.getInstance();
             cal1.setTime(strDate);
             String strdate3 = df.format(strDate);
@@ -1262,28 +1590,23 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             apiMinusFif = sdf.format(cal1.getTime());
 
             apiMinusFif = apiMinusFif.substring(11, 19);
-            Logger.error(">>apiMinusFif ....." + apiMinusFif);
             Calendar cal2 = Calendar.getInstance();
             cal2.setTime(strDate);
             cal2.add(Calendar.MINUTE, +240);
             // cal2.add(Calendar.MINUTE, +15);
             apiPlusFif = sdf.format(cal2.getTime());
             apiPlusFif = apiPlusFif.substring(11, 19);
-            Logger.error(">>apiPlusFif ....." + apiPlusFif);
             String apiTime = null;
             apiTime = orderVisitDetailsModelsArr.get(pos).getSlot();
-            Logger.error(">>apiTime: " + orderVisitDetailsModelsArr.get(pos).getSlot());
 
             ////////////////////////////////////////////////////////////////////////Alert Display time //////////////////////
 
-            Logger.error(">> " + orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot());
             Calendar cal3 = Calendar.getInstance();
             cal3.setTime(strDate2);
             cal3.add(Calendar.MINUTE, -30);
             apiMinusFifdisp = sdf.format(cal3.getTime());
 
             apiMinusFifdisp = apiMinusFifdisp.substring(11, 19);
-            Logger.error(">>apiMinusFifdisp ....." + apiMinusFifdisp);
             Calendar cal4 = Calendar.getInstance();
             cal4.setTime(strDate2);
             //jai 9/10/17
@@ -1291,14 +1614,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             //  cal4.add(Calendar.MINUTE, +15);
             apiPlusFifdisp = sdf.format(cal4.getTime());
             apiPlusFifdisp = apiPlusFifdisp.substring(11, 19);
-            Logger.error(">>apiPlusFifdisp ....." + apiPlusFifdisp);
             apiTime = orderVisitDetailsModelsArr.get(pos).getSlot();
-            Logger.error(">>apiPlusFifdisp: " + orderVisitDetailsModelsArr.get(pos).getSlot());
 
-
-            Logger.error(">>Checker api: " + strdate3);
-            Logger.error(">>Checkerplus15min: " + apiPlusFifdisp);
-            Logger.error(">>CheckerMinus15min: " + apiMinusFifdisp);
           /*  if (checkWithApiTimeForPPBS(apiPlusFif, apiMinusFif, apiTime)) {
 */
             if (checkWithApiTimeForPPBS(apiPlusFifdisp, apiMinusFifdisp, strdate3)) {
@@ -1357,7 +1674,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     Intent intent = new Intent(Intent.ACTION_CALL);
                     MaskedPhoneNumber = json;
                     intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
-                    Logger.error("MaskedPhoneNumber" + MaskedPhoneNumber);
 
                     appPreferenceManager.setMaskNumber(MaskedPhoneNumber);
                     if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -1386,7 +1702,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
         @Override
         public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark, String date) {
-            Logger.error("onOkButtonClicked");
             AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
             OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
 
@@ -1421,29 +1736,21 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                Logger.error("200 success");
-                Logger.error("before refresh");
                 refreshDelegate1.onRefreshClicked();
-                Logger.error("after refresh");
                 if (userChoosenReleaseTask.equals("Visit Cancellation")) {
-                    Logger.error("success 1");
                     if (!isCancelRequesGenereted) {
-                        Logger.error("success 2");
                         isCancelRequesGenereted = true;
                         orderDetailsModel.setStatus("RESCHEDULED");
                         OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
                         orderDetailsDao.insertOrUpdate(orderDetailsModel);
                         Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
-                        Logger.error("before refresh");
                         refreshDelegate1.onRefreshClicked();
-                        Logger.error("after refresh");
 
                         activity.finish();
 
                     }
                 }
             } else {
-                Logger.error("success 11");
                 Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
@@ -1456,10 +1763,10 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
 
     private class FoldingCellViewHolder {
-        TextView tvSrNo, tvName, tvAge, txtAddress, txtorderno, txtKits, timedata, timetitle, txt_distance, pintitle, pindata, apptDate, apptDateValue, locationtitle, locationdata;//tvAadharNo,
+        TextView tvSrNo, tvName, tvAge, txtAddress, txtorderno, txtKits, timedata, ben_cnt, bs_kit, timetitle, txt_distance, pintitle, pindata, apptDate, apptDateValue, locationtitle, locationdata;//tvAadharNo,
         ImageView imgCBAccept;
         TextView txtSrNo, txtName, txtAge, txtAadharNo;
-        ImageView imgRelease, imgRelease2, imgcall;
+        ImageView imgRelease, imgRelease2, imgcall, img_view_test;
         ImageView imgFastingStatus;
         Button btnStartNavigation;
         FrameLayout fm_title;
@@ -1495,6 +1802,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             txtorderno = (TextView) itemView.findViewById(R.id.tv_orderno);
             apptDate = (TextView) itemView.findViewById(R.id.apptdate);
             timedata = (TextView) itemView.findViewById(R.id.time_data);
+            ben_cnt = (TextView) itemView.findViewById(R.id.ben_cnt);
+            bs_kit = (TextView) itemView.findViewById(R.id.bs_kit);
             locationdata = (TextView) itemView.findViewById(R.id.location_datas);
             pindata = (TextView) itemView.findViewById(R.id.pincode_data);
 
@@ -1503,7 +1812,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             txtAge.setVisibility(View.INVISIBLE);
             tvAge.setVisibility(View.INVISIBLE);
             imgcall.setVisibility(View.INVISIBLE);
-            Logger.error("IMGCALL1 INVISIBLE");
 //            tvAadharNo = (TextView) itemView.findViewById(R.id.tv_aadhar_no);
             txtAddress = (TextView) itemView.findViewById(R.id.txt_address);
             //    txtorderno = (TextView) itemView.findViewById(R.id.tv_orderno);
@@ -1512,6 +1820,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             btnStartNavigation = (Button) itemView.findViewById(R.id.btn_start_navigation);
             imgCBAccept = (ImageView) itemView.findViewById(R.id.img_oas);
             imgRelease2 = (ImageView) itemView.findViewById(R.id.img_release2);
+            img_view_test = (ImageView) itemView.findViewById(R.id.img_view_test);
             txt_distance = (TextView) itemView.findViewById(R.id.txt_distance_1);
 
             //change22june2017
@@ -1520,6 +1829,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             //change22june2017
 
             timedata.setVisibility(View.VISIBLE);
+            ben_cnt.setVisibility(View.VISIBLE);
+            bs_kit.setVisibility(View.VISIBLE);
             //anand
             timetitle.setVisibility(View.GONE);
             //anand
@@ -1536,7 +1847,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     private void isAutoTimeSelected() {
         try {
             if (Settings.Global.getInt(activity.getContentResolver(), Settings.Global.AUTO_TIME) == 1) {
-                Logger.error("enabled");
                 isAutoTimeSelected = true;
             } else {
                 final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);

@@ -290,8 +290,6 @@ public class AsyncTaskForRequest {
     }
 
 
-
-
     public ApiCallAsyncTask getTrackBtechLocationRequestAsyncTask(TrackBtechLocationRequestModel trackBtechLocationRequestModel) {
         apiCallAsyncTask = null;
         try {
@@ -316,7 +314,7 @@ public class AsyncTaskForRequest {
     }
 
     //Order Allocation //
-    public ApiCallAsyncTask getOrderAllocationpost (OrderAllocationTrackLocationRequestModel orderAllocationTrackLocationRequestModel) {
+    public ApiCallAsyncTask getOrderAllocationpost(OrderAllocationTrackLocationRequestModel orderAllocationTrackLocationRequestModel) {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
@@ -371,7 +369,7 @@ public class AsyncTaskForRequest {
             Log.e(AsyncTaskForRequest.class.getSimpleName(), "getTestListAsyncTask: ");
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             //  abstractApiModel.setRequestUrl("http://bts.dxscloud.com/techsoapi/api/BenTestList/GetTestList/SP33337413");
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.GET_TEST_LIST+"/"+sp_id);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.GET_TEST_LIST + "/" + sp_id);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -411,7 +409,7 @@ public class AsyncTaskForRequest {
     }
 
     /*
-	 * Set Btech Slot Availability Api Integration*/
+     * Set Btech Slot Availability Api Integration*/
 
     public ApiCallAsyncTask getPostBtechAvailabilityRequestAsyncTask(SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel) {
         apiCallAsyncTask = null;
@@ -471,7 +469,7 @@ public class AsyncTaskForRequest {
             Log.e(AsyncTaskForRequest.class.getSimpleName(), "getFetchOrderDetailsRequestAsyncTask: ");
             // String postJson = new Gson().toJson(orderVisitDetailsModel);
             //  abstractApiModel.setPostData(postJson);
-            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setHeader(getHeader_new(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_ORDER_DETAIL + "/" + appPreferenceManager.getLoginResponseModel().getUserID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
@@ -488,7 +486,7 @@ public class AsyncTaskForRequest {
     /*
 	 * Fetch Order Detail by visit Api Integration*/
 
-    public ApiCallAsyncTask getFetchOrderDetailsByVisitRequestAsyncTask(String  orderID) {
+    public ApiCallAsyncTask getFetchOrderDetailsByVisitRequestAsyncTask(String orderID) {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
@@ -498,7 +496,7 @@ public class AsyncTaskForRequest {
             //  abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             //  abstractApiModel.setRequestUrl("https://www.dxscloud.com/techsoapi/api/OrderDetailsByVisit/AP002977468");
-          abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.ORDER_DETAILS_BY_VISIT + "/" + orderID);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.ORDER_DETAILS_BY_VISIT + "/" + orderID);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -562,7 +560,7 @@ public class AsyncTaskForRequest {
     }
 
     //Slot master //
-    public ApiCallAsyncTask getSlotMasterDetailsRequestAsyncTask(String pincode ,String Appdate) {
+    public ApiCallAsyncTask getSlotMasterDetailsRequestAsyncTask(String pincode, String Appdate) {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
@@ -571,7 +569,7 @@ public class AsyncTaskForRequest {
             // String postJson = new Gson().toJson(orderVisitDetailsModel);
             //  abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.SUB_SLOT_MASTER +"/"+pincode+"/"+Appdate);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.SUB_SLOT_MASTER + "/" + pincode + "/" + Appdate);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -585,8 +583,6 @@ public class AsyncTaskForRequest {
     }
 
 
-
-
     public ApiCallAsyncTask getBtechAvaliability() {
         apiCallAsyncTask = null;
         try {
@@ -596,7 +592,7 @@ public class AsyncTaskForRequest {
             // String postJson = new Gson().toJson(orderVisitDetailsModel);
             //  abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.SCHEDULEOPEN+ "/" + appPreferenceManager.getLoginResponseModel().getUserID());
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.SCHEDULEOPEN + "/" + appPreferenceManager.getLoginResponseModel().getUserID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -689,7 +685,7 @@ public class AsyncTaskForRequest {
             // String postJson = new Gson().toJson(orderVisitDetailsModel);
             //  abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BANK_MASTER+"/"+appPreferenceManager.getLoginResponseModel().getUserID()/*"VISTT001109154"*/);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BANK_MASTER + "/" + appPreferenceManager.getLoginResponseModel().getUserID()/*"VISTT001109154"*/);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -799,7 +795,7 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.TSPNBTAVAILABILITY+ "/" + id);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.TSPNBTAVAILABILITY + "/" + id);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -1138,6 +1134,7 @@ public class AsyncTaskForRequest {
         }
         return apiCallAsyncTask;
     }
+
     public ApiCallAsyncTask ChatPostapi(ChatRequestModel chatRequestModel) {
         apiCallAsyncTask = null;
         try {
@@ -1179,8 +1176,6 @@ public class AsyncTaskForRequest {
     }
 
 
-
-
     // Order Served list
     public ApiCallAsyncTask getOrderServedDetailsDisplayRequestAsyncTask(String date) {
         apiCallAsyncTask = null;
@@ -1209,7 +1204,7 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.ALREADY_APPLIED_LEAVE_HISTORY_DETAILS_DISPLAY + "/" + appPreferenceManager.getLoginResponseModel().getUserID() );
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.ALREADY_APPLIED_LEAVE_HISTORY_DETAILS_DISPLAY + "/" + appPreferenceManager.getLoginResponseModel().getUserID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -1340,7 +1335,7 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_VERSION_CONTROL_DETAIL+"/"+Appnameid);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_VERSION_CONTROL_DETAIL + "/" + Appnameid);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -1500,7 +1495,7 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.REMARKS+"/"+id);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.REMARKS + "/" + id);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -1516,13 +1511,13 @@ public class AsyncTaskForRequest {
 
     //Order Allocation //
 
-    public ApiCallAsyncTask getorderallocation (int btechid ,String pincode ) {
+    public ApiCallAsyncTask getorderallocation(int btechid, String pincode) {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_ORDER_ALLOCATION+"/"+btechid+"/"+pincode);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_ORDER_ALLOCATION + "/" + btechid + "/" + pincode);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -1687,6 +1682,33 @@ public class AsyncTaskForRequest {
         header.add(headerData1);
         return header;
     }
+
+    private List<HeaderData> getHeader_new(String contentType) {
+        HeaderData headerData = new HeaderData();
+        headerData.setHeaderKey(AbstractApiModel.AUTHORIZATION);
+        headerData.setHeaderValue("Bearer " + appPreferenceManager.getAPISessionKey());
+
+        HeaderData headerData1 = new HeaderData();
+        headerData1.setHeaderKey("Accept-Encoding");
+        headerData1.setHeaderValue("gzip");
+
+        HeaderData headerData2 = new HeaderData();
+        headerData2.setHeaderKey("Content-Type");
+        headerData2.setHeaderValue(contentType);
+
+        HeaderData headerData3 = new HeaderData();
+        headerData3.setHeaderKey("Content-Encoding");
+        headerData3.setHeaderValue("gzip");
+
+        List<HeaderData> header = new ArrayList<>();
+        header.add(headerData);
+        header.add(headerData1);
+        header.add(headerData2);
+        header.add(headerData3);
+        return header;
+    }
+
+
     private List<HeaderData> getHeaderAccept(String contentType) {
         HeaderData headerData = new HeaderData();
         headerData.setHeaderKey(AbstractApiModel.AUTHORIZATION);
@@ -1794,6 +1816,7 @@ public class AsyncTaskForRequest {
         }
         return apiCallAsyncTask;
     }
+
     public ApiCallAsyncTask getTSP_MasterBarcodeMapRequestAsyncTask(BtechwithHub_MasterBarcodeMappingRequestModel masterBarcodeMappingRequestModel) {
         apiCallAsyncTask = null;
         try {

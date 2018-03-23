@@ -71,7 +71,7 @@ public class FeedbackFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            mActivity=getActivity();
+        mActivity=getActivity();
     }
     public static FeedbackFragment newInstance() {
         FeedbackFragment fragment = new FeedbackFragment();
@@ -185,12 +185,27 @@ public class FeedbackFragment extends Fragment {
                 strEmail=edtEmail.getText().toString();
                 strQuery=edtQuery.getText().toString();
                 alertDialogBuilder = new AlertDialog.Builder(mActivity);
-                if (strName.equals("") || strEmail.equals("") || strMobile.equals("") || strQuery.equals("") || spinType.getSelectedItemPosition()==0){
+                if (strName.equals("") || strEmail.equals("") || strMobile.equals("") || strQuery.equals("")){
                     alertDialogBuilder
                             .setMessage("All fields are mandatory")
                             .setCancelable(true)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }else if (spinType.getSelectedItemPosition()==0) {
+                    alertDialogBuilder
+                            .setMessage("Please select feedback category.")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO Auto-generated method stub
                                     dialog.dismiss();
                                 }
                             });
@@ -214,13 +229,24 @@ public class FeedbackFragment extends Fragment {
                     alertDialog.show();
                 }else if (strMobile.length()!=10){
                     alertDialogBuilder
-                        .setMessage("Mobile number should be of 10 digits")
-                        .setCancelable(true)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        });
+                            .setMessage("Mobile number should be of 10 digits")
+                            .setCancelable(true)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }else if (strMobile.startsWith("5")||strMobile.startsWith("4")||strMobile.startsWith("3")||strMobile.startsWith("2")||strMobile.startsWith("1")||strMobile.startsWith("0")){
+                    alertDialogBuilder
+                            .setMessage("Mobile number should start with 6,7,8 or 9")
+                            .setCancelable(true)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            });
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
                 }else  if (!Validator.isValidEmail(strEmail.toString())) {
@@ -304,7 +330,7 @@ public class FeedbackFragment extends Fragment {
                 }
 
                 arrFeedback=new ArrayList<>();
-                arrFeedback.add("-Select Feedback Option-");
+                arrFeedback.add("-Select Feedback Category-");
                 JSONObject json = new JSONObject(strData);
                 JSONArray jsonArray=json.getJSONArray("MASTER");
                 for (int i=0;i<jsonArray.length();i++){
@@ -385,7 +411,7 @@ public class FeedbackFragment extends Fragment {
                 jobj.put("name", strName);
                 jobj.put("email", strEmail);
                 jobj.put("mobile", strMobile);
-                jobj.put("feedback", strQuery);
+                jobj.put("feedback", strQuery+ " - Btech app");
                 jobj.put("emotion_text", strEmotionsType);
                 jobj.put("rating", strRating);
             } catch (JSONException e) {

@@ -42,11 +42,13 @@ public class AbstractApiModel implements AppConstants {
     //public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.
     // 0com/btsapi";
 
-    public static final String API_VERSION="https://www.thyrocare.com/API_BETA";
-//    public static final String API_VERSION="https://www.thyrocare.com/APIs";
 
     public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.com/techsoapi";//staging
-//     public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
+    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
+
+
+//    public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
+//    public static final String API_VERSION = "https://www.thyrocare.com/APIs";
 
 
     public static String SERVER_BASE_API_URL = appEnvironment.equals("DEVELOPMENT") ? SERVER_BASE_API_URL_DEV : appEnvironment.equals("DEMO") ? SERVER_BASE_API_URL_DEMO : appEnvironment.equals("PRODUCTION") ? SERVER_BASE_API_URL_PROD : SERVER_BASE_API_URL_DEV;
@@ -80,7 +82,8 @@ public class AbstractApiModel implements AppConstants {
     public String SELFIE_UPLOAD = VERSION_API_URL + "/SelfiUpload";
 
 
-    public String FETCH_ORDER_DETAIL = VERSION_API_URL + "/OrderVisitDetails";
+    //    public String FETCH_ORDER_DETAIL = VERSION_API_URL + "/OrderVisitDetails";
+    public String FETCH_ORDER_DETAIL = VERSION_API_URL + "/OrderVisitDetailsOptimize";
     public String ORDER_DETAILS_BY_VISIT = VERSION_API_URL + "/OrderDetailsByVisit";
 
 

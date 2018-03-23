@@ -66,5 +66,7 @@ public class BundleConstants {
     public static String ShowTimeInNotificatn="";
     public static int DoneworkOrder=0;
     public static int delay=0;
+    public static String statusBen="Select Beneficiary";
+    public static String KITSNOTAVAILABLE="Kits not available.";
     //neha G---------------------------------
 }

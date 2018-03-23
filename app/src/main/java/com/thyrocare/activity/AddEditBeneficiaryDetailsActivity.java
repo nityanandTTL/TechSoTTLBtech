@@ -501,8 +501,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 }else {
                     Logger.error("Lead ID " + beneficiaryDetailsModel.getLeadId());
                     getviewTestData(beneficiaryDetailsModel.getLeadId());
-
-
                 }
 
             }

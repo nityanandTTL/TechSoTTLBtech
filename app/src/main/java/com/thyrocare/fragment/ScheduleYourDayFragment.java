@@ -80,8 +80,12 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         super.onCreate(savedInstanceState);
 
         activity = (HomeScreenActivity) getActivity();
-        activity.toolbarHome.setTitle("Schedule your Day");
-        activity.toolbarHome.setVisibility(View.INVISIBLE);
+        try {
+            activity.toolbarHome.setTitle("Schedule your Day");
+            activity.toolbarHome.setVisibility(View.INVISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
 

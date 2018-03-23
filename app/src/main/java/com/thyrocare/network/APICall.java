@@ -8,6 +8,7 @@ import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.CommonUtils;
 import com.google.gson.Gson;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -45,6 +46,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.zip.GZIPInputStream;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -131,6 +133,11 @@ public class APICall implements AppConstants {
             HttpEntity httpEntity = httpResponse.getEntity();
 
             getResponseInputStream = httpEntity.getContent();
+
+            Header contentEncoding = httpResponse.getFirstHeader("Content-Encoding");
+            if (contentEncoding != null && contentEncoding.getValue().equalsIgnoreCase("gzip")) {
+                getResponseInputStream = new GZIPInputStream(getResponseInputStream);
+            }
 
             // Logger.debug(EntityUtils.toString(httpEntity));
 

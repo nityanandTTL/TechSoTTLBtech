@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,8 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickListener {
     private HomeScreenActivity activity;
     private Dialog d;
+
+    private EditText edt__release_remark;
     private Button btn_yes, btn_no;
     private TextView tv_title;
     private Spinner edt_remark;
@@ -143,6 +146,7 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
 
 
     private void initUI() {
+        edt__release_remark = (EditText) findViewById(R.id.edt__release_remark);
         btn_yes = (Button) findViewById(R.id.btn_yes);
         btn_no = (Button) findViewById(R.id.btn_no);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -153,10 +157,10 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
-            if (!InputUtils.isNull(remarksResponseModelmain.getReason().trim())) {
+            if (!edt__release_remark.getText().toString().equals("")) {
                 if (validate()) {
-                    Logger.error("reason: " + remarksResponseModelmain.getReason().trim());
-                   confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel, remarksResponseModelmain.getReason().trim());
+                    Logger.error("reason: " + edt__release_remark.getText().toString());
+                   confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel, edt__release_remark.getText().toString());
                     dismiss();
                 }
 
@@ -171,10 +175,13 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
     }
 
     private boolean validate() {
-        if (edt_remark.getSelectedItem().equals("--SELECT--")) {
+        if (edt__release_remark.getText().toString().equals("")) {
+            TastyToast.makeText(activity, "Enter Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+            return false;
+        }/* if (edt_remark.getSelectedItem().equals("--SELECT--")) {
             TastyToast.makeText(activity, "Select Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
             return false;
-        }
+        }*/
         return true;
     }
 }
