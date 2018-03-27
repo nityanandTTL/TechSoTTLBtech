@@ -50,7 +50,7 @@ import java.util.Locale;
 /**
  * Created by Orion on 5/2/2017.<br/>
  * for getting orders<br/>
- *  http://bts.dxscloud.com/btsapi/api/BtechOrderSummary/BtechServedOrders/884543107/2017-07-19<br/>
+ * http://bts.dxscloud.com/btsapi/api/BtechOrderSummary/BtechServedOrders/884543107/2017-07-19<br/>
  */
 
 public class OrderServedFragment extends AbstractFragment {
@@ -85,7 +85,15 @@ public class OrderServedFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
-        activity.toolbarHome.setTitle("Orders Served");
+        try {
+            if (activity != null) {
+                if (activity.toolbarHome != null) {
+                    activity.toolbarHome.setTitle("Orders Served");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         appPreferenceManager = new AppPreferenceManager(activity);
         if (getArguments() != null) {
 
@@ -207,7 +215,6 @@ public class OrderServedFragment extends AbstractFragment {
         orderServedDisplayDetailsAdapter = new OrderServedDisplayDetailsAdapter(btechOrderModels, activity, new OrderServedDisplayDetailsAdapterClickedDelegate() {
             @Override
             public void onCallCustomer(String customerMobile, String orderNo) {
-
 
 
                 Intent intent = new Intent(Intent.ACTION_CALL);

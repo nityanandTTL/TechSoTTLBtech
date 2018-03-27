@@ -219,6 +219,8 @@ public class AbstractApiModel implements AppConstants {
     /* Headers to be added as list */
     private List<HeaderData> header;
     public String TSPNBTAVAILABILITY = VERSION_API_URL + "/BtechAvaibilityNew/NBTMarkedAvailability";
+    public String GET_Email = "http://api.quickemailverification.com/v1/verify?email=";
+    public String GET_ERecipt = "http://bts.dxscloud.com/techsoapi/api/Ledger/OrderReceipt";
 
     public String getRequestUrl() {
         return requestUrl;

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.thyrocare.models.data.AccessUserCodeModel;
 import com.thyrocare.models.data.ChildTestsModel;
 import com.thyrocare.models.data.TestClinicalHistoryModel;
 import com.thyrocare.models.data.TestRateMasterModel;
@@ -45,6 +46,7 @@ public class TestRateMasterDao {
 	String DESCRIPTION = "Description";
 	String CHILD_TESTS = "chldtests";
 	String TEST_SKILLS = "tstSkills";
+	String ACCESS_USERCODE = "accessUserCode";
 	String TEST_CLINICAL_HISTORY = "tstClinicalHistory";
 	String CREATED_AT = "createdAt";
 	String CREATED_BY = "createdBy";
@@ -96,10 +98,14 @@ public class TestRateMasterDao {
 		TypeToken<ArrayList<TestClinicalHistoryModel>> tokenTestClinicalHistory = new TypeToken<ArrayList<TestClinicalHistoryModel>>(){};
 		ArrayList<TestClinicalHistoryModel> tchArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(TEST_CLINICAL_HISTORY)),tokenTestClinicalHistory.getType());
 
+		TypeToken<ArrayList<AccessUserCodeModel>> accessUserCode = new TypeToken<ArrayList<AccessUserCodeModel>>(){};
+		ArrayList<AccessUserCodeModel> accArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(ACCESS_USERCODE)),accessUserCode.getType());
+
 		testRateMasterModel.setChldtests(ctArr);
 		testRateMasterModel.setSampltype(bstArr);
 		testRateMasterModel.setTstSkills(tsArr);
 		testRateMasterModel.setTstClinicalHistory(tchArr);
+		testRateMasterModel.setAccessUserCode(accArr);
 
 		testRateMasterModel.setCreatedAt(cursor.getLong(cursor.getColumnIndex(CREATED_AT)));
 		testRateMasterModel.setCreatedBy(cursor.getString(cursor.getColumnIndex(CREATED_BY)));
@@ -122,6 +128,7 @@ public class TestRateMasterDao {
 		values.put(SAMPLE_TYPE, new Gson().toJson(orderDetailsModel.getSampltype()));
 		values.put(CHILD_TESTS, new Gson().toJson(orderDetailsModel.getChldtests()));
 		values.put(TEST_SKILLS, new Gson().toJson(orderDetailsModel.getTstSkills()));
+		values.put(ACCESS_USERCODE, new Gson().toJson(orderDetailsModel.getAccessUserCode()));
 		values.put(TEST_CLINICAL_HISTORY, new Gson().toJson(orderDetailsModel.getTstClinicalHistory()));
 		values.put(LAST_MEAL_EAT, orderDetailsModel.getLastMealEat());
 		values.put(RATE, orderDetailsModel.getRate());

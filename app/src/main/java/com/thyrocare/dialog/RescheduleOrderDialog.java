@@ -199,7 +199,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
             TastyToast.makeText(activity, "Select date and time", TastyToast.LENGTH_LONG, TastyToast.WARNING);
             //  Toast.makeText(activity, "Select date and time", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (spn_remark.getSelectedItem().equals("--SELECT--")) {
+        } else if (spn_remark.getSelectedItem().toString().equals("--SELECT--")) {
             TastyToast.makeText(activity, "Select Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
             //  Toast.makeText(activity, "Select date and time", Toast.LENGTH_SHORT).show();
             return false;

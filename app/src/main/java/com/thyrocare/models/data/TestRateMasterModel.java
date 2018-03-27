@@ -25,6 +25,7 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
     private ArrayList<ChildTestsModel> chldtests;
     private ArrayList<TestSkillsModel> tstSkills;
     private ArrayList<TestClinicalHistoryModel> tstClinicalHistory;
+    private ArrayList<AccessUserCodeModel> accessUserCode;
 
     public TestRateMasterModel() {
         super();
@@ -32,6 +33,7 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
         chldtests = new ArrayList<>();
         tstSkills = new ArrayList<>();
         tstClinicalHistory = new ArrayList<>();
+        accessUserCode = new ArrayList<>();
     }
 
     protected TestRateMasterModel(Parcel in) {
@@ -50,6 +52,7 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
         Description = in.readString();
         chldtests = in.createTypedArrayList(ChildTestsModel.CREATOR);
         tstSkills = in.createTypedArrayList(TestSkillsModel.CREATOR);
+        accessUserCode = in.createTypedArrayList(AccessUserCodeModel.CREATOR);
     }
 
     @Override
@@ -69,6 +72,7 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
         dest.writeString(Description);
         dest.writeTypedList(chldtests);
         dest.writeTypedList(tstSkills);
+        dest.writeTypedList(accessUserCode);
     }
 
     @Override
@@ -190,6 +194,14 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
 
     public void setTstSkills(ArrayList<TestSkillsModel> tstSkills) {
         this.tstSkills = tstSkills;
+    }
+
+    public ArrayList<AccessUserCodeModel> getAccessUserCode() {
+        return accessUserCode;
+    }
+
+    public void setAccessUserCode(ArrayList<AccessUserCodeModel> accessUserCode) {
+        this.accessUserCode = accessUserCode;
     }
 
     public String getDescription() {

@@ -37,6 +37,7 @@ public class OrderDetailsDao {
     private String SLOT = "Slot";
     private String RESPONSE = "Response";
     private String BRAND_ID = "BrandId";
+    private String USER_ACCESSCODE = "UserAccessCode";
     private String SLOT_ID = "SlotId";
     private String ADDRESS = "Address";
     private String PINCODE = "Pincode";
@@ -100,6 +101,7 @@ public class OrderDetailsDao {
         orderDetailsModel.setAppointmentDate(cursor.getString(cursor.getColumnIndex(APPOINTMENT_DATE)));
         orderDetailsModel.setSlotId(cursor.getInt(cursor.getColumnIndex(SLOT_ID)));
         orderDetailsModel.setBrandId(cursor.getInt(cursor.getColumnIndex(BRAND_ID)));
+        orderDetailsModel.setUserAccessCode(cursor.getInt(cursor.getColumnIndex(USER_ACCESSCODE)));
         orderDetailsModel.setOrderNo(cursor.getString(cursor.getColumnIndex(ORDER_NO)));
         orderDetailsModel.setResponse(cursor.getString(cursor.getColumnIndex(RESPONSE)));
         orderDetailsModel.setAddress(cursor.getString(cursor.getColumnIndex(ADDRESS)));
@@ -159,6 +161,7 @@ public class OrderDetailsDao {
         values.put(SLOT_ID, orderDetailsModel.getSlotId());
         values.put(RESPONSE, orderDetailsModel.getResponse());
         values.put(BRAND_ID, orderDetailsModel.getBrandId());
+        values.put(USER_ACCESSCODE, orderDetailsModel.getUserAccessCode());
         values.put(ADDRESS, orderDetailsModel.getAddress());
         values.put(PINCODE, orderDetailsModel.getPincode());
         values.put(MOBILE, orderDetailsModel.getMobile());

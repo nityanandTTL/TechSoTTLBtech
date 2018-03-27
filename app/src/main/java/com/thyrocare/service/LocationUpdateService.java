@@ -198,12 +198,12 @@ public class LocationUpdateService extends IntentService {
                 fetchchat();
                 Logger.error("wowowow0.1");
                 appPreferenceManager = new AppPreferenceManager(getApplicationContext());
-
+/*
                 if (!appPreferenceManager.getUserDetailUserName().equals("") && !appPreferenceManager.getUserDetailChatWith().equals("")) {
                     Logger.error("uname " + appPreferenceManager.getUserDetailUserName());
                     Logger.error("chatWith " + appPreferenceManager.getUserDetailChatWith());
 
-                }
+                }*/
 
                 if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
                     Logger.error("wowowow0.2");
@@ -454,10 +454,10 @@ public class LocationUpdateService extends IntentService {
         if (Looper.myLooper() != null) {
             appPreferenceManager = new AppPreferenceManager(getApplicationContext());
 
-            if (!appPreferenceManager.getUserDetailUserName().equals("") && !appPreferenceManager.getUserDetailChatWith().equals("")) {
+           /* if (!appPreferenceManager.getUserDetailUserName().equals("") && !appPreferenceManager.getUserDetailChatWith().equals("")) {
                 Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
 
-            }
+            }*/
             if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
                 AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
                 ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask(false);
@@ -596,7 +596,7 @@ public class LocationUpdateService extends IntentService {
 
             if (Looper.myLooper() != null) {
                 if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
-                    Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
+//                    Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
                     if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBT_ROLE_ID)) {
                         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
                         ApiCallAsyncTask BtechBlockDetailsApiAsyncTask = asyncTaskForRequest.getBtechBlockDetails();
@@ -623,7 +623,7 @@ public class LocationUpdateService extends IntentService {
             }
             if (Looper.myLooper() != null) {
                 if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
-                    Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
+//                    Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
                     if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBT_ROLE_ID)) {
                         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
                         ApiCallAsyncTask AcceptOrderNotificationApiAsyncTask = asyncTaskForRequest.getAcceptOrderNotification();

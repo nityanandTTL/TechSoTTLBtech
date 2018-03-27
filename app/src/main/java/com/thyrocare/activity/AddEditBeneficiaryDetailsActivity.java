@@ -38,6 +38,7 @@ import com.thyrocare.dialog.DisplaySelectedTestsListForCancellationDialog;
 import com.thyrocare.dialog.LabAlertSelectorDialog;
 import com.thyrocare.fragment.BeneficiaryDetailsScanBarcodeFragment;
 import com.thyrocare.models.api.request.OrderBookingRequestModel;
+import com.thyrocare.models.api.response.Emailreponsedatamodel;
 import com.thyrocare.models.api.response.GetTestListResponseModel;
 import com.thyrocare.models.api.response.OrderBookingResponseBeneficiaryModel;
 import com.thyrocare.models.api.response.OrderBookingResponseOrderModel;
@@ -88,12 +89,15 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private AppPreferenceManager appPreferenceManager;
     private BeneficiaryDetailsModel beneficiaryDetailsModel;
     private EditText edtBenName;
+    private EditText edt_emailnew;
+    private EditText edt_addressnew;
+    private EditText edt_Mobilenew;
     private EditText edtAge;
     private EditText edtAadhar;
-    private ImageView imgMale,imgFemale;
+    private ImageView imgMale, imgFemale;
     private TextView edtTests;
     private LinearLayout llBarcodes;
-    private TextView edtCH,edtLA, textView3;
+    private TextView edtCH, edtLA, textView3;
     private EditText edtRemarks;
     private ImageView imgVenipuncture, imgHC;
     private Button btnSave;
@@ -116,15 +120,16 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private IntentIntegrator intentIntegrator;
     private boolean isAdd = false;
     private boolean isScanAadhar = false;
-    private AadharDataModel aadharDataModel=new AadharDataModel();
+    private AadharDataModel aadharDataModel = new AadharDataModel();
     private ImageView imgAadhar;
     ImageView img_view_test;
     ArrayList<TestGroupListModel> testGroupListModelArrayList;
-    public static String testEdit="no";
+    public static String testEdit = "no";
     GetTestListResponseModel TestListResponseModel;
+
     @Override
     public void onBackPressed() {
-        if(isAdd) {
+        if (isAdd) {
             beneficiaryDetailsDao.deleteByBenId(beneficiaryDetailsModel.getBenId() + "");
         }
         super.onBackPressed();
@@ -148,45 +153,41 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         beneficiaryDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
         orderDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
 
-        isEdit = getIntent().getExtras().getBoolean(BundleConstants.IS_BENEFICIARY_EDIT,false);
-        isAdd = getIntent().getExtras().getBoolean(BundleConstants.IS_BENEFICIARY_ADD,false);
+        isEdit = getIntent().getExtras().getBoolean(BundleConstants.IS_BENEFICIARY_EDIT, false);
+        isAdd = getIntent().getExtras().getBoolean(BundleConstants.IS_BENEFICIARY_ADD, false);
         initUI();
         initData();
         initListeners();
     }
 
     private void initScanBarcodeView() {
-        if(beneficiaryDetailsModel!=null
-                && beneficiaryDetailsModel.getBarcodedtl()!=null
-                && beneficiaryDetailsModel.getBarcodedtl().size()>0) {
+        if (beneficiaryDetailsModel != null
+                && beneficiaryDetailsModel.getBarcodedtl() != null
+                && beneficiaryDetailsModel.getBarcodedtl().size() > 0) {
             tlBarcodes.removeAllViews();
             for (final BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel :
                     beneficiaryDetailsModel.getBarcodedtl()) {
-                TableRow tr = (TableRow) activity.getLayoutInflater().inflate(R.layout.item_scan_barcode,null);
-                TextView txtSampleType = (TextView)tr.findViewById(R.id.txt_sample_type);
-                TextView edtBarcode = (TextView)tr.findViewById(R.id.edt_barcode);
+                TableRow tr = (TableRow) activity.getLayoutInflater().inflate(R.layout.item_scan_barcode, null);
+                TextView txtSampleType = (TextView) tr.findViewById(R.id.txt_sample_type);
+                TextView edtBarcode = (TextView) tr.findViewById(R.id.edt_barcode);
                 ImageView imgScan = (ImageView) tr.findViewById(R.id.scan_barcode_button);
                 txtSampleType.setText(beneficiaryBarcodeDetailsModel.getSamplType());
 
-                if(beneficiaryBarcodeDetailsModel.getSamplType().equals("SERUM")){
+                if (beneficiaryBarcodeDetailsModel.getSamplType().equals("SERUM")) {
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
-                }
-                else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("EDTA")){
+                } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("EDTA")) {
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
-                }
-                else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE")){
+                } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE")) {
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
-                }
-                else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("HEPARIN")){
+                } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("HEPARIN")) {
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
-                }
-                else if(beneficiaryBarcodeDetailsModel.getSamplType().equals("URINE")){
+                } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("URINE")) {
                     txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
                 }
 
-                if(edtBarcode.getText().toString().startsWith("0") || edtBarcode.getText().toString().startsWith("$")){
+                if (edtBarcode.getText().toString().startsWith("0") || edtBarcode.getText().toString().startsWith("$")) {
                     Toast.makeText(activity, "Invalid barcode", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     edtBarcode.setText(beneficiaryBarcodeDetailsModel.getBarcode());
                 }
 
@@ -194,11 +195,11 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     @Override
                     public void onClick(View v) {
                         currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
-                        intentIntegrator = new IntentIntegrator(activity){
+                        intentIntegrator = new IntentIntegrator(activity) {
                             @Override
                             protected void startActivityForResult(Intent intent, int code) {
                                 isScanAadhar = false;
-                                AddEditBeneficiaryDetailsActivity.this.startActivityForResult(intent,BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+                                AddEditBeneficiaryDetailsActivity.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
                             }
                         };
                         intentIntegrator.initiateScan();
@@ -208,14 +209,14 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     @Override
                     public void onClick(View v) {
                         currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
-                        AddSampleBarcodeDialog sampleBarcodeDialog = new AddSampleBarcodeDialog(""+currentScanSampleType,activity, new AddSampleBarcodeDialogDelegate() {
+                        AddSampleBarcodeDialog sampleBarcodeDialog = new AddSampleBarcodeDialog("" + currentScanSampleType, activity, new AddSampleBarcodeDialogDelegate() {
                             @Override
                             public void onSampleBarcodeAdded(String scanned_barcode) {
-                                if(scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")){
+                                if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")) {
                                     Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
-                                }else {
-                                    if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8 ) {
-                                        if(beneficiaryDetailsModel.getBarcodedtl()!=null) {
+                                } else {
+                                    if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                                        if (beneficiaryDetailsModel.getBarcodedtl() != null) {
                                             for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
                                                 if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
                                                         && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())) {
@@ -225,7 +226,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                                                             orderVisitDetailsModel.getAllOrderdetails()) {
                                                         for (BeneficiaryDetailsModel bdm :
                                                                 odm.getBenMaster()) {
-                                                            if(bdm.getBarcodedtl()!=null && bdm.getBarcodedtl().size()>0) {
+                                                            if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
                                                                 for (BeneficiaryBarcodeDetailsModel bbdm :
                                                                         bdm.getBarcodedtl()) {
                                                                     if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
@@ -247,13 +248,11 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                                                 }
                                             }
                                             initData();
+                                        } else {
+                                            Toast.makeText(activity, "Failed to Update Barcode Value", Toast.LENGTH_SHORT).show();
                                         }
-                                        else{
-                                            Toast.makeText(activity,"Failed to Update Barcode Value",Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                    else{
-                                        Toast.makeText(activity,"Failed to Update Barcode Value",Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(activity, "Failed to Update Barcode Value", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
@@ -280,106 +279,103 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            if(statusCode==200) {
+            if (statusCode == 200) {
 
 
                 orderBookingResponseVisitModel = new ResponseParser(activity).getOrderBookingAPIResponse(json, statusCode);
-               if(orderBookingResponseVisitModel.getOrderids()!=null && orderBookingResponseVisitModel.getOrderids().size()>0) {
-                   for (OrderBookingResponseOrderModel obrom :
-                           orderBookingResponseVisitModel.getOrderids()) {
-                       if(obrom.getBenfids()!=null) {
-                           orderBookingResponseBeneficiaryModelArr.addAll(obrom.getBenfids());
-                       }
-                       else{
-                           Toast.makeText(getApplicationContext(),"Invalid Order id ",Toast.LENGTH_SHORT);
-                       }
-                   }
+                if (orderBookingResponseVisitModel.getOrderids() != null && orderBookingResponseVisitModel.getOrderids().size() > 0) {
+                    for (OrderBookingResponseOrderModel obrom :
+                            orderBookingResponseVisitModel.getOrderids()) {
+                        if (obrom.getBenfids() != null) {
+                            orderBookingResponseBeneficiaryModelArr.addAll(obrom.getBenfids());
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Invalid Order id ", Toast.LENGTH_SHORT);
+                        }
+                    }
 
-                   OrderVisitDetailsModel orderVisitDetails = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
+                    OrderVisitDetailsModel orderVisitDetails = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
 
-                   //UPDATE old Order No and Benficiary Id with New Order No and Beneficiary Id
-                   for (OrderDetailsModel odm :
-                           orderVisitDetails.getAllOrderdetails()) {
-                       for (OrderBookingResponseOrderModel obrom :
-                               orderBookingResponseVisitModel.getOrderids()) {
-                           //CHECK if old ORDER NO from API response equals order no of local Order Detail Model
-                           // AND API response old order Id not equals new order Id
-                           if (odm.getOrderNo().equals(obrom.getOldOrderId())){ //&& !obrom.getOldOrderId().equals(obrom.getNewOrderId())) {
-                               odm.setOrderNo(obrom.getNewOrderId());
-                               //UPDATE old order no with new order no
-                               orderDetailsDao.updateOrderNo(obrom.getOldOrderId(), odm);
-                               for (BeneficiaryDetailsModel bdm :
-                                       odm.getBenMaster()) {
-                                   for (OrderBookingResponseBeneficiaryModel obrbm :
-                                           orderBookingResponseBeneficiaryModelArr) {
-                                       //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
-                                       // AND API response old beneficiary Id not equals new beneficiary Id
-                                       if ((bdm.getBenId() + "").equals(obrbm.getOldBenIds())) {
-                                           bdm.setOrderNo(obrom.getNewOrderId());
-                                           bdm.setBenId(Integer.parseInt(obrbm.getNewBenIds()));
-                                           //UPDATE old beneficiary Id with new Beneficiary Id in Barcode Details
-                                           for (int i = 0; bdm.getBarcodedtl() != null && i < bdm.getBarcodedtl().size(); i++) {
-                                               //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
-                                               // AND API response old beneficiary Id not equals new beneficiary Id
-                                               if (bdm.getBarcodedtl().get(i).getBenId() == Integer.parseInt(obrbm.getOldBenIds())) {
-                                                   bdm.getBarcodedtl().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
-                                                   bdm.getBarcodedtl().get(i).setOrderNo(obrom.getNewOrderId());
-                                               }
-                                           }
+                    //UPDATE old Order No and Benficiary Id with New Order No and Beneficiary Id
+                    for (OrderDetailsModel odm :
+                            orderVisitDetails.getAllOrderdetails()) {
+                        for (OrderBookingResponseOrderModel obrom :
+                                orderBookingResponseVisitModel.getOrderids()) {
+                            //CHECK if old ORDER NO from API response equals order no of local Order Detail Model
+                            // AND API response old order Id not equals new order Id
+                            if (odm.getOrderNo().equals(obrom.getOldOrderId())) { //&& !obrom.getOldOrderId().equals(obrom.getNewOrderId())) {
+                                odm.setOrderNo(obrom.getNewOrderId());
+                                //UPDATE old order no with new order no
+                                orderDetailsDao.updateOrderNo(obrom.getOldOrderId(), odm);
+                                for (BeneficiaryDetailsModel bdm :
+                                        odm.getBenMaster()) {
+                                    for (OrderBookingResponseBeneficiaryModel obrbm :
+                                            orderBookingResponseBeneficiaryModelArr) {
+                                        //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                        // AND API response old beneficiary Id not equals new beneficiary Id
+                                        if ((bdm.getBenId() + "").equals(obrbm.getOldBenIds())) {
+                                            bdm.setOrderNo(obrom.getNewOrderId());
+                                            bdm.setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                            //UPDATE old beneficiary Id with new Beneficiary Id in Barcode Details
+                                            for (int i = 0; bdm.getBarcodedtl() != null && i < bdm.getBarcodedtl().size(); i++) {
+                                                //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                                // AND API response old beneficiary Id not equals new beneficiary Id
+                                                if (bdm.getBarcodedtl().get(i).getBenId() == Integer.parseInt(obrbm.getOldBenIds())) {
+                                                    bdm.getBarcodedtl().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                                    bdm.getBarcodedtl().get(i).setOrderNo(obrom.getNewOrderId());
+                                                }
+                                            }
 
-                                           //UPDATE old beneficiary Id with new Beneficiary Id in Sample Type Details
-                                           for (int i = 0; bdm.getSampleType() != null && i < bdm.getSampleType().size(); i++) {
-                                               //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
-                                               // AND API response old beneficiary Id not equals new beneficiary Id
-                                               if (bdm.getSampleType().get(i).getBenId() == Integer.parseInt(obrbm.getOldBenIds())) {
-                                                   bdm.getSampleType().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
-                                               }
-                                           }
+                                            //UPDATE old beneficiary Id with new Beneficiary Id in Sample Type Details
+                                            for (int i = 0; bdm.getSampleType() != null && i < bdm.getSampleType().size(); i++) {
+                                                //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                                // AND API response old beneficiary Id not equals new beneficiary Id
+                                                if (bdm.getSampleType().get(i).getBenId() == Integer.parseInt(obrbm.getOldBenIds())) {
+                                                    bdm.getSampleType().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                                }
+                                            }
 
 
-                                           //UPDATE old beneficiary Id with new Beneficiary Id in Clinical History
-                                           for (int i = 0; bdm.getClHistory() != null && i < bdm.getClHistory().size(); i++) {
-                                               //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
-                                               // AND API response old beneficiary Id not equals new beneficiary Id
-                                               if (bdm.getClHistory().get(i).getBenId() == Integer.parseInt(obrbm.getOldBenIds())) {
-                                                   bdm.getClHistory().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
-                                               }
-                                           }
+                                            //UPDATE old beneficiary Id with new Beneficiary Id in Clinical History
+                                            for (int i = 0; bdm.getClHistory() != null && i < bdm.getClHistory().size(); i++) {
+                                                //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                                // AND API response old beneficiary Id not equals new beneficiary Id
+                                                if (bdm.getClHistory().get(i).getBenId() == Integer.parseInt(obrbm.getOldBenIds())) {
+                                                    bdm.getClHistory().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                                }
+                                            }
 
-                                           //UPDATE old beneficiary Id with new Beneficiary Id in Lab Alerts
-                                           for (int i = 0; bdm.getLabAlert() != null && i < bdm.getLabAlert().size(); i++) {
-                                               //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
-                                               // AND API response old beneficiary Id not equals new beneficiary Id
-                                               if (bdm.getLabAlert().get(i).getBenId() == Integer.parseInt(obrbm.getOldBenIds())) {
-                                                   bdm.getLabAlert().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
-                                               }
-                                           }
+                                            //UPDATE old beneficiary Id with new Beneficiary Id in Lab Alerts
+                                            for (int i = 0; bdm.getLabAlert() != null && i < bdm.getLabAlert().size(); i++) {
+                                                //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
+                                                // AND API response old beneficiary Id not equals new beneficiary Id
+                                                if (bdm.getLabAlert().get(i).getBenId() == Integer.parseInt(obrbm.getOldBenIds())) {
+                                                    bdm.getLabAlert().get(i).setBenId(Integer.parseInt(obrbm.getNewBenIds()));
+                                                }
+                                            }
 
-                                           beneficiaryDetailsDao.updateBeneficiaryId(Integer.parseInt(obrbm.getOldBenIds()), bdm);
-                                       }
-                                   }
-                               }
-                           }
-                       }
-                   }
-                   //END of UPDATE old Order No and Benficiary Id with New Order No and Beneficiary Id
+                                            beneficiaryDetailsDao.updateBeneficiaryId(Integer.parseInt(obrbm.getOldBenIds()), bdm);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    //END of UPDATE old Order No and Benficiary Id with New Order No and Beneficiary Id
 
-                   Intent intentFinish = new Intent();
-                   intentFinish.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
-                   intentFinish.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
-                   if (isEdit) {
-                       setResult(BundleConstants.EDIT_FINISH, intentFinish);
-                   } else if (isAdd) {
-                       setResult(BundleConstants.ADD_FINISH, intentFinish);
-                   }
-                   finish();
-               }
-               else{
-                   Toast.makeText(getApplicationContext(),"Invalid Order id ",Toast.LENGTH_SHORT);
-               }
-            }
-            else{
-                Toast.makeText(activity,""+json,Toast.LENGTH_SHORT).show();
+                    Intent intentFinish = new Intent();
+                    intentFinish.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
+                    intentFinish.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                    if (isEdit) {
+                        setResult(BundleConstants.EDIT_FINISH, intentFinish);
+                    } else if (isAdd) {
+                        setResult(BundleConstants.ADD_FINISH, intentFinish);
+                    }
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Invalid Order id ", Toast.LENGTH_SHORT);
+                }
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -402,47 +398,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validate()){
-
-                    beneficiaryDetailsModel.setName(edtBenName.getText().toString().trim());
-                    beneficiaryDetailsModel.setAge(Integer.parseInt(edtAge.getText().toString().trim()));
-                    beneficiaryDetailsModel.setGender(isM?"M":"F");
-                    beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
-                    beneficiaryDetailsModel.setTestsCode(edtTests.getText().toString());
-                    beneficiaryDetailsModel.setTests(edtTests.getText().toString());
-                    beneficiaryDetailsModel.setRemarks(edtRemarks.getText().toString());
-                    beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                    orderDetailsModel.setReportHC(isHC?1:0);
-                    orderDetailsModel.setAddBen(isAdd);
-                    //jai
-/*
-
-                    if(testEdit.equals("no")){
-                        orderDetailsModel.setTestEdit(false);
-                        beneficiaryDetailsModel.setTestEdit(false);
-                    }else {
-                        orderDetailsModel.setTestEdit(true);
-                        beneficiaryDetailsModel.setTestEdit(true);
-                    }
-*/
-
-
-                 //jai
-                    /********************/
-
-                    /********************/
-
-                    orderDetailsDao.insertOrUpdate(orderDetailsModel);
-                    OrderBookingRequestModel obrm = generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
-//            if(validate(obrm)) {
-                    ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(obrm);
-                    orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
-                    if (isNetworkAvailable(activity)) {
-                        orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
-                    } else {
-                        Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
-                    }
-//            }
+                if (validate()) {
+                    getemailvalidation();
                 }
             }
         });
@@ -496,9 +453,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 Toast.makeText(activity, "img_view_test", Toast.LENGTH_SHORT).show();
 
 
-                if(beneficiaryDetailsModel.getLeadId()==null){
-                    Logger.error("Lead ID null" );
-                }else {
+                if (beneficiaryDetailsModel.getLeadId() == null) {
+                    Logger.error("Lead ID null");
+                } else {
                     Logger.error("Lead ID " + beneficiaryDetailsModel.getLeadId());
                     getviewTestData(beneficiaryDetailsModel.getLeadId());
                 }
@@ -509,13 +466,13 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
 //                if(beneficiaryDetailsModel.getTestSampleType()!=null && beneficiaryDetailsModel.getTestSampleType().size()>0) {
-                    //TODO show edit tests and allow addition and removal
-                    DisplaySelectedTestsListForCancellationDialog dstlfcd = new DisplaySelectedTestsListForCancellationDialog(activity,
-                            beneficiaryDetailsModel.getTestSampleType(), new CloseTestsDisplayDialogButtonDialogDelegate() {
-                        @Override
-                        public void onItemClick(ArrayList<TestRateMasterModel> selectedTestsList,boolean isTestEdit) {
+                //TODO show edit tests and allow addition and removal
+                DisplaySelectedTestsListForCancellationDialog dstlfcd = new DisplaySelectedTestsListForCancellationDialog(activity,
+                        beneficiaryDetailsModel.getTestSampleType(), new CloseTestsDisplayDialogButtonDialogDelegate() {
+                    @Override
+                    public void onItemClick(ArrayList<TestRateMasterModel> selectedTestsList, boolean isTestEdit) {
 
-                            //jai
+                        //jai
 
 /*
 
@@ -531,103 +488,97 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 */
 
 
-
-                            //jai
-
+                        //jai
 
 
-
-                            ArrayList<BeneficiaryTestDetailsModel> selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
-                            for (TestRateMasterModel trmm:
+                        ArrayList<BeneficiaryTestDetailsModel> selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
+                        for (TestRateMasterModel trmm :
+                                selectedTestsList) {
+                            BeneficiaryTestDetailsModel btdm = new BeneficiaryTestDetailsModel();
+                            btdm.setFasting(trmm.getFasting());
+                            btdm.setChldtests(trmm.getChldtests() != null ? trmm.getChldtests() : new ArrayList<ChildTestsModel>());
+                            btdm.setTests(trmm.getTestCode());
+                            btdm.setTestType(trmm.getTestType());
+                            btdm.setProjId("");
+                            btdm.setSampleType(trmm.getSampltype() != null ? trmm.getSampltype() : new ArrayList<TestSampleTypeModel>());
+                            btdm.setTstClinicalHistory(trmm.getTstClinicalHistory() != null ? trmm.getTstClinicalHistory() : new ArrayList<TestClinicalHistoryModel>());
+                            if (!InputUtils.isNull(trmm.getTestType()) && trmm.getTestType().equalsIgnoreCase("offer")) {
+                                btdm.setProjId(trmm.getTestCode());
+                                btdm.setTests(trmm.getDescription());
+                            }
+                            selectedTestDetailsArr.add(btdm);
+                        }
+                        beneficiaryDetailsModel.setTestSampleType(selectedTestDetailsArr);
+                        boolean isFasting = false;
+                        String testsCode = "";
+                        if (selectedTestsList != null) {
+                            for (TestRateMasterModel testRateMasterModel :
                                     selectedTestsList) {
-                                BeneficiaryTestDetailsModel btdm = new BeneficiaryTestDetailsModel();
-                                btdm.setFasting(trmm.getFasting());
-                                btdm.setChldtests(trmm.getChldtests()!=null?trmm.getChldtests():new ArrayList<ChildTestsModel>());
-                                btdm.setTests(trmm.getTestCode());
-                                btdm.setTestType(trmm.getTestType());
-                                btdm.setProjId("");
-                                btdm.setSampleType(trmm.getSampltype()!=null?trmm.getSampltype():new ArrayList<TestSampleTypeModel>());
-                                btdm.setTstClinicalHistory(trmm.getTstClinicalHistory()!=null?trmm.getTstClinicalHistory():new ArrayList<TestClinicalHistoryModel>());
-                                if(!InputUtils.isNull(trmm.getTestType())&&trmm.getTestType().equalsIgnoreCase("offer")){
-                                    btdm.setProjId(trmm.getTestCode());
-                                    btdm.setTests(trmm.getDescription());
-                                }
-                                selectedTestDetailsArr.add(btdm);
-                            }
-                            beneficiaryDetailsModel.setTestSampleType(selectedTestDetailsArr);
-                            boolean isFasting = false;
-                            String testsCode = "";
-                            if(selectedTestsList!=null) {
-                                for (TestRateMasterModel testRateMasterModel :
-                                        selectedTestsList) {
-                                    if (InputUtils.isNull(testsCode)) {
-                                        if(!InputUtils.isNull(testRateMasterModel.getTestType())&&testRateMasterModel.getTestType().equals("OFFER")) {
-                                            testsCode = testRateMasterModel.getDescription();
-                                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
-                                        }
-                                        else{
-                                            testsCode = testRateMasterModel.getTestCode();
-                                        }
+                                if (InputUtils.isNull(testsCode)) {
+                                    if (!InputUtils.isNull(testRateMasterModel.getTestType()) && testRateMasterModel.getTestType().equals("OFFER")) {
+                                        testsCode = testRateMasterModel.getDescription();
+                                        beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
                                     } else {
-                                        if(!InputUtils.isNull(testRateMasterModel.getTestType())&&testRateMasterModel.getTestType().equals("OFFER")) {
-                                            testsCode = testsCode + "," + testRateMasterModel.getDescription();
-                                            beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
-                                        }
-                                        else{
-                                            testsCode = testsCode + "," + testRateMasterModel.getTestCode();
+                                        testsCode = testRateMasterModel.getTestCode();
+                                    }
+                                } else {
+                                    if (!InputUtils.isNull(testRateMasterModel.getTestType()) && testRateMasterModel.getTestType().equals("OFFER")) {
+                                        testsCode = testsCode + "," + testRateMasterModel.getDescription();
+                                        beneficiaryDetailsModel.setProjId(testRateMasterModel.getTestCode());
+                                    } else {
+                                        testsCode = testsCode + "," + testRateMasterModel.getTestCode();
 
-                                        }
-                                    }
-                                }
-                                if(InputUtils.isNull(beneficiaryDetailsModel.getProjId())){
-                                    beneficiaryDetailsModel.setProjId("");
-                                }
-                                ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
-                                for (TestRateMasterModel trmm :
-                                        selectedTestsList) {
-                                    for (TestSampleTypeModel tstm :
-                                            trmm.getSampltype()) {
-                                        BeneficiarySampleTypeDetailsModel bstdm = new BeneficiarySampleTypeDetailsModel();
-                                        bstdm.setBenId(beneficiaryDetailsModel.getBenId());
-                                        bstdm.setSampleType(tstm.getSampleType());
-                                        bstdm.setId(tstm.getId());
-                                        if(!samples.contains(bstdm)){
-                                            samples.add(bstdm);
-                                        }
-                                    }
-                                }
-                                beneficiaryDetailsModel.setSampleType(samples);
-                                for (TestRateMasterModel trmm:
-                                        selectedTestsList) {
-                                    if(!trmm.getFasting().toLowerCase().contains("non")){
-                                        isFasting = true;
-                                        break;
                                     }
                                 }
                             }
-                            beneficiaryDetailsModel.setTestsCode(testsCode);
-                            beneficiaryDetailsModel.setTests(testsCode);
-                            if(isFasting) {
-                                beneficiaryDetailsModel.setFasting("Fasting");
+                            if (InputUtils.isNull(beneficiaryDetailsModel.getProjId())) {
+                                beneficiaryDetailsModel.setProjId("");
                             }
-                            else{
-                                beneficiaryDetailsModel.setFasting("Non-Fasting");
+                            ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
+                            for (TestRateMasterModel trmm :
+                                    selectedTestsList) {
+                                for (TestSampleTypeModel tstm :
+                                        trmm.getSampltype()) {
+                                    BeneficiarySampleTypeDetailsModel bstdm = new BeneficiarySampleTypeDetailsModel();
+                                    bstdm.setBenId(beneficiaryDetailsModel.getBenId());
+                                    bstdm.setSampleType(tstm.getSampleType());
+                                    bstdm.setId(tstm.getId());
+                                    if (!samples.contains(bstdm)) {
+                                        samples.add(bstdm);
+                                    }
+                                }
                             }
-                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                            initData();
+                            beneficiaryDetailsModel.setSampleType(samples);
+                            for (TestRateMasterModel trmm :
+                                    selectedTestsList) {
+                                if (!trmm.getFasting().toLowerCase().contains("non")) {
+                                    isFasting = true;
+                                    break;
+                                }
+                            }
                         }
-                    }, new AddTestListDialogDelegate() {
-                        @Override
-                        public void onItemClick(ArrayList<BeneficiaryTestDetailsModel> selectedTestsList) {
-                            Intent intentAddTests = new Intent(activity, DisplayTestsMasterListActivity.class);
-                            intentAddTests.putExtra(BundleConstants.SELECTED_TESTS_LIST, selectedTestsList);
-                            intentAddTests.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
-                            intentAddTests.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
-                            intentAddTests.putExtra(BundleConstants.IS_TEST_EDIT, isEdit);
-                            startActivityForResult(intentAddTests, BundleConstants.ADD_TESTS_START);
+                        beneficiaryDetailsModel.setTestsCode(testsCode);
+                        beneficiaryDetailsModel.setTests(testsCode);
+                        if (isFasting) {
+                            beneficiaryDetailsModel.setFasting("Fasting");
+                        } else {
+                            beneficiaryDetailsModel.setFasting("Non-Fasting");
                         }
-                    });
-                    dstlfcd.show();
+                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                        initData();
+                    }
+                }, new AddTestListDialogDelegate() {
+                    @Override
+                    public void onItemClick(ArrayList<BeneficiaryTestDetailsModel> selectedTestsList) {
+                        Intent intentAddTests = new Intent(activity, DisplayTestsMasterListActivity.class);
+                        intentAddTests.putExtra(BundleConstants.SELECTED_TESTS_LIST, selectedTestsList);
+                        intentAddTests.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
+                        intentAddTests.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficiaryDetailsModel);
+                        intentAddTests.putExtra(BundleConstants.IS_TEST_EDIT, isEdit);
+                        startActivityForResult(intentAddTests, BundleConstants.ADD_TESTS_START);
+                    }
+                });
+                dstlfcd.show();
                 /*}
                 else{
                     Intent intentAddTests = new Intent(activity, DisplayTestsMasterListActivity.class);
@@ -643,15 +594,15 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 ArrayList<BeneficiaryTestDetailsModel> forCHSelection = new ArrayList<>();
-                if(beneficiaryDetailsModel.getTestSampleType()!=null) {
+                if (beneficiaryDetailsModel.getTestSampleType() != null) {
                     for (BeneficiaryTestDetailsModel btdm :
                             beneficiaryDetailsModel.getTestSampleType()) {
-                        if(btdm.getTstClinicalHistory()!=null && btdm.getTstClinicalHistory().size()>0){
+                        if (btdm.getTstClinicalHistory() != null && btdm.getTstClinicalHistory().size() > 0) {
                             forCHSelection.add(btdm);
                         }
                     }
                 }
-                if(forCHSelection.size()>0) {
+                if (forCHSelection.size() > 0) {
                     ClinicalHistorySelectorDialog clinicalHistorySelectorDialog = new ClinicalHistorySelectorDialog(activity, forCHSelection, benCHArr, beneficiaryDetailsModel.getBenId(), new SelectClinicalHistoryCheckboxDelegate() {
                         @Override
                         public void onCheckChange(ArrayList<BeneficiaryTestWiseClinicalHistoryModel> chArr) {
@@ -662,16 +613,15 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                         }
                     });
                     clinicalHistorySelectorDialog.show();
-                }
-                else{
-                    Toast.makeText(activity,"Clinical History Not Required",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, "Clinical History Not Required", Toast.LENGTH_SHORT).show();
                 }
             }
         });
         edtLA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(labAlertsArr.size()>0) {
+                if (labAlertsArr.size() > 0) {
                     LabAlertSelectorDialog labAlertSelectorDialog = new LabAlertSelectorDialog(activity, labAlertsArr, benLAArr, beneficiaryDetailsModel.getBenId(), new SelectLabAlertsCheckboxDelegate() {
                         @Override
                         public void onCheckChange(ArrayList<BeneficiaryLabAlertsModel> chArr) {
@@ -682,9 +632,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                         }
                     });
                     labAlertSelectorDialog.show();
-                }
-                else{
-                    Toast.makeText(activity,"Lab Alerts Master Not Available",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, "Lab Alerts Master Not Available", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -702,15 +651,87 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String benName = s.toString();
-                if(InputUtils.isNull(benName)){
+                if (InputUtils.isNull(benName)) {
                     beneficiaryDetailsModel.setName("");
-                }
-                else{
+                } else {
                     beneficiaryDetailsModel.setName(benName);
                 }
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             }
         });
+
+        /*edt_Mobilenew.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String benName = s.toString();
+                if(InputUtils.isNull(benName)){
+                    orderDetailsModel.setMobile("");
+                }
+                else{
+                    orderDetailsModel.setMobile(benName);
+                }
+                orderDetailsDao.insertOrUpdate(orderDetailsModel);
+            }
+        });
+
+        edt_addressnew.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String benName = s.toString();
+                if(InputUtils.isNull(benName)){
+                    orderDetailsModel.setAddress("");
+                }
+                else{
+                    orderDetailsModel.setAddress(benName);
+                }
+                orderDetailsDao.insertOrUpdate(orderDetailsModel);
+            }
+        });
+
+        edt_emailnew.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String benName = s.toString();
+                if(InputUtils.isNull(benName)){
+                    orderDetailsModel.setEmail("");
+                }
+                else{
+                    orderDetailsModel.setEmail(benName);
+                }
+                orderDetailsDao.insertOrUpdate(orderDetailsModel);
+            }
+        });*/
+
         edtRemarks.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -725,10 +746,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String remarks = s.toString();
-                if(InputUtils.isNull(remarks)){
+                if (InputUtils.isNull(remarks)) {
                     beneficiaryDetailsModel.setRemarks("");
-                }
-                else{
+                } else {
                     beneficiaryDetailsModel.setRemarks(remarks);
                 }
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
@@ -748,20 +768,82 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String benAge = s.toString();
-                if(InputUtils.isNull(benAge)){
+                if (InputUtils.isNull(benAge)) {
                     beneficiaryDetailsModel.setAge(1);
-                }
-                else if(Integer.parseInt(benAge)>0 && Integer.parseInt(benAge)<136){
+                } else if (Integer.parseInt(benAge) > 0 && Integer.parseInt(benAge) < 136) {
                     beneficiaryDetailsModel.setAge(Integer.parseInt(benAge));
-                }
-                else{
+                } else {
                     edtAge.setText("1");
                     beneficiaryDetailsModel.setAge(1);
-                    Toast.makeText(activity,"Age should be between 1 and 135",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Age should be between 1 and 135", Toast.LENGTH_SHORT).show();
                 }
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             }
         });
+    }
+
+    private void getemailvalidation() {
+
+        String Email = edt_emailnew.getText().toString();
+        String Email_Key = "6a6eed3ad2167ceba317f1bbe8f6f9407af41201c1d87f83f830d1a42809";
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchAssignedDetailApiAsyncTask = asyncTaskForRequest.getEmailVailidation(Email, Email_Key);
+        fetchAssignedDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new GetEmaildelegateTaskResult());
+        if (isNetworkAvailable(activity)) {
+            fetchAssignedDetailApiAsyncTask.execute(fetchAssignedDetailApiAsyncTask);
+        } else {
+            Toast.makeText(activity, "No Internet", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    class GetEmaildelegateTaskResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                Logger.error("" + json);
+
+                ResponseParser responseParser = new ResponseParser(activity);
+                Emailreponsedatamodel emailreponsedatamodel = new Emailreponsedatamodel();
+
+                emailreponsedatamodel = responseParser.getemailreponsedatamodel(json, statusCode);
+                if (emailreponsedatamodel.getResult().equalsIgnoreCase("valid")) {
+                    beneficiaryDetailsModel.setName(edtBenName.getText().toString().trim());
+                    beneficiaryDetailsModel.setAge(Integer.parseInt(edtAge.getText().toString().trim()));
+                    beneficiaryDetailsModel.setGender(isM ? "M" : "F");
+                    beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
+                    beneficiaryDetailsModel.setTestsCode(edtTests.getText().toString());
+                    beneficiaryDetailsModel.setTests(edtTests.getText().toString());
+                    beneficiaryDetailsModel.setRemarks(edtRemarks.getText().toString());
+                    beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                    orderDetailsModel.setReportHC(isHC ? 1 : 0);
+                    orderDetailsModel.setAddress(edt_addressnew.getText().toString());
+                    orderDetailsModel.setMobile(edt_Mobilenew.getText().toString());
+                    orderDetailsModel.setEmail(edt_emailnew.getText().toString());
+
+                    orderDetailsModel.setAddBen(isAdd);
+
+                    orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                    OrderBookingRequestModel obrm = generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
+                    ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(obrm);
+                    orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
+                    if (isNetworkAvailable(activity)) {
+                        orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
+                    } else {
+                        Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(activity, "INVALID EMAIL", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Logger.error("" + json);
+            }
+
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
     }
 
     private void getviewTestData(String leadId) {
@@ -800,40 +882,44 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
         }
     }
+
     private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
     }
 
     private boolean validate() {
-        if(InputUtils.isNull(edtBenName.getText().toString())){
+        if (InputUtils.isNull(edtBenName.getText().toString())) {
             Toast.makeText(activity, "Beneficiary Name is required", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if(InputUtils.isNull(edtAge.getText().toString())){
+        } else if (InputUtils.isNull(edtAge.getText().toString())) {
             Toast.makeText(activity, "Beneficiary Age is required", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if(!InputUtils.isNull(edtAge.getText().toString())&& Integer.parseInt(edtAge.getText().toString())<1 && Integer.parseInt(edtAge.getText().toString())>135){
+        } else if (!InputUtils.isNull(edtAge.getText().toString()) && Integer.parseInt(edtAge.getText().toString()) < 1 && Integer.parseInt(edtAge.getText().toString()) > 135) {
             Toast.makeText(activity, "Beneficiary Age should be between 1 and 135", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if(InputUtils.isNull(edtTests.getText().toString())){
+        } else if (InputUtils.isNull(edtTests.getText().toString())) {
             Toast.makeText(activity, "Beneficiary Tests List is required", Toast.LENGTH_SHORT).show();
             return false;
+        } else if (InputUtils.isNull(edt_emailnew.getText().toString())) {
+            Toast.makeText(activity, "Email Address is required", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (InputUtils.isNull(edt_addressnew.getText().toString())) {
+            Toast.makeText(activity, "Address is required", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (InputUtils.isNull(edt_Mobilenew.getText().toString())) {
+            Toast.makeText(activity, "Mobile is required", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (edt_Mobilenew.getText().toString().length() != 10) {
+            Toast.makeText(activity, "Invalid Mobile", Toast.LENGTH_SHORT).show();
+            return false;
         }
-       /* else if(InputUtils.isNull(encodedVanipunctureImg)){
-            Toast.makeText(activity, "Beneficiary Barcode Image is required", Toast.LENGTH_SHORT).show();
-            return false;
-        }  else if(encodedVanipunctureImg.equals("")){
-            Toast.makeText(activity, "Beneficiary Barcode Image is required", Toast.LENGTH_SHORT).show();
-            return false;
-        }*/
-        if(beneficiaryDetailsModel.getBarcodedtl()!=null && beneficiaryDetailsModel.getBarcodedtl().size()>0){
-            for (BeneficiaryBarcodeDetailsModel benBarcode:
-                 beneficiaryDetailsModel.getBarcodedtl()) {
-                if(InputUtils.isNull(benBarcode.getBarcode())){
-                    Toast.makeText(activity, "Please scan Barcode for Sample Type "+benBarcode.getSamplType(), Toast.LENGTH_SHORT).show();
+
+        if (beneficiaryDetailsModel.getBarcodedtl() != null && beneficiaryDetailsModel.getBarcodedtl().size() > 0) {
+            for (BeneficiaryBarcodeDetailsModel benBarcode :
+                    beneficiaryDetailsModel.getBarcodedtl()) {
+                if (InputUtils.isNull(benBarcode.getBarcode())) {
+                    Toast.makeText(activity, "Please scan Barcode for Sample Type " + benBarcode.getSamplType(), Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
@@ -853,18 +939,17 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             isHC = true;
         }
 
-        if(orderDetailsModel.isEditHC())
-        {
+        if (orderDetailsModel.isEditHC()) {
             imgHC.setVisibility(View.VISIBLE);
             textView3.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             imgHC.setVisibility(View.GONE);
             textView3.setVisibility(View.GONE);
         }
         //jai
-        if(orderDetailsModel.isEditOrder()){
+        if (orderDetailsModel.isEditOrder()) {
             edtTests.setEnabled(true);
-        }else {
+        } else {
             edtTests.setEnabled(false);
         }
 //jai
@@ -874,24 +959,24 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 && beneficiaryDetailsModel.getSampleType() != null
                 && beneficiaryDetailsModel.getBarcodedtl().size() == beneficiaryDetailsModel.getSampleType().size()) {
             int sameSampleTypeCnt = 0;
-            for (BeneficiaryBarcodeDetailsModel bbdm:
+            for (BeneficiaryBarcodeDetailsModel bbdm :
                     beneficiaryDetailsModel.getBarcodedtl()) {
-                for (BeneficiarySampleTypeDetailsModel bstdm:
+                for (BeneficiarySampleTypeDetailsModel bstdm :
                         beneficiaryDetailsModel.getSampleType()) {
-                    if(bbdm.getSamplType().equals(bstdm.getSampleType())){
+                    if (bbdm.getSamplType().equals(bstdm.getSampleType())) {
                         sameSampleTypeCnt++;
                     }
                 }
             }
-            if(sameSampleTypeCnt==beneficiaryDetailsModel.getBarcodedtl().size() && sameSampleTypeCnt==beneficiaryDetailsModel.getSampleType().size()){
+            if (sameSampleTypeCnt == beneficiaryDetailsModel.getBarcodedtl().size() && sameSampleTypeCnt == beneficiaryDetailsModel.getSampleType().size()) {
                 isBarcodeAndSampleListSame = true;
             }
         }
-        if(!isBarcodeAndSampleListSame){
-            if(beneficiaryDetailsModel!=null && beneficiaryDetailsModel.getBarcodedtl()==null){
+        if (!isBarcodeAndSampleListSame) {
+            if (beneficiaryDetailsModel != null && beneficiaryDetailsModel.getBarcodedtl() == null) {
                 beneficiaryDetailsModel.setBarcodedtl(new ArrayList<BeneficiaryBarcodeDetailsModel>());
             }
-            if(beneficiaryDetailsModel!=null && beneficiaryDetailsModel.getSampleType()!=null) {
+            if (beneficiaryDetailsModel != null && beneficiaryDetailsModel.getSampleType() != null) {
                 beneficiaryDetailsModel.getBarcodedtl().clear();
                 for (BeneficiarySampleTypeDetailsModel sampleTypes :
                         beneficiaryDetailsModel.getSampleType()) {
@@ -905,9 +990,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
             }
         }
-        if(beneficiaryDetailsModel!=null){
+        if (beneficiaryDetailsModel != null) {
             /*set Data from aadhar details*/
-            if(isScanAadhar) {
+            if (isScanAadhar) {
                 beneficiaryDetailsModel.setName(!InputUtils.isNull(aadharDataModel.getName()) ? aadharDataModel.getName() : "");
                 beneficiaryDetailsModel.setAge(DateUtils.getAgeFromDOBString(aadharDataModel.getDob()));
                 beneficiaryDetailsModel.setGender(!InputUtils.isNull(aadharDataModel.getGender()) ? aadharDataModel.getGender() : "");
@@ -916,9 +1001,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             }
             /*end set data from aadhar details*/
 //            if(!InputUtils.isNull(beneficiaryDetailsModel.getAadhar())) {
-                edtAadhar.setText(!InputUtils.isNull(beneficiaryDetailsModel.getAadhar()) ? beneficiaryDetailsModel.getAadhar() : "");
-                edtAadhar.setVisibility(View.VISIBLE);
-                imgAadhar.setVisibility(View.VISIBLE);
+            edtAadhar.setText(!InputUtils.isNull(beneficiaryDetailsModel.getAadhar()) ? beneficiaryDetailsModel.getAadhar() : "");
+            edtAadhar.setVisibility(View.VISIBLE);
+            imgAadhar.setVisibility(View.VISIBLE);
             /*}
             else{
                 edtAadhar.setVisibility(View.GONE);
@@ -928,48 +1013,64 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             edtAge.setText(!InputUtils.isNull(beneficiaryDetailsModel.getAge()+"") ? beneficiaryDetailsModel.getAge()+"" : "");
             edtTests.setText(!InputUtils.isNull(beneficiaryDetailsModel.getTestsCode()) ? beneficiaryDetailsModel.getTestsCode() : "");
 */
-            if (beneficiaryDetailsModel.getName() != null){
+            if (beneficiaryDetailsModel.getName() != null) {
                 edtBenName.setText(beneficiaryDetailsModel.getName().toString().trim());
-            }else{
+            } else {
                 edtBenName.setText("");
             }
 
-            if (beneficiaryDetailsModel.getAge()+"" != null){
-                edtAge.setText(beneficiaryDetailsModel.getAge()+"");
-            }else{
+            if (beneficiaryDetailsModel.getAge() + "" != null) {
+                edtAge.setText(beneficiaryDetailsModel.getAge() + "");
+            } else {
                 edtAge.setText("");
             }
 
-            if (beneficiaryDetailsModel.getTestsCode() != null){
+            if (orderDetailsModel.getAddress() != null) {
+                edt_addressnew.setText(orderDetailsModel.getAddress().toString().trim());
+            } else {
+                edt_addressnew.setText("");
+            }
+
+            if (orderDetailsModel.getMobile() + "" != null) {
+                edt_Mobilenew.setText(orderDetailsModel.getMobile() + "");
+            } else {
+                edt_Mobilenew.setText("");
+            }
+
+            if (orderDetailsModel.getEmail() != null) {
+                edt_emailnew.setText(orderDetailsModel.getEmail().toString().trim());
+            } else {
+                edt_emailnew.setText("");
+            }
+
+            if (beneficiaryDetailsModel.getTestsCode() != null) {
                 edtTests.setText(beneficiaryDetailsModel.getTestsCode());
-            }else{
+            } else {
                 edtTests.setText("");
             }
 
 
             //TODO get clinical History and set it in edtCH
             //TODO on click of edtCH open a Dialog box and allow multi selection of clinical histories
-            if(!InputUtils.isNull(beneficiaryDetailsModel.getGender())){
-                if(beneficiaryDetailsModel.getGender().equals("M")||beneficiaryDetailsModel.getGender().equalsIgnoreCase("Male")) {
+            if (!InputUtils.isNull(beneficiaryDetailsModel.getGender())) {
+                if (beneficiaryDetailsModel.getGender().equals("M") || beneficiaryDetailsModel.getGender().equalsIgnoreCase("Male")) {
                     isM = true;
                     imgFemale.setImageDrawable(getResources().getDrawable(R.drawable.female));
                     imgMale.setImageDrawable(getResources().getDrawable(R.drawable.m_selected));
-                }
-                else{
+                } else {
                     isM = false;
                     imgFemale.setImageDrawable(getResources().getDrawable(R.drawable.f_selected));
                     imgMale.setImageDrawable(getResources().getDrawable(R.drawable.male));
                 }
             }
-            if(!InputUtils.isNull(beneficiaryDetailsModel.getVenepuncture()))
-            {
+            if (!InputUtils.isNull(beneficiaryDetailsModel.getVenepuncture())) {
                 imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
                 encodedVanipunctureImg = beneficiaryDetailsModel.getVenepuncture();
             }
             benCHArr = beneficiaryDetailsModel.getClHistory();
             benLAArr = beneficiaryDetailsModel.getLabAlert();
             String chS = "";
-            if(benCHArr!=null && benCHArr.size()>0) {
+            if (benCHArr != null && benCHArr.size() > 0) {
                 for (BeneficiaryTestWiseClinicalHistoryModel chm :
                         benCHArr) {
                     if (InputUtils.isNull(chS))
@@ -981,11 +1082,11 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             edtCH.setText(chS);
 
             String laS = "";
-            if(benLAArr!=null && benLAArr.size()>0) {
+            if (benLAArr != null && benLAArr.size() > 0) {
                 for (BeneficiaryLabAlertsModel lam :
                         benLAArr) {
-                    LabAlertMasterModel labAlertMasterModel = labAlertMasterDao.getModelFromId(lam.getLabAlertId()+"");
-                    if(labAlertMasterModel!=null) {
+                    LabAlertMasterModel labAlertMasterModel = labAlertMasterDao.getModelFromId(lam.getLabAlertId() + "");
+                    if (labAlertMasterModel != null) {
                         if (InputUtils.isNull(laS))
                             laS = "" + labAlertMasterModel.getLabAlert();
                         else
@@ -995,11 +1096,11 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             }
             edtLA.setText(laS);
         }
-        if(orderDetailsModel!=null){
-            if(orderDetailsModel.getReportHC()==0) {
+        if (orderDetailsModel != null) {
+            if (orderDetailsModel.getReportHC() == 0) {
                 imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.tick_icon));
                 isHC = false;
-            }else{
+            } else {
                 imgHC.setImageDrawable(activity.getResources().getDrawable(R.drawable.green_tick_icon));
                 isHC = true;
             }
@@ -1011,6 +1112,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     public void initUI() {
         super.initUI();
         edtBenName = (EditText) findViewById(R.id.edt_ben_name);
+        edt_emailnew = (EditText) findViewById(R.id.edt_emailnew);
+        edt_addressnew = (EditText) findViewById(R.id.edt_addressnew);
+        edt_Mobilenew = (EditText) findViewById(R.id.edt_Mobilenew);
         edtAge = (EditText) findViewById(R.id.edt_age);
         edtTests = (TextView) findViewById(R.id.edt_test);
         img_view_test = (ImageView) findViewById(R.id.img_view_test);
@@ -1033,7 +1137,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if ((scanningResult != null) && (scanningResult.getContents() != null)) {
-            if(!isScanAadhar) {
+            if (!isScanAadhar) {
                 String scanned_barcode = scanningResult.getContents();
                 if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
                     if (beneficiaryDetailsModel.getBarcodedtl() != null) {
@@ -1075,9 +1179,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 } else {
                     Toast.makeText(activity, "Failed to Scan Barcode", Toast.LENGTH_SHORT).show();
                 }
-            }else{
+            } else {
                 String scanContentBarcode = scanningResult.getContents();
-                aadharDataModel= AadharUtils.getAadharDataModelFromXML(scanContentBarcode);
+                aadharDataModel = AadharUtils.getAadharDataModelFromXML(scanContentBarcode);
                 initData();
             }
         }
@@ -1096,10 +1200,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private void onCaptureImageResult(Intent data) {
         thumbnail = (Bitmap) data.getExtras().get("data");
         encodedVanipunctureImg = encodeImage(thumbnail);
-        if(!InputUtils.isNull(encodedVanipunctureImg)) {
+        if (!InputUtils.isNull(encodedVanipunctureImg)) {
             imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
-        }
-        else{
+        } else {
             imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.cameraa));
         }
         beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
@@ -1113,8 +1216,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
 
         //Fix for Setting AddBen = false for already added Beneficiaries to the server
-        for (int i =0;i<orderDetailsArr.size();i++) {
-            if(!orderDetailsArr.get(i).getOrderNo().equals(orderDetailsModel.getOrderNo()) && orderDetailsArr.get(i).isAddBen()){
+        for (int i = 0; i < orderDetailsArr.size(); i++) {
+            if (!orderDetailsArr.get(i).getOrderNo().equals(orderDetailsModel.getOrderNo()) && orderDetailsArr.get(i).isAddBen()) {
                 orderDetailsArr.get(i).setAddBen(false);
             }
         }
@@ -1135,18 +1238,18 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
         //SET BENEFICIARY Details Models Array - START
         ArrayList<BeneficiaryDetailsModel> benArr = new ArrayList<>();
-        for (OrderDetailsModel orderDetailsModel:
+        for (OrderDetailsModel orderDetailsModel :
                 orderDetailsArr) {
             ArrayList<BeneficiaryDetailsModel> tempBenArr = new ArrayList<>();
             tempBenArr = beneficiaryDetailsDao.getModelsFromOrderNo(orderDetailsModel.getOrderNo());
-            if(tempBenArr!=null) {
+            if (tempBenArr != null) {
                 benArr.addAll(tempBenArr);
             }
         }
 
         //Fix for Setting AddBen = false for already added Beneficiaries to the server
-        for(int i=0;i<benArr.size();i++){
-            if(benArr.get(i).getBenId()!=beneficiaryDetailsModel.getBenId() && beneficiaryDetailsModel.isAddBen()){
+        for (int i = 0; i < benArr.size(); i++) {
+            if (benArr.get(i).getBenId() != beneficiaryDetailsModel.getBenId() && beneficiaryDetailsModel.isAddBen()) {
                 benArr.get(i).setAddBen(false);
             }
         }
@@ -1167,18 +1270,18 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         //SET BENEFICIARY Lab Alerts Models Array - START
         ArrayList<BeneficiaryLabAlertsModel> benLAArr = new ArrayList<>();
 
-        for (BeneficiaryDetailsModel beneficiaryDetailsModel:
+        for (BeneficiaryDetailsModel beneficiaryDetailsModel :
                 benArr) {
-            if(beneficiaryDetailsModel.getBarcodedtl()!=null) {
+            if (beneficiaryDetailsModel.getBarcodedtl() != null) {
                 benBarcodeArr.addAll(beneficiaryDetailsModel.getBarcodedtl());
             }
-            if(beneficiaryDetailsModel.getSampleType()!=null) {
+            if (beneficiaryDetailsModel.getSampleType() != null) {
                 benSTArr.addAll(beneficiaryDetailsModel.getSampleType());
             }
-            if(beneficiaryDetailsModel.getClHistory()!=null) {
+            if (beneficiaryDetailsModel.getClHistory() != null) {
                 benCHArr.addAll(beneficiaryDetailsModel.getClHistory());
             }
-            if(beneficiaryDetailsModel.getLabAlert()!=null) {
+            if (beneficiaryDetailsModel.getLabAlert() != null) {
                 benLAArr.addAll(beneficiaryDetailsModel.getLabAlert());
             }
             //*******
@@ -1198,6 +1301,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
         return orderBookingRequestModel;
     }
+
     private class CustomDialogClass extends Dialog {
 
         private Activity c;
@@ -1224,6 +1328,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         }
 
     }
+
     private void iflateTestGroupName(LinearLayout ll_tests) {
         if (TestListResponseModel.getTestGroupList().size() > 0) {
             // Logger.error("if ");

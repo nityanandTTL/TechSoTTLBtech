@@ -39,11 +39,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
 /**
  * API used<br/>
  * /Ledger/CashRegister<br/>
- *  http://bts.dxscloud.com/btsapi/api/OrdersCredit/BtechEarnings/884543107<br/>
- *  http://bts.dxscloud.com/btsapi/api/PayThyrocare/SelectMode/3<br/>
+ * http://bts.dxscloud.com/btsapi/api/OrdersCredit/BtechEarnings/884543107<br/>
+ * http://bts.dxscloud.com/btsapi/api/PayThyrocare/SelectMode/3<br/>
  */
 public class LedgerDisplayFragment extends AbstractFragment {
 
@@ -84,7 +85,15 @@ public class LedgerDisplayFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
-        activity.toolbarHome.setTitle("Ledger");
+        try {
+            if (activity != null) {
+                if (activity.toolbarHome != null) {
+                    activity.toolbarHome.setTitle("Ledger");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
         if (getArguments() != null) {

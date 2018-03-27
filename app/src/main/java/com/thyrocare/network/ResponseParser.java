@@ -17,6 +17,7 @@ import com.thyrocare.models.api.response.CampScanQRResponseModel;
 import com.thyrocare.models.api.response.CampListDisplayResponseModel;
 import com.thyrocare.models.api.response.CartAPIResponseModel;
 import com.thyrocare.models.api.response.DispatchHubDisplayDetailsResponseModel;
+import com.thyrocare.models.api.response.Emailreponsedatamodel;
 import com.thyrocare.models.api.response.ErrorModel;
 import com.thyrocare.models.api.response.ErrorResponseModel;
 import com.thyrocare.models.api.response.FetchLabAlertMasterAPIResponseModel;
@@ -590,6 +591,7 @@ public class ResponseParser implements AppConstants {
         //}
         return getTestListResponseModel;
     }
+
     public OrderPassresponseModel getOrderPassresponseModel(String json, int statusCode) {
         OrderPassresponseModel orderPassresponseModel = null;
         if (!parseIntoError(json, statusCode)) {
@@ -597,6 +599,7 @@ public class ResponseParser implements AppConstants {
         }
         return orderPassresponseModel;
     }
+
     // Nityanand Start
     //Fetch TSP NBT Response parse:
     public ArrayList<TSPNBT_AvilModel> getTSPNBTDetailsResponseModel(String json, int statusCode) {
@@ -650,6 +653,14 @@ public class ResponseParser implements AppConstants {
             tsp_scanBarcodeResponseModel = gson.fromJson(json, Tsp_ScanBarcodeResponseModel.class);
         }
         return tsp_scanBarcodeResponseModel;
+    }
+
+    public Emailreponsedatamodel getemailreponsedatamodel(String json, int statusCode) {
+        Emailreponsedatamodel emailreponsedatamodel = null;
+        if (!parseIntoError(json, statusCode)) {
+            emailreponsedatamodel = gson.fromJson(json, Emailreponsedatamodel.class);
+        }
+        return emailreponsedatamodel;
     }
 
 
@@ -1010,7 +1021,6 @@ public class ResponseParser implements AppConstants {
     }
 
 
-
     ////Fetch Leave  details Response parse:
     public ArrayList<ChatRequestModel> getchatMasterResponse(String json, int statusCode) {
         ArrayList<ChatRequestModel> chatRequestModels = null;
@@ -1028,7 +1038,6 @@ public class ResponseParser implements AppConstants {
         leaveAppliedResponseModels = gson.fromJson(json, token.getType());
         return leaveAppliedResponseModels;
     }
-
 
 
     ////Fetch Leave  details Response parse:

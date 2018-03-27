@@ -136,7 +136,9 @@
     <string name="more_than_one_face_detected">More than one face detected</string>
     <string name="addressvalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890,./- </string>
     <string name="Namevalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="vailidatingemail">Validating Emails </string>
     <string name="Mobile_no_validation">1234567890</string>
+    <string name="Sending_Ereciept">Sending Ereciept</string>
     <string-array name="payment_mode">
         <item>Cash By ATM</item>
         <item>Cash</item>

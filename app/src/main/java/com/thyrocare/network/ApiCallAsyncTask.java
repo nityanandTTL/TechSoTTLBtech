@@ -361,7 +361,8 @@ public class ApiCallAsyncTask extends AsyncTask<Void, Void, String> implements
 		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR1){
 			as.execute();
 		} else {
-			as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			as.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+//			as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		}
 	}
 

@@ -25,6 +25,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
     private String Refcode;
     private String ProjId;//
     private int ReportHC;
+    private int UserAccessCode;
     private boolean isTestEdit;
     private boolean isAddBen;
     private ArrayList<BeneficiaryDetailsModel> benMaster;
@@ -63,6 +64,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         Refcode = in.readString();
         ProjId = in.readString();
         ReportHC = in.readInt();
+        UserAccessCode = in.readInt();
         isTestEdit = in.readByte() != 0;
         isAddBen = in.readByte() != 0;
         benMaster = in.createTypedArrayList(BeneficiaryDetailsModel.CREATOR);
@@ -102,6 +104,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         dest.writeString(Refcode);
         dest.writeString(ProjId);
         dest.writeInt(ReportHC);
+        dest.writeInt(UserAccessCode);
         dest.writeByte((byte) (isTestEdit ? 1 : 0));
         dest.writeByte((byte) (isAddBen ? 1 : 0));
         dest.writeTypedList(benMaster);
@@ -311,6 +314,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
 
     public void setReportHC(int reportHC) {
         ReportHC = reportHC;
+    }
+
+    public int getUserAccessCode() {
+        return UserAccessCode;
+    }
+
+    public void setUserAccessCode(int userAccessCode) {
+        UserAccessCode = userAccessCode;
     }
 
     public boolean isTestEdit() {

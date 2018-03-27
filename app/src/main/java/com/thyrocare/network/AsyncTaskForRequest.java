@@ -434,7 +434,7 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
     /*
-	 * Service Update  Api Integration*/
+     * Service Update  Api Integration*/
 
     public ApiCallAsyncTask getPostServiceUpdateRequestAsyncTask(ServiceUpdateRequestModel serviceUpdateRequestModel) {
         apiCallAsyncTask = null;
@@ -458,7 +458,7 @@ public class AsyncTaskForRequest {
         }
         return apiCallAsyncTask;
     }
-	/*
+    /*
 	 * Fetch Order Detail Api Integration*/
 
     public ApiCallAsyncTask getFetchOrderDetailsRequestAsyncTask(boolean b) {
@@ -1944,6 +1944,48 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
 
+    public ApiCallAsyncTask getEmailVailidation(String email, String email2) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getTestListAsyncTask: ");
+            abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(abstractApiModel.GET_Email + email + "&apikey=" + email2);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.vailidatingemail));
+            apiCallAsyncTask.setProgressBarCancellable(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getEriecept(String orderid) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getTestListAsyncTask: ");
+            abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(abstractApiModel.GET_ERecipt + "/" + orderid);
+
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.Sending_Ereciept));
+            apiCallAsyncTask.setProgressBarCancellable(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
 
     //tejas t ------------------------------------------
 }

@@ -474,30 +474,30 @@ public class PaymentsActivity extends AbstractActivity {
                 llBankModeDetails.setGravity(Gravity.RIGHT);
 
 
-                    Button btnBankMode = new Button(activity);
-                    LinearLayout.LayoutParams txtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    txtParams.setMargins(10, 10, 10, 10);
-                    btnBankMode.setLayoutParams(txtParams);
-                    btnBankMode.setGravity(Gravity.CENTER);
-                    btnBankMode.setPadding(5, 5, 5, 5);
-                    btnBankMode.setMinEms(10);
-                    //jai2
-                    btnBankMode.setTextColor(getResources().getColor(android.R.color.white));
-                    btnBankMode.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
-                    btnBankMode.setText("BANK");
-                    btnBankMode.setTag(pparm);
-                    btnBankMode.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            HomeScreenActivity.isFromPayment = true;
-                            startActivity(new Intent(activity, HomeScreenActivity.class));
-                        }
-                    });
+                Button btnBankMode = new Button(activity);
+                LinearLayout.LayoutParams txtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                txtParams.setMargins(10, 10, 10, 10);
+                btnBankMode.setLayoutParams(txtParams);
+                btnBankMode.setGravity(Gravity.CENTER);
+                btnBankMode.setPadding(5, 5, 5, 5);
+                btnBankMode.setMinEms(10);
+                //jai2
+                btnBankMode.setTextColor(getResources().getColor(android.R.color.white));
+                btnBankMode.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
+                btnBankMode.setText("BANK");
+                btnBankMode.setTag(pparm);
+                btnBankMode.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        HomeScreenActivity.isFromPayment = true;
+                        startActivity(new Intent(activity, HomeScreenActivity.class));
+                    }
+                });
 
-                if(Flagcnt == 1) {
+                if (Flagcnt == 1) {
 
                     btnBankMode.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     btnBankMode.setVisibility(View.INVISIBLE);
                 }
 
@@ -858,6 +858,11 @@ public class PaymentsActivity extends AbstractActivity {
                     }*//*----Changes done Due to blocking */
                 }
             }
+            try {
+                jsonRequest.put("UserId", appPreferenceManager.getLoginResponseModel().getUserID());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             startTransactionAsyncTask = asyncTaskForRequest.getStartTransactionRequestAsyncTask(jsonRequest);
             startTransactionAsyncTask.setApiCallAsyncTaskDelegate(new FetchTransactionResponseOnStartTransactionAsyncTaskDelegateResult());
             if (isNetworkAvailable(activity)) {
@@ -913,9 +918,9 @@ public class PaymentsActivity extends AbstractActivity {
                         initDoCaptureResponseData();
                     }
                 } else {
-                    if(paymentStartTransactionAPIResponseModel.getTokenData() != null) {
+                    if (paymentStartTransactionAPIResponseModel.getTokenData() != null) {
                         Toast.makeText(activity, paymentStartTransactionAPIResponseModel.getTokenData(), Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         Toast.makeText(activity, paymentStartTransactionAPIResponseModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -1040,12 +1045,10 @@ public class PaymentsActivity extends AbstractActivity {
                 btnPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(edtPaymentUserInputs != null)
-                        {
-                            if(edtPaymentUserInputs.getText().length() == 6)
-                            {
+                        if (edtPaymentUserInputs != null) {
+                            if (edtPaymentUserInputs.getText().length() == 6) {
                                 fetchDoCaptureResponse(true);
-                            }else {
+                            } else {
                                 Toast.makeText(activity, "Enter Valid OTP.", Toast.LENGTH_SHORT).show();
                             }
                         }

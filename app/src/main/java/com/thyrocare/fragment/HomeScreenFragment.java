@@ -131,6 +131,7 @@ public class HomeScreenFragment extends AbstractFragment {
         appPreferenceManager = new AppPreferenceManager(activity);
         activity.isOnHome = true;
 
+        CommonUtils.exportDB(activity);
         if (getArguments() != null) {
 
         }
@@ -144,8 +145,8 @@ public class HomeScreenFragment extends AbstractFragment {
 
         //tsp
 
-Logger.error("hhhhhhrole "+appPreferenceManager.getLoginRole());
-Logger.error("hhhhid "+appPreferenceManager.getLoginResponseModel().getUserID());
+        Logger.error("hhhhhhrole " + appPreferenceManager.getLoginRole());
+        Logger.error("hhhhid " + appPreferenceManager.getLoginResponseModel().getUserID());
         if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)) {//loginRole.equalsIgnoreCase("9")
             rootView = inflater.inflate(R.layout.tsp_fragment_home_screen, container, false);
             initUI_TSP();
@@ -161,7 +162,7 @@ Logger.error("hhhhid "+appPreferenceManager.getLoginResponseModel().getUserID())
             rootView = inflater.inflate(R.layout.fragment_home_screen, container, false);
             initUI();
             initData();
-              getCampDetailCount();
+            getCampDetailCount();
             initListeners();
 
         }
