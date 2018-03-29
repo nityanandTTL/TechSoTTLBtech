@@ -131,7 +131,7 @@ public class HomeScreenFragment extends AbstractFragment {
         appPreferenceManager = new AppPreferenceManager(activity);
         activity.isOnHome = true;
 
-        CommonUtils.exportDB(activity);
+//        CommonUtils.exportDB(activity);
         if (getArguments() != null) {
 
         }

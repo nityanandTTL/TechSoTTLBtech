@@ -664,7 +664,11 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     if (!orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED") && !orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")) {
 
                         registerToggle(pos);
-                        holder.cell.toggle(false);
+                        try {
+                            holder.cell.toggle(false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         initData(holder, pos);
                     } else {
                         Toast.makeText(activity, "Please accept the order first", Toast.LENGTH_SHORT).show();

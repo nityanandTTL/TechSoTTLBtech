@@ -323,10 +323,14 @@ public class DisplayTestsMasterListActivity extends AbstractActivity {
                             if (testTypeWiseTestRateMasterModels != null) {
                                 for (int i = 0; i < testTypeWiseTestRateMasterModels.size(); i++) {
                                     if (testTypeWiseTestRateMasterModels.get(i).getAccessUserCode() != null) {
-                                        for (int j = 0; j < testTypeWiseTestRateMasterModels.get(i).getAccessUserCode().size(); j++) {
-                                            if (Integer.parseInt(testTypeWiseTestRateMasterModels.get(i).getAccessUserCode().get(j).getAccessCode()) == orderDetailsModel.getUserAccessCode()) {
-                                                testTypeWiseTestRateMasterModels_new.add(testTypeWiseTestRateMasterModels.get(i));
+                                        if (testTypeWiseTestRateMasterModels.get(i).getAccessUserCode().size() != 0) {
+                                            for (int j = 0; j < testTypeWiseTestRateMasterModels.get(i).getAccessUserCode().size(); j++) {
+                                                if (Integer.parseInt(testTypeWiseTestRateMasterModels.get(i).getAccessUserCode().get(j).getAccessCode()) == orderDetailsModel.getUserAccessCode()) {
+                                                    testTypeWiseTestRateMasterModels_new.add(testTypeWiseTestRateMasterModels.get(i));
+                                                }
                                             }
+                                        }else{
+                                            testTypeWiseTestRateMasterModels_new.add(testTypeWiseTestRateMasterModels.get(i));
                                         }
                                     }
                                 }
