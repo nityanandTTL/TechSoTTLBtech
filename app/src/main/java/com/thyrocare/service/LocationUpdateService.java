@@ -105,6 +105,7 @@ public class LocationUpdateService extends IntentService {
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
 
+        // As per Ganesh Sir Instruction
         /*Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
