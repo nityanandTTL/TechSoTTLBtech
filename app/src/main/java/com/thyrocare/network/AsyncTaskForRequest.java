@@ -1168,7 +1168,7 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage("FETCHING REQUEST ");
-            apiCallAsyncTask.setProgressBarVisible(true);
+            apiCallAsyncTask.setProgressBarVisible(false);
         } catch (Exception e) {
             e.printStackTrace();
         }

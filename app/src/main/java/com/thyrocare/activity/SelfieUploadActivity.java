@@ -47,10 +47,13 @@ import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 
 import java.io.InputStream;
+
 import android.graphics.BitmapFactory;
+
 import com.google.android.gms.vision.face.FaceDetector;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
+
 import android.util.SparseArray;
 
 public class SelfieUploadActivity extends AbstractActivity implements View.OnClickListener {
@@ -78,6 +81,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     Uri outPutfileUri;
     private Button Logout;
     private int faceDetected;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -136,7 +140,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         initUI();
 
 
-
         initData();
         setListners();
 
@@ -157,7 +160,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
        /* TextView faceCountView = (TextView) findViewById(R.id.face_count);
         faceCountView.setText(faces.size() + " faces detected");*/
         //Toast.makeText(activity, "faces detected "+faces.size(), Toast.LENGTH_SHORT).show();
-        faceDetected=faces.size();
+        faceDetected = faces.size();
         detector.release();
     }
 
@@ -170,19 +173,19 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         btn_uploadPhoto.setOnClickListener(this);
         img_user_picture.setOnClickListener(this);
 
-  Logout.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-          ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
-          logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
-          if (isNetworkAvailable(activity)) {
-              logoutAsyncTask.execute(logoutAsyncTask);
-          } else {
-              TastyToast.makeText(activity, "Logout functionality is only available in Online Mode", TastyToast.LENGTH_LONG, TastyToast.INFO);
-             // Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
-          }
-      }
-  });
+        Logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
+                logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
+                if (isNetworkAvailable(activity)) {
+                    logoutAsyncTask.execute(logoutAsyncTask);
+                } else {
+                    TastyToast.makeText(activity, "Logout functionality is only available in Online Mode", TastyToast.LENGTH_LONG, TastyToast.INFO);
+                    // Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private class LogoutAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -198,7 +201,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 finish();
             } else {
                 TastyToast.makeText(activity, "Failed to Logout ", TastyToast.LENGTH_LONG, TastyToast.ERROR);
-               // Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -210,7 +213,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     public void initUI() {
         super.initUI();
-        Logout=(Button) findViewById(R.id.btn_Logout);
+        Logout = (Button) findViewById(R.id.btn_Logout);
         tv_username = (TextView) findViewById(R.id.tv_username);
         tv_user_address = (TextView) findViewById(R.id.tv_user_address);
         img_user_picture = (CircularImageView) findViewById(R.id.img_user_picture);
@@ -227,21 +230,25 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
         if (v.getId() == R.id.btn_uploadPhoto) {
             if (validate()) {
-                AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-                SelfieUploadRequestModel selfieUploadRequestModel = new SelfieUploadRequestModel();
-                Log.e(TAG, "onClick: btechId : " + appPreferenceManager.getLoginResponseModel().getUserID());
-                Log.e(TAG, "onClick: encodedProImg " + encodedProImg);
-                selfieUploadRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
+                try {
+                    AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+                    SelfieUploadRequestModel selfieUploadRequestModel = new SelfieUploadRequestModel();
+                    Log.e(TAG, "onClick: btechId : " + appPreferenceManager.getLoginResponseModel().getUserID());
+                    Log.e(TAG, "onClick: encodedProImg " + encodedProImg);
+                    selfieUploadRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
 
-                selfieUploadRequestModel.setPic("" + encodedProImg);
+                    selfieUploadRequestModel.setPic("" + encodedProImg);
 
-                ApiCallAsyncTask selfieUploadApiAsyncTask = asyncTaskForRequest.getSelfieUploadRequestAsyncTask(selfieUploadRequestModel);
-                selfieUploadApiAsyncTask.setApiCallAsyncTaskDelegate(new SelfieApiAsyncTaskDelegateResult());
-                if (isNetworkAvailable(activity)) {
-                    selfieUploadApiAsyncTask.execute(selfieUploadApiAsyncTask);
-                } else {
-                    TastyToast.makeText(activity, "Check Internet Connection", TastyToast.LENGTH_LONG, TastyToast.ERROR);
-                   // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                    ApiCallAsyncTask selfieUploadApiAsyncTask = asyncTaskForRequest.getSelfieUploadRequestAsyncTask(selfieUploadRequestModel);
+                    selfieUploadApiAsyncTask.setApiCallAsyncTaskDelegate(new SelfieApiAsyncTaskDelegateResult());
+                    if (isNetworkAvailable(activity)) {
+                        selfieUploadApiAsyncTask.execute(selfieUploadApiAsyncTask);
+                    } else {
+                        TastyToast.makeText(activity, "Check Internet Connection", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } /*else {
                 TastyToast.makeText(activity,getString(R.string.add_selfie_error), TastyToast.LENGTH_LONG, TastyToast.WARNING);
@@ -254,8 +261,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     private boolean validate() {
-        if(encodedProImg.isEmpty()){
-            TastyToast.makeText(activity,getString(R.string.add_selfie_error), TastyToast.LENGTH_LONG, TastyToast.WARNING);
+        if (encodedProImg.isEmpty()) {
+            TastyToast.makeText(activity, getString(R.string.add_selfie_error), TastyToast.LENGTH_LONG, TastyToast.WARNING);
             return false;
         }
        /* if (faceDetected==0){
@@ -412,16 +419,16 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     callMasterSync();
                 }
             } else {
-                if(IS_DEBUG)
-                    TastyToast.makeText(activity, ""+json, TastyToast.LENGTH_LONG, TastyToast.INFO);
-                  //  Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                if (IS_DEBUG)
+                    TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
+                //  Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onApiCancelled() {
             TastyToast.makeText(activity, getString(R.string.network_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-           // Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -455,8 +462,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     public void callMasterSync() {
         if (NetworkUtils.isNetworkAvailable(activity)) {
             if (isMasterTableSyncServiceIsInProgress()) {
-                TastyToast.makeText(activity,  getString(R.string.progress_message_fetching_test_master_please_wait), TastyToast.LENGTH_LONG, TastyToast.DEFAULT);
-               // Toast.makeText(activity, getString(R.string.progress_message_fetching_test_master_please_wait), Toast.LENGTH_LONG).show();
+                TastyToast.makeText(activity, getString(R.string.progress_message_fetching_test_master_please_wait), TastyToast.LENGTH_LONG, TastyToast.DEFAULT);
+                // Toast.makeText(activity, getString(R.string.progress_message_fetching_test_master_please_wait), Toast.LENGTH_LONG).show();
             } else {
                 callMasterTableSyncService();
             }
@@ -534,7 +541,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
                         if (isIssueFoundInSync) {
                             TastyToast.makeText(activity, getString(R.string.sync_master_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-                           // Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
 
                             if (appPreferenceManager != null) {
                                 appPreferenceManager.clearAllPreferences();
@@ -546,7 +553,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                             }
                             dhbDao.deleteTablesonLogout();
                             TastyToast.makeText(activity, getString(R.string.sync_master_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-                          //  Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
+                            //  Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
 
                         } else {
                             TastyToast.makeText(activity, getString(R.string.sync_done_master_table), TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
@@ -557,7 +564,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                             appPreferenceManager.setLeaveFlag(leaveFlag);
                             appPreferenceManager.setLeaveFromDate(fromdateapi);
                             appPreferenceManager.setLeaveToDate(todateapi);
-                            Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                             i.putExtra("LEAVEINTIMATION", "0");
                             startActivity(i);
                         }
@@ -569,7 +576,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 } else if (intent.getAction().equals(AppConstants.OFFLINE_STATUS_ACTION_NO_DATA)
                         || intent.getAction().equals(AppConstants.MASTER_TABLE_UPDATE_ACTION_NO_DATA)) {
                     TastyToast.makeText(activity, getString(R.string.sync_no_data), TastyToast.LENGTH_LONG, TastyToast.INFO);
-                   // Toast.makeText(activity, getResources().getString(R.string.sync_no_data), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(activity, getResources().getString(R.string.sync_no_data), Toast.LENGTH_SHORT).show();
 
                 }
             }

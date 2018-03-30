@@ -105,7 +105,7 @@ public class LocationUpdateService extends IntentService {
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
 
-        Thread t = new Thread(new Runnable() {
+        /*Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
@@ -120,9 +120,9 @@ public class LocationUpdateService extends IntentService {
 
             }
         });
-        t.start();
+        t.start();*/
 
-        Thread t2 = new Thread(new Runnable() {
+       Thread t2 = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
@@ -160,7 +160,7 @@ public class LocationUpdateService extends IntentService {
         });
         t3.start();
 
-        Thread t4 = new Thread(new Runnable() {
+        /* Thread t4 = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
@@ -177,7 +177,7 @@ public class LocationUpdateService extends IntentService {
 
             }
         });
-        t4.start();
+        t4.start();*/
         return START_STICKY;
     }
 
@@ -195,7 +195,7 @@ public class LocationUpdateService extends IntentService {
             }
 
             if (Looper.myLooper() != null) {
-                fetchchat();
+//                fetchchat();
                 Logger.error("wowowow0.1");
                 appPreferenceManager = new AppPreferenceManager(getApplicationContext());
 /*
@@ -316,7 +316,7 @@ public class LocationUpdateService extends IntentService {
 
 
                         sendNotify(pendingIntent, jsonArray, Counter);
-                        Chatpostapi(jsonArray);
+//                        Chatpostapi(jsonArray);
                     }
 
                 }
