@@ -2,27 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    android:id="@+id/ll_login"
+    android:gravity="center"
     android:orientation="vertical"
     android:padding="@dimen/dp_10"
-    android:gravity="center"
     android:weightSum="10"
     tools:context="com.thyrocare.activity.LoginScreenActivity">
+
     <ImageView
-        android:layout_weight="5"
         android:id="@+id/logo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/dp_10"
-        android:src="@drawable/app_logo_img"/>
-    <LinearLayout
         android:layout_weight="5"
+        android:src="@drawable/app_logo_img" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="5"
         android:orientation="vertical">
 
         <LinearLayout
@@ -48,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/username_icon" />
 
-                <EditText
+                <!--<EditText
                     android:background="@drawable/custom_border_grey"
                     android:id="@+id/username_login"
                     android:layout_width="wrap_content"
@@ -58,7 +60,24 @@
                     android:minEms="15"
                     android:nextFocusForward="@+id/password_login"
                     android:singleLine="true"
-                    android:textSize="15sp" />
+                    android:textSize="15sp" />-->
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/username_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/custom_border_grey"
+                        android:hint="Enter Username"
+                        android:maxLines="1"
+                        android:minEms="15"
+                        android:nextFocusForward="@+id/password_login"
+                        android:singleLine="true"
+                        android:textSize="15sp" />
+                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -75,16 +94,33 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/password_icon" />
 
-                <EditText
-                    android:background="@drawable/custom_border_grey"
+                <!--<EditText
                     android:id="@+id/password_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/custom_border_grey"
                     android:hint="Enter Password"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:minEms="15"
-                    android:textSize="15sp" />
+                    android:textSize="15sp" />-->
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:passwordToggleEnabled="true">
+
+                    <EditText
+                        android:id="@+id/password_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/custom_border_grey"
+                        android:hint="Enter Password"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:minEms="15"
+                        android:textSize="15sp" />
+                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
             <TextView
@@ -123,11 +159,11 @@
         </LinearLayout>
 
         <ImageView
-            android:layout_marginTop="0dp"
-            android:paddingTop="@dimen/dp_2"
-            android:paddingBottom="@dimen/dp_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/login_shadow"/>
+            android:layout_marginTop="0dp"
+            android:paddingBottom="@dimen/dp_2"
+            android:paddingTop="@dimen/dp_2"
+            android:src="@drawable/login_shadow" />
     </LinearLayout>
 </LinearLayout>

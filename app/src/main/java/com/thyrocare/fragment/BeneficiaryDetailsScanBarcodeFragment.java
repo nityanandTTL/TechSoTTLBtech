@@ -224,6 +224,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             }
             Logger.error("test code "+beneficiaryDetailsModel.getTestsCode());
             edtTests.setText(beneficiaryDetailsModel.getTestsCode());
+//            edtRemarks.setText(beneficiaryDetailsModel.getRemarks());
 
             if (beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.PPBS)
                     || beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.INSPP)

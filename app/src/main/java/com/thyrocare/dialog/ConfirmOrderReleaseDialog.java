@@ -160,7 +160,7 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
             if (!edt__release_remark.getText().toString().equals("")) {
                 if (validate()) {
                     Logger.error("reason: " + edt__release_remark.getText().toString());
-                   confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel, edt__release_remark.getText().toString());
+                    confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel, edt__release_remark.getText().toString());
                     dismiss();
                 }
 

@@ -71,11 +71,12 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
         i.putExtra("LEAVEINTIMATION", "0");
         startActivity(i);
         activity.finish();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,12 +153,12 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
             public void onClick(View v) {
                 //changes_5june2017
               /*  if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
-                    txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
-                    txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    llSlotsDisplay.setVisibility(View.VISIBLE);
-                    isAvailable = true;
-                    btnProceed.setVisibility(View.VISIBLE);
-                    fetchData();
+                txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
+                txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                llSlotsDisplay.setVisibility(View.VISIBLE);
+                isAvailable = true;
+                btnProceed.setVisibility(View.VISIBLE);
+                fetchData();
               /*  } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
                     Toast.makeText(activity, "User can schedule only once per day...Please try again later.", Toast.LENGTH_SHORT).show();
                 }*/
@@ -187,7 +188,7 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
 
                                 setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
                                 setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
-                                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                                calendar.add(Calendar.DAY_OF_MONTH, 2);
                                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
@@ -322,44 +323,27 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200 || statusCode == 201) {
                 Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
-             /*   if (isAvailable) {
+                //appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json, SetBtechAvailabilityAPIRequestModel.class));
+                appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.MILLISECOND, 0);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.HOUR_OF_DAY, 0);
+                if (value.equals("0")) {
+                    if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
 
-                    //changes_5june2017
-                    appPreferenceManager.setScheduleCounter("y");
-                    String scheduledDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                    appPreferenceManager.setScheduleDate(scheduledDate);
-                    //changes_5june2017*/
-
-                    //appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json, SetBtechAvailabilityAPIRequestModel.class));
-                    appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
-                    Calendar c = Calendar.getInstance();
-                    c.set(Calendar.MILLISECOND, 0);
-                    c.set(Calendar.SECOND, 0);
-                    c.set(Calendar.MINUTE, 0);
-                    c.set(Calendar.HOUR_OF_DAY, 0);
-                    if(value.equals("0")){
-                        if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
-                            Logger.error("Aaata Gela");
-                            Logger.error("Selfie" + String.valueOf(appPreferenceManager.getSelfieResponseModel()));
-                            Logger.error("LOgeeererereeere" + String.valueOf(appPreferenceManager.getSelfieResponseModel().getTimeUploaded()));
-                            Logger.error("LOgeeererereeereMIllis" + String.valueOf(c.getTimeInMillis()));
-
-
-                            // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
-                            Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
-                            i.putExtra("LEAVEINTIMATION", "0");
-                            startActivity(i);
-                        } else {
-                            switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
-                        }
-                    }else{
-                        Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
                         startActivity(i);
+                    } else {
+                        switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
                     }
-                /*} else {
-
-                }*/
+                } else {
+                    Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                    i.putExtra("LEAVEINTIMATION", "0");
+                    startActivity(i);
+                }
             } else {
                 pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                 Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();

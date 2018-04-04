@@ -100,8 +100,6 @@ public class LeaveIntimationFragment extends AbstractFragment {
 
         setListners();
         if (appPreferenceManager.getCameFrom() == 1) {
-
-
             todate.setVisibility(View.VISIBLE);
 
             finalsetfromdate = appPreferenceManager.getLeaveFromDate();

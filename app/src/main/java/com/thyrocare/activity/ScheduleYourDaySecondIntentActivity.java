@@ -173,23 +173,11 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
 
-
                                 dialog.dismiss();
-                                Intent intent=new Intent(activity,SelfieUploadActivity.class);
+                                /*Intent intent=new Intent(activity,SelfieUploadActivity.class);
                                 startActivity(intent);
-                                finish();
-                                //neha g ---------------------
-                                appPreferenceManager.setDay_aftr_tom(2);
-                                BundleConstants.Day_aftr_tom=2;
-                                //TODO NEHA
-                                StartAlarm();
+                                finish();*/
 
-                                //neha g-----------------------
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
                                 SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
                                 setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
                                 setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
@@ -210,6 +198,21 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
                                 } else {
                                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                 }
+
+                                //neha g ---------------------
+                                appPreferenceManager.setDay_aftr_tom(2);
+                                BundleConstants.Day_aftr_tom=2;
+                                //TODO NEHA
+                                StartAlarm();
+
+                                //neha g-----------------------
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                dialog.dismiss();
                             }
                         });
                 builder.create().
@@ -355,11 +358,6 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
                     c.set(Calendar.MINUTE, 0);
                     c.set(Calendar.HOUR_OF_DAY, 0);
                     if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
-                        Logger.error("Selfie" + String.valueOf(appPreferenceManager.getSelfieResponseModel()));
-                        Logger.error("LOgeeererereeere" + String.valueOf(appPreferenceManager.getSelfieResponseModel().getTimeUploaded()));
-                        Logger.error("LOgeeererereeereMIllis" + String.valueOf(c.getTimeInMillis()));
-
-
 
                         Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
@@ -370,6 +368,20 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
                     appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json, SetBtechAvailabilityAPIRequestModel.class));
                     appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
 
+                }else{
+
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.MILLISECOND, 0);
+                    c.set(Calendar.SECOND, 0);
+                    c.set(Calendar.MINUTE, 0);
+                    c.set(Calendar.HOUR_OF_DAY, 0);
+                    if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+                        Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+                    } else {
+                        switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
+                    }
                 }
 
             } else {

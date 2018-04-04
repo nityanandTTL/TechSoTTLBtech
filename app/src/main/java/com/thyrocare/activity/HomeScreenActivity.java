@@ -426,15 +426,25 @@ public class HomeScreenActivity extends AbstractActivity
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                appPreferenceManager.clearAllPreferences();
-                dhbDao.deleteTablesonLogout();
-                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-                homeIntent.addCategory(Intent.CATEGORY_HOME);
-                homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(homeIntent);
-               // stopService(TImeCheckerIntent);
-                finish();
-                finishAffinity();
+                try {
+                    appPreferenceManager.clearAllPreferences();
+                    dhbDao.deleteTablesonLogout();
+                    Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                    homeIntent.addCategory(Intent.CATEGORY_HOME);
+                    homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(homeIntent);
+                    // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+                    Intent n = new Intent(activity, LoginScreenActivity.class);
+                    n.setAction(Intent.ACTION_MAIN);
+                    n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(n);
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             } else {
                 Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();

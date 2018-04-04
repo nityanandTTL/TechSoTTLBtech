@@ -64,8 +64,8 @@ public class CreditFragment extends Fragment {
     ArrayList<String> paymentMode = new ArrayList<>();
     ArrayList<String> bankName = new ArrayList<>();
     private Button btn_submit;
-    private  EditText edt_branch_name;
-    private TextView  edt_instrument, tv_no_file_chosen, tv_choose_file, tv_re_enter_cheque_no, tv_re_enter_remark, tv_re_enter_amount, tv_enter_amount, tv_branch_name, tv_select_instrument, tv_cheque_no, tv_date_of_deposit, tv_transaction_number, re_renter_transcation_number;
+    private EditText edt_branch_name;
+    private TextView edt_instrument, tv_no_file_chosen, tv_choose_file, tv_re_enter_cheque_no, tv_re_enter_remark, tv_re_enter_amount, tv_enter_amount, tv_branch_name, tv_select_instrument, tv_cheque_no, tv_date_of_deposit, tv_transaction_number, re_renter_transcation_number;
     private EditText edt_re_enter_cheque_number, edt_deposit, edt_tsp, edt_transaction_number, edt_re_enter_transcation_number, edt_cheque_number, edt_amount, edt_re_enter_amount, edt_remark;
     private int mYear, mMonth, mDay;
     private int PICK_IMAGE_REQUEST = 1;
@@ -156,8 +156,8 @@ public class CreditFragment extends Fragment {
 
         callPaymentModeMaster();
         callBankmaster();
-        if(HomeScreenActivity.isFromPayment==true){
-            HomeScreenActivity.isFromPayment=false;
+        if (HomeScreenActivity.isFromPayment == true) {
+            HomeScreenActivity.isFromPayment = false;
         }
         return view;
     }
@@ -329,75 +329,75 @@ public class CreditFragment extends Fragment {
     private boolean validate() {
         if (edt_branch_name.getText().toString().equals("--SELECT--")) {
             TastyToast.makeText(activity, "Select Branch Name", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-           // edt_branch_name.setError("Select Branch Name");
+            // edt_branch_name.setError("Select Branch Name");
             edt_branch_name.requestFocus();
             return false;
         } else if (edt_instrument.getText().toString().equals("--SELECT--")) {
             TastyToast.makeText(activity, "Select Instrument", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-          //  edt_instrument.setError("Select Instrument");
+            //  edt_instrument.setError("Select Instrument");
             edt_instrument.requestFocus();
             return false;
         } else if (InputUtils.isNull(edt_deposit.getText().toString())) {
             TastyToast.makeText(activity, "Select Date of Deposit", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-          //  edt_deposit.setError("Select Date of Deposit");
+            //  edt_deposit.setError("Select Date of Deposit");
             edt_deposit.requestFocus();
             return false;
         } else if (edt_transaction_number.isShown() && InputUtils.isNull(edt_transaction_number.getText().toString())) {
             TastyToast.makeText(activity, "Enter Transaction Number", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-           // edt_transaction_number.setError("Enter Transaction Number");
+            // edt_transaction_number.setError("Enter Transaction Number");
             edt_transaction_number.requestFocus();
             return false;
         } else if (edt_re_enter_transcation_number.isShown() && InputUtils.isNull(edt_re_enter_transcation_number.getText().toString())) {
             TastyToast.makeText(activity, "Re-Enter Transaction Number", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-          //  edt_re_enter_transcation_number.setError("Re-Enter Transaction Number");
+            //  edt_re_enter_transcation_number.setError("Re-Enter Transaction Number");
             edt_re_enter_transcation_number.requestFocus();
             return false;
         } else if (!edt_transaction_number.getText().toString().equals(edt_re_enter_transcation_number.getText().toString())) {
             TastyToast.makeText(activity, "Transaction Number do not match", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-           // edt_re_enter_transcation_number.setError("Transaction Number do not match");
+            // edt_re_enter_transcation_number.setError("Transaction Number do not match");
             edt_re_enter_transcation_number.requestFocus();
             return false;
         } else if (edt_cheque_number.isShown() && InputUtils.isNull(edt_cheque_number.getText().toString())) {
             TastyToast.makeText(activity, "Enter Cheque Number", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-          //  edt_cheque_number.setError("Enter Cheque Number");
+            //  edt_cheque_number.setError("Enter Cheque Number");
             edt_cheque_number.requestFocus();
             return false;
         } else if (edt_re_enter_cheque_number.isShown() && InputUtils.isNull(edt_re_enter_cheque_number.getText().toString())) {
             TastyToast.makeText(activity, "Re-Enter Cheque Number", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-           // edt_re_enter_cheque_number.setError("Re-Enter Cheque Number");
+            // edt_re_enter_cheque_number.setError("Re-Enter Cheque Number");
             edt_re_enter_cheque_number.requestFocus();
             return false;
         } else if (edt_cheque_number.isShown() && !edt_cheque_number.getText().toString().equals(edt_re_enter_cheque_number.getText().toString())) {
             TastyToast.makeText(activity, "Checque Number do not match", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-           // edt_re_enter_cheque_number.setError("Checque Number do not match");
+            // edt_re_enter_cheque_number.setError("Checque Number do not match");
             edt_re_enter_cheque_number.requestFocus();
             return false;
         } else if (InputUtils.isNull(edt_amount.getText().toString())) {
             TastyToast.makeText(activity, "Enter Amount", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-           // edt_amount.setError("Enter Amount Number");
+            // edt_amount.setError("Enter Amount Number");
             edt_amount.requestFocus();
             return false;
         } else if (InputUtils.isNull(edt_re_enter_amount.getText().toString())) {
             TastyToast.makeText(activity, "Re-Enter Amount", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-           // edt_re_enter_amount.setError("Re-Enter Amount");
+            // edt_re_enter_amount.setError("Re-Enter Amount");
             edt_re_enter_amount.requestFocus();
             return false;
         } else if (!edt_amount.getText().toString().equals(edt_re_enter_amount.getText().toString())) {
             TastyToast.makeText(activity, "Amount do not match", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-           // edt_re_enter_amount.setError("Amount do not match");
+            // edt_re_enter_amount.setError("Amount do not match");
             edt_re_enter_amount.requestFocus();
             return false;
         } else if (image.equals("")) {
             TastyToast.makeText(activity, "Choose File", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-           // Toast.makeText(activity, "Choose File", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(activity, "Choose File", Toast.LENGTH_SHORT).show();
             return false;
         } else if (image.equals("no")) {
             TastyToast.makeText(activity, "Image Size should less than 2 MB", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-           // Toast.makeText(activity, "Image Size should less than 2 MB", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(activity, "Image Size should less than 2 MB", Toast.LENGTH_SHORT).show();
             return false;
         } else if (InputUtils.isNull(edt_remark.getText().toString())) {
             TastyToast.makeText(activity, "Enter Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-           // edt_remark.setError("Enter Remark");
+            // edt_remark.setError("Enter Remark");
             edt_remark.requestFocus();
             return false;
         }
@@ -449,8 +449,8 @@ public class CreditFragment extends Fragment {
                         });
 
                 alertDialog.show();
-                image="no";
-            }else {
+                image = "no";
+            } else {
                 image = encodeTobase64(bm);
             }
 
@@ -459,7 +459,19 @@ public class CreditFragment extends Fragment {
         }
     }
 
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {    int width = image.getWidth();    int height = image.getHeight();    float bitmapRatio = (float) width / (float) height;    if (bitmapRatio > 1) {        width = maxSize;        height = (int) (width / bitmapRatio);    } else {        height = maxSize;        width = (int) (height * bitmapRatio);    }    return Bitmap.createScaledBitmap(image, width, height, true);}
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
 
     public static String encodeTobase64(Bitmap image) {
         Bitmap immagex = image;
@@ -539,8 +551,8 @@ public class CreditFragment extends Fragment {
     private class CashDepositEntryAPIAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            TastyToast.makeText(activity,  "" + json, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-          //  Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+            //  Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             activity.toolbarHome.setVisibility(View.VISIBLE);
             activity.pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
         }

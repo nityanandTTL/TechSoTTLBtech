@@ -638,6 +638,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         crbm.setOrderNo(order.getOrderNo());
                         crbm.setAddben(ben.isAddBen());
                         crbm.setTestEdit(ben.isTestEdit());
+//                        crbm.setRemarks(ben.getRemarks());
                         if (!InputUtils.isNull(ben.getProjId())) {
                             crbm.setTests(ben.getProjId() + "," + ben.getTestsCode());
                             crbm.setProjId(ben.getProjId());

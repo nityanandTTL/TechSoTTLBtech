@@ -622,7 +622,7 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
                     .getString(R.string.progress_message_camp_count_details_please_wait));
-            apiCallAsyncTask.setProgressBarVisible(true);
+            apiCallAsyncTask.setProgressBarVisible(false);
         } catch (Exception e) {
             e.printStackTrace();
         }

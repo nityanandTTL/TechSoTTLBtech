@@ -180,19 +180,9 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.dismiss();
-                                Intent intent=new Intent(activity,ScheduleYourDaySecondIntentActivity.class);
+                               /* Intent intent=new Intent(activity,ScheduleYourDaySecondIntentActivity.class);
                                 startActivity(intent);
-                                finish();
-
-                                //neha g---------------
-                                appPreferenceManager.setNot_avail_tom(2);
-                                BundleConstants.not_avail_tom=2;
-                                //neha g---------------------
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                                finish();*/
 
                                 SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
                                 setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
@@ -214,6 +204,39 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
                                 } else {
                                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                 }
+
+                                //neha g---------------
+                                appPreferenceManager.setNot_avail_tom(2);
+                                BundleConstants.not_avail_tom=2;
+                                //neha g---------------------
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                dialog.dismiss();
+
+                                /*SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
+                                setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
+                                setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                String slots = "";
+                                setBtechAvailabilityAPIRequestModel.setSlots(slots);
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
+                                Calendar calendar = Calendar.getInstance();
+
+                                setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
+                                setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
+                                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                                setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
+
+                                ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
+                                setBtechAvailabilityAsyncTask.setApiCallAsyncTaskDelegate(new SetBtechAvailabilityAsyncTaskDelegateResult(false));
+                                if (isNetworkAvailable(activity)) {
+                                    setBtechAvailabilityAsyncTask.execute(setBtechAvailabilityAsyncTask);
+                                } else {
+                                    Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                }*/
                             }
                         });
                 builder.create().
@@ -343,6 +366,8 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
                     appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
                     switchToActivity(activity, ScheduleYourDaySecondIntentActivity.class, new Bundle());
 
+                }else{
+                    switchToActivity(activity, ScheduleYourDaySecondIntentActivity.class, new Bundle());
                 }
 
             } else {
