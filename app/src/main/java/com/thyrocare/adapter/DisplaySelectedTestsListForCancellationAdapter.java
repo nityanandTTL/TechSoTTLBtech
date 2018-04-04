@@ -18,7 +18,6 @@ import com.thyrocare.fragment.BeneficiariesDisplayFragment;
 import com.thyrocare.models.data.BeneficiaryTestDetailsModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
-import com.thyrocare.utils.app.BundleConstants;
 
 import java.util.ArrayList;
 

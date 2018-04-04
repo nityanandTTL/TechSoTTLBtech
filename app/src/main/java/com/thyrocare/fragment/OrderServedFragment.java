@@ -26,7 +26,6 @@ import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.adapter.OrderServedDisplayDetailsAdapter;
 import com.thyrocare.delegate.OrderServedDisplayDetailsAdapterClickedDelegate;
-import com.thyrocare.models.api.request.CallPatchRequestModel;
 import com.thyrocare.models.api.response.OrderServedResponseModel;
 import com.thyrocare.models.data.BtechOrderModel;
 import com.thyrocare.network.ApiCallAsyncTask;

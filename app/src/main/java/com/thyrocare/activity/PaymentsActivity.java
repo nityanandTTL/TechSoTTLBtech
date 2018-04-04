@@ -11,7 +11,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.support.design.widget.BottomSheetDialog;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -39,7 +38,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thyrocare.R;
-import com.thyrocare.fragment.LedgerDisplayFragment;
 import com.thyrocare.models.api.response.FetchLedgerResponseModel;
 import com.thyrocare.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.thyrocare.models.api.response.PaymentProcessAPIResponseModel;

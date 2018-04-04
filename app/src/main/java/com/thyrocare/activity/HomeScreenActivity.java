@@ -30,27 +30,23 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thyrocare.R;
-import com.thyrocare.adapter.VisitOrderDisplayAdapter;
 import com.thyrocare.dao.DhbDao;
-import com.thyrocare.dialog.RescheduleOrderDialog;
 import com.thyrocare.fragment.CreditFragment;
 import com.thyrocare.fragment.FeedbackFragment;
 import com.thyrocare.fragment.HomeScreenFragment;
 import com.thyrocare.fragment.LeaveIntimationFragment;
 import com.thyrocare.fragment.ResetPasswordFragment;
-import com.thyrocare.network.AbstractApiModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
-import com.thyrocare.service.Timecheckservice;
 import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.InputUtils;
-import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,6 +84,9 @@ public class HomeScreenActivity extends AbstractActivity
         activity = this;
         dhbDao = new DhbDao(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
+
+        //For Cache Clear
+        CommonUtils.deleteCache(activity);
 
         try {
             value = getIntent().getExtras().getString("LEAVEINTIMATION");

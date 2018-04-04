@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
-import com.thyrocare.adapter.VisitOrderDisplayAdapter;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
 import com.thyrocare.delegate.OrderPassRecyclerViewAdapterDelegate;
@@ -23,7 +22,6 @@ import com.thyrocare.delegate.VisitOrderDisplayRecyclerViewAdapterDelegate;
 import com.thyrocare.delegate.VisitOrderDisplayyRecyclerViewAdapterDelegate;
 import com.thyrocare.delegate.refreshDelegate;
 import com.thyrocare.dialog.RescheduleOrderDialog;
-import com.thyrocare.fragment.tsp.TSP_OrdersDisplayFragment;
 import com.thyrocare.models.api.request.OrderAllocationTrackLocationRequestModel;
 import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.models.data.BeneficiaryDetailsModel;

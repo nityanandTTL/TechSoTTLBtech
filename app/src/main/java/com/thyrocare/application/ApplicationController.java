@@ -14,8 +14,9 @@ import com.crashlytics.android.Crashlytics;
 import com.thyrocare.dao.DbHelper;
 import com.thyrocare.utils.app.AppPreferenceManager;
 
-import io.fabric.sdk.android.Fabric;
 import java.util.Stack;
+
+import io.fabric.sdk.android.Fabric;
 
 public class ApplicationController extends MultiDexApplication {
 

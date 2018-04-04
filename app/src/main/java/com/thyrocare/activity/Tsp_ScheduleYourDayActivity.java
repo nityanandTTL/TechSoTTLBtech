@@ -24,19 +24,15 @@ import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
-import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DateUtils;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 /**

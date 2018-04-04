@@ -9,20 +9,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.FaceDetector;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
-import com.thyrocare.customview.FaceOverlayView;
 import com.thyrocare.customview.TouchImageView;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.models.api.request.SelfieUploadRequestModel;
@@ -33,28 +34,16 @@ import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.service.MasterTablesSyncService;
 import com.thyrocare.uiutils.AbstractActivity;
-import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.api.NetworkUtils;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.InputUtils;
-import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
-
-import java.io.InputStream;
-
-import android.graphics.BitmapFactory;
-
-import com.google.android.gms.vision.face.FaceDetector;
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.face.Face;
-
-import android.util.SparseArray;
 
 public class SelfieUploadActivity extends AbstractActivity implements View.OnClickListener {
     private static final String TAG = SelfieUploadActivity.class.getSimpleName();
@@ -238,9 +227,11 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 try {
                     AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
                     SelfieUploadRequestModel selfieUploadRequestModel = new SelfieUploadRequestModel();
-                    Log.e(TAG, "onClick: btechId : " + appPreferenceManager.getLoginResponseModel().getUserID());
-                    Log.e(TAG, "onClick: encodedProImg " + encodedProImg);
-                    selfieUploadRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
+                    if (appPreferenceManager.getLoginResponseModel() != null) {
+                        if (appPreferenceManager.getLoginResponseModel().getUserID() != null) {
+                            selfieUploadRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
+                        }
+                    }
 
                     selfieUploadRequestModel.setPic("" + encodedProImg);
 

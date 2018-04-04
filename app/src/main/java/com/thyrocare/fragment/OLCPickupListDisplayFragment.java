@@ -14,9 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thyrocare.R;
-import com.thyrocare.activity.OLCPickupDetailMapDisplayFragmentActivity;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.activity.OLCPickupActivity;
+import com.thyrocare.activity.OLCPickupDetailMapDisplayFragmentActivity;
 import com.thyrocare.adapter.BtechClientDetailsAdapter;
 import com.thyrocare.delegate.BtechClientDetailsAdapterOnItemClickDelegate;
 import com.thyrocare.models.api.response.BtechClientsResponseModel;

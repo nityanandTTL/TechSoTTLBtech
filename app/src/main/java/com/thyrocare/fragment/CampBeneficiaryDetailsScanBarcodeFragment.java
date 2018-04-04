@@ -19,6 +19,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.R;
 import com.thyrocare.activity.CampOrderBookingActivity;
 import com.thyrocare.dao.DhbDao;
@@ -52,14 +54,10 @@ import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 
 import java.util.ArrayList;
-
-import static com.thyrocare.utils.app.CommonUtils.encodeImage;
 
 /**
  * /OrderBooking

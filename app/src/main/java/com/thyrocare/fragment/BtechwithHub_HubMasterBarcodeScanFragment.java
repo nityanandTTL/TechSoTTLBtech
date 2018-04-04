@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.adapter.BtechwithHub_HubScanBarcodeListAdapter;
@@ -29,10 +31,9 @@ import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
+
 import java.util.ArrayList;
 /**
  *　APi Used 　　　i)/SpecimenTrack/ReceiveScannedBarcode/Btechid<br/>
@@ -186,7 +187,11 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
                     }
                 }
 
-                hubScanBarcodeListAdapter.notifyDataSetChanged();
+                try {
+                    hubScanBarcodeListAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 master_scanned_barcode = scanningResult.getContents();
             }

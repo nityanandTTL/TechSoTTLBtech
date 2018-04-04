@@ -29,7 +29,6 @@ import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.Global;
 import com.thyrocare.utils.app.Validator;
 
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -41,6 +40,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

@@ -11,12 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.thyrocare.R;
 import com.thyrocare.adapter.SlotsDisplayAdapter;
 import com.thyrocare.delegate.SlotsSelectionDelegate;
-import com.thyrocare.fragment.HomeScreenFragment;
-import com.thyrocare.fragment.LeaveIntimationFragment;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.data.SlotModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -345,7 +342,7 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
                     startActivity(i);
                 }
             } else {
-                pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+//                pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                 Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
             }
         }

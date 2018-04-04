@@ -172,55 +172,59 @@ public class AbstractFragment extends Fragment implements
 
     public void pushFragments(Fragment fragment, boolean shouldAnimate,
                               boolean shouldAdd, String destinationFragmetTag, int frameLayoutContainerId, String CurrentFragmentTag) {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction ft = manager.beginTransaction();
-        if (shouldAnimate) {
-            // ft.setCustomAnimations(R.animator.fragment_slide_left_enter,
-            // R.animator.fragment_slide_left_exit,
-            // R.animator.fragment_slide_right_enter,
-            // R.animator.fragment_slide_right_exit);
-        }
-
-        ft.replace(frameLayoutContainerId, fragment, CurrentFragmentTag);
-
-        //ft.add(R.id.fr_layout_container, fragment, TAG_FRAGMENT);
-
-        if (shouldAdd) {
-            /*
-             * here you can create named backstack for realize another logic.
-			   <<<<<<< HEAD
-			                                                                                                                                                                                                                                                                                                                                                                                                   <<<<<<< HEAD
-			                                                                                                                                                                                                                                                                                                                                                                                                           /*
-			 * here you can create named backstack for realize another logic.
-			                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> bf799f243c1bd10ee4fb953d6481aa806925783f
-			                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> 7054f2ddd15b92e9724794839f298ccd266af5f2
-			   =======
-			                                                                                                                                                                                                                                                                                                                                                                                                                                                   <<<<<<< HEAD
-			                                                                                                                                                                                                                                                                                                                                                                                                                                                           /*
-			 * here you can create named backstack for realize another logic.
-			                                                                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> bf799f243c1bd10ee4fb953d6481aa806925783f
-			                                                                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> 7054f2ddd15b92e9724794839f298ccd266af5f2
-			   >>>>>>> 596a4e066e37214dd935f8db9f0f637d7af457c3
-			 * ft.addToBackStack("name of your backstack");
-			 */
-            ft.addToBackStack(destinationFragmetTag);
-        } else {
-            /*
-			 * and remove named backstack:
-			 * manager.popBackStack("name of your backstack",
-			 * FragmentManager.POP_BACK_STACK_INCLUSIVE); or remove whole:
-			 * manager.popBackStack(null,
-			 * FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			 */
-            try {
-                manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction ft = manager.beginTransaction();
+            if (shouldAnimate) {
+                // ft.setCustomAnimations(R.animator.fragment_slide_left_enter,
+                // R.animator.fragment_slide_left_exit,
+                // R.animator.fragment_slide_right_enter,
+                // R.animator.fragment_slide_right_exit);
             }
-        }
 
-        ft.commit();
+            ft.replace(frameLayoutContainerId, fragment, CurrentFragmentTag);
+
+            //ft.add(R.id.fr_layout_container, fragment, TAG_FRAGMENT);
+
+            if (shouldAdd) {
+                /*
+                 * here you can create named backstack for realize another logic.
+                   <<<<<<< HEAD
+                                                                                                                                                                                                                                                                                                                                                                                                                   <<<<<<< HEAD
+                                                                                                                                                                                                                                                                                                                                                                                                                           /*
+                 * here you can create named backstack for realize another logic.
+                                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> bf799f243c1bd10ee4fb953d6481aa806925783f
+                                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> 7054f2ddd15b92e9724794839f298ccd266af5f2
+                   =======
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                   <<<<<<< HEAD
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                           /*
+                 * here you can create named backstack for realize another logic.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> bf799f243c1bd10ee4fb953d6481aa806925783f
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                   >>>>>>> 7054f2ddd15b92e9724794839f298ccd266af5f2
+                   >>>>>>> 596a4e066e37214dd935f8db9f0f637d7af457c3
+                 * ft.addToBackStack("name of your backstack");
+                 */
+                ft.addToBackStack(destinationFragmetTag);
+            } else {
+                /*
+                 * and remove named backstack:
+                 * manager.popBackStack("name of your backstack",
+                 * FragmentManager.POP_BACK_STACK_INCLUSIVE); or remove whole:
+                 * manager.popBackStack(null,
+                 * FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                 */
+                try {
+                    manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            ft.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

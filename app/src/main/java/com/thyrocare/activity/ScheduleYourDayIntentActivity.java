@@ -11,14 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.adapter.SlotsDisplayAdapter;
 import com.thyrocare.delegate.SlotsSelectionDelegate;
-import com.thyrocare.fragment.HomeScreenFragment;
-import com.thyrocare.fragment.LeaveIntimationFragment;
-import com.thyrocare.fragment.TSP_SendFragment;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.data.SlotModel;
 import com.thyrocare.network.ApiCallAsyncTask;

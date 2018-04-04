@@ -2,7 +2,6 @@ package com.thyrocare.models.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.ArrayRes;
 
 import java.util.ArrayList;
 

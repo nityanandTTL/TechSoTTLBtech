@@ -90,6 +90,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private String MaskedPhoneNumber = "";
     private boolean isFetchingOrders = false;
     public static boolean edit;
+
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
     }
@@ -128,8 +129,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         if (isNetworkAvailable(activity)) {
             fetchBtechEstEarningsApiAsyncTask.execute(fetchBtechEstEarningsApiAsyncTask);
         } else {
-            TastyToast.makeText(activity,  "Check internet connection", TastyToast.LENGTH_LONG, TastyToast.ERROR);
-           // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, "Check internet connection", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             //  initData();
         }
     }
@@ -150,7 +151,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             @Override
             public void onRefresh() {
                 TastyToast.makeText(activity, "View Refreshed", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-               // Toast.makeText(activity, "refresh on realease", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(activity, "refresh on realease", Toast.LENGTH_SHORT).show();
                 fetchData();
             }
         });
@@ -159,17 +160,21 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                LayoutInflater inflater = activity.getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
-                builder.setView(dialogView);
-                ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
-                Button btn_edit = (Button) dialogView.findViewById(R.id.btn_edit);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_list_item_1, kits_arr);
-                lv_test_codes.setAdapter(adapter);
-                btn_edit.setVisibility(View.GONE);
-                builder.show();
+                try {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    LayoutInflater inflater = activity.getLayoutInflater();
+                    View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
+                    builder.setView(dialogView);
+                    ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
+                    Button btn_edit = (Button) dialogView.findViewById(R.id.btn_edit);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                            android.R.layout.simple_list_item_1, kits_arr);
+                    lv_test_codes.setAdapter(adapter);
+                    btn_edit.setVisibility(View.GONE);
+                    builder.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -190,7 +195,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
             // Permission denied, Disable the functionality that depends on activity permission.
             TastyToast.makeText(activity, "permission denied", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-           // Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
+            // Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -214,14 +219,14 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask(true);
         fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
-            if(!isFetchingOrders) {
+            if (!isFetchingOrders) {
                 isFetchingOrders = true;
                 fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
             }
         } else {
             TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
-           // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             initData();
         }
     }
@@ -324,7 +329,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
             if (statusCode == 200) {
                 //jai
-                JSONObject jsonObject=new JSONObject(json);
+                JSONObject jsonObject = new JSONObject(json);
                 ResponseParser responseParser = new ResponseParser(activity);
                 FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = new FetchOrderDetailsResponseModel();
                 fetchOrderDetailsResponseModel = responseParser.getFetchOrderDetailsResponseModel(json, statusCode);
@@ -366,7 +371,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         public void onApiCancelled() {
             isFetchingOrders = false;
             TastyToast.makeText(activity, getString(R.string.network_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-          //  Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -381,7 +386,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         txtTotalKitsRequired = (TextView) rootView.findViewById(R.id.title_est_kits);
         txtTotalKitsRequired.setSelected(true);
         txtNoRecord = (TextView) rootView.findViewById(R.id.txt_no_orders);
-
 
 
     }
@@ -444,7 +448,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
         @Override
         public void onItemReschedule(OrderVisitDetailsModel orderVisitDetailsModel) {
-            rod = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(),orderVisitDetailsModel.getAllOrderdetails().get(0));
+            rod = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModel.getAllOrderdetails().get(0));
             rod.show();
         }
 
@@ -469,7 +473,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
             } else {
                 TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-              //  Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -499,7 +503,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
             } else {
                 TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-             //   Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                //   Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -523,7 +527,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
             } else {
                 TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-              //  Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -532,6 +536,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
         }
     }
+
     public class ConfirmOrderPassDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
         @Override
         public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
@@ -566,18 +571,18 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 204 || statusCode == 200) {
                 TastyToast.makeText(activity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-               // Toast.makeText(activity, "Order Released Successfully", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(activity, "Order Released Successfully", Toast.LENGTH_SHORT).show();
                 fetchData();
             } else {
-                TastyToast.makeText(activity, ""+json, TastyToast.LENGTH_LONG, TastyToast.INFO);
-               // Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
+                // Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onApiCancelled() {
             TastyToast.makeText(activity, "Network Error", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-         //   Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
+            //   Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -593,7 +598,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 204 || statusCode == 200) {
                 TastyToast.makeText(activity, "Order Accepted Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-               // Toast.makeText(activity, "Order Accepted Successfully", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(activity, "Order Accepted Successfully", Toast.LENGTH_SHORT).show();
                 OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
                 for (OrderDetailsModel orderDetailsModel :
                         orderVisitDetailsModel.getAllOrderdetails()) {
@@ -602,8 +607,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 }
                 initData();
             } else {
-                TastyToast.makeText(activity, ""+json, TastyToast.LENGTH_LONG, TastyToast.INFO);
-              //  Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
+                //  Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -617,22 +622,22 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private class BtechEarningsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            int totalEarning=0;
+            int totalEarning = 0;
             HashMap<String, Integer> kitsCount = new HashMap<>();
             String kitsReq = "";
             String kitsReq1 = "";
 
-            if(statusCode==200){
+            if (statusCode == 200) {
                 ResponseParser responseParser = new ResponseParser(activity);
                 BtechEstEarningsResponseModel btechEstEarningsResponseModel = new BtechEstEarningsResponseModel();
                 btechEstEarningsResponseModel = responseParser.getBtecheSTEarningResponseModel(json, statusCode);
                 if (btechEstEarningsResponseModel != null && btechEstEarningsResponseModel.getBtechEarnings().size() > 0) {
-                    txtTotalDistance.setText(""+btechEstEarningsResponseModel.getDistance());
+                    txtTotalDistance.setText("" + btechEstEarningsResponseModel.getDistance());
                     for (int i = 0; i < btechEstEarningsResponseModel.getBtechEarnings().size(); i++) {
-                        for (int j = 0; j < btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().size() ; j++) {
-                            totalEarning=totalEarning+btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getEstIncome();
-                            Logger.error("totaldistance: "+totalEarning);
-                            txtTotalEarnings.setText(""+totalEarning);
+                        for (int j = 0; j < btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().size(); j++) {
+                            totalEarning = totalEarning + btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getEstIncome();
+                            Logger.error("totaldistance: " + totalEarning);
+                            txtTotalEarnings.setText("" + totalEarning);
 
                             for (KitsCountModel kt :
                                     btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getKits()) {
@@ -652,7 +657,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                         HashMap.Entry pair = (HashMap.Entry) it.next();
                         if (InputUtils.isNull(kitsReq)) {
                             kitsReq = pair.getValue() + " " + pair.getKey();
-                            kitsReq1= pair.getValue() + " " + pair.getKey();
+                            kitsReq1 = pair.getValue() + " " + pair.getKey();
                         } else {
                             kitsReq = kitsReq + " | " + pair.getValue() + " " + pair.getKey();
                             kitsReq1 = kitsReq1 + "," + pair.getValue() + " " + pair.getKey();
@@ -692,7 +697,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
             } else {
                 TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-               // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -718,8 +723,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 TastyToast.makeText(activity, "Order rescheduled successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                 //Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
             } else {
-                TastyToast.makeText(activity, ""+json, TastyToast.LENGTH_LONG, TastyToast.INFO);
-               // Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
+                // Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
             fetchData();
         }
@@ -727,7 +732,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         @Override
         public void onApiCancelled() {
             TastyToast.makeText(activity, "Network Error", TastyToast.LENGTH_LONG, TastyToast.ERROR);
-          //  Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
 

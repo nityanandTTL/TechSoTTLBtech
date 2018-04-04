@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.os.Looper;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,7 +32,6 @@ import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -190,18 +188,27 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
     }
 
     private boolean valtdate() {
-        if (edt_remark.isShown() && InputUtils.isNull(edt_remark.getText().toString().trim())) {
-            TastyToast.makeText(activity, "Please Enter Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+        if (spn_remark != null) {
+            try {
+                if (edt_remark.isShown() && InputUtils.isNull(edt_remark.getText().toString().trim())) {
+                    TastyToast.makeText(activity, "Please Enter Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
 
-            // Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (txt_from_date.getText().toString().equals("")) {
-            TastyToast.makeText(activity, "Select date and time", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-            //  Toast.makeText(activity, "Select date and time", Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (spn_remark.getSelectedItem().toString().equals("--SELECT--")) {
-            TastyToast.makeText(activity, "Select Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-            //  Toast.makeText(activity, "Select date and time", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
+                    return false;
+                } else if (txt_from_date.getText().toString().equals("")) {
+                    TastyToast.makeText(activity, "Select date and time", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+                    //  Toast.makeText(activity, "Select date and time", Toast.LENGTH_SHORT).show();
+                    return false;
+                } else if (spn_remark.getSelectedItem().toString().equals("--SELECT--")) {
+                    TastyToast.makeText(activity, "Select Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+                    //  Toast.makeText(activity, "Select date and time", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
             return false;
         }
         return true;
@@ -216,8 +223,8 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
 
                     orderRescheduleDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, edt_remark.getText().toString() + " " + remarksResponseModelmain.getReason().trim(), txt_from_date.getText().toString());
                 } else {
-                   Logger.error("remark: "+remarksResponseModelmain.getReason().trim());
-                   orderRescheduleDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, remarksResponseModelmain.getReason().trim(), txt_from_date.getText().toString());
+                    Logger.error("remark: " + remarksResponseModelmain.getReason().trim());
+                    orderRescheduleDialogButtonClickedDelegate.onOkButtonClicked(orderDetailsModel, remarksResponseModelmain.getReason().trim(), txt_from_date.getText().toString());
 
                 }
                 dismiss();

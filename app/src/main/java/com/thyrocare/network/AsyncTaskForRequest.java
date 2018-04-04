@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.thyrocare.R;
 import com.thyrocare.models.api.request.ApplyLeaveRequestModel;
 import com.thyrocare.models.api.request.BtechAppVersion;
@@ -37,7 +38,6 @@ import com.thyrocare.models.api.request.TrackBtechLocationRequestModel;
 import com.thyrocare.models.api.request.Tsp_Send_RequestModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
-import com.google.gson.Gson;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;

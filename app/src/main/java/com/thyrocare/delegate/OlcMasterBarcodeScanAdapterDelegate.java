@@ -1,8 +1,5 @@
 package com.thyrocare.delegate;
 
-import android.view.View;
-import android.widget.EditText;
-
 /**
  * Created by Orion on 5/8/2017.
  */

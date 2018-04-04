@@ -3,8 +3,6 @@ package com.thyrocare.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -15,7 +13,6 @@ import android.widget.Toast;
 
 import com.thyrocare.R;
 import com.thyrocare.delegate.AddSampleBarcodeDialogDelegate;
-import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.InputUtils;
 
 

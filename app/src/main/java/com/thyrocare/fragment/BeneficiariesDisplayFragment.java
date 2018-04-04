@@ -700,13 +700,14 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         pagerIndicator = (LinearLayout) rootView.findViewById(R.id.viewPagerCountDots);
         OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
 
-        Logger.error("Selcted testssssssss" + orderBookingRequestModel.getBendtl().get(0).getTests());
-
-        for (int i = 0; i <orderBookingRequestModel.getBendtl().size() ; i++) {
-            test=test+orderBookingRequestModel.getBendtl().get(i).getTests().toString();
+        try {
+            for (int i = 0; i <orderBookingRequestModel.getBendtl().size() ; i++) {
+                test=test+orderBookingRequestModel.getBendtl().get(i).getTests().toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            test = "";
         }
-        Logger.error("string test "+test);
-       // test = orderBookingRequestModel.getBendtl().get(0).getTests().toString();
 
         if (orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS)||
                 orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.INSPP)||

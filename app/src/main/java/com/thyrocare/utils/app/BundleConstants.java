@@ -3,8 +3,6 @@ package com.thyrocare.utils.app;
 /**
  * Created by Orion on 4/27/2017.
  */
-import java.lang.String;
-
 
 public class BundleConstants {
     //Intent and Activity Result related constants

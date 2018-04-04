@@ -23,11 +23,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +33,6 @@ import android.widget.Toast;
 import com.ramotion.foldingcell.FoldingCell;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
-import com.thyrocare.activity.Tsp_ScheduleYourDayActivity;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
 import com.thyrocare.delegate.OrderPassRecyclerViewAdapterDelegate;
@@ -62,7 +59,6 @@ import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
-import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DateUtils;
 import com.thyrocare.utils.app.InputUtils;
 
@@ -866,7 +862,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         CallViewTestDialog.setCanceledOnTouchOutside(false);
 
         TextView txt_ordno = (TextView) CallViewTestDialog.findViewById(R.id.txt_ordno);
-        if(visitId != null) {
+        if (visitId != null) {
             txt_ordno.setText(" : " + visitId);
         }
 
@@ -1089,9 +1085,18 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             //holder.txt_distance.setText(String.valueOf(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getDistance()) + "KM");
             holder.txtKits.setText(String.valueOf(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits().get(0).getKit()));
             holder.txtAddress.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress());
-            if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
-                holder.imgRelease.setVisibility(View.GONE);
-                holder.imgRelease2.setVisibility(View.GONE);
+
+            try {
+                if (appPreferenceManager.getLoginResponseModel() != null) {
+                    if (appPreferenceManager.getLoginResponseModel().getRole() != null) {
+                        if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
+                            holder.imgRelease.setVisibility(View.GONE);
+                            holder.imgRelease2.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             //jai

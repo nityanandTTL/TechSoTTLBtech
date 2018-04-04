@@ -4,14 +4,9 @@ package com.thyrocare.fragment;
  * Created by Orion on 6/14/2017.
  */
 
-import android.Manifest;
-import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,8 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,11 +22,8 @@ import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.activity.ScheduleYourDayActivity;
 import com.thyrocare.activity.ScheduleYourDayActivity2;
 import com.thyrocare.adapter.AppliedLeaveDisplayDetailsAdapter;
-import com.thyrocare.adapter.OrderServedDisplayDetailsAdapter;
 import com.thyrocare.delegate.LeaveAppliedDisplayDetailsAdapterClickedDelegate;
-import com.thyrocare.delegate.OrderServedDisplayDetailsAdapterClickedDelegate;
 import com.thyrocare.models.api.response.LeaveAppliedResponseModel;
-import com.thyrocare.models.api.response.OrderServedResponseModel;
 import com.thyrocare.models.data.BtechOrderModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
@@ -41,16 +31,13 @@ import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.api.Logger;
-import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
-import com.thyrocare.utils.app.DateUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 

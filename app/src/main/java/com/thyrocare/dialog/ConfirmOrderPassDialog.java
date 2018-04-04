@@ -1,14 +1,9 @@
 package com.thyrocare.dialog;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,14 +15,10 @@ import android.widget.Toast;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
-import com.thyrocare.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.thyrocare.delegate.refreshDelegate;
 import com.thyrocare.fragment.VisitOrdersDisplayFragment;
 import com.thyrocare.models.api.request.OrderPassRequestModel;
-import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
-import com.thyrocare.models.api.response.LoginResponseModel;
 import com.thyrocare.models.api.response.OrderPassresponseModel;
-import com.thyrocare.models.api.response.RemarksResponseModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
 import com.thyrocare.models.data.Orderallocation;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -35,10 +26,7 @@ import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.utils.api.Logger;
-import com.thyrocare.utils.app.AppConstants;
-import com.thyrocare.utils.app.AppPreference;
 import com.thyrocare.utils.app.AppPreferenceManager;
-import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
 

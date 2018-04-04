@@ -22,8 +22,6 @@ import com.firebase.client.Firebase;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
-import com.thyrocare.fragment.LeaveIntimationFragment;
-import com.thyrocare.models.api.request.ApplyLeaveRequestModel;
 import com.thyrocare.models.api.request.DownloadDetailsRequestModel;
 import com.thyrocare.models.api.request.LoginRequestModel;
 import com.thyrocare.models.api.response.BtechAvaliabilityResponseModel;
@@ -35,18 +33,12 @@ import com.thyrocare.network.ResponseParser;
 import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
-import com.thyrocare.utils.app.AppPreference;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.InputUtils;
 import com.thyrocare.utils.app.UiUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Calendar;
-
-
-import static android.widget.Toast.LENGTH_SHORT;
 
 public class LoginScreenActivity extends AbstractActivity implements View.OnClickListener {
     public static final String TAG_LOGIN = "LOGIN_SCREEN_ACTIVITY";

@@ -67,7 +67,13 @@ public class HubListDisplayFragment extends AbstractFragment {
         View rootview = inflater.inflate(R.layout.fragment_btech_collections_list, container, false);
         initUI(rootview);
         activity = (HomeScreenActivity) getActivity();
-        activity.toolbarHome.setTitle("Hub List");
+        try {
+            if(activity.toolbarHome != null) {
+                activity.toolbarHome.setTitle("Hub List");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         activity.isOnHome = false;
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

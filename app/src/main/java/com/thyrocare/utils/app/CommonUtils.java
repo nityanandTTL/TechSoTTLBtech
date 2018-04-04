@@ -16,9 +16,9 @@ import android.os.Environment;
 import android.util.Base64;
 import android.util.TypedValue;
 
+import com.google.gson.Gson;
 import com.thyrocare.models.api.response.MessageModel;
 import com.thyrocare.utils.api.Logger;
-import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -60,11 +60,17 @@ public class CommonUtils {
     }
 
     public static String encodeImage(Bitmap bm) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] b = baos.toByteArray();
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] b = baos.toByteArray();
 
-        return Base64.encodeToString(b, Base64.DEFAULT);
+            return Base64.encodeToString(b, Base64.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "";
     }
 
     public static String encodeImage(byte[] b) {
@@ -193,6 +199,31 @@ public class CommonUtils {
         } catch (IOException e) {
 
             e.printStackTrace();
+        }
+    }
+
+    public static void deleteCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            deleteDir(dir, context);
+        } catch (Exception e) {
+        }
+    }
+
+    public static boolean deleteDir(File dir, Context context) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]), context);
+                if (!success) {
+                    return false;
+                }
+            }
+            return dir.delete();
+        } else if (dir != null && dir.isFile()) {
+            return dir.delete();
+        } else {
+            return false;
         }
     }
 

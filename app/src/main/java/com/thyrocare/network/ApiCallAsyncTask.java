@@ -10,10 +10,10 @@ import android.os.Build;
 import android.os.Process;
 import android.view.Window;
 
+import com.google.gson.JsonSyntaxException;
 import com.thyrocare.utils.api.NetworkUtils;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.CommonUtils;
-import com.google.gson.JsonSyntaxException;
 
 public class ApiCallAsyncTask extends AsyncTask<Void, Void, String> implements
         AppConstants, OnDismissListener {

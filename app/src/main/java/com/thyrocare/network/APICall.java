@@ -2,11 +2,11 @@ package com.thyrocare.network;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.thyrocare.models.api.response.MessageModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.CommonUtils;
-import com.google.gson.Gson;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;

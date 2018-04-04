@@ -1,8 +1,5 @@
 package com.thyrocare.utils.app;
 
-import android.net.Uri;
-
-
 public interface AppConstants {
 
 	// ------------ CONSTANTS -------------

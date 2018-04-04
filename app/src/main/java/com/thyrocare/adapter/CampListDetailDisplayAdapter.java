@@ -18,19 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ramotion.foldingcell.FoldingCell;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.delegate.CampListDisplayRecyclerViewAdapterDelegate;
-
-import com.thyrocare.models.api.request.CallPatchRequestModel;
 import com.thyrocare.models.data.CampDetailModel;
-
-import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
-import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.utils.app.AppConstants;
-import com.thyrocare.utils.app.AppPreferenceManager;
-import com.ramotion.foldingcell.FoldingCell;
 
 import org.json.JSONException;
 

@@ -308,8 +308,13 @@ public class LeaveIntimationFragment extends AbstractFragment {
     }
 
     private boolean validate() {
-        if(sp.getSelectedItem().equals("--SELECT--")){
-            TastyToast.makeText(activity, "Select Nature", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+        try {
+            if(sp.getSelectedItem().equals("--SELECT--")){
+                TastyToast.makeText(activity, "Select Nature", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
         return true;

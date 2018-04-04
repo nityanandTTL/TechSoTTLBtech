@@ -23,9 +23,7 @@ import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
-import com.thyrocare.activity.Chat;
 import com.thyrocare.activity.SplashScreenActivity;
-import com.thyrocare.activity.UserDetails;
 import com.thyrocare.activity.Users;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
@@ -53,7 +51,6 @@ import org.json.JSONObject;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;

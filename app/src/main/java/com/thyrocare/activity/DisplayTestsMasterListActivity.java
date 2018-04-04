@@ -152,7 +152,11 @@ public class DisplayTestsMasterListActivity extends AbstractActivity {
                 //jai
                 benDetailsModel.setTestEdit(isEdit);
                 //jai
-                orderDetailsModel.setBrandId(brandMasterModel.getBrandId());
+                try {
+                    orderDetailsModel.setBrandId(brandMasterModel.getBrandId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 new OrderDetailsDao(dhbDao.getDb()).insertOrUpdate(orderDetailsModel);
 
                 boolean isFasting = false;

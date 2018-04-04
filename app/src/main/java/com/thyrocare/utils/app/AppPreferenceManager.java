@@ -3,12 +3,12 @@ package com.thyrocare.utils.app;
 import android.app.Activity;
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.api.response.LoginResponseModel;
 import com.thyrocare.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.models.data.SlotModel;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 

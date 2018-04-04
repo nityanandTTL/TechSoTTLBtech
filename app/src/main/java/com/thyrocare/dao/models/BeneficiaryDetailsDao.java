@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thyrocare.models.data.BeneficiaryBarcodeDetailsModel;
 import com.thyrocare.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.models.data.BeneficiaryLabAlertsModel;
@@ -13,8 +15,6 @@ import com.thyrocare.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.InputUtils;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 

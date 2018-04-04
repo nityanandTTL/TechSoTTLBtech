@@ -22,6 +22,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.R;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.BeneficiaryDetailsDao;
@@ -36,7 +38,6 @@ import com.thyrocare.dialog.AddSampleBarcodeDialog;
 import com.thyrocare.dialog.ClinicalHistorySelectorDialog;
 import com.thyrocare.dialog.DisplaySelectedTestsListForCancellationDialog;
 import com.thyrocare.dialog.LabAlertSelectorDialog;
-import com.thyrocare.fragment.BeneficiaryDetailsScanBarcodeFragment;
 import com.thyrocare.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.models.api.response.Emailreponsedatamodel;
 import com.thyrocare.models.api.response.GetTestListResponseModel;
@@ -71,8 +72,6 @@ import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.DateUtils;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 

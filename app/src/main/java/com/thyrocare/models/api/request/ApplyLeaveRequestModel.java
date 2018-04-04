@@ -1,7 +1,5 @@
 package com.thyrocare.models.api.request;
 
-import java.util.Date;
-
 /**
  * Created by Orion on 5/6/2017.
  */

@@ -22,7 +22,6 @@ import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.utils.api.Logger;
-import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
 
@@ -156,21 +155,25 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_yes) {
-            if (!edt__release_remark.getText().toString().equals("")) {
-                if (validate()) {
-                    Logger.error("reason: " + edt__release_remark.getText().toString());
-                    confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel, edt__release_remark.getText().toString());
-                    dismiss();
-                }
+        try {
+            if (v.getId() == R.id.btn_yes) {
+                if (!edt__release_remark.getText().toString().equals("")) {
+                    if (validate()) {
+                        Logger.error("reason: " + edt__release_remark.getText().toString());
+                        confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel, edt__release_remark.getText().toString());
+                        dismiss();
+                    }
 
-            } else {
-                Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
+                }
             }
-        }
-        if (v.getId() == R.id.btn_no) {
-            confirmOrderReleaseDialogButtonClickedDelegate.onCancelButtonClicked();
-            dismiss();
+            if (v.getId() == R.id.btn_no) {
+                confirmOrderReleaseDialogButtonClickedDelegate.onCancelButtonClicked();
+                dismiss();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

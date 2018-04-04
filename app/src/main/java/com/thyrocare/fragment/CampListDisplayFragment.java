@@ -15,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.R;
 import com.thyrocare.activity.CampOrderBookingActivity;
 import com.thyrocare.activity.HomeScreenActivity;
@@ -24,7 +26,6 @@ import com.thyrocare.dao.models.BeneficiaryDetailsDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
 import com.thyrocare.delegate.CampListDisplayRecyclerViewAdapterDelegate;
 import com.thyrocare.dialog.ConfirmOrderReleaseDialog;
-import com.thyrocare.models.api.request.CallPatchRequestModel;
 import com.thyrocare.models.api.request.CampStartedRequestModel;
 import com.thyrocare.models.api.response.CampListDisplayResponseModel;
 import com.thyrocare.models.api.response.CampScanQRResponseModel;
@@ -40,8 +41,6 @@ import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 

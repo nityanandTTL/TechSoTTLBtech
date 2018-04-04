@@ -4,31 +4,19 @@ package com.thyrocare.adapter;
  * Created by Orion on 4/21/2017.
  */
 
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.thyrocare.R;
-import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.delegate.LeaveAppliedDisplayDetailsAdapterClickedDelegate;
-import com.thyrocare.delegate.OrderServedDisplayDetailsAdapterClickedDelegate;
 import com.thyrocare.models.api.response.LeaveAppliedResponseModel;
-import com.thyrocare.models.data.BtechOrderModel;
 import com.thyrocare.utils.api.Logger;
-import com.thyrocare.utils.app.DateUtils;
-import com.thyrocare.utils.app.InputUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class AppliedLeaveDisplayDetailsAdapter extends RecyclerView.Adapter<AppliedLeaveDisplayDetailsAdapter.MyViewHolder> {
 

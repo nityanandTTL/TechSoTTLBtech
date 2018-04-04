@@ -1,8 +1,5 @@
 package com.thyrocare.models.api.response;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * Created by e4904@thyrocare.com on 24/3/18.
  */

@@ -7,9 +7,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.view.Window;
 
+import com.google.gson.JsonSyntaxException;
 import com.thyrocare.network.AbstractApiModel;
 import com.thyrocare.utils.app.AppPreferenceManager;
-import com.google.gson.JsonSyntaxException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;

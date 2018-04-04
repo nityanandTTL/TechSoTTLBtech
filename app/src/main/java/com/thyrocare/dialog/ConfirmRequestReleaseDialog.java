@@ -21,7 +21,6 @@ import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.utils.api.Logger;
-import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
 

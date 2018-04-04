@@ -19,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.R;
 import com.thyrocare.activity.CampOrderBookingActivity;
 import com.thyrocare.dao.DhbDao;
@@ -36,7 +38,6 @@ import com.thyrocare.models.data.BeneficiaryLabAlertsModel;
 import com.thyrocare.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.thyrocare.models.data.BrandMasterModel;
 import com.thyrocare.models.data.CampAllOrderDetailsModel;
-
 import com.thyrocare.models.data.CampDetailModel;
 import com.thyrocare.models.data.LabAlertMasterModel;
 import com.thyrocare.models.data.OrderBookingDetailsModel;
@@ -52,8 +53,6 @@ import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 
