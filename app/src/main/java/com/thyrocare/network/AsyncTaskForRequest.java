@@ -1972,7 +1972,7 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
             Log.e(AsyncTaskForRequest.class.getSimpleName(), "getTestListAsyncTask: ");
             abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(abstractApiModel.GET_ERecipt + "/" + orderid);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.GET_ERecipt + "/" + orderid);
 
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);

@@ -43,11 +43,11 @@ public class AbstractApiModel implements AppConstants {
     // 0com/btsapi";
 
 
-    public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.com/techsoapi";//staging
-    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
-    
-//    public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
-//    public static final String API_VERSION = "https://www.thyrocare.com/APIs";
+//    public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.com/techsoapi";//staging
+//    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
+//
+    public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
+    public static final String API_VERSION = "https://www.thyrocare.com/APIs";
 
 
     public static String SERVER_BASE_API_URL = appEnvironment.equals("DEVELOPMENT") ? SERVER_BASE_API_URL_DEV : appEnvironment.equals("DEMO") ? SERVER_BASE_API_URL_DEMO : appEnvironment.equals("PRODUCTION") ? SERVER_BASE_API_URL_PROD : SERVER_BASE_API_URL_DEV;
@@ -196,6 +196,7 @@ public class AbstractApiModel implements AppConstants {
     public String TSP_BARCODE_SCAN = VERSION_API_URL + "/SpecimenTrack/TSPScannedBarcode";
 
     public String TSP_BARCODE = VERSION_API_URL + "/SpecimenTrack/ReceiveHubBarcode";
+    public String GET_ERecipt = VERSION_API_URL + "/Ledger/OrderReceipt";
 
     public String LOCUS_PUSH_LOCATIONS_API = "https://api.locus.sh/v1/client/thyrocare/user/";
 
@@ -219,7 +220,6 @@ public class AbstractApiModel implements AppConstants {
     private List<HeaderData> header;
     public String TSPNBTAVAILABILITY = VERSION_API_URL + "/BtechAvaibilityNew/NBTMarkedAvailability";
     public String GET_Email = "http://api.quickemailverification.com/v1/verify?email=";
-    public String GET_ERecipt = "http://bts.dxscloud.com/techsoapi/api/Ledger/OrderReceipt";
 
     public String getRequestUrl() {
         return requestUrl;

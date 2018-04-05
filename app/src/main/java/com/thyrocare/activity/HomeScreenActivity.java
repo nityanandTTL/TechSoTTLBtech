@@ -38,6 +38,7 @@ import com.thyrocare.fragment.FeedbackFragment;
 import com.thyrocare.fragment.HomeScreenFragment;
 import com.thyrocare.fragment.LeaveIntimationFragment;
 import com.thyrocare.fragment.ResetPasswordFragment;
+import com.thyrocare.network.AbstractApiModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
@@ -201,7 +202,18 @@ public class HomeScreenActivity extends AbstractActivity
         txtUserId = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_id);
         txtUserName = (TextView) NavHeaderHomeScreen.findViewById(R.id.txt_user_name);
         txt_version_code = (TextView) findViewById(R.id.txt_version_code);
-        txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity)/*+"("+ AbstractApiModel.SERVER_BASE_API_URL_PROD+")"*/);
+
+        try {
+            if (AbstractApiModel.SERVER_BASE_API_URL_PROD.equals("http://bts.dxscloud.com/techsoapi")) {
+                txt_version_code.setText("Stag Version: " + CommonUtils.getAppVersion(activity));
+            } else if (AbstractApiModel.SERVER_BASE_API_URL_PROD.equals("https://www.dxscloud.com/techsoapi")) {
+                txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
+        }
+
         navigationView.addHeaderView(NavHeaderHomeScreen);
         super.initUI();
     }
