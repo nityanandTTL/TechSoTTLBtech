@@ -66,5 +66,6 @@ public class BundleConstants {
     public static int delay=0;
     public static String statusBen="Select Beneficiary";
     public static String KITSNOTAVAILABLE="Kits not available.";
+    public static int RemoveBenId=0;
     //neha G---------------------------------
 }

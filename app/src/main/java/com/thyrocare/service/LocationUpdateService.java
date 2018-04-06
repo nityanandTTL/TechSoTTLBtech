@@ -102,6 +102,12 @@ public class LocationUpdateService extends IntentService {
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
 
+        try {
+            appPreferenceManager = new AppPreferenceManager(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // As per Ganesh Sir Instruction
         /*Thread t = new Thread(new Runnable() {
             @Override

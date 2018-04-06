@@ -36,6 +36,7 @@ import com.thyrocare.models.api.request.ServiceUpdateRequestModel;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.api.request.TrackBtechLocationRequestModel;
 import com.thyrocare.models.api.request.Tsp_Send_RequestModel;
+import com.thyrocare.models.data.REMOVEBENSMSPOSTDATAModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
 
@@ -1981,6 +1982,27 @@ public class AsyncTaskForRequest {
                     .getString(R.string.Sending_Ereciept));
             apiCallAsyncTask.setProgressBarCancellable(true);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getRemoveBenSMSAsyncTask(REMOVEBENSMSPOSTDATAModel rembensmsRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            String postJson = new Gson().toJson(rembensmsRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.POST_REMOVE_BEN_SMS);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage("Please wait..");
+            apiCallAsyncTask.setProgressBarVisible(false);
+            apiCallAsyncTask.setProgressBarCancellable(false);
         } catch (Exception e) {
             e.printStackTrace();
         }

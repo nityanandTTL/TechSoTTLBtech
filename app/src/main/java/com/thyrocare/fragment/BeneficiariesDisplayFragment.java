@@ -48,6 +48,7 @@ import com.thyrocare.models.data.CartRequestOrderModel;
 import com.thyrocare.models.data.OrderBookingDetailsModel;
 import com.thyrocare.models.data.OrderDetailsModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
+import com.thyrocare.models.data.REMOVEBENSMSPOSTDATAModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
@@ -1245,6 +1246,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         }
                     }
                 }
+
+                if(BundleConstants.RemoveBenId != 0){
+                    CallApiForRemoveBenSMS(BundleConstants.RemoveBenId, cartAPIResponseModel.getOrders().get(0).getOrderNo(), cartAPIResponseModel.getOrders().get(0).getAmountDue());
+                    BundleConstants.RemoveBenId = 0;
+                }
+
             } else {
                 Toast.makeText(activity, "Failed to fetch updated Payment Details", Toast.LENGTH_SHORT).show();
             }
@@ -1271,6 +1278,33 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             }
 
            // fetchDataOfVisitOrderForRefreshAmountDue();
+        }
+    }
+
+    private void CallApiForRemoveBenSMS(int removeBenId, String orderNo, int amountDue) {
+        REMOVEBENSMSPOSTDATAModel ent = new REMOVEBENSMSPOSTDATAModel();
+        ent.setBenId(removeBenId);
+        ent.setOrderNo(orderNo);
+        ent.setRate1(""+amountDue);
+        ApiCallAsyncTask auxlAsyncTask = new AsyncTaskForRequest(activity).getRemoveBenSMSAsyncTask(ent);
+        auxlAsyncTask.setApiCallAsyncTaskDelegate(new getReMOveBenSMSAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            auxlAsyncTask.execute(auxlAsyncTask);
+        } else {
+            Toast.makeText(activity, getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class getReMOveBenSMSAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
         }
     }
 

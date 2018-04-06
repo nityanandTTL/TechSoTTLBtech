@@ -67,6 +67,7 @@ import com.thyrocare.models.data.LabAlertMasterModel;
 import com.thyrocare.models.data.OrderBookingDetailsModel;
 import com.thyrocare.models.data.OrderDetailsModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
+import com.thyrocare.models.data.REMOVEBENSMSPOSTDATAModel;
 import com.thyrocare.models.data.TestClinicalHistoryModel;
 import com.thyrocare.models.data.TestGroupListModel;
 import com.thyrocare.models.data.TestRateMasterModel;
@@ -415,6 +416,9 @@ Logger.error("");
                                             rb.setOrderNo(beneficiaryDetailsModel.getOrderNo());
                                             rb.setIsAdded(orderDetailsModel.isAddBen() ? "1" : "0");
 
+                                            //set id for Remove ben SMS
+                                            BundleConstants.RemoveBenId = beneficiaryDetailsModel.getBenId();
+
                                             ApiCallAsyncTask removeBeneficiaryAsyncTask = new AsyncTaskForRequest(activity).getRemoveBeneficiaryRequestAsyncTask(rb);
                                             removeBeneficiaryAsyncTask.setApiCallAsyncTaskDelegate(new ApiCallAsyncTaskDelegate() {
                                                 @Override
@@ -452,6 +456,7 @@ Logger.error("");
                                                                     orderDetailsDao.insertOrUpdate(orderDetailsModel);
                                                                 }
                                                             }
+                                                            //CallApiForRemoveBenSMS(BundleConstants.RemoveBenId, orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderNo(), orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
                                                             Toast.makeText(activity, "Beneficiary Removed Successfully", Toast.LENGTH_SHORT).show();
                                                             refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId()));
                                                         }
