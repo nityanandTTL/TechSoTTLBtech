@@ -28,16 +28,14 @@
 
     <application
         android:name=".application.ApplicationController"
-        tools:replace="android:icon"
         android:allowBackup="true"
-        android:largeHeap="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-
-
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
         <activity
             android:name=".activity.SplashScreenActivity"
             android:label="@string/app_name"
@@ -54,6 +52,14 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:noHistory="true"
+            android:name=".activity.NotificationClickActivity"
+            android:label="@string/app_notificationorders"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activity.LoginScreenActivity"
             android:label="@string/app_name"
@@ -109,60 +115,47 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.CampOrderBookingActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.ScheduleYourDayActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.Tsp_ScheduleYourDayActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.ScheduleYourDayIntentActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.ScheduleYourDaySecondIntentActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.ScheduleYourDayActivity2"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".dialog.MyDialog"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            ></activity>
-
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".activity.Users" />
         <activity
-            android:name=".activity.Users"
-
-            ></activity>
-        <activity
-            android:theme="@style/AppTheme.NoActionBar"
             android:name=".activity.Chat"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-            ></activity>
-
-
-        <meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="face"/>
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="face" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -175,14 +168,15 @@
             android:name=".service.CheckPaymentResponseService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name=".service.LocationUpdateService"
+        <service
+            android:name=".service.LocationUpdateService"
             android:enabled="true"
-            android:exported="true"/>
-        <service android:name=".service.Timecheckservice"
+            android:exported="true" />
+        <service
+            android:name=".service.Timecheckservice"
             android:enabled="true"
-            android:stopWithTask="true"
-            android:exported="true"/>
-
+            android:exported="true"
+            android:stopWithTask="true" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -191,14 +185,14 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
-
-        <!--<meta-data
+        <!--
+            <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="2a0670c74854a2ed0477442a4f32c168dc57d1ba" />-->
-
+            android:value="2a0670c74854a2ed0477442a4f32c168dc57d1ba" />
+        -->
 
         <service
             android:name=".service.FireIDService"
@@ -223,12 +217,14 @@
 
         <receiver android:name=".network.MyBroadcastReceiver">
             <intent-filter>
-                <action android:name="ALARM"
-                    android:process=":remote"/>
+                <action
+                    android:name="ALARM"
+                    android:process=":remote" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

@@ -2,6 +2,8 @@ package com.thyrocare.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -31,7 +33,9 @@ import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
+import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
@@ -61,6 +65,7 @@ public class SplashScreenActivity extends AbstractActivity {
         setContentView(R.layout.activity_splash_screen);
         activity = this;
         AppId = AppConstants.BTECH_APP_ID;
+
         appPreferenceManager = new AppPreferenceManager(activity);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -98,10 +103,8 @@ public class SplashScreenActivity extends AbstractActivity {
         //Call Service
         Logger.error("locationUpdateIntent Executed 1");
         locationUpdateIntent = new Intent(this, LocationUpdateService.class);
-
-
-        Logger.error("locationUpdateIntent Executed 2");
     }
+
   /*void StartLocationUpdateService() {
        try {
             try {
@@ -159,8 +162,7 @@ public class SplashScreenActivity extends AbstractActivity {
                 if (btechAvaliabilityResponseModel != null) {
                   /*if(btechAvaliabilityResponseModel.getNumberofDays()==0) {*/
                     if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
-                       Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
-                        //  Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                        Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
                         startActivity(i);
                     } else if (btechAvaliabilityResponseModel.getNumberofDays() == 0) {
@@ -176,12 +178,14 @@ public class SplashScreenActivity extends AbstractActivity {
                             Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                             i.putExtra("LEAVEINTIMATION", "0");
                             startActivity(i);
+                            finish();
                         } else {
                             if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
                                 // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
                                 Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                                 i.putExtra("LEAVEINTIMATION", "0");
                                 startActivity(i);
+                                finish();
                             } else {
                                 switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
                             }
@@ -264,10 +268,7 @@ public class SplashScreenActivity extends AbstractActivity {
                                 new DhbDao(activity).deleteTablesonLogout();
 
 
-
-
                                 //jai
-
 
 
                                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionControlMasterModel.getAppUrl()));
@@ -297,10 +298,11 @@ public class SplashScreenActivity extends AbstractActivity {
             }
 
         }
+
         private class DownloadApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
             @Override
             public void apiCallResult(String json, int statusCode) throws JSONException {
-            Logger.error("apiCallResult "+json);
+                Logger.error("apiCallResult " + json);
             }
 
             @Override
@@ -308,6 +310,7 @@ public class SplashScreenActivity extends AbstractActivity {
                 Logger.error("onApiCancelled ");
             }
         }
+
         @Override
         public void onApiCancelled() {
             Logger.error(TAG_FRAGMENT + "onApiCancelled: ");
@@ -387,8 +390,11 @@ public class SplashScreenActivity extends AbstractActivity {
         @Override
         public void dbTaskCompletedWithResult(Boolean result) {
             //   StartLocationUpdateService();
-            startService(locationUpdateIntent);
-
+//            startService(locationUpdateIntent);
+            if (DeviceUtils.isMyServiceRunning(LocationUpdateService.class, activity)) {
+            } else {
+                startService(locationUpdateIntent);
+            }
             if (InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
                 switchToActivity(activity, LoginScreenActivity.class, new Bundle());
             } else {
@@ -401,7 +407,7 @@ public class SplashScreenActivity extends AbstractActivity {
                     //                    Call_TspScreen();
                     fetchDataForTsp();
                 } else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
-                    Logger.error("role1: "+AppConstants.NBTTSP_ROLE_ID);
+                    Logger.error("role1: " + AppConstants.NBTTSP_ROLE_ID);
 
                     Calendar c = Calendar.getInstance();
                     c.set(Calendar.MILLISECOND, 0);
@@ -415,33 +421,17 @@ public class SplashScreenActivity extends AbstractActivity {
                         Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
                         startActivity(i);
-
-                    }else {
+                        finish();
+                    } else {
                         Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
-                        //  Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
                         startActivity(i);
 
                     }
 
 
-
-
-                }else {
+                } else {
                     fetchData();
-                  /*  if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
-                        Logger.error("Selfie"+String.valueOf(appPreferenceManager.getSelfieResponseModel()));
-                        Logger.error("LOgeeererereeere"+String.valueOf(appPreferenceManager.getSelfieResponseModel().getTimeUploaded()));
-                        Logger.error("LOgeeererereeereMIllis"+String.valueOf(c.getTimeInMillis()));
-
-
-
-
-                       // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
-                        switchToActivity(activity, HomeScreenActivity.class, new Bundle());
-                    } else {
-                        switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
-                    }*/
                 }
 
             }
@@ -452,21 +442,7 @@ public class SplashScreenActivity extends AbstractActivity {
         Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
         i.putExtra("LEAVEINTIMATION", "0");
         startActivity(i);
-
-        /*Calendar c = Calendar.getInstance();
-        c.set(Calendar.MILLISECOND, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-
-        if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
-            // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
-            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-            i.putExtra("LEAVEINTIMATION", "0");
-            startActivity(i);
-        } else {
-            switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
-        }*/
+        finish();
     }
 
     private void fetchDataForTsp() {

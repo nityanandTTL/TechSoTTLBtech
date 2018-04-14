@@ -58,6 +58,7 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
 
     private String lasScheduleDate;
     String dayAfterttomorrowAsString;
+    private String disableNo="";
 
 
     public ScheduleYourDayActivity2() {
@@ -85,6 +86,15 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
         value = getIntent().getExtras().getString("WHEREFROM");
+
+        try {
+            if (getIntent().getExtras().getString("SHOWNO") != null) {
+                disableNo = getIntent().getExtras().getString("SHOWNO");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         calendar.add(Calendar.DAY_OF_YEAR, 2);
         Date tomorrow = calendar.getTime();
         DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
@@ -271,6 +281,12 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
         btnProceed.setVisibility(View.INVISIBLE);
         llSlotsDisplay = (LinearLayout) findViewById(R.id.ll_slots_display);
         gvSlots = (GridView) findViewById(R.id.gv_slots);
+
+        if(disableNo.toString().equals("1")){
+            txtNo.setVisibility(View.INVISIBLE);
+        }else {
+            txtNo.setVisibility(View.VISIBLE);
+        }
     }
 
     private class FetchSlotsAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {

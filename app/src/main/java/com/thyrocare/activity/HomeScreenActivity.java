@@ -38,6 +38,7 @@ import com.thyrocare.fragment.FeedbackFragment;
 import com.thyrocare.fragment.HomeScreenFragment;
 import com.thyrocare.fragment.LeaveIntimationFragment;
 import com.thyrocare.fragment.ResetPasswordFragment;
+import com.thyrocare.fragment.VisitOrdersDisplayFragment;
 import com.thyrocare.network.AbstractApiModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
@@ -46,6 +47,7 @@ import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.InputUtils;
 
@@ -53,6 +55,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class HomeScreenActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -72,12 +76,14 @@ public class HomeScreenActivity extends AbstractActivity
     private boolean doubleBackToExitPressedOnce = false;
     public boolean isOnHome = false;
     ActionBarDrawerToggle toggle;
-    private String value="";
+    private String value = "";
     private Object mCurrentFragment;
-    public static boolean isFromPayment=false;
+    public static boolean isFromPayment = false;
     private static Intent TImeCheckerIntent;
-    String y="";
+    String y = "";
+    public static String mCurrentFragmentName = "";//jai
     CharSequence[] items;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,14 +114,20 @@ public class HomeScreenActivity extends AbstractActivity
                 toolbarHome.setVisibility(View.VISIBLE);
                 pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             } else {
-                if (appPreferenceManager.getLeaveFlag() != 0) {
-                    pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-                    appPreferenceManager.setCameFrom(1);
-                    toolbarHome.setVisibility(View.GONE);
 
+                if (BundleConstants.ORDER_Notification) {
+                    BundleConstants.ORDER_Notification = false;
+                    pushFragments(VisitOrdersDisplayFragment.newInstance(), false, false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
                 } else {
-                    toolbarHome.setVisibility(View.VISIBLE);
-                    pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+                    if (appPreferenceManager.getLeaveFlag() != 0) {
+                        pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+                        appPreferenceManager.setCameFrom(1);
+                        toolbarHome.setVisibility(View.GONE);
+
+                    } else {
+                        toolbarHome.setVisibility(View.VISIBLE);
+                        pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+                    }
                 }
             }
 
@@ -125,10 +137,11 @@ public class HomeScreenActivity extends AbstractActivity
         }
        /* TImeCheckerIntent = new Intent(this, Timecheckservice.class);
         startService(TImeCheckerIntent);*/
-       if(isFromPayment){
-           pushFragments(CreditFragment.newInstance(), false, false,
-                   CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-       }
+
+        if (isFromPayment) {
+            pushFragments(CreditFragment.newInstance(), false, false,
+                    CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        }
     }
 
     public void setTitle(String title) {
@@ -139,10 +152,10 @@ public class HomeScreenActivity extends AbstractActivity
         if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserName()))
             txtUserName.setText(appPreferenceManager.getLoginResponseModel().getUserName());
         if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()))
-            y=appPreferenceManager.getLoginResponseModel().getUserID();
-            y = y.substring(y.length() - 4);
-            txtUserId.setText(y);
-           // txtUserId.setText(appPreferenceManager.getLoginResponseModel().getUserID());
+            y = appPreferenceManager.getLoginResponseModel().getUserID();
+        y = y.substring(y.length() - 4);
+        txtUserId.setText(y);
+        // txtUserId.setText(appPreferenceManager.getLoginResponseModel().getUserID());
 
         if (appPreferenceManager.getSelfieResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
 
@@ -235,32 +248,42 @@ public class HomeScreenActivity extends AbstractActivity
     public void onBackPressed() {
         List fragments = getSupportFragmentManager().getFragments();
         mCurrentFragment = fragments.get(fragments.size() - 1);
-        Logger.error("mCurrentFragment: "+mCurrentFragment);
-        if (mCurrentFragment==null){
+        Logger.error("mCurrentFragment: " + mCurrentFragment);
+        if (mCurrentFragment == null) {
             //stopService(TImeCheckerIntent);
-            finishAffinity();
-        }else
-        if (mCurrentFragment.toString().contains("HomeScreenFragment")){
-          //  stopService(TImeCheckerIntent);
-            finishAffinity();
+            if (mCurrentFragmentName.equals("LeaveHistoryFragment")) {
+                //mCurrentFragmentName="";
+                //  pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+                // finishAffinity();
+
+            } else {
+                finishAffinity();
+            }
+        } else if (mCurrentFragment.toString().contains("HomeScreenFragment")) {
+            //  stopService(TImeCheckerIntent);
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory( Intent.CATEGORY_HOME );
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
+//            finishAffinity();
         }
 
 
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
-          //  stopService(TImeCheckerIntent);
+            //  stopService(TImeCheckerIntent);
             return;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-           /* if (isOnHome) {
-                this.doubleBackToExitPressedOnce = true;
-                Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-            } else {*/
+            Logger.error("testdrive");
+            if (mCurrentFragmentName.equals("LeaveHistoryFragment")) {
+                pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            } else {
                 pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-        /*    }*/
+            }
         }
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -349,7 +372,7 @@ public class HomeScreenActivity extends AbstractActivity
     }
 
     private void showOptionsinAlert() {
-        items = new String[]{"Chat","WhatsApp","Training"};
+        items = new String[]{"Chat", "WhatsApp", "Training"};
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Select Action");
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -357,26 +380,27 @@ public class HomeScreenActivity extends AbstractActivity
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("Chat")) {
                     //  loginChat();//anand sir requirement
-                   Toast.makeText(activity, "Coming soon", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Coming soon", Toast.LENGTH_SHORT).show();
                 } else if (items[item].equals("WhatsApp")) {
                     onClickWhatsApp();
-                }else {
+                } else {
                     Toast.makeText(activity, "Coming soon", Toast.LENGTH_SHORT).show();
                 }
             }
         });
         builder.show();
     }
+
     public void onClickWhatsApp() {
 
-        PackageManager pm=getPackageManager();
+        PackageManager pm = getPackageManager();
         try {
 
             Intent waIntent = new Intent(Intent.ACTION_SEND);
             waIntent.setType("text/plain");
             String text = "YOUR TEXT HERE";
 
-            PackageInfo info=pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+            PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
             //Check if package exists or not. If not then code
             //in catch block will be called
             waIntent.setPackage("com.whatsapp");
@@ -390,6 +414,7 @@ public class HomeScreenActivity extends AbstractActivity
         }
 
     }
+
     private void loginChat() {
         String url = "https://finalchat-df79b.firebaseio.com/users.json";
         final ProgressDialog pd = new ProgressDialog(HomeScreenActivity.this);
@@ -410,7 +435,7 @@ public class HomeScreenActivity extends AbstractActivity
                         } else if (obj.getJSONObject(appPreferenceManager.getLoginResponseModel().getUserName()).getString("password").equals(appPreferenceManager.getLoginResponseModel().getUserName())) {
                             UserDetails.username = appPreferenceManager.getLoginResponseModel().getUserName();
                             UserDetails.password = appPreferenceManager.getLoginResponseModel().getUserName();
-                            startActivity(new Intent(HomeScreenActivity.this, Users.class).putExtra("comeFrom","Pre"));
+                            startActivity(new Intent(HomeScreenActivity.this, Users.class).putExtra("comeFrom", "Pre"));
                             //startActivity(new Intent(HomeScreenActivity.this, Users.class));
                         } else {
                             Toast.makeText(HomeScreenActivity.this, "incorrect password", Toast.LENGTH_LONG).show();
@@ -433,6 +458,7 @@ public class HomeScreenActivity extends AbstractActivity
         RequestQueue rQueue = Volley.newRequestQueue(HomeScreenActivity.this);
         rQueue.add(request);
     }
+
     private class LogoutAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {

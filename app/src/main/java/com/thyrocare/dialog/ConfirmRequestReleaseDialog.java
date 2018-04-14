@@ -1,6 +1,7 @@
 package com.thyrocare.dialog;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,7 +34,7 @@ import static android.widget.Toast.LENGTH_SHORT;
  */
 
 public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickListener {
-    private HomeScreenActivity activity;
+    private Context activity;
     private Dialog d;
     private Button btn_yes, btn_no;
     private TextView tv_title;
@@ -45,7 +46,7 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
     private ArrayList<String> remarks;
     private ConfirmOrderReleaseDialogButtonClickedDelegate confirmOrderReleaseDialogButtonClickedDelegate;
     private OrderVisitDetailsModel orderVisitDetailsModel;
-    public ConfirmRequestReleaseDialog(HomeScreenActivity activity, ConfirmOrderReleaseDialogButtonClickedDelegate confirmOrderReleaseDialogButtonClickedDelegate, OrderVisitDetailsModel orderVisitDetailsModel) {
+    public ConfirmRequestReleaseDialog(Context activity, ConfirmOrderReleaseDialogButtonClickedDelegate confirmOrderReleaseDialogButtonClickedDelegate, OrderVisitDetailsModel orderVisitDetailsModel) {
         super(activity);
         this.activity = activity;
         this.confirmOrderReleaseDialogButtonClickedDelegate = confirmOrderReleaseDialogButtonClickedDelegate;
@@ -167,7 +168,7 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
 
                 confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel, edt__release_remark.getText().toString().trim());
                 //   confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel,remarksResponseModelmain.getReason().trim());
-                confirmOrderReleaseDialogButtonClickedDelegate.onCancelButtonClicked();
+//                confirmOrderReleaseDialogButtonClickedDelegate.onCancelButtonClicked();
                 dismiss();
 
             } else {

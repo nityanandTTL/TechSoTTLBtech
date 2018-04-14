@@ -17,12 +17,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Action;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
+import com.thyrocare.activity.HomeScreenActivity;
+import com.thyrocare.activity.NotificationClickActivity;
 import com.thyrocare.activity.SplashScreenActivity;
 import com.thyrocare.activity.Users;
 import com.thyrocare.dao.DhbDao;
@@ -31,6 +34,7 @@ import com.thyrocare.models.api.request.ChatRequestModel;
 import com.thyrocare.models.api.request.LocusPushLocationRequestModel;
 import com.thyrocare.models.api.request.TrackBtechLocationRequestModel;
 import com.thyrocare.models.api.response.FetchOrderDetailsResponseModel;
+import com.thyrocare.models.data.AcceptOrderNotfiDetailsModel;
 import com.thyrocare.models.data.LocationModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -87,6 +91,7 @@ public class LocationUpdateService extends IntentService {
     int minnew = 0;
     ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels;
     private String todate = "";
+    private ArrayList<AcceptOrderNotfiDetailsModel> materialDetailsModels;
 
     //neha g ------------
 
@@ -126,7 +131,7 @@ public class LocationUpdateService extends IntentService {
         });
         t.start();*/
 
-       Thread t2 = new Thread(new Runnable() {
+        Thread t2 = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
@@ -154,6 +159,7 @@ public class LocationUpdateService extends IntentService {
                     Logger.error("Thread is Executing 3 ");
                     try {
                         Thread.sleep(30 * 60 * 1000);
+//                        Thread.sleep(1 * 60 * 1000);
                         //  Thread.sleep(30 * 1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -567,12 +573,33 @@ public class LocationUpdateService extends IntentService {
 
                     boolean isAppInBackground = isAppIsInBackground(getApplicationContext());
 
+                    ResponseParser responseParser = new ResponseParser(getApplicationContext());
+                    materialDetailsModels = new ArrayList<>();
+
+                    materialDetailsModels = responseParser.getAcceptOrderNotfiResponseModel(json, statusCode);
                     if (jsonObject != null || jsonObject.equals("")) {
                         Log.e(TAG, "CBT/NBT Has Orders Assigned Under him/her...");
                         if (!isAppInBackground) {
                             Log.e(TAG, "APP is running, hence no notification needs to be send");
                         } else {
+
+                            try {
+                                NotificationManager notificationManager;
+                                notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                notificationManager.cancelAll();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
                             startAcceptordernotification();
+                            /*if (materialDetailsModels != null && materialDetailsModels.size() > 0) {
+                                if (materialDetailsModels.size() != 0) {
+                                    for (int i = 0; i < materialDetailsModels.size(); i++) {
+//                                        sendNotification(materialDetailsModels.get(i).getVisitId(), i);
+                                        sendNotification_n(materialDetailsModels.get(i), i);
+                                    }
+                                }
+                            }*/
                         }
                     } else {
                         Log.e(TAG, "CBT/NBT Has NO Orders Assigned Under him/her...");
@@ -625,6 +652,7 @@ public class LocationUpdateService extends IntentService {
                 Logger.error("Lopper Exist ");
                 Looper.myLooper().prepare();
             }
+
             if (Looper.myLooper() != null) {
                 if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
 //                    Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
@@ -701,6 +729,98 @@ public class LocationUpdateService extends IntentService {
 
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(mNotificationId, notification);
+    }
+
+    private void sendNotification(String OrderNo, int i) {
+        try {
+            Intent intent = new Intent(this, SplashScreenActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, i /* Request code */, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Intent secondActivityIntent = new Intent(this, HomeScreenActivity.class);
+            secondActivityIntent.putExtra(BundleConstants.VISIT_ID, "" + OrderNo);
+            secondActivityIntent.putExtra(BundleConstants.FlagAcceptReject, "1");
+            secondActivityIntent.putExtra("LEAVEINTIMATION", "0");
+            PendingIntent secondActivityPendingIntent = PendingIntent.getActivity(this, i, secondActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Intent thirdActivityIntent = new Intent(this, HomeScreenActivity.class);
+            thirdActivityIntent.putExtra(BundleConstants.VISIT_ID, "" + OrderNo);
+            thirdActivityIntent.putExtra(BundleConstants.FlagAcceptReject, "0");
+            thirdActivityIntent.putExtra("LEAVEINTIMATION", "0");
+            PendingIntent thirdActivityPendingIntent = PendingIntent.getActivity(this, i, thirdActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.app_logo)
+                    .setContentTitle(OrderNo)
+                    .setContentText("Order is Assigned, Please Accept or Reject the Order")
+                    .addAction(R.drawable.app_logo, "Yes", secondActivityPendingIntent)
+                    .addAction(R.drawable.app_logo1, "No", thirdActivityPendingIntent)
+                    .setAutoCancel(true)
+                    .setOngoing(true)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
+
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            notificationManager.notify(i /* ID of notification */, notificationBuilder.build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendNotification_n(AcceptOrderNotfiDetailsModel AcceptOrderModel, int i) {
+        try {
+            NotificationManager notificationManager;
+            notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            Intent yesIntent = getNotificationIntent();
+            yesIntent.setAction(BundleConstants.YES_ACTION);
+            yesIntent.putExtra(BundleConstants.VISIT_ID, "" + AcceptOrderModel.getVisitId());
+            yesIntent.putExtra(BundleConstants.YESNO_ID, "" + i);
+            yesIntent.putExtra(BundleConstants.ORDER_SLOTID, "" + AcceptOrderModel.getSlotId());
+
+            Intent maybeIntent = getNotificationIntent();
+            maybeIntent.setAction(BundleConstants.NO_ACTION);
+            maybeIntent.putExtra(BundleConstants.VISIT_ID, "" + AcceptOrderModel.getVisitId());
+            maybeIntent.putExtra(BundleConstants.YESNO_ID, "" + i);
+            maybeIntent.putExtra(BundleConstants.ORDER_SLOTID, "" + AcceptOrderModel.getSlotId());
+
+            NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+            bigTextStyle.setBigContentTitle("" + AcceptOrderModel.getVisitId());
+            bigTextStyle.bigText("Order is Assigned, Please Accept or Reject the Order");
+
+            Notification notification = new NotificationCompat.Builder(getApplicationContext())
+//                    .setContentIntent(PendingIntent.getActivity(getApplicationContext(), 0, getNotificationIntent(), PendingIntent.FLAG_UPDATE_CURRENT))
+                    .setSmallIcon(R.drawable.app_logo)
+//                    .setTicker("Action Buttons Notification Received")
+                    .setContentTitle("" + AcceptOrderModel.getVisitId())
+                    .setContentText("Order is Assigned, Please Accept or Reject the Order")
+                    .setWhen(System.currentTimeMillis())
+                    .setStyle(bigTextStyle)
+                    .setAutoCancel(false)
+                    .setOngoing(false)
+                    .addAction(new Action(
+                            R.mipmap.ic_thumb_up_black_36dp,
+                            getString(R.string.yes),
+                            PendingIntent.getActivity(this, i, yesIntent, PendingIntent.FLAG_ONE_SHOT)))
+                    .addAction(new Action(
+                            R.mipmap.ic_thumb_down_black_36dp,
+                            getString(R.string.no),
+                            PendingIntent.getActivity(this, i, maybeIntent, PendingIntent.FLAG_ONE_SHOT)))
+                    .build();
+
+            notificationManager.notify(i, notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Intent getNotificationIntent() {
+        Intent intent = new Intent(getApplicationContext(), NotificationClickActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
 
     private boolean isAppIsInBackground(Context context) {

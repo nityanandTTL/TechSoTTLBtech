@@ -44,6 +44,7 @@ import com.thyrocare.models.api.response.SessionExpireModel;
 import com.thyrocare.models.api.response.SubSlotMasterResponseModel;
 import com.thyrocare.models.api.response.Tsp_ScanBarcodeResponseModel;
 import com.thyrocare.models.api.response.Tsp_SendConsignment_Modes_ResponseModel;
+import com.thyrocare.models.data.AcceptOrderNotfiDetailsModel;
 import com.thyrocare.models.data.BrandMasterModel;
 import com.thyrocare.models.data.BrandTestMasterModel;
 import com.thyrocare.models.data.CampAllOrderDetailsModel;
@@ -1119,5 +1120,15 @@ public class ResponseParser implements AppConstants {
             cartAPIResponseModel = gson.fromJson(json, CartAPIResponseModel.class);
         }
         return cartAPIResponseModel;
+    }
+
+    public ArrayList<AcceptOrderNotfiDetailsModel> getAcceptOrderNotfiResponseModel(String json, int statusCode) {
+        ArrayList<AcceptOrderNotfiDetailsModel> materialDetailsModels = null;
+//		if (!parseIntoError(json, statusCode)){
+        TypeToken<ArrayList<AcceptOrderNotfiDetailsModel>> token = new TypeToken<ArrayList<AcceptOrderNotfiDetailsModel>>() {
+        };
+        materialDetailsModels = gson.fromJson(json, token.getType());
+//		}
+        return materialDetailsModels;
     }
 }

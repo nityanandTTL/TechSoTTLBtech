@@ -84,6 +84,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
+        activity.mCurrentFragmentName="";
         appPreferenceManager = new AppPreferenceManager(activity);
     }
 

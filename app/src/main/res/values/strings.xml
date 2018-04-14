@@ -131,6 +131,7 @@
     <string name="enter_user_name">Enter User name</string>
     <string name="enter_password">Enter Password</string>
     <string name="no">No</string>
+    <string name="yes">Yes</string>
     <string name="old_pwd_and_new_pwd_should_not_be_same">Old Password and new Password should not be same</string>
     <string name="no_face_detected">No face detected</string>
     <string name="more_than_one_face_detected">More than one face detected</string>
@@ -139,6 +140,7 @@
     <string name="vailidatingemail">Validating Emails </string>
     <string name="Mobile_no_validation">1234567890</string>
     <string name="Sending_Ereciept">Sending Ereciept</string>
+    <string name="app_notificationorders">Order</string>
     <string-array name="payment_mode">
         <item>Cash By ATM</item>
         <item>Cash</item>

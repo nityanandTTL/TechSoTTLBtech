@@ -45,7 +45,7 @@ import java.util.Locale;
 /**
  * Created by Orion on 5/2/2017.<br/>
  * for getting orders<br/>
- *  http://bts.dxscloud.com/btsapi/api/BtechOrderSummary/BtechServedOrders/884543107/2017-07-19<br/>
+ * http://bts.dxscloud.com/btsapi/api/BtechOrderSummary/BtechServedOrders/884543107/2017-07-19<br/>
  */
 
 public class LeaveHistoryFragment extends AbstractFragment {
@@ -60,14 +60,15 @@ public class LeaveHistoryFragment extends AbstractFragment {
     SwipeRefreshLayout swipeRefreshLayout;
     private String todaysDate;
     private ArrayList<BtechOrderModel> btechOrderModels = new ArrayList<>();
-   // private OrderServedDisplayDetailsAdapter orderServedDisplayDetailsAdapter;
+    // private OrderServedDisplayDetailsAdapter orderServedDisplayDetailsAdapter;
     private AppliedLeaveDisplayDetailsAdapter appliedLeaveDisplayDetailsAdapter;
     private int mYear, mMonth, mDay;
     private String todate = "";
     private FloatingActionButton apply_leave;
     private String MaskedPhoneNumber = "";
-    public static  boolean isFromLeaveHistory=false;
-    private ArrayList<LeaveAppliedResponseModel> leaveAppliedResponseModels=new ArrayList<>();
+    public static boolean isFromLeaveHistory = false;
+    private ArrayList<LeaveAppliedResponseModel> leaveAppliedResponseModels = new ArrayList<>();
+
     public LeaveHistoryFragment() {
         // Required empty public constructor
     }
@@ -85,7 +86,12 @@ public class LeaveHistoryFragment extends AbstractFragment {
         activity = (HomeScreenActivity) getActivity();
         try {
             activity.toolbarHome.setTitle("Leave Applied");
-        }catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            activity.mCurrentFragmentName=""+LeaveHistoryFragment.class.getSimpleName();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -111,9 +117,9 @@ public class LeaveHistoryFragment extends AbstractFragment {
     public void initUI() {
         super.initUI();
         recycler_view = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        swipeRefreshLayout=(SwipeRefreshLayout)rootView.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         no_orders = (TextView) rootView.findViewById(R.id.no_orders);
-        apply_leave=(FloatingActionButton)rootView.findViewById(R.id.apply_leave);
+        apply_leave = (FloatingActionButton) rootView.findViewById(R.id.apply_leave);
     }
 
     private void setListners() {
@@ -126,7 +132,7 @@ public class LeaveHistoryFragment extends AbstractFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (swipeRefreshLayout.isRefreshing()){
+                if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                     initData();
                 }
@@ -153,15 +159,15 @@ public class LeaveHistoryFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-                Logger.error(TAG_FRAGMENT+"json "+json);
-                JSONArray jsonArray=new JSONArray(json);
+                Logger.error(TAG_FRAGMENT + "json " + json);
+                JSONArray jsonArray = new JSONArray(json);
                 ResponseParser responseParser = new ResponseParser(activity);
 
                 leaveAppliedResponseModels = responseParser.getLeaveAppliedResponse(json, statusCode);
                 if (leaveAppliedResponseModels != null && leaveAppliedResponseModels.size() > 0) {
                     no_orders.setVisibility(View.GONE);
                     prepareRecyclerView();
-                }else {
+                } else {
                     no_orders.setVisibility(View.VISIBLE);
                     Toast.makeText(activity, "No record found", Toast.LENGTH_SHORT).show();
                 }
@@ -180,35 +186,36 @@ public class LeaveHistoryFragment extends AbstractFragment {
     }
 
     private void prepareRecyclerView() {
-    appliedLeaveDisplayDetailsAdapter=new AppliedLeaveDisplayDetailsAdapter(leaveAppliedResponseModels, new LeaveAppliedDisplayDetailsAdapterClickedDelegate() {
+        appliedLeaveDisplayDetailsAdapter = new AppliedLeaveDisplayDetailsAdapter(leaveAppliedResponseModels, new LeaveAppliedDisplayDetailsAdapterClickedDelegate() {
 
-        @Override
-        public void onClickLeave(String date) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-          //  Date fd= DateUtils.dateFromString(""+date,sdf);
-            String currStringDate=sdf.format(new Date());
-            Logger.error("currStringDate "+currStringDate.substring(8,10));
-            Logger.error("clicked date123 "+date.substring(8,10));
-            if(Integer.parseInt(currStringDate.substring(8,10))+1==Integer.parseInt(date.substring(8,10))){
-                Logger.error("tommorrow");
-                Intent mIntent = new Intent(activity, ScheduleYourDayActivity.class);
-                mIntent.putExtra("WHEREFROM", "0");
+            @Override
+            public void onClickLeave(String date) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                //  Date fd= DateUtils.dateFromString(""+date,sdf);
+                String currStringDate = sdf.format(new Date());
+                Logger.error("currStringDate " + currStringDate.substring(8, 10));
+                Logger.error("clicked date123 " + date.substring(8, 10));
+                if (Integer.parseInt(currStringDate.substring(8, 10)) + 1 == Integer.parseInt(date.substring(8, 10))) {
+                    Logger.error("tommorrow");
+                    Intent mIntent = new Intent(activity, ScheduleYourDayActivity.class);
+                    mIntent.putExtra("WHEREFROM", "0");
+                    mIntent.putExtra("SHOWNO", "1");
+                    startActivity(mIntent);
+                } else if (Integer.parseInt(currStringDate.substring(8, 10)) == Integer.parseInt(date.substring(8, 10))) {
+                    Logger.error("today");
+                } else if (Integer.parseInt(currStringDate.substring(8, 10)) + 2 == Integer.parseInt(date.substring(8, 10))) {
+                    Logger.error("day after tommorrow");
+                    Intent mIntent = new Intent(activity, ScheduleYourDayActivity2.class);
+                    mIntent.putExtra("WHEREFROM", "0");
+                    mIntent.putExtra("SHOWNO", "1");
+                    startActivity(mIntent);
+                } else {
+                    Toast.makeText(activity, "cannot edit availability", Toast.LENGTH_SHORT).show();
+                }
 
-                startActivity(mIntent);
-            }if(Integer.parseInt(currStringDate.substring(8,10))==Integer.parseInt(date.substring(8,10))){
-                Logger.error("today");
-            }if(Integer.parseInt(currStringDate.substring(8,10))+2==Integer.parseInt(date.substring(8,10))){
-                Logger.error("day after tommorrow");
-                Intent mIntent = new Intent(activity, ScheduleYourDayActivity2.class);
-                mIntent.putExtra("WHEREFROM", "0");
-                startActivity(mIntent);
-            }else {
-                Toast.makeText(activity, "cannot edit availability", Toast.LENGTH_SHORT).show();
+
             }
-
-
-        }
-    });
+        });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
         recycler_view.setLayoutManager(mLayoutManager);
         recycler_view.setItemAnimator(new DefaultItemAnimator());
@@ -221,7 +228,7 @@ public class LeaveHistoryFragment extends AbstractFragment {
         long different = endDate.getTime() - startDate.getTime();
 
         System.out.println("startDate : " + startDate);
-        System.out.println("endDate : "+ endDate);
+        System.out.println("endDate : " + endDate);
         System.out.println("different : " + different);
 
         long secondsInMilli = 1000;
@@ -243,7 +250,7 @@ public class LeaveHistoryFragment extends AbstractFragment {
         System.out.printf(
                 "%d days, %d hours, %d minutes, %d seconds%n",
                 elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds);
-        return ""+ elapsedDays;
+        return "" + elapsedDays;
     }
 }
 
