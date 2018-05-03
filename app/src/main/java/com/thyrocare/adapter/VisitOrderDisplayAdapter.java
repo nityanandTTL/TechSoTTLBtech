@@ -70,7 +70,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
 
 import static com.thyrocare.utils.api.NetworkUtils.isNetworkAvailable;
@@ -680,21 +682,21 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null) {
                     if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits() != null) {
                         if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits().size() != 0) {
-                            holder.bs_kit.setText("" + CallViewKitsstr(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits()));
+                            holder.bs_kit.setText(" | " + CallViewKitsstr(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits()));
                         } else {
-                            holder.bs_kit.setText("");
+                            holder.bs_kit.setText(" | ");
                         }
                     } else {
-                        holder.bs_kit.setText("");
+                        holder.bs_kit.setText(" | ");
                     }
                 } else {
-                    holder.bs_kit.setText("");
+                    holder.bs_kit.setText(" | ");
                 }
             } else {
-                holder.bs_kit.setText("");
+                holder.bs_kit.setText(" | ");
             }
         } else {
-            holder.bs_kit.setText("");
+            holder.bs_kit.setText(" | ");
         }
 
 
@@ -777,60 +779,36 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     }
 
     private String CallViewKitsstr(ArrayList<KitsCountModel> kits) {
-        ArrayList<String> testTypesArr = new ArrayList<String>();
 
-        try {
-            for (int i = 0; i < kits.size(); i++) {
-                testTypesArr.add(kits.get(i).getKit());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        HashMap<String, Integer> kitsCount = new HashMap<>();
+        String kitsReq = "";
 
-        ArrayList<String> testTypesNew = new ArrayList<>();
-        testTypesNew = removeDuplicates(testTypesArr);
-
-        ArrayList<KitsCountModel> kits_new = new ArrayList<>();
-        for (int j = 0; j < testTypesNew.size(); j++) {
-            for (int k = 0; k < kits.size(); k++) {
-                if (testTypesNew.get(j).toString().trim().equals(kits.get(k).getKit().toString().trim())) {
-                    if (kits_new.size() != 0) {
-                        for (int m = 0; m < kits_new.size(); m++) {
-                            if (kits_new.get(m).getKit().equals(testTypesNew.get(j).toString())) {
-                                int setVal = kits_new.get(m).getValue();
-                                kits_new.get(m).setValue(setVal + (kits.get(k).getValue()));
-
-                            } else {
-                                kits_new.add(kits.get(k));
-                            }
-                        }
-                    } else {
-                        kits_new.add(kits.get(k));
-                    }
-                }
-            }
-        }
-
-
-        String str = "";
-        if (kits_new != null) {
-            if (kits_new.size() > 0) {
-                for (int i = 0; i < kits_new.size(); i++) {
-                    str = str + kits_new.get(i).getValue() + " " + kits_new.get(i).getKit() + " |";
-                }
-                str = str.substring(0, str.length() - 1);
-
+        for (KitsCountModel kt :
+                kits) {
+            if (kitsCount.containsKey(kt.getKit())) {
+                kitsCount.put(kt.getKit(), kitsCount.get(kt.getKit()) + kt.getValue());
             } else {
-                str = "";
+                kitsCount.put(kt.getKit(), kt.getValue());
             }
-        } else {
-            str = "";
         }
 
 
-        return str;
-    }
+        Iterator it = kitsCount.entrySet().iterator();
+        while (it.hasNext()) {
+            HashMap.Entry pair = (HashMap.Entry) it.next();
+            if (InputUtils.isNull(kitsReq)) {
+                kitsReq = pair.getValue() + " " + pair.getKey();
+            } else {
+                kitsReq = kitsReq + " | " + pair.getValue() + " " + pair.getKey();
+            }
+            it.remove(); // avoids a ConcurrentModificationException
+        }
 
+        String regex = "\\s*\\bKIT\\b\\s*";
+        kitsReq = kitsReq.replaceAll(regex, "");
+
+        return kitsReq;
+    }
 
     static ArrayList<String> removeDuplicates(ArrayList<String> list) {
 
@@ -889,6 +867,14 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             ArrayAdapter<String> spinneradapter51 = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, DDLListArr);
             spinneradapter51.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             ben_names.setAdapter(spinneradapter51);
+
+            if (DDLListArr.size() == 2) {
+                ben_names.setSelection(1);
+                ben_names.setEnabled(false);
+            } else {
+                ben_names.setSelection(0);
+                ben_names.setEnabled(true);
+            }
 
             ben_names.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -1051,7 +1037,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null) {
                             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster() != null) {
                                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() != 0) {
-                                    holder.ben_cnt.setText("| " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() + "");
+                                    holder.ben_cnt.setText("" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() + " |");
                                 } else {
                                     holder.ben_cnt.setText("");
                                 }
@@ -1162,7 +1148,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.txtName.setVisibility(View.INVISIBLE);
                 holder.txtAge.setVisibility(View.INVISIBLE);
                 holder.tvAge.setVisibility(View.INVISIBLE);
-                holder.imgcall.setVisibility(View.INVISIBLE);
+                holder.imgcall.setVisibility(View.GONE);
                 holder.imgFastingStatus.setVisibility(View.INVISIBLE);
 
                 //  holder.txtSrNo.setVisibility(View.INVISIBLE);
@@ -1277,7 +1263,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             } else {
                 fastingFlagInt = 1;
                 holder.imgFastingStatus.setVisibility(View.VISIBLE);
-                holder.imgCBAccept.setVisibility(View.INVISIBLE);
+                holder.imgCBAccept.setVisibility(View.GONE);
                 holder.tvName.setVisibility(View.VISIBLE);
                 holder.txtName.setVisibility(View.VISIBLE);
                 holder.txtAge.setVisibility(View.VISIBLE);
@@ -1820,7 +1806,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             txtName.setVisibility(View.INVISIBLE);
             txtAge.setVisibility(View.INVISIBLE);
             tvAge.setVisibility(View.INVISIBLE);
-            imgcall.setVisibility(View.INVISIBLE);
+            imgcall.setVisibility(View.GONE);
 //            tvAadharNo = (TextView) itemView.findViewById(R.id.tv_aadhar_no);
             txtAddress = (TextView) itemView.findViewById(R.id.txt_address);
             //    txtorderno = (TextView) itemView.findViewById(R.id.tv_orderno);

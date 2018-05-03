@@ -92,6 +92,7 @@ public class TSP_OrdersDisplayFragment extends AbstractFragment {
     private RescheduleOrderDialog rod;
     private String MaskedPhoneNumber = "";
     private boolean isFetchingOrders = false;
+
     public TSP_OrdersDisplayFragment() {
         // Required empty public constructor
     }
@@ -158,17 +159,19 @@ public class TSP_OrdersDisplayFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                LayoutInflater inflater = activity.getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
-                builder.setView(dialogView);
-                ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
-                Button btn_edit = (Button) dialogView.findViewById(R.id.btn_edit);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_list_item_1, kits_arr);
-                lv_test_codes.setAdapter(adapter);
-                btn_edit.setVisibility(View.GONE);
-                builder.show();
+                if (kits_arr != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    LayoutInflater inflater = activity.getLayoutInflater();
+                    View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
+                    builder.setView(dialogView);
+                    ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
+                    Button btn_edit = (Button) dialogView.findViewById(R.id.btn_edit);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                            android.R.layout.simple_list_item_1, kits_arr);
+                    lv_test_codes.setAdapter(adapter);
+                    btn_edit.setVisibility(View.GONE);
+                    builder.show();
+                }
             }
         });
     }
@@ -212,7 +215,7 @@ public class TSP_OrdersDisplayFragment extends AbstractFragment {
         ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask(true);
         fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
-            if(!isFetchingOrders) {
+            if (!isFetchingOrders) {
                 isFetchingOrders = true;
                 fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
             }
@@ -382,7 +385,6 @@ public class TSP_OrdersDisplayFragment extends AbstractFragment {
         txtNoRecord = (TextView) rootView.findViewById(R.id.txt_no_orders);
 
 
-
     }
 
     private class CallPatchRequestAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -443,7 +445,7 @@ public class TSP_OrdersDisplayFragment extends AbstractFragment {
 
         @Override
         public void onItemReschedule(OrderVisitDetailsModel orderVisitDetailsModel) {
-            rod = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(),orderVisitDetailsModel.getAllOrderdetails().get(0));
+            rod = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModel.getAllOrderdetails().get(0));
             rod.show();
         }
 
@@ -528,6 +530,7 @@ public class TSP_OrdersDisplayFragment extends AbstractFragment {
 
         }
     }
+
     public class ConfirmOrderPassDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
         @Override
         public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
@@ -607,22 +610,22 @@ public class TSP_OrdersDisplayFragment extends AbstractFragment {
     private class BtechEarningsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            int totalEarning=0;
+            int totalEarning = 0;
             HashMap<String, Integer> kitsCount = new HashMap<>();
             String kitsReq = "";
             String kitsReq1 = "";
 
-            if(statusCode==200){
+            if (statusCode == 200) {
                 ResponseParser responseParser = new ResponseParser(activity);
                 BtechEstEarningsResponseModel btechEstEarningsResponseModel = new BtechEstEarningsResponseModel();
                 btechEstEarningsResponseModel = responseParser.getBtecheSTEarningResponseModel(json, statusCode);
                 if (btechEstEarningsResponseModel != null && btechEstEarningsResponseModel.getBtechEarnings().size() > 0) {
-                    txtTotalDistance.setText(""+btechEstEarningsResponseModel.getDistance());
+                    txtTotalDistance.setText("" + btechEstEarningsResponseModel.getDistance());
                     for (int i = 0; i < btechEstEarningsResponseModel.getBtechEarnings().size(); i++) {
-                        for (int j = 0; j < btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().size() ; j++) {
-                            totalEarning=totalEarning+btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getEstIncome();
-                            Logger.error("totaldistance: "+totalEarning);
-                            txtTotalEarnings.setText(""+totalEarning);
+                        for (int j = 0; j < btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().size(); j++) {
+                            totalEarning = totalEarning + btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getEstIncome();
+                            Logger.error("totaldistance: " + totalEarning);
+                            txtTotalEarnings.setText("" + totalEarning);
 
                             for (KitsCountModel kt :
                                     btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getKits()) {
@@ -642,7 +645,7 @@ public class TSP_OrdersDisplayFragment extends AbstractFragment {
                         HashMap.Entry pair = (HashMap.Entry) it.next();
                         if (InputUtils.isNull(kitsReq)) {
                             kitsReq = pair.getValue() + " " + pair.getKey();
-                            kitsReq1= pair.getValue() + " " + pair.getKey();
+                            kitsReq1 = pair.getValue() + " " + pair.getKey();
                         } else {
                             kitsReq = kitsReq + " | " + pair.getValue() + " " + pair.getKey();
                             kitsReq1 = kitsReq1 + "," + pair.getValue() + " " + pair.getKey();

@@ -176,20 +176,24 @@ public class APICall implements AppConstants {
 
         }
 
-        if (getResponseInputStream != null) {
+        try {
+            if (getResponseInputStream != null) {
 
-            responseJson = getJsonStringFromInputstream(getResponseInputStream);
+                responseJson = getJsonStringFromInputstream(getResponseInputStream);
 
-            //Logger.debug("json getResponseInputStream : " + responseJson);
+                //Logger.debug("json getResponseInputStream : " + responseJson);
 
-            int maxLogSize = 1000;
-            for (int i = 0; i <= responseJson.length() / maxLogSize; i++) {
-                int start = i * maxLogSize;
-                int end = (i + 1) * maxLogSize;
-                end = end > responseJson.length() ? responseJson.length() : end;
-                Log.v("json getResponseInputStream : ", responseJson.substring(start, end));
+                int maxLogSize = 1000;
+                for (int i = 0; i <= responseJson.length() / maxLogSize; i++) {
+                    int start = i * maxLogSize;
+                    int end = (i + 1) * maxLogSize;
+                    end = end > responseJson.length() ? responseJson.length() : end;
+                    Log.v("json getResponseInputStream : ", responseJson.substring(start, end));
+                }
+
             }
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (statusCode != 200) {

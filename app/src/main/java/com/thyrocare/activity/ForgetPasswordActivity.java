@@ -1,5 +1,6 @@
 package com.thyrocare.activity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -66,7 +67,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
         if (v.getId() == R.id.btn_verify_otp) {
             if (validateFields()) {
 //                Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
-                  getOtpApi("verify otp");
+                getOtpApi("verify otp");
             }
         }
     }
@@ -85,41 +86,49 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
         }
         if (InputUtils.isNull(edt_confirm_new_password.getText().toString())) {
             edt_confirm_new_password.setError(getString(R.string.password_criteria));
-           edt_confirm_new_password.requestFocus();
+            edt_confirm_new_password.requestFocus();
             return false;
         }
         if (!edt_confirm_new_password.getText().toString().equals(edt_new_password.getText().toString())) {
             edt_confirm_new_password.setError(getString(R.string.password_do_not_match));
-        edt_confirm_new_password.requestFocus();
+            edt_confirm_new_password.requestFocus();
             return false;
         }
         return true;
     }
 
     private void getOtpApi(String action) {
-        ResetPasswordRequestModel resetPasswordRequestModel = new ResetPasswordRequestModel();
-        resetPasswordRequestModel.setEmail(edt_mobile_no.getText().toString());
-        if (action.equals("verify otp")) {
-            str = code.trim().replaceAll("\n ", "");
-            Logger.error(str.replaceAll("^\"|\"$", ""));
-            resetPasswordRequestModel.setCode(str.replaceAll("^\"|\"$", ""));
-            resetPasswordRequestModel.setConfirmPassword(edt_confirm_new_password.getText().toString());
-            resetPasswordRequestModel.setPassword(edt_new_password.getText().toString());
-            resetPasswordRequestModel.setOTP(edt_otp.getText().toString());
-        }
+        try {
+            ResetPasswordRequestModel resetPasswordRequestModel = new ResetPasswordRequestModel();
+            resetPasswordRequestModel.setEmail(edt_mobile_no.getText().toString());
+            if (action.equals("verify otp")) {
+                if (code != null) {
+                    str = code.trim().replaceAll("\n ", "");
+                } else {
+                    str = "";
+                }
+                Logger.error(str.replaceAll("^\"|\"$", ""));
+                resetPasswordRequestModel.setCode(str.replaceAll("^\"|\"$", ""));
+                resetPasswordRequestModel.setConfirmPassword(edt_confirm_new_password.getText().toString());
+                resetPasswordRequestModel.setPassword(edt_new_password.getText().toString());
+                resetPasswordRequestModel.setOTP(edt_otp.getText().toString());
+            }
 
-        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(this);
-        ApiCallAsyncTask changePasswordApiAsyncTask = asyncTaskForRequest.getResetPasswordRequestAsyncTask(resetPasswordRequestModel);
-        if (action.equals("send otp")) {
-            changePasswordApiAsyncTask.setApiCallAsyncTaskDelegate(new ResetPasswordApiAsyncTaskDelegateResult());
-        } else {
-            changePasswordApiAsyncTask.setApiCallAsyncTaskDelegate(new ResetPasswordVerifyOtpApiAsyncTaskDelegateResult());
-        }
+            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(this);
+            ApiCallAsyncTask changePasswordApiAsyncTask = asyncTaskForRequest.getResetPasswordRequestAsyncTask(resetPasswordRequestModel);
+            if (action.equals("send otp")) {
+                changePasswordApiAsyncTask.setApiCallAsyncTaskDelegate(new ResetPasswordApiAsyncTaskDelegateResult());
+            } else {
+                changePasswordApiAsyncTask.setApiCallAsyncTaskDelegate(new ResetPasswordVerifyOtpApiAsyncTaskDelegateResult());
+            }
 
-        if (isNetworkAvailable(this)) {
-            changePasswordApiAsyncTask.execute(changePasswordApiAsyncTask);
-        } else {
-            Toast.makeText(this, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            if (isNetworkAvailable(this)) {
+                changePasswordApiAsyncTask.execute(changePasswordApiAsyncTask);
+            } else {
+                Toast.makeText(this, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

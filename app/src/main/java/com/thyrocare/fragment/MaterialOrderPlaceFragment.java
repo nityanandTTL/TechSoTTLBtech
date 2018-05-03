@@ -595,23 +595,31 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
     }
 
     private void performFiltering(String constraint) {
-        String filterString = constraint.toUpperCase();
+        try {
+            String filterString = constraint.toUpperCase();
 
-        ArrayList<FinalMaterialModel> list = finalMaterialModelsArr;
-
-        int count = list.size();
-        ArrayList<FinalMaterialModel> nlist = new ArrayList<FinalMaterialModel>(count);
-
-        String filterableString;
-
-        for (int i = 0; i < count; i++) {
-            filterableString = list.get(i).getMaterialDetailsModel().getMaterialName();
-            if (filterableString.toUpperCase().contains(filterString) || InputUtils.isNull(filterString)) {
-                nlist.add(list.get(i));
+            ArrayList<FinalMaterialModel> list = finalMaterialModelsArr;
+            int count = 0;
+            if (list != null) {
+                count = list.size();
+            } else {
+                count = 0;
             }
+            ArrayList<FinalMaterialModel> nlist = new ArrayList<FinalMaterialModel>(count);
+
+            String filterableString;
+
+            for (int i = 0; i < count; i++) {
+                filterableString = list.get(i).getMaterialDetailsModel().getMaterialName();
+                if (filterableString.toUpperCase().contains(filterString) || InputUtils.isNull(filterString)) {
+                    nlist.add(list.get(i));
+                }
+            }
+            Filterarraylst = nlist;
+            materialordertable.removeAllViews();
+            initData();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Filterarraylst = nlist;
-        materialordertable.removeAllViews();
-        initData();
     }
 }

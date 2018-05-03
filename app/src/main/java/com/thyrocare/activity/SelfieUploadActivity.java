@@ -1,5 +1,7 @@
 package com.thyrocare.activity;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
@@ -8,11 +10,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +28,9 @@ import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.Controller.DeviceLogOutController;
 import com.thyrocare.R;
+import com.thyrocare.application.ApplicationController;
 import com.thyrocare.customview.TouchImageView;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.models.api.request.SelfieUploadRequestModel;
@@ -138,19 +145,23 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
        /* InputStream stream = getResources().openRawResource(R.raw.image01);
         Bitmap bitmap = BitmapFactory.decodeStream(stream);*/
 
-        FaceDetector detector = new FaceDetector.Builder(getApplicationContext())
-                .setTrackingEnabled(false)
-                .build();
+        try {
+            FaceDetector detector = new FaceDetector.Builder(getApplicationContext())
+                    .setTrackingEnabled(false)
+                    .build();
 
-        // Create a frame from the bitmap and run face detection on the frame.
-        Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-        SparseArray<Face> faces = detector.detect(frame);
+            // Create a frame from the bitmap and run face detection on the frame.
+            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+            SparseArray<Face> faces = detector.detect(frame);
 
        /* TextView faceCountView = (TextView) findViewById(R.id.face_count);
         faceCountView.setText(faces.size() + " faces detected");*/
-        //Toast.makeText(activity, "faces detected "+faces.size(), Toast.LENGTH_SHORT).show();
-        faceDetected = faces.size();
-        detector.release();
+            //Toast.makeText(activity, "faces detected "+faces.size(), Toast.LENGTH_SHORT).show();
+            faceDetected = faces.size();
+            detector.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initData() {
@@ -165,16 +176,46 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
-                logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
-                if (isNetworkAvailable(activity)) {
-                    logoutAsyncTask.execute(logoutAsyncTask);
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(activity,
+                            new String[]{Manifest.permission.READ_PHONE_STATE}, AppConstants.APP_PERMISSIONS);
                 } else {
-                    TastyToast.makeText(activity, "Logout functionality is only available in Online Mode", TastyToast.LENGTH_LONG, TastyToast.INFO);
-                    // Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
+                    ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
+                    logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
+                    if (isNetworkAvailable(activity)) {
+                        logoutAsyncTask.execute(logoutAsyncTask);
+                        CallLogOutDevice();
+                    } else {
+                        TastyToast.makeText(activity, "Logout functionality is only available in Online Mode", TastyToast.LENGTH_LONG, TastyToast.INFO);
+                        // Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
+    }
+
+    @SuppressLint("MissingPermission")
+    private void CallLogOutDevice() {
+        try {
+            if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
+                String device_id = "";
+                try {
+                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    device_id = telephonyManager.getDeviceId();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (ApplicationController.mDeviceLogOutController != null) {
+                    ApplicationController.mDeviceLogOutController = null;
+                }
+
+                ApplicationController.mDeviceLogOutController = new DeviceLogOutController(activity);
+                ApplicationController.mDeviceLogOutController.CallLogOutDevice(appPreferenceManager.getLoginResponseModel().getUserID(), device_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private class LogoutAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {

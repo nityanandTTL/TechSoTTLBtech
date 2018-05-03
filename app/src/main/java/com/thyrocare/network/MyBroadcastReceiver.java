@@ -2,6 +2,7 @@ package com.thyrocare.network;
 
 import android.app.ActivityManager;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -12,6 +13,8 @@ import android.os.Build;
 import android.support.v7.app.NotificationCompat;
 
 import com.thyrocare.R;
+import com.thyrocare.activity.HomeScreenActivity;
+import com.thyrocare.activity.ScheduleYourDaySecondIntentActivity;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 
@@ -37,30 +40,42 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         }else {*/
         mManager = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
 
-
+        Intent snoozeIntent = new Intent(context, ScheduleYourDaySecondIntentActivity.class);
+        Intent snoozeIntent2 = new Intent(context, HomeScreenActivity.class);//to be done here//
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
         System.out.println("entered Broadcastreceiver");
         mBuilder.setContentTitle("New Message");
         mBuilder.setContentText("You've received new message.");
         mBuilder.setTicker("New Message Alert!");
         mBuilder.setSmallIcon(R.drawable.app_logo);
+
+
         mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.app_logo));
         android.support.v4.app.NotificationCompat.InboxStyle inboxStyle = new android.support.v4.app.NotificationCompat.InboxStyle();
         inboxStyle.setBigContentTitle("BTech");
 
 
         if (BundleConstants.OrderAccept == 2 && BundleConstants.delay == 0 || !appPreferenceManager.getShowTimeInNotificatn().equals("")) {
+
             String[] events = new String[6];
             events[0] = new String("Your order is scheule at " + BundleConstants.ShowTimeInNotificatn);
             events[1] = new String("Click on start, If you have already started please hurry!");
             System.out.println("15min");
+            PendingIntent snoozePendingIntent =
+                    PendingIntent.getActivity(context, 0, snoozeIntent2, 0);
+            mBuilder.addAction(0, "Start",
+                    snoozePendingIntent);
             for (int i = 0; i < events.length; i++) {
                 inboxStyle.addLine(events[i]);
             }
         } else if (BundleConstants.Day_aftr_tom == 2 || appPreferenceManager.getDay_aftr_tom() == 2) {
+            PendingIntent snoozePendingIntent =
+                    PendingIntent.getActivity(context, 0, snoozeIntent, 0);
             String[] events = new String[6];
             events[0] = new String("You have still not given your availability for tomorrow");
             events[1] = new String(",please log in to do it immediately.");
+            mBuilder.addAction(0, "Set Avaliablity",
+                    snoozePendingIntent);
             System.out.println("acccept");
 
             for (int i = 0; i < events.length; i++) {
@@ -103,32 +118,25 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
     }
 
     private boolean isAppIsInBackground(Context context) {
-        boolean isInBackground = false;
-        try {
-            isInBackground = true;
-            ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
-                List<ActivityManager.RunningAppProcessInfo> runningProcesses = am.getRunningAppProcesses();
-                for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
-                    if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                        for (String activeProcess : processInfo.pkgList) {
-                            if (activeProcess.equals(context.getPackageName())) {
-                                isInBackground = false;
-                            }
+        boolean isInBackground = true;
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
+            List<ActivityManager.RunningAppProcessInfo> runningProcesses = am.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
+                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    for (String activeProcess : processInfo.pkgList) {
+                        if (activeProcess.equals(context.getPackageName())) {
+                            isInBackground = false;
                         }
                     }
                 }
-            } else {
-                List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
-                ComponentName componentInfo = taskInfo.get(0).topActivity;
-                if (componentInfo.getPackageName().equals(context.getPackageName())) {
-                    isInBackground = false;
-                }
             }
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+            ComponentName componentInfo = taskInfo.get(0).topActivity;
+            if (componentInfo.getPackageName().equals(context.getPackageName())) {
+                isInBackground = false;
+            }
         }
 
         return isInBackground;

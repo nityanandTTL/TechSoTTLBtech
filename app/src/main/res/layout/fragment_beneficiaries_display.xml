@@ -129,7 +129,7 @@
                 android:layout_marginTop="@dimen/dp_2"
                 android:background="@drawable/purple_btn_bg"
                 android:gravity="center"
-                android:hint="Proceed for Payment"
+                android:hint="PAY"
                 android:minEms="12"
                 android:padding="@dimen/dp_3"
                 android:textColor="@android:color/white"

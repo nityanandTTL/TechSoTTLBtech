@@ -1,6 +1,7 @@
 package com.thyrocare.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -12,10 +13,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.thyrocare.Controller.DeviceLogOutController;
 import com.thyrocare.R;
+import com.thyrocare.application.ApplicationController;
 import com.thyrocare.customview.CustomUpdateDailog;
 import com.thyrocare.dao.CreateOrUpgradeDbTask;
 import com.thyrocare.dao.DbHelper;
@@ -258,6 +262,7 @@ public class SplashScreenActivity extends AbstractActivity {
                                 ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
                                 logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
                                 if (isNetworkAvailable(activity)) {
+                                    CallLogOutDevice();
                                     logoutAsyncTask.execute(logoutAsyncTask);
                                 } else {
                                     Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
@@ -318,6 +323,30 @@ public class SplashScreenActivity extends AbstractActivity {
         }
 
 
+    }
+
+    @SuppressLint("MissingPermission")
+    private void CallLogOutDevice() {
+        try {
+            if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
+                String device_id = "";
+                try {
+                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    device_id = telephonyManager.getDeviceId();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (ApplicationController.mDeviceLogOutController != null) {
+                    ApplicationController.mDeviceLogOutController = null;
+                }
+
+                ApplicationController.mDeviceLogOutController = new DeviceLogOutController(activity);
+                ApplicationController.mDeviceLogOutController.CallLogOutDevice(appPreferenceManager.getLoginResponseModel().getUserID(), device_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private class LogoutAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {

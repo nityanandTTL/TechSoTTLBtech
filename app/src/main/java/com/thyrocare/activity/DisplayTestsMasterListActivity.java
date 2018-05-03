@@ -274,7 +274,7 @@ public class DisplayTestsMasterListActivity extends AbstractActivity {
         svTestsList.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         svTestsList.setIconifiedByDefault(false);
         svTestsList.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
+           /* @Override
             public boolean onQueryTextSubmit(String query) {
                 expAdapter.filterData(query);
                 return false;
@@ -290,6 +290,49 @@ public class DisplayTestsMasterListActivity extends AbstractActivity {
             @Override
             public boolean onClose() {
                 expAdapter.filterData("");
+                return false;
+            }
+        });*/
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (expAdapter != null) {
+                    expAdapter.filterData(query);
+                    if(!query.isEmpty()){
+                        for(int i=0; i < expAdapter.getGroupCount(); i++)
+                            expandList.expandGroup(i);
+                    }else{
+                        for(int i=0; i < expAdapter.getGroupCount(); i++)
+                            expandList.collapseGroup(i);
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                if (expAdapter != null) {
+                    expAdapter.filterData(query);
+                    if(!query.isEmpty()){
+                        for(int i=0; i < expAdapter.getGroupCount(); i++)
+                            expandList.expandGroup(i);
+                    }else{
+                        for(int i=0; i < expAdapter.getGroupCount(); i++)
+                            expandList.collapseGroup(i);
+                    }
+
+                }
+                return false;
+            }
+        });
+        svTestsList.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                if (expAdapter != null) {
+                    expAdapter.filterData("");
+                    for(int i=0; i < expAdapter.getGroupCount(); i++)
+                        expandList.collapseGroup(i);
+                }
                 return false;
             }
         });

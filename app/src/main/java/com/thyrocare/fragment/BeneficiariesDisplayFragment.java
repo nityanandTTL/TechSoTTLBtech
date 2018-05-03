@@ -34,6 +34,7 @@ import com.thyrocare.models.api.request.CartAPIRequestModel;
 import com.thyrocare.models.api.request.OrderAllocationTrackLocationRequestModel;
 import com.thyrocare.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.models.api.response.CartAPIResponseModel;
+import com.thyrocare.models.api.response.ErrorModel;
 import com.thyrocare.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.models.api.response.OrderBookingResponseBeneficiaryModel;
 import com.thyrocare.models.api.response.OrderBookingResponseOrderModel;
@@ -101,7 +102,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     public static String isINSPPTestRemoved = "normal";
     public static String isFBSTestRemoved = "normal";
     public static String isINSFATestRemoved = "normal";
-    boolean isOnlyWOE=false;
+    boolean isOnlyWOE = false;
     //neha g -----------
     String datefrom_model = "";
     //neha g -------------
@@ -110,6 +111,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     //changes_17june2017
     Date apitimeinHHMMFormat;
     private boolean isFetchingOrders = false;
+
     public BeneficiariesDisplayFragment() {
         // Required empty public constructor
     }
@@ -143,14 +145,14 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         initUI();
 
         initData();
-        if(totalAmountPayable>0){
-            Logger.error("totalAmountPayable if1 "+totalAmountPayable);
+        if (totalAmountPayable > 0) {
+            Logger.error("totalAmountPayable if1 " + totalAmountPayable);
             fetchOrderDetailByVisitRefreshAmountDue();
-        }else {
-            Logger.error("totalAmountPayable else1 "+totalAmountPayable);
+        } else {
+            Logger.error("totalAmountPayable else1 " + totalAmountPayable);
         }
 
-       // fetchDataOfVisitOrderForRefreshAmountDue();
+        // fetchDataOfVisitOrderForRefreshAmountDue();
         initListeners();
 
         return rootView;
@@ -161,7 +163,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsByVisitRequestAsyncTask(orderVisitDetailsModel.getVisitId());
         fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsByVisitIdApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
-            if(!isFetchingOrders) {
+            if (!isFetchingOrders) {
                 isFetchingOrders = true;
                 fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
             }
@@ -177,7 +179,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask(true);
         fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
-            if(!isFetchingOrders) {
+            if (!isFetchingOrders) {
                 isFetchingOrders = true;
                 fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
             }
@@ -197,11 +199,11 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
                 if (orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS)
                         || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.INSPP)
-                        || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)) {
+                        || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
                     //llAddBeneficiary.setEnabled(false);
-                    Toast.makeText(activity, "This "+orderBookingRequestModel.getBendtl().get(0).getTests()+" Test Here you cannot Add Benificary  ", Toast.LENGTH_SHORT).show();
-                    isOnlyWOE=true;
-                }else {
+                    Toast.makeText(activity, "This " + orderBookingRequestModel.getBendtl().get(0).getTests() + " Test Here you cannot Add Benificary  ", Toast.LENGTH_SHORT).show();
+                    isOnlyWOE = true;
+                } else {
                     //0   Toast.makeText(getActivity(),"Feature Coming Soon Stay tuned...... ",Toast.LENGTH_SHORT).show();
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setTitle("Confirm Action")
@@ -268,7 +270,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         btnProceedPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Logger.error("btn proceed coming");
+                Logger.error("btn proceed coming");
 
                 //changes_17june2017
                /* if (title_add_beneficiary.getText().equals("Next Beneficiary")) {
@@ -285,10 +287,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                     Logger.error("Selcted testssssssss" + orderBookingRequestModel.getBendtl().get(0).getTests());
 
 
-
                     if (orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS)
                             || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.INSPP)
-                            || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP) ){
+                            || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
 
                         //llAddBeneficiary.setEnabled(false);
                         //Toast.makeText(activity, "This"+orderBookingRequestModel.getBendtl().get(0).getTests()+" Test Here you cannot Add Benificary  ", Toast.LENGTH_SHORT).show();
@@ -327,7 +328,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         //neha g -----------------------------------
                         CheckDelay();
 
-                        if(BundleConstants.delay!=0) {
+                        if (BundleConstants.delay != 0) {
                             System.out.println("notify enter");
                             showNotiication();
 
@@ -354,12 +355,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     }
 
     private boolean validate(OrderBookingRequestModel orderBookingRequestModel) {
-        Logger.error("on btn proceed: "+AddEditBeneficiaryDetailsActivity.testEdit);
-
-
-
-
-
+        Logger.error("on btn proceed: " + AddEditBeneficiaryDetailsActivity.testEdit);
 
 
         for (BeneficiaryBarcodeDetailsModel barcodesModel :
@@ -379,25 +375,25 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 return false;
             }
             if (bdm.getVenepuncture() == null
-                    ||bdm.getVenepuncture().toString().equalsIgnoreCase("null")||bdm.getVenepuncture().isEmpty()) {
+                    || bdm.getVenepuncture().toString().equalsIgnoreCase("null") || bdm.getVenepuncture().isEmpty()) {
                 Toast.makeText(activity, "Please capture Beneficiary Barcode image for " + bdm.getName(), Toast.LENGTH_SHORT).show();
                 return false;
-            }else {
-                Logger.error("bdm not null "+bdm.getVenepuncture());
+            } else {
+                Logger.error("bdm not null " + bdm.getVenepuncture());
             }
         }
 
 
         for (BeneficiaryDetailsModel bdm : orderBookingRequestModel.getBendtl()) {
 
-            Log.e(BeneficiariesDisplayFragment.class.getSimpleName(), "validateeeeee: "+bdm.getTests() );
-            Log.e(BeneficiariesDisplayFragment.class.getSimpleName(), "genderrr: "+bdm.getGender() );
+            Log.e(BeneficiariesDisplayFragment.class.getSimpleName(), "validateeeeee: " + bdm.getTests());
+            Log.e(BeneficiariesDisplayFragment.class.getSimpleName(), "genderrr: " + bdm.getGender());
 
-            if (bdm.getGender().equalsIgnoreCase("F")&&(bdm.getTests().contains("PSA"))) {
+            if (bdm.getGender().equalsIgnoreCase("F") && (bdm.getTests().contains("PSA"))) {
 
-                if(bdm.getTests().contains("FPSA")){
+                if (bdm.getTests().contains("FPSA")) {
                     Toast.makeText(activity, "FPSA test is not for Womens. Please change it for " + bdm.getName(), Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     Toast.makeText(activity, "PSA test is not for Womens. Please change it for " + bdm.getName(), Toast.LENGTH_SHORT).show();
                 }
                 return false;
@@ -420,12 +416,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     //neha g---------------------------
 
     private void CheckDelay() {
-        int apptime= 0;
+        int apptime = 0;
         int hours = new Time(System.currentTimeMillis()).getHours();
         int min = new Time(System.currentTimeMillis()).getMinutes();
-        String currTime = hours+":"+min;
-        System.out.println("currtime"+currTime); //17:39
-        datefrom_model=  BundleConstants.ShowTimeInNotificatn; //17:30
+        String currTime = hours + ":" + min;
+        System.out.println("currtime" + currTime); //17:39
+        datefrom_model = BundleConstants.ShowTimeInNotificatn; //17:30
         System.out.println();
         try {
             String[] timesplit = datefrom_model.split(":");
@@ -435,23 +431,20 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
             int subhr = hours - slothr;
             int submin = min - slotmin;
-            if(slotmin==00){
-                subhr= subhr-1;
-                submin=30;
+            if (slotmin == 00) {
+                subhr = subhr - 1;
+                submin = 30;
             }
-
-
-
 
 
             System.out.println("sub min" + submin);
             BundleConstants.delay = subhr + submin;
-            BundleConstants.DoneworkOrder=1;
-            appPreferenceManager.setDelay(subhr+submin);
+            BundleConstants.DoneworkOrder = 1;
+            appPreferenceManager.setDelay(subhr + submin);
 
 
             System.out.println("dealy in order" + BundleConstants.delay);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -501,7 +494,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
             }
         }
-        Logger.error("tejas Amount when order booking "+totalAmountPayable);
+        Logger.error("tejas Amount when order booking " + totalAmountPayable);
         for (int i = 0; i < ordtl.size(); i++) {
             ordtl.get(i).setAmountDue(totalAmountPayable);
             ordtl.get(i).setAmountPayable(totalAmountPayable);
@@ -587,7 +580,6 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         // Here #############################################################################################
 
 
-
         vpBeneficiaries.removeAllViews();
         vpBeneficiaries.clearOnPageChangeListeners();
         totalAmountPayable = 0;
@@ -597,16 +589,16 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             totalAmountPayable = totalAmountPayable + orderDetailsModel.getAmountPayable();
         }
 
-        if(isOnlyWOE){
+        if (isOnlyWOE) {
             txtAmtPayable.setText("0/-");
-        }else {
+        } else {
             txtAmtPayable.setText("" + totalAmountPayable + "/-");
         }
 
         if (totalAmountPayable == 0) {
             btnProceedPayment.setText("Submit Work Order");
         } else {
-            btnProceedPayment.setText("Proceed for Payment");
+            btnProceedPayment.setText("PAY");
         }
         ArrayList<BeneficiaryDetailsModel> beneficiariesArr = new ArrayList<>();
         for (OrderDetailsModel orderDetailsModel : orderVisitDetailsModel.getAllOrderdetails()) {
@@ -680,12 +672,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         //jai
         OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
         orderDetailsModel = orderVisitDetailsModel.getAllOrderdetails().get(0);
-        if (orderDetailsModel.isEditOrder()){
+        if (orderDetailsModel.isEditOrder()) {
             llAddBeneficiary.setEnabled(true);
-            Logger.error("isEditOrder "+orderDetailsModel.isEditOrder());
-        }else {
+            Logger.error("isEditOrder " + orderDetailsModel.isEditOrder());
+        } else {
             llAddBeneficiary.setEnabled(false);
-            Logger.error("isEditOrder "+orderDetailsModel.isEditOrder());
+            Logger.error("isEditOrder " + orderDetailsModel.isEditOrder());
         }
         //jai
 
@@ -702,19 +694,19 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
 
         try {
-            for (int i = 0; i <orderBookingRequestModel.getBendtl().size() ; i++) {
-                test=test+orderBookingRequestModel.getBendtl().get(i).getTests().toString();
+            for (int i = 0; i < orderBookingRequestModel.getBendtl().size(); i++) {
+                test = test + orderBookingRequestModel.getBendtl().get(i).getTests().toString();
             }
         } catch (Exception e) {
             e.printStackTrace();
             test = "";
         }
 
-        if (orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS)||
-                orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.INSPP)||
-                orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)) {
+        if (orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS) ||
+                orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.INSPP) ||
+                orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
             llAddBeneficiary.setEnabled(false);
-            isOnlyWOE=true;
+            isOnlyWOE = true;
 
         }
         //changes_17june2017
@@ -965,7 +957,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         .setPositiveButton("Collect", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (btnProceedPayment.getText().equals("Proceed for Payment")) {
+                                if (btnProceedPayment.getText().equals("PAY")) {
 
                                     final String[] paymentItems = new String[]{"Cash", "Digital"};
                                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -988,7 +980,6 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                                         Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
 
 
-
                                                                         workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
                                                                         if (isNetworkAvailable(activity)) {
                                                                             workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
@@ -1007,7 +998,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                     } else {
                                                         PaymentMode = 2;
                                                         Intent intentPayments = new Intent(activity, PaymentsActivity.class);
-                                                        Logger.error("tejastotalAmountPayableatsending "+totalAmountPayable);
+                                                        Logger.error("tejastotalAmountPayableatsending " + totalAmountPayable);
                                                         intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
                                                         intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 2);
                                                         intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO, orderVisitDetailsModel.getVisitId());
@@ -1047,7 +1038,19 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                             }
                         }).show();
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                try {
+                    if (statusCode == 400) {
+                        ErrorModel loginResponseModel = new ResponseParser(activity).getErrorResponseModel(json, statusCode);
+
+                        if (loginResponseModel != null) {
+                            Toast.makeText(activity, "" + loginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -1079,56 +1082,54 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                 Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
                                 Logger.error("test123 : " + test.toUpperCase());
 
-                                if(test.toUpperCase().contains(AppConstants.PPBS)){
-                                    Logger.error("contains PPBS : " );
-                                }else {
-                                    Logger.error("not contains PPBS : " );
+                                if (test.toUpperCase().contains(AppConstants.PPBS)) {
+                                    Logger.error("contains PPBS : ");
+                                } else {
+                                    Logger.error("not contains PPBS : ");
                                 }
-                                if(test.toUpperCase().contains(AppConstants.FBS)){
-                                    Logger.error("contains FBS : " );
-                                }else {
-                                    Logger.error("not contains FBS : " );
+                                if (test.toUpperCase().contains(AppConstants.FBS)) {
+                                    Logger.error("contains FBS : ");
+                                } else {
+                                    Logger.error("not contains FBS : ");
                                 }
 
 
-                               if(test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
-                                       && /*jai*/isPPBSTestRemoved.equals("normal")&&test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA")
-                                       && /*jai*/isINSPPTestRemoved.equals("normal"))
+                                if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
+                                        && /*jai*/isPPBSTestRemoved.equals("normal") && test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA")
+                                        && /*jai*/isINSPPTestRemoved.equals("normal"))
 
-                               {
-                                   if (!isINSFATestRemoved.equals("removed")&&!isFBSTestRemoved.equals("removed")){
-                                       Logger.error("should print revisit dialog for both: " );
-                                       Logger.error("for both");
-                                       AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                       builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS and INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
-                                               .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                   @Override
-                                                   public void onClick(DialogInterface dialog, int which) {
+                                {
+                                    if (!isINSFATestRemoved.equals("removed") && !isFBSTestRemoved.equals("removed")) {
+                                        Logger.error("should print revisit dialog for both: ");
+                                        Logger.error("for both");
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                        builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS and INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
 
-                                                       activity.finish();
+                                                        activity.finish();
 
 
-                                                   }
-                                               })
-                                               .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                   @Override
-                                                   public void onClick(DialogInterface dialog, int which) {
-                                                       dialog.dismiss();
-                                                   }
-                                               })
-                                               .setCancelable(false)
-                                               .show();
-                                   }
+                                                    }
+                                                })
+                                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                })
+                                                .setCancelable(false)
+                                                .show();
+                                    }
 
-                               }
-
-                                  else if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
+                                } else if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
                                         && /*jai*/isPPBSTestRemoved.equals("normal")) {
 
                                     Logger.error("isFBSTestRemoved status : " + isFBSTestRemoved);
-                                    if (!isFBSTestRemoved.equals("removed")){
+                                    if (!isFBSTestRemoved.equals("removed")) {
 
-                                        Logger.error("should print revisit dialog for fbs: " );
+                                        Logger.error("should print revisit dialog for fbs: ");
 
                                         Logger.error("for PPBS");
                                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -1156,9 +1157,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                         && /*jai*/isINSPPTestRemoved.equals("normal")) {
 
                                     Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
-                                    if (!isINSFATestRemoved.equals("removed")){
+                                    if (!isINSFATestRemoved.equals("removed")) {
 
-                                        Logger.error("should print revisit dialog for insfa: " );
+                                        Logger.error("should print revisit dialog for insfa: ");
 
                                         Logger.error("for INSPP");
                                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -1183,7 +1184,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                     }
                                     //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
                                 } else {
-                                    Logger.error("testcode in else "+test.toUpperCase());
+                                    Logger.error("testcode in else " + test.toUpperCase());
                                     activity.finish();
                                 }
 
@@ -1247,7 +1248,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                     }
                 }
 
-                if(BundleConstants.RemoveBenId != 0){
+                if (BundleConstants.RemoveBenId != 0) {
                     CallApiForRemoveBenSMS(BundleConstants.RemoveBenId, cartAPIResponseModel.getOrders().get(0).getOrderNo(), cartAPIResponseModel.getOrders().get(0).getAmountDue());
                     BundleConstants.RemoveBenId = 0;
                 }
@@ -1256,28 +1257,28 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 Toast.makeText(activity, "Failed to fetch updated Payment Details", Toast.LENGTH_SHORT).show();
             }
             initData();
-            if(totalAmountPayable>0){
-                Logger.error("totalAmountPayable if2 "+totalAmountPayable);
+            if (totalAmountPayable > 0) {
+                Logger.error("totalAmountPayable if2 " + totalAmountPayable);
                 fetchOrderDetailByVisitRefreshAmountDue();
-            }else {
-                Logger.error("totalAmountPayable else2 "+totalAmountPayable);
+            } else {
+                Logger.error("totalAmountPayable else2 " + totalAmountPayable);
             }
 
-           // fetchDataOfVisitOrderForRefreshAmountDue();
+            // fetchDataOfVisitOrderForRefreshAmountDue();
         }
 
         @Override
         public void onApiCancelled() {
             Toast.makeText(activity, "Failed to fetch updated Payment Details", Toast.LENGTH_SHORT).show();
             initData();
-            if(totalAmountPayable>0){
-                Logger.error("totalAmountPayable if3 "+totalAmountPayable);
+            if (totalAmountPayable > 0) {
+                Logger.error("totalAmountPayable if3 " + totalAmountPayable);
                 fetchOrderDetailByVisitRefreshAmountDue();
-            }else {
-                Logger.error("totalAmountPayable else3 "+totalAmountPayable);
+            } else {
+                Logger.error("totalAmountPayable else3 " + totalAmountPayable);
             }
 
-           // fetchDataOfVisitOrderForRefreshAmountDue();
+            // fetchDataOfVisitOrderForRefreshAmountDue();
         }
     }
 
@@ -1285,7 +1286,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         REMOVEBENSMSPOSTDATAModel ent = new REMOVEBENSMSPOSTDATAModel();
         ent.setBenId(removeBenId);
         ent.setOrderNo(orderNo);
-        ent.setRate1(""+amountDue);
+        ent.setRate1("" + amountDue);
         ApiCallAsyncTask auxlAsyncTask = new AsyncTaskForRequest(activity).getRemoveBenSMSAsyncTask(ent);
         auxlAsyncTask.setApiCallAsyncTaskDelegate(new getReMOveBenSMSAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
@@ -1316,7 +1317,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             if (statusCode == 200) {
 
                 //jai
-                JSONObject jsonObject=new JSONObject(json);
+                JSONObject jsonObject = new JSONObject(json);
 
                 Logger.error("tejas0");
 
@@ -1331,21 +1332,19 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
                         if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
                             Logger.error("tejas3");
-                            Logger.error("tejas4 "+VisitOrderDisplayAdapter.posForAmountDue);
+                            Logger.error("tejas4 " + VisitOrderDisplayAdapter.posForAmountDue);
 
                             for (OrderDetailsModel orderDetailsModel :
                                     orderVisitDetailsModel.getAllOrderdetails()) {
-                                Logger.error("tejas5 "+orderDetailsModel.getAmountDue());
+                                Logger.error("tejas5 " + orderDetailsModel.getAmountDue());
                             }
 
 
-                            totalAmountPayable=orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue();
-                            Logger.error("tttejas1 "+orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
+                            totalAmountPayable = orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue();
+                            Logger.error("tttejas1 " + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
 
 
-
-
-                            txtAmtPayable.setText(""+orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
+                            txtAmtPayable.setText("" + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
 
 
 /*
@@ -1357,8 +1356,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                             for (OrderDetailsModel orderDetailsModel :
                                     orderVisitDetailsModel.getAllOrderdetails()) {
                                 orderDetailsModel.setAmountPayable(orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue).getAmountDue());
-                                Logger.error("tttejas2 "+orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue).getAmountDue());
-                                txtAmtPayable.setText(""+orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue).getAmountDue());
+                                Logger.error("tttejas2 " + orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue).getAmountDue());
+                                txtAmtPayable.setText("" + orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue).getAmountDue());
                             }
 
                             /*txtAmtPayable.setText("" + totalAmountPayable + "/-");
@@ -1368,7 +1367,6 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                 btnProceedPayment.setText("Proceed for Payment");
                             }
 */
-
 
 
                         }
@@ -1395,26 +1393,25 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private class FetchOrderDetailsByVisitIdApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            Logger.error("OrderDetailsByVisitIdApiAsyncTaskDelegateResult "+json);
-            JSONObject jsonObject =new JSONObject(json);
+            Logger.error("OrderDetailsByVisitIdApiAsyncTaskDelegateResult " + json);
+            JSONObject jsonObject = new JSONObject(json);
 
-            JSONArray orderVisitDetailsArray=jsonObject.getJSONArray("orderVisitDetails");
-            JSONObject orderVisitDetailsObject=orderVisitDetailsArray.getJSONObject(0);
-            JSONArray allOrderdetailsArray=orderVisitDetailsObject.getJSONArray("allOrderdetails");
-            JSONObject allOrderdetailsObject=allOrderdetailsArray.getJSONObject(0);
-           // Logger.error("a123mount "+allOrderdetailsObject.getString("AmountDue"));
+            JSONArray orderVisitDetailsArray = jsonObject.getJSONArray("orderVisitDetails");
+            JSONObject orderVisitDetailsObject = orderVisitDetailsArray.getJSONObject(0);
+            JSONArray allOrderdetailsArray = orderVisitDetailsObject.getJSONArray("allOrderdetails");
+            JSONObject allOrderdetailsObject = allOrderdetailsArray.getJSONObject(0);
+            // Logger.error("a123mount "+allOrderdetailsObject.getString("AmountDue"));
 
-            Logger.error("a123mount int "+allOrderdetailsObject.getInt("AmountDue"));
+            Logger.error("a123mount int " + allOrderdetailsObject.getInt("AmountDue"));
 
-            totalAmountPayable=jsonObject.getInt("AmountDue");
+            totalAmountPayable = jsonObject.getInt("AmountDue");
 
-            Logger.error("tttejas1 "+totalAmountPayable);
-            if(isOnlyWOE){
+            Logger.error("tttejas1 " + totalAmountPayable);
+            if (isOnlyWOE) {
                 txtAmtPayable.setText("0/-");
-            }else {
-                txtAmtPayable.setText(""+totalAmountPayable);
+            } else {
+                txtAmtPayable.setText("" + totalAmountPayable);
             }
-
 
 
         }

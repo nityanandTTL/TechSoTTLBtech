@@ -22,8 +22,8 @@ android {
         applicationId "com.thyrocare"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 31
-        versionName "1.1.23"
+        versionCode 32
+        versionName "1.1.24"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -54,13 +54,13 @@ android {
     productFlavors {
         BTECHdev {
             applicationId = "com.thyrocare.btech.dev"
-            versionCode 31
-            versionName "debug_1.1.23"
+            versionCode 32
+            versionName "debug_1.1.24"
         }
         BTECHprod {
             applicationId = "com.thyrocare.btech"
-            versionCode 31
-            versionName "1.1.23"
+            versionCode 32
+            versionName "1.1.24"
         }
     }
     packagingOptions {
@@ -111,6 +111,7 @@ dependencies {
     compile 'com.sdsmdg.tastytoast:tastytoast:0.1.1'
     compile 'com.android.support:cardview-v7:23.3.+'
     testCompile 'junit:junit:4.12'
+    compile 'com.github.wooplr:Spotlight:1.2.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

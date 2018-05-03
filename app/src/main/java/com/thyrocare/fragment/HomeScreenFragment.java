@@ -1,15 +1,22 @@
 package com.thyrocare.fragment;
 
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,11 +26,17 @@ import android.widget.Toast;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
+import com.thyrocare.activity.LoginScreenActivity;
 import com.thyrocare.activity.PaymentsActivity;
+import com.thyrocare.customview.CustomDeviceResetDailog;
+import com.thyrocare.dao.DhbDao;
+import com.thyrocare.delegate.CustomUpdateDialogOkButtonOnClickedDelegate;
 import com.thyrocare.fragment.tsp.TSP_OrdersDisplayFragment;
+import com.thyrocare.models.data.DeviceLoginDetailsModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
+import com.thyrocare.network.ResponseParser;
 import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
@@ -31,9 +44,12 @@ import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.InputUtils;
+import com.wooplr.spotlight.utils.SpotlightSequence;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * <br/> <b>*TITLE:-HUB</b><br/>
@@ -117,6 +133,36 @@ public class HomeScreenFragment extends AbstractFragment {
         return fragment;
     }
 
+    private void loadSpotlight(final View view) {
+        if(view!=null){
+            view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else {
+                        view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            SpotlightSequence.getInstance(activity,null)
+                                    .addSpotlight(view.findViewById(R.id.schedule_icon), "Schedule", "Schedule your availability ", "Schedule")
+                                    .addSpotlight(view.findViewById(R.id.orders_booked), "Orders", "Orders assigned to you are here ", "orderassigng")
+                                    .addSpotlight(view.findViewById(R.id.payment_icon), "Payments", "You can make payments from here", "payments")
+                                    .addSpotlight(view.findViewById(R.id.ordersserved), "Served Orders", "Order history is here", "sorders")
+
+                                    .startSequence();
+                        }
+                    },400);
+                }
+            });
+
+
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,8 +210,14 @@ public class HomeScreenFragment extends AbstractFragment {
             getCampDetailCount();
             initListeners();
 
+            if(!appPreferenceManager.isLoadSpotlightOnHome()){
+                appPreferenceManager.setLoadSpotlightOnHome(true);
+                loadSpotlight(rootView);
+            }
+
         }
         setHasOptionsMenu(true);
+        CallCheckUserLoginDeviceId();
         return rootView;
     }
 
@@ -450,10 +502,94 @@ public class HomeScreenFragment extends AbstractFragment {
         }
     }
 
+    public void CallCheckUserLoginDeviceId() {
+        if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
+            ApiCallAsyncTask logoutDeviceAsyncTask = new AsyncTaskForRequest(activity).getLoginDeviceData(appPreferenceManager.getLoginResponseModel().getUserID());
+            logoutDeviceAsyncTask.setApiCallAsyncTaskDelegate(new LogInDeviceListAsyncTaskDelegateResult());
+            if (isNetworkAvailable(activity)) {
+                logoutDeviceAsyncTask.execute(logoutDeviceAsyncTask);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         MenuItem item = menu.findItem(R.id.action_settings);
         item.setVisible(false);
+    }
+
+    private class LogInDeviceListAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @SuppressLint("MissingPermission")
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                ResponseParser responseParser = new ResponseParser(activity);
+                ArrayList<DeviceLoginDetailsModel> materialDetailsModels = new ArrayList<>();
+
+                materialDetailsModels = responseParser.getDeviceDetailsResponseModel(json, statusCode);
+                if (materialDetailsModels != null) {
+                    if (materialDetailsModels.size() != 0) {
+                        String device_id = "";
+                        try {
+                            TelephonyManager telephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+                            device_id = telephonyManager.getDeviceId();
+
+                            if (!device_id.toString().trim().equalsIgnoreCase("")) {
+                                if (!device_id.toString().trim().equalsIgnoreCase(materialDetailsModels.get(0).getDeviceId())) {
+                                    CallDeviceNotMatchedDialog();
+                                }
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    private void CallDeviceNotMatchedDialog() {
+        CustomDeviceResetDailog cudd = new CustomDeviceResetDailog(activity, new CustomUpdateDialogOkButtonOnClickedDelegate() {
+            @Override
+            public void onUpdateClicked() {
+
+            }
+
+            @Override
+            public void onOkClicked() {
+                try {
+                    appPreferenceManager.clearAllPreferences();
+                    DhbDao dhbDao = new DhbDao(activity);
+                    dhbDao.deleteTablesonLogout();
+                    Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                    homeIntent.addCategory(Intent.CATEGORY_HOME);
+                    homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    activity.startActivity(homeIntent);
+                    // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+                    Intent n = new Intent(activity, LoginScreenActivity.class);
+                    n.setAction(Intent.ACTION_MAIN);
+                    n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(n);
+                    activity.finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        cudd.show();
+        cudd.setCancelable(false);
     }
 }

@@ -15,6 +15,7 @@ import com.thyrocare.R;
 import com.thyrocare.delegate.LeaveAppliedDisplayDetailsAdapterClickedDelegate;
 import com.thyrocare.models.api.response.LeaveAppliedResponseModel;
 import com.thyrocare.utils.api.Logger;
+import com.thyrocare.utils.app.DateUtils;
 
 import java.util.List;
 
@@ -64,7 +65,11 @@ public class AppliedLeaveDisplayDetailsAdapter extends RecyclerView.Adapter<Appl
         final LeaveAppliedResponseModel btechOLeaveAppliedResponseModelrderModel = leaveAppliedResponseModels.get(position);
         if (btechOLeaveAppliedResponseModelrderModel!= null) {
 
-            holder.tv_date.setText("" + btechOLeaveAppliedResponseModelrderModel.getLeaveDate().substring(0,10));
+            try {
+                holder.tv_date.setText("" + DateUtils.Req_Date_Req("" + btechOLeaveAppliedResponseModelrderModel.getLeaveDate().substring(0,10), "yyyy-MM-dd", "dd-MM-yyyy"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             holder.tv_remark.setText("Remark: " + btechOLeaveAppliedResponseModelrderModel.getRemarks());
 
             int sr_no= position +1;

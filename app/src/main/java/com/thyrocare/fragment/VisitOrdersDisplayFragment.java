@@ -269,6 +269,10 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             }
             it.remove(); // avoids a ConcurrentModificationException
         }
+
+        String regex = "\\s*\\bKIT\\b\\s*";
+        kitsReq = kitsReq.replaceAll(regex, "");
+
         txtTotalKitsRequired.setText(kitsReq);
         prepareRecyclerView();
         swipeRefreshLayout.setRefreshing(false);
@@ -669,6 +673,10 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                     Logger.error("arr: " + kits_arr.toString());
                     Logger.error("test code string: " + kits);
                     //  txtTotalKitsRequired.setText(kits_arr[0]);
+
+                    String regex = "\\s*\\bKIT\\b\\s*";
+                    kitsReq = kitsReq.replaceAll(regex, "");
+
                     txtTotalKitsRequired.setText(kitsReq);
                 }
 

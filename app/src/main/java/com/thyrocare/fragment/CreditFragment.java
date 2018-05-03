@@ -443,48 +443,55 @@ public class CreditFragment extends Fragment {
 
             bm = getResizedBitmap(bm, 500);
 
-            Bitmap bitmap = bm;
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            byte[] imageInByte = stream.toByteArray();
-            long lengthbmp = imageInByte.length;
-            Logger.error("lengthbmp: " + lengthbmp);
-            if (lengthbmp >= 2000000) {
+            if (bm != null) {
+                Bitmap bitmap = bm;
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] imageInByte = stream.toByteArray();
+                long lengthbmp = imageInByte.length;
+                Logger.error("lengthbmp: " + lengthbmp);
+                if (lengthbmp >= 2000000) {
               /*  bm = getResizedBitmap(bm, 500);*/
-                AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+                    AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
 
-                alertDialog.setMessage("Image size should be less than 2 MB");
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
+                    alertDialog.setMessage("Image size should be less than 2 MB");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
 
-                            }
-                        });
+                                }
+                            });
 
-                alertDialog.show();
-                image = "no";
-            } else {
-                image = encodeTobase64(bm);
+                    alertDialog.show();
+                    image = "no";
+                } else {
+                    image = encodeTobase64(bm);
+                }
             }
-
 
             Logger.error("image: " + image);
         }
     }
 
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 1) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
+        try {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            float bitmapRatio = (float) width / (float) height;
+            if (bitmapRatio > 1) {
+                width = maxSize;
+                height = (int) (width / bitmapRatio);
+            } else {
+                height = maxSize;
+                width = (int) (height * bitmapRatio);
+            }
+            return Bitmap.createScaledBitmap(image, width, height, true);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return Bitmap.createScaledBitmap(image, width, height, true);
+
+        return null;
     }
 
     public static String encodeTobase64(Bitmap image) {

@@ -591,15 +591,15 @@ public class LocationUpdateService extends IntentService {
                                 e.printStackTrace();
                             }
 
-                            startAcceptordernotification();
-                            /*if (materialDetailsModels != null && materialDetailsModels.size() > 0) {
+//                            startAcceptordernotification();
+                            if (materialDetailsModels != null && materialDetailsModels.size() > 0) {
                                 if (materialDetailsModels.size() != 0) {
                                     for (int i = 0; i < materialDetailsModels.size(); i++) {
 //                                        sendNotification(materialDetailsModels.get(i).getVisitId(), i);
                                         sendNotification_n(materialDetailsModels.get(i), i);
                                     }
                                 }
-                            }*/
+                            }
                         }
                     } else {
                         Log.e(TAG, "CBT/NBT Has NO Orders Assigned Under him/her...");

@@ -29,6 +29,7 @@ import com.thyrocare.models.api.request.OrderAllocationTrackLocationRequestModel
 import com.thyrocare.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.models.api.request.OrderPassRequestModel;
 import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
+import com.thyrocare.models.api.request.Post_DeviceID;
 import com.thyrocare.models.api.request.RemoveBeneficiaryAPIRequestModel;
 import com.thyrocare.models.api.request.ResetPasswordRequestModel;
 import com.thyrocare.models.api.request.SelfieUploadRequestModel;
@@ -139,6 +140,48 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
                     .getString(R.string.progress_message_authenticating_please_wait));
             apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getPostUserLogOutRequestAsyncTask(Post_DeviceID m_Post_DeviceID) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            String postJson = new Gson().toJson(m_Post_DeviceID);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.UserLoginDevicePostUserLogOut);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_authenticating_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getPostUserLogInRequestAsyncTask(Post_DeviceID m_Post_DeviceID) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            String postJson = new Gson().toJson(m_Post_DeviceID);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.UserLoginDevicePostUserLogin);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_authenticating_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -460,7 +503,7 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
     /*
-	 * Fetch Order Detail Api Integration*/
+     * Fetch Order Detail Api Integration*/
 
     public ApiCallAsyncTask getFetchOrderDetailsRequestAsyncTask(boolean b) {
         apiCallAsyncTask = null;
@@ -1950,7 +1993,7 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getTestListAsyncTask: ");
+            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getEmailVailidation: ");
             abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(abstractApiModel.GET_Email + email + "&apikey=" + email2);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -1960,6 +2003,24 @@ public class AsyncTaskForRequest {
                     .getString(R.string.vailidatingemail));
             apiCallAsyncTask.setProgressBarCancellable(true);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+
+    public ApiCallAsyncTask getLoginDeviceData(String UserId) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            Log.e(AsyncTaskForRequest.class.getSimpleName(), "getLoginDeviceData: ");
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.GetUserLoginDeviceData + "/" + UserId);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
         } catch (Exception e) {
             e.printStackTrace();
         }

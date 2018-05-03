@@ -1111,6 +1111,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     public void initUI() {
         super.initUI();
         edtBenName = (EditText) findViewById(R.id.edt_ben_name);
+        edtBenName.requestFocus();
         edt_emailnew = (EditText) findViewById(R.id.edt_emailnew);
         edt_addressnew = (EditText) findViewById(R.id.edt_addressnew);
         edt_Mobilenew = (EditText) findViewById(R.id.edt_Mobilenew);

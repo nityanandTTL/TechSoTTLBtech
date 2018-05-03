@@ -205,7 +205,12 @@ public class AbstractApiModel implements AppConstants {
 
     public String BTECH_ACCEPTORDER_CHECK = VERSION_API_URL + "/BtechNotification/OrderAssigned";
 
+    public String UserLoginDevicePostUserLogin = VERSION_API_URL + "/UserLoginDevice/PostUserLogin";
+    public String UserLoginDevicePostUserLogOut = VERSION_API_URL + "/UserLoginDevice/PostUserLogOut";
+    public String GetUserLoginDeviceData = VERSION_API_URL + "/UserLoginDevice/GetDeviceData";
+
     public String ADD_BENEFICIARY = "/api/AddBeneficiary";
+
 
     public static final String X_API_KEY = "x-api-key";
 

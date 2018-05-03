@@ -53,6 +53,11 @@ public class AppPreferenceManager {
     private String UserDetailUserName = "userDetailUserName";
     private String UserDetailChatWith = "userDetailChatWith";
 
+    private String isLoadSpotlightOnOrderd = "isLoadSpotlightOnOrderd";
+    private String isLoadSpotlightOnOrderdHistory = "isLoadSpotlightOnOrderdHistory";
+    private String isLoadSpotlightOnPager = "isLoadSpotlightOnPager";
+    private String isLoadSpotlightOnHome = "isLoadSpotlightOnHome";
+
 
     //Neha G---------------------------------
     private String ShowTimeInNotificatn="";
@@ -289,7 +294,37 @@ public class AppPreferenceManager {
         appPreference.putString(this.loginTime, loginTime);
     }
 
+    public boolean isLoadSpotlightOnPager() {
+        return appPreference.getBoolean(this.isLoadSpotlightOnPager, false);
+    }
 
+    public void setLoadSpotlightOnPager(boolean value) {
+        appPreference.putBoolean(this.isLoadSpotlightOnPager, value);
+    }
+
+    public boolean isLoadSpotlightOnHome() {
+        return appPreference.getBoolean(this.isLoadSpotlightOnHome, false);
+    }
+
+    public void setLoadSpotlightOnHome(boolean value) {
+        appPreference.putBoolean(this.isLoadSpotlightOnHome, value);
+    }
+
+    public boolean isLoadSpotlightOnOrderdHistory() {
+        return appPreference.getBoolean(this.isLoadSpotlightOnOrderdHistory, false);
+    }
+
+    public void setLoadSpotlightOnOrderdHistory(boolean value) {
+        appPreference.putBoolean(this.isLoadSpotlightOnOrderdHistory, value);
+    }
+
+    public boolean isLoadSpotlightOnOrderd() {
+        return appPreference.getBoolean(this.isLoadSpotlightOnOrderd, false);
+    }
+
+    public void setLoadSpotlightOnOrderd(boolean value) {
+        appPreference.putBoolean(this.isLoadSpotlightOnOrderd, value);
+    }
     public String getTotalDistance() {
         return appPreference.getString(totalDistance, "");
     }

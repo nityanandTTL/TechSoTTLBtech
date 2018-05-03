@@ -34,6 +34,7 @@ import com.thyrocare.network.ResponseParser;
 import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.DateUtils;
 
 import org.json.JSONException;
 
@@ -110,7 +111,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 Date date1 = (Date) formatter.parse(finalsetfromdate);
                 Date date2 = (Date) formatter.parse(finalsettodate);
 
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
                 fromDt.setTime(date1);
                 toDt.setTime(date2);
@@ -140,7 +141,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 activity.toolbarHome.setTitle("Leave Intimation");
             }
             activity.isOnHome = false;
-            defdate = getCalculatedDate("yyyy-MM-dd", 1);
+            defdate = getCalculatedDate("dd-MM-yyyy", 1);
             todate.setVisibility(View.INVISIBLE);
             fromdate.setText(defdate);
             todate.setText(defdate);
@@ -179,7 +180,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-                                fromdate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                                fromdate.setText(DateUtils.Req_Date_Req(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year,"dd-MM-yyyy","dd-MM-yyyy"));
                                 fromDt.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
                             }
                         }, mYear, mMonth, mDay);
@@ -209,7 +210,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
                                 Calendar td = Calendar.getInstance();
                                 td.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
                                 if (fromDt.getTimeInMillis() <= td.getTimeInMillis()) {
-                                    todate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                                    todate.setText(DateUtils.Req_Date_Req(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth, "yyyy-MM-dd","dd-MM-yyyy"));
                                     toDt.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
                                     toDt.add(Calendar.HOUR, 24);
                                     calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
@@ -282,19 +283,19 @@ public class LeaveIntimationFragment extends AbstractFragment {
 
             applyLeaveRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
             applyLeaveRequestModel.setLeaveType("NA");//As Per Ganesh Sir Remarks
-            applyLeaveRequestModel.setFromdate(fromdate.getText().toString());
-            applyLeaveRequestModel.setTodate(todate.getText().toString());
+            applyLeaveRequestModel.setFromdate(DateUtils.Req_Date_Req(fromdate.getText().toString(),"dd-MM-yyyy", "yyyy-MM-dd"));
+            applyLeaveRequestModel.setTodate(DateUtils.Req_Date_Req(todate.getText().toString(),"dd-MM-yyyy", "yyyy-MM-dd"));
             applyLeaveRequestModel.setRemarks(leaveremark.getText().toString());
             applyLeaveRequestModel.setEnteredBy(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
 
             if (one.isChecked()) {
                 daysdiff = 1;
                 days.setText("1");
-                applyLeaveRequestModel.setTodate(fromdate.getText().toString());
+                applyLeaveRequestModel.setTodate(DateUtils.Req_Date_Req(fromdate.getText().toString(),"dd-MM-yyyy", "yyyy-MM-dd"));
                 applyLeaveRequestModel.setDays(daysdiff);
             } else {
                 days.setText(daysdiff + "");
-                applyLeaveRequestModel.setTodate(todate.getText().toString());
+                applyLeaveRequestModel.setTodate(DateUtils.Req_Date_Req(todate.getText().toString(),"dd-MM-yyyy", "yyyy-MM-dd"));
                 applyLeaveRequestModel.setDays(daysdiff);
             }
             AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);

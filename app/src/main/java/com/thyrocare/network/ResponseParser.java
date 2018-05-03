@@ -28,6 +28,7 @@ import com.thyrocare.models.api.response.FetchLedgerResponseModel;
 import com.thyrocare.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.models.api.response.GetTestListResponseModel;
 import com.thyrocare.models.api.response.LeaveAppliedResponseModel;
+import com.thyrocare.models.api.response.LoginDeviceResponseModel;
 import com.thyrocare.models.api.response.LoginResponseModel;
 import com.thyrocare.models.api.response.MaterialINVResponseModel;
 import com.thyrocare.models.api.response.MessageModel;
@@ -52,6 +53,7 @@ import com.thyrocare.models.data.CampDetailsBenMasterModel;
 import com.thyrocare.models.data.CampDetailsKitsModel;
 import com.thyrocare.models.data.CampDetailsSampleTypeModel;
 import com.thyrocare.models.data.DepositRegisterModel;
+import com.thyrocare.models.data.DeviceLoginDetailsModel;
 import com.thyrocare.models.data.Earning_NewRegisterModel;
 import com.thyrocare.models.data.LeaveNatureMasterModel;
 import com.thyrocare.models.data.MaterialDetailsModel;
@@ -734,6 +736,15 @@ public class ResponseParser implements AppConstants {
         return loginResponseModel;
     }
 
+    // LoginDeviceId Response Parse
+    public LoginDeviceResponseModel getLoginDeviceResponseModel(String json, int statusCode) {
+        LoginDeviceResponseModel loginResponseModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            loginResponseModel = gson.fromJson(json, LoginDeviceResponseModel.class);
+        }
+        return loginResponseModel;
+    }
+
     //BtechAvaliability
     public BtechAvaliabilityResponseModel getBtechAvaliabilityResponseModel(String json, int statusCode) {
         BtechAvaliabilityResponseModel btechAvaliabilityResponseModel = null;
@@ -1130,5 +1141,21 @@ public class ResponseParser implements AppConstants {
         materialDetailsModels = gson.fromJson(json, token.getType());
 //		}
         return materialDetailsModels;
+    }
+
+    // LoginDeviceId Response Parse
+    public ErrorModel getErrorResponseModel(String json, int statusCode) {
+        ErrorModel loginResponseModel = null;
+        loginResponseModel = gson.fromJson(json, ErrorModel.class);
+        return loginResponseModel;
+    }
+
+    //Fetch Slot Details Response parse:
+    public ArrayList<DeviceLoginDetailsModel> getDeviceDetailsResponseModel(String json, int statusCode) {
+        ArrayList<DeviceLoginDetailsModel> slotModels = null;
+        TypeToken<ArrayList<DeviceLoginDetailsModel>> token = new TypeToken<ArrayList<DeviceLoginDetailsModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+        return slotModels;
     }
 }

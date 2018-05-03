@@ -1,20 +1,26 @@
 package com.thyrocare.activity;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +37,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.thyrocare.Controller.DeviceLogOutController;
 import com.thyrocare.R;
+import com.thyrocare.application.ApplicationController;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.fragment.CreditFragment;
 import com.thyrocare.fragment.FeedbackFragment;
@@ -39,6 +47,7 @@ import com.thyrocare.fragment.HomeScreenFragment;
 import com.thyrocare.fragment.LeaveIntimationFragment;
 import com.thyrocare.fragment.ResetPasswordFragment;
 import com.thyrocare.fragment.VisitOrdersDisplayFragment;
+import com.thyrocare.models.api.request.Post_DeviceID;
 import com.thyrocare.network.AbstractApiModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
@@ -262,7 +271,7 @@ public class HomeScreenActivity extends AbstractActivity
         } else if (mCurrentFragment.toString().contains("HomeScreenFragment")) {
             //  stopService(TImeCheckerIntent);
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-            homeIntent.addCategory( Intent.CATEGORY_HOME );
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
             homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(homeIntent);
 //            finishAffinity();
@@ -343,20 +352,20 @@ public class HomeScreenActivity extends AbstractActivity
                     FeedbackFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             //   Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_logout) {
-            toolbarHome.setVisibility(View.VISIBLE);
 
-
-            /*//delete the image from storage_change_2june_2017
-            File file = new File(Environment.getExternalStorageDirectory(), "MyPhoto.jpg");
-            boolean deleted = file.delete();
-            //delete the image from storage_change_2june_2017*/
-
-            ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
-            logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
-            if (isNetworkAvailable(activity)) {
-                logoutAsyncTask.execute(logoutAsyncTask);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity,
+                        new String[]{Manifest.permission.READ_PHONE_STATE}, AppConstants.APP_PERMISSIONS);
             } else {
-                Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
+                toolbarHome.setVisibility(View.VISIBLE);
+                ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
+                logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
+                if (isNetworkAvailable(activity)) {
+                    logoutAsyncTask.execute(logoutAsyncTask);
+                    CallLogOutDevice();
+                } else {
+                    Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
+                }
             }
         } else if (id == R.id.nav_communication) {
             toolbarHome.setVisibility(View.VISIBLE);
@@ -369,6 +378,30 @@ public class HomeScreenActivity extends AbstractActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @SuppressLint("MissingPermission")
+    private void CallLogOutDevice() {
+        try {
+            if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
+                String device_id = "";
+                try {
+                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    device_id = telephonyManager.getDeviceId();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (ApplicationController.mDeviceLogOutController != null) {
+                    ApplicationController.mDeviceLogOutController = null;
+                }
+
+                ApplicationController.mDeviceLogOutController = new DeviceLogOutController(activity);
+                ApplicationController.mDeviceLogOutController.CallLogOutDevice(appPreferenceManager.getLoginResponseModel().getUserID(), device_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showOptionsinAlert() {
