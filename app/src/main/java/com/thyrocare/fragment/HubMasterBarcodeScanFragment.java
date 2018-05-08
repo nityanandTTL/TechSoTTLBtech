@@ -181,6 +181,9 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
         if (master_scanned_barcode.equals("")) {
             Toast.makeText(activity, "scan for master barcode first", Toast.LENGTH_SHORT).show();
             return false;
+        }else if (master_scanned_barcode.toString().trim().length() != 8) {
+            Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
+            return false;
         }
         return true;
     }
@@ -198,7 +201,7 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
                     barcodeModels = btechCollectionsResponseModel.getBarcode();
                     isCentrifuged = false;
 
-                        prepareRecyclerView();
+                    prepareRecyclerView();
 
 
                 } else {
@@ -234,45 +237,43 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 */
-                            if (scanningResult.getContents().startsWith("0") || scanningResult.getContents().startsWith("$")) {
-                                Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                if (!isMasterBarcode) {
-
-                                    String scanned_barcode = scanningResult.getContents();
-                                    if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")) {
-                                        Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        for (int i = 0; i < barcodeModels.size(); i++) {
-                                            if (barcodeModels.get(i).getBarcode().equals(scanned_barcode)) {
-                                                if (barcodeModels.get(i).isScanned()) {
-                                                    Toast.makeText(activity, "Same Barcode is Already Scanned", Toast.LENGTH_SHORT).show();
-                                                    break;
-                                                } else {
-                                                    barcodeModels.get(i).setScanned(true);
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        try {
-                                            hubScanBarcodeListAdapter.notifyDataSetChanged();
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
+            if (scanningResult.getContents().startsWith("0") || scanningResult.getContents().startsWith("$")) {
+                Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+            } else {
+                if (!isMasterBarcode) {
+                    String scanned_barcode = scanningResult.getContents();
+                    if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")) {
+                        Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+                    } else {
+                        for (int i = 0; i < barcodeModels.size(); i++) {
+                            if (barcodeModels.get(i).getBarcode().equals(scanned_barcode)) {
+                                if (barcodeModels.get(i).isScanned()) {
+                                    Toast.makeText(activity, "Same Barcode is Already Scanned", Toast.LENGTH_SHORT).show();
+                                    break;
                                 } else {
-
-                                    master_scanned_barcode = scanningResult.getContents();
+                                    barcodeModels.get(i).setScanned(true);
+                                    break;
                                 }
                             }
-                       // }
-                   // });
+                        }
+                        try {
+                            hubScanBarcodeListAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-
-
-
+                } else {
+                    master_scanned_barcode = scanningResult.getContents();
+                    if(master_scanned_barcode.toString().trim().length() != 8){
+                        Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(activity, "Master barcode scanned successfully", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            // }
+            // });
 
 
         } else {

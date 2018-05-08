@@ -35,6 +35,7 @@ import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
+import com.thyrocare.delegate.CallbackforShowCaseDelegate;
 import com.thyrocare.delegate.OrderPassRecyclerViewAdapterDelegate;
 import com.thyrocare.delegate.OrderRescheduleDialogButtonClickedDelegate;
 import com.thyrocare.delegate.VisitOrderDisplayRecyclerViewAdapterDelegate;
@@ -127,13 +128,16 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     GetTestListResponseModel TestListResponseModel;
     LinearLayout ll_tests, ll_selectben, ll_kits;
     TextView txt_msg_ben;
+    private CallbackforShowCaseDelegate callbackforShowCaseDelegate;
+    View view;
 
     //private refreshDelegate refreshDelegate;
-    public VisitOrderDisplayAdapter(HomeScreenActivity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels, VisitOrderDisplayRecyclerViewAdapterDelegate visitOrderDisplayRecyclerViewAdapterDelegate, refreshDelegate refreshDelegate, VisitOrderDisplayyRecyclerViewAdapterDelegate visitOrderDisplayyRecyclerViewAdapterDelegate, OrderPassRecyclerViewAdapterDelegate orderPassRecyclerViewAdapterDelegate) {
+    public VisitOrderDisplayAdapter(HomeScreenActivity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels, VisitOrderDisplayRecyclerViewAdapterDelegate visitOrderDisplayRecyclerViewAdapterDelegate, refreshDelegate refreshDelegate, VisitOrderDisplayyRecyclerViewAdapterDelegate visitOrderDisplayyRecyclerViewAdapterDelegate, OrderPassRecyclerViewAdapterDelegate orderPassRecyclerViewAdapterDelegate,CallbackforShowCaseDelegate callbackforShowCaseDelegate) {
         this.activity = activity;
         this.orderVisitDetailsModelsArr = orderDetailsResponseModels;
         this.visitOrderDisplayRecyclerViewAdapterDelegate = visitOrderDisplayRecyclerViewAdapterDelegate;
         this.visitOrderDisplayyRecyclerViewAdapterDelegate = visitOrderDisplayyRecyclerViewAdapterDelegate;
+        this.callbackforShowCaseDelegate = callbackforShowCaseDelegate;
         this.orderPassRecyclerViewAdapterDelegate = orderPassRecyclerViewAdapterDelegate;
         this.refreshDelegate1 = refreshDelegate;
         layoutInflater = LayoutInflater.from(activity);
@@ -166,6 +170,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.item_folding_cell, parent, false);
             holder = new FoldingCellViewHolder(convertView);
             convertView.setTag(holder);
+            loadShowCase(convertView, position);
         } else {
             holder = (FoldingCellViewHolder) convertView.getTag();
         }
@@ -1837,6 +1842,20 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             pindata.setVisibility(View.VISIBLE);
 
         }
+    }
+
+    private void loadShowCase(View itemView, int position) {
+        view=itemView;
+
+        if (position == 0) {
+            if(itemView.findViewById(R.id.img_oas).isShown()){
+                callbackforShowCaseDelegate.onFirstPosition(itemView,true);
+            }else {
+                callbackforShowCaseDelegate.onFirstPosition(itemView,false);
+            }
+
+        }
+
     }
 
     private void isAutoTimeSelected() {

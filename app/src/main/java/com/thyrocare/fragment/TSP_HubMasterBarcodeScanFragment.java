@@ -148,7 +148,7 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
                 if (gpsTracker != null) {
                     hbm.setLatitude("" + String.valueOf(gpsTracker.getLatitude()));
                     hbm.setLongitude("" + String.valueOf(gpsTracker.getLongitude()));
-                }else {
+                } else {
                     hbm.setLatitude("");
                     hbm.setLongitude("");
                 }
@@ -173,6 +173,9 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
         if (master_scanned_barcode.equals("")) {
             Toast.makeText(activity, "scan for master barcode first", Toast.LENGTH_SHORT).show();
             return false;
+        } else if (master_scanned_barcode.toString().trim().length() < 8) {
+            Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
+            return false;
         }
         return true;
     }
@@ -182,33 +185,44 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null && scanningResult.getContents() != null) {
-            if (!isMasterBarcode) {
-                String scanned_barcode = scanningResult.getContents();
 
-                for (int i = 0; i < barcodeModels.size(); i++) {
-                    if (barcodeModels.get(i).getBarcode().equals(scanned_barcode)) {
-                        Logger.debug("inside loop" + "1");
-
-                        if (barcodeModels.get(i).isReceived()) {
-                            Logger.debug("inside loop" + "true");
-                            Toast.makeText(activity, "Same Barcode is Already Scanned", Toast.LENGTH_SHORT).show();
-                            break;
-                        } else {
-                            barcodeModels.get(i).setReceived(true);
-                            break;
-                        }
-
-                    }
-                }
-                try {
-                    hubScanBarcodeListAdapter.notifyDataSetChanged();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+            if (scanningResult.getContents().startsWith("0") || scanningResult.getContents().startsWith("$")) {
+                Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
             } else {
-                master_scanned_barcode = scanningResult.getContents();
-                Logger.debug("result***" + master_scanned_barcode);
+
+                if (!isMasterBarcode) {
+                    String scanned_barcode = scanningResult.getContents();
+
+                    for (int i = 0; i < barcodeModels.size(); i++) {
+                        if (barcodeModels.get(i).getBarcode().equals(scanned_barcode)) {
+                            Logger.debug("inside loop" + "1");
+
+                            if (barcodeModels.get(i).isReceived()) {
+                                Logger.debug("inside loop" + "true");
+                                Toast.makeText(activity, "Same Barcode is Already Scanned", Toast.LENGTH_SHORT).show();
+                                break;
+                            } else {
+                                barcodeModels.get(i).setReceived(true);
+                                break;
+                            }
+
+                        }
+                    }
+                    try {
+                        hubScanBarcodeListAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    master_scanned_barcode = scanningResult.getContents();
+                    if (master_scanned_barcode.toString().trim().length() < 8) {
+                        Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(activity, "Master barcode scanned successfully", Toast.LENGTH_SHORT).show();
+                    }
+                    Logger.debug("result***" + master_scanned_barcode);
+                }
             }
         } else {
             Logger.error("Cancelled from fragment");

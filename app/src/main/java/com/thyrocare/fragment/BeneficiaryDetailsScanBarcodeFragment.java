@@ -7,14 +7,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -84,6 +89,7 @@ import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
+import com.wooplr.spotlight.utils.SpotlightSequence;
 
 import org.json.JSONException;
 
@@ -166,8 +172,42 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
         initUI();
         initData();
+
+        if(!appPreferenceManager.isLoadSpotlightOnPager()){
+            appPreferenceManager.setLoadSpotlightOnPager(true);
+            loadShowCase();
+        }
+
         setListeners();
         return rootview;
+    }
+
+    private void loadShowCase() {
+        if(rootview!=null){
+            rootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        rootview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else {
+                        rootview.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("run", "run: " );
+                            SpotlightSequence.getInstance(activity,null)
+                                    .addSpotlight(rootview.findViewById(R.id.img_view_test), "View Test", "View all the tests", "viewtest1")
+                                    .addSpotlight(rootview.findViewById(R.id.img_edit), "Edit Order ", "", "Edit your order hare")
+                                    .startSequence();
+                        }
+                    },400);
+                }
+            });
+
+
+        }
     }
 
     private void initData() {

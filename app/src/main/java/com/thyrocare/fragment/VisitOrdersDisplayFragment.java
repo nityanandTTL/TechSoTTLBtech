@@ -2,16 +2,22 @@ package com.thyrocare.fragment;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -26,6 +32,7 @@ import com.thyrocare.adapter.VisitOrderDisplayAdapter;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.BeneficiaryDetailsDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
+import com.thyrocare.delegate.CallbackforShowCaseDelegate;
 import com.thyrocare.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.thyrocare.delegate.OrderPassRecyclerViewAdapterDelegate;
 import com.thyrocare.delegate.OrderRescheduleDialogButtonClickedDelegate;
@@ -53,6 +60,7 @@ import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.InputUtils;
+import com.wooplr.spotlight.utils.SpotlightSequence;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -315,6 +323,29 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 }
 
 
+            }, new CallbackforShowCaseDelegate() {
+                @SuppressLint("LongLogTag")
+                @Override
+                public void onFirstPosition(View view, boolean isAccepted) {
+
+                    Log.e(TAG_FRAGMENT, "onFirstPosition: " );
+                    if (!appPreferenceManager.isLoadSpotlightOnOrderd()) {
+                        appPreferenceManager.setLoadSpotlightOnOrderd(true);
+
+                        loadSpotlight(view, isAccepted);
+
+                    }
+                }
+
+                @SuppressLint("LongLogTag")
+                @Override
+                public void onAcceptOrderFirstPosition(View view) {
+
+                    Log.e(TAG_FRAGMENT, "onAcceptOrderFirstPosition: " );
+
+                    loadSpotlightAfterAceepting(view);
+
+                }
             });
             recyclerView.setAdapter(visitOrderDisplayRecyclerViewAdapter);
             recyclerView.setVisibility(View.VISIBLE);
@@ -322,6 +353,70 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         } else {
             recyclerView.setVisibility(View.GONE);
             txtNoRecord.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void loadSpotlight(final View view, final boolean isAccepted) {
+        if (view != null) {
+            view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else {
+                        view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("run", "run: ");
+                            SpotlightSequence.getInstance(activity, null)
+                                    .addSpotlight(view.findViewById(R.id.img_release2), "Order Manipulation", "You can release, Reschedule Order", "bin")
+
+                                    .addSpotlight(view.findViewById(R.id.img_view_test), "View Tests ", "You can view all the tests", "viewtest");
+
+
+                            /*if (!isAccepted) {
+                                SpotlightSequence.getInstance(activity, null).addSpotlight(view.findViewById(R.id.img_oas), "Accept Order ", "Accept alloted order", "accepto");
+                            } else {
+                                SpotlightSequence.getInstance(activity, null).addSpotlight(view.findViewById(R.id.call), "Call ", "Tap here to call customer", "callcustm");
+                            }
+*/
+
+                            SpotlightSequence.getInstance(activity, null).startSequence();
+                        }
+                    }, 400);
+                }
+            });
+
+
+        }
+    }
+
+    private void loadSpotlightAfterAceepting(final View view) {
+        if (view != null) {
+            view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else {
+                        view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("run11222", "run: ");
+                            SpotlightSequence.getInstance(activity, null)
+                                    .addSpotlight(view.findViewById(R.id.call), "Call Customer", "Tap here to call customer", "callcustjk")
+
+                                    .startSequence();
+                        }
+                    }, 400);
+                }
+            });
         }
     }
 

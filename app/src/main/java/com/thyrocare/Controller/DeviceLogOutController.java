@@ -99,6 +99,8 @@ public class DeviceLogOutController {
                         TastyToast.makeText(mContext, "" + loginResponseModel.getRespMessage(), TastyToast.LENGTH_LONG, TastyToast.ERROR);
                     }
                 }
+            }else {
+                TastyToast.makeText(mContext, "" + json, TastyToast.LENGTH_LONG, TastyToast.ERROR);
             }
         }
 
