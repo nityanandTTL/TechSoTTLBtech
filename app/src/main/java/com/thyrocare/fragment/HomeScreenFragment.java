@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,6 +33,8 @@ import com.thyrocare.activity.PaymentsActivity;
 import com.thyrocare.customview.CustomDeviceResetDailog;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.delegate.CustomUpdateDialogOkButtonOnClickedDelegate;
+import com.thyrocare.fragment.LME.LME_OrdersDisplayFragment;
+import com.thyrocare.fragment.LME.LME_WLMISFragment;
 import com.thyrocare.fragment.tsp.TSP_OrdersDisplayFragment;
 import com.thyrocare.models.data.DeviceLoginDetailsModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -116,7 +120,7 @@ public class HomeScreenFragment extends AbstractFragment {
     private TextView txtUserName, txt_no_of_camps;
     private CircularImageView rvSelfie;
     private ImageView imgPayment, imgOrders, imgSchedule, imgMaterials, imgOLCPickup, imgHub, imgCamp, ordersserved, imgLedger;
-    private ImageView bellicon;
+    private ImageView bellicon, lme_orders_list, lme_mis_icon;
     Dialog MainDailog;
 
     //tsp
@@ -134,7 +138,7 @@ public class HomeScreenFragment extends AbstractFragment {
     }
 
     private void loadSpotlight(final View view) {
-        if(view!=null){
+        if (view != null) {
             view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
@@ -147,7 +151,7 @@ public class HomeScreenFragment extends AbstractFragment {
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            SpotlightSequence.getInstance(activity,null)
+                            SpotlightSequence.getInstance(activity, null)
                                     .addSpotlight(view.findViewById(R.id.schedule_icon), "Schedule", "Schedule your availability ", "Schedule")
                                     .addSpotlight(view.findViewById(R.id.orders_booked), "Orders", "Orders assigned to you are here ", "orderassigng")
                                     .addSpotlight(view.findViewById(R.id.payment_icon), "Payments", "You can make payments from here", "payments")
@@ -155,7 +159,7 @@ public class HomeScreenFragment extends AbstractFragment {
 
                                     .startSequence();
                         }
-                    },400);
+                    }, 400);
                 }
             });
 
@@ -198,19 +202,24 @@ public class HomeScreenFragment extends AbstractFragment {
             initData_Tsp();
             getCampDetailCount();
             initListeners_TSP();
+        } else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {//loginRole.equalsIgnoreCase("9")
+            rootView = inflater.inflate(R.layout.lme_fragment_home_screen, container, false);
+            initUI_LME();
+            initData_LME();
+            initListeners_LME();
         } else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {//loginRole.equalsIgnoreCase("11")
             rootView = inflater.inflate(R.layout.fragment_home_screen_nbt, container, false);
             initUI_NBT();
             initData();
             initListeners_NBT();
         } else {//for btech & hub login
-            rootView = inflater.inflate(R.layout.fragment_home_screen, container, false);
+            rootView = inflater.inflate(R.layout.fragment_home_screen_sixmenu, container, false);
             initUI();
             initData();
             getCampDetailCount();
             initListeners();
 
-            if(!appPreferenceManager.isLoadSpotlightOnHome()){
+            if (!appPreferenceManager.isLoadSpotlightOnHome()) {
                 appPreferenceManager.setLoadSpotlightOnHome(true);
                 loadSpotlight(rootView);
             }
@@ -219,6 +228,72 @@ public class HomeScreenFragment extends AbstractFragment {
         setHasOptionsMenu(true);
         CallCheckUserLoginDeviceId();
         return rootView;
+    }
+
+    private void initListeners_LME() {
+        lme_orders_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CallBatchDialog();
+            }
+        });
+
+        lme_mis_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pushFragments(LME_WLMISFragment.newInstance(), false, false, LME_WLMISFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+            }
+        });
+    }
+
+    private void CallBatchDialog() {
+        final Dialog dialog_batch = new Dialog(activity);
+        dialog_batch.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog_batch.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog_batch.setContentView(R.layout.dialog_batchonebatchtwo);
+        dialog_batch.setCanceledOnTouchOutside(false);
+
+        Button btn_batchone = (Button) dialog_batch.findViewById(R.id.btn_batchone);
+        Button btn_batchtwo = (Button) dialog_batch.findViewById(R.id.btn_batchtwo);
+
+        btn_batchone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    dialog_batch.dismiss();
+                    BundleConstants.batch_code = 1;
+                    pushFragments(LME_OrdersDisplayFragment.newInstance(), false, false, LME_OrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        btn_batchtwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    dialog_batch.dismiss();
+                    BundleConstants.batch_code = 2;
+                    pushFragments(LME_OrdersDisplayFragment.newInstance(), false, false, LME_OrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        dialog_batch.show();
+    }
+
+    private void initData_LME() {
+        txtUserName.setText(appPreferenceManager.getLoginResponseModel().getUserName());
+    }
+
+    private void initUI_LME() {
+        txtUserName = (TextView) rootView.findViewById(R.id.txt_username);
+        lme_orders_list = (ImageView) rootView.findViewById(R.id.lme_orders_list);
+        lme_mis_icon = (ImageView) rootView.findViewById(R.id.lme_mis_icon);
     }
 
     private void initData_Tsp() {
@@ -299,7 +374,11 @@ public class HomeScreenFragment extends AbstractFragment {
     }
 
     private void initUI_TSP() {
-        rvSelfie = (CircularImageView) rootView.findViewById(R.id.img_user_picture);
+        try {
+            rvSelfie = (CircularImageView) rootView.findViewById(R.id.img_user_picture);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         txtUserName = (TextView) rootView.findViewById(R.id.txt_username);
         send_icon = (ImageView) rootView.findViewById(R.id.send_icon);
         receive_icon = (ImageView) rootView.findViewById(R.id.receive_icon);

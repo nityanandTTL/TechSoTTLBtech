@@ -38,6 +38,7 @@ import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.api.request.TrackBtechLocationRequestModel;
 import com.thyrocare.models.api.request.Tsp_Send_RequestModel;
 import com.thyrocare.models.data.REMOVEBENSMSPOSTDATAModel;
+import com.thyrocare.models.data.ScannedMasterBarcodebyLMEPOSTDATAModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
 
@@ -2063,12 +2064,68 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage("Please wait..");
             apiCallAsyncTask.setProgressBarVisible(false);
-            apiCallAsyncTask.setProgressBarCancellable(false);
+            apiCallAsyncTask.setProgressBarCancellable(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return apiCallAsyncTask;
     }
 
-    //tejas t ------------------------------------------
+    public ApiCallAsyncTask getSampleDropDetailsbyTSPLME(String id, int batch_f) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.GetSampleDropDetailsbyTSPLME + "/" + id +"/"+batch_f);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage("Please wait...");
+            apiCallAsyncTask.setProgressBarCancellable(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+
+    public ApiCallAsyncTask getPostScannedMasterBarcodebyLMEAsyncTask(ScannedMasterBarcodebyLMEPOSTDATAModel rembensmsRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            String postJson = new Gson().toJson(rembensmsRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.PostScannedMasterBarcodebyLME);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage("Please wait..");
+            apiCallAsyncTask.setProgressBarVisible(true);
+            apiCallAsyncTask.setProgressBarCancellable(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getWLMIS(String id) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.GetWLMIS + "/" + id);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage("Please wait...");
+            apiCallAsyncTask.setProgressBarCancellable(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
 }

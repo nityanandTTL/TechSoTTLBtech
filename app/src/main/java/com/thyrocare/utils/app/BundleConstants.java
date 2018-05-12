@@ -9,6 +9,7 @@ public class BundleConstants {
     public static final int VOMD_START = 1004;
     public static final int VOMD_ARRIVED = 1005;
     public static final int HMD_START = 1006;
+    public static final int LME_START = 10064;
     public static final int HMD_ARRIVED = 1007;
     public static final int ADD_TESTS_START = 1008;
     public static final int ADD_TESTS_FINISH = 1009;
@@ -76,4 +77,5 @@ public class BundleConstants {
     public static String YESNO_ID = "yesno";
     public static String ORDER_SLOTID = "orderslotid";
     public static boolean ORDER_Notification = false;
+    public static int batch_code=0;
 }

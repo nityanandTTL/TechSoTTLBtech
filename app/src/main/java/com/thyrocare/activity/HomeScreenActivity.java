@@ -158,12 +158,23 @@ public class HomeScreenActivity extends AbstractActivity
     }
 
     private void initData() {
-        if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserName()))
-            txtUserName.setText(appPreferenceManager.getLoginResponseModel().getUserName());
-        if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()))
-            y = appPreferenceManager.getLoginResponseModel().getUserID();
-        y = y.substring(y.length() - 4);
-        txtUserId.setText(y);
+        try {
+
+            if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserName()))
+                txtUserName.setText(appPreferenceManager.getLoginResponseModel().getUserName());
+            if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()))
+                y = appPreferenceManager.getLoginResponseModel().getUserID();
+
+            if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.LME_ROLE_ID)) {
+
+            } else {
+                y = y.substring(y.length() - 4);
+            }
+//            y = y.substring(y.length() - 4);
+            txtUserId.setText(y);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // txtUserId.setText(appPreferenceManager.getLoginResponseModel().getUserID());
 
         if (appPreferenceManager.getSelfieResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {

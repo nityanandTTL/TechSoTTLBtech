@@ -169,6 +169,10 @@ public class SplashScreenActivity extends AbstractActivity {
                         Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
                         startActivity(i);
+                    }else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
                     } else if (btechAvaliabilityResponseModel.getNumberofDays() == 0) {
                         Logger.error("ZERRO");
                         Bundle bundle = new Bundle();

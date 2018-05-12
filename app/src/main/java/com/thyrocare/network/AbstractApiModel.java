@@ -49,7 +49,7 @@ public class AbstractApiModel implements AppConstants {
 //    public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
 //    public static final String API_VERSION = "https://www.thyrocare.com/APIs";
 
-//    public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging
+//    public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
 //    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
 
 
@@ -211,6 +211,11 @@ public class AbstractApiModel implements AppConstants {
     public String UserLoginDevicePostUserLogin = VERSION_API_URL + "/UserLoginDevice/PostUserLogin";
     public String UserLoginDevicePostUserLogOut = VERSION_API_URL + "/UserLoginDevice/PostUserLogOut";
     public String GetUserLoginDeviceData = VERSION_API_URL + "/UserLoginDevice/GetDeviceData";
+
+    //LME
+    public String GetSampleDropDetailsbyTSPLME = VERSION_API_URL + "/TSPLMESampleDrop/GetSampleDropDetailsbyTSPLME";
+    public String PostScannedMasterBarcodebyLME = VERSION_API_URL + "/TSPLMESampleDrop/PostScannedMasterBarcodebyLME";
+    public String GetWLMIS = VERSION_API_URL + "/TSPLMESampleDrop/GetWLMIS";
 
     public String ADD_BENEFICIARY = "/api/AddBeneficiary";
 

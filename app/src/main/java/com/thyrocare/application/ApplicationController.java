@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.thyrocare.Controller.DeviceLogOutController;
+import com.thyrocare.Controller.TSPLMESampleDropController;
 import com.thyrocare.dao.DbHelper;
 import com.thyrocare.utils.app.AppPreferenceManager;
 
@@ -37,6 +38,7 @@ public class ApplicationController extends MultiDexApplication {
 	// after 15 min there will be two beep events 20 mins and 25 mins before completing 30 min inactive time.
 	public static final int MAX_BEEP_COUNT = 2;
 	public static DeviceLogOutController mDeviceLogOutController;
+	public static TSPLMESampleDropController mTSPLMESampleDropController;
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

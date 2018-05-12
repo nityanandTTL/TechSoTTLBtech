@@ -22,8 +22,8 @@ android {
         applicationId "com.thyrocare"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 32
-        versionName "1.1.24"
+        versionCode 33
+        versionName "1.1.25"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -54,13 +54,13 @@ android {
     productFlavors {
         BTECHdev {
             applicationId = "com.thyrocare.btech.dev"
-            versionCode 32
-            versionName "debug_1.1.24"
+            versionCode 33
+            versionName "debug_1.1.25"
         }
         BTECHprod {
             applicationId = "com.thyrocare.btech"
-            versionCode 32
-            versionName "1.1.24"
+            versionCode 33
+            versionName "1.1.25"
         }
     }
     packagingOptions {

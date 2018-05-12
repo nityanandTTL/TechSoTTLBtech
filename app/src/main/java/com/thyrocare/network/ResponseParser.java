@@ -59,9 +59,11 @@ import com.thyrocare.models.data.LeaveNatureMasterModel;
 import com.thyrocare.models.data.MaterialDetailsModel;
 import com.thyrocare.models.data.NarrationMasterModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
+import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.models.data.SlotModel;
 import com.thyrocare.models.data.TSPNBT_AvilModel;
 import com.thyrocare.models.data.VersionControlMasterModel;
+import com.thyrocare.models.data.WLMISDetailsModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AlertDialogMessage;
 import com.thyrocare.utils.app.AppConstants;
@@ -1154,6 +1156,22 @@ public class ResponseParser implements AppConstants {
     public ArrayList<DeviceLoginDetailsModel> getDeviceDetailsResponseModel(String json, int statusCode) {
         ArrayList<DeviceLoginDetailsModel> slotModels = null;
         TypeToken<ArrayList<DeviceLoginDetailsModel>> token = new TypeToken<ArrayList<DeviceLoginDetailsModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+        return slotModels;
+    }
+
+    public ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> getSampleDropDetailsbyTSPLMEResponseModel(String json, int statusCode) {
+        ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> slotModels = null;
+        TypeToken<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>> token = new TypeToken<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+        return slotModels;
+    }
+
+    public ArrayList<WLMISDetailsModel> getWLMISResponseModel(String json, int statusCode) {
+        ArrayList<WLMISDetailsModel> slotModels = null;
+        TypeToken<ArrayList<WLMISDetailsModel>> token = new TypeToken<ArrayList<WLMISDetailsModel>>() {
         };
         slotModels = gson.fromJson(json, token.getType());
         return slotModels;

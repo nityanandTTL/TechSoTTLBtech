@@ -60,4 +60,6 @@
     <color name="white">#ffffff</color>
     <color name="div_color">#cccccc</color>
     <color name="primary_color">#252525</color>
+    <color name="zebragrey">#F5F5F5</color>
+    <color name="zebrablue">#EBF9FF</color>
 </resources>

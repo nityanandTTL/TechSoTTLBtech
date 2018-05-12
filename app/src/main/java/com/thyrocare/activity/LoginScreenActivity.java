@@ -244,6 +244,11 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
 
                 i.putExtra("LEAVEINTIMATION", "0");
                 startActivity(i);
+            } else if (loginResponseModel.getRole().equals(AppConstants.LME_ROLE_ID)) {
+                appPreferenceManager.setLoginResponseModel(loginResponseModel);
+                appPreferenceManager.setAPISessionKey(loginResponseModel.getAccess_token());
+
+                switchToActivity(activity, SplashScreenActivity.class, new Bundle());
             } else {
                 TastyToast.makeText(activity, getString(R.string.pls_use_valid_btech_credential_to_log_in), TastyToast.LENGTH_LONG, TastyToast.WARNING);
                 //   Toast.makeText(activity, "Please use valid BTECH credentials to log in", Toast.LENGTH_SHORT).show();
