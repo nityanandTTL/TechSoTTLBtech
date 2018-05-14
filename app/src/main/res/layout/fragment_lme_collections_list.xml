@@ -23,10 +23,92 @@
         android:layout_margin="16dp"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/ll_alldata"
             android:layout_width="match_parent"
-            android:text=""
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
+            android:layout_weight="7"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:freezesText="true"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="name"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:freezesText="true"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="address"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:ellipsize="marquee"
+                android:fadingEdge="horizontal"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:freezesText="true"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="code"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sample count : "
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/txt_cnt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/mainTextColor"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,13 +118,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Barcode : "/>
+                android:layout_marginLeft="16dp"
+                android:text="Barcode : " />
 
             <TextView
                 android:id="@+id/scanned_barcode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""/>
+                android:text="" />
         </LinearLayout>
     </LinearLayout>
 
@@ -75,11 +158,11 @@
                 android:weightSum="2">
 
                 <ImageView
-                    android:layout_height="@dimen/dp_20"
                     android:layout_width="0dp"
-                    android:src="@drawable/scan_master_barcode"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="0.5"
-                    android:layout_gravity="center_vertical"/>
+                    android:src="@drawable/scan_master_barcode" />
 
                 <TextView
                     android:id="@+id/tv_scan_barcode"
@@ -111,9 +194,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/purple_btn_bg"
+                android:minEms="9"
                 android:text="End"
-                android:visibility="visible"
-                android:minEms="9"/>
+                android:visibility="visible" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

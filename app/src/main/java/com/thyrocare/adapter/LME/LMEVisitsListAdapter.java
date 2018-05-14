@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -41,10 +42,12 @@ public class LMEVisitsListAdapter extends RecyclerView.Adapter<LMEVisitsListAdap
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int pos) {
 
-        holder.txt_name.setText("" + mListArray.get(pos).getSourceCode());
+        holder.txt_code.setText("" + mListArray.get(pos).getSourceCode());
         holder.txt_cnt.setText("" + mListArray.get(pos).getSampleCount());
+        holder.txt_name.setText("" + mListArray.get(pos).getName());
+        holder.txt_address.setText("" + mListArray.get(pos).getAddress() +"-"+mListArray.get(pos).getPincode());
 
-        holder.btn_start_end.setOnClickListener(new View.OnClickListener() {
+        holder.ll_alldata.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mLME_OrdersDisplayFragment.StartEndButtonClicked(mListArray.get(pos));
@@ -60,15 +63,18 @@ public class LMEVisitsListAdapter extends RecyclerView.Adapter<LMEVisitsListAdap
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView txt_name, txt_cnt;
-        public Button btn_start_end;
+        public TextView txt_code, txt_cnt, txt_name, txt_address;
+        public LinearLayout ll_alldata;
 
         public MyViewHolder(View view) {
             super(view);
 
             this.txt_name = (TextView) view.findViewById(R.id.txt_name);
+            this.txt_address = (TextView) view.findViewById(R.id.txt_address);
+            this.txt_code = (TextView) view.findViewById(R.id.txt_code);
             this.txt_cnt = (TextView) view.findViewById(R.id.txt_cnt);
-            this.btn_start_end = (Button) view.findViewById(R.id.btn_start_end);
+            this.ll_alldata = (LinearLayout) view.findViewById(R.id.ll_alldata);
+            txt_address.setSelected(true);
         }
     }
 }

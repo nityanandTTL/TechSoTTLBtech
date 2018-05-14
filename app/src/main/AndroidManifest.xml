@@ -81,6 +81,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activity.LMEMapDisplayFragmentActivity"
+            android:label="LME"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activity.OLCPickupDetailMapDisplayFragmentActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"

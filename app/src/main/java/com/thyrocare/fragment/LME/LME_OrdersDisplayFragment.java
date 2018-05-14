@@ -17,6 +17,7 @@ import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.Controller.TSPLMESampleDropController;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
+import com.thyrocare.activity.LMEMapDisplayFragmentActivity;
 import com.thyrocare.adapter.LME.LMEVisitsListAdapter;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
@@ -113,25 +114,16 @@ public class LME_OrdersDisplayFragment extends AbstractFragment {
 
     public void StartEndButtonClicked(final SampleDropDetailsbyTSPLMEDetailsModel sampleDropDetailsbyTSPLMEDetailsModel) {
         msampleDropDetailsbyTSPLMEDetailsModel = sampleDropDetailsbyTSPLMEDetailsModel;
-        if (sampleDropDetailsbyTSPLMEDetailsModel != null) {
+        Intent intentMapDisplay = new Intent(activity, LMEMapDisplayFragmentActivity.class);
+        intentMapDisplay.putExtra(BundleConstants.LME_ORDER_MODEL, sampleDropDetailsbyTSPLMEDetailsModel);
+        startActivityForResult(intentMapDisplay, BundleConstants.LME_START);
+    }
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setMessage("Are you sure?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            StartPostScannedMasterBarcodebyLME(sampleDropDetailsbyTSPLMEDetailsModel);
-                            TastyToast.makeText(activity, "" + sampleDropDetailsbyTSPLMEDetailsModel.getSampleCount(), TastyToast.LENGTH_SHORT, TastyToast.INFO);
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .show();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == BundleConstants.LME_START && resultCode == BundleConstants.LME_ARRIVED) {
+            pushFragments(LMEMasterBarcodeScanFragment.newInstance(msampleDropDetailsbyTSPLMEDetailsModel), false, false, LMEMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
         }
     }
 
@@ -158,6 +150,9 @@ public class LME_OrdersDisplayFragment extends AbstractFragment {
     }
 
     public void StartButtonClickedSuccess() {
+
+        //ToDo Map start arrived arrived
+
         pushFragments(LMEMasterBarcodeScanFragment.newInstance(msampleDropDetailsbyTSPLMEDetailsModel), false, false, LMEMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
     }
 }

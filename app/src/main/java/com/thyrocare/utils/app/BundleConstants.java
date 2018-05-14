@@ -10,6 +10,7 @@ public class BundleConstants {
     public static final int VOMD_ARRIVED = 1005;
     public static final int HMD_START = 1006;
     public static final int LME_START = 10064;
+    public static final int LME_ARRIVED = 1007;
     public static final int HMD_ARRIVED = 1007;
     public static final int ADD_TESTS_START = 1008;
     public static final int ADD_TESTS_FINISH = 1009;
@@ -31,6 +32,7 @@ public class BundleConstants {
     public static final String BENEFICIARY_DETAILS_MODEL = "beneficiaryDetailsModel";
     public static final String ORDER_DETAILS_MODEL = "orderDetailsModel";
     public static final String HUB_BTECH_MODEL = "hubBtechModel";
+    public static final String LME_ORDER_MODEL = "lmeOrderModel";
     public static final String BTECH_CLIENTS_MODEL = "btechClientsModel";
 
     public static final String IS_BENEFICIARY_EDIT = "isBeneficiaryEdit";

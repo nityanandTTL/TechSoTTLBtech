@@ -58,11 +58,12 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
     private HomeScreenActivity activity;
     private ArrayList<HubBarcodeModel> barcodeModels = new ArrayList<>();
     private String master_scanned_barcode = "";
-    SampleDropDetailsbyTSPLMEDetailsModel hubbTechModel;
+    SampleDropDetailsbyTSPLMEDetailsModel mSampleDropDetailsbyTSPLMEDetailsModel;
     private IntentIntegrator intentIntegrator;
     private Button btnDispatch;
     TextView scanned_barcode;
     static LMEMasterBarcodeScanFragment fragment;
+    TextView txt_code, txt_cnt, txt_name, txt_address;
 
     public LMEMasterBarcodeScanFragment() {
     }
@@ -75,7 +76,7 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
     public static LMEMasterBarcodeScanFragment newInstance(SampleDropDetailsbyTSPLMEDetailsModel hubbTechModel) {
         fragment = new LMEMasterBarcodeScanFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(BundleConstants.HUB_BTECH_MODEL, hubbTechModel);
+        bundle.putParcelable(BundleConstants.LME_ORDER_MODEL, hubbTechModel);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -88,7 +89,7 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
         activity = (HomeScreenActivity) getActivity();
         activity.toolbarHome.setTitle("Barcode Scan");
         appPreferenceManager = new AppPreferenceManager(activity);
-        hubbTechModel = getArguments().getParcelable(BundleConstants.HUB_BTECH_MODEL);
+        mSampleDropDetailsbyTSPLMEDetailsModel = getArguments().getParcelable(BundleConstants.LME_ORDER_MODEL);
         initUI(view);
         setListeners();
 
@@ -107,6 +108,16 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
         ll_hub_display_footer.setVisibility(View.VISIBLE);
         btnDispatch = (Button) view.findViewById(R.id.btn_dispatch);
         scanned_barcode = (TextView) view.findViewById(R.id.scanned_barcode);
+
+        txt_name = (TextView) view.findViewById(R.id.txt_name);
+        txt_address = (TextView) view.findViewById(R.id.txt_address);
+        txt_code = (TextView) view.findViewById(R.id.txt_code);
+        txt_cnt = (TextView) view.findViewById(R.id.txt_cnt);
+
+        txt_code.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getSourceCode());
+        txt_cnt.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getSampleCount());
+        txt_name.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getName());
+        txt_address.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getAddress() +"-"+mSampleDropDetailsbyTSPLMEDetailsModel.getPincode());
     }
 
     @Override
@@ -116,7 +127,7 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
         } else if (v.getId() == R.id.btn_dispatch) {
             if (validate()) {
                 //callMasterBarcodeMapApi();
-                StartPostScannedMasterBarcodebyLME(hubbTechModel);
+                StartPostScannedMasterBarcodebyLME(mSampleDropDetailsbyTSPLMEDetailsModel);
             }
         }
     }
@@ -128,7 +139,7 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
             n = new ScannedMasterBarcodebyLMEPOSTDATAModel();
             n.setMasterBarcode(""+master_scanned_barcode.toString().trim());
             n.setSampleDropIds("" + sampleDropDetailsbyTSPLMEDetailsModel.getSampleDropId());
-            n.setStatus("2");
+            n.setStatus("3");
             n.setLatitude(String.valueOf(gpsTracker.getLatitude()));
             n.setLongitude(String.valueOf(gpsTracker.getLongitude()));
         } catch (Exception e) {

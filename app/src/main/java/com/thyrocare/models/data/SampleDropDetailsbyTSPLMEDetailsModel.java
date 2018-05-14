@@ -21,6 +21,10 @@ public class SampleDropDetailsbyTSPLMEDetailsModel implements Parcelable{
     private String LastUpdated;
     private String StartedAt;
     private String CompletedAt;
+    private String Name;
+    private String Address;
+    private String Pincode;
+    private String ArrivedAt;
 
     protected SampleDropDetailsbyTSPLMEDetailsModel(Parcel in) {
         SampleDropId = in.readInt();
@@ -34,6 +38,34 @@ public class SampleDropDetailsbyTSPLMEDetailsModel implements Parcelable{
         LastUpdated = in.readString();
         StartedAt = in.readString();
         CompletedAt = in.readString();
+        Name = in.readString();
+        Address = in.readString();
+        Pincode = in.readString();
+        ArrivedAt = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(SampleDropId);
+        dest.writeInt(LMEUserId);
+        dest.writeInt(TSPOLCId);
+        dest.writeString(SourceCode);
+        dest.writeInt(SampleCount);
+        dest.writeInt(Batch);
+        dest.writeInt(Status);
+        dest.writeString(EntryDate);
+        dest.writeString(LastUpdated);
+        dest.writeString(StartedAt);
+        dest.writeString(CompletedAt);
+        dest.writeString(Name);
+        dest.writeString(Address);
+        dest.writeString(Pincode);
+        dest.writeString(ArrivedAt);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<SampleDropDetailsbyTSPLMEDetailsModel> CREATOR = new Creator<SampleDropDetailsbyTSPLMEDetailsModel>() {
@@ -136,23 +168,35 @@ public class SampleDropDetailsbyTSPLMEDetailsModel implements Parcelable{
         CompletedAt = completedAt;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getName() {
+        return Name;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(SampleDropId);
-        dest.writeInt(LMEUserId);
-        dest.writeInt(TSPOLCId);
-        dest.writeString(SourceCode);
-        dest.writeInt(SampleCount);
-        dest.writeInt(Batch);
-        dest.writeInt(Status);
-        dest.writeString(EntryDate);
-        dest.writeString(LastUpdated);
-        dest.writeString(StartedAt);
-        dest.writeString(CompletedAt);
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public void setAddress(String address) {
+        Address = address;
+    }
+
+    public String getPincode() {
+        return Pincode;
+    }
+
+    public void setPincode(String pincode) {
+        Pincode = pincode;
+    }
+
+    public String getArrivedAt() {
+        return ArrivedAt;
+    }
+
+    public void setArrivedAt(String arrivedAt) {
+        ArrivedAt = arrivedAt;
     }
 }

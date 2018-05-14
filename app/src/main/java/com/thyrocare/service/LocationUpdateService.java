@@ -656,6 +656,7 @@ public class LocationUpdateService extends IntentService {
             if (Looper.myLooper() != null) {
                 if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
 //                    Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
+
                     if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBT_ROLE_ID)) {
                         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
                         ApiCallAsyncTask AcceptOrderNotificationApiAsyncTask = asyncTaskForRequest.getAcceptOrderNotification();
