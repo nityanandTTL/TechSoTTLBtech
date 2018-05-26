@@ -1,32 +1,22 @@
 package com.thyrocare.fragment.LME;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.Controller.TSPLMESampleDropController;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
-import com.thyrocare.adapter.LME.LMEVisitsListAdapter;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
-import com.thyrocare.models.data.ScannedMasterBarcodebyLMEPOSTDATAModel;
 import com.thyrocare.models.data.WLMISDetailsModel;
 import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.app.AppPreferenceManager;
-import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.DateUtils;
-import com.thyrocare.utils.app.GPSTracker;
 
 import java.util.ArrayList;
 
@@ -42,7 +32,7 @@ public class LME_WLMISFragment extends AbstractFragment {
     static LME_WLMISFragment fragment;
     private SampleDropDetailsbyTSPLMEDetailsModel msampleDropDetailsbyTSPLMEDetailsModel;
     TextView nodata;
-    LinearLayout ll_staffstat;
+    LinearLayout ll_staffstat, ll_wlmis;
 
     public LME_WLMISFragment() {
         // Required empty public constructor
@@ -81,6 +71,7 @@ public class LME_WLMISFragment extends AbstractFragment {
     public void initUI() {
         nodata = (TextView) rootView.findViewById(R.id.nodata);
         ll_staffstat = (LinearLayout) rootView.findViewById(R.id.ll_staffstat);
+        ll_wlmis = (LinearLayout) rootView.findViewById(R.id.ll_wlmis);
     }
 
     private void fetchData() {
@@ -118,7 +109,7 @@ public class LME_WLMISFragment extends AbstractFragment {
                 txt_code = (TextView) view.findViewById(R.id.txt_code);
 
                 txt_sr.setText(""+(i+1));
-                txt_datetime.setText(""+DateUtils.Req_Date_Req(materialDetailsModels.get(i).getCompletedAt(), "dd-MM-yyyy HH:mm a", "dd-MM-yyyy")+" \n "+DateUtils.Req_Date_Req(materialDetailsModels.get(i).getCompletedAt(), "dd-MM-yyyy HH:mm a", "HH:mm a"));
+                txt_datetime.setText(""+DateUtils.Req_Date_Req(materialDetailsModels.get(i).getCompletedAt(), "dd-MM-yyyy HH:mm a", "dd-MM-yyyy")+" \n "+DateUtils.Req_Date_Req(materialDetailsModels.get(i).getCompletedAt(), "dd-MM-yyyy hh:mm a", "hh:mm a"));
                 txt_batch.setText(""+materialDetailsModels.get(i).getBatch());
                 txt_wl.setText(""+materialDetailsModels.get(i).getWL());
                 txt_turnover.setText("");
@@ -140,7 +131,7 @@ public class LME_WLMISFragment extends AbstractFragment {
                     txt_code.setBackgroundColor(getResources().getColor(R.color.zebrablue));
                 }
 
-                ll_staffstat.addView(view);
+                ll_wlmis.addView(view);
             }
         }
     }

@@ -3,7 +3,6 @@ package com.thyrocare.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,7 +36,6 @@ import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
-import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
@@ -266,8 +264,12 @@ public class SplashScreenActivity extends AbstractActivity {
                                 ApiCallAsyncTask logoutAsyncTask = new AsyncTaskForRequest(activity).getLogoutRequestAsyncTask();
                                 logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
                                 if (isNetworkAvailable(activity)) {
-                                    CallLogOutDevice();
                                     logoutAsyncTask.execute(logoutAsyncTask);
+                                    if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+
+                                    } else {
+                                        CallLogOutDevice();
+                                    }
                                 } else {
                                     Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
                                     finishAffinity();

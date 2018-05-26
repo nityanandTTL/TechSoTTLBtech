@@ -1,12 +1,8 @@
 package com.thyrocare.Controller;
 
 import android.content.Context;
-import android.telephony.TelephonyManager;
-import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
-import com.thyrocare.R;
-import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.activity.LoginScreenActivity;
 import com.thyrocare.models.api.request.Post_DeviceID;
 import com.thyrocare.models.api.response.LoginDeviceResponseModel;
@@ -14,8 +10,6 @@ import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
-import com.thyrocare.utils.app.CommonUtils;
-import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
 

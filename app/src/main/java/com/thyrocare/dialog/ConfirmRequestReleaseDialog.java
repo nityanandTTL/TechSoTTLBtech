@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thyrocare.R;
-import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.thyrocare.models.api.response.RemarksResponseModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;

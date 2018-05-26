@@ -285,7 +285,11 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
                 loginResponseModel = new LoginResponseModel();
                 loginResponseModel = responseParser.getLoginResponseModel(json, statusCode);
                 if (loginResponseModel != null) {
-                    CallDeviceIDLoginAPI(loginResponseModel);
+                    if (loginResponseModel.getRole().equals(AppConstants.LME_ROLE_ID)) {
+                        setLoginDeviceResponse();
+                    } else {
+                        CallDeviceIDLoginAPI(loginResponseModel);
+                    }
                 }
 
             } else {

@@ -16,7 +16,7 @@
     </RelativeLayout>
 
     <include
-        android:id="@+id/il_cell_title" layout="@layout/lme_itemvisitslist" />
+        android:id="@+id/il_cell_title" layout="@layout/lme_acceptitemvisitslist" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,27 +34,31 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/ll_scan_master_barcode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 android:layout_weight="1"
-                android:background="@drawable/footer_bg">
+                android:background="@drawable/footer_bg"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="@dimen/dp_20"
+                    android:layout_width="0dp"
                     android:layout_height="@dimen/dp_20"
-                    android:layout_gravity="center"
-                    android:src="@drawable/hub_home_icon" />
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.5"
+                    android:src="@drawable/scan_master_barcode" />
 
                 <TextView
-                    android:id="@+id/title_est_address"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_scan_barcode"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_weight="1.5"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
-                    android:text="11, Sushila App, Panchavati, Nashik-422003"
+                    android:text="Scan Master Barcode"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp" />
 
@@ -70,20 +74,7 @@
             android:padding="@dimen/dp_10">
 
             <Button
-                android:id="@+id/btn_arrived"
-                android:layout_width="@dimen/dp_75"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/purple_btn_bg"
-                android:text="@string/arrive"
-                android:textColor="@android:color/white"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:visibility="gone"/>
-
-            <Button
-                android:id="@+id/btn_startNav"
+                android:id="@+id/btn_startaccept"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -91,7 +82,7 @@
                 android:layout_marginStart="10dp"
                 android:background="@drawable/purple_btn_bg"
                 android:gravity="center"
-                android:text="@string/start"
+                android:text="Accept"
                 android:textColor="@android:color/white"
                 android:visibility="visible" />
         </LinearLayout>

@@ -1,14 +1,13 @@
 package com.thyrocare.activity;
 
 import android.Manifest;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,9 +16,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,22 +38,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+import com.thyrocare.Controller.TSPLMESampleDropController;
 import com.thyrocare.R;
-import com.thyrocare.models.api.request.HubStartRequestModel;
+import com.thyrocare.application.ApplicationController;
 import com.thyrocare.models.data.HUBBTechModel;
 import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.models.data.ScannedMasterBarcodebyLMEPOSTDATAModel;
-import com.thyrocare.network.ApiCallAsyncTask;
-import com.thyrocare.network.ApiCallAsyncTaskDelegate;
-import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.utils.api.Logger;
-import com.thyrocare.utils.api.NetworkUtils;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.fileutils.DataParser;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -79,13 +78,12 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
     private ArrayList<HUBBTechModel> hubbTechModels;
     private LocationRequest mLocationRequest;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    private Button btn_startNav, btn_arrived;
+    private Button btn_startaccept;
 
     private FragmentActivity activity;
     private SampleDropDetailsbyTSPLMEDetailsModel mSampleDropDetailsbyTSPLMEDetailsModel;
     TextView txt_code, txt_cnt, txt_name, txt_address;
 
-    private TextView txtAddress;
     private AppPreferenceManager appPreferenceManager;
     private Geocoder geocoder;
     private List<Address> addresses;
@@ -93,12 +91,18 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
     private int Integertotaldiff;
     private boolean isStarted = false;
     private LatLng mAddressLatLong;
+    LMEMapDisplayFragmentActivity mLMEMapDisplayFragmentActivity;
+    LinearLayout ll_scan_master_barcode;
+    private IntentIntegrator intentIntegrator;
+    private String master_scanned_barcode = "";
+    TextView scanned_barcode;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lmeactivity_navigation_map_display);
         activity = this;
+        mLMEMapDisplayFragmentActivity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
         mSampleDropDetailsbyTSPLMEDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.LME_ORDER_MODEL);
 
@@ -115,14 +119,10 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
 
 
     private void setListeners() {
-        btn_arrived.setOnClickListener(this);
-        btn_startNav.setOnClickListener(this);
+        btn_startaccept.setOnClickListener(this);
         double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
 
         Integertotaldiff = (int) totaldist;
-//        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
-
-        btn_arrived.setVisibility(View.GONE);
     }
 
     private String getAddress(double latitude, double longitude) {
@@ -151,9 +151,11 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         txt_code = (TextView) findViewById(R.id.txt_code);
         txt_cnt = (TextView) findViewById(R.id.txt_cnt);
 
-        btn_arrived = (Button) findViewById(R.id.btn_arrived);
-        btn_startNav = (Button) findViewById(R.id.btn_startNav);
-        txtAddress = (TextView) findViewById(R.id.title_est_address);
+        ll_scan_master_barcode = (LinearLayout) findViewById(R.id.ll_scan_master_barcode);
+        ll_scan_master_barcode.setOnClickListener(this);
+
+        btn_startaccept = (Button) findViewById(R.id.btn_startaccept);
+        scanned_barcode = (TextView) findViewById(R.id.scanned_barcode);
 
         SupportMapFragment mapFragment = (SupportMapFragment) activity.getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -352,70 +354,115 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         super.onResume();
     }
 
+    private boolean validate() {
+        if (master_scanned_barcode.toString().trim().length() != 8 && master_scanned_barcode.toString().trim().length() >= 1) {
+            scanned_barcode.setText("");
+            Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (master_scanned_barcode.equals("")) {
+            CallDialog_a();
+            return false;
+        }
+        return true;
+    }
+
+    private void CallDialog_a() {
+        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+
+        alertDialog.setMessage("Accept without master Barcode?");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        StartPostScannedMasterBarcodebyLME(mSampleDropDetailsbyTSPLMEDetailsModel);
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                    }
+                });
+        alertDialog.show();
+    }
+
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_arrived) {
-            callOrderStatusChangeApi(2);
-        } else if (v.getId() == R.id.btn_startNav) {
-            callOrderStatusChangeApi(1);
+        if (v.getId() == R.id.btn_startaccept) {
+            if (validate()) {
+                StartPostScannedMasterBarcodebyLME(mSampleDropDetailsbyTSPLMEDetailsModel);
+            }
+        } else if (v.getId() == R.id.ll_scan_master_barcode) {
+            scanFromFragment();
         }
     }
 
-    private void callOrderStatusChangeApi(int status) {
+    public void scanFromFragment() {
+        intentIntegrator = new IntentIntegrator(activity) {
+            @Override
+            protected void startActivityForResult(Intent intent, int code) {
+                mLMEMapDisplayFragmentActivity.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override
+            }
+        };
+        intentIntegrator.initiateScan();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        final IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (scanningResult != null && scanningResult.getContents() != null) {
+            if (scanningResult.getContents().startsWith("0") || scanningResult.getContents().startsWith("$")) {
+                Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+            } else {
+                master_scanned_barcode = scanningResult.getContents();
+                if (master_scanned_barcode.toString().trim().length() != 8) {
+                    master_scanned_barcode = "";
+                    Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
+                } else {
+                    scanned_barcode.setText("" + master_scanned_barcode.toString().trim());
+                    Toast.makeText(activity, "Master barcode scanned successfully", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            Logger.error("Cancelled from fragment");
+        }
+    }
+
+    private void StartPostScannedMasterBarcodebyLME(SampleDropDetailsbyTSPLMEDetailsModel sampleDropDetailsbyTSPLMEDetailsModel) {
         ScannedMasterBarcodebyLMEPOSTDATAModel n = null;
         try {
             GPSTracker gpsTracker = new GPSTracker(activity);
             n = new ScannedMasterBarcodebyLMEPOSTDATAModel();
-            n.setMasterBarcode("");
-            n.setSampleDropIds("" + mSampleDropDetailsbyTSPLMEDetailsModel.getSampleDropId());
-            n.setStatus("" + status);
+            n.setMasterBarcode("" + master_scanned_barcode.toString().trim());
+            n.setSampleDropIds("" + sampleDropDetailsbyTSPLMEDetailsModel.getSampleDropId());
+            n.setStatus("3");
             n.setLatitude(String.valueOf(gpsTracker.getLatitude()));
             n.setLongitude(String.valueOf(gpsTracker.getLongitude()));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ApiCallAsyncTask HubStartApiAsyncTask = new AsyncTaskForRequest(activity).getPostScannedMasterBarcodebyLMEAsyncTask(n);
-        if (status == 2) {
-            HubStartApiAsyncTask.setApiCallAsyncTaskDelegate(new ArrivedApiAsyncTaskDelegateResult());
-        } else {
-            HubStartApiAsyncTask.setApiCallAsyncTaskDelegate(new StartApiAsyncTaskDelegateResult());
+        if (ApplicationController.mTSPLMESampleDropController != null) {
+            ApplicationController.mTSPLMESampleDropController = null;
         }
 
-        if (NetworkUtils.isNetworkAvailable(activity)) {
-            HubStartApiAsyncTask.execute(HubStartApiAsyncTask);
-        } else {
-            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-        }
+        ApplicationController.mTSPLMESampleDropController = new TSPLMESampleDropController(activity, mLMEMapDisplayFragmentActivity);
+        ApplicationController.mTSPLMESampleDropController.CallPostScannedMasterBarcodebyLME(n);
     }
 
     private void initData() {
-        txtAddress.setText(mSampleDropDetailsbyTSPLMEDetailsModel.getAddress() + "-" + mSampleDropDetailsbyTSPLMEDetailsModel.getPincode());
         txt_code.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getSourceCode());
         txt_cnt.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getSampleCount());
         txt_name.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getName());
         txt_address.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getAddress() + "-" + mSampleDropDetailsbyTSPLMEDetailsModel.getPincode());
     }
 
-    private class ArrivedApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
-        @Override
-        public void apiCallResult(String json, int statusCode) throws JSONException {
-            Logger.error(json);
-            if (statusCode == 204 || statusCode == 200) {
-                Toast.makeText(activity, "Arrived Successfully", Toast.LENGTH_SHORT).show();
-                Intent intentResult = new Intent();
-                intentResult.putExtra(BundleConstants.LME_ORDER_MODEL, mSampleDropDetailsbyTSPLMEDetailsModel);
-                setResult(BundleConstants.LME_ARRIVED, intentResult);
-                finish();
-            } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onApiCancelled() {
-            Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
-        }
+    public void EndButtonClickedSuccess() {
+        Intent intentResult = new Intent();
+        intentResult.putExtra(BundleConstants.HUB_BTECH_MODEL, mSampleDropDetailsbyTSPLMEDetailsModel);
+        setResult(BundleConstants.HMD_ARRIVED, intentResult);
+        finish();
     }
 
     // Fetches data from url passed
@@ -610,27 +657,5 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         float dist = (float) (earthRadius * c);
         return dist;
-    }
-
-    private class StartApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
-        @Override
-        public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode == 204 || statusCode == 200) {
-                Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
-                btn_arrived.setVisibility(View.VISIBLE);
-                btn_startNav.setVisibility(View.GONE);
-                Intent intent = new Intent(Intent.ACTION_VIEW,
-                        //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
-                        Uri.parse("google.navigation:q=" + destlat + "," + destlong));
-                startActivity(intent);
-            } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onApiCancelled() {
-            Toast.makeText(activity, "API CANCELLED ", Toast.LENGTH_SHORT).show();
-        }
     }
 }

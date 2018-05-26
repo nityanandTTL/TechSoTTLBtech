@@ -213,7 +213,7 @@ public class HomeScreenFragment extends AbstractFragment {
             initData();
             initListeners_NBT();
         } else {//for btech & hub login
-            rootView = inflater.inflate(R.layout.fragment_home_screen_sixmenu, container, false);
+            rootView = inflater.inflate(R.layout.fragment_home_screen, container, false);
             initUI();
             initData();
             getCampDetailCount();
@@ -225,6 +225,7 @@ public class HomeScreenFragment extends AbstractFragment {
             }
 
         }
+
         setHasOptionsMenu(true);
         CallCheckUserLoginDeviceId();
         return rootView;
@@ -250,11 +251,15 @@ public class HomeScreenFragment extends AbstractFragment {
         final Dialog dialog_batch = new Dialog(activity);
         dialog_batch.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog_batch.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog_batch.setContentView(R.layout.dialog_batchonebatchtwo);
+        dialog_batch.setContentView(R.layout.dialog_batchonebatchtwo_d);
         dialog_batch.setCanceledOnTouchOutside(false);
 
-        Button btn_batchone = (Button) dialog_batch.findViewById(R.id.btn_batchone);
-        Button btn_batchtwo = (Button) dialog_batch.findViewById(R.id.btn_batchtwo);
+        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.95);
+        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.95);
+        dialog_batch.getWindow().setLayout(width, height);
+
+        ImageView btn_batchone = (ImageView) dialog_batch.findViewById(R.id.btn_batchone);
+        ImageView btn_batchtwo = (ImageView) dialog_batch.findViewById(R.id.btn_batchtwo);
 
         btn_batchone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -488,19 +493,22 @@ public class HomeScreenFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
                 // Toast.makeText(activity, "Feature Coming Soon..", Toast.LENGTH_SHORT).show();
-                pushFragments(MaterialFragment.newInstance(), false, false, MaterialFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                pushFragments(MaterialFragment_new.newInstance(), false, false, MaterialFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+//                pushFragments(MaterialFragment.newInstance(), false, false, MaterialFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         imgOLCPickup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(OLCPickupListDisplayFragment.newInstance(), false, false, OLCPickupListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                Toast.makeText(activity, "Feature Coming Soon..", Toast.LENGTH_SHORT).show();
+//                pushFragments(OLCPickupListDisplayFragment.newInstance(), false, false, OLCPickupListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         imgCamp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(CampListDisplayFragment.newInstance(), false, false, CampListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                Toast.makeText(activity, "Feature Coming Soon..", Toast.LENGTH_SHORT).show();
+//                pushFragments(CampListDisplayFragment.newInstance(), false, false, CampListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         ordersserved.setOnClickListener(new View.OnClickListener() {
@@ -583,12 +591,16 @@ public class HomeScreenFragment extends AbstractFragment {
 
     public void CallCheckUserLoginDeviceId() {
         if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
-            ApiCallAsyncTask logoutDeviceAsyncTask = new AsyncTaskForRequest(activity).getLoginDeviceData(appPreferenceManager.getLoginResponseModel().getUserID());
-            logoutDeviceAsyncTask.setApiCallAsyncTaskDelegate(new LogInDeviceListAsyncTaskDelegateResult());
-            if (isNetworkAvailable(activity)) {
-                logoutDeviceAsyncTask.execute(logoutDeviceAsyncTask);
-            } else {
-                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+
+            }else {
+                ApiCallAsyncTask logoutDeviceAsyncTask = new AsyncTaskForRequest(activity).getLoginDeviceData(appPreferenceManager.getLoginResponseModel().getUserID());
+                logoutDeviceAsyncTask.setApiCallAsyncTaskDelegate(new LogInDeviceListAsyncTaskDelegateResult());
+                if (isNetworkAvailable(activity)) {
+                    logoutDeviceAsyncTask.execute(logoutDeviceAsyncTask);
+                } else {
+                    Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

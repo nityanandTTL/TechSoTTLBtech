@@ -2,8 +2,6 @@ package com.thyrocare.delegate;
 
 import android.view.View;
 
-import com.thyrocare.models.data.OrderVisitDetailsModel;
-
 /**
  * Created by Orion on 4/27/2017.
  */

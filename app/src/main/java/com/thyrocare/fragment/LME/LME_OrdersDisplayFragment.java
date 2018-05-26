@@ -1,19 +1,20 @@
 package com.thyrocare.fragment.LME;
 
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.Controller.TSPLMESampleDropController;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
@@ -40,8 +41,11 @@ public class LME_OrdersDisplayFragment extends AbstractFragment {
     private View rootView;
     static LME_OrdersDisplayFragment fragment;
     private RecyclerView recy_Orderlist;
+    EditText edt_search;
     TextView txt_nodata;
     private SampleDropDetailsbyTSPLMEDetailsModel msampleDropDetailsbyTSPLMEDetailsModel;
+    LMEVisitsListAdapter adaptor;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public LME_OrdersDisplayFragment() {
         // Required empty public constructor
@@ -83,6 +87,34 @@ public class LME_OrdersDisplayFragment extends AbstractFragment {
         recy_Orderlist.setLayoutManager(mLayoutManager);
         recy_Orderlist.setItemAnimator(new DefaultItemAnimator());
         txt_nodata = (TextView) rootView.findViewById(R.id.txt_nodata);
+        edt_search = (EditText) rootView.findViewById(R.id.edt_search);
+
+        edt_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (adaptor != null) {
+                    adaptor.filter(s.toString());
+                }
+            }
+        });
+
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.srl_visit_orders_display);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                fetchData();
+            }
+        });
     }
 
     private void fetchData() {
@@ -95,19 +127,20 @@ public class LME_OrdersDisplayFragment extends AbstractFragment {
     }
 
     public void SetOrdersList(ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> materialDetailsModels) {
-        System.out.println("");
-
         if (materialDetailsModels.size() != 0) {
-            LMEVisitsListAdapter adaptor = new LMEVisitsListAdapter(materialDetailsModels, fragment);
+            adaptor = new LMEVisitsListAdapter(materialDetailsModels, fragment);
             recy_Orderlist.setAdapter(adaptor);
             recy_Orderlist.setVisibility(View.VISIBLE);
             txt_nodata.setVisibility(View.GONE);
-        }else {
+        } else {
             NodataFound();
         }
+
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     public void NodataFound() {
+        swipeRefreshLayout.setRefreshing(false);
         recy_Orderlist.setVisibility(View.GONE);
         txt_nodata.setVisibility(View.VISIBLE);
     }
@@ -123,7 +156,12 @@ public class LME_OrdersDisplayFragment extends AbstractFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == BundleConstants.LME_START && resultCode == BundleConstants.LME_ARRIVED) {
-            pushFragments(LMEMasterBarcodeScanFragment.newInstance(msampleDropDetailsbyTSPLMEDetailsModel), false, false, LMEMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+            try {
+                activity.getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            pushFragments(LMEMasterBarcodeScanFragment.newInstance(msampleDropDetailsbyTSPLMEDetailsModel), false, false, LMEMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
         }
     }
 

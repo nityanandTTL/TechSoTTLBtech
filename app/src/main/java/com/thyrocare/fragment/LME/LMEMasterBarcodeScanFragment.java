@@ -1,13 +1,7 @@
 package com.thyrocare.fragment.LME;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,27 +15,16 @@ import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.Controller.TSPLMESampleDropController;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
-import com.thyrocare.adapter.HubScanBarcodeListAdapter;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.fragment.HomeScreenFragment;
-import com.thyrocare.fragment.HubListDisplayFragment;
-import com.thyrocare.models.api.request.MasterBarcodeMappingRequestModel;
-import com.thyrocare.models.api.response.BtechCollectionsResponseModel;
-import com.thyrocare.models.data.HUBBTechModel;
 import com.thyrocare.models.data.HubBarcodeModel;
 import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.models.data.ScannedMasterBarcodebyLMEPOSTDATAModel;
-import com.thyrocare.network.ApiCallAsyncTask;
-import com.thyrocare.network.ApiCallAsyncTaskDelegate;
-import com.thyrocare.network.AsyncTaskForRequest;
-import com.thyrocare.network.ResponseParser;
 import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.GPSTracker;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 

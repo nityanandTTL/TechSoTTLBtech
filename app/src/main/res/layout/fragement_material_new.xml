@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical"
+    android:weightSum="6">
+
+    <ScrollView
+        android:id="@+id/sv_material_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ll_tab">
+
+        <TableLayout
+            android:id="@+id/materialtable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_2"></TableLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/ll_updateRecord"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_5"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/updateRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/purple_btn_bg"
+            android:minEms="10"
+            android:text="Update Stock"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+</RelativeLayout>

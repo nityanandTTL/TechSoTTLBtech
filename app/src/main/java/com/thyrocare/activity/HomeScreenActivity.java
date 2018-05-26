@@ -10,7 +10,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -47,7 +46,7 @@ import com.thyrocare.fragment.HomeScreenFragment;
 import com.thyrocare.fragment.LeaveIntimationFragment;
 import com.thyrocare.fragment.ResetPasswordFragment;
 import com.thyrocare.fragment.VisitOrdersDisplayFragment;
-import com.thyrocare.models.api.request.Post_DeviceID;
+import com.thyrocare.fragment.tsp.TSP_OrdersDisplayFragment;
 import com.thyrocare.network.AbstractApiModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
@@ -64,8 +63,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-
-import static android.widget.Toast.LENGTH_SHORT;
 
 public class HomeScreenActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -126,7 +123,11 @@ public class HomeScreenActivity extends AbstractActivity
 
                 if (BundleConstants.ORDER_Notification) {
                     BundleConstants.ORDER_Notification = false;
-                    pushFragments(VisitOrdersDisplayFragment.newInstance(), false, false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+                    if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.TSP_ROLE_ID)) {
+                        pushFragments(TSP_OrdersDisplayFragment.newInstance(), false, false, TSP_OrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+                    } else if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID)) {
+                        pushFragments(VisitOrdersDisplayFragment.newInstance(), false, false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+                    }
                 } else {
                     if (appPreferenceManager.getLeaveFlag() != 0) {
                         pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
@@ -345,16 +346,23 @@ public class HomeScreenActivity extends AbstractActivity
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         } else if (id == R.id.nav_leave) {
-            toolbarHome.setVisibility(View.VISIBLE);
-            pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+                Toast.makeText(activity, "You are not authorize to view this module.", Toast.LENGTH_LONG).show();
+            } else {
+                toolbarHome.setVisibility(View.VISIBLE);
+                pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            }
         } else if (id == R.id.nav_change_password) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(ResetPasswordFragment.newInstance(), false, false, ResetPasswordFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         } else if (id == R.id.nav_credit) {
-
-            toolbarHome.setVisibility(View.VISIBLE);
-            pushFragments(CreditFragment.newInstance(), false, false,
-                    CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+                Toast.makeText(activity, "You are not authorize to view this module.", Toast.LENGTH_LONG).show();
+            } else {
+                toolbarHome.setVisibility(View.VISIBLE);
+                pushFragments(CreditFragment.newInstance(), false, false,
+                        CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+            }
             //   Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_feedback) {
 
@@ -373,17 +381,24 @@ public class HomeScreenActivity extends AbstractActivity
                 logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
                 if (isNetworkAvailable(activity)) {
                     logoutAsyncTask.execute(logoutAsyncTask);
-                    CallLogOutDevice();
+                    if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+
+                    } else {
+                        CallLogOutDevice();
+                    }
                 } else {
                     Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
                 }
             }
         } else if (id == R.id.nav_communication) {
-            toolbarHome.setVisibility(View.VISIBLE);
-            // Toast.makeText(activity, "Coming Soon..", Toast.LENGTH_SHORT).show();
+            if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+                Toast.makeText(activity, "You are not authorize to view this module.", Toast.LENGTH_LONG).show();
+            } else {
+                toolbarHome.setVisibility(View.VISIBLE);
+                // Toast.makeText(activity, "Coming Soon..", Toast.LENGTH_SHORT).show();
 
-            showOptionsinAlert();
-
+                showOptionsinAlert();
+            }
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

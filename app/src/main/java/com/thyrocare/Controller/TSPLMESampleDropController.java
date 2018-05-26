@@ -1,11 +1,12 @@
 package com.thyrocare.Controller;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
-import com.thyrocare.activity.HomeScreenActivity;
+import com.thyrocare.activity.LMEMapDisplayFragmentActivity;
 import com.thyrocare.fragment.LME.LMEMasterBarcodeScanFragment;
 import com.thyrocare.fragment.LME.LME_OrdersDisplayFragment;
 import com.thyrocare.fragment.LME.LME_WLMISFragment;
@@ -29,6 +30,7 @@ import static com.thyrocare.utils.api.NetworkUtils.isNetworkAvailable;
 
 public class TSPLMESampleDropController {
 
+    LMEMapDisplayFragmentActivity mLMEMapDisplayFragmentActivity;
     Context mContext;
     LME_OrdersDisplayFragment mLME_OrdersDisplayFragment;
     LMEMasterBarcodeScanFragment mLMEMasterBarcodeScanFragment;
@@ -50,6 +52,12 @@ public class TSPLMESampleDropController {
     public TSPLMESampleDropController(Context activity, LME_WLMISFragment fragment) {
         this.mContext = activity;
         this.mLME_WLMISFragment = fragment;
+    }
+
+    public TSPLMESampleDropController(FragmentActivity activity, LMEMapDisplayFragmentActivity pLMEMapDisplayFragmentActivity) {
+        this.mContext = activity;
+        this.mLMEMapDisplayFragmentActivity = pLMEMapDisplayFragmentActivity;
+        flag = 3;
     }
 
     public void CallGetSampleDropDetailsbyTSPLME(String Id, int batch_f) {
@@ -121,6 +129,8 @@ public class TSPLMESampleDropController {
                     mLME_OrdersDisplayFragment.StartButtonClickedSuccess();
                 }else if(flag == 2) {
                     mLMEMasterBarcodeScanFragment.EndButtonClickedSuccess();
+                }else if(flag == 3) {
+                    mLMEMapDisplayFragmentActivity.EndButtonClickedSuccess();
                 }
             }else {
 

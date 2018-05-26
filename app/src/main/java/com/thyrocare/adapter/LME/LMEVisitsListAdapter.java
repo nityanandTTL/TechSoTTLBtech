@@ -5,16 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 
 import com.thyrocare.R;
 import com.thyrocare.fragment.LME.LME_OrdersDisplayFragment;
 import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 /**
@@ -25,10 +24,14 @@ public class LMEVisitsListAdapter extends RecyclerView.Adapter<LMEVisitsListAdap
 
     ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> mListArray;
     LME_OrdersDisplayFragment mLME_OrdersDisplayFragment;
+    private final ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> arraylist;
 
     public LMEVisitsListAdapter(ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> materialDetailsModels, LME_OrdersDisplayFragment fragment) {
         this.mListArray = materialDetailsModels;
         this.mLME_OrdersDisplayFragment = fragment;
+
+        this.arraylist = new ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>();
+        this.arraylist.addAll(mListArray);
 
     }
 
@@ -60,6 +63,25 @@ public class LMEVisitsListAdapter extends RecyclerView.Adapter<LMEVisitsListAdap
     @Override
     public int getItemCount() {
         return mListArray.size();
+    }
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        mListArray.clear();
+        if (charText.length() == 0) {
+            mListArray.addAll(arraylist);
+        }
+        else
+        {
+            for (SampleDropDetailsbyTSPLMEDetailsModel wp : arraylist)
+            {
+                if (wp.getSourceCode().toLowerCase(Locale.getDefault()).contains(charText))
+                {
+                    mListArray.add(wp);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

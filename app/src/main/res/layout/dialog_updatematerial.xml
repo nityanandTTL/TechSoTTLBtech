@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_cancel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="4dp"
+            android:src="@drawable/canceldialog_icon" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <EditText
+                        android:id="@+id/edt_itemname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="32dp"
+                        android:layout_marginRight="32dp"
+                        android:hint="Item"
+                        android:editable="false"
+                        android:maxLines="1"
+                        android:nextFocusForward="@+id/password_login"
+                        android:singleLine="true"
+                        android:textSize="15sp" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <EditText
+                        android:id="@+id/edt_virtualstk"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="32dp"
+                        android:layout_marginRight="32dp"
+                        android:digits="0123456789"
+                        android:hint="Virtual Stock"
+                        android:maxLines="1"
+                        android:inputType="number"
+                        android:nextFocusForward="@+id/password_login"
+                        android:singleLine="true"
+                        android:textSize="15sp" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <EditText
+                        android:id="@+id/edt_actualstk"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="32dp"
+                        android:inputType="number"
+                        android:layout_marginRight="32dp"
+                        android:hint="Actual Stock"
+                        android:digits="0123456789"
+                        android:maxLines="1"
+                        android:nextFocusForward="@+id/password_login"
+                        android:singleLine="true"
+                        android:textSize="15sp" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <EditText
+                        android:id="@+id/edt_rem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="32dp"
+                        android:layout_marginRight="32dp"
+                        android:hint="Remarks"
+                        android:maxLines="3"
+                        android:nextFocusForward="@+id/password_login"
+                        android:textSize="15sp" />
+                </android.support.design.widget.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/btn_updatemat"
+                        android:layout_width="200dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/login_btn_bg"
+                        android:gravity="center"
+                        android:minEms="8"
+                        android:padding="@dimen/dp_2"
+                        android:text="Update"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:gravity="center"></LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

@@ -30,6 +30,7 @@ import com.thyrocare.models.api.response.GetTestListResponseModel;
 import com.thyrocare.models.api.response.LeaveAppliedResponseModel;
 import com.thyrocare.models.api.response.LoginDeviceResponseModel;
 import com.thyrocare.models.api.response.LoginResponseModel;
+import com.thyrocare.models.api.response.MaterialBtechStockResponseModel;
 import com.thyrocare.models.api.response.MaterialINVResponseModel;
 import com.thyrocare.models.api.response.MessageModel;
 import com.thyrocare.models.api.response.OrderBookingResponseVisitModel;
@@ -1021,6 +1022,14 @@ public class ResponseParser implements AppConstants {
         MaterialINVResponseModel materialINVResponseModel = null;
         if (!parseIntoError(json, statusCode)) {
             materialINVResponseModel = gson.fromJson(json, MaterialINVResponseModel.class);
+        }
+        return materialINVResponseModel;
+    }
+
+    public MaterialBtechStockResponseModel getMaterialStockDetailsResponseModel(String json, int statusCode) {
+        MaterialBtechStockResponseModel materialINVResponseModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            materialINVResponseModel = gson.fromJson(json, MaterialBtechStockResponseModel.class);
         }
         return materialINVResponseModel;
     }

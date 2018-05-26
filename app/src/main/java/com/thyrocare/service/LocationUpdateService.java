@@ -16,8 +16,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v7.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Action;
+import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -657,7 +657,7 @@ public class LocationUpdateService extends IntentService {
                 if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
 //                    Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
 
-                    if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBT_ROLE_ID)) {
+                    if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBT_ROLE_ID)|| appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.TSP_ROLE_ID)) {
                         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(getApplicationContext());
                         ApiCallAsyncTask AcceptOrderNotificationApiAsyncTask = asyncTaskForRequest.getAcceptOrderNotification();
                         AcceptOrderNotificationApiAsyncTask.setApiCallAsyncTaskDelegate(new AcceptOrderNotificationApiAsyncTaskDelegateResult());

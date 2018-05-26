@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tablematerialorder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/dp_5"
+    android:layout_marginRight="@dimen/dp_5"
+    android:background="@android:color/white"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:background="@color/navyblue"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="Item"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="0.8"
+        android:background="@color/navyblue"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="Virtual Stock"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="0.8"
+        android:background="@color/navyblue"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="Actual Stock"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
+
+
+</TableRow>

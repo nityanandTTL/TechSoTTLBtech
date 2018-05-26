@@ -184,7 +184,11 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
                     if (isNetworkAvailable(activity)) {
                         logoutAsyncTask.execute(logoutAsyncTask);
-                        CallLogOutDevice();
+                        if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+
+                        } else {
+                            CallLogOutDevice();
+                        }
                     } else {
                         TastyToast.makeText(activity, "Logout functionality is only available in Online Mode", TastyToast.LENGTH_LONG, TastyToast.INFO);
                         // Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();

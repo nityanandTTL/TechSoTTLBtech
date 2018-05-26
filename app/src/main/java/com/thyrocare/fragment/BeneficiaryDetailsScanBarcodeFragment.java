@@ -72,7 +72,6 @@ import com.thyrocare.models.data.LabAlertMasterModel;
 import com.thyrocare.models.data.OrderBookingDetailsModel;
 import com.thyrocare.models.data.OrderDetailsModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
-import com.thyrocare.models.data.REMOVEBENSMSPOSTDATAModel;
 import com.thyrocare.models.data.TestClinicalHistoryModel;
 import com.thyrocare.models.data.TestGroupListModel;
 import com.thyrocare.models.data.TestRateMasterModel;

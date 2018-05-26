@@ -37,6 +37,7 @@ import com.thyrocare.models.api.request.ServiceUpdateRequestModel;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.api.request.TrackBtechLocationRequestModel;
 import com.thyrocare.models.api.request.Tsp_Send_RequestModel;
+import com.thyrocare.models.api.request.UpdateMaterial;
 import com.thyrocare.models.data.REMOVEBENSMSPOSTDATAModel;
 import com.thyrocare.models.data.ScannedMasterBarcodebyLMEPOSTDATAModel;
 import com.thyrocare.utils.api.Logger;
@@ -529,7 +530,7 @@ public class AsyncTaskForRequest {
     }
 
     /*
-	 * Fetch Order Detail by visit Api Integration*/
+     * Fetch Order Detail by visit Api Integration*/
 
     public ApiCallAsyncTask getFetchOrderDetailsByVisitRequestAsyncTask(String orderID) {
         apiCallAsyncTask = null;
@@ -999,6 +1000,25 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_MATERIALINV_DETAIL + "/" + appPreferenceManager.getLoginResponseModel().getUserID());
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetching_MaterialsINV_details_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getBtechVirtualStoack_DETAILRequestAsyncTask() {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_BtechVirtualStoack_DETAIL + "/" + appPreferenceManager.getLoginResponseModel().getUserID());
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -1983,6 +2003,8 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarVisible(false);
+            apiCallAsyncTask.setProgressBarCancellable(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2034,7 +2056,7 @@ public class AsyncTaskForRequest {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             Log.e(AsyncTaskForRequest.class.getSimpleName(), "getTestListAsyncTask: ");
-            abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.GET_ERecipt + "/" + orderid);
 
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
@@ -2057,7 +2079,7 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
             String postJson = new Gson().toJson(rembensmsRequestModel);
             abstractApiModel.setPostData(postJson);
-            abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.POST_REMOVE_BEN_SMS);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
@@ -2076,8 +2098,8 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.GetSampleDropDetailsbyTSPLME + "/" + id +"/"+batch_f);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.GetSampleDropDetailsbyTSPLME + "/" + id + "/" + batch_f);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -2097,7 +2119,7 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
             String postJson = new Gson().toJson(rembensmsRequestModel);
             abstractApiModel.setPostData(postJson);
-            abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.PostScannedMasterBarcodebyLME);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
@@ -2116,13 +2138,36 @@ public class AsyncTaskForRequest {
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
-            abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.GetWLMIS + "/" + id);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage("Please wait...");
             apiCallAsyncTask.setProgressBarCancellable(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getPostStockMaterialOrderAsyncTask(UpdateMaterial setmaterialorderRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(setmaterialorderRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_BtechVirtualStoackUpdate_DETAIL);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_changing_MaterailsOrder_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

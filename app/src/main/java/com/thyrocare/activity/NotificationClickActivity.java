@@ -4,25 +4,21 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
-import com.thyrocare.dao.models.OrderDetailsDao;
 import com.thyrocare.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.thyrocare.dialog.ConfirmRequestReleaseDialog;
-import com.thyrocare.fragment.VisitOrdersDisplayFragment;
 import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
-import com.thyrocare.models.data.OrderDetailsModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
-import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.BundleConstants;
 
 import org.json.JSONException;
