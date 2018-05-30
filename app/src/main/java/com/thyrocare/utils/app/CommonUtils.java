@@ -15,8 +15,12 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.TypedValue;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.activity.LoginScreenActivity;
+import com.thyrocare.dao.DhbDao;
 import com.thyrocare.models.api.response.MessageModel;
 import com.thyrocare.utils.api.Logger;
 
@@ -227,4 +231,27 @@ public class CommonUtils {
         }
     }
 
+    public static void CallLogOutFromDevice(Context mContext, Activity mActivity, AppPreferenceManager appPreferenceManager, DhbDao dhbDao) {
+        try {
+            TastyToast.makeText(mContext, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            appPreferenceManager.clearAllPreferences();
+            dhbDao.deleteTablesonLogout();
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            mActivity.startActivity(homeIntent);
+            // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+            Intent n = new Intent(mContext, LoginScreenActivity.class);
+            n.setAction(Intent.ACTION_MAIN);
+            n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            mActivity.startActivity(n);
+            mActivity.finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

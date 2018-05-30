@@ -16,6 +16,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.Controller.DeviceLogOutController;
 import com.thyrocare.R;
 import com.thyrocare.application.ApplicationController;
@@ -365,6 +366,8 @@ public class SplashScreenActivity extends AbstractActivity {
                 startActivity(intent);
 
                 finish();
+            }else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
                 Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
                 finishAffinity();
@@ -377,6 +380,33 @@ public class SplashScreenActivity extends AbstractActivity {
         }
     }
 
+    public void CallLogOutFromDevice() {
+        try {
+            TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            appPreferenceManager.clearAllPreferences();
+            try {
+                new DhbDao(activity).deleteTablesonLogout();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
+            // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+            Intent n = new Intent(activity, LoginScreenActivity.class);
+            n.setAction(Intent.ACTION_MAIN);
+            n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(n);
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

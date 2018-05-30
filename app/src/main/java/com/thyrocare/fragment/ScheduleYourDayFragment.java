@@ -17,10 +17,12 @@ import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
+import com.thyrocare.activity.LoginScreenActivity;
 import com.thyrocare.activity.ScheduleYourDayActivity;
 import com.thyrocare.activity.ScheduleYourDayActivity2;
 import com.thyrocare.activity.ScheduleYourDayIntentActivity;
 import com.thyrocare.adapter.SlotsDisplayAdapter;
+import com.thyrocare.dao.DhbDao;
 import com.thyrocare.delegate.SlotsSelectionDelegate;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.api.response.BtechAvaliabilityResponseModel;
@@ -348,6 +350,8 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                     }
                 }
                 initData();
+            } else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
                 Toast.makeText(activity, "Failed to Fetch Slots", Toast.LENGTH_SHORT).show();
             }
@@ -357,6 +361,34 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         public void onApiCancelled() {
 
         }
+    }
+
+    public void CallLogOutFromDevice() {
+        try {
+            TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            appPreferenceManager.clearAllPreferences();
+            try {
+                new DhbDao(activity).deleteTablesonLogout();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            getActivity().startActivity(homeIntent);
+            // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+            Intent n = new Intent(activity, LoginScreenActivity.class);
+            n.setAction(Intent.ACTION_MAIN);
+            n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            getActivity().startActivity(n);
+            getActivity().finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void initData() {
@@ -397,6 +429,8 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 } else {
                     pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                 }
+            } else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
                 TastyToast.makeText(activity,  "Failed to set Availability", TastyToast.LENGTH_LONG, TastyToast.ERROR);
                 //Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();

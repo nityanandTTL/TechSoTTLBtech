@@ -44,6 +44,7 @@ import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.NetworkUtils;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.InputUtils;
 
@@ -238,6 +239,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }else if (statusCode == 401) {
+                CommonUtils.CallLogOutFromDevice(activity, activity, appPreferenceManager, dhbDao);
             } else {
                 TastyToast.makeText(activity, "Failed to Logout ", TastyToast.LENGTH_LONG, TastyToast.ERROR);
                 // Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
@@ -459,6 +462,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     todateapi = selfieUploadResponseModel.getToDate();
                     callMasterSync();
                 }
+            } else if (statusCode == 401) {
+                CommonUtils.CallLogOutFromDevice(activity, activity, appPreferenceManager, dhbDao);
             } else {
                 if (IS_DEBUG)
                     TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
@@ -472,7 +477,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             // Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private boolean isServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);

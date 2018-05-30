@@ -2,6 +2,7 @@ package com.thyrocare.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -542,6 +543,8 @@ public class HomeScreenActivity extends AbstractActivity
                     e.printStackTrace();
                 }
 
+            } else if (statusCode == 401) {
+                CommonUtils.CallLogOutFromDevice(activity, (Activity) activity, appPreferenceManager, dhbDao);
             } else {
                 Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
             }

@@ -11,8 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.adapter.SlotsDisplayAdapter;
+import com.thyrocare.dao.DhbDao;
 import com.thyrocare.delegate.SlotsSelectionDelegate;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.data.SlotModel;
@@ -58,7 +60,7 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
 
     private String lasScheduleDate;
     String dayAfterttomorrowAsString;
-    private String disableNo="";
+    private String disableNo = "";
 
 
     public ScheduleYourDayActivity2() {
@@ -282,9 +284,9 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
         llSlotsDisplay = (LinearLayout) findViewById(R.id.ll_slots_display);
         gvSlots = (GridView) findViewById(R.id.gv_slots);
 
-        if(disableNo.toString().equals("1")){
+        if (disableNo.toString().equals("1")) {
             txtNo.setVisibility(View.INVISIBLE);
-        }else {
+        } else {
             txtNo.setVisibility(View.VISIBLE);
         }
     }
@@ -302,6 +304,8 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
                     }
                 }
                 initData();
+            } else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
                 Toast.makeText(activity, "Failed to Fetch Slots", Toast.LENGTH_SHORT).show();
             }
@@ -311,6 +315,34 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
         public void onApiCancelled() {
 
         }
+    }
+
+    public void CallLogOutFromDevice() {
+        try {
+            TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            appPreferenceManager.clearAllPreferences();
+            try {
+                new DhbDao(activity).deleteTablesonLogout();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
+            // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+            Intent n = new Intent(activity, LoginScreenActivity.class);
+            n.setAction(Intent.ACTION_MAIN);
+            n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(n);
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void initData() {
@@ -357,6 +389,8 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
                     i.putExtra("LEAVEINTIMATION", "0");
                     startActivity(i);
                 }
+            } else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
 //                pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                 Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
