@@ -22,6 +22,7 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
@@ -159,6 +160,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         faceCountView.setText(faces.size() + " faces detected");*/
             //Toast.makeText(activity, "faces detected "+faces.size(), Toast.LENGTH_SHORT).show();
             faceDetected = faces.size();
+            Toast.makeText(activity, ""+faces.size(), Toast.LENGTH_SHORT).show();
             detector.release();
         } catch (Exception e) {
             e.printStackTrace();
@@ -268,6 +270,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_takePhoto) {
+            faceDetected = 0;
             cameraIntent();
         }
         if (v.getId() == R.id.btn_uploadPhoto) {
@@ -308,26 +311,15 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         if (encodedProImg.isEmpty()) {
             TastyToast.makeText(activity, getString(R.string.add_selfie_error), TastyToast.LENGTH_LONG, TastyToast.WARNING);
             return false;
-        }
-       /* if (faceDetected==0){
-           // Toast.makeText(activity, "No face detected", Toast.LENGTH_SHORT).show();
+        }else if(faceDetected == 0){
             TastyToast.makeText(activity,getString(R.string.no_face_detected), TastyToast.LENGTH_LONG, TastyToast.WARNING);
             btn_takePhoto.setVisibility(View.VISIBLE);
             btn_uploadPhoto.setVisibility(View.GONE);
             return false;
         }
-        if(faceDetected>1){
-            TastyToast.makeText(activity,getString(R.string.more_than_one_face_detected), TastyToast.LENGTH_LONG, TastyToast.WARNING);
-            return false;
-        }*/
+
         return true;
     }
-    /*  private boolean validate() {
-        if (faceDetected==0){
-            return false;
-        }
-        return !encodedProImg.isEmpty();
-    }*/
 
     private void cameraIntent() {
 
