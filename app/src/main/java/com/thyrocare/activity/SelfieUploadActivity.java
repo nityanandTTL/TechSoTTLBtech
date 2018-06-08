@@ -12,7 +12,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.MediaStore;
@@ -24,9 +27,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.Frame;
+/*import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.microsoft.projectoxford.face.FaceServiceClient;
+import com.microsoft.projectoxford.face.FaceServiceRestClient;
+import com.microsoft.projectoxford.face.contract.VerifyResult;
+
+import com.microsoft.projectoxford.face.FaceServiceClient;
+import com.microsoft.projectoxford.face.contract.Face;
+import com.microsoft.projectoxford.face.contract.VerifyResult;
+
+*/
+
+
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.Controller.DeviceLogOutController;
@@ -35,6 +49,7 @@ import com.thyrocare.application.ApplicationController;
 import com.thyrocare.customview.TouchImageView;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.models.api.request.SelfieUploadRequestModel;
+import com.thyrocare.models.api.response.BtechImageResponseModel;
 import com.thyrocare.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
@@ -51,8 +66,18 @@ import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
 
 public class SelfieUploadActivity extends AbstractActivity implements View.OnClickListener {
     private static final String TAG = SelfieUploadActivity.class.getSimpleName();
@@ -78,7 +103,12 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private String fromdateapi, todateapi;
     Uri outPutfileUri;
     private Button Logout;
-    private int faceDetected;
+    private int faceDetected = 0;
+
+    // The IDs of the two faces to be verified.
+    private UUID mFaceId0;
+    private UUID mFaceId1;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onStart() {
@@ -141,6 +171,12 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         initData();
         setListners();
 
+        if (BundleConstants.Flag_facedetection) {
+            CallApiOpenImage(appPreferenceManager.getLoginResponseModel().getUserID());
+        } else {
+
+        }
+
     }
 
     private void faceCount(Bitmap bitmap) {
@@ -148,19 +184,19 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         Bitmap bitmap = BitmapFactory.decodeStream(stream);*/
 
         try {
-            FaceDetector detector = new FaceDetector.Builder(getApplicationContext())
+            com.google.android.gms.vision.face.FaceDetector detector = new com.google.android.gms.vision.face.FaceDetector.Builder(getApplicationContext())
                     .setTrackingEnabled(false)
                     .build();
 
             // Create a frame from the bitmap and run face detection on the frame.
-            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-            SparseArray<Face> faces = detector.detect(frame);
+            com.google.android.gms.vision.Frame frame = new com.google.android.gms.vision.Frame.Builder().setBitmap(bitmap).build();
+            SparseArray<com.google.android.gms.vision.face.Face> faces = detector.detect(frame);
 
        /* TextView faceCountView = (TextView) findViewById(R.id.face_count);
         faceCountView.setText(faces.size() + " faces detected");*/
             //Toast.makeText(activity, "faces detected "+faces.size(), Toast.LENGTH_SHORT).show();
             faceDetected = faces.size();
-            Toast.makeText(activity, ""+faces.size(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(activity, ""+faces.size(), Toast.LENGTH_SHORT).show();
             detector.release();
         } catch (Exception e) {
             e.printStackTrace();
@@ -241,7 +277,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }else if (statusCode == 401) {
+            } else if (statusCode == 401) {
                 CommonUtils.CallLogOutFromDevice(activity, activity, appPreferenceManager, dhbDao);
             } else {
                 TastyToast.makeText(activity, "Failed to Logout ", TastyToast.LENGTH_LONG, TastyToast.ERROR);
@@ -275,27 +311,16 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
         if (v.getId() == R.id.btn_uploadPhoto) {
             if (validate()) {
-                try {
-                    AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-                    SelfieUploadRequestModel selfieUploadRequestModel = new SelfieUploadRequestModel();
-                    if (appPreferenceManager.getLoginResponseModel() != null) {
-                        if (appPreferenceManager.getLoginResponseModel().getUserID() != null) {
-                            selfieUploadRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
-                        }
-                    }
-
-                    selfieUploadRequestModel.setPic("" + encodedProImg);
-
-                    ApiCallAsyncTask selfieUploadApiAsyncTask = asyncTaskForRequest.getSelfieUploadRequestAsyncTask(selfieUploadRequestModel);
-                    selfieUploadApiAsyncTask.setApiCallAsyncTaskDelegate(new SelfieApiAsyncTaskDelegateResult());
-                    if (isNetworkAvailable(activity)) {
-                        selfieUploadApiAsyncTask.execute(selfieUploadApiAsyncTask);
+                if (BundleConstants.Flag_facedetection) {
+                    if (mFaceId0 == null) {
+                        Toast.makeText(getApplicationContext(), "Please take photo", Toast.LENGTH_SHORT).show();
+                    } else if (mFaceId1 == null) {
+                        Toast.makeText(getApplicationContext(), "Please Upload photo", Toast.LENGTH_SHORT).show();
                     } else {
-                        TastyToast.makeText(activity, "Check Internet Connection", TastyToast.LENGTH_LONG, TastyToast.ERROR);
-                        // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                        new VerificationTask(mFaceId0, mFaceId1).execute();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    CallPostImageData();
                 }
             } /*else {
                 TastyToast.makeText(activity,getString(R.string.add_selfie_error), TastyToast.LENGTH_LONG, TastyToast.WARNING);
@@ -307,12 +332,37 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
     }
 
+    private void CallPostImageData() {
+        try {
+            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+            SelfieUploadRequestModel selfieUploadRequestModel = new SelfieUploadRequestModel();
+            if (appPreferenceManager.getLoginResponseModel() != null) {
+                if (appPreferenceManager.getLoginResponseModel().getUserID() != null) {
+                    selfieUploadRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
+                }
+            }
+
+            selfieUploadRequestModel.setPic("" + encodedProImg);
+
+            ApiCallAsyncTask selfieUploadApiAsyncTask = asyncTaskForRequest.getSelfieUploadRequestAsyncTask(selfieUploadRequestModel);
+            selfieUploadApiAsyncTask.setApiCallAsyncTaskDelegate(new SelfieApiAsyncTaskDelegateResult());
+            if (isNetworkAvailable(activity)) {
+                selfieUploadApiAsyncTask.execute(selfieUploadApiAsyncTask);
+            } else {
+                TastyToast.makeText(activity, "Check Internet Connection", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private boolean validate() {
         if (encodedProImg.isEmpty()) {
             TastyToast.makeText(activity, getString(R.string.add_selfie_error), TastyToast.LENGTH_LONG, TastyToast.WARNING);
             return false;
-        }else if(faceDetected == 0){
-            TastyToast.makeText(activity,getString(R.string.no_face_detected), TastyToast.LENGTH_LONG, TastyToast.WARNING);
+        } else if (faceDetected == 0) {
+            TastyToast.makeText(activity, getString(R.string.no_face_detected), TastyToast.LENGTH_LONG, TastyToast.WARNING);
             btn_takePhoto.setVisibility(View.VISIBLE);
             btn_uploadPhoto.setVisibility(View.GONE);
             return false;
@@ -389,7 +439,12 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
         thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        faceCount(thumbnail);
+
+        if (BundleConstants.Flag_facedetection) {
+            detect(thumbnail, 1);
+        } else {
+            faceCount(thumbnail);
+        }
         //===========================
         /*FaceDetector faceDetector=new FaceDetector(thumbnail.getWidth(),thumbnail.getHeight(),1);
         FaceDetector.Face[] face = new FaceDetector.Face[1];
@@ -404,11 +459,22 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
         encodedProImg = CommonUtils.encodeImage(thumbnail);
+
         if (!InputUtils.isNull(encodedProImg)) {
             //Toast.makeText(activity, "if", Toast.LENGTH_SHORT).show();
 
-            btn_uploadPhoto.setVisibility(View.VISIBLE);
-            btn_takePhoto.setVisibility(View.INVISIBLE);
+            if (BundleConstants.Flag_facedetection) {
+
+            } else {
+                if (faceDetected == 0) {
+                    TastyToast.makeText(activity, getString(R.string.no_face_detected), TastyToast.LENGTH_LONG, TastyToast.WARNING);
+                    btn_takePhoto.setVisibility(View.VISIBLE);
+                    btn_uploadPhoto.setVisibility(View.GONE);
+                } else {
+                    btn_uploadPhoto.setVisibility(View.VISIBLE);
+                    btn_takePhoto.setVisibility(View.INVISIBLE);
+                }
+            }
         } else {
             //Toast.makeText(activity, "else", Toast.LENGTH_SHORT).show();
 
@@ -665,5 +731,322 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
 
     }
+
+    private void CallApiOpenImage(String BTechId) {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchSlotsApiAsyncTask = asyncTaskForRequest.getBtechImageRequestAsyncTask(BTechId);
+        fetchSlotsApiAsyncTask.setApiCallAsyncTaskDelegate(new fetchBtechImageAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            fetchSlotsApiAsyncTask.execute(fetchSlotsApiAsyncTask);
+        } else {
+            TastyToast.makeText(activity, "Check Internet Connection..", TastyToast.LENGTH_LONG, TastyToast.INFO);
+        }
+    }
+
+    private class fetchBtechImageAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                ResponseParser responseParser = new ResponseParser(activity);
+                BtechImageResponseModel availableSlotsResponseModel = responseParser.getBTECHIMAGEModel(json, statusCode);
+                if (availableSlotsResponseModel != null) {
+                    GetResponseBtechImage(availableSlotsResponseModel);
+                } else {
+                    TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
+                }
+
+            } else {
+                BundleConstants.Flag_facedetection = false;
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    private void GetResponseBtechImage(BtechImageResponseModel availableSlotsResponseModel) {
+        if (availableSlotsResponseModel.getImgUrl() != null) {
+            if (!availableSlotsResponseModel.getImgUrl().equals("")) {
+                try {
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                //Your code goes here
+                                Bitmap image = getBitmapFromURL("http://bts.dxscloud.com/techsoapi/Images/BtechSelfi/07062018884543107.jpg");
+                                System.out.println("");
+                                detect(image, 0);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                    thread.start();
+
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            } else {
+                BundleConstants.Flag_facedetection = false;
+                TastyToast.makeText(activity, "Image not Available", TastyToast.LENGTH_LONG, TastyToast.INFO);
+            }
+        } else {
+            BundleConstants.Flag_facedetection = false;
+            TastyToast.makeText(activity, "Image not Available", TastyToast.LENGTH_LONG, TastyToast.INFO);
+        }
+    }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Start detecting in image specified by index.
+    private void detect(Bitmap bitmap, int index) {
+        // Put the image into an input stream for detection.
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(output.toByteArray());
+
+        // Start a background task to detect faces in the image.
+        new DetectionTask(index).execute(inputStream);
+    }
+
+    // Background task of face detection.
+    private class DetectionTask extends AsyncTask<InputStream, String, com.microsoft.projectoxford.face.contract.Face[]> {
+        // Index indicates detecting in which of the two images.
+        private int mIndex;
+        private boolean mSucceed = true;
+
+        DetectionTask(int index) {
+            mIndex = index;
+        }
+
+        @Override
+        protected com.microsoft.projectoxford.face.contract.Face[] doInBackground(InputStream... params) {
+            // Get an instance of face service client to detect faces in image.
+            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(getString(R.string.endpoint), getString(R.string.subscription_key));
+            try {
+                publishProgress("Detecting...");
+
+                // Start detection.
+                return faceServiceClient.detect(
+                        params[0],  /* Input stream of image to detect */
+                        true,       /* Whether to return face ID */
+                        false,       /* Whether to return face landmarks */
+                        /* Which face attributes to analyze, currently we support:
+                           age,gender,headPose,smile,facialHair */
+                        null);
+            } catch (Exception e) {
+                mSucceed = false;
+                publishProgress(e.getMessage());
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if(mIndex == 1) {
+                if (progressDialog != null) {
+                    progressDialog = null;
+                }
+                progressDialog = new ProgressDialog(activity);
+                progressDialog.setTitle(getString(R.string.loading));
+                progressDialog.show();
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(String... progress) {
+            if(mIndex == 1) {progressDialog.setMessage(progress[0]);}
+        }
+
+        @Override
+        protected void onPostExecute(com.microsoft.projectoxford.face.contract.Face[] result) {
+            if(mIndex == 1) {
+                try {
+                    if (progressDialog != null) {
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Show the result on screen when detection is done.
+            setUiAfterDetection(result, mIndex, mSucceed);
+        }
+    }
+
+    // Show the result on screen when detection in image that indicated by index is done.
+    private void setUiAfterDetection(com.microsoft.projectoxford.face.contract.Face[] result, int index, boolean succeed) {
+        List<com.microsoft.projectoxford.face.contract.Face> faces;
+        faces = new ArrayList<>();
+        if (result != null) {
+            faces = Arrays.asList(result);
+            if (faces.size() != 0) {
+                try {
+                    if (faces.size() > 1) {
+                       /* if (index == 1) {
+                            img_gal.setImageDrawable(null);
+                        } else {
+                            img_cam.setImageDrawable(null);
+                        }*/
+
+                        if (index == 1) {
+                            btn_takePhoto.setVisibility(View.VISIBLE);
+                            btn_uploadPhoto.setVisibility(View.GONE);
+                        }else {
+                            BundleConstants.Flag_facedetection = false;
+                        }
+
+                        Toast.makeText(getApplicationContext(), "Image contain more than 1 faces.", Toast.LENGTH_LONG).show();
+                    } else {
+                        if (index == 1) {
+                            faceDetected = faces.size();
+                            mFaceId1 = faces.get(0).faceId;
+                            btn_uploadPhoto.setVisibility(View.VISIBLE);
+                            btn_takePhoto.setVisibility(View.INVISIBLE);
+                        } else {
+                            mFaceId0 = faces.get(0).faceId;
+                        }
+                    }
+                    System.out.println("");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                if (index == 1) {
+                    TastyToast.makeText(activity, getString(R.string.no_face_detected), TastyToast.LENGTH_LONG, TastyToast.WARNING);
+                    btn_takePhoto.setVisibility(View.VISIBLE);
+                    btn_uploadPhoto.setVisibility(View.GONE);
+                }else {
+                    BundleConstants.Flag_facedetection = false;
+                }
+            }
+        }
+
+        if (result != null && result.length == 0) {
+            Toast.makeText(getApplicationContext(), "No face detected!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Background task for face verification.
+    private class VerificationTask extends AsyncTask<Void, String, com.microsoft.projectoxford.face.contract.VerifyResult> {
+        // The IDs of two face to verify.
+        private UUID mFaceId0;
+        private UUID mFaceId1;
+
+        VerificationTask(UUID faceId0, UUID faceId1) {
+            mFaceId0 = faceId0;
+            mFaceId1 = faceId1;
+        }
+
+        @Override
+        protected com.microsoft.projectoxford.face.contract.VerifyResult doInBackground(Void... params) {
+            // Get an instance of face service client to detect faces in image.
+            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(getString(R.string.endpoint), getString(R.string.subscription_key));
+            try {
+                publishProgress("Verifying...");
+
+                // Start verification.
+                return faceServiceClient.verify(
+                        mFaceId0,      /* The first face ID to verify */
+                        mFaceId1);     /* The second face ID to verify */
+            } catch (Exception e) {
+                publishProgress(e.getMessage());
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            if(progressDialog != null){
+                progressDialog = null;
+            }
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle(getString(R.string.loading));
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(String... progress) {
+            progressDialog.setMessage(progress[0]);
+        }
+
+        @Override
+        protected void onPostExecute(com.microsoft.projectoxford.face.contract.VerifyResult result) {
+
+            try {
+                if(progressDialog != null){
+                    if(progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (result != null) {
+                /*addLog("Response: Success. Face " + mFaceId0 + " and face "
+                        + mFaceId1 + (result.isIdentical ? " " : " don't ")
+                        + "belong to the same person");*/
+            }
+
+            // Show the result on screen when verification is done.
+            setUiAfterVerification(result);
+        }
+    }
+
+    // Show the result on screen when verification is done.
+    private void setUiAfterVerification(com.microsoft.projectoxford.face.contract.VerifyResult result) {
+        // Verification is done, hide the progress dialog.
+        // progressDialog.dismiss();
+
+        // Enable all the buttons.
+        // setAllButtonEnabledStatus(true);
+
+        // Show verification result.
+        if (result != null) {
+            DecimalFormat formatter = new DecimalFormat("#0.00");
+            String verificationResult = (result.isIdentical ? "The same person" : "Different persons")
+                    + ". The confidence is " + formatter.format(result.confidence);
+            int s = 0;
+            if (result.isIdentical) {
+                s = 1;
+            } else {
+                s = 2;
+            }
+            setInfo(verificationResult, s);
+        }
+    }
+
+    private void setInfo(String verificationResult, int isIdentical) {
+        if (isIdentical == 1) {
+            TastyToast.makeText(activity, "" + verificationResult, TastyToast.LENGTH_LONG, TastyToast.INFO);
+            CallPostImageData();
+        } else if (isIdentical == 2) {
+            btn_takePhoto.setVisibility(View.VISIBLE);
+            btn_uploadPhoto.setVisibility(View.GONE);
+            TastyToast.makeText(activity, "" + verificationResult, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+        }
+    }
+
 
 }

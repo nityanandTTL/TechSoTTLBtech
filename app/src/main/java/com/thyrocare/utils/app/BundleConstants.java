@@ -80,4 +80,7 @@ public class BundleConstants {
     public static String ORDER_SLOTID = "orderslotid";
     public static boolean ORDER_Notification = false;
     public static int batch_code=0;
+
+    //Flag True for Face detection, false to disable
+    public static boolean Flag_facedetection = false;
 }

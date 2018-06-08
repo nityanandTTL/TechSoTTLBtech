@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -39,6 +40,7 @@ import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.InputUtils;
 import com.thyrocare.utils.app.UiUtils;
 
@@ -90,6 +92,24 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
         edt_password_login.setTypeface(Typeface.DEFAULT);
         btn_login = (Button) findViewById(R.id.login_button);
         ll_login = (LinearLayout) findViewById(R.id.ll_login);
+
+        final ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+        toggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (toggleButton.getText().toString().equals("ON")) {
+                    BundleConstants.Flag_facedetection = true;
+                } else if (toggleButton.getText().toString().equals("OFF")) {
+                    BundleConstants.Flag_facedetection = false;
+                }
+
+                StringBuilder result = new StringBuilder();
+                result.append("ToggleButton1 : ").append(toggleButton.getText());
+                //Displaying the message in toast
+                Toast.makeText(getApplicationContext(), result.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     /*private void showSuccess(String title, String message) {

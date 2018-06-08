@@ -19,6 +19,8 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-sdk tools:overrideLibrary="com.microsoft.projectoxford.face"/>
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"

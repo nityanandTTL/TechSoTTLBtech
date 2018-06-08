@@ -14,6 +14,7 @@ import com.thyrocare.models.api.response.BtechAvaliabilityResponseModel;
 import com.thyrocare.models.api.response.BtechClientsResponseModel;
 import com.thyrocare.models.api.response.BtechCollectionsResponseModel;
 import com.thyrocare.models.api.response.BtechEstEarningsResponseModel;
+import com.thyrocare.models.api.response.BtechImageResponseModel;
 import com.thyrocare.models.api.response.BtechwithHubResponseModel;
 import com.thyrocare.models.api.response.BusinessErrorModel;
 import com.thyrocare.models.api.response.CampListDisplayResponseModel;
@@ -1184,5 +1185,13 @@ public class ResponseParser implements AppConstants {
         };
         slotModels = gson.fromJson(json, token.getType());
         return slotModels;
+    }
+
+    public BtechImageResponseModel getBTECHIMAGEModel(String json, int statusCode) {
+        BtechImageResponseModel fetchOrderSummaryResponseModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            fetchOrderSummaryResponseModel = gson.fromJson(json, BtechImageResponseModel.class);
+        }
+        return fetchOrderSummaryResponseModel;
     }
 }

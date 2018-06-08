@@ -140,6 +140,8 @@ public class AbstractApiModel implements AppConstants {
     public String FETCH_BtechVirtualStoack_DETAIL = VERSION_API_URL + "/MaterialOrderTracking/BtechVirtualStoack";
     public String FETCH_BtechVirtualStoackUpdate_DETAIL = VERSION_API_URL + "/MaterialOrderTracking/BtechVirtualStoackUpdate";
 
+    public String BTECH_IMAGE_DATA = VERSION_API_URL + "/OrderAllocation/BtechImage";
+
     public String BTECH_COLLECTIONS = VERSION_API_URL + "/BtechCollections";
 
     public String BTECH_HUB_DETAILS_DISPLAY = VERSION_API_URL + "/BtechHubs";
