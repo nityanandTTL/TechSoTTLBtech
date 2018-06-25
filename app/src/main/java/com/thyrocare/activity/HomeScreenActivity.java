@@ -241,7 +241,7 @@ public class HomeScreenActivity extends AbstractActivity
         try {
             if (AbstractApiModel.SERVER_BASE_API_URL_PROD.equals("http://bts.dxscloud.com/techsoapi")) {
                 txt_version_code.setText("Stag Version: " + CommonUtils.getAppVersion(activity));
-            } else if (AbstractApiModel.SERVER_BASE_API_URL_PROD.equals("https://www.dxscloud.com/techsoapi")) {
+            } else {
                 txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
             }
         } catch (Exception e) {

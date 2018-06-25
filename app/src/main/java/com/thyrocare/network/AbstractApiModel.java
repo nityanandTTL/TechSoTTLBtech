@@ -43,13 +43,14 @@ public class AbstractApiModel implements AppConstants {
     // 0com/btsapi";
 
 
-    public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.com/techsoapi";//staging
-    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
-//
-//    public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
-//    public static final String API_VERSION = "https://www.thyrocare.com/APIs";
+//    public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.com/techsoapi";//staging
+//    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
 
-//    public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
+//    public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
+    public static final String API_VERSION = "https://www.thyrocare.com/APIs";
+
+    //    public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
+    public static String SERVER_BASE_API_URL_PROD = "https://techso.thyrocare.cloud/techsoapi";//live new server
 //    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
 
 
@@ -141,6 +142,7 @@ public class AbstractApiModel implements AppConstants {
     public String FETCH_BtechVirtualStoackUpdate_DETAIL = VERSION_API_URL + "/MaterialOrderTracking/BtechVirtualStoackUpdate";
 
     public String BTECH_IMAGE_DATA = VERSION_API_URL + "/OrderAllocation/BtechImage";
+    public String BTECH_FACEIMAGE_DATA = VERSION_API_URL + "/OrderAllocation/BtechFaceDetection";
 
     public String BTECH_COLLECTIONS = VERSION_API_URL + "/BtechCollections";
 

@@ -8,6 +8,7 @@ public class BtechImageResponseModel {
     private int BtechId;
     private String ImgUrl;
     private String Response;
+    private int flag;
 
     public int getBtechId() {
         return BtechId;
@@ -31,5 +32,13 @@ public class BtechImageResponseModel {
 
     public void setResponse(String response) {
         Response = response;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 }

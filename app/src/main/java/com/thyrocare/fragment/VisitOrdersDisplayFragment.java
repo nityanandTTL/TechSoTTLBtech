@@ -3,6 +3,7 @@ package com.thyrocare.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -18,10 +19,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
@@ -47,6 +55,7 @@ import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.models.api.response.BtechEstEarningsResponseModel;
 import com.thyrocare.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.models.data.BeneficiaryDetailsModel;
+import com.thyrocare.models.data.DespositionDataModel;
 import com.thyrocare.models.data.KitsCountModel;
 import com.thyrocare.models.data.OrderDetailsModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
@@ -98,6 +107,9 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private String MaskedPhoneNumber = "";
     private boolean isFetchingOrders = false;
     public static boolean edit;
+    private ArrayList<DespositionDataModel> remarksDataModelsarr;
+    private ArrayList<String> remarksarr;
+    private DespositionDataModel remarksDataModel;
 
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
@@ -328,7 +340,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 @Override
                 public void onFirstPosition(View view, boolean isAccepted) {
 
-                    Log.e(TAG_FRAGMENT, "onFirstPosition: " );
+                    Log.e(TAG_FRAGMENT, "onFirstPosition: ");
                     if (!appPreferenceManager.isLoadSpotlightOnOrderd()) {
                         appPreferenceManager.setLoadSpotlightOnOrderd(true);
 
@@ -341,7 +353,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 @Override
                 public void onAcceptOrderFirstPosition(View view) {
 
-                    Log.e(TAG_FRAGMENT, "onAcceptOrderFirstPosition: " );
+                    Log.e(TAG_FRAGMENT, "onAcceptOrderFirstPosition: ");
 
                     loadSpotlightAfterAceepting(view);
 
@@ -528,6 +540,12 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         @Override
         public void onCallCustomer(OrderVisitDetailsModel orderVisitDetailsModel) {
 
+            /*try {
+                CallDespositionDialog(orderVisitDetailsModel);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }*/
+
             Intent intent = new Intent(Intent.ACTION_CALL);
             intent.setData(Uri.parse("tel:" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile()));
             activity.startActivity(intent);
@@ -575,6 +593,117 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 //  Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void CallDespositionDialog(final OrderVisitDetailsModel orderVisitDetailsModel) {
+        final Dialog dialog_ready = new Dialog(activity);
+        dialog_ready.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog_ready.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog_ready.setContentView(R.layout.dialog_desposition);
+//        dialog_ready.setCanceledOnTouchOutside(false);
+        dialog_ready.setCancelable(false);
+
+        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.70);
+//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.60);
+        dialog_ready.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        dialog_ready.show();
+
+        ImageView img_cnc = (ImageView) dialog_ready.findViewById(R.id.img_cnc);
+        img_cnc.setVisibility(View.GONE);
+        img_cnc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog_ready.dismiss();
+            }
+        });
+
+        TextView txt_odn = (TextView) dialog_ready.findViewById(R.id.txt_odn);
+        txt_odn.setText(""+orderVisitDetailsModel.getVisitId());
+
+        Spinner spn_desp = (Spinner) dialog_ready.findViewById(R.id.spn_desp);
+        remarksDataModelsarr = getDespData();
+        remarksDataModel = new DespositionDataModel();
+        if (remarksDataModelsarr != null && remarksDataModelsarr.size() > 0) {
+
+            remarksarr = new ArrayList<>();
+            if (remarksDataModelsarr != null && remarksDataModelsarr.size() > 0) {
+                for (DespositionDataModel remarksDataModels :
+                        remarksDataModelsarr) {
+                    remarksarr.add(remarksDataModels.getDesp_key().toUpperCase());
+                }
+            }
+
+            ArrayAdapter<String> spinneradapterremarks = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, remarksarr);
+            spinneradapterremarks.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spn_desp.setAdapter(spinneradapterremarks);
+            spn_desp.setSelection(0);
+            remarksDataModel = remarksDataModelsarr.get(0);
+            spn_desp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    remarksDataModel = remarksDataModelsarr.get(position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+
+
+            });
+        }
+
+        final EditText edt_desprem = (EditText) dialog_ready.findViewById(R.id.edt_desprem);
+        Button btn_proceed = (Button) dialog_ready.findViewById(R.id.btn_proceed);
+        btn_proceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (remarksDataModel != null) {
+                    if (remarksDataModel.getId() == 0) {
+                        TastyToast.makeText(activity, "Select desposition", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                    } else if (edt_desprem.getText().toString().trim().equals("")) {
+                        TastyToast.makeText(activity, "Enter Remarks", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                    } else {
+                        dialog_ready.dismiss();
+                        TastyToast.makeText(activity, "" + orderVisitDetailsModel.getVisitId() + " >> " + remarksDataModel.getDesp_key() + " >> " + edt_desprem.getText().toString().trim(), TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
+                    }
+
+                }
+            }
+        });
+
+    }
+
+    private ArrayList<DespositionDataModel> getDespData() {
+        ArrayList<DespositionDataModel> ent = new ArrayList<>();
+        DespositionDataModel e = new DespositionDataModel();
+        e.setId(0);
+        e.setDesp_key("SELECT");
+        ent.add(e);
+
+        e = new DespositionDataModel();
+        e.setId(1);
+        e.setDesp_key("Received");
+        ent.add(e);
+
+        e = new DespositionDataModel();
+        e.setId(2);
+        e.setDesp_key("Not Responding");
+        ent.add(e);
+
+        e = new DespositionDataModel();
+        e.setId(3);
+        e.setDesp_key("Busy");
+        ent.add(e);
+
+        e = new DespositionDataModel();
+        e.setId(4);
+        e.setDesp_key("Responded but busy");
+        ent.add(e);
+
+
+        return ent;
     }
 
     @Override

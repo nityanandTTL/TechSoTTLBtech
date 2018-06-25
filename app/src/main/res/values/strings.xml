@@ -143,7 +143,7 @@
     <string name="Sending_Ereciept">Sending Ereciept</string>
     <string name="app_notificationorders">Order</string>
     <string name="endpoint">https://westcentralus.api.cognitive.microsoft.com/face/v1.0</string>
-    <string name="subscription_key">33a5f0c48383471a95e413d097173470</string>
+    <string name="subscription_key">f416b621d7684a6bb49235cbcf00f7ec</string>
     <string-array name="payment_mode">
         <item>Cash By ATM</item>
         <item>Cash</item>

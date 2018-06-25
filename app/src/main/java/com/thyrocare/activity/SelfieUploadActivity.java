@@ -470,6 +470,10 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     TastyToast.makeText(activity, getString(R.string.no_face_detected), TastyToast.LENGTH_LONG, TastyToast.WARNING);
                     btn_takePhoto.setVisibility(View.VISIBLE);
                     btn_uploadPhoto.setVisibility(View.GONE);
+                }else if (faceDetected > 1) {
+                    TastyToast.makeText(activity, "Image contain more than 1 faces", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+                    btn_takePhoto.setVisibility(View.VISIBLE);
+                    btn_uploadPhoto.setVisibility(View.GONE);
                 } else {
                     btn_uploadPhoto.setVisibility(View.VISIBLE);
                     btn_takePhoto.setVisibility(View.INVISIBLE);
@@ -734,7 +738,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     private void CallApiOpenImage(String BTechId) {
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchSlotsApiAsyncTask = asyncTaskForRequest.getBtechImageRequestAsyncTask(BTechId);
+        ApiCallAsyncTask fetchSlotsApiAsyncTask = asyncTaskForRequest.getBtechFaceImageRequestAsyncTask(BTechId);
         fetchSlotsApiAsyncTask.setApiCallAsyncTaskDelegate(new fetchBtechImageAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
             fetchSlotsApiAsyncTask.execute(fetchSlotsApiAsyncTask);
@@ -752,6 +756,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 if (availableSlotsResponseModel != null) {
                     GetResponseBtechImage(availableSlotsResponseModel);
                 } else {
+                    BundleConstants.Flag_facedetection = false;
                     TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
                 }
 
@@ -767,36 +772,39 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
     }
 
-    private void GetResponseBtechImage(BtechImageResponseModel availableSlotsResponseModel) {
-        if (availableSlotsResponseModel.getImgUrl() != null) {
-            if (!availableSlotsResponseModel.getImgUrl().equals("")) {
-                try {
-                    Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                //Your code goes here
-                                Bitmap image = getBitmapFromURL("http://bts.dxscloud.com/techsoapi/Images/BtechSelfi/07062018884543107.jpg");
-                                System.out.println("");
-                                detect(image, 0);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+    private void GetResponseBtechImage(final BtechImageResponseModel availableSlotsResponseModel) {
+        if (availableSlotsResponseModel.getFlag() == 1) {
+            if (availableSlotsResponseModel.getImgUrl() != null) {
+                if (!availableSlotsResponseModel.getImgUrl().equals("")) {
+                    try {
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    //Your code goes here
+                                    Bitmap image = getBitmapFromURL("" + availableSlotsResponseModel.getImgUrl());
+                                    detect(image, 0);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
-                    });
+                        });
 
-                    thread.start();
+                        thread.start();
 
-                } catch (Exception e) {
-                    System.out.println(e);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                } else {
+                    BundleConstants.Flag_facedetection = false;
+                    TastyToast.makeText(activity, "Image not Available", TastyToast.LENGTH_LONG, TastyToast.INFO);
                 }
             } else {
                 BundleConstants.Flag_facedetection = false;
                 TastyToast.makeText(activity, "Image not Available", TastyToast.LENGTH_LONG, TastyToast.INFO);
             }
-        } else {
+        }else if(availableSlotsResponseModel.getFlag() == 0){
             BundleConstants.Flag_facedetection = false;
-            TastyToast.makeText(activity, "Image not Available", TastyToast.LENGTH_LONG, TastyToast.INFO);
         }
     }
 
@@ -860,7 +868,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
         @Override
         protected void onPreExecute() {
-            if(mIndex == 1) {
+            if (mIndex == 1) {
                 if (progressDialog != null) {
                     progressDialog = null;
                 }
@@ -872,12 +880,14 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
         @Override
         protected void onProgressUpdate(String... progress) {
-            if(mIndex == 1) {progressDialog.setMessage(progress[0]);}
+            if (mIndex == 1) {
+                progressDialog.setMessage(progress[0]);
+            }
         }
 
         @Override
         protected void onPostExecute(com.microsoft.projectoxford.face.contract.Face[] result) {
-            if(mIndex == 1) {
+            if (mIndex == 1) {
                 try {
                     if (progressDialog != null) {
                         if (progressDialog.isShowing()) {
@@ -912,7 +922,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                         if (index == 1) {
                             btn_takePhoto.setVisibility(View.VISIBLE);
                             btn_uploadPhoto.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             BundleConstants.Flag_facedetection = false;
                         }
 
@@ -936,7 +946,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     TastyToast.makeText(activity, getString(R.string.no_face_detected), TastyToast.LENGTH_LONG, TastyToast.WARNING);
                     btn_takePhoto.setVisibility(View.VISIBLE);
                     btn_uploadPhoto.setVisibility(View.GONE);
-                }else {
+                } else {
                     BundleConstants.Flag_facedetection = false;
                 }
             }
@@ -977,7 +987,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
         @Override
         protected void onPreExecute() {
-            if(progressDialog != null){
+            if (progressDialog != null) {
                 progressDialog = null;
             }
             progressDialog = new ProgressDialog(activity);
@@ -994,8 +1004,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         protected void onPostExecute(com.microsoft.projectoxford.face.contract.VerifyResult result) {
 
             try {
-                if(progressDialog != null){
-                    if(progressDialog.isShowing()) {
+                if (progressDialog != null) {
+                    if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
                 }

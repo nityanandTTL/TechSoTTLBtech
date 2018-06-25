@@ -2181,7 +2181,25 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BTECH_IMAGE_DATA + "/"+bTechId);
-//            abstractApiModel.setRequestUrl("http://bts.dxscloud.com/techsoapi/api/OrderAllocation/BtechImage/"+bTechId);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage("Please wait..");
+            apiCallAsyncTask.setProgressBarCancellable(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+
+    public ApiCallAsyncTask getBtechFaceImageRequestAsyncTask(String bTechId) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BTECH_FACEIMAGE_DATA + "/"+bTechId);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);

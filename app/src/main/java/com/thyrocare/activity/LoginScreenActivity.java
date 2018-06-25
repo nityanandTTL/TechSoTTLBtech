@@ -93,7 +93,7 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
         btn_login = (Button) findViewById(R.id.login_button);
         ll_login = (LinearLayout) findViewById(R.id.ll_login);
 
-        final ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+        /*final ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
         toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +109,7 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
                 //Displaying the message in toast
                 Toast.makeText(getApplicationContext(), result.toString(), Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
     }
 
     /*private void showSuccess(String title, String message) {
@@ -312,6 +312,8 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
                     }
                 }
 
+            }else if (statusCode == 400) {
+                TastyToast.makeText(getApplicationContext(), "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
             } else {
                 JSONObject jsonObject = new JSONObject(json);
 

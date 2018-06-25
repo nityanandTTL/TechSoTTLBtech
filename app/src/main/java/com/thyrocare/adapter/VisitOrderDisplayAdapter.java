@@ -132,7 +132,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     View view;
 
     //private refreshDelegate refreshDelegate;
-    public VisitOrderDisplayAdapter(HomeScreenActivity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels, VisitOrderDisplayRecyclerViewAdapterDelegate visitOrderDisplayRecyclerViewAdapterDelegate, refreshDelegate refreshDelegate, VisitOrderDisplayyRecyclerViewAdapterDelegate visitOrderDisplayyRecyclerViewAdapterDelegate, OrderPassRecyclerViewAdapterDelegate orderPassRecyclerViewAdapterDelegate,CallbackforShowCaseDelegate callbackforShowCaseDelegate) {
+    public VisitOrderDisplayAdapter(HomeScreenActivity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels, VisitOrderDisplayRecyclerViewAdapterDelegate visitOrderDisplayRecyclerViewAdapterDelegate, refreshDelegate refreshDelegate, VisitOrderDisplayyRecyclerViewAdapterDelegate visitOrderDisplayyRecyclerViewAdapterDelegate, OrderPassRecyclerViewAdapterDelegate orderPassRecyclerViewAdapterDelegate, CallbackforShowCaseDelegate callbackforShowCaseDelegate) {
         this.activity = activity;
         this.orderVisitDetailsModelsArr = orderDetailsResponseModels;
         this.visitOrderDisplayRecyclerViewAdapterDelegate = visitOrderDisplayRecyclerViewAdapterDelegate;
@@ -1013,6 +1013,16 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             }
             holder.tvAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
 
+            if (CheckPPBSisPresent(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster())) {
+                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
+                    holder.img_ppbs.setVisibility(View.GONE);
+                } else {
+                    holder.img_ppbs.setVisibility(View.VISIBLE);
+                }
+            } else {
+                holder.img_ppbs.setVisibility(View.GONE);
+            }
+
             holder.tvName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
             holder.tvName.setSelected(true);
             holder.tvSrNo.setText(pos + 1 + "");
@@ -1338,6 +1348,21 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                             }).show();
                 }
             });
+        }
+    }
+
+    private boolean CheckPPBSisPresent(ArrayList<BeneficiaryDetailsModel> benMaster) {
+
+        if (benMaster.size() != 0) {
+            for (int i = 0; i < benMaster.size(); i++) {
+                if (benMaster.get(i).getTestsCode().contains("PPBS")) {
+                    System.out.println("Nitya >> Matched");
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            return false;
         }
     }
 
@@ -1767,7 +1792,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         ImageView imgCBAccept;
         TextView txtSrNo, txtName, txtAge, txtAadharNo;
         ImageView imgRelease, imgRelease2, imgcall, img_view_test;
-        ImageView imgFastingStatus;
+        ImageView imgFastingStatus, img_ppbs;
         Button btnStartNavigation;
         FrameLayout fm_title;
         FoldingCell cell;
@@ -1781,6 +1806,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
             imgFastingStatus = (ImageView) itemView.findViewById(R.id.title_fasting);
             imgcall = (ImageView) itemView.findViewById(R.id.call);
+            img_ppbs = (ImageView) itemView.findViewById(R.id.img_ppbs);
             locationtitle = (TextView) itemView.findViewById(R.id.location_title);
             //  locationdata = (TextView) itemView.findViewById(R.id.location_datas);
             pintitle = (TextView) itemView.findViewById(R.id.pincode_title);
@@ -1845,13 +1871,13 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     }
 
     private void loadShowCase(View itemView, int position) {
-        view=itemView;
+        view = itemView;
 
         if (position == 0) {
-            if(itemView.findViewById(R.id.img_oas).isShown()){
-                callbackforShowCaseDelegate.onFirstPosition(itemView,true);
-            }else {
-                callbackforShowCaseDelegate.onFirstPosition(itemView,false);
+            if (itemView.findViewById(R.id.img_oas).isShown()) {
+                callbackforShowCaseDelegate.onFirstPosition(itemView, true);
+            } else {
+                callbackforShowCaseDelegate.onFirstPosition(itemView, false);
             }
 
         }

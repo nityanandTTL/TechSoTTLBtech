@@ -558,7 +558,6 @@ Logger.error("");
         img_view_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(activity, "img_view_test1", Toast.LENGTH_SHORT).show();
                 if (beneficiaryDetailsModel.getLeadId() == null) {
                     Logger.error("Lead ID null");
                    /* getviewTestData("SP33337413");*/
@@ -840,7 +839,8 @@ Logger.error("");
                         intentIntegrator.initiateScan();
                     }
                 });
-                edtBarcode.setOnClickListener(new View.OnClickListener() {
+
+                /*edtBarcode.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
@@ -898,7 +898,7 @@ Logger.error("");
                         });
                         sampleBarcodeDialog.show();
                     }
-                });
+                });*/
                 tlBarcodes.addView(tr);
             }
             llBarcodes.setVisibility(View.VISIBLE);

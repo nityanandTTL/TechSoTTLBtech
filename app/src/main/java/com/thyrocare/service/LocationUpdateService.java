@@ -45,6 +45,7 @@ import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
+import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.app.InputUtils;
 
@@ -382,7 +383,7 @@ public class LocationUpdateService extends IntentService {
         long[] pattern = {500, 500, 500, 500, 500};
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.drawable.app_logo)
+                .setSmallIcon(CommonUtils.getNotificationIcon())
                 .setContentTitle("Oms App Notification")
                 .setContentText("" + message + "from " + from)
                 .setAutoCancel(true).setVibrate(pattern)
@@ -509,7 +510,7 @@ public class LocationUpdateService extends IntentService {
         int mNotificationId = 002;
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 getApplicationContext());
-        Notification notification = mBuilder.setSmallIcon(R.drawable.app_logo).setTicker("Btech App").setWhen(0)
+        Notification notification = mBuilder.setSmallIcon(CommonUtils.getNotificationIcon()).setTicker("Btech App").setWhen(0)
                 .setAutoCancel(true)
                 .setContentTitle("Btech App")
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
@@ -691,7 +692,7 @@ public class LocationUpdateService extends IntentService {
         CharSequence msg = "YOUR ACCESS HAS BEEN BLOCKED DUE TO OPERATIONAL REASONS. PLEASE CONTACT YOUR SUPERVISOR.";
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 getApplicationContext());
-        Notification notification = mBuilder.setSmallIcon(R.drawable.app_logo).setTicker("Btech App").setWhen(0)
+        Notification notification = mBuilder.setSmallIcon(CommonUtils.getNotificationIcon()).setTicker("Btech App").setWhen(0)
                 .setAutoCancel(true)
                 .setContentTitle("Btech App")
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
@@ -719,7 +720,7 @@ public class LocationUpdateService extends IntentService {
         CharSequence msg = "NEW ORDER PENDING FOR YOUR ACCEPTANCE, DO IT IMMEDIATELY TO AVOID ANY INCONVENIENCE TO THE PATIENT.";
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 getApplicationContext());
-        Notification notification = mBuilder.setSmallIcon(R.drawable.app_logo).setTicker("Btech App").setWhen(0)
+        Notification notification = mBuilder.setSmallIcon(CommonUtils.getNotificationIcon()).setTicker("Btech App").setWhen(0)
                 .setAutoCancel(true)
                 .setContentTitle("Btech App")
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
@@ -753,7 +754,7 @@ public class LocationUpdateService extends IntentService {
 
             Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.app_logo)
+                    .setSmallIcon(CommonUtils.getNotificationIcon())
                     .setContentTitle(OrderNo)
                     .setContentText("Order is Assigned, Please Accept or Reject the Order")
                     .addAction(R.drawable.app_logo, "Yes", secondActivityPendingIntent)
@@ -794,7 +795,7 @@ public class LocationUpdateService extends IntentService {
 
             Notification notification = new NotificationCompat.Builder(getApplicationContext())
 //                    .setContentIntent(PendingIntent.getActivity(getApplicationContext(), 0, getNotificationIntent(), PendingIntent.FLAG_UPDATE_CURRENT))
-                    .setSmallIcon(R.drawable.app_logo)
+                    .setSmallIcon(CommonUtils.getNotificationIcon())
 //                    .setTicker("Action Buttons Notification Received")
                     .setContentTitle("" + AcceptOrderModel.getVisitId())
                     .setContentText("Order is Assigned, Please Accept or Reject the Order")

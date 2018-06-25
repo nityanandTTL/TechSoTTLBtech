@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.R;
 import com.thyrocare.activity.LoginScreenActivity;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.models.api.response.MessageModel;
@@ -253,5 +254,10 @@ public class CommonUtils {
             e.printStackTrace();
         }
 
+    }
+
+    public static int getNotificationIcon(){
+
+        return R.mipmap.app_nlogo;
     }
 }

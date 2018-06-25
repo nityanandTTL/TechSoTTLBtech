@@ -893,7 +893,7 @@ public class PaymentsActivity extends AbstractActivity {
                                         finish();
                                     }
                                 }).show();
-                    } else if (NarrationId == 2 && ModeId == 1) {
+                    } else if (NarrationId == 2 && (ModeId == 1 || ModeId == 10)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                         builder.setTitle("Verify Payment")
                                 .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
@@ -1061,11 +1061,17 @@ public class PaymentsActivity extends AbstractActivity {
     private void fetchDoCaptureResponse(boolean showProgressDialog) {
         JSONObject jsonRequest = new JSONObject();
         try {
+
             jsonRequest.put("URLId", paymentStartTransactionAPIResponseModel.getReqParameters().getURLId());
             for (PaymentNameValueModel pnvm :
                     paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection()) {
                 jsonRequest.put(pnvm.getKey(), pnvm.getValue());
             }
+
+            if (NarrationId == 2 && (ModeId == 1 || ModeId == 10)) {
+                jsonRequest.put("OrderNo", OrderNo);
+            }
+
             doCaptureResponseAsyncTask = asyncTaskForRequest.getDoCaptureResponseRequestAsyncTask(jsonRequest, paymentStartTransactionAPIResponseModel.getReqParameters().getAPIUrl());
             doCaptureResponseAsyncTask.setApiCallAsyncTaskDelegate(new DoCaptureResponseAsyncTaskDelegateResult(showProgressDialog));
             doCaptureResponseAsyncTask.setProgressBarVisible(showProgressDialog);
@@ -1190,6 +1196,11 @@ public class PaymentsActivity extends AbstractActivity {
                     paymentDoCaptureResponseAPIResponseModel.getReqParameters().getNameValueCollection()) {
                 jsonRequest.put(pnvm.getKey(), pnvm.getValue());
             }
+
+            if (NarrationId == 2 && (ModeId == 1 || ModeId == 10)) {
+                jsonRequest.put("OrderNo", OrderNo);
+            }
+
             recheckResponseAsyncTask = asyncTaskForRequest.getDoCaptureResponseRequestAsyncTask(jsonRequest, paymentDoCaptureResponseAPIResponseModel.getReqParameters().getAPIUrl());
             recheckResponseAsyncTask.setApiCallAsyncTaskDelegate(new DoCaptureResponseAsyncTaskDelegateResult(showProgressDialog));
             recheckResponseAsyncTask.setProgressBarVisible(showProgressDialog);

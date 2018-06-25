@@ -17,6 +17,7 @@ import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.activity.ScheduleYourDaySecondIntentActivity;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
+import com.thyrocare.utils.app.CommonUtils;
 
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         mBuilder.setContentTitle("New Message");
         mBuilder.setContentText("You've received new message.");
         mBuilder.setTicker("New Message Alert!");
-        mBuilder.setSmallIcon(R.drawable.app_logo);
+        mBuilder.setSmallIcon(CommonUtils.getNotificationIcon());
 
 
         mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.app_logo));
