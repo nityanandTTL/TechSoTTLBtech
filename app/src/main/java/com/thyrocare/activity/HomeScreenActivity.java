@@ -239,7 +239,7 @@ public class HomeScreenActivity extends AbstractActivity
         txt_version_code = (TextView) findViewById(R.id.txt_version_code);
 
         try {
-            if (AbstractApiModel.SERVER_BASE_API_URL_PROD.equals("http://bts.dxscloud.com/techsoapi")) {
+            if (AbstractApiModel.SERVER_BASE_API_URL_PROD.equals("http://techsostng.thyrocare.cloud/techsoapi")) {
                 txt_version_code.setText("Stag Version: " + CommonUtils.getAppVersion(activity));
             } else {
                 txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));

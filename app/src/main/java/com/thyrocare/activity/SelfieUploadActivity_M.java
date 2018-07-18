@@ -26,6 +26,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.FaceDetector;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.Controller.DeviceLogOutController;
@@ -64,8 +66,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-public class SelfieUploadActivity extends AbstractActivity implements View.OnClickListener {
-    private static final String TAG = SelfieUploadActivity.class.getSimpleName();
+public class SelfieUploadActivity_M extends AbstractActivity implements View.OnClickListener {
+    private static final String TAG = SelfieUploadActivity_M.class.getSimpleName();
     TextView tv_username, tv_user_address;
 
     //changes_1june2017
@@ -156,7 +158,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         initData();
         setListners();
 
-        if (BundleConstants.Flag_facedetection == 1) {
+        if (BundleConstants.b_facedetection) {
             CallApiOpenImage(appPreferenceManager.getLoginResponseModel().getUserID());
         } else {
 
@@ -169,19 +171,19 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         Bitmap bitmap = BitmapFactory.decodeStream(stream);*/
 
         try {
-            com.google.android.gms.vision.face.FaceDetector detector = new com.google.android.gms.vision.face.FaceDetector.Builder(getApplicationContext())
+            FaceDetector detector = new FaceDetector.Builder(getApplicationContext())
                     .setTrackingEnabled(false)
                     .build();
 
             // Create a frame from the bitmap and run face detection on the frame.
-            com.google.android.gms.vision.Frame frame = new com.google.android.gms.vision.Frame.Builder().setBitmap(bitmap).build();
+            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
             SparseArray<com.google.android.gms.vision.face.Face> faces = detector.detect(frame);
 
        /* TextView faceCountView = (TextView) findViewById(R.id.face_count);
         faceCountView.setText(faces.size() + " faces detected");*/
             //Toast.makeText(activity, "faces detected "+faces.size(), Toast.LENGTH_SHORT).show();
             faceDetected = faces.size();
-//            Toast.makeText(activity, ""+faces.size(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(activity, "" + faces.size(), Toast.LENGTH_SHORT).show();
             detector.release();
         } catch (Exception e) {
             e.printStackTrace();
@@ -426,6 +428,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 
         if (BundleConstants.Flag_facedetection == 1) {
+            detect(thumbnail, 1);
+        } else if (BundleConstants.Flag_facedetection == 2) {
             detect(thumbnail, 1);
         } else {
             faceCount(thumbnail);
@@ -742,6 +746,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 ResponseParser responseParser = new ResponseParser(activity);
                 BtechImageResponseModel availableSlotsResponseModel = responseParser.getBTECHIMAGEModel(json, statusCode);
                 if (availableSlotsResponseModel != null) {
+                    BundleConstants.Flag_facedetection = availableSlotsResponseModel.getFlag();
                     GetResponseBtechImage(availableSlotsResponseModel);
                 } else {
                     BundleConstants.Flag_facedetection = 0;
@@ -791,8 +796,10 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 BundleConstants.Flag_facedetection = 0;
                 TastyToast.makeText(activity, "Image not Available", TastyToast.LENGTH_LONG, TastyToast.INFO);
             }
-        }else if(availableSlotsResponseModel.getFlag() == 0){
+        } else if (availableSlotsResponseModel.getFlag() == 0) {
             BundleConstants.Flag_facedetection = 0;
+        } else if (availableSlotsResponseModel.getFlag() == 2) {
+            BundleConstants.Flag_facedetection = 2;
         }
     }
 

@@ -67,14 +67,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
-                        android:gravity="center_vertical"
-                        android:background="@drawable/edittext_modified_states">
+                        android:background="@drawable/edittext_modified_states"
+                        android:gravity="center_vertical">
 
                         <TextView
                             android:id="@+id/txt_odn"
                             android:layout_width="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -105,11 +105,13 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_rem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -117,13 +119,37 @@
                         android:layout_weight="2"
                         android:text="Remarks : " />
 
-                    <EditText
-                        android:id="@+id/edt_desprem"
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
-                        android:background="@drawable/edittext_modified_states"
-                        android:lines="3" />
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/edt_desprem"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:background="@drawable/edittext_modified_states"
+                            android:digits="1234567890qwertyuioplkjhgfdsazxcvbnm,. QWERTYUIOPASDFGHJKLZXCVBNM"
+                            android:lines="3"
+                            android:padding="16dp"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:id="@+id/ll_spnrem"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edittext_modified_states"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <Spinner
+                                android:id="@+id/spn_rem"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"></Spinner>
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
 

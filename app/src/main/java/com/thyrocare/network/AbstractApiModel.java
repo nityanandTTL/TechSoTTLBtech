@@ -46,11 +46,11 @@ public class AbstractApiModel implements AppConstants {
 //    public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.com/techsoapi";//staging
 //    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
 
-//    public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
+    //    public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
     public static final String API_VERSION = "https://www.thyrocare.com/APIs";
 
-    //    public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
-    public static String SERVER_BASE_API_URL_PROD = "https://techso.thyrocare.cloud/techsoapi";//live new server
+//    public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
+    public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
 //    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
 
 
@@ -222,6 +222,10 @@ public class AbstractApiModel implements AppConstants {
     public String GetSampleDropDetailsbyTSPLME = VERSION_API_URL + "/TSPLMESampleDrop/GetSampleDropDetailsbyTSPLME";
     public String PostScannedMasterBarcodebyLME = VERSION_API_URL + "/TSPLMESampleDrop/PostScannedMasterBarcodebyLME";
     public String GetWLMIS = VERSION_API_URL + "/TSPLMESampleDrop/GetWLMIS";
+
+    //getDisposition
+    public String GetDisposition = VERSION_API_URL + "/OrderAllocation/Disposition";
+    public String SetDispositionWithMedia = VERSION_API_URL + "/OrderAllocation/MediaUpload";
 
     public String ADD_BENEFICIARY = "/api/AddBeneficiary";
 

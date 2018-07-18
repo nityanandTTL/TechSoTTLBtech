@@ -79,8 +79,9 @@ public class BundleConstants {
     public static String YESNO_ID = "yesno";
     public static String ORDER_SLOTID = "orderslotid";
     public static boolean ORDER_Notification = false;
-    public static int batch_code=0;
+    public static int batch_code = 0;
 
-    //Flag True for Face detection, false to disable
-    public static boolean Flag_facedetection = false;
+    //Flag 1 for Face detection, 0 for disable, 2 for faceCount
+    public static int Flag_facedetection = 0;
+    public static boolean b_facedetection = false;
 }

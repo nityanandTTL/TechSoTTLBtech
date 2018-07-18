@@ -56,6 +56,7 @@ import com.thyrocare.models.data.CampDetailsKitsModel;
 import com.thyrocare.models.data.CampDetailsSampleTypeModel;
 import com.thyrocare.models.data.DepositRegisterModel;
 import com.thyrocare.models.data.DeviceLoginDetailsModel;
+import com.thyrocare.models.data.DispositionDataModel;
 import com.thyrocare.models.data.Earning_NewRegisterModel;
 import com.thyrocare.models.data.LeaveNatureMasterModel;
 import com.thyrocare.models.data.MaterialDetailsModel;
@@ -1193,5 +1194,13 @@ public class ResponseParser implements AppConstants {
             fetchOrderSummaryResponseModel = gson.fromJson(json, BtechImageResponseModel.class);
         }
         return fetchOrderSummaryResponseModel;
+    }
+
+    public DispositionDataModel getDispositionAPIResponseModel(String json, int statusCode) {
+        DispositionDataModel orderVisitDetailsModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            orderVisitDetailsModel = gson.fromJson(json, DispositionDataModel.class);
+        }
+        return orderVisitDetailsModel;
     }
 }

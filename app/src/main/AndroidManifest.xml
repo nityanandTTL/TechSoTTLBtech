@@ -218,6 +218,11 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".service.TrackerService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="6674ab9b4d0d937e8cd9160160b95767b86b5b15" />

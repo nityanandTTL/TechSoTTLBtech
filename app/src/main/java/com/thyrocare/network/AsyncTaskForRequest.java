@@ -35,6 +35,7 @@ import com.thyrocare.models.api.request.ResetPasswordRequestModel;
 import com.thyrocare.models.api.request.SelfieUploadRequestModel;
 import com.thyrocare.models.api.request.ServiceUpdateRequestModel;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
+import com.thyrocare.models.api.request.SetDispositionDataModel;
 import com.thyrocare.models.api.request.TrackBtechLocationRequestModel;
 import com.thyrocare.models.api.request.Tsp_Send_RequestModel;
 import com.thyrocare.models.api.request.UpdateMaterial;
@@ -674,7 +675,7 @@ public class AsyncTaskForRequest {
         }
         return apiCallAsyncTask;
     }/*
-	 * Send QR code Api Integration*/
+     * Send QR code Api Integration*/
 
     public ApiCallAsyncTask getSendQRCodeRequestAsyncTask(String qrContent) {
         apiCallAsyncTask = null;
@@ -697,7 +698,7 @@ public class AsyncTaskForRequest {
         }
         return apiCallAsyncTask;
     }/*
-	 * PaymentModeMaster Api Integration*/
+     * PaymentModeMaster Api Integration*/
 
     public ApiCallAsyncTask getPaymentModeMasterRequestAsyncTask() {
         apiCallAsyncTask = null;
@@ -720,7 +721,7 @@ public class AsyncTaskForRequest {
         }
         return apiCallAsyncTask;
     }/*
-	 * PaymentModeMaster Api Integration*/
+     * PaymentModeMaster Api Integration*/
 
     public ApiCallAsyncTask getBankMasterRequestAsyncTask() {
         apiCallAsyncTask = null;
@@ -1748,6 +1749,16 @@ public class AsyncTaskForRequest {
         return header;
     }
 
+    private List<HeaderData> getMultiPartHeader() {
+        HeaderData headerData1 = new HeaderData();
+        headerData1.setHeaderKey("Content-Type");
+        headerData1.setHeaderValue("multipart/form-data");
+
+        List<HeaderData> header = new ArrayList<>();
+        header.add(headerData1);
+        return header;
+    }
+
     private List<HeaderData> getHeader_new(String contentType) {
         HeaderData headerData = new HeaderData();
         headerData.setHeaderKey(AbstractApiModel.AUTHORIZATION);
@@ -2174,13 +2185,13 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
 
-    public ApiCallAsyncTask getBtechImageRequestAsyncTask(String bTechId) {
+    public ApiCallAsyncTask getBtechFaceImageRequestAsyncTask(String bTechId) {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BTECH_IMAGE_DATA + "/"+bTechId);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BTECH_FACEIMAGE_DATA + "/" + bTechId);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -2192,19 +2203,53 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
 
-
-    public ApiCallAsyncTask getBtechFaceImageRequestAsyncTask(String bTechId) {
+    public ApiCallAsyncTask getDispositionAsyncTask() {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.BTECH_FACEIMAGE_DATA + "/"+bTechId);
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.GetDisposition);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage("Please wait..");
-            apiCallAsyncTask.setProgressBarCancellable(true);
+            apiCallAsyncTask.setProgressBarCancellable(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask setDispositionAsyncTask(SetDispositionDataModel setDispositionDataModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+           /* String postJson = new Gson().toJson(setDispositionDataModel);
+            abstractApiModel.setPostData(postJson);*/
+
+           /* MultipartEntityBuilder entity = MultipartEntityBuilder.create();
+            entity.addPart("AppId", new StringBody("1"));
+            entity.addPart("DispId", new StringBody("1"));
+            entity.addPart("FrmNo", new StringBody("9004717579"));
+            entity.addPart("OrderNo", new StringBody("A653E4"));
+            entity.addPart("Remarks", new StringBody("test entry"));
+            entity.addPart("ToNo", new StringBody("9029818814"));
+            entity.addPart("UserId", new StringBody("884543107"));
+
+            abstractApiModel.setEntity(entity.build());*/
+
+            abstractApiModel.setHeader(getMultiPartHeader());
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.SetDispositionWithMedia);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType("multipart/form-data");
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_changing_MaterailsOrder_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

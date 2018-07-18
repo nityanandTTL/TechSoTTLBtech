@@ -33,13 +33,13 @@ import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.service.LocationUpdateService;
+import com.thyrocare.service.TrackerService;
 import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DeviceUtils;
-import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
@@ -59,7 +59,7 @@ public class SplashScreenActivity extends AbstractActivity {
     private int AppId;
     private static Intent TImeCheckerIntent;
 
-    private static Intent locationUpdateIntent;
+    private static Intent locationUpdateIntent, FirebaselocationUpdateIntent;
     VersionControlMasterModel versionControlMasterModel;
     private ArrayList<TSPNBT_AvilModel> TSP_NBTAvailArr;
 
@@ -101,12 +101,23 @@ public class SplashScreenActivity extends AbstractActivity {
                             AppConstants.APP_PERMISSIONS);
                 } else {
                     fetchVersionControlDetails();
+                    startTrackerService();
                 }
             }
         }, AppConstants.SPLASH_SCREEN_TIMEOUT);
         //Call Service
         Logger.error("locationUpdateIntent Executed 1");
+
         locationUpdateIntent = new Intent(this, LocationUpdateService.class);
+        FirebaselocationUpdateIntent = new Intent(this, TrackerService.class);
+    }
+
+    private void startTrackerService() {
+
+        if (DeviceUtils.isMyServiceRunning(TrackerService.class, activity)) {
+        } else {
+            startService(FirebaselocationUpdateIntent);
+        }
     }
 
   /*void StartLocationUpdateService() {

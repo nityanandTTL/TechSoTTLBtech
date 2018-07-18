@@ -4,9 +4,12 @@ package com.thyrocare.fragment;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,8 +17,13 @@ import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -26,10 +34,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
@@ -52,13 +60,17 @@ import com.thyrocare.dialog.ConfirmOrderReleaseDialog;
 import com.thyrocare.dialog.ConfirmRequestReleaseDialog;
 import com.thyrocare.dialog.RescheduleOrderDialog;
 import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
+import com.thyrocare.models.api.request.SetDispositionDataModel;
 import com.thyrocare.models.api.response.BtechEstEarningsResponseModel;
 import com.thyrocare.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.models.data.DespositionDataModel;
+import com.thyrocare.models.data.DispositionDataModel;
+import com.thyrocare.models.data.DispositionDetailsModel;
 import com.thyrocare.models.data.KitsCountModel;
 import com.thyrocare.models.data.OrderDetailsModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
+import com.thyrocare.network.AbstractApiModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
@@ -71,9 +83,22 @@ import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.InputUtils;
 import com.wooplr.spotlight.utils.SpotlightSequence;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -107,9 +132,15 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private String MaskedPhoneNumber = "";
     private boolean isFetchingOrders = false;
     public static boolean edit;
-    private ArrayList<DespositionDataModel> remarksDataModelsarr;
+    private ArrayList<DispositionDetailsModel> remarksDataModelsarr;
     private ArrayList<String> remarksarr;
-    private DespositionDataModel remarksDataModel;
+    private ArrayList<String> remarks_notc_arr;
+    private DispositionDetailsModel remarksDataModel;
+    private String remarks_notc_str = "";
+
+    Dialog dialog_ready;
+    int statusCode;
+    private ProgressDialog progressDialog;
 
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
@@ -163,6 +194,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         initUI();
         fetchData();
         setListener();
+
         return rootView;
     }
 
@@ -540,11 +572,11 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         @Override
         public void onCallCustomer(OrderVisitDetailsModel orderVisitDetailsModel) {
 
-            /*try {
-                CallDespositionDialog(orderVisitDetailsModel);
+            try {
+                callgetDispositionData(orderVisitDetailsModel);
             } catch (Exception e) {
                 e.printStackTrace();
-            }*/
+            }
 
             Intent intent = new Intent(Intent.ACTION_CALL);
             intent.setData(Uri.parse("tel:" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile()));
@@ -595,15 +627,26 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         }
     }
 
-    private void CallDespositionDialog(final OrderVisitDetailsModel orderVisitDetailsModel) {
-        final Dialog dialog_ready = new Dialog(activity);
+    public void callgetDispositionData(OrderVisitDetailsModel orderVisitDetailsModel) {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchDispositionApiAsyncTask = asyncTaskForRequest.getDispositionAsyncTask();
+        fetchDispositionApiAsyncTask.setApiCallAsyncTaskDelegate(new fetchDispositionAsyncTaskDelegateResult(orderVisitDetailsModel));
+        if (isNetworkAvailable(activity)) {
+            fetchDispositionApiAsyncTask.execute(fetchDispositionApiAsyncTask);
+        } else {
+            TastyToast.makeText(activity, "Check Internet Connection..", TastyToast.LENGTH_LONG, TastyToast.INFO);
+        }
+    }
+
+    private void CallDespositionDialog(final OrderVisitDetailsModel orderVisitDetailsModel, ArrayList<DispositionDetailsModel> allDisp) {
+        dialog_ready = new Dialog(activity);
         dialog_ready.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog_ready.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog_ready.setContentView(R.layout.dialog_desposition);
 //        dialog_ready.setCanceledOnTouchOutside(false);
         dialog_ready.setCancelable(false);
 
-        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.70);
+        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.85);
 //        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.60);
         dialog_ready.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -619,18 +662,52 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         });
 
         TextView txt_odn = (TextView) dialog_ready.findViewById(R.id.txt_odn);
-        txt_odn.setText(""+orderVisitDetailsModel.getVisitId());
+        txt_odn.setText("" + orderVisitDetailsModel.getVisitId());
+
+        final EditText edt_desprem = (EditText) dialog_ready.findViewById(R.id.edt_desprem);
+        final LinearLayout ll_rem = (LinearLayout) dialog_ready.findViewById(R.id.ll_rem);
+        final LinearLayout ll_spnrem = (LinearLayout) dialog_ready.findViewById(R.id.ll_spnrem);
+        final Spinner spn_rem = (Spinner) dialog_ready.findViewById(R.id.spn_rem);
+
+        remarks_notc_arr = new ArrayList<>();
+        remarks_notc_arr.add("Select");
+        remarks_notc_arr.add("Ringing / No Response");
+        remarks_notc_arr.add("Busy");
+        remarks_notc_arr.add("Invalid Number");
+        remarks_notc_arr.add("Number Does Not Exist");
+        remarks_notc_arr.add("Switch off / Not reachable");
+
+        ArrayAdapter<String> spnrnotconnectedremarks = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, remarks_notc_arr);
+        spnrnotconnectedremarks.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spn_rem.setAdapter(spnrnotconnectedremarks);
+        spn_rem.setSelection(0);
+        spn_rem.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    remarks_notc_str = "";
+                } else {
+                    remarks_notc_str = remarks_notc_arr.get(position);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         Spinner spn_desp = (Spinner) dialog_ready.findViewById(R.id.spn_desp);
-        remarksDataModelsarr = getDespData();
-        remarksDataModel = new DespositionDataModel();
+        remarksDataModelsarr = allDisp;
+        remarksDataModel = new DispositionDetailsModel();
         if (remarksDataModelsarr != null && remarksDataModelsarr.size() > 0) {
 
             remarksarr = new ArrayList<>();
+            remarksarr.add("Select");
             if (remarksDataModelsarr != null && remarksDataModelsarr.size() > 0) {
-                for (DespositionDataModel remarksDataModels :
+                for (DispositionDetailsModel remarksDataModels :
                         remarksDataModelsarr) {
-                    remarksarr.add(remarksDataModels.getDesp_key().toUpperCase());
+                    remarksarr.add(remarksDataModels.getDisposition().toUpperCase());
                 }
             }
 
@@ -638,37 +715,127 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             spinneradapterremarks.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spn_desp.setAdapter(spinneradapterremarks);
             spn_desp.setSelection(0);
-            remarksDataModel = remarksDataModelsarr.get(0);
             spn_desp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    remarksDataModel = remarksDataModelsarr.get(position);
+                    if (position == 0) {
+                        remarksDataModel = null;
+                        ll_rem.setVisibility(View.GONE);
+                    } else {
+                        if (position == 1) {
+                            ll_rem.setVisibility(View.VISIBLE);
+                            ll_spnrem.setVisibility(View.GONE);
+                            edt_desprem.setVisibility(View.VISIBLE);
+                        } else if (position == 2) {
+                            ll_rem.setVisibility(View.VISIBLE);
+                            ll_spnrem.setVisibility(View.VISIBLE);
+                            edt_desprem.setVisibility(View.GONE);
+                        }
+                        remarksDataModel = remarksDataModelsarr.get(position - 1);
+                    }
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
 
                 }
-
-
             });
         }
 
-        final EditText edt_desprem = (EditText) dialog_ready.findViewById(R.id.edt_desprem);
+        edt_desprem.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+        });
+
+        edt_desprem.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().trim().startsWith(".") || s.toString().trim().startsWith(",")) {
+                    // CommonUtils.toastytastyError(activity, "Enter valid Mobile Number ", false);
+
+                    final android.app.AlertDialog.Builder builder;
+                    builder = new android.app.AlertDialog.Builder(getActivity());
+                    builder.setCancelable(false);
+                    builder.setTitle("")
+                            .setMessage("Invalid text")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    edt_desprem.setText("");
+                                    dialog.dismiss();
+                                }
+                            })
+
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+
+                    edt_desprem.setFocusable(true);
+                }
+            }
+        });
+
         Button btn_proceed = (Button) dialog_ready.findViewById(R.id.btn_proceed);
         btn_proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (remarksDataModel != null) {
-                    if (remarksDataModel.getId() == 0) {
+                    if (remarksDataModel.getDispId() == 0) {
                         TastyToast.makeText(activity, "Select desposition", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
-                    } else if (edt_desprem.getText().toString().trim().equals("")) {
+                    } else if (edt_desprem.getText().toString().trim().equals("") && edt_desprem.getVisibility() == View.VISIBLE) {
                         TastyToast.makeText(activity, "Enter Remarks", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                    } else if (remarks_notc_str.equals("") && ll_spnrem.getVisibility() == View.VISIBLE) {
+                        TastyToast.makeText(activity, "Select Remarks", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
                     } else {
-                        dialog_ready.dismiss();
-                        TastyToast.makeText(activity, "" + orderVisitDetailsModel.getVisitId() + " >> " + remarksDataModel.getDesp_key() + " >> " + edt_desprem.getText().toString().trim(), TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
-                    }
+                        String st = "";
+                        if (remarksDataModel.getDispId() == 1) {
+                            st = edt_desprem.getText().toString().trim();
+                        } else if (remarksDataModel.getDispId() == 2) {
+                            st = remarks_notc_str;
+                        }
 
+                        SetDispositionDataModel nm = new SetDispositionDataModel();
+                        nm.setAppId(1);
+                        nm.setDispId(remarksDataModel.getDispId());
+                        nm.setOrderNo("" + orderVisitDetailsModel.getVisitId());
+                        nm.setUserId("" + appPreferenceManager.getLoginResponseModel().getUserID());
+                        nm.setFrmNo("" + appPreferenceManager.getLoginResponseModel().getUserName());
+                        nm.setToNo("" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+                        nm.setRemarks("" + st);
+
+                        if (isNetworkAvailable(activity)) {
+                            new Btech_AsyncLoadBookingFreqApi(nm).execute();
+                        } else {
+                            TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        }
+                    }
+                } else {
+                    TastyToast.makeText(activity, "Select desposition", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
                 }
             }
         });
@@ -968,4 +1135,182 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         }
     }
 
+    private class fetchDispositionAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        OrderVisitDetailsModel orderDet;
+
+        public fetchDispositionAsyncTaskDelegateResult(OrderVisitDetailsModel orderVisitDetailsModel) {
+            this.orderDet = orderVisitDetailsModel;
+        }
+
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+
+            if (statusCode == 200) {
+
+                ResponseParser responseParser = new ResponseParser(activity);
+                DispositionDataModel dispositionDataModel = new DispositionDataModel();
+                dispositionDataModel = responseParser.getDispositionAPIResponseModel(json, statusCode);
+
+                if (dispositionDataModel != null) {
+                    System.out.println("");
+                    if (dispositionDataModel.getAllDisp() != null) {
+                        if (dispositionDataModel.getAllDisp().size() != 0) {
+                            CallDespositionDialog(orderDet, dispositionDataModel.getAllDisp());
+                        }
+                    }
+                }
+
+            } else {
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            }
+
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    public class Btech_AsyncLoadBookingFreqApi extends AsyncTask<Void, Void, String> {
+
+        SetDispositionDataModel setDispositionDataModel;
+
+        public Btech_AsyncLoadBookingFreqApi(SetDispositionDataModel nm) {
+            this.setDispositionDataModel = nm;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            CallInitialiseProgressDialog();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            HttpClient httpClient = new DefaultHttpClient();
+            StringBuilder builder = new StringBuilder();
+            String json = "";
+            try {
+                HttpPost request = new HttpPost(AbstractApiModel.SERVER_BASE_API_URL + "/api/OrderAllocation/MediaUpload");
+
+                MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+                entity.addPart("AppId", new StringBody("" + setDispositionDataModel.getAppId()));
+                entity.addPart("DispId", new StringBody("" + setDispositionDataModel.getDispId()));
+                entity.addPart("FrmNo", new StringBody("" + setDispositionDataModel.getFrmNo()));
+                entity.addPart("OrderNo", new StringBody("" + setDispositionDataModel.getOrderNo()));
+                entity.addPart("Remarks", new StringBody("" + setDispositionDataModel.getRemarks()));
+                entity.addPart("ToNo", new StringBody("" + setDispositionDataModel.getToNo()));
+                entity.addPart("UserId", new StringBody("" + setDispositionDataModel.getUserId()));
+
+                request.setEntity(entity);
+                HttpResponse response = httpClient.execute(request);
+                StatusLine statusLine = response.getStatusLine();
+                statusCode = statusLine.getStatusCode();
+                if (statusCode == 200) {
+                    HttpEntity responseEntity = response.getEntity();
+                    InputStream content = responseEntity.getContent();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    json = builder.toString();
+                    System.out.println("Nitya >> " + json);
+
+                } else {
+                    HttpEntity responseEntity = response.getEntity();
+                    InputStream content = responseEntity.getContent();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    json = builder.toString();
+                    System.out.println("Nitya >> " + json);
+                }
+
+            } catch (IllegalStateException e) {
+                Log.e("FileUpload Illegal", e.getMessage());
+            } catch (IOException e) {
+                Log.e("FileUpload IOException ", e.getMessage());
+            } catch (Exception e) {
+                Log.e("Exception ", e.getMessage());
+            } finally {
+                // close connections
+                httpClient.getConnectionManager().shutdown();
+            }
+
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(String res) {
+            super.onPostExecute(res);
+            CallCloseProgressDialog();
+            if (statusCode == 200) {
+                if (dialog_ready != null) {
+                    if (dialog_ready.isShowing()) {
+                        dialog_ready.dismiss();
+                    }
+                }
+                TastyToast.makeText(activity, "" + res, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+            } else {
+                TastyToast.makeText(activity, "" + res, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            }
+        }
+    }
+
+    private void CallInitialiseProgressDialog() {
+        if (activity != null) {
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("");
+            progressDialog.setMessage("Please wait...");
+            progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            progressDialog.setCancelable(true);
+            progressDialog.setCanceledOnTouchOutside(false);
+            try {
+                progressDialog.show();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void CallCloseProgressDialog() {
+        try {
+
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class setDispositionDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                if (dialog_ready != null) {
+                    if (dialog_ready.isShowing()) {
+                        dialog_ready.dismiss();
+                    }
+                }
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+            } else {
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
 }

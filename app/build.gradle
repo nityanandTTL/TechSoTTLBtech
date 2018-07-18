@@ -20,10 +20,10 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.thyrocare"
-        minSdkVersion 19
+        minSdkVersion 18
         targetSdkVersion 25
-        versionCode 35
-        versionName "1.1.27"
+        versionCode 37
+        versionName "1.1.29"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -54,13 +54,13 @@ android {
     productFlavors {
         BTECHdev {
             applicationId = "com.thyrocare.btech.dev"
-            versionCode 35
-            versionName "debug_1.1.27"
+            versionCode 37
+            versionName "debug_1.1.29"
         }
         BTECHprod {
             applicationId = "com.thyrocare.btech"
-            versionCode 35
-            versionName "1.1.27"
+            versionCode 37
+            versionName "1.1.29"
         }
     }
     packagingOptions {
@@ -92,6 +92,7 @@ dependencies {
     compile 'com.android.support:mediarouter-v7:25.3.1'
     compile 'com.android.support:animated-vector-drawable:25.3.1'
     compile 'com.google.android.gms:play-services:10.2.1'
+    compile 'com.google.android.gms:play-services-vision:10.2.1'
     compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'

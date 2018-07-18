@@ -1,7 +1,6 @@
 package com.thyrocare.fragment;
 
 import android.app.Dialog;
-import android.media.Image;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,18 +17,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.customview.CustomOKDialog;
 import com.thyrocare.delegate.CustomOkDialogOkButtonOnClickedDelegate;
-import com.thyrocare.models.api.request.BtechsRequestModel;
 import com.thyrocare.models.api.request.UpdateMaterial;
 import com.thyrocare.models.api.response.MaterialBtechStockResponseModel;
 import com.thyrocare.models.data.BTStockMaterialsModel;
-import com.thyrocare.models.data.BtechIdModel;
-import com.thyrocare.models.data.MaterialDetailsModel;
 import com.thyrocare.models.data.MaterialsStocksModel_new;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
@@ -120,35 +115,44 @@ public class MaterialFragment_new extends AbstractFragment {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cdd = new CustomOKDialog(activity, new CustomOkDialogOkButtonOnClickedDelegate() {
-                    @Override
-                    public void onClicked(String remarks) {
-                        UpdateMaterial m = new UpdateMaterial();
-                        m.allMaterialStock = new ArrayList<>();
-                        UpdateMaterial.AllMaterialStock ms;
-                        m.BtechId = "" + appPreferenceManager.getLoginResponseModel().getUserID();
 
-                        for (int i = 0; i < stockModelsArr.size(); i++) {
-                            ms = new UpdateMaterial.AllMaterialStock();
-                            ms.materialID = "" + stockModelsArr.get(i).getMaterialID();
-                            ms.virtualStock = "" + stockModelsArr.get(i).getVirtualStock();
-                            ms.actualStock = "" + stockModelsArr.get(i).getActualStock();
-                            ms.remarks = "" + remarks;
-                            m.allMaterialStock.add(ms);
-                        }
+                if (stockModelsArr != null) {
+                    if (stockModelsArr.size() != 0) {
+                        cdd = new CustomOKDialog(activity, new CustomOkDialogOkButtonOnClickedDelegate() {
+                            @Override
+                            public void onClicked(String remarks) {
+                                UpdateMaterial m = new UpdateMaterial();
+                                m.allMaterialStock = new ArrayList<>();
+                                UpdateMaterial.AllMaterialStock ms;
+                                m.BtechId = "" + appPreferenceManager.getLoginResponseModel().getUserID();
 
-                        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-                        ApiCallAsyncTask setMaterialsDetailApiAsyncTask = asyncTaskForRequest.getPostStockMaterialOrderAsyncTask(m);
-                        setMaterialsDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new setMaterialOrderDetailsApiAsyncTaskDelegateResult());
-                        if (isNetworkAvailable(activity)) {
-                            setMaterialsDetailApiAsyncTask.execute(setMaterialsDetailApiAsyncTask);
-                        } else {
-                            Toast.makeText(activity, R.string.internet_connetion_error, LENGTH_SHORT).show();
-                        }
+                                for (int i = 0; i < stockModelsArr.size(); i++) {
+                                    ms = new UpdateMaterial.AllMaterialStock();
+                                    ms.materialID = "" + stockModelsArr.get(i).getMaterialID();
+                                    ms.virtualStock = "" + stockModelsArr.get(i).getVirtualStock();
+                                    ms.actualStock = "" + stockModelsArr.get(i).getActualStock();
+                                    ms.remarks = "" + remarks;
+                                    m.allMaterialStock.add(ms);
+                                }
+
+                                AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+                                ApiCallAsyncTask setMaterialsDetailApiAsyncTask = asyncTaskForRequest.getPostStockMaterialOrderAsyncTask(m);
+                                setMaterialsDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new setMaterialOrderDetailsApiAsyncTaskDelegateResult());
+                                if (isNetworkAvailable(activity)) {
+                                    setMaterialsDetailApiAsyncTask.execute(setMaterialsDetailApiAsyncTask);
+                                } else {
+                                    Toast.makeText(activity, R.string.internet_connetion_error, LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        cdd.show();
+                        cdd.setCancelable(false);
+                    }else {
+                        TastyToast.makeText(activity, "No data to update", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
                     }
-                });
-                cdd.show();
-                cdd.setCancelable(false);
+                }else {
+                    TastyToast.makeText(activity, "No data to update", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+                }
             }
         });
     }

@@ -142,8 +142,15 @@
     <string name="Mobile_no_validation">1234567890</string>
     <string name="Sending_Ereciept">Sending Ereciept</string>
     <string name="app_notificationorders">Order</string>
-    <string name="endpoint">https://westcentralus.api.cognitive.microsoft.com/face/v1.0</string>
-    <string name="subscription_key">f416b621d7684a6bb49235cbcf00f7ec</string>
+    <string name="endpoint">https://centralindia.api.cognitive.microsoft.com/face/v1.0</string>
+    <string name="subscription_key">5b5115ebff8c49f6a36e7b361794ccef</string>
+
+    <string name="notification_text">Tracking, tap to cancel</string>
+    <string name="transport_id" translatable="false">123</string>
+    <string name="firebase_path" translatable="false">locations</string>
+    <string name="firebase_email" translatable="false">thyrocaretechnologiesp@gmail.com</string>
+    <string name="firebase_password" translatable="false">Pass@123</string>
+
     <string-array name="payment_mode">
         <item>Cash By ATM</item>
         <item>Cash</item>

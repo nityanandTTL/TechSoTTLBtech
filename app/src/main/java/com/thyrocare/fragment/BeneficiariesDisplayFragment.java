@@ -1122,7 +1122,6 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                 .setCancelable(false)
                                                 .show();
                                     }
-
                                 } else if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
                                         && /*jai*/isPPBSTestRemoved.equals("normal")) {
 

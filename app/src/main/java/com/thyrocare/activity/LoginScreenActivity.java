@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -40,7 +39,6 @@ import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
-import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.InputUtils;
 import com.thyrocare.utils.app.UiUtils;
 
