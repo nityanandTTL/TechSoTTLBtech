@@ -67,7 +67,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class SelfieUploadActivity_M extends AbstractActivity implements View.OnClickListener {
-    private static final String TAG = SelfieUploadActivity_M.class.getSimpleName();
+    private static final String TAG = SelfieUploadActivity.class.getSimpleName();
     TextView tv_username, tv_user_address;
 
     //changes_1june2017
@@ -96,6 +96,8 @@ public class SelfieUploadActivity_M extends AbstractActivity implements View.OnC
     private UUID mFaceId0;
     private UUID mFaceId1;
     ProgressDialog progressDialog;
+    private String sub_key = "";
+    private String end_key = "";
 
     @Override
     protected void onStart() {
@@ -747,14 +749,20 @@ public class SelfieUploadActivity_M extends AbstractActivity implements View.OnC
                 BtechImageResponseModel availableSlotsResponseModel = responseParser.getBTECHIMAGEModel(json, statusCode);
                 if (availableSlotsResponseModel != null) {
                     BundleConstants.Flag_facedetection = availableSlotsResponseModel.getFlag();
+                    sub_key = ""+availableSlotsResponseModel.getSubscriptionKey();
+                    end_key = ""+availableSlotsResponseModel.getEndpointKey();
                     GetResponseBtechImage(availableSlotsResponseModel);
                 } else {
                     BundleConstants.Flag_facedetection = 0;
+                    sub_key = "";
+                    end_key = "";
                     TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
                 }
 
             } else {
                 BundleConstants.Flag_facedetection = 0;
+                sub_key = "";
+                end_key = "";
                 TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
             }
         }
@@ -776,6 +784,21 @@ public class SelfieUploadActivity_M extends AbstractActivity implements View.OnC
                                 try {
                                     //Your code goes here
                                     Bitmap image = getBitmapFromURL("" + availableSlotsResponseModel.getImgUrl());
+
+                                    if(image != null){
+
+                                    }else {
+                                        String string = "" + availableSlotsResponseModel.getImgUrl();
+                                        String newurl = string.replace("https", "http");
+                                        image = getBitmapFromURL("" + newurl);
+                                    }
+
+                                    if(image == null){
+                                        BundleConstants.Flag_facedetection = 0;
+                                        sub_key = "";
+                                        end_key = "";
+                                    }
+
                                     detect(image, 0);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -842,7 +865,7 @@ public class SelfieUploadActivity_M extends AbstractActivity implements View.OnC
         @Override
         protected com.microsoft.projectoxford.face.contract.Face[] doInBackground(InputStream... params) {
             // Get an instance of face service client to detect faces in image.
-            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(getString(R.string.endpoint), getString(R.string.subscription_key));
+            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(end_key, sub_key);
             try {
                 publishProgress("Detecting...");
 
@@ -948,7 +971,7 @@ public class SelfieUploadActivity_M extends AbstractActivity implements View.OnC
         }
 
         if (result != null && result.length == 0) {
-            Toast.makeText(getApplicationContext(), "No face detected!", Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, getString(R.string.no_face_detected), TastyToast.LENGTH_LONG, TastyToast.WARNING);
         }
     }
 
@@ -966,7 +989,7 @@ public class SelfieUploadActivity_M extends AbstractActivity implements View.OnC
         @Override
         protected com.microsoft.projectoxford.face.contract.VerifyResult doInBackground(Void... params) {
             // Get an instance of face service client to detect faces in image.
-            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(getString(R.string.endpoint), getString(R.string.subscription_key));
+            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(end_key, sub_key);
             try {
                 publishProgress("Verifying...");
 

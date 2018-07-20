@@ -65,7 +65,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class SelfieUploadActivity_F extends AbstractActivity implements View.OnClickListener {
-    private static final String TAG = SelfieUploadActivity_F.class.getSimpleName();
+    private static final String TAG = SelfieUploadActivity.class.getSimpleName();
     TextView tv_username, tv_user_address;
 
     //changes_1june2017

@@ -83,5 +83,5 @@ public class BundleConstants {
 
     //Flag 1 for Face detection, 0 for disable, 2 for faceCount
     public static int Flag_facedetection = 0;
-    public static boolean b_facedetection = false;
+    public static boolean b_facedetection = true;
 }

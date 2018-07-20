@@ -26,6 +26,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.FaceDetector;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.Controller.DeviceLogOutController;
@@ -94,6 +96,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private UUID mFaceId0;
     private UUID mFaceId1;
     ProgressDialog progressDialog;
+    private String sub_key = "";
+    private String end_key = "";
 
     @Override
     protected void onStart() {
@@ -156,7 +160,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         initData();
         setListners();
 
-        if (BundleConstants.Flag_facedetection == 1) {
+        if (BundleConstants.b_facedetection) {
             CallApiOpenImage(appPreferenceManager.getLoginResponseModel().getUserID());
         } else {
 
@@ -169,19 +173,19 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         Bitmap bitmap = BitmapFactory.decodeStream(stream);*/
 
         try {
-            com.google.android.gms.vision.face.FaceDetector detector = new com.google.android.gms.vision.face.FaceDetector.Builder(getApplicationContext())
+            FaceDetector detector = new FaceDetector.Builder(getApplicationContext())
                     .setTrackingEnabled(false)
                     .build();
 
             // Create a frame from the bitmap and run face detection on the frame.
-            com.google.android.gms.vision.Frame frame = new com.google.android.gms.vision.Frame.Builder().setBitmap(bitmap).build();
+            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
             SparseArray<com.google.android.gms.vision.face.Face> faces = detector.detect(frame);
 
        /* TextView faceCountView = (TextView) findViewById(R.id.face_count);
         faceCountView.setText(faces.size() + " faces detected");*/
             //Toast.makeText(activity, "faces detected "+faces.size(), Toast.LENGTH_SHORT).show();
             faceDetected = faces.size();
-//            Toast.makeText(activity, ""+faces.size(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(activity, "" + faces.size(), Toast.LENGTH_SHORT).show();
             detector.release();
         } catch (Exception e) {
             e.printStackTrace();
@@ -426,6 +430,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 
         if (BundleConstants.Flag_facedetection == 1) {
+            detect(thumbnail, 1);
+        } else if (BundleConstants.Flag_facedetection == 2) {
             detect(thumbnail, 1);
         } else {
             faceCount(thumbnail);
@@ -742,14 +748,21 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 ResponseParser responseParser = new ResponseParser(activity);
                 BtechImageResponseModel availableSlotsResponseModel = responseParser.getBTECHIMAGEModel(json, statusCode);
                 if (availableSlotsResponseModel != null) {
+                    BundleConstants.Flag_facedetection = availableSlotsResponseModel.getFlag();
+                    sub_key = ""+availableSlotsResponseModel.getSubscriptionKey();
+                    end_key = ""+availableSlotsResponseModel.getEndpointKey();
                     GetResponseBtechImage(availableSlotsResponseModel);
                 } else {
                     BundleConstants.Flag_facedetection = 0;
+                    sub_key = "";
+                    end_key = "";
                     TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
                 }
 
             } else {
                 BundleConstants.Flag_facedetection = 0;
+                sub_key = "";
+                end_key = "";
                 TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
             }
         }
@@ -771,6 +784,21 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                                 try {
                                     //Your code goes here
                                     Bitmap image = getBitmapFromURL("" + availableSlotsResponseModel.getImgUrl());
+
+                                    if(image != null){
+
+                                    }else {
+                                        String string = "" + availableSlotsResponseModel.getImgUrl();
+                                        String newurl = string.replace("https", "http");
+                                        image = getBitmapFromURL("" + newurl);
+                                    }
+
+                                    if(image == null){
+                                        BundleConstants.Flag_facedetection = 0;
+                                        sub_key = "";
+                                        end_key = "";
+                                    }
+
                                     detect(image, 0);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -791,8 +819,10 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 BundleConstants.Flag_facedetection = 0;
                 TastyToast.makeText(activity, "Image not Available", TastyToast.LENGTH_LONG, TastyToast.INFO);
             }
-        }else if(availableSlotsResponseModel.getFlag() == 0){
+        } else if (availableSlotsResponseModel.getFlag() == 0) {
             BundleConstants.Flag_facedetection = 0;
+        } else if (availableSlotsResponseModel.getFlag() == 2) {
+            BundleConstants.Flag_facedetection = 2;
         }
     }
 
@@ -835,7 +865,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         @Override
         protected com.microsoft.projectoxford.face.contract.Face[] doInBackground(InputStream... params) {
             // Get an instance of face service client to detect faces in image.
-            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(getString(R.string.endpoint), getString(R.string.subscription_key));
+            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(end_key, sub_key);
             try {
                 publishProgress("Detecting...");
 
@@ -941,7 +971,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
 
         if (result != null && result.length == 0) {
-            Toast.makeText(getApplicationContext(), "No face detected!", Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, getString(R.string.no_face_detected), TastyToast.LENGTH_LONG, TastyToast.WARNING);
         }
     }
 
@@ -959,7 +989,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         @Override
         protected com.microsoft.projectoxford.face.contract.VerifyResult doInBackground(Void... params) {
             // Get an instance of face service client to detect faces in image.
-            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(getString(R.string.endpoint), getString(R.string.subscription_key));
+            com.microsoft.projectoxford.face.FaceServiceClient faceServiceClient = new com.microsoft.projectoxford.face.FaceServiceRestClient(end_key, sub_key);
             try {
                 publishProgress("Verifying...");
 
