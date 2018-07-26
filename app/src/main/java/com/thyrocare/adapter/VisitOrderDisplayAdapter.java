@@ -197,9 +197,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
                     } else {*/
 
-                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.PPBS)
-                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
-                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
+                    if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
                         items = new String[]{"Do you want to cancel the visit?"};
                         cancelVisit = "y";
 
@@ -221,9 +219,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         items = new String[]{
                                 "Request Release"};
                     }else {*/
-                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.PPBS)
-                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
-                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
+
+                    if (isValidForEditing( orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
                         items = new String[]{"Do you want to cancel the visit?"};
                         cancelVisit = "y";
 
@@ -370,9 +367,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                                 "Order Release"};
 
                     } else {*/
-                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.PPBS)
-                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
-                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
+                    if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
                         items = new String[]{"Do you want to cancel the visit?"};
                         cancelVisit = "y";
                     } else {
@@ -391,9 +386,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                                 "Request Release"};
                     }else {*/
 
-                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.PPBS)
-                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
-                            || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
+                    if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase())) {
                         items = new String[]{"Do you want to cancel the visit?"};
                         cancelVisit = "y";
                     } else {
@@ -507,9 +500,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.PPBS)
-                        || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
-                        || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
+                if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase())) {
                     isAutoTimeSelected();
                     if (isAutoTimeSelected == true) {
                         if (timeCheckPPBS(pos)) {
@@ -1023,6 +1014,17 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.img_ppbs.setVisibility(View.GONE);
             }
 
+            if (CheckRBSisPresent(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster())) {
+                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
+                    holder.img_ppbs.setVisibility(View.GONE);
+                } else {
+                    holder.img_ppbs.setVisibility(View.VISIBLE);
+                    holder.img_ppbs.setImageResource(R.drawable.rbs_t);
+                }
+            } else {
+                holder.img_ppbs.setVisibility(View.GONE);
+            }
+
             holder.tvName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
             holder.tvName.setSelected(true);
             holder.tvSrNo.setText(pos + 1 + "");
@@ -1101,15 +1103,50 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             }
 
             //jai
-            if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.PPBS)
-                    || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().equals(AppConstants.INSPP)
-                    || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
+            if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase())) {
                 holder.imgRelease.setVisibility(View.VISIBLE);
                 holder.imgRelease2.setVisibility(View.VISIBLE);
             }
             //jai
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.PPBS)
-                    && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS)) {
+                    && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS))
+            {
+                // checkWithApiTimeForPPBS("11:00 AM","00:00 AM",""+new Date())
+
+
+                // if (checkIfBefore11()) {
+                if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
+                    holder.imgRelease.setVisibility(View.GONE);
+                    holder.imgRelease2.setVisibility(View.GONE);
+                } else {
+                    checkbefore11 = true;
+                    if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
+                        holder.imgRelease.setVisibility(View.GONE);
+                        holder.imgRelease2.setVisibility(View.GONE);
+                    } else {
+                        holder.imgRelease.setVisibility(View.VISIBLE);
+                        holder.imgRelease2.setVisibility(View.VISIBLE);
+                    }
+
+                }
+
+               /* } else {
+                    checkbefore11 = false;
+                    if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
+                        holder.imgRelease.setVisibility(View.GONE);
+                        holder.imgRelease2.setVisibility(View.GONE);
+                    }else {
+                        holder.imgRelease.setVisibility(View.VISIBLE);
+                        holder.imgRelease2.setVisibility(View.VISIBLE);
+                    }
+
+                    *//*holder.imgRelease.setVisibility(View.GONE);
+                    holder.imgRelease2.setVisibility(View.GONE);*//*
+                }*/
+            }
+            if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.RBS)
+                    && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS))
+            {
                 // checkWithApiTimeForPPBS("11:00 AM","00:00 AM",""+new Date())
 
 
@@ -1355,7 +1392,20 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
         if (benMaster.size() != 0) {
             for (int i = 0; i < benMaster.size(); i++) {
-                if (benMaster.get(i).getTestsCode().contains("PPBS")) {
+                if (benMaster.get(i).getTestsCode().contains(AppConstants.PPBS)) {
+                    System.out.println("Nitya >> Matched");
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }private boolean CheckRBSisPresent(ArrayList<BeneficiaryDetailsModel> benMaster) {
+
+        if (benMaster.size() != 0) {
+            for (int i = 0; i < benMaster.size(); i++) {
+                if (benMaster.get(i).getTestsCode().contains(AppConstants.RBS)) {
                     System.out.println("Nitya >> Matched");
                     return true;
                 }
@@ -1971,6 +2021,33 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         public void onApiCancelled() {
 
         }
+    }
+    private boolean isValidForEditing(String tests) {
+
+        if(        tests.equalsIgnoreCase(AppConstants.PPBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS+ "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP+ "," + AppConstants.RBS)
+
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS)
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS+ "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP+ "," + AppConstants.PPBS)
+
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS+ "," + AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS+ "," + AppConstants.PPBS)
+                ){
+            return true;
+        }
+
+
+
+        return false;
     }
 }
 

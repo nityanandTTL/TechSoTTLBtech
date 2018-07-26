@@ -8,9 +8,8 @@ public class BtechImageResponseModel {
     private int BtechId;
     private String ImgUrl;
     private String Response;
-    private String SubscriptionKey;
     private String EndpointKey;
-
+    private String SubscriptionKey;
     private int flag;
 
     public int getBtechId() {
@@ -41,8 +40,12 @@ public class BtechImageResponseModel {
         return flag;
     }
 
-    public void setFlag(int flag) {
-        this.flag = flag;
+    public String getEndpointKey() {
+        return EndpointKey;
+    }
+
+    public void setEndpointKey(String endpointKey) {
+        EndpointKey = endpointKey;
     }
 
     public String getSubscriptionKey() {
@@ -53,11 +56,7 @@ public class BtechImageResponseModel {
         SubscriptionKey = subscriptionKey;
     }
 
-    public String getEndpointKey() {
-        return EndpointKey;
-    }
-
-    public void setEndpointKey(String endpointKey) {
-        EndpointKey = endpointKey;
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 }

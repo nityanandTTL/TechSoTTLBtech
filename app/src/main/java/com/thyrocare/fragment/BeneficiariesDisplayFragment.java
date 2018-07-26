@@ -99,6 +99,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private LinearLayout llAddBeneficiary;
     private String test;
     public static String isPPBSTestRemoved = "normal";
+    public static String isRBSTestRemoved = "normal";
     public static String isINSPPTestRemoved = "normal";
     public static String isFBSTestRemoved = "normal";
     public static String isINSFATestRemoved = "normal";
@@ -195,11 +196,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         llAddBeneficiary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
 
-                if (orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS)
-                        || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.INSPP)
-                        || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
+                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");/*BeneficiaryDetailsModel*/
+
+                Log.e(TAG_FRAGMENT, "tests: " + orderBookingRequestModel.getBendtl().get(0).getTests());
+
+                if (isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
                     //llAddBeneficiary.setEnabled(false);
                     Toast.makeText(activity, "This " + orderBookingRequestModel.getBendtl().get(0).getTests() + " Test Here you cannot Add Benificary  ", Toast.LENGTH_SHORT).show();
                     isOnlyWOE = true;
@@ -287,9 +289,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                     Logger.error("Selcted testssssssss" + orderBookingRequestModel.getBendtl().get(0).getTests());
 
 
-                    if (orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS)
-                            || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.INSPP)
-                            || orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
+                    if (isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
 
                         //llAddBeneficiary.setEnabled(false);
                         //Toast.makeText(activity, "This"+orderBookingRequestModel.getBendtl().get(0).getTests()+" Test Here you cannot Add Benificary  ", Toast.LENGTH_SHORT).show();
@@ -352,6 +352,33 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
             }
         });
+    }
+
+    private boolean isValidForEditing(String tests) {
+
+        if (tests.equalsIgnoreCase(AppConstants.PPBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS + "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP + "," + AppConstants.RBS)
+
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS)
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS + "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP + "," + AppConstants.PPBS)
+
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS + "," + AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS + "," + AppConstants.PPBS)
+                ) {
+            return true;
+        }
+
+
+        return false;
     }
 
     private boolean validate(OrderBookingRequestModel orderBookingRequestModel) {
@@ -701,10 +728,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             e.printStackTrace();
             test = "";
         }
+        Log.e(TAG_FRAGMENT, "initUI: " + orderBookingRequestModel.getBendtl().get(0).getTests());
+        if (isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
 
-        if (orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS) ||
-                orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.INSPP) ||
-                orderBookingRequestModel.getBendtl().get(0).getTests().equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)) {
+
             llAddBeneficiary.setEnabled(false);
             isOnlyWOE = true;
 
@@ -980,12 +1007,186 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                                         Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
 
 
+
+//jai testing
+
+                                                                      /*  Logger.error("isPPBSTestRemoved status : " + isPPBSTestRemoved);
+                                                                        Logger.error("isRBSTestRemoved status : " + isRBSTestRemoved);
+                                                                        Logger.error("isINSPPTestRemoved status : " + isINSPPTestRemoved);
+                                                                        Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
+                                                                        Logger.error("test123 : " + test.toUpperCase());
+
+                                                                        if (test.toUpperCase().contains(AppConstants.PPBS)) {
+                                                                            Logger.error("contains PPBS : ");
+                                                                        } else {
+                                                                            Logger.error("not contains PPBS : ");
+                                                                        }
+                                                                        if (test.toUpperCase().contains(AppConstants.FBS)) {
+                                                                            Logger.error("contains FBS : ");
+                                                                        } else {
+                                                                            Logger.error("not contains FBS : ");
+                                                                        }
+
+
+                                                                        if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS) && *//*jai*//*isPPBSTestRemoved.equals("normal")
+                                                                                && test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA") && *//*jai*//*isINSPPTestRemoved.equals("normal")
+                                                                                && test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS) && *//*jai*//*isRBSTestRemoved.equals("normal")
+                                                                                )
+
+                                                                        {
+                                                                            if (!isINSFATestRemoved.equals("removed") && !isFBSTestRemoved.equals("removed")) {
+                                                                                Logger.error("should print revisit dialog for both: ");
+                                                                                Logger.error("for both");
+
+
+                                                                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                                                                builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS/RBS and INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                            @Override
+                                                                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                                                                activity.finish();
+
+
+                                                                                            }
+                                                                                        })
+                                                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                                                            @Override
+                                                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                                                dialog.dismiss();
+                                                                                            }
+                                                                                        })
+                                                                                        .setCancelable(false)
+                                                                                        .show();
+                                                                            }
+
+                                                                        } else if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
+                                                                                && *//*jai*//*isPPBSTestRemoved.equals("normal")) {
+
+                                                                            Logger.error("isFBSTestRemoved status : " + isFBSTestRemoved);
+                                                                            if (!isFBSTestRemoved.equals("removed")) {
+
+                                                                                Logger.error("should print revisit dialog for ppbs: ");
+
+                                                                                Logger.error("for PPBS");
+                                                                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                                                                String testToDisplay = "";
+                                                                                if (test.contains(AppConstants.RBS) && isRBSTestRemoved.equals("normal")) {
+                                                                                    testToDisplay = "PPBS and RBS";
+                                                                                } else {
+                                                                                    testToDisplay = "PPBS";
+                                                                                }
+
+                                                                                builder.setMessage("Please note you have to revisit at customer place to collect sample for " + testToDisplay + " in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                            @Override
+                                                                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                                                                activity.finish();
+
+
+                                                                                            }
+                                                                                        })
+                                                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                                                            @Override
+                                                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                                                dialog.dismiss();
+                                                                                            }
+                                                                                        })
+                                                                                        .setCancelable(false)
+                                                                                        .show();
+
+                                                                            }
+                                                                            //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
+                                                                        } else if (test.toUpperCase().contains(AppConstants.INSPP) && test.toUpperCase().contains(AppConstants.INSFA)
+                                                                                && *//*jai*//*isINSPPTestRemoved.equals("normal")) {
+
+                                                                            Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
+                                                                            if (!isINSFATestRemoved.equals("removed")) {
+
+                                                                                Logger.error("should print revisit dialog for insfa: ");
+
+                                                                                Logger.error("for INSPP");
+                                                                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                                                                builder.setMessage("Please note you have to revisit at customer place to collect sample for INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                            @Override
+                                                                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                                                                activity.finish();
+
+
+                                                                                            }
+                                                                                        })
+                                                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                                                            @Override
+                                                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                                                dialog.dismiss();
+                                                                                            }
+                                                                                        })
+                                                                                        .setCancelable(false)
+                                                                                        .show();
+                                                                            }
+                                                                            //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
+                                                                        } else if (test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS)
+                                                                                && *//*jai*//*isRBSTestRemoved.equals("normal")) {
+
+                                                                            Logger.error("isRBSTestRemoved status : " + isFBSTestRemoved);
+                                                                            if (!isFBSTestRemoved.equals("removed")) {
+
+                                                                                Logger.error("should print revisit dialog for rbs: ");
+
+                                                                                Logger.error("for rbs");
+                                                                                String testToDisplay = "";
+                                                                                if (test.contains(AppConstants.PPBS)) {
+                                                                                    testToDisplay = "PPBS and RBS";
+                                                                                } else {
+                                                                                    testToDisplay = "RBS";
+                                                                                }
+
+                                                                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                                                                builder.setMessage("Please note you have to revisit at customer place to collect sample for RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                                            @Override
+                                                                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                                                                activity.finish();
+
+
+                                                                                            }
+                                                                                        })
+                                                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                                                            @Override
+                                                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                                                dialog.dismiss();
+                                                                                            }
+                                                                                        })
+                                                                                        .setCancelable(false)
+                                                                                        .show();
+                                                                            }
+                                                                            //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
+                                                                        } else {
+                                                                            Logger.error("testcode in else " + test.toUpperCase());
+                                                                            activity.finish();
+                                                                        }
+
+
+*/
+//jai testing
+
+
+
+
                                                                         workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
                                                                         if (isNetworkAvailable(activity)) {
                                                                             workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
                                                                         } else {
                                                                             Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                                                         }
+
+
+
+
                                                                     }
                                                                 })
                                                                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -1078,6 +1279,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                              /*   if (test.toUpperCase().contains("PPBS") && test.toUpperCase().contains("FBS"))  {*/
                                 //  llAddBeneficiary.setEnabled(false);
                                 Logger.error("isPPBSTestRemoved status : " + isPPBSTestRemoved);
+                                Logger.error("isRBSTestRemoved status : " + isRBSTestRemoved);
                                 Logger.error("isINSPPTestRemoved status : " + isINSPPTestRemoved);
                                 Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
                                 Logger.error("test123 : " + test.toUpperCase());
@@ -1094,16 +1296,19 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                 }
 
 
-                                if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
-                                        && /*jai*/isPPBSTestRemoved.equals("normal") && test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA")
-                                        && /*jai*/isINSPPTestRemoved.equals("normal"))
+                                if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS) && /*jai*/isPPBSTestRemoved.equals("normal")
+                                        && test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA") && /*jai*/isINSPPTestRemoved.equals("normal")
+                                        && test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS) && /*jai*/isRBSTestRemoved.equals("normal")
+                                        )
 
                                 {
                                     if (!isINSFATestRemoved.equals("removed") && !isFBSTestRemoved.equals("removed")) {
                                         Logger.error("should print revisit dialog for both: ");
                                         Logger.error("for both");
+
+
                                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                        builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS and INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                        builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS/RBS and INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
                                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
@@ -1122,17 +1327,58 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                 .setCancelable(false)
                                                 .show();
                                     }
+
                                 } else if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
                                         && /*jai*/isPPBSTestRemoved.equals("normal")) {
 
                                     Logger.error("isFBSTestRemoved status : " + isFBSTestRemoved);
                                     if (!isFBSTestRemoved.equals("removed")) {
 
-                                        Logger.error("should print revisit dialog for fbs: ");
+
+                                        Logger.error("should print revisit dialog for ppbs: ");
 
                                         Logger.error("for PPBS");
                                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                        String testToDisplay = "";
+                                      /*
+                                        if (test.contains(AppConstants.RBS) && isRBSTestRemoved.equals("normal")) {
+                                            testToDisplay = "PPBS and RBS";
+                                        } else {
+                                            testToDisplay = "PPBS";
+                                        }*/
+
                                         builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                        activity.finish();
+
+
+                                                    }
+                                                })
+                                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                })
+                                                .setCancelable(false)
+                                                .show();
+
+                                    }
+                                    //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
+                                } else if (test.toUpperCase().contains(AppConstants.INSPP) && test.toUpperCase().contains(AppConstants.INSFA)
+                                        && /*jai*/isINSPPTestRemoved.equals("normal")) {
+
+                                    Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
+                                    if (!isINSFATestRemoved.equals("removed")) {
+
+                                        Logger.error("should print revisit dialog for insfa: ");
+
+                                        Logger.error("for INSPP");
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                        builder.setMessage("Please note you have to revisit at customer place to collect sample for INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
                                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
@@ -1152,17 +1398,24 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                 .show();
                                     }
                                     //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
-                                } else if (test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA")
-                                        && /*jai*/isINSPPTestRemoved.equals("normal")) {
+                                } else if (test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS)
+                                        && /*jai*/isRBSTestRemoved.equals("normal")) {
 
-                                    Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
-                                    if (!isINSFATestRemoved.equals("removed")) {
+                                    Logger.error("isRBSTestRemoved status : " + isFBSTestRemoved);
+                                    if (!isFBSTestRemoved.equals("removed")) {
 
-                                        Logger.error("should print revisit dialog for insfa: ");
+                                        Logger.error("should print revisit dialog for rbs: ");
 
-                                        Logger.error("for INSPP");
+                                        Logger.error("for rbs");
+                                        String testToDisplay = "";
+                                        if (test.contains(AppConstants.PPBS)) {
+                                            testToDisplay = "PPBS and RBS";
+                                        } else {
+                                            testToDisplay = "RBS";
+                                        }
+
                                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                        builder.setMessage("Please note you have to revisit at customer place to collect sample for INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                        builder.setMessage("Please note you have to revisit at customer place to collect sample for RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
                                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {

@@ -102,6 +102,8 @@ public class AbstractFragment extends Fragment implements
         return false;
     }
 
+
+
     @Override
     public void switchToActivity(Activity current,
                                  Class<? extends Activity> otherActivityClass,

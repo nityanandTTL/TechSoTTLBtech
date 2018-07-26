@@ -19,7 +19,7 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-sdk tools:overrideLibrary="com.microsoft.projectoxford.face"/>
+    <uses-sdk tools:overrideLibrary="com.microsoft.projectoxford.face" />
 
     <supports-screens
         android:anyDensity="true"
@@ -51,14 +51,15 @@
         </activity>
         <activity
             android:name=".activity.HomeScreenActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:noHistory="true"
             android:name=".activity.NotificationClickActivity"
             android:label="@string/app_notificationorders"
+            android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -94,9 +95,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.OrderBookingActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.ForgetPasswordActivity"

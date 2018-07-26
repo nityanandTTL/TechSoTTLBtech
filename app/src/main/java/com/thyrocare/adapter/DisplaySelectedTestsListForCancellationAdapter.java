@@ -31,11 +31,12 @@ public class DisplaySelectedTestsListForCancellationAdapter extends BaseAdapter 
     private ArrayList<BeneficiaryTestDetailsModel> selectedTestsListArr;
     private RemoveSelectedTestFromListDelegate removeSelectedTestFromListDelegate;
     private LayoutInflater layoutInflater;
-    private boolean isINSPPpresent=false;
-    private boolean isPPBSpresent=false;
-    private boolean isFBSpresent=false;
-    private boolean isFastingPresent=false;
-    private int FastingCount=0;
+    private boolean isINSPPpresent = false;
+    private boolean isPPBSpresent = false;
+    private boolean isRBSpresent = false;
+    private boolean isFBSpresent = false;
+    private boolean isFastingPresent = false;
+    private int FastingCount = 0;
 
     public DisplaySelectedTestsListForCancellationAdapter(Activity activity, ArrayList<BeneficiaryTestDetailsModel> selectedTestsListArr, RemoveSelectedTestFromListDelegate removeSelectedTestFromListDelegate) {
         this.activity = activity;
@@ -81,29 +82,33 @@ public class DisplaySelectedTestsListForCancellationAdapter extends BaseAdapter 
         holder.imgRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FastingCount=0;
+                FastingCount = 0;
                 if (selectedTestsListArr.size() > 1) {
-                    Logger.error("is fasting "+selectedTestsListArr.get(pos).getFasting());
-                    for (int i = 0; i <selectedTestsListArr.size() ; i++) {
-                        if(selectedTestsListArr.get(i).getTests().equalsIgnoreCase(AppConstants.INSPP)){
-                            isINSPPpresent=true;
+                    Logger.error("is fasting " + selectedTestsListArr.get(pos).getFasting());
+                    for (int i = 0; i < selectedTestsListArr.size(); i++) {
+                        if (selectedTestsListArr.get(i).getTests().equalsIgnoreCase(AppConstants.INSPP)) {
+                            isINSPPpresent = true;
                         }
-                        if (selectedTestsListArr.get(i).getTests().equalsIgnoreCase(AppConstants.PPBS)){
-                            isPPBSpresent=true;
+                        if (selectedTestsListArr.get(i).getTests().equalsIgnoreCase(AppConstants.PPBS)) {
+                            isPPBSpresent = true;
                         }
-                        if(selectedTestsListArr.get(i).getTests().equalsIgnoreCase(AppConstants.FBS)){
-                            isFBSpresent=true;
+                        if (selectedTestsListArr.get(i).getTests().equalsIgnoreCase(AppConstants.RBS)) {
+                            isRBSpresent = true;
+                        }
+                        if (selectedTestsListArr.get(i).getTests().equalsIgnoreCase(AppConstants.FBS)) {
+                            isFBSpresent = true;
 
                         }
-                        if(selectedTestsListArr.get(i).getFasting().equalsIgnoreCase("Fasting")){
-                            FastingCount= FastingCount+1;
-                            Logger.error("FastingCount "+FastingCount);
-                            isFastingPresent=true;
+                        if (selectedTestsListArr.get(i).getFasting().equalsIgnoreCase("Fasting")) {
+                            FastingCount = FastingCount + 1;
+                            Logger.error("FastingCount " + FastingCount);
+                            isFastingPresent = true;
                         }
 
                     }
 
                     if (selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.FBS) && isPPBSpresent ||
+                            selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.FBS) && isRBSpresent ||
                             selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.INSFA) && isINSPPpresent
                             ) {
                         Logger.error("isINSPPpresent size " + isINSPPpresent);
@@ -114,8 +119,12 @@ public class DisplaySelectedTestsListForCancellationAdapter extends BaseAdapter 
                         final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
                         builder1.setTitle("Warning ");
                         if (selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.FBS)) {
+                            if (isPPBSpresent) {
+                                builder1.setMessage("Please note in case you are removing FBBS test then PPBS test will automatically removed ");
+                            } else {
+                                builder1.setMessage("Please note in case you are removing FBBS test then RBS test will automatically removed ");
+                            }
 
-                            builder1.setMessage("Please note in case you are removing FBBS test then PPBS test will automatically removed ");
                         } else {
                             builder1.setMessage("Please note in case you are removing INSFA test then INSPP test will automatically removed ");
                         }
@@ -156,25 +165,28 @@ public class DisplaySelectedTestsListForCancellationAdapter extends BaseAdapter 
                     //jai
                     else if (selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.PPBS)) {
                         BeneficiariesDisplayFragment.isPPBSTestRemoved = "ppbs removed";
-                        isPPBSpresent=false;
+                        isPPBSpresent = false;
                         Logger.error("removing PPBS");
+                        selectedTestsListArr.remove(pos);
+                    } else if (selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.RBS)) {
+                        BeneficiariesDisplayFragment.isRBSTestRemoved = "rbs removed";
+                        isRBSpresent = false;
+                        Logger.error("removing RBS");
                         selectedTestsListArr.remove(pos);
                     } else if (selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.INSPP)) {
                         BeneficiariesDisplayFragment.isINSPPTestRemoved = "inspp removed";
-                        isINSPPpresent=false;
+                        isINSPPpresent = false;
 
                         Logger.error("removing INSPP");
                         selectedTestsListArr.remove(pos);
                     }
                     //jai
 
-                    else  if( !selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.FBS)
-                            && isFBSpresent==true && FastingCount==2 &&
-                            selectedTestsListArr.get(pos).getFasting().equalsIgnoreCase("Fasting") )
-                            {
-                                Toast.makeText(activity, "Cannot remove "+selectedTestsListArr.get(pos).getTests()+" test.", Toast.LENGTH_SHORT).show();
-                            }
-                    else {
+                    else if (!selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.FBS)
+                            && isFBSpresent == true && FastingCount == 2 &&
+                            selectedTestsListArr.get(pos).getFasting().equalsIgnoreCase("Fasting")) {
+                        Toast.makeText(activity, "Cannot remove " + selectedTestsListArr.get(pos).getTests() + " test.", Toast.LENGTH_SHORT).show();
+                    } else {
                         selectedTestsListArr.remove(pos);
                     }
                     removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr);

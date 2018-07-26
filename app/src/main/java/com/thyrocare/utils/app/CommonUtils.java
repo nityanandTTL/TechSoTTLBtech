@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.TypedValue;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;

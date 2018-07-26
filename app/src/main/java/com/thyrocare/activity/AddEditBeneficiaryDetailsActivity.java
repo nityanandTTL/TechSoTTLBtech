@@ -29,10 +29,12 @@ import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.BeneficiaryDetailsDao;
 import com.thyrocare.dao.models.LabAlertMasterDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
+import com.thyrocare.delegate.AddSampleBarcodeDialogDelegate;
 import com.thyrocare.delegate.AddTestListDialogDelegate;
 import com.thyrocare.delegate.CloseTestsDisplayDialogButtonDialogDelegate;
 import com.thyrocare.delegate.SelectClinicalHistoryCheckboxDelegate;
 import com.thyrocare.delegate.SelectLabAlertsCheckboxDelegate;
+import com.thyrocare.dialog.AddSampleBarcodeDialog;
 import com.thyrocare.dialog.ClinicalHistorySelectorDialog;
 import com.thyrocare.dialog.DisplaySelectedTestsListForCancellationDialog;
 import com.thyrocare.dialog.LabAlertSelectorDialog;
@@ -576,6 +578,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                         startActivityForResult(intentAddTests, BundleConstants.ADD_TESTS_START);
                     }
                 });
+                dstlfcd.setCancelable(false);
                 dstlfcd.show();
                 /*}
                 else{

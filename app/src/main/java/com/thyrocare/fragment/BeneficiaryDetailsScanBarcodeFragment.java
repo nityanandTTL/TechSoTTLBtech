@@ -40,6 +40,7 @@ import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.BeneficiaryDetailsDao;
 import com.thyrocare.dao.models.LabAlertMasterDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
+import com.thyrocare.delegate.AddSampleBarcodeDialogDelegate;
 import com.thyrocare.delegate.AddTestListDialogDelegate;
 import com.thyrocare.delegate.CloseTestsDisplayDialogButtonDialogDelegate;
 import com.thyrocare.delegate.OrderCancelDialogButtonClickedDelegate;
@@ -47,6 +48,7 @@ import com.thyrocare.delegate.OrderRescheduleDialogButtonClickedDelegate;
 import com.thyrocare.delegate.RefreshBeneficiariesSliderDelegate;
 import com.thyrocare.delegate.SelectClinicalHistoryCheckboxDelegate;
 import com.thyrocare.delegate.SelectLabAlertsCheckboxDelegate;
+import com.thyrocare.dialog.AddSampleBarcodeDialog;
 import com.thyrocare.dialog.CancelOrderDialog;
 import com.thyrocare.dialog.ClinicalHistorySelectorDialog;
 import com.thyrocare.dialog.DisplaySelectedTestsListForCancellationDialog;
@@ -262,10 +264,9 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             edtTests.setText(beneficiaryDetailsModel.getTestsCode());
             edtRemarks.setText(beneficiaryDetailsModel.getRemarks());
 
-            if (beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.PPBS)
-                    || beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.INSPP)
-                    || beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)) {
-Logger.error("");
+            if (isValidForEditing(beneficiaryDetailsModel.getTestsCode())) {
+Logger.error("=====disable1=====");
+
                 edtTests.setEnabled(false);
                 imgHC.setEnabled(false);
                 btnRelease.setVisibility(View.GONE);
@@ -296,9 +297,7 @@ Logger.error("");
                 textView3.setVisibility(View.GONE);
             }
 //jai
-            if(beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.PPBS)
-                    || beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.INSPP)
-                    || beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase(AppConstants.PPBS+","+AppConstants.INSPP)){
+            if(isValidForEditing(beneficiaryDetailsModel.getTestsCode())){
 
             }else {
                 Logger.error("not pp insp");
@@ -306,6 +305,7 @@ Logger.error("");
                     edtTests.setEnabled(true);
                     Logger.error("isEditOrder scan "+orderDetailsModel.isEditOrder());
                 }else {
+                    Logger.error("=====disable2=====");
                     edtTests.setEnabled(false);
                     Logger.error("isEditOrder scan "+orderDetailsModel.isEditOrder());
                 }
@@ -355,7 +355,33 @@ Logger.error("");
             initScanBarcodeView();
         }
     }
+    private boolean isValidForEditing(String tests) {
 
+        if(        tests.equalsIgnoreCase(AppConstants.PPBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS+ "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP+ "," + AppConstants.RBS)
+
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS)
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS+ "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP+ "," + AppConstants.PPBS)
+
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS+ "," + AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS+ "," + AppConstants.PPBS)
+                ){
+            return true;
+        }
+
+
+
+        return false;
+    }
     private void setListeners() {
         imgVenipuncture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -688,6 +714,7 @@ Logger.error("");
                         startActivityForResult(intentAddTests, BundleConstants.ADD_TESTS_START);
                     }
                 });
+                dstlfcd.setCancelable(false);
                 dstlfcd.show();
                 /*}
                 else{

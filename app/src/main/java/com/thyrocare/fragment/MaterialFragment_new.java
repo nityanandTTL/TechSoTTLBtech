@@ -1,6 +1,7 @@
 package com.thyrocare.fragment;
 
 import android.app.Dialog;
+import android.media.Image;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,14 +18,18 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.customview.CustomOKDialog;
 import com.thyrocare.delegate.CustomOkDialogOkButtonOnClickedDelegate;
+import com.thyrocare.models.api.request.BtechsRequestModel;
 import com.thyrocare.models.api.request.UpdateMaterial;
 import com.thyrocare.models.api.response.MaterialBtechStockResponseModel;
 import com.thyrocare.models.data.BTStockMaterialsModel;
+import com.thyrocare.models.data.BtechIdModel;
+import com.thyrocare.models.data.MaterialDetailsModel;
 import com.thyrocare.models.data.MaterialsStocksModel_new;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;

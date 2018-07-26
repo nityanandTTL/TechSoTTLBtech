@@ -4,7 +4,7 @@ public interface AppConstants {
 
     // ------------ CONSTANTS -------------
 
-    public static final int ANDROID_APP_VERSION = 29;
+    public static final int ANDROID_APP_VERSION = 31;
 
     public static final boolean IS_DEBUG = true;
 
@@ -91,6 +91,7 @@ public interface AppConstants {
     public static final int APP_PERMISSIONS = 1001;
     public static final String PPBS = "PPBS";
     public static final String INSPP = "INSPP";
+    public static final String RBS = "RBS";
     public static final String FBS = "FBS";
     public static final String INSFA = "INSFA";
     public static final String API_KEY = "dNBJfkhL5z8ng3lsNOuAEL2D73G@FDOC0z3fvmKQjiw=";

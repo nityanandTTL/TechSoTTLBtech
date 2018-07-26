@@ -67,6 +67,7 @@ public class FeedbackFragment extends Fragment {
     private Global globalClass;
     private ConnectionDetector cd;
     private SharedPreferences pref, prefs_user;
+    private String deviceInfo="";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,8 @@ public class FeedbackFragment extends Fragment {
         pref=mActivity.getSharedPreferences("domain", 0);
         prefs_user = mActivity.getSharedPreferences("login_detail", 0);
         mScrollView.setVisibility(View.INVISIBLE);
+
+        setDeviceInfo();
 
         if (cd.isConnectingToInternet()){
             new AsyncLoadOptionApi().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -298,6 +301,44 @@ public class FeedbackFragment extends Fragment {
         return view;
     }
 
+    private void setDeviceInfo() {
+        String myDeviceModel = "";
+        try {
+            myDeviceModel = android.os.Build.MODEL;
+        } catch (Exception e) {
+            e.printStackTrace();
+            myDeviceModel = "";
+        }
+
+        String myDevice = "";
+        try {
+            myDevice = android.os.Build.DEVICE;
+        } catch (Exception e) {
+            e.printStackTrace();
+            myDevice = "";
+        }
+
+        String myDevicePRODUCT = "";
+        try {
+            myDevicePRODUCT = android.os.Build.PRODUCT;
+        } catch (Exception e) {
+            e.printStackTrace();
+            myDevicePRODUCT = "";
+        }
+
+        String myDeviceVersion = "";
+        try {
+            myDeviceVersion = android.os.Build.VERSION.SDK;
+        } catch (Exception e) {
+            e.printStackTrace();
+            myDeviceVersion = "";
+        }
+
+        deviceInfo = myDeviceModel+" "+ myDevice + " "+myDevicePRODUCT+" "+myDeviceVersion;
+
+        System.out.println("Nitya >> "+deviceInfo);
+    }
+
     public class AsyncLoadOptionApi extends AsyncTask<Void, Void, ArrayList<String>> {
         String strData="";
         @Override
@@ -411,7 +452,7 @@ public class FeedbackFragment extends Fragment {
                 jobj.put("name", strName);
                 jobj.put("email", strEmail);
                 jobj.put("mobile", strMobile);
-                jobj.put("feedback", strQuery+ " - Btech app");
+                jobj.put("feedback", strQuery+ " - Btech app "+deviceInfo);
                 jobj.put("emotion_text", strEmotionsType);
                 jobj.put("rating", strRating);
             } catch (JSONException e) {
