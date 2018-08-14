@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.thyrocare.R;
 import com.thyrocare.fragment.LME.LME_OrdersDisplayFragment;
 import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
+import com.thyrocare.utils.app.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -46,9 +47,10 @@ public class LMEVisitsListAdapter extends RecyclerView.Adapter<LMEVisitsListAdap
     public void onBindViewHolder(MyViewHolder holder, final int pos) {
 
         holder.txt_code.setText("" + mListArray.get(pos).getSourceCode());
-        holder.txt_cnt.setText("" + mListArray.get(pos).getSampleCount());
+//        holder.txt_cnt.setText("" + mListArray.get(pos).getSampleCount());
+        holder.txt_cnt.setText("" + CommonUtils.getSampleCount(mListArray.get(pos)));
         holder.txt_name.setText("" + mListArray.get(pos).getName());
-        holder.txt_address.setText("" + mListArray.get(pos).getAddress() +"-"+mListArray.get(pos).getPincode());
+        holder.txt_address.setText("" + mListArray.get(pos).getAddress() + "-" + mListArray.get(pos).getPincode());
 
         holder.ll_alldata.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +60,6 @@ public class LMEVisitsListAdapter extends RecyclerView.Adapter<LMEVisitsListAdap
         });
 
     }
-
 
     @Override
     public int getItemCount() {
@@ -70,13 +71,9 @@ public class LMEVisitsListAdapter extends RecyclerView.Adapter<LMEVisitsListAdap
         mListArray.clear();
         if (charText.length() == 0) {
             mListArray.addAll(arraylist);
-        }
-        else
-        {
-            for (SampleDropDetailsbyTSPLMEDetailsModel wp : arraylist)
-            {
-                if (wp.getSourceCode().toLowerCase(Locale.getDefault()).contains(charText))
-                {
+        } else {
+            for (SampleDropDetailsbyTSPLMEDetailsModel wp : arraylist) {
+                if (wp.getSourceCode().toLowerCase(Locale.getDefault()).contains(charText)) {
                     mListArray.add(wp);
                 }
             }

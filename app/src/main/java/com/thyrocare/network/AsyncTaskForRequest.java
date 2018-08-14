@@ -34,6 +34,7 @@ import com.thyrocare.models.api.request.Post_DeviceID;
 import com.thyrocare.models.api.request.RemoveBeneficiaryAPIRequestModel;
 import com.thyrocare.models.api.request.ResetPasswordRequestModel;
 import com.thyrocare.models.api.request.SelfieUploadRequestModel;
+import com.thyrocare.models.api.request.SendScannedbarcodeLME;
 import com.thyrocare.models.api.request.ServiceUpdateRequestModel;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.api.request.SetDispositionDataModel;
@@ -2127,7 +2128,7 @@ public class AsyncTaskForRequest {
     }
 
 
-    public ApiCallAsyncTask getPostScannedMasterBarcodebyLMEAsyncTask(ScannedMasterBarcodebyLMEPOSTDATAModel rembensmsRequestModel) {
+    public ApiCallAsyncTask getPostScannedMasterBarcodebyLMEAsyncTask(SendScannedbarcodeLME[] rembensmsRequestModel) {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);

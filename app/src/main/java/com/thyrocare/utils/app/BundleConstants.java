@@ -1,5 +1,7 @@
 package com.thyrocare.utils.app;
 
+import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
+
 /**
  * Created by Orion on 4/27/2017.
  */
@@ -84,4 +86,5 @@ public class BundleConstants {
     //Flag 1 for Face detection, 0 for disable, 2 for faceCount
     public static int Flag_facedetection = 0;
     public static boolean b_facedetection = true;
+    public static SampleDropDetailsbyTSPLMEDetailsModel setsampleDropDetailsModel;
 }

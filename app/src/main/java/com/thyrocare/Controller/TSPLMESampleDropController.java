@@ -10,6 +10,7 @@ import com.thyrocare.activity.LMEMapDisplayFragmentActivity;
 import com.thyrocare.fragment.LME.LMEMasterBarcodeScanFragment;
 import com.thyrocare.fragment.LME.LME_OrdersDisplayFragment;
 import com.thyrocare.fragment.LME.LME_WLMISFragment;
+import com.thyrocare.models.api.request.SendScannedbarcodeLME;
 import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.models.data.ScannedMasterBarcodebyLMEPOSTDATAModel;
 import com.thyrocare.models.data.WLMISDetailsModel;
@@ -33,7 +34,6 @@ public class TSPLMESampleDropController {
     LMEMapDisplayFragmentActivity mLMEMapDisplayFragmentActivity;
     Context mContext;
     LME_OrdersDisplayFragment mLME_OrdersDisplayFragment;
-    LMEMasterBarcodeScanFragment mLMEMasterBarcodeScanFragment;
     LME_WLMISFragment mLME_WLMISFragment;
     int flag = 0;
 
@@ -41,12 +41,6 @@ public class TSPLMESampleDropController {
         this.mContext = activity;
         this.mLME_OrdersDisplayFragment = fragment;
         flag = 1;
-    }
-
-    public TSPLMESampleDropController(Context activity, LMEMasterBarcodeScanFragment fragment) {
-        this.mContext = activity;
-        this.mLMEMasterBarcodeScanFragment = fragment;
-        flag = 2;
     }
 
     public TSPLMESampleDropController(Context activity, LME_WLMISFragment fragment) {
@@ -71,7 +65,7 @@ public class TSPLMESampleDropController {
         }
     }
 
-    public void CallPostScannedMasterBarcodebyLME(ScannedMasterBarcodebyLMEPOSTDATAModel n) {
+    public void CallPostScannedMasterBarcodebyLME(SendScannedbarcodeLME[] n) {
 
         ApiCallAsyncTask logoutDeviceAsyncTask = new AsyncTaskForRequest(mContext).getPostScannedMasterBarcodebyLMEAsyncTask(n);
         logoutDeviceAsyncTask.setApiCallAsyncTaskDelegate(new PostScannedMasterBarcodebyLMEAsyncTaskDelegateResult());
@@ -97,7 +91,7 @@ public class TSPLMESampleDropController {
                         } else {
                             mLME_OrdersDisplayFragment.NodataFound();
                         }
-                    }else {
+                    } else {
                         mLME_OrdersDisplayFragment.NodataFound();
                     }
                 } catch (Exception e) {
@@ -125,14 +119,12 @@ public class TSPLMESampleDropController {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
                 TastyToast.makeText(mContext, "" + json, TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
-                if(flag == 1) {
+                if (flag == 1) {
                     mLME_OrdersDisplayFragment.StartButtonClickedSuccess();
-                }else if(flag == 2) {
-                    mLMEMasterBarcodeScanFragment.EndButtonClickedSuccess();
-                }else if(flag == 3) {
+                } else if (flag == 3) {
                     mLMEMapDisplayFragmentActivity.EndButtonClickedSuccess();
                 }
-            }else {
+            } else {
 
             }
         }
@@ -169,7 +161,7 @@ public class TSPLMESampleDropController {
                         } else {
                             mLME_WLMISFragment.NodataFound();
                         }
-                    }else {
+                    } else {
                         mLME_WLMISFragment.NodataFound();
                     }
                 } catch (Exception e) {
@@ -179,8 +171,6 @@ public class TSPLMESampleDropController {
                         materialDetailsModels = null;
                     }
                 }
-
-
             } else {
 
             }

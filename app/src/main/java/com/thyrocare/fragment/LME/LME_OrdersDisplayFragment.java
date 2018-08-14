@@ -147,8 +147,8 @@ public class LME_OrdersDisplayFragment extends AbstractFragment {
 
     public void StartEndButtonClicked(final SampleDropDetailsbyTSPLMEDetailsModel sampleDropDetailsbyTSPLMEDetailsModel) {
         msampleDropDetailsbyTSPLMEDetailsModel = sampleDropDetailsbyTSPLMEDetailsModel;
+        BundleConstants.setsampleDropDetailsModel = sampleDropDetailsbyTSPLMEDetailsModel;
         Intent intentMapDisplay = new Intent(activity, LMEMapDisplayFragmentActivity.class);
-        intentMapDisplay.putExtra(BundleConstants.LME_ORDER_MODEL, sampleDropDetailsbyTSPLMEDetailsModel);
         startActivityForResult(intentMapDisplay, BundleConstants.LME_START);
     }
 
@@ -161,30 +161,7 @@ public class LME_OrdersDisplayFragment extends AbstractFragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//            pushFragments(LMEMasterBarcodeScanFragment.newInstance(msampleDropDetailsbyTSPLMEDetailsModel), false, false, LMEMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
         }
-    }
-
-    private void StartPostScannedMasterBarcodebyLME(SampleDropDetailsbyTSPLMEDetailsModel sampleDropDetailsbyTSPLMEDetailsModel) {
-        ScannedMasterBarcodebyLMEPOSTDATAModel n = null;
-        try {
-            GPSTracker gpsTracker = new GPSTracker(activity);
-            n = new ScannedMasterBarcodebyLMEPOSTDATAModel();
-            n.setMasterBarcode("");
-            n.setSampleDropIds("" + sampleDropDetailsbyTSPLMEDetailsModel.getSampleDropId());
-            n.setStatus("1");
-            n.setLatitude(String.valueOf(gpsTracker.getLatitude()));
-            n.setLongitude(String.valueOf(gpsTracker.getLongitude()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (ApplicationController.mTSPLMESampleDropController != null) {
-            ApplicationController.mTSPLMESampleDropController = null;
-        }
-
-        ApplicationController.mTSPLMESampleDropController = new TSPLMESampleDropController(activity, fragment);
-        ApplicationController.mTSPLMESampleDropController.CallPostScannedMasterBarcodebyLME(n);
     }
 
     public void StartButtonClickedSuccess() {

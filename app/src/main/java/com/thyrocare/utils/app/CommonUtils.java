@@ -23,6 +23,7 @@ import com.thyrocare.R;
 import com.thyrocare.activity.LoginScreenActivity;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.models.api.response.MessageModel;
+import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.utils.api.Logger;
 
 import java.io.ByteArrayOutputStream;
@@ -259,5 +260,24 @@ public class CommonUtils {
     public static int getNotificationIcon(){
 
         return R.mipmap.app_nlogo;
+    }
+
+    public static String getSampleCount(SampleDropDetailsbyTSPLMEDetailsModel sampleDropDetailsModel) {
+        String cnt = "";
+
+        if (sampleDropDetailsModel != null) {
+            if (sampleDropDetailsModel.getBarcodeList() != null) {
+                if (sampleDropDetailsModel.getBarcodeList().size() != 0) {
+                    int smpcnt = 0;
+                    for (int i = 0; i < sampleDropDetailsModel.getBarcodeList().size(); i++) {
+                        smpcnt = smpcnt + sampleDropDetailsModel.getBarcodeList().get(i).getSampleCount();
+                    }
+
+                    cnt = "" + smpcnt;
+                }
+            }
+        }
+
+        return cnt;
     }
 }

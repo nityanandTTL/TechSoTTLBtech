@@ -43,22 +43,24 @@ public class AbstractApiModel implements AppConstants {
     //public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.
     // 0com/btsapi";
 
-
 //    public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.com/techsoapi";//staging
-//    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
-
     //    public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
-    public static final String API_VERSION = "https://www.thyrocare.com/APIs";
 
-//         public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
-    public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
-    // public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
+    //TODO Stag
+    public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
+    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
+    //TODO Stag
+
+    //TODO Live
+   /* public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
+    public static final String API_VERSION = "https://www.thyrocare.com/APIs";*/
+    //TODO Live
 
 
     public static String SERVER_BASE_API_URL = appEnvironment.equals("DEVELOPMENT") ? SERVER_BASE_API_URL_DEV : appEnvironment.equals("DEMO") ? SERVER_BASE_API_URL_DEMO : appEnvironment.equals("PRODUCTION") ? SERVER_BASE_API_URL_PROD : SERVER_BASE_API_URL_DEV;
 
 
-    /**
+    /**1
      * RESPECTIVE URLS
      */
 

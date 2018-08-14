@@ -98,7 +98,7 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
         txt_cnt = (TextView) view.findViewById(R.id.txt_cnt);
 
         txt_code.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getSourceCode());
-        txt_cnt.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getSampleCount());
+//        txt_cnt.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getSampleCount());
         txt_name.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getName());
         txt_address.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getAddress() +"-"+mSampleDropDetailsbyTSPLMEDetailsModel.getPincode());
     }
@@ -121,7 +121,7 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
             GPSTracker gpsTracker = new GPSTracker(activity);
             n = new ScannedMasterBarcodebyLMEPOSTDATAModel();
             n.setMasterBarcode(""+master_scanned_barcode.toString().trim());
-            n.setSampleDropIds("" + sampleDropDetailsbyTSPLMEDetailsModel.getSampleDropId());
+//            n.setSampleDropIds("" + sampleDropDetailsbyTSPLMEDetailsModel.getSampleDropId());
             n.setStatus("3");
             n.setLatitude(String.valueOf(gpsTracker.getLatitude()));
             n.setLongitude(String.valueOf(gpsTracker.getLongitude()));
@@ -132,9 +132,6 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
         if (ApplicationController.mTSPLMESampleDropController != null) {
             ApplicationController.mTSPLMESampleDropController = null;
         }
-
-        ApplicationController.mTSPLMESampleDropController = new TSPLMESampleDropController(activity, fragment);
-        ApplicationController.mTSPLMESampleDropController.CallPostScannedMasterBarcodebyLME(n);
     }
 
     private boolean validate() {

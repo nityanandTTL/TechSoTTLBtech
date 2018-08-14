@@ -17,6 +17,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -38,17 +41,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.Controller.TSPLMESampleDropController;
 import com.thyrocare.R;
+import com.thyrocare.adapter.LMEBarcodescanListListAdapter;
 import com.thyrocare.application.ApplicationController;
+import com.thyrocare.models.api.request.SendScannedbarcodeLME;
 import com.thyrocare.models.data.HUBBTechModel;
 import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.models.data.ScannedMasterBarcodebyLMEPOSTDATAModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
+import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.fileutils.DataParser;
 
@@ -82,7 +90,7 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
 
     private FragmentActivity activity;
     private SampleDropDetailsbyTSPLMEDetailsModel mSampleDropDetailsbyTSPLMEDetailsModel;
-    TextView txt_code, txt_cnt, txt_name, txt_address;
+    TextView txt_code, txt_name, txt_address;
 
     private AppPreferenceManager appPreferenceManager;
     private Geocoder geocoder;
@@ -95,7 +103,8 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
     LinearLayout ll_scan_master_barcode;
     private IntentIntegrator intentIntegrator;
     private String master_scanned_barcode = "";
-    TextView scanned_barcode;
+    RecyclerView recy_barcode_list;
+    private LMEBarcodescanListListAdapter mLMEBarcodescanListListAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,7 +113,7 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         activity = this;
         mLMEMapDisplayFragmentActivity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
-        mSampleDropDetailsbyTSPLMEDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.LME_ORDER_MODEL);
+        mSampleDropDetailsbyTSPLMEDetailsModel = BundleConstants.setsampleDropDetailsModel;
 
         initUI();
         initData();
@@ -148,14 +157,14 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
 
         txt_name = (TextView) findViewById(R.id.txt_name);
         txt_address = (TextView) findViewById(R.id.txt_address);
+        txt_address.setSelected(true);
         txt_code = (TextView) findViewById(R.id.txt_code);
-        txt_cnt = (TextView) findViewById(R.id.txt_cnt);
+        recy_barcode_list = (RecyclerView) findViewById(R.id.recy_barcode_list);
 
         ll_scan_master_barcode = (LinearLayout) findViewById(R.id.ll_scan_master_barcode);
         ll_scan_master_barcode.setOnClickListener(this);
 
         btn_startaccept = (Button) findViewById(R.id.btn_startaccept);
-        scanned_barcode = (TextView) findViewById(R.id.scanned_barcode);
 
         SupportMapFragment mapFragment = (SupportMapFragment) activity.getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -355,15 +364,34 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
     }
 
     private boolean validate() {
-        if (master_scanned_barcode.toString().trim().length() != 8 && master_scanned_barcode.toString().trim().length() >= 1) {
-            scanned_barcode.setText("");
+        /*if (master_scanned_barcode.toString().trim().length() != 8 && master_scanned_barcode.toString().trim().length() >= 1) {
             Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
             return false;
         } else if (master_scanned_barcode.equals("")) {
             CallDialog_a();
             return false;
+        }*/
+
+        try {
+            if (mSampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList() != null) {
+                if (mSampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().size() != 0) {
+                    for (int i = 0; i < mSampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().size(); i++) {
+                        if (mSampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().get(i).isScanned()) {
+                            return true;
+                        }
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
+
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-        return true;
     }
 
     private void CallDialog_a() {
@@ -392,6 +420,8 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         if (v.getId() == R.id.btn_startaccept) {
             if (validate()) {
                 StartPostScannedMasterBarcodebyLME(mSampleDropDetailsbyTSPLMEDetailsModel);
+            } else {
+                TastyToast.makeText(activity, "No barcode scanned", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
             }
         } else if (v.getId() == R.id.ll_scan_master_barcode) {
             scanFromFragment();
@@ -415,13 +445,30 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
             if (scanningResult.getContents().startsWith("0") || scanningResult.getContents().startsWith("$")) {
                 Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
             } else {
-                master_scanned_barcode = scanningResult.getContents();
+                /*master_scanned_barcode = scanningResult.getContents();
                 if (master_scanned_barcode.toString().trim().length() != 8) {
                     master_scanned_barcode = "";
                     Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
                 } else {
-                    scanned_barcode.setText("" + master_scanned_barcode.toString().trim());
                     Toast.makeText(activity, "Master barcode scanned successfully", Toast.LENGTH_SHORT).show();
+                }*/
+                master_scanned_barcode = scanningResult.getContents();
+                for (int i = 0; i < mSampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().size(); i++) {
+                    if (mSampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().get(i).getMasterBarcode().equals(master_scanned_barcode)) {
+                        if (mSampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().get(i).isScanned()) {
+                            Toast.makeText(activity, "Same Barcode is Already Scanned", Toast.LENGTH_SHORT).show();
+                            break;
+                        } else {
+                            mSampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().get(i).setScanned(true);
+                            mSampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().get(i).setScannedBarcode("" + master_scanned_barcode);
+                            break;
+                        }
+                    }
+                }
+                try {
+                    mLMEBarcodescanListListAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         } else {
@@ -430,32 +477,71 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
     }
 
     private void StartPostScannedMasterBarcodebyLME(SampleDropDetailsbyTSPLMEDetailsModel sampleDropDetailsbyTSPLMEDetailsModel) {
-        ScannedMasterBarcodebyLMEPOSTDATAModel n = null;
+        /*ScannedMasterBarcodebyLMEPOSTDATAModel n = null;
         try {
             GPSTracker gpsTracker = new GPSTracker(activity);
             n = new ScannedMasterBarcodebyLMEPOSTDATAModel();
             n.setMasterBarcode("" + master_scanned_barcode.toString().trim());
-            n.setSampleDropIds("" + sampleDropDetailsbyTSPLMEDetailsModel.getSampleDropId());
+//            n.setSampleDropIds("" + sampleDropDetailsbyTSPLMEDetailsModel.getSampleDropId());
             n.setStatus("3");
             n.setLatitude(String.valueOf(gpsTracker.getLatitude()));
             n.setLongitude(String.valueOf(gpsTracker.getLongitude()));
         } catch (Exception e) {
             e.printStackTrace();
+        }*/
+
+        SendScannedbarcodeLME[] nmcfb = new SendScannedbarcodeLME[sampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().size()];
+
+        if (sampleDropDetailsbyTSPLMEDetailsModel != null) {
+            if (sampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList() != null) {
+                if (sampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().size() != 0) {
+                    for (int i = 0; i < sampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().size(); i++) {
+                        SendScannedbarcodeLME nt = new SendScannedbarcodeLME();
+                        GPSTracker gpsTracker = new GPSTracker(activity);
+
+                        nt.SampleDropId = "" + sampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().get(i).getSampleDropId();
+                        nt.MasterBarcode = "" + sampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().get(i).getMasterBarcode();
+
+                        if (sampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().get(i).isScanned()) {
+                            nt.ScanBarcode = "" + sampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().get(i).getScannedBarcode();
+                        } else {
+                            nt.ScanBarcode = "";
+                        }
+                        nt.Latitude = "" + String.valueOf(gpsTracker.getLatitude());
+                        nt.Longitude = "" + String.valueOf(gpsTracker.getLongitude());
+                        nt.Status = "3";
+
+                        nmcfb[i] = nt;
+                    }
+
+                }
+            }
         }
+
+//        String postJson = new Gson().toJson(nmcfb);
 
         if (ApplicationController.mTSPLMESampleDropController != null) {
             ApplicationController.mTSPLMESampleDropController = null;
         }
 
         ApplicationController.mTSPLMESampleDropController = new TSPLMESampleDropController(activity, mLMEMapDisplayFragmentActivity);
-        ApplicationController.mTSPLMESampleDropController.CallPostScannedMasterBarcodebyLME(n);
+        ApplicationController.mTSPLMESampleDropController.CallPostScannedMasterBarcodebyLME(nmcfb);
     }
 
     private void initData() {
         txt_code.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getSourceCode());
-        txt_cnt.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getSampleCount());
         txt_name.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getName());
         txt_address.setText("" + mSampleDropDetailsbyTSPLMEDetailsModel.getAddress() + "-" + mSampleDropDetailsbyTSPLMEDetailsModel.getPincode());
+
+        prepareRecyclerView();
+    }
+
+    private void prepareRecyclerView() {
+        mLMEBarcodescanListListAdapter = new LMEBarcodescanListListAdapter(mSampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList(), mLMEMapDisplayFragmentActivity);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
+        recy_barcode_list.setLayoutManager(mLayoutManager);
+        recy_barcode_list.setItemAnimator(new DefaultItemAnimator());
+        recy_barcode_list.setAdapter(mLMEBarcodescanListListAdapter);
     }
 
     public void EndButtonClickedSuccess() {
