@@ -21,9 +21,13 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,8 +55,13 @@ import com.thyrocare.adapter.LMEBarcodescanListListAdapter;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.models.api.request.SendScannedbarcodeLME;
 import com.thyrocare.models.data.HUBBTechModel;
+import com.thyrocare.models.data.LocationMasterModel;
 import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.models.data.ScannedMasterBarcodebyLMEPOSTDATAModel;
+import com.thyrocare.network.ApiCallAsyncTask;
+import com.thyrocare.network.ApiCallAsyncTaskDelegate;
+import com.thyrocare.network.AsyncTaskForRequest;
+import com.thyrocare.network.ResponseParser;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
@@ -60,6 +69,7 @@ import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.fileutils.DataParser;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -72,6 +82,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import static com.thyrocare.utils.api.NetworkUtils.isNetworkAvailable;
 
 
 public class LMEMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
@@ -105,6 +117,11 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
     private String master_scanned_barcode = "";
     RecyclerView recy_barcode_list;
     private LMEBarcodescanListListAdapter mLMEBarcodescanListListAdapter;
+    Spinner sp_location;
+    private ArrayList<LocationMasterModel> mLocationmaster;
+    private ArrayList<String> LocationStringListArr;
+    private int pos_id = 0;
+    private String mLocation_str = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,6 +141,18 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         // Initializing
         MarkerPoints = new ArrayList<>();
 
+        CallLocationMaster();
+    }
+
+    private void CallLocationMaster() {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchbtechavailAsyncTask = asyncTaskForRequest.getLocationMasterAsyncTask();
+        fetchbtechavailAsyncTask.setApiCallAsyncTaskDelegate(new LocationMasterApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            fetchbtechavailAsyncTask.execute(fetchbtechavailAsyncTask);
+        } else {
+            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -160,6 +189,7 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         txt_address.setSelected(true);
         txt_code = (TextView) findViewById(R.id.txt_code);
         recy_barcode_list = (RecyclerView) findViewById(R.id.recy_barcode_list);
+        sp_location = (Spinner) findViewById(R.id.sp_location);
 
         ll_scan_master_barcode = (LinearLayout) findViewById(R.id.ll_scan_master_barcode);
         ll_scan_master_barcode.setOnClickListener(this);
@@ -418,10 +448,14 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_startaccept) {
-            if (validate()) {
-                StartPostScannedMasterBarcodebyLME(mSampleDropDetailsbyTSPLMEDetailsModel);
+            if (pos_id == 0) {
+                TastyToast.makeText(activity, "Please select location", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
             } else {
-                TastyToast.makeText(activity, "No barcode scanned", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                if (validate()) {
+                    StartPostScannedMasterBarcodebyLME(mSampleDropDetailsbyTSPLMEDetailsModel);
+                } else {
+                    TastyToast.makeText(activity, "No barcode scanned", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                }
             }
         } else if (v.getId() == R.id.ll_scan_master_barcode) {
             scanFromFragment();
@@ -510,6 +544,7 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
                         nt.Latitude = "" + String.valueOf(gpsTracker.getLatitude());
                         nt.Longitude = "" + String.valueOf(gpsTracker.getLongitude());
                         nt.Status = "3";
+                        nt.Location = ""+pos_id;
 
                         nmcfb[i] = nt;
                     }
@@ -743,5 +778,80 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         float dist = (float) (earthRadius * c);
         return dist;
+    }
+
+    private class LocationMasterApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                ResponseParser responseParser = new ResponseParser(activity);
+                mLocationmaster = responseParser.getLocationMasterResponseModel(json, statusCode);
+                if (mLocationmaster != null) {
+                    if (mLocationmaster.size() != 0) {
+                        setSpinnerDialog(mLocationmaster);
+                    } else {
+                        Okdialog("Something went wrong.");
+                    }
+                } else {
+                    Okdialog("Something went wrong.");
+                }
+            } else {
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                Okdialog("" + json);
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    private void setSpinnerDialog(final ArrayList<LocationMasterModel> mLocationmaster) {
+        LocationStringListArr = new ArrayList<>();
+        LocationStringListArr.add("" + BundleConstants.locationText);
+        for (LocationMasterModel btsCodeDataModell :
+                mLocationmaster) {
+            LocationStringListArr.add(btsCodeDataModell.getLocationType());
+        }
+
+        if (LocationStringListArr.size() != 0) {
+            ArrayAdapter<String> spinneradapter51 = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, LocationStringListArr);
+            spinneradapter51.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sp_location.setAdapter(spinneradapter51);
+
+            sp_location.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position == 0) {
+                        pos_id = position;
+                        mLocation_str = "";
+                    } else {
+                        pos_id = Integer.parseInt(mLocationmaster.get(position - 1).getId());
+                        mLocation_str = mLocationmaster.get(position - 1).getLocationType();
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+    }
+
+    public void Okdialog(String msg) {
+        android.app.AlertDialog.Builder builder1 = new android.app.AlertDialog.Builder(activity);
+        builder1.setTitle("");
+        builder1.setMessage(msg);
+        builder1.setCancelable(false);
+        builder1.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                activity.finish();
+            }
+        });
+        android.app.AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 }

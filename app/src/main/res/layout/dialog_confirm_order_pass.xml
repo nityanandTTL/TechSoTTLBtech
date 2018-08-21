@@ -1,57 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:background="@android:color/transparent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_15"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="Do you really want to Pass this order ?"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:id="@+id/sp_Btech"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/call_btech"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/call_olc_picup_icon" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/purple_btn_bg"
+                android:minEms="6"
+                android:text="No"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_yes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/purple_btn_bg"
+                android:minEms="6"
+                android:text="SEND OTP"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/validateOtp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Enter OTP"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_otp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/edit_text" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/purple_btn_bg"
+                    android:minEms="6"
+                    android:text="Submit"
+
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+                <Button
+
+                    android:id="@+id/btn_resend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/purple_btn_bg"
+                    android:minEms="6"
+                    android:text="RESEND"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/btn_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/purple_btn_bg"
+                    android:minEms="6"
+                    android:text="CALL"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
-        android:layout_weight="1"
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:text="Do you really want to Pass this order ?"
+        android:layout_gravity="right"
+        android:layout_weight="1"
+        android:background="@drawable/red_cross_icon"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
-        android:textStyle="bold"/>
-
-    <Spinner
-        android:padding="10dp"
-        android:id="@+id/sp_Btech"
-        android:layout_weight="1"
-        android:layout_margin="10dp"
-        android:background="@android:color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <LinearLayout
-        android:layout_weight="1"
-        android:layout_margin="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="horizontal" >
-        <Button
-            android:layout_marginEnd="10dp"
-            android:minEms="6"
-            android:id="@+id/btn_no"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/purple_btn_bg"
-            android:text="No"
-
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
-        <Button
-            android:layout_marginStart="10dp"
-            android:minEms="6"
-            android:id="@+id/btn_yes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/purple_btn_bg"
-            android:text="Yes"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
-    </LinearLayout>
-</LinearLayout>
+        android:textStyle="bold" />
+</FrameLayout>

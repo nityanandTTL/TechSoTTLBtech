@@ -59,6 +59,7 @@ import com.thyrocare.models.data.DeviceLoginDetailsModel;
 import com.thyrocare.models.data.DispositionDataModel;
 import com.thyrocare.models.data.Earning_NewRegisterModel;
 import com.thyrocare.models.data.LeaveNatureMasterModel;
+import com.thyrocare.models.data.LocationMasterModel;
 import com.thyrocare.models.data.MaterialDetailsModel;
 import com.thyrocare.models.data.NarrationMasterModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
@@ -1183,6 +1184,15 @@ public class ResponseParser implements AppConstants {
     public ArrayList<WLMISDetailsModel> getWLMISResponseModel(String json, int statusCode) {
         ArrayList<WLMISDetailsModel> slotModels = null;
         TypeToken<ArrayList<WLMISDetailsModel>> token = new TypeToken<ArrayList<WLMISDetailsModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+        return slotModels;
+    }
+
+
+    public ArrayList<LocationMasterModel> getLocationMasterResponseModel(String json, int statusCode) {
+        ArrayList<LocationMasterModel> slotModels = null;
+        TypeToken<ArrayList<LocationMasterModel>> token = new TypeToken<ArrayList<LocationMasterModel>>() {
         };
         slotModels = gson.fromJson(json, token.getType());
         return slotModels;

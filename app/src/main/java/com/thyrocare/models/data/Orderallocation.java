@@ -7,17 +7,20 @@ import android.os.Parcelable;
  * Created by E4904 on 9/1/2017.
  */
 
-public class Orderallocation  implements Parcelable{
+public class Orderallocation implements Parcelable {
 
 
-private int BtechId;
-    private String  BtechName;
+    private int BtechId;
+    private String BtechName;
     private String Pincode;
+    private String Mobile;
+
 
     protected Orderallocation(Parcel in) {
         BtechId = in.readInt();
         BtechName = in.readString();
         Pincode = in.readString();
+        Mobile = in.readString();
     }
 
     @Override
@@ -25,6 +28,7 @@ private int BtechId;
         dest.writeInt(BtechId);
         dest.writeString(BtechName);
         dest.writeString(Pincode);
+        dest.writeString(Mobile);
     }
 
     @Override
@@ -66,6 +70,14 @@ private int BtechId;
 
     public void setPincode(String pincode) {
         Pincode = pincode;
+    }
+
+    public String getMobile() {
+        return Mobile;
+    }
+
+    public void setMobile(String mobile) {
+        Mobile = mobile;
     }
 
     public Orderallocation() {

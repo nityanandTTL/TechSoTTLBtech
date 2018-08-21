@@ -11,16 +11,22 @@ public class OrderPassRequestModel implements Parcelable {
 
     private int BtechId;
     private String VisitId;
+    private String Mobile;
+    private String OTP;
 
     protected OrderPassRequestModel(Parcel in) {
         BtechId = in.readInt();
         VisitId = in.readString();
+        Mobile = in.readString();
+        OTP = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(BtechId);
         dest.writeString(VisitId);
+        dest.writeString(Mobile);
+        dest.writeString(OTP);
     }
 
     @Override
@@ -54,6 +60,22 @@ public class OrderPassRequestModel implements Parcelable {
 
     public void setVisitId(String visitId) {
         VisitId = visitId;
+    }
+
+    public String getMobile() {
+        return Mobile;
+    }
+
+    public void setMobile(String mobile) {
+        Mobile = mobile;
+    }
+
+    public String getOTP() {
+        return OTP;
+    }
+
+    public void setOTP(String OTP) {
+        this.OTP = OTP;
     }
 
     public OrderPassRequestModel() {

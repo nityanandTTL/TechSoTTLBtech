@@ -1,8 +1,11 @@
 package com.thyrocare.activity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -28,6 +31,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -49,11 +53,13 @@ import com.thyrocare.models.data.OrderVisitDetailsModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
+import com.thyrocare.service.TrackerService;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.api.NetworkUtils;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
+import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.fileutils.DataParser;
 
@@ -99,7 +105,9 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
     private AppPreferenceManager appPreferenceManager;
     private String MaskedPhoneNumber = "";
     private DhbDao dhbDao;
+    private Intent FirebaselocationUpdateIntent;
     private OrderDetailsDao orderDetailsDao;
+    GPSTracker gpsTracker;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,6 +115,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         setContentView(R.layout.activity_navigation_map_display);
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
+        gpsTracker = new GPSTracker(activity);
         dhbDao = new DhbDao(activity);
         orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
         Bundle bundle = new Bundle();
@@ -120,6 +129,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         }
         // Initializing
         MarkerPoints = new ArrayList<>();
+        FirebaselocationUpdateIntent = new Intent(this, TrackerService.class);
     }
 
     private void initData() {
@@ -135,11 +145,20 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         txtAddress.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
     }
 
+    private void startTrackerService() {
+
+        /*if (DeviceUtils.isMyServiceRunning(TrackerService.class, activity)) {
+        } else {*/
+
+            startService(FirebaselocationUpdateIntent);
+      //  }
+    }
+
     private void setListeners() {
         btn_arrived.setOnClickListener(this);
         btn_startNav.setOnClickListener(this);
 
-       // double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
+        // double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
 
         //Integertotaldiff = (int) totaldist;
         llCall.setOnClickListener(new View.OnClickListener() {
@@ -198,7 +217,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                     mMap.setMyLocationEnabled(true);
                 }
 //===========================
-                GPSTracker gpsTracker = new GPSTracker(activity);
+
                 if (gpsTracker.canGetLocation() && !gpsTracker.isInternetAvailable()) {
                     Log.e(TAG_FRAGMENT, "onMapReady: location : " + Double.toString(gpsTracker.getLatitude()) + "long " + gpsTracker.getLongitude());
                     final LatLng currentLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
@@ -226,13 +245,13 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                         LatLng dest = destTempLocation;
                         LatLng origin = currentLocation;
                         String url = getUrl(origin, dest);
-                        Logger.error("tyanche "+destlat+"long "+destlong);
-                        Logger.error("tyanche1 "+gpsTracker.getLatitude()+"long "+gpsTracker.getLongitude());
+                        Logger.error("tyanche " + destlat + "long " + destlong);
+                        Logger.error("tyanche1 " + gpsTracker.getLatitude() + "long " + gpsTracker.getLongitude());
                         //String distanceKm=""+distFrom(gpsTracker.getLatitude(),gpsTracker.getLongitude(),destlat,destlong);
-                        if(gpsTracker.getLatitude()==0 ||gpsTracker.getLongitude()==0 ||destlat==0||destlong==0){
+                        if (gpsTracker.getLatitude() == 0 || gpsTracker.getLongitude() == 0 || destlat == 0 || destlong == 0) {
                             txtDistance.setText("0 km");
-                        }else {
-                            txtDistance.setText(""+distFrom(gpsTracker.getLatitude(),gpsTracker.getLongitude(),destlat,destlong));
+                        } else {
+                            txtDistance.setText("" + distFrom(gpsTracker.getLatitude(), gpsTracker.getLongitude(), destlat, destlong));
                         }
 
                         Log.d("onMapClick", url.toString());
@@ -445,10 +464,33 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         }*/
         super.onResume();
     }
-
+    protected BroadcastReceiver stopReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG_FRAGMENT, "received stop broadcast");
+            // Stop the service when the notification is tapped
+            unregisterReceiver(stopReceiver);
+          //  stopSelf();
+        }
+    };
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_arrived) {
+
+           // registerReceiver(stopReceiver, new IntentFilter("stop"));
+
+           /*
+            if (DeviceUtils.isMyServiceRunning(TrackerService.class, activity)) {
+                Log.e(TAG_FRAGMENT, "onClick1: " );
+
+            } else {
+                Log.e(TAG_FRAGMENT, "onClick2: " );
+
+            }
+*/
+
+
+
             AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
 
             alertDialog.setMessage("Do you want to Confirm?");
@@ -456,6 +498,8 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
+                            TrackerService.handler1.removeMessages(0);
+                            activity.stopService(new Intent(getApplicationContext(),TrackerService.class));
                             callOrderStatusChangeApi(3);
                         }
                     });
@@ -471,7 +515,15 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
 
         } else if (v.getId() == R.id.btn_startNav) {
 
-            callOrderStatusChangeApi(7);
+            if (gpsTracker.isGPSon() /*&& !gpsTracker.isInternetAvailable()*/) {
+                startTrackerService();
+                callOrderStatusChangeApi(7);
+            }else {
+                gpsTracker.showSettingsAlert();
+                Toast.makeText(activity, "Check Internet connection and gps settings", Toast.LENGTH_SHORT).show();
+            }
+
+
         }
     }
 
@@ -741,7 +793,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                         Math.sin(dLng / 2) * Math.sin(dLng / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         float dist = (float) (earthRadius * c);
-        float distkm=(float)(dist/ 1000);
+        float distkm = (float) (dist / 1000);
 
         return distkm;
     }

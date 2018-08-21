@@ -42,6 +42,7 @@ public class TrackerService extends Service implements LocationListener, GoogleA
     private LocationRequest request;
     private AppPreferenceManager appPreferenceManager;
     private Location location1;
+    public static Handler handler1;
     private LocationManager mLocationManager;
 
     @Override
@@ -60,7 +61,9 @@ public class TrackerService extends Service implements LocationListener, GoogleA
                 .build();
 
         // buildNotification();
-        final Handler handler1 = new Handler();
+        /*registerReceiver(stopReceiver, new IntentFilter("stop"));*/
+
+         handler1 = new Handler();
         final int delay = 5000; //milliseconds
 
         handler1.postDelayed(new Runnable() {
@@ -142,33 +145,11 @@ public class TrackerService extends Service implements LocationListener, GoogleA
 
         Log.e(TAG, "requestLocationUpdates: 22");
 
-       /* FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);*/
-        // FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi(this);
-//        final String path = getString(R.string.firebase_path) + "/" + appPreferenceManager.getLoginResponseModel().getUserID();
-        //  final String path = getString(R.string.firebase_path) + "/" + getString(R.string.transport_id);
-
 
         int permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PackageManager.PERMISSION_GRANTED) {
 
-           /* GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
-            location1 = new Location("");
-            location1.setLatitude(gpsTracker.getLatitude());
-            location1.setLongitude(gpsTracker.getLongitude());
-            Log.e(TAG, "requestLocationUpdates: lat long " + location1);
-
-            final String path = getString(R.string.firebase_path) + "/" + appPreferenceManager.getLoginResponseModel().getUserName() + "-" + appPreferenceManager.getLoginResponseModel().getUserID();
-
-
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
-
-            if (location1 != null) {
-
-                //   Toast.makeText(this, "last known " + location1, Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "location update " + location1);
-                ref.setValue(location1);
-            }*/
 
 
             // Request location updates and when an update is
@@ -179,6 +160,8 @@ public class TrackerService extends Service implements LocationListener, GoogleA
                 location1 = new Location("");
                 location1.setLatitude(gpsTracker.getLatitude());
                 location1.setLongitude(gpsTracker.getLongitude());
+                location1.setTime(System.currentTimeMillis());
+
 
                 final String path = getString(R.string.firebase_path) + "/" + rplchar(appPreferenceManager.getLoginResponseModel().getUserName().toString().trim()) + "-" + appPreferenceManager.getLoginResponseModel().getUserID();
 
@@ -189,6 +172,7 @@ public class TrackerService extends Service implements LocationListener, GoogleA
 
                     //   Toast.makeText(this, "last known " + location1, Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "location update " + location1);
+                    ref.child("users").push().setValue(location1);
                     ref.setValue(location1);
                 }
             } catch (Exception e) {

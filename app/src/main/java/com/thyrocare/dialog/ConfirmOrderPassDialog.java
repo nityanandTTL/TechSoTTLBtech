@@ -1,13 +1,24 @@
 package com.thyrocare.dialog;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +38,7 @@ import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.BundleConstants;
 
 import org.json.JSONException;
 
@@ -40,11 +52,13 @@ import static com.thyrocare.utils.api.NetworkUtils.isNetworkAvailable;
  */
 
 public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListener {
+    private static final String TAG = ConfirmOrderPassDialog.class.getSimpleName();
     private HomeScreenActivity activity;
     private Dialog d;
-    private Button btn_yes, btn_no;
-    private TextView tv_title;
+    private Button btn_yes, btn_no, btn_call, btn_send;
+    private TextView tv_title, tv_cancel;
     private Spinner sp_btech;
+    private TextView call_btech;
     private OrderPassresponseModel orderPassresponseModel;
     private ArrayList<Orderallocation> orderallocationsarr;
     private ArrayList<String> Btecharr;
@@ -54,7 +68,8 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
     private OrderPassRequestModel orderPassRequestModel;
     private AppPreferenceManager appPreferenceManager;
     private String Pincode;
-
+    private EditText edt_otp;
+    private LinearLayout validateOtp;
 
     public ConfirmOrderPassDialog(HomeScreenActivity activity, refreshDelegate RefreshDelegate, String pincode, OrderVisitDetailsModel orderVisitDetailsModel) {
         super(activity);
@@ -62,8 +77,10 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
         this.RefreshDelegate = RefreshDelegate;
         this.orderVisitDetailsModel = orderVisitDetailsModel;
         this.Pincode = pincode;
+
         // this.VisitID=VisitId;
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +98,10 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
     private void setListners() {
         btn_no.setOnClickListener(this);
         btn_yes.setOnClickListener(this);
+        call_btech.setOnClickListener(this);
+        btn_call.setOnClickListener(this);
+        tv_cancel.setOnClickListener(this);
+        btn_send.setOnClickListener(this);
 
     }
 
@@ -89,7 +110,6 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
         ApiCallAsyncTask fetchLeaveDetailApiAsyncTask =
                 asyncTaskForRequest.getorderallocation(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()), "" + Pincode/*orderVisitDetailsModel.getAllOrderdetails().get(0).get*/);
         fetchLeaveDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderPassDetailsApiAsyncTaskDelegateResult());
-
         fetchLeaveDetailApiAsyncTask.execute(fetchLeaveDetailApiAsyncTask);
 
 
@@ -176,8 +196,14 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
     private void initUI() {
         btn_yes = (Button) findViewById(R.id.btn_yes);
         btn_no = (Button) findViewById(R.id.btn_no);
+        btn_call = (Button) findViewById(R.id.btn_call);
         tv_title = (TextView) findViewById(R.id.tv_title);
         sp_btech = (Spinner) findViewById(R.id.sp_Btech);
+        call_btech = (TextView) findViewById(R.id.call_btech);
+        tv_cancel = (TextView) findViewById(R.id.tv_cancel);
+        btn_send = (Button) findViewById(R.id.btn_send);
+        edt_otp = (EditText) findViewById(R.id.edt_otp);
+        validateOtp = (LinearLayout) findViewById(R.id.validateOtp);
     }
 
 
@@ -185,33 +211,122 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
             if (validate()) {
-                PostOrderpass();
+                PostSendOTPOrderpass();
+
             }
 
-            //   confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderPassRequestModel);
-            RefreshDelegate.onRefreshClicked();
-            dismiss();
+            // RefreshDelegate.onRefreshClicked();
+            // dismiss();
 
         }
         if (v.getId() == R.id.btn_no) {
-            //confirmOrderReleaseDialogButtonClickedDelegate.onCancelButtonClicked();
             dismiss();
         }
+        if (v.getId() == R.id.btn_send) {
+            validateOTP();
+            //showAlert("test");
+
+            // dismiss();
+        }
+        if (v.getId() == R.id.tv_cancel) {
+            dismiss();
+        }
+        if (v.getId() == R.id.call_btech) {
+            try {
+                if (validate()) {
+                    if (orderallocationmodel.getMobile() != null) {
+                        Log.e(TAG, "onClick: mobile " + orderallocationmodel.getMobile());
+
+                        Intent intent = new Intent(Intent.ACTION_CALL);
+                        intent.setData(Uri.parse("tel:" + orderallocationmodel.getMobile()));
+                        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    ActivityCompat#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for ActivityCompat#requestPermissions for more details.
+                            return;
+                        }
+                        getContext().startActivity(intent);
+
+                        // Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", "" + orderallocationmodel.getMobile(), null));
+                        // getContext().startActivity(intent);
+                        //getContext().startActivityForResult(intent,REQUEST_CODE);
+                        //  getContext().startActivityForResult(intent, BundleConstants.REQUEST_CODE);
+                        //  VisitOrdersDisplayFragment.isToFromMap=true;
+                        //  dismiss();
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private void validateOTP() {
+        if (!edt_otp.getText().toString().equals("")) {
+            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+            OrderPassRequestModel orderPassRequestModel = new OrderPassRequestModel();
+            orderPassRequestModel.setMobile(orderallocationmodel.getMobile());
+            orderPassRequestModel.setVisitId(orderVisitDetailsModel.getVisitId());
+            orderPassRequestModel.setOTP("" + edt_otp.getText().toString());
+            Logger.error("btech " + orderallocationmodel.getBtechName());
+
+            ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderPassVerifyOtpRequestModelAsyncTask(orderPassRequestModel);
+            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderPassValidateApiAsyncTaskDelegateResult());
+            if (isNetworkAvailable(activity)) {
+                orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            Toast.makeText(activity, "Enter OTP", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private boolean validate() {
-        if (sp_btech.getSelectedItem().equals("--SELECT--")) {
-            TastyToast.makeText(activity, "Select BTECH Name", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-            // TastyToast
-            return false;
+        try {
+            if (sp_btech.getSelectedItem().equals("--SELECT--")) {
+                TastyToast.makeText(activity, "Select BTECH Name", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+                // TastyToast
+                return false;
+            }
+            if (orderallocationmodel == null) {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (orderallocationmodel == null) {
-            return false;
-        }
+
         return true;
     }
 
+    private void PostSendOTPOrderpass() {
+
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        OrderPassRequestModel orderPassRequestModel = new OrderPassRequestModel();
+        orderPassRequestModel.setMobile(orderallocationmodel.getMobile());
+        orderPassRequestModel.setVisitId(orderVisitDetailsModel.getVisitId());
+        // orderPassRequestModel.setBtechId(orderallocationmodel.getBtechId());
+        Logger.error("btech " + orderallocationmodel.getBtechName());
+
+        ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderPassSendOtpRequestModelAsyncTask(orderPassRequestModel);
+        orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderPassApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
+        } else {
+            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void PostOrderpass() {
+
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         OrderPassRequestModel orderPassRequestModel = new OrderPassRequestModel();
         orderPassRequestModel.setBtechId(orderallocationmodel.getBtechId());
@@ -219,28 +334,28 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
         Logger.error("btech " + orderallocationmodel.getBtechName());
 
         ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderPassRequestModelAsyncTask(orderPassRequestModel);
-        orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderPassApiAsyncTaskDelegateResult());
+        orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderPassApiAsyncTaskDelegateResultSubmit());
         if (isNetworkAvailable(activity)) {
             orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
         } else {
             Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
         }
 
+
     }
 
     private class OrderPassApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
+            Log.e(TAG, "apiCallResult1: " + json);
+
             if (statusCode == 200) {
-                //Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
-
-
-                dismiss();
+                validateOtp.setVisibility(View.VISIBLE);
+                btn_yes.setText("Resend");
+                showAlert1("" + json);
             } else {
-                showAlert("This Order can not be pass to other BTECH");
-                // Toast.makeText(activity, ""+json, Toast.LENGTH_SHORT).show();
-                dismiss();
-
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                //showAlert("This Order can not be pass to other BTECH");
             }
         }
 
@@ -252,20 +367,81 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
     }
 
     private void showAlert(String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+        final AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
 
         alertDialog.setMessage("" + message);
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                new DialogInterface.OnClickListener() {
+                new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        activity.pushFragments(VisitOrdersDisplayFragment.newInstance(), false, false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment.TAG_FRAGMENT);
-                        dialog.dismiss();
+                        Log.e(TAG, "onClick: dismiss ");
 
+                        activity.pushFragments(VisitOrdersDisplayFragment.newInstance(), false, false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment.TAG_FRAGMENT);
+
+                        dismissD();
                     }
                 });
 
         alertDialog.show();
+
+    }
+
+    private void showAlert1(String message) {
+        final AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+
+        alertDialog.setMessage("" + message);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                new OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.e(TAG, "onClick: dismiss ");
+
+                        activity.pushFragments(VisitOrdersDisplayFragment.newInstance(), false, false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment.TAG_FRAGMENT);
+
+                        dialog.dismiss();
+                    }
+                });
+
+        alertDialog.show();
+
+    }
+
+    private void dismissD() {
+        dismiss();
     }
 
 
+    private class OrderPassValidateApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            Log.e(TAG, "apiCallResult: " + json);
+            if (statusCode == 200) {
+                Toast.makeText(activity, "Valid OTP", Toast.LENGTH_SHORT).show();
+                PostOrderpass();
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    private class OrderPassApiAsyncTaskDelegateResultSubmit implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                showAlert("Order Passed successfully");
+
+            } else {
+                showAlert("This Order can not be pass to other BTECH");
+
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
 }

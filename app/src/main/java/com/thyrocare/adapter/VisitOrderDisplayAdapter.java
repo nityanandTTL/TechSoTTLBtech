@@ -61,6 +61,7 @@ import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.DateUtils;
+import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
@@ -130,6 +131,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
     TextView txt_msg_ben;
     private CallbackforShowCaseDelegate callbackforShowCaseDelegate;
     View view;
+    private GPSTracker gpsTracker;
 
     //private refreshDelegate refreshDelegate;
     public VisitOrderDisplayAdapter(HomeScreenActivity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels, VisitOrderDisplayRecyclerViewAdapterDelegate visitOrderDisplayRecyclerViewAdapterDelegate, refreshDelegate refreshDelegate, VisitOrderDisplayyRecyclerViewAdapterDelegate visitOrderDisplayyRecyclerViewAdapterDelegate, OrderPassRecyclerViewAdapterDelegate orderPassRecyclerViewAdapterDelegate, CallbackforShowCaseDelegate callbackforShowCaseDelegate) {
@@ -142,6 +144,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         this.refreshDelegate1 = refreshDelegate;
         layoutInflater = LayoutInflater.from(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
+        gpsTracker = new GPSTracker(activity);
         dhbDao = new DhbDao(activity);
         todate = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(new Date());
 
@@ -203,7 +206,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
                     } else {
                         items = new String[]{"Order Reschedule",
-                                "Order Release"/*, "Order Pass"*/};
+                                "Order Release", "Order Pass"};
                     }
 
 
@@ -220,14 +223,14 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                                 "Request Release"};
                     }else {*/
 
-                    if (isValidForEditing( orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
+                    if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
                         items = new String[]{"Do you want to cancel the visit?"};
                         cancelVisit = "y";
 
                     } else {
 
                         items = new String[]{"Order Reschedule",
-                                "Request Release"/*, "Order Pass"*/};
+                                "Request Release", "Order Pass"};
                     }
 
                   /*      Toast.makeText(activity, "Reschedule,Request,order  pass", Toast.LENGTH_SHORT).show();
@@ -372,7 +375,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         cancelVisit = "y";
                     } else {
                         items = new String[]{"Order Reschedule",
-                                "Order Release"/*, "Order Pass"*/};
+                                "Order Release", "Order Pass"};
                         Toast.makeText(activity, "Reschedule,Release", Toast.LENGTH_SHORT).show();
                     }
 
@@ -391,7 +394,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         cancelVisit = "y";
                     } else {
                         items = new String[]{"Order Reschedule",
-                                "Request Release"/*, "Order Pass"*/};
+                                "Request Release", "Order Pass"};
                     }
 
                     /*    Toast.makeText(activity, "Reschedule,Request", Toast.LENGTH_SHORT).show();
@@ -413,6 +416,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                             cdd.show();
 
 
+                        } else if (items[item].equals("Order Pass")) {
+                            orderPassRecyclerViewAdapterDelegate.onItemReleaseto(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getPincode(), orderVisitDetailsModelsArr.get(pos));
                         } else if (items[item].equals("Request Release")) {
 
 
@@ -500,62 +505,65 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase())) {
-                    isAutoTimeSelected();
-                    if (isAutoTimeSelected == true) {
-                        if (timeCheckPPBS(pos)) {
-                            //true
-                            goAheadWithNormalFlow();
+                if (gpsTracker.canGetLocation()) {
 
-                        } else {
-                            AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
-                            alertDialog.setMessage(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode() + " test can be served in between " + apiMinusFifdisp + " to " + apiPlusFifdisp);
-                            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
 
-                                        }
-                                    });
-                            alertDialog.show();
+                    if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase())) {
+                        isAutoTimeSelected();
+                        if (isAutoTimeSelected == true) {
+                            if (timeCheckPPBS(pos)) {
+                                //true
+                                goAheadWithNormalFlow();
+
+                            } else {
+                                AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+                                alertDialog.setMessage(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode() + " test can be served in between " + apiMinusFifdisp + " to " + apiPlusFifdisp);
+                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+
+                                            }
+                                        });
+                                alertDialog.show();
+                            }
+
                         }
 
-                    }
+
+                    } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.PPBS)
+                            && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS)) {
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                        Calendar cal = Calendar.getInstance();
+                        Date currentTime = cal.getTime();
+                        String CurrentStr = currentTime.toString();
+                        strDate = null;
+                        try {
+                            Test = orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot();
+                            Test2 = orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot();
+                            strDate2 = sdf.parse("" + orderVisitDetailsModelsArr.get(pos).getSlot());
+                            strDate3 = sdf.parse("" + orderVisitDetailsModelsArr.get(pos).getSlot());
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(strDate2);
+                            apihours = calendar.get(Calendar.HOUR_OF_DAY);
+                            apiminutes = calendar.get(Calendar.MINUTE);
 
 
-                } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.PPBS)
-                        && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS)) {
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
 
-                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
-                    Calendar cal = Calendar.getInstance();
-                    Date currentTime = cal.getTime();
-                    String CurrentStr = currentTime.toString();
-                    strDate = null;
-                    try {
-                        Test = orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot();
-                        Test2 = orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot();
-                        strDate2 = sdf.parse("" + orderVisitDetailsModelsArr.get(pos).getSlot());
-                        strDate3 = sdf.parse("" + orderVisitDetailsModelsArr.get(pos).getSlot());
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(strDate2);
-                        apihours = calendar.get(Calendar.HOUR_OF_DAY);
-                        apiminutes = calendar.get(Calendar.MINUTE);
+                        Calendar cal7 = Calendar.getInstance();
+                        cal7.setTime(strDate3);
 
+                        cal7.add(Calendar.MINUTE, +360);
+                        int hours = cal7.get(Calendar.HOUR_OF_DAY);
+                        int Minutes = cal7.get(Calendar.MINUTE);
+                        apiPlusTwoPBBS = sdf.format(cal7.getTime());
+                        apiPlusTwoPBBS2 = sdf.format(cal7.getTime());
 
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    Calendar cal7 = Calendar.getInstance();
-                    cal7.setTime(strDate3);
-
-                    cal7.add(Calendar.MINUTE, +360);
-                    int hours = cal7.get(Calendar.HOUR_OF_DAY);
-                    int Minutes = cal7.get(Calendar.MINUTE);
-                    apiPlusTwoPBBS = sdf.format(cal7.getTime());
-                    apiPlusTwoPBBS2 = sdf.format(cal7.getTime());
-
-                    goAheadWithNormalFlow();
+                        goAheadWithNormalFlow();
 
                   /*  if (isTimeBetweenTwoHours(apihours, hours, Calendar.getInstance(), apiminutes, Minutes)) {
                         holder.btnStartNavigation.setEnabled(true);
@@ -568,13 +576,15 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     }*/
 
 
-                } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains("INSPP")
-                        && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains("INSFA")) {
-                    goAheadWithNormalFlow();
+                    } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains("INSPP")
+                            && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains("INSFA")) {
+                        goAheadWithNormalFlow();
+                    } else {
+                        goAheadWithNormalFlow();
+                    }
                 } else {
-                    goAheadWithNormalFlow();
+                    gpsTracker.showSettingsAlert();
                 }
-
             }
 
             private boolean isTimeBetweenTwoHours(
@@ -595,49 +605,53 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             }
 
             private void goAheadWithNormalFlow() {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.ENGLISH);
-                Date date = DateUtils.dateFromString(newTimeAfterMinusSixty1, sdf);
+                if (gpsTracker.canGetLocation()) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.ENGLISH);
+                    Date date = DateUtils.dateFromString(newTimeAfterMinusSixty1, sdf);
 
-                if (new Date().before(date)) {
-                    //  Toast.makeText(activity, "is After", Toast.LENGTH_SHORT).show();
-                    AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+                    if (new Date().before(date)) {
+                        //  Toast.makeText(activity, "is After", Toast.LENGTH_SHORT).show();
+                        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
 
-                    alertDialog.setMessage("Appointment time of this order is at " + orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot() + " " + "Still do you want to start?");
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    assigned();
-                                }
-                            });
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
+                        alertDialog.setMessage("Appointment time of this order is at " + orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot() + " " + "Still do you want to start?");
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        assigned();
+                                    }
+                                });
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
 
-                                }
-                            });
-                    alertDialog.show();
+                                    }
+                                });
+                        alertDialog.show();
+                    } else {
+                        //Toast.makeText(activity, "is before", Toast.LENGTH_SHORT).show();
+                        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+
+                        alertDialog.setMessage("Do you want to Confirm?");
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        assigned();
+                                    }
+                                });
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+
+                                    }
+                                });
+                        alertDialog.show();
+                    }
                 } else {
-                    //Toast.makeText(activity, "is before", Toast.LENGTH_SHORT).show();
-                    AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
-
-                    alertDialog.setMessage("Do you want to Confirm?");
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    assigned();
-                                }
-                            });
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-
-                                }
-                            });
-                    alertDialog.show();
+                    gpsTracker.showSettingsAlert();
                 }
             }
 
@@ -1109,8 +1123,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             }
             //jai
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.PPBS)
-                    && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS))
-            {
+                    && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS)) {
                 // checkWithApiTimeForPPBS("11:00 AM","00:00 AM",""+new Date())
 
 
@@ -1145,8 +1158,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 }*/
             }
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.RBS)
-                    && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS))
-            {
+                    && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS)) {
                 // checkWithApiTimeForPPBS("11:00 AM","00:00 AM",""+new Date())
 
 
@@ -1401,7 +1413,9 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         } else {
             return false;
         }
-    }private boolean CheckRBSisPresent(ArrayList<BeneficiaryDetailsModel> benMaster) {
+    }
+
+    private boolean CheckRBSisPresent(ArrayList<BeneficiaryDetailsModel> benMaster) {
 
         if (benMaster.size() != 0) {
             for (int i = 0; i < benMaster.size(); i++) {
@@ -2022,29 +2036,29 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
         }
     }
+
     private boolean isValidForEditing(String tests) {
 
-        if(        tests.equalsIgnoreCase(AppConstants.PPBS)
+        if (tests.equalsIgnoreCase(AppConstants.PPBS)
                 || tests.equalsIgnoreCase(AppConstants.INSPP)
                 || tests.equalsIgnoreCase(AppConstants.RBS)
                 || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)
                 || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS)
-                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS+ "," + AppConstants.INSPP)
-                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP+ "," + AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS + "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP + "," + AppConstants.RBS)
 
                 || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS)
                 || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP)
-                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS+ "," + AppConstants.INSPP)
-                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP+ "," + AppConstants.PPBS)
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS + "," + AppConstants.INSPP)
+                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP + "," + AppConstants.PPBS)
 
                 || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS)
                 || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS)
-                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS+ "," + AppConstants.RBS)
-                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS+ "," + AppConstants.PPBS)
-                ){
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS + "," + AppConstants.RBS)
+                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS + "," + AppConstants.PPBS)
+                ) {
             return true;
         }
-
 
 
         return false;

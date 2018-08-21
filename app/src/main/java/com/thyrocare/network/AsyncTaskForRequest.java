@@ -388,31 +388,6 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
 
-    //POst Order PAss //
-    public ApiCallAsyncTask getOrderPassRequestModelAsyncTask(OrderPassRequestModel orderPassRequestModel) {
-        apiCallAsyncTask = null;
-        try {
-            apiCallAsyncTask = new ApiCallAsyncTask(context);
-            abstractApiModel = new AbstractApiModel();
-
-            String postJson = new Gson().toJson(orderPassRequestModel);
-            abstractApiModel.setPostData(postJson);
-            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.POST_ORDER_PASS);
-            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
-            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
-            apiCallAsyncTask.setApiModel(abstractApiModel);
-            apiCallAsyncTask.setProgressBarMessage(context.getResources()
-                    .getString(R.string.progress_message_changing_order_status_please_wait));
-            apiCallAsyncTask.setProgressBarVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return apiCallAsyncTask;
-    }
-  /*
-     * GetTestList*/
-
     public ApiCallAsyncTask getTestListAsyncTask(String sp_id) {
         apiCallAsyncTask = null;
         try {
@@ -2226,35 +2201,83 @@ public class AsyncTaskForRequest {
         return apiCallAsyncTask;
     }
 
-    public ApiCallAsyncTask setDispositionAsyncTask(SetDispositionDataModel setDispositionDataModel) {
+    public ApiCallAsyncTask getLocationMasterAsyncTask() {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.LOCATION_MASTER);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage("Please wait..");
+            apiCallAsyncTask.setProgressBarCancellable(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    //POst Order PAss //
+    public ApiCallAsyncTask getOrderPassRequestModelAsyncTask(OrderPassRequestModel orderPassRequestModel) {
         apiCallAsyncTask = null;
         try {
             apiCallAsyncTask = new ApiCallAsyncTask(context);
             abstractApiModel = new AbstractApiModel();
 
-           /* String postJson = new Gson().toJson(setDispositionDataModel);
-            abstractApiModel.setPostData(postJson);*/
-
-           /* MultipartEntityBuilder entity = MultipartEntityBuilder.create();
-            entity.addPart("AppId", new StringBody("1"));
-            entity.addPart("DispId", new StringBody("1"));
-            entity.addPart("FrmNo", new StringBody("9004717579"));
-            entity.addPart("OrderNo", new StringBody("A653E4"));
-            entity.addPart("Remarks", new StringBody("test entry"));
-            entity.addPart("ToNo", new StringBody("9029818814"));
-            entity.addPart("UserId", new StringBody("884543107"));
-
-            abstractApiModel.setEntity(entity.build());*/
-
-            abstractApiModel.setHeader(getMultiPartHeader());
-            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.SetDispositionWithMedia);
+            String postJson = new Gson().toJson(orderPassRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.POST_ORDER_PASS);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
-            apiCallAsyncTask.setContentType("multipart/form-data");
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
             apiCallAsyncTask.setProgressBarMessage(context.getResources()
-                    .getString(R.string.progress_message_changing_MaterailsOrder_please_wait));
+                    .getString(R.string.progress_message_changing_order_status_please_wait));
             apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    } //POst Order PAss send otp//
+    public ApiCallAsyncTask getOrderPassSendOtpRequestModelAsyncTask(OrderPassRequestModel orderPassRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
 
+            String postJson = new Gson().toJson(orderPassRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.POST_SEND_OTP);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_changing_order_status_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }//POst Order PAss verify otp//
+    public ApiCallAsyncTask getOrderPassVerifyOtpRequestModelAsyncTask(OrderPassRequestModel orderPassRequestModel) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+
+            String postJson = new Gson().toJson(orderPassRequestModel);
+            abstractApiModel.setPostData(postJson);
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.POST_VERIFY_OTP);
+            apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_changing_order_status_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
         }

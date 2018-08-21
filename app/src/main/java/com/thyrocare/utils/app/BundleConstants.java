@@ -87,4 +87,5 @@ public class BundleConstants {
     public static int Flag_facedetection = 0;
     public static boolean b_facedetection = true;
     public static SampleDropDetailsbyTSPLMEDetailsModel setsampleDropDetailsModel;
+    public static String locationText="Select Location";
 }

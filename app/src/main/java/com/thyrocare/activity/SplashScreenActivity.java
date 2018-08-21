@@ -59,7 +59,7 @@ public class SplashScreenActivity extends AbstractActivity {
     private int AppId;
     private static Intent TImeCheckerIntent;
 
-    private static Intent locationUpdateIntent, FirebaselocationUpdateIntent;
+    private static Intent locationUpdateIntent;
     VersionControlMasterModel versionControlMasterModel;
     private ArrayList<TSPNBT_AvilModel> TSP_NBTAvailArr;
 
@@ -101,7 +101,6 @@ public class SplashScreenActivity extends AbstractActivity {
                             AppConstants.APP_PERMISSIONS);
                 } else {
                     fetchVersionControlDetails();
-                    startTrackerService();
                 }
             }
         }, AppConstants.SPLASH_SCREEN_TIMEOUT);
@@ -109,16 +108,8 @@ public class SplashScreenActivity extends AbstractActivity {
         Logger.error("locationUpdateIntent Executed 1");
 
         locationUpdateIntent = new Intent(this, LocationUpdateService.class);
-        FirebaselocationUpdateIntent = new Intent(this, TrackerService.class);
     }
 
-    private void startTrackerService() {
-
-        if (DeviceUtils.isMyServiceRunning(TrackerService.class, activity)) {
-        } else {
-            startService(FirebaselocationUpdateIntent);
-        }
-    }
 
   /*void StartLocationUpdateService() {
        try {

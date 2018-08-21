@@ -77,8 +77,6 @@ public class AbstractApiModel implements AppConstants {
 
     public String CHANGE_PASSWORD = VERSION_API_URL + "/Account/ChangePassword";
 
-    public String POST_ORDER_PASS = VERSION_API_URL + "/OrderAllocation/TransferOrder";
-
     public String RESET_PASSWORD = VERSION_API_URL + "/Account/ResetPassword";
 
     public String ORDER_ALLOCATION_POST = VERSION_API_URL + "/OrderAllocation/TrackLocation";
@@ -120,6 +118,7 @@ public class AbstractApiModel implements AppConstants {
 
     public String BTECH_AVAILABILITY = VERSION_API_URL + "/BtechAvaibilityNew/Avaibility";
     public String SERVICE_UPDATE = VERSION_API_URL + "/OrderAllocation/ServiceUpdate";
+    public String LOCATION_MASTER = VERSION_API_URL + "/Masters/LocationMaster";
 
     public String SUB_SLOT_MASTER = VERSION_API_URL + "/Masters/DisplaySubSlotMasters";
     public String GET_TEST_LIST = VERSION_API_URL + "/BenTestList/GetTestList";
@@ -225,6 +224,12 @@ public class AbstractApiModel implements AppConstants {
     public String GetSampleDropDetailsbyTSPLME = VERSION_API_URL + "/TSPLMESampleDrop/GetSampleDropDetailsbyTSPLME";
     public String PostScannedMasterBarcodebyLME = VERSION_API_URL + "/TSPLMESampleDrop/PostScannedMasterBarcodebyLME";
     public String GetWLMIS = VERSION_API_URL + "/TSPLMESampleDrop/GetWLMIS";
+
+    //api/AllSMS/PostSendOTP
+    public String POST_ORDER_PASS = VERSION_API_URL + "/OrderAllocation/TransferOrder";
+    public String POST_SEND_OTP = VERSION_API_URL + "/AllSMS/PostSendOTP";
+    public String POST_VERIFY_OTP = VERSION_API_URL + "/AllSMS/PostVerifyOTP";
+    //api/AllSMS/PostVerifyOTP
 
     //getDisposition
     public String GetDisposition = VERSION_API_URL + "/OrderAllocation/Disposition";
