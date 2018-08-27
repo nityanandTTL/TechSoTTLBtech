@@ -21,7 +21,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -45,7 +44,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.sdsmdg.tastytoast.TastyToast;
@@ -57,7 +55,6 @@ import com.thyrocare.models.api.request.SendScannedbarcodeLME;
 import com.thyrocare.models.data.HUBBTechModel;
 import com.thyrocare.models.data.LocationMasterModel;
 import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
-import com.thyrocare.models.data.ScannedMasterBarcodebyLMEPOSTDATAModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
@@ -65,7 +62,6 @@ import com.thyrocare.network.ResponseParser;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
-import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.fileutils.DataParser;
 
@@ -524,6 +520,17 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
             e.printStackTrace();
         }*/
 
+        String userID = "";
+        try {
+            if (appPreferenceManager.getLoginResponseModel() != null) {
+                if (appPreferenceManager.getLoginResponseModel().getUserID() != null) {
+                    userID = appPreferenceManager.getLoginResponseModel().getUserID();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         SendScannedbarcodeLME[] nmcfb = new SendScannedbarcodeLME[sampleDropDetailsbyTSPLMEDetailsModel.getBarcodeList().size()];
 
         if (sampleDropDetailsbyTSPLMEDetailsModel != null) {
@@ -544,7 +551,8 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
                         nt.Latitude = "" + String.valueOf(gpsTracker.getLatitude());
                         nt.Longitude = "" + String.valueOf(gpsTracker.getLongitude());
                         nt.Status = "3";
-                        nt.Location = ""+pos_id;
+                        nt.Location = "" + pos_id;
+                        nt.EntryBy = "" + userID;
 
                         nmcfb[i] = nt;
                     }

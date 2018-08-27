@@ -5,7 +5,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,7 +17,6 @@ import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -40,7 +38,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
@@ -580,10 +577,14 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            try {
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile()));
+                activity.startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-            Intent intent = new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile()));
-            activity.startActivity(intent);
 
 
 
@@ -827,9 +828,9 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                         nm.setDispId(remarksDataModel.getDispId());
                         nm.setOrderNo("" + orderVisitDetailsModel.getVisitId());
                         nm.setUserId("" + appPreferenceManager.getLoginResponseModel().getUserID());
-                        String s =  "" + appPreferenceManager.getLoginResponseModel().getUserName();
+                        String s = "" + appPreferenceManager.getLoginResponseModel().getUserName();
                         nm.setFrmNo("" + s.substring(0, Math.min(s.length(), 18)));
-                        Log.e(TAG_FRAGMENT, "onClick: "+  s.substring(0, Math.min(s.length(), 18)));
+                        Log.e(TAG_FRAGMENT, "onClick: " + s.substring(0, Math.min(s.length(), 18)));
                         nm.setToNo("" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
                         nm.setRemarks("" + st);
 

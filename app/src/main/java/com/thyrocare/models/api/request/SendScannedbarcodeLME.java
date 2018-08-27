@@ -13,4 +13,5 @@ public class SendScannedbarcodeLME {
     public String Longitude;
     public String Status;
     public String Location;
+    public String EntryBy;
 }

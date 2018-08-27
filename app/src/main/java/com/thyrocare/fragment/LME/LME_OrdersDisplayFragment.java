@@ -22,11 +22,9 @@ import com.thyrocare.activity.LMEMapDisplayFragmentActivity;
 import com.thyrocare.adapter.LME.LMEVisitsListAdapter;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
-import com.thyrocare.models.data.ScannedMasterBarcodebyLMEPOSTDATAModel;
 import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
-import com.thyrocare.utils.app.GPSTracker;
 
 import java.util.ArrayList;
 

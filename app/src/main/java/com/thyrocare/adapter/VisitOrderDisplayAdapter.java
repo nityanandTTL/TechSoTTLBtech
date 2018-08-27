@@ -206,7 +206,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
                     } else {
                         items = new String[]{"Order Reschedule",
-                                "Order Release", "Order Pass"};
+                                "Order Release"/*, "Order Pass"*/};
                     }
 
 
@@ -230,7 +230,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     } else {
 
                         items = new String[]{"Order Reschedule",
-                                "Request Release", "Order Pass"};
+                                "Request Release"/*, "Order Pass"*/};
                     }
 
                   /*      Toast.makeText(activity, "Reschedule,Request,order  pass", Toast.LENGTH_SHORT).show();
@@ -375,7 +375,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         cancelVisit = "y";
                     } else {
                         items = new String[]{"Order Reschedule",
-                                "Order Release", "Order Pass"};
+                                "Order Release"/*, "Order Pass"*/};
                         Toast.makeText(activity, "Reschedule,Release", Toast.LENGTH_SHORT).show();
                     }
 
@@ -394,7 +394,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         cancelVisit = "y";
                     } else {
                         items = new String[]{"Order Reschedule",
-                                "Request Release", "Order Pass"};
+                                "Request Release"/*, "Order Pass"*/};
                     }
 
                     /*    Toast.makeText(activity, "Reschedule,Request", Toast.LENGTH_SHORT).show();

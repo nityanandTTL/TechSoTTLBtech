@@ -113,8 +113,19 @@ public class HomeScreenActivity extends AbstractActivity
 
         } else {
 
-            Crashlytics.setUserIdentifier(appPreferenceManager.getLoginResponseModel().getUserID());
-            Crashlytics.setUserName(appPreferenceManager.getLoginResponseModel().getUserName());
+            try {
+                if (appPreferenceManager.getLoginResponseModel() != null) {
+                    if (appPreferenceManager.getLoginResponseModel().getUserID() != null) {
+                        Crashlytics.setUserIdentifier(appPreferenceManager.getLoginResponseModel().getUserID());
+                    }
+                    if (appPreferenceManager.getLoginResponseModel().getUserName() != null) {
+                        Crashlytics.setUserName(appPreferenceManager.getLoginResponseModel().getUserName());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             initUI();
 
             if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {

@@ -311,20 +311,25 @@ public class MaterialFragment extends AbstractFragment {
                     @Override
                     public void afterTextChanged(Editable s) {
                         if (!InputUtils.isNull(s.toString())) {
-                            if (Integer.parseInt(s.toString()) <= Integer.parseInt(btMaterialsModel.getVirtualStock())) {
-                                MaterialsStocksModel materialsStocksModel = new MaterialsStocksModel();
-                                materialsStocksModel.setMaterialID(Integer.parseInt(btMaterialsModel.getMaterialID()));
-                                materialsStocksModel.setActualStock(Integer.parseInt(s.toString()));
-                                if (stockModelsArr.contains(materialsStocksModel)) {
-                                    stockModelsArr.remove(materialsStocksModel);
-                                    stockModelsArr.add(materialsStocksModel);
+                            try{
+                                if (Integer.parseInt(s.toString()) <= Integer.parseInt(btMaterialsModel.getVirtualStock())) {
+                                    MaterialsStocksModel materialsStocksModel = new MaterialsStocksModel();
+                                    materialsStocksModel.setMaterialID(Integer.parseInt(btMaterialsModel.getMaterialID()));
+                                    materialsStocksModel.setActualStock(Integer.parseInt(s.toString()));
+                                    if (stockModelsArr.contains(materialsStocksModel)) {
+                                        stockModelsArr.remove(materialsStocksModel);
+                                        stockModelsArr.add(materialsStocksModel);
+                                    } else {
+                                        stockModelsArr.add(materialsStocksModel);
+                                    }
                                 } else {
-                                    stockModelsArr.add(materialsStocksModel);
+                                    actual.setText(btMaterialsModel.getVirtualStock());
+                                    Toast.makeText(activity, "Actual Stock cannot be greater than Virtual Stock", Toast.LENGTH_SHORT).show();
                                 }
-                            } else {
-                                actual.setText(btMaterialsModel.getVirtualStock());
-                                Toast.makeText(activity, "Actual Stock cannot be greater than Virtual Stock", Toast.LENGTH_SHORT).show();
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
+
                         }
                     }
                 });

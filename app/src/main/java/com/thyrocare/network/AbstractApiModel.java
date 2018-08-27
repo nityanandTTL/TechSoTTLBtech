@@ -3,7 +3,6 @@ package com.thyrocare.network;
 
 import com.thyrocare.utils.app.AppConstants;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 
 import java.util.HashMap;
@@ -47,13 +46,13 @@ public class AbstractApiModel implements AppConstants {
     //    public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
 
     //TODO Stag
-    public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
-    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
+    /*public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
+    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";*/
     //TODO Stag
 
     //TODO Live
-   /* public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
-    public static final String API_VERSION = "https://www.thyrocare.com/APIs";*/
+    public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
+    public static final String API_VERSION = "https://www.thyrocare.com/APIs";
     //TODO Live
 
 

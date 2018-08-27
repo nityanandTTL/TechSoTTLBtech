@@ -256,7 +256,7 @@ public class AbstractActivity extends AppCompatActivity implements ActivityHelpe
 
         if (shouldAdd) {
             /*
-			 * here you can create named backstack for realize another logic.
+             * here you can create named backstack for realize another logic.
 			   <<<<<<< HEAD
 			                                                                                                                                                                                                                                                                                                                                                                                                   <<<<<<< HEAD
 			                                                                                                                                                                                                                                                                                                                                                                                                           /*
@@ -288,7 +288,11 @@ public class AbstractActivity extends AppCompatActivity implements ActivityHelpe
             }
         }
 
-        ft.commit();
+        try {
+            ft.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

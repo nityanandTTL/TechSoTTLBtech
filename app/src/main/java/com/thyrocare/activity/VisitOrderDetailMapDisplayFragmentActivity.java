@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -31,7 +30,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -59,7 +57,6 @@ import com.thyrocare.utils.api.NetworkUtils;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
-import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.fileutils.DataParser;
 

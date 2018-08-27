@@ -729,12 +729,14 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             test = "";
         }
         Log.e(TAG_FRAGMENT, "initUI: " + orderBookingRequestModel.getBendtl().get(0).getTests());
-        if (isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
+        if (orderBookingRequestModel.getBendtl().get(0).getTests() != null) {
+            if (isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
 
 
-            llAddBeneficiary.setEnabled(false);
-            isOnlyWOE = true;
+                llAddBeneficiary.setEnabled(false);
+                isOnlyWOE = true;
 
+            }
         }
         //changes_17june2017
         //title_add_beneficiary = (TextView) rootView.findViewById(R.id.title_add_beneficiary);
@@ -1007,7 +1009,6 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                                         Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
 
 
-
 //jai testing
 
                                                                       /*  Logger.error("isPPBSTestRemoved status : " + isPPBSTestRemoved);
@@ -1175,16 +1176,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 //jai testing
 
 
-
-
                                                                         workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
                                                                         if (isNetworkAvailable(activity)) {
                                                                             workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
                                                                         } else {
                                                                             Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                                                         }
-
-
 
 
                                                                     }

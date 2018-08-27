@@ -33,7 +33,6 @@ import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.service.LocationUpdateService;
-import com.thyrocare.service.TrackerService;
 import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;

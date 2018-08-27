@@ -4,7 +4,6 @@ package com.thyrocare.adapter;
  * Created by Orion on 4/21/2017.
  */
 
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.thyrocare.R;
-import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.activity.LMEMapDisplayFragmentActivity;
-import com.thyrocare.models.data.HubBarcodeModel;
 import com.thyrocare.models.data.SampleDropBarcodeList;
 import com.thyrocare.utils.api.Logger;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class LMEBarcodescanListListAdapter extends RecyclerView.Adapter<LMEBarcodescanListListAdapter.MyViewHolder> {
 

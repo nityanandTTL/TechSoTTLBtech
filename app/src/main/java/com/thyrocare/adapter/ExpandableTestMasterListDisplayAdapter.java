@@ -235,43 +235,47 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
 
                     tempselectedTests = new ArrayList<>();
                     tempselectedTests1 = new ArrayList<>();
+if(testRateMasterModel.getChldtests()!=null ){
+    for (int i = 0; i < testRateMasterModel.getChldtests().size(); i++) {
 
-                    for (int i = 0; i < testRateMasterModel.getChldtests().size(); i++) {
 
+        //tejas t -----------------------------
+        for (int j = 0; j < selectedTests.size(); j++) {
 
-                        //tejas t -----------------------------
-                        for (int j = 0; j < selectedTests.size(); j++) {
+            if (testRateMasterModel.getChldtests().get(i).getChildTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
+                System.out.println("Cart selectedtestlist Description :" + selectedTests.get(j).getDescription() + "Cart selectedtestlist Code :" + selectedTests.get(j).getTestCode());
 
-                            if (testRateMasterModel.getChldtests().get(i).getChildTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
-                                System.out.println("Cart selectedtestlist Description :" + selectedTests.get(j).getDescription() + "Cart selectedtestlist Code :" + selectedTests.get(j).getTestCode());
+                if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
+                        && !InputUtils.isNull(selectedTests.get(j).getDescription())) {
+                    tempselectedTests1.add(selectedTests.get(j).getDescription());
+                } else {
+                    tempselectedTests1.add(selectedTests.get(j).getTestCode());
+                }
 
-                                if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
-                                        && !InputUtils.isNull(selectedTests.get(j).getDescription())) {
-                                    tempselectedTests1.add(selectedTests.get(j).getDescription());
-                                } else {
-                                    tempselectedTests1.add(selectedTests.get(j).getTestCode());
-                                }
+                tempselectedTests.add(selectedTests.get(j));
+            }
+        }
+    }
+}
 
-                                tempselectedTests.add(selectedTests.get(j));
-                            }
-                        }
-                    }
+if (selectedTests!=null){
+    for (int j = 0; j < selectedTests.size(); j++) {
+        TestRateMasterModel selectedTestModel123 = selectedTests.get(j);
+        if (selectedTestModel123.getChldtests() != null && testRateMasterModel.getChldtests() != null && testRateMasterModel.checkIfChildsContained(selectedTestModel123)) {
 
-                    for (int j = 0; j < selectedTests.size(); j++) {
-                        TestRateMasterModel selectedTestModel123 = selectedTests.get(j);
-                        if (selectedTestModel123.getChldtests() != null && testRateMasterModel.getChldtests() != null && testRateMasterModel.checkIfChildsContained(selectedTestModel123)) {
+            if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
+                    && !InputUtils.isNull(selectedTests.get(j).getDescription())) {
+                tempselectedTests1.add(selectedTests.get(j).getDescription());
+            } else {
+                tempselectedTests1.add(selectedTests.get(j).getTestCode());
+            }
+            tempselectedTests.add(selectedTestModel123);
+        }
+    }
 
-                            if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
-                                    && !InputUtils.isNull(selectedTests.get(j).getDescription())) {
-                                tempselectedTests1.add(selectedTests.get(j).getDescription());
-                            } else {
-                                tempselectedTests1.add(selectedTests.get(j).getTestCode());
-                            }
-                            tempselectedTests.add(selectedTestModel123);
-                        }
-                    }
+}
 
-                    if (tempselectedTests.size() > 0 && tempselectedTests != null) {
+                    if (tempselectedTests != null && tempselectedTests.size() > 0  ) {
                         String cartproduct = TextUtils.join(",", tempselectedTests1);
                         alertDialogBuilder = new AlertDialog.Builder(activity);
                         alertDialogBuilder
@@ -285,13 +289,16 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
                         AlertDialog alertDialog = alertDialogBuilder.create();
                         alertDialog.show();
                     }
-                    for (int i = 0; i < tempselectedTests.size(); i++) {
-                        for (int j = 0; j < selectedTests.size(); j++) {
-                            if (tempselectedTests.get(i).getTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
-                                selectedTests.remove(j);
+                    if(tempselectedTests != null){
+                        for (int i = 0; i < tempselectedTests.size(); i++) {
+                            for (int j = 0; j < selectedTests.size(); j++) {
+                                if (tempselectedTests.get(i).getTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
+                                    selectedTests.remove(j);
+                                }
                             }
                         }
                     }
+
 
                     selectedTests.add(testRateMasterModel);
                     mcallback.onCheckChange(selectedTests);

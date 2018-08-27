@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.thyrocare.Controller.TSPLMESampleDropController;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.application.ApplicationController;

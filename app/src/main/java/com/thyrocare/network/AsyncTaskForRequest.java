@@ -5,7 +5,6 @@ import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
 
-import com.android.internal.http.multipart.MultipartEntity;
 import com.google.gson.Gson;
 import com.thyrocare.R;
 import com.thyrocare.models.api.request.ApplyLeaveRequestModel;
@@ -37,20 +36,15 @@ import com.thyrocare.models.api.request.SelfieUploadRequestModel;
 import com.thyrocare.models.api.request.SendScannedbarcodeLME;
 import com.thyrocare.models.api.request.ServiceUpdateRequestModel;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
-import com.thyrocare.models.api.request.SetDispositionDataModel;
 import com.thyrocare.models.api.request.TrackBtechLocationRequestModel;
 import com.thyrocare.models.api.request.Tsp_Send_RequestModel;
 import com.thyrocare.models.api.request.UpdateMaterial;
 import com.thyrocare.models.data.REMOVEBENSMSPOSTDATAModel;
-import com.thyrocare.models.data.ScannedMasterBarcodebyLMEPOSTDATAModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
