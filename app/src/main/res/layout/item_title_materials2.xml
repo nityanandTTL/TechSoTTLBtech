@@ -1,70 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:weightSum="5">
+    android:orientation="vertical">
+
+    <TableRow
+        android:id="@+id/tbl_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="5">
 
 
-    <TextView
-        android:layout_weight="1.25"
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:text="Item"
-        android:background="@color/navyblue"
-        android:layout_margin="4dp"
-        android:padding="15dp"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:layout_weight="1.25"
+            android:background="@color/navyblue"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="Item"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:text="@string/virtual"
-        android:textSize="13sp"
-        android:background="@color/navyblue"
-        android:layout_margin="4dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@color/navyblue"
+            android:gravity="center"
+            android:text="@string/virtual"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:text="Rate"
-        android:textSize="14sp"
-        android:background="@color/navyblue"
-        android:layout_margin="4dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@color/navyblue"
+            android:gravity="center"
+            android:text="Rate"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_weight="0.75"
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:text="Qty"
-        android:textSize="14sp"
-        android:background="@color/navyblue"
-        android:layout_margin="4dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:layout_weight="0.75"
+            android:background="@color/navyblue"
+            android:gravity="center"
+            android:text="Qty"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:text="Price"
-        android:background="@color/navyblue"
-        android:layout_margin="4dp"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textColor="@color/colorPrimaryDark"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@color/navyblue"
+            android:gravity="center"
+            android:text="Price"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
-</TableRow>
+    </TableRow>
+</LinearLayout>

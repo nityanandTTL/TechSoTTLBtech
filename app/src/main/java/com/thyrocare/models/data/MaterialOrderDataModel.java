@@ -7,10 +7,13 @@ import android.os.Parcelable;
  * Created by Orion on 5/24/2017.
  */
 
-public class MaterialOrderDataModel  extends BaseModel implements Parcelable {
+public class MaterialOrderDataModel extends BaseModel implements Parcelable {
     Integer MaterialId;
     Integer OrderQty;
     Integer Status;
+    String item_name;
+    String item_UnitCost;
+    String item_UnitSize;
 
     public MaterialOrderDataModel() {
         super ();
@@ -21,6 +24,9 @@ public class MaterialOrderDataModel  extends BaseModel implements Parcelable {
         MaterialId = in.readInt();
         OrderQty = in.readInt();
         Status = in.readInt();
+        item_name = in.readString();
+        item_UnitCost = in.readString();
+        item_UnitSize = in.readString();
 
     }
 
@@ -30,6 +36,9 @@ public class MaterialOrderDataModel  extends BaseModel implements Parcelable {
         dest.writeInt(MaterialId);
         dest.writeInt(OrderQty);
         dest.writeInt(Status);
+        dest.writeString(item_name);
+        dest.writeString(item_UnitCost);
+        dest.writeString(item_UnitSize);
 
     }
 
@@ -72,6 +81,30 @@ public class MaterialOrderDataModel  extends BaseModel implements Parcelable {
 
     public void setStatus(Integer status) {
         Status = status;
+    }
+
+    public String getItem_name() {
+        return item_name;
+    }
+
+    public void setItem_name(String item_name) {
+        this.item_name = item_name;
+    }
+
+    public String getItem_UnitCost() {
+        return item_UnitCost;
+    }
+
+    public String getItem_UnitSize() {
+        return item_UnitSize;
+    }
+
+    public void setItem_UnitSize(String item_UnitSize) {
+        this.item_UnitSize = item_UnitSize;
+    }
+
+    public void setItem_UnitCost(String item_UnitCost) {
+        this.item_UnitCost = item_UnitCost;
     }
 
     @Override

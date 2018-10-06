@@ -26,7 +26,6 @@ import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.adapter.OrderServedDisplayDetailsAdapter;
 import com.thyrocare.delegate.OrderServedDisplayDetailsAdapterClickedDelegate;
-import com.thyrocare.models.api.request.CallPatchRequestModel;
 import com.thyrocare.models.api.response.OrderServedResponseModel;
 import com.thyrocare.models.data.BtechOrderModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -50,7 +49,7 @@ import java.util.Locale;
 /**
  * Created by Orion on 5/2/2017.<br/>
  * for getting orders<br/>
- *  http://bts.dxscloud.com/btsapi/api/BtechOrderSummary/BtechServedOrders/884543107/2017-07-19<br/>
+ * http://bts.dxscloud.com/btsapi/api/BtechOrderSummary/BtechServedOrders/884543107/2017-07-19<br/>
  */
 
 public class OrderServedFragment extends AbstractFragment {
@@ -85,7 +84,15 @@ public class OrderServedFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
-        activity.toolbarHome.setTitle("Orders Served");
+        try {
+            if (activity != null) {
+                if (activity.toolbarHome != null) {
+                    activity.toolbarHome.setTitle("Orders Served");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         appPreferenceManager = new AppPreferenceManager(activity);
         if (getArguments() != null) {
 
@@ -207,13 +214,22 @@ public class OrderServedFragment extends AbstractFragment {
         orderServedDisplayDetailsAdapter = new OrderServedDisplayDetailsAdapter(btechOrderModels, activity, new OrderServedDisplayDetailsAdapterClickedDelegate() {
             @Override
             public void onCallCustomer(String customerMobile, String orderNo) {
+
+
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + customerMobile));
+                activity.startActivity(intent);
+
+
+
+/*
                 CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
                 callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
                 callPatchRequestModel.setDestNumber(customerMobile);
                 callPatchRequestModel.setVisitID(orderNo);
                 ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
                 callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-                callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
+                callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);*/
             }
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);

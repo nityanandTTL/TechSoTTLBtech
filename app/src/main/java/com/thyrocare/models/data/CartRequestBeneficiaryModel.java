@@ -15,6 +15,8 @@ public class CartRequestBeneficiaryModel implements Parcelable {
     private String ProjId;
     private Boolean Addben;
     private Boolean isTestEdit;
+    private String Remarks;
+
 
 
     public CartRequestBeneficiaryModel() {
@@ -25,6 +27,7 @@ public class CartRequestBeneficiaryModel implements Parcelable {
         BenId = in.readString();
         Tests = in.readString();
         ProjId = in.readString();
+        Remarks = in.readString();
         isTestEdit = in.readByte() != 0;
         Addben = in.readByte() != 0;
     }
@@ -35,6 +38,7 @@ public class CartRequestBeneficiaryModel implements Parcelable {
         dest.writeString(BenId);
         dest.writeString(Tests);
         dest.writeString(ProjId);
+        dest.writeString(Remarks);
         dest.writeByte((byte) (isTestEdit ? 1 : 0));
         dest.writeByte((byte) (Addben ? 1 : 0));
 
@@ -89,6 +93,14 @@ public class CartRequestBeneficiaryModel implements Parcelable {
 
     public void setProjId(String projId) {
         ProjId = projId;
+    }
+
+    public String getRemarks() {
+        return Remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        Remarks = remarks;
     }
 
     public Boolean getAddben() {

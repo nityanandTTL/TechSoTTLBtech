@@ -13,7 +13,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	public static final String DB_NAME = "dhb_db";
 
-	public static final int DB_VERSION = 6;
+	public static final int DB_VERSION = 11;
 
 	private static DbHelper dbHelper;
 
@@ -72,6 +72,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
 		DbMigrationHelper migrationHelper = new DbMigrationHelper(db, context.getApplicationContext());
 		OperationResult result = migrationHelper.upgradeToVersion(oldVersion,
 		                                                          newVersion);

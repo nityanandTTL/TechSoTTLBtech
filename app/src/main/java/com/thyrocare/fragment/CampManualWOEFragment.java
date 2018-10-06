@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.R;
 import com.thyrocare.activity.CampOrderBookingActivity;
 import com.thyrocare.dao.DhbDao;
@@ -35,7 +38,6 @@ import com.thyrocare.models.data.BeneficiaryLabAlertsModel;
 import com.thyrocare.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.thyrocare.models.data.BrandMasterModel;
 import com.thyrocare.models.data.CampAllOrderDetailsModel;
-
 import com.thyrocare.models.data.CampDetailModel;
 import com.thyrocare.models.data.LabAlertMasterModel;
 import com.thyrocare.models.data.OrderBookingDetailsModel;
@@ -51,8 +53,6 @@ import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 
@@ -282,7 +282,8 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         edt_test_alerts = (TextView) view.findViewById(R.id.edt_test_alerts);
         String tests = campDetailModel.getProduct();
         testsList = tests.split(",");
-        edt_test_alerts.setText("" + testsList[0]);
+        edt_test_alerts.setText("--SELECT--");
+       // edt_test_alerts.setText("" + testsList[0]);
     }
 
     private void clearEntries() {
@@ -353,17 +354,24 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             // view_female.setVisibility(View.GONE);
         }
         if (v.getId() == R.id.edt_test_alerts) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             LayoutInflater inflater = activity.getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
+            final View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
             builder.setView(dialogView);
-            ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
+            final ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
             Button btn_edit = (Button) dialogView.findViewById(R.id.btn_edit);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity,
                     android.R.layout.simple_list_item_1, testsList);
             lv_test_codes.setAdapter(adapter);
             btn_edit.setVisibility(View.GONE);
             builder.show();
+           lv_test_codes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+               @Override
+               public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                   edt_test_alerts.setText(""+testsList[i]);
+               }
+           });
+
         }
     }
 
@@ -450,6 +458,10 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         } else if (edt_mobile.getText().toString().length() < 10) {
             edt_mobile.setError("Enter Valid Mobile Number");
             edt_mobile.requestFocus();
+            return false;
+        } else if (edt_test_alerts.getText().toString().equals("--SELECT--")) {
+            edt_test_alerts.setError("Select test");
+            edt_test_alerts.requestFocus();
             return false;
         }
         for (BeneficiaryBarcodeDetailsModel benBarcode : barcodeDetailsArr) {

@@ -45,7 +45,7 @@ public class GPSTracker extends Service implements LocationListener {
     // The minimum distance to change Updates in meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5; // 5 meters
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000*5; // 5 seconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 5; // 5 seconds
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
@@ -57,9 +57,9 @@ public class GPSTracker extends Service implements LocationListener {
 
     public Location getLocation() {
         Logger.error("Thread is Executing2 ");
-        if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission( mContext, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission( mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
         try {
             locationManager = (LocationManager) mContext
@@ -86,9 +86,9 @@ public class GPSTracker extends Service implements LocationListener {
                         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                         if (location != null) {
                             latitude = location.getLatitude();
-                            Logger.error("latitude"+latitude +"");
+                            Logger.error("latitude" + latitude + "");
                             longitude = location.getLongitude();
-                            Logger.error("longitude"+longitude +"");
+                            Logger.error("longitude" + longitude + "");
                         }
                     }
                 }
@@ -221,5 +221,9 @@ public class GPSTracker extends Service implements LocationListener {
             return false;
         }
 
+    }
+
+    public boolean isGPSon() {
+        return isGPSEnabled;
     }
 }

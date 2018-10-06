@@ -42,7 +42,7 @@ import com.thyrocare.utils.app.InputUtils;
 import java.util.ArrayList;
 
 
-public class DisplayTestsMasterListActivity extends AbstractActivity{
+public class DisplayTestsMasterListActivity extends AbstractActivity {
     private Spinner spBrandMasters;
     private DhbDao dhbDao;
     private Activity activity;
@@ -75,11 +75,11 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
         bdd = new BeneficiaryDetailsDao(dhbDao.getDb());
         appPreferenceManager = new AppPreferenceManager(activity);
         orderDetailsModel = new OrderDetailsModel();
-        if(getIntent().getExtras()!=null){
+        if (getIntent().getExtras() != null) {
             selectedTestDetailsArr = getIntent().getExtras().getParcelableArrayList(BundleConstants.SELECTED_TESTS_LIST);
             orderDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
-            benDetailsModel=getIntent().getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
-            isEdit = getIntent().getExtras().getBoolean(BundleConstants.IS_TEST_EDIT,true);
+            benDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
+            isEdit = getIntent().getExtras().getBoolean(BundleConstants.IS_TEST_EDIT, true);
         }
         initUI();
         initData();
@@ -125,18 +125,18 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
                 selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
                 benDetailsModel.setProjId("");
                 int AmountDue = 0;
-                for (TestRateMasterModel trmm:
+                for (TestRateMasterModel trmm :
                         selectedTestsList) {
-                    AmountDue = AmountDue+trmm.getRate();
+                    AmountDue = AmountDue + trmm.getRate();
                     BeneficiaryTestDetailsModel btdm = new BeneficiaryTestDetailsModel();
                     btdm.setFasting(trmm.getFasting());
-                    btdm.setChldtests(trmm.getChldtests()!=null?trmm.getChldtests():new ArrayList<ChildTestsModel>());
+                    btdm.setChldtests(trmm.getChldtests() != null ? trmm.getChldtests() : new ArrayList<ChildTestsModel>());
                     btdm.setTests(trmm.getTestCode());
                     btdm.setTestType(trmm.getTestType());
                     btdm.setProjId("");
-                    btdm.setSampleType(trmm.getSampltype()!=null?trmm.getSampltype():new ArrayList<TestSampleTypeModel>());
-                    btdm.setTstClinicalHistory(trmm.getTstClinicalHistory()!=null?trmm.getTstClinicalHistory():new ArrayList<TestClinicalHistoryModel>());
-                    if(!InputUtils.isNull(trmm.getTestType())&&trmm.getTestType().equalsIgnoreCase("offer")){
+                    btdm.setSampleType(trmm.getSampltype() != null ? trmm.getSampltype() : new ArrayList<TestSampleTypeModel>());
+                    btdm.setTstClinicalHistory(trmm.getTstClinicalHistory() != null ? trmm.getTstClinicalHistory() : new ArrayList<TestClinicalHistoryModel>());
+                    if (!InputUtils.isNull(trmm.getTestType()) && trmm.getTestType().equalsIgnoreCase("offer")) {
                         btdm.setProjId(trmm.getTestCode());
                         btdm.setTests(trmm.getDescription());
                         benDetailsModel.setProjId(trmm.getTestCode());
@@ -144,38 +144,44 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
                     selectedTestDetailsArr.add(btdm);
                 }
                 benDetailsModel.setTestSampleType(selectedTestDetailsArr);
-                if(!isEdit){
-                    orderDetailsModel.setAmountDue(orderDetailsModel.getAmountDue()+AmountDue);
+                if (!isEdit) {
+                    orderDetailsModel.setAmountDue(orderDetailsModel.getAmountDue() + AmountDue);
                 }
                 orderDetailsModel.setTestEdit(isEdit);
-                orderDetailsModel.setBrandId(brandMasterModel.getBrandId());
+
+                //jai
+                benDetailsModel.setTestEdit(isEdit);
+                //jai
+                try {
+                    orderDetailsModel.setBrandId(brandMasterModel.getBrandId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 new OrderDetailsDao(dhbDao.getDb()).insertOrUpdate(orderDetailsModel);
 
                 boolean isFasting = false;
                 String testsCode = "";
-                if(selectedTestsList!=null) {
+                if (selectedTestsList != null) {
                     for (TestRateMasterModel testRateMasterModel :
                             selectedTestsList) {
                         if (InputUtils.isNull(testsCode)) {
-                            if(!InputUtils.isNull(testRateMasterModel.getTestType())&&testRateMasterModel.getTestType().equals("OFFER")) {
+                            if (!InputUtils.isNull(testRateMasterModel.getTestType()) && testRateMasterModel.getTestType().equals("OFFER")) {
                                 testsCode = testRateMasterModel.getDescription();
                                 benDetailsModel.setProjId(testRateMasterModel.getTestCode());
-                            }
-                            else{
+                            } else {
                                 testsCode = testRateMasterModel.getTestCode();
                             }
                         } else {
-                            if(!InputUtils.isNull(testRateMasterModel.getTestType())&&testRateMasterModel.getTestType().equals("OFFER")) {
+                            if (!InputUtils.isNull(testRateMasterModel.getTestType()) && testRateMasterModel.getTestType().equals("OFFER")) {
                                 testsCode = testsCode + "," + testRateMasterModel.getDescription();
                                 benDetailsModel.setProjId(testRateMasterModel.getTestCode());
-                            }
-                            else{
+                            } else {
                                 testsCode = testsCode + "," + testRateMasterModel.getTestCode();
 
                             }
                         }
                     }
-                    if(InputUtils.isNull(benDetailsModel.getProjId())){
+                    if (InputUtils.isNull(benDetailsModel.getProjId())) {
                         benDetailsModel.setProjId("");
                     }
                     ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
@@ -187,15 +193,15 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
                             bstdm.setBenId(benDetailsModel.getBenId());
                             bstdm.setSampleType(tstm.getSampleType());
                             bstdm.setId(tstm.getId());
-                            if(!samples.contains(bstdm)){
+                            if (!samples.contains(bstdm)) {
                                 samples.add(bstdm);
                             }
                         }
                     }
                     benDetailsModel.setSampleType(samples);
-                    for (TestRateMasterModel trmm:
+                    for (TestRateMasterModel trmm :
                             selectedTestsList) {
-                        if(!trmm.getFasting().toLowerCase().contains("non")){
+                        if (!trmm.getFasting().toLowerCase().contains("non")) {
                             isFasting = true;
                             break;
                         }
@@ -203,16 +209,15 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
                 }
                 benDetailsModel.setTestsCode(testsCode);
                 benDetailsModel.setTests(testsCode);
-                if(isFasting) {
+                if (isFasting) {
                     benDetailsModel.setFasting("Fasting");
-                }
-                else{
+                } else {
                     benDetailsModel.setFasting("Non-Fasting");
                 }
                 bdd.insertOrUpdate(benDetailsModel);
                 Intent intentFinish = new Intent();
 //                intentFinish.putExtra(BundleConstants.BRAND_ID,brandMasterModel.getBrandId());
-                setResult(BundleConstants.ADD_TESTS_FINISH,intentFinish);
+                setResult(BundleConstants.ADD_TESTS_FINISH, intentFinish);
                 finish();
             }
         });
@@ -220,7 +225,7 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
 
     private void initData() {
         selectedTestsList = new ArrayList<>();
-        if(selectedTestDetailsArr!=null) {
+        if (selectedTestDetailsArr != null) {
             for (BeneficiaryTestDetailsModel btdm :
                     selectedTestDetailsArr) {
                 TestRateMasterModel trmm = new TestRateMasterModel();
@@ -242,16 +247,16 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
         final ArrayList<BrandMasterModel> brandMasterModels = brandMasterDao.getAllModels();
         ArrayAdapter<BrandMasterModel> adapter = new ArrayAdapter<BrandMasterModel>(this, android.R.layout.simple_spinner_item, brandMasterModels);
         spBrandMasters.setAdapter(adapter);
-        if(orderDetailsModel!=null && !orderDetailsModel.isAddBen()){
-            for(int i=0;i<brandMasterModels.size();i++){
-                if(orderDetailsModel.getBrandId()==brandMasterModels.get(i).getBrandId()){
+        if (orderDetailsModel != null && !orderDetailsModel.isAddBen()) {
+            for (int i = 0; i < brandMasterModels.size(); i++) {
+                if (orderDetailsModel.getBrandId() == brandMasterModels.get(i).getBrandId()) {
                     spBrandMasters.setSelection(i);
                     break;
                 }
             }
         }
 //        if(isEdit){
-            spBrandMasters.setEnabled(false);
+        spBrandMasters.setEnabled(false);
 //        }
 //        else{
 //            spBrandMasters.setEnabled(true);
@@ -269,7 +274,7 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
         svTestsList.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         svTestsList.setIconifiedByDefault(false);
         svTestsList.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
+           /* @Override
             public boolean onQueryTextSubmit(String query) {
                 expAdapter.filterData(query);
                 return false;
@@ -287,11 +292,55 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
                 expAdapter.filterData("");
                 return false;
             }
+        });*/
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (expAdapter != null) {
+                    expAdapter.filterData(query);
+                    if(!query.isEmpty()){
+                        for(int i=0; i < expAdapter.getGroupCount(); i++)
+                            expandList.expandGroup(i);
+                    }else{
+                        for(int i=0; i < expAdapter.getGroupCount(); i++)
+                            expandList.collapseGroup(i);
+                    }
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                if (expAdapter != null) {
+                    expAdapter.filterData(query);
+                    if(!query.isEmpty()){
+                        for(int i=0; i < expAdapter.getGroupCount(); i++)
+                            expandList.expandGroup(i);
+                    }else{
+                        for(int i=0; i < expAdapter.getGroupCount(); i++)
+                            expandList.collapseGroup(i);
+                    }
+
+                }
+                return false;
+            }
+        });
+        svTestsList.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                if (expAdapter != null) {
+                    expAdapter.filterData("");
+                    for(int i=0; i < expAdapter.getGroupCount(); i++)
+                        expandList.collapseGroup(i);
+                }
+                return false;
+            }
         });
     }
 
-    private class PopulateTestDataAsyncTask extends AsyncTask<Void,Void,Void>{
+    private class PopulateTestDataAsyncTask extends AsyncTask<Void, Void, Void> {
         private Object item;
+
         public PopulateTestDataAsyncTask(Object item) {
             this.item = item;
         }
@@ -299,7 +348,7 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showProgressDialog(activity,"Please wait while we load the Tests List...");
+            showProgressDialog(activity, "Please wait while we load the Tests List...");
         }
 
         @Override
@@ -308,16 +357,45 @@ public class DisplayTestsMasterListActivity extends AbstractActivity{
                 Logger.error("click");
                 Logger.error("Brand ID : " + brandMasterModel.getBrandId());
                 TestRateMasterDao testRateMasterDao = new TestRateMasterDao(dhbDao.getDb());
-                ArrayList<String> testTypesArr = new ArrayList<String>() ;
+                ArrayList<String> testTypesArr = new ArrayList<String>();
                 ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels = new ArrayList<TestTypeWiseTestRateMasterModelsList>();
-                testTypesArr = testRateMasterDao.getAllTestTypesFromBrandId(brandMasterModel.getBrandId()+"");
+                testTypesArr = testRateMasterDao.getAllTestTypesFromBrandId(brandMasterModel.getBrandId() + "");
                 for (String testType :
                         testTypesArr) {
                     ArrayList<TestRateMasterModel> testTypeWiseTestRateMasterModels = testRateMasterDao.getModelsFromTestType(testType);
-                    TestTypeWiseTestRateMasterModelsList testTypeWiseTestRateMasterModelsList =  new TestTypeWiseTestRateMasterModelsList() ;
-                    testTypeWiseTestRateMasterModelsList.setTestType(testType);
-                    testTypeWiseTestRateMasterModelsList.setTestRateMasterModels(testTypeWiseTestRateMasterModels);
-                    testRateMasterModels.add(testTypeWiseTestRateMasterModelsList);
+
+                    ArrayList<TestRateMasterModel> testTypeWiseTestRateMasterModels_new = new ArrayList<>();
+                    try {
+                        if (orderDetailsModel.getUserAccessCode() != 0) {
+                            if (testTypeWiseTestRateMasterModels != null) {
+                                for (int i = 0; i < testTypeWiseTestRateMasterModels.size(); i++) {
+                                    if (testTypeWiseTestRateMasterModels.get(i).getAccessUserCode() != null) {
+                                        if (testTypeWiseTestRateMasterModels.get(i).getAccessUserCode().size() != 0) {
+                                            for (int j = 0; j < testTypeWiseTestRateMasterModels.get(i).getAccessUserCode().size(); j++) {
+                                                if (Integer.parseInt(testTypeWiseTestRateMasterModels.get(i).getAccessUserCode().get(j).getAccessCode()) == orderDetailsModel.getUserAccessCode()) {
+                                                    testTypeWiseTestRateMasterModels_new.add(testTypeWiseTestRateMasterModels.get(i));
+                                                }
+                                            }
+                                        }else{
+                                            testTypeWiseTestRateMasterModels_new.add(testTypeWiseTestRateMasterModels.get(i));
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            testTypeWiseTestRateMasterModels_new = testTypeWiseTestRateMasterModels;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        testTypeWiseTestRateMasterModels_new = testTypeWiseTestRateMasterModels;
+                    }
+
+                    if (testTypeWiseTestRateMasterModels_new.size() != 0) {
+                        TestTypeWiseTestRateMasterModelsList testTypeWiseTestRateMasterModelsList = new TestTypeWiseTestRateMasterModelsList();
+                        testTypeWiseTestRateMasterModelsList.setTestType(testType);
+                        testTypeWiseTestRateMasterModelsList.setTestRateMasterModels(testTypeWiseTestRateMasterModels_new);
+                        testRateMasterModels.add(testTypeWiseTestRateMasterModelsList);
+                    }
                 }
                 expAdapter = new ExpandableTestMasterListDisplayAdapter(activity, testRateMasterModels, selectedTestsList, new EditTestExpandListAdapterCheckboxDelegate() {
                     @Override

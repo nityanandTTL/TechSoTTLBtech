@@ -39,15 +39,27 @@ public class AbstractApiModel implements AppConstants {
 
     // New DB changes Amazon Production
     // https://www.dxscloud.com/techso
-    public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.com/btsapi";
-// public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";
+    //public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.
+    // 0com/btsapi";
 
+//public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.com/techsoapi";//staging
+    //    public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
+
+    //TODO Stag
+
+    public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
+    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
+    //TODO Live
+   /* public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
+    public static final String API_VERSION = "https://www.thyrocare.com/APIs";*/
+    //TODO Live
 
 
     public static String SERVER_BASE_API_URL = appEnvironment.equals("DEVELOPMENT") ? SERVER_BASE_API_URL_DEV : appEnvironment.equals("DEMO") ? SERVER_BASE_API_URL_DEMO : appEnvironment.equals("PRODUCTION") ? SERVER_BASE_API_URL_PROD : SERVER_BASE_API_URL_DEV;
 
 
     /**
+     * 1
      * RESPECTIVE URLS
      */
 
@@ -56,8 +68,6 @@ public class AbstractApiModel implements AppConstants {
     public static String APP_NAME = "BTECH";
 
     // Version Specific Base URL
-
-
     public String VERSION_API_URL = "/api";
 
     public String LOGIN = "/Token";
@@ -68,9 +78,19 @@ public class AbstractApiModel implements AppConstants {
 
     public String RESET_PASSWORD = VERSION_API_URL + "/Account/ResetPassword";
 
+    public String ORDER_ALLOCATION_POST = VERSION_API_URL + "/OrderAllocation/TrackLocation";
+
+    public String TRACK_BTECH_LOCATION = VERSION_API_URL + "/OrderAllocation/TrackBtechLocation";
+
     public String SELFIE_UPLOAD = VERSION_API_URL + "/SelfiUpload";
 
-    public String FETCH_ORDER_DETAIL = VERSION_API_URL + "/OrderVisitDetails";
+
+    //    public String FETCH_ORDER_DETAIL = VERSION_API_URL + "/OrderVisitDetails";
+    public String FETCH_ORDER_DETAIL = VERSION_API_URL + "/OrderVisitDetailsOptimize";
+    public String ORDER_DETAILS_BY_VISIT = VERSION_API_URL + "/OrderDetailsByVisit";
+
+
+    public String FETCH_ORDER_ALLOCATION = VERSION_API_URL + "/OrderAllocation/PinForOrderAllocation";
 
     public String SET_MATERIALORDER_DETAIL = VERSION_API_URL + "/MaterialOrderHome/PostMaterialOrderApprove";
 
@@ -92,11 +112,17 @@ public class AbstractApiModel implements AppConstants {
 
     public String FETCH_BRAND_WISE_TEST_MASTER = VERSION_API_URL + "/BrandTestRateList";
 
-   // public String BTECH_AVAILABILITY = VERSION_API_URL + "/BtechAvaibility";
-
+    // public String BTECH_AVAILABILITY = VERSION_API_URL + "/BtechAvaibility";
+    public static final String ACCEPT = "Accept";
 
     public String BTECH_AVAILABILITY = VERSION_API_URL + "/BtechAvaibilityNew/Avaibility";
+    public String SERVICE_UPDATE = VERSION_API_URL + "/OrderAllocation/ServiceUpdate";
+    public String LOCATION_MASTER = VERSION_API_URL + "/Masters/LocationMaster";
 
+    public String SUB_SLOT_MASTER = VERSION_API_URL + "/Masters/DisplaySubSlotMasters";
+    public String GET_TEST_LIST = VERSION_API_URL + "/BenTestList/GetTestList";
+
+    public String DOWNLOAD_DETAILS = VERSION_API_URL + "/OrderAllocation/BtechAppVersion";
     public String LOGOUT = VERSION_API_URL + "/Account/Logout";
 
     public String FETCH_LEDGER_DETAIL = VERSION_API_URL + "/Ledger/CashRegister";
@@ -113,12 +139,18 @@ public class AbstractApiModel implements AppConstants {
     public String FETCH_MATERIALMASTER_DETAIL = VERSION_API_URL + "/Masters/CategoryWiseMaterialMaster";
 
     public String FETCH_MATERIALINV_DETAIL = VERSION_API_URL + "/Inventory/StockInHand";
+    public String FETCH_BtechVirtualStoack_DETAIL = VERSION_API_URL + "/MaterialOrderTracking/BtechVirtualStoack";
+    public String FETCH_BtechVirtualStoackUpdate_DETAIL = VERSION_API_URL + "/MaterialOrderTracking/BtechVirtualStoackUpdate";
+
+    public String BTECH_IMAGE_DATA = VERSION_API_URL + "/OrderAllocation/BtechImage";
+    public String BTECH_FACEIMAGE_DATA = VERSION_API_URL + "/OrderAllocation/BtechFaceDetection";
 
     public String BTECH_COLLECTIONS = VERSION_API_URL + "/BtechCollections";
 
     public String BTECH_HUB_DETAILS_DISPLAY = VERSION_API_URL + "/BtechHubs";
 
     public String ORDER_SERVED_DETAILS_DISPLAY = VERSION_API_URL + "/BtechOrderSummary/BtechServedOrders";
+    public String ALREADY_APPLIED_LEAVE_HISTORY_DETAILS_DISPLAY = VERSION_API_URL + "/BtechAbsentList/AbsentList";
 
     public String BTECH_CLIENTS_DETAILS_DISPLAY = VERSION_API_URL + "/BtechClients";
 
@@ -146,7 +178,7 @@ public class AbstractApiModel implements AppConstants {
 
     public String OLC_PICKUP_SUBMIT_SCAN_BARCODE = VERSION_API_URL + "/ScanPickup";
 
-    public String REMARKS = VERSION_API_URL + "/Masters/ReleaseRemarksMaster";
+    public String REMARKS = VERSION_API_URL + "/Masters/ReleaseRemarksMasterNew";
 
     public String SCHEDULEOPEN = VERSION_API_URL + "/BtechAvaibilityNew/BtechMarkedAvailability";
 
@@ -174,10 +206,38 @@ public class AbstractApiModel implements AppConstants {
     public String TSP_BARCODE_SCAN = VERSION_API_URL + "/SpecimenTrack/TSPScannedBarcode";
 
     public String TSP_BARCODE = VERSION_API_URL + "/SpecimenTrack/ReceiveHubBarcode";
+    public String GET_ERecipt = VERSION_API_URL + "/Ledger/OrderReceipt";
+    public String POST_REMOVE_BEN_SMS = VERSION_API_URL + "/AllSMS/PostRemoveBenSMS";
+    public String EmailValidate = "/MASTER.svc/EmailValidate";
 
     public String LOCUS_PUSH_LOCATIONS_API = "https://api.locus.sh/v1/client/thyrocare/user/";
 
+    public String BTECH_BLOCK_CHECK = VERSION_API_URL + "/BtechNotification/BlockedBTS";
+
+    public String BTECH_ACCEPTORDER_CHECK = VERSION_API_URL + "/BtechNotification/OrderAssigned";
+
+    public String UserLoginDevicePostUserLogin = VERSION_API_URL + "/UserLoginDevice/PostUserLogin";
+    public String UserLoginDevicePostUserLogOut = VERSION_API_URL + "/UserLoginDevice/PostUserLogOut";
+    public String GetUserLoginDeviceData = VERSION_API_URL + "/UserLoginDevice/GetDeviceData";
+
+    //LME
+    public String GetSampleDropDetailsbyTSPLME = VERSION_API_URL + "/TSPLMESampleDrop/GetSampleDropDetailsbyTSPLME";
+    public String PostScannedMasterBarcodebyLME = VERSION_API_URL + "/TSPLMESampleDrop/PostScannedMasterBarcodebyLME";
+    public String GetWLMIS = VERSION_API_URL + "/TSPLMESampleDrop/GetWLMIS";
+    public String GetWLPickUpMIS = VERSION_API_URL + "/TSPLMESampleDrop/GetWLPickUpMIS";
+
+    //api/AllSMS/PostSendOTP
+    public String POST_ORDER_PASS = VERSION_API_URL + "/OrderAllocation/TransferOrder";
+    public String POST_SEND_OTP = VERSION_API_URL + "/AllSMS/PostSendOTP";
+    public String POST_VERIFY_OTP = VERSION_API_URL + "/AllSMS/PostVerifyOTP";
+    //api/AllSMS/PostVerifyOTP
+
+    //getDisposition
+    public String GetDisposition = VERSION_API_URL + "/OrderAllocation/Disposition";
+    public String SetDispositionWithMedia = VERSION_API_URL + "/OrderAllocation/MediaUpload";
+
     public String ADD_BENEFICIARY = "/api/AddBeneficiary";
+
 
     public static final String X_API_KEY = "x-api-key";
 
@@ -191,6 +251,8 @@ public class AbstractApiModel implements AppConstants {
     private String postJsonString;
     /* Headers to be added as list */
     private List<HeaderData> header;
+    public String TSPNBTAVAILABILITY = VERSION_API_URL + "/BtechAvaibilityNew/NBTMarkedAvailability";
+    public String GET_Email = "http://api.quickemailverification.com/v1/verify?email=";
 
     public String getRequestUrl() {
         return requestUrl;
@@ -242,6 +304,8 @@ public class AbstractApiModel implements AppConstants {
         } else {
             this.requestUrl = this.requestUrl + "&" + key + "=" + (value);
         }
+
+
     }
 
     public void setParam(String key, int value) {

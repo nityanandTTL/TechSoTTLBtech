@@ -18,19 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ramotion.foldingcell.FoldingCell;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.delegate.CampListDisplayRecyclerViewAdapterDelegate;
-
-import com.thyrocare.models.api.request.CallPatchRequestModel;
 import com.thyrocare.models.data.CampDetailModel;
-
-import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
-import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.utils.app.AppConstants;
-import com.thyrocare.utils.app.AppPreferenceManager;
-import com.ramotion.foldingcell.FoldingCell;
 
 import org.json.JSONException;
 
@@ -178,12 +172,19 @@ public class CampListDetailDisplayAdapter extends BaseAdapter {
                     tv_sr_no.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
+
+                            Intent intent = new Intent(Intent.ACTION_CALL);
+                            intent.setData(Uri.parse("tel:" + campDetailModelList.get(pos).getBtechs().get(pos).getMobile()));
+                            activity.startActivity(intent);
+
+                            /*
                             CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
                             callPatchRequestModel.setSrcnumber(new AppPreferenceManager(activity).getLoginResponseModel().getUserID());
                             callPatchRequestModel.setDestNumber(campDetailModelList.get(pos).getBtechs().get(pos).getMobile());
                             ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
                             callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-                            callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
+                            callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);*/
                     }
                     });
                     tv_status.setText("Status: " + campDetailModelList.get(pos).getBtechs().get(i).getStatus());

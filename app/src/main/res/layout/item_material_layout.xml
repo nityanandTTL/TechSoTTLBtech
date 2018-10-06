@@ -2,44 +2,46 @@
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@color/colorBackground"
-    android:weightSum="3"
     android:layout_marginLeft="@dimen/dp_3"
-    android:layout_marginRight="@dimen/dp_3">
+    android:layout_marginRight="@dimen/dp_3"
+    android:background="@color/colorBackground"
+    android:orientation="horizontal"
+    android:weightSum="3">
+
     <TextView
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:text=""
         android:id="@+id/txt_item"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_margin="4dp"
-        android:padding="5dp"
+        android:layout_weight="1"
+        android:background="@color/light"
         android:gravity="center"
-        android:background="@color/light"/>
+        android:padding="5dp"
+        android:text="" />
 
 
-    <TextView android:layout_weight="1"
+    <TextView
         android:id="@+id/txt_virtualstock"
-        android:layout_height="match_parent"
         android:layout_width="0dp"
-        android:padding="5dp"
-        android:text=""
-        android:background="@color/light"
+        android:layout_height="match_parent"
         android:layout_margin="4dp"
-        android:gravity="center"/>
+        android:layout_weight="1"
+        android:background="@color/light"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="" />
 
-    <EditText android:layout_weight="1"
+    <EditText
         android:id="@+id/edit_actual"
-        android:layout_height="match_parent"
         android:layout_width="0dp"
-        android:padding="5dp"
-        android:text=""
-        android:inputType="number"
-        android:background="@color/light"
+        android:layout_height="match_parent"
         android:layout_margin="4dp"
-        android:gravity="center"/>
-
+        android:layout_weight="1"
+        android:background="@color/light"
+        android:gravity="center"
+        android:inputType="number"
+        android:padding="5dp"
+        android:text="" />
 
 
 </TableRow>

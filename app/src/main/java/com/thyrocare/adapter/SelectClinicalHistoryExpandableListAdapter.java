@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.thyrocare.R;
 import com.thyrocare.delegate.SelectClinicalHistoryCheckboxDelegate;
 import com.thyrocare.models.data.BeneficiaryTestDetailsModel;
-import com.thyrocare.models.data.TestClinicalHistoryModel;
 import com.thyrocare.models.data.BeneficiaryTestWiseClinicalHistoryModel;
+import com.thyrocare.models.data.TestClinicalHistoryModel;
 
 import java.util.ArrayList;
 

@@ -24,7 +24,7 @@
             <RelativeLayout
                 android:id="@+id/benf_number_queue"
                 android:layout_width="match_parent"
-                android:layout_height="155dp"
+                android:layout_height="245dp"
                 android:layout_weight="3"
                 android:background="@color/bgTitleRight"
                 android:gravity="center_horizontal"
@@ -32,7 +32,7 @@
 
                 <RelativeLayout
                     android:layout_width="5dp"
-                    android:layout_height="155dp"
+                    android:layout_height="245dp"
                     android:background="@color/colorSecondary">
 
                 </RelativeLayout>
@@ -160,7 +160,6 @@
 
                 <EditText
 
-                    android:editable="false"
                     android:id="@+id/title_aadhar_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -168,6 +167,7 @@
                     android:layout_toEndOf="@+id/title_aadhar_icon"
                     android:background="@android:drawable/editbox_background"
                     android:drawableEnd="@android:drawable/ic_menu_camera"
+                    android:editable="false"
                     android:fadingEdge="horizontal"
                     android:hint="Enter Aadhar"
                     android:maxLines="1"
@@ -176,6 +176,63 @@
                     android:textColor="@android:color/darker_gray"
                     android:textSize="16sp"
                     android:visibility="visible" />
+
+                <EditText
+                    android:id="@+id/edt_Mobilenew"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title_aadhar_no"
+                    android:background="@android:drawable/editbox_background"
+                    android:digits="0123456789"
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:hint="Enter Mobile No"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:maxLines="1"
+                    android:minEms="10"
+                    android:singleLine="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/edt_addressnew"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edt_Mobilenew"
+                    android:layout_marginRight="16dp"
+                    android:background="@android:drawable/editbox_background"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/., "
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:hint="Enter Address"
+                    android:inputType="textPersonName|textCapWords"
+                    android:lines="4"
+                    android:maxLength="250"
+                    android:maxLines="1"
+                    android:minEms="10"
+                    android:singleLine="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/edt_emailnew"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edt_addressnew"
+                    android:layout_marginRight="16dp"
+                    android:background="@android:drawable/editbox_background"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@."
+                    android:fadingEdge="horizontal"
+                    android:gravity="center"
+                    android:hint="Enter email"
+                    android:inputType="textEmailAddress"
+                    android:maxLength="40"
+                    android:maxLines="1"
+                    android:minEms="10"
+                    android:singleLine="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -223,25 +280,40 @@
                         android:padding="@dimen/dp_10"
                         android:text="Tests:" />
 
-                    <TextView
-                        android:id="@+id/edt_test"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="70dp"
+                        android:layout_marginLeft="@dimen/dp_10"
                         android:layout_marginRight="@dimen/dp_10"
-                        android:layout_marginTop="-10dp"
-                        android:background="@drawable/edittext_modified_states"
-                        android:drawableEnd="@android:drawable/arrow_down_float"
-                        android:ellipsize="marquee"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:freezesText="true"
-                        android:gravity="center"
-                        android:hint="Click to view tests list"
-                        android:marqueeRepeatLimit="marquee_forever"
-                        android:scrollHorizontally="true"
-                        android:singleLine="true"
-                        android:textSize="14sp" />
+
+                        android:layout_marginTop="-10dp">
+
+                        <ImageView
+                            android:id="@+id/img_view_test"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:background="@android:drawable/editbox_background"
+                            android:src="@drawable/ic_visibility_black_24dp" />
+
+                        <TextView
+                            android:id="@+id/edt_test"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            android:background="@drawable/edittext_modified_states"
+                            android:drawableEnd="@android:drawable/arrow_down_float"
+                            android:ellipsize="marquee"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:freezesText="true"
+                            android:gravity="center"
+                            android:hint="Click to view tests list"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -279,7 +351,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/dp_10"
-                            android:text="Venipuncture: " />
+                            android:text="Beneficiary Barcode Pic: " />
 
                         <ImageView
                             android:id="@+id/img_venipuncture"
@@ -293,9 +365,9 @@
 
 
                     <LinearLayout
-                        android:layout_marginTop="-10dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="-10dp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -309,8 +381,8 @@
                             android:id="@+id/hard_copy_check"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            android:layout_marginLeft="10dp"
                             android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
                             android:src="@drawable/tick_icon" />
                     </LinearLayout>
 
@@ -330,10 +402,10 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_marginLeft="-7dp"
                             android:id="@+id/clinical_history_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="-7dp"
                             android:padding="@dimen/dp_10"
                             android:text="Clinical History:" />
 
@@ -364,20 +436,20 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_marginLeft="-7dp"
                             android:id="@+id/lab_alerts_txt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="-7dp"
                             android:padding="@dimen/dp_10"
                             android:text="Lab Alerts:" />
 
                         <TextView
-                            android:layout_marginLeft="70dp"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:layout_marginTop="-10dp"
                             android:id="@+id/edt_lab_alerts"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="70dp"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:layout_marginTop="-10dp"
                             android:background="@drawable/edittext_modified_states"
                             android:drawableEnd="@android:drawable/arrow_down_float"
                             android:editable="false"
@@ -400,20 +472,20 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_marginLeft="-7dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginLeft="-7dp"
                             android:padding="@dimen/dp_10"
                             android:text="Remarks:" />
 
                         <EditText
-                            android:layout_marginLeft="70dp"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:layout_marginTop="-10dp"
                             android:id="@+id/edt_customer_sign"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="70dp"
+                            android:layout_marginRight="@dimen/dp_10"
+                            android:layout_marginTop="-10dp"
                             android:background="@drawable/edittext_modified_states"
                             android:hint="Enter Remarks"
                             android:inputType="textCapSentences|textMultiLine"

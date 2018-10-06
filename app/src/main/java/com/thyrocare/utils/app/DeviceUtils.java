@@ -184,6 +184,17 @@ public class DeviceUtils {
 			return true;
 		}
 	}
+
+	public static boolean isMyServiceRunning(Class<?> serviceClass, Context mContext) {
+		ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+		for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+			if (serviceClass.getName().equals(service.service.getClassName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 //	public static boolean isRunningInForeground(Context context) {
 //		ActivityManager activityManager =
 //				(ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);

@@ -1,6 +1,9 @@
 package com.thyrocare.activity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -16,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,21 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.thyrocare.R;
-import com.thyrocare.dao.DhbDao;
-import com.thyrocare.dao.models.OrderDetailsDao;
-import com.thyrocare.models.api.request.CallPatchRequestModel;
-import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
-import com.thyrocare.models.data.OrderVisitDetailsModel;
-import com.thyrocare.network.ApiCallAsyncTask;
-import com.thyrocare.network.ApiCallAsyncTaskDelegate;
-import com.thyrocare.network.AsyncTaskForRequest;
-import com.thyrocare.utils.api.Logger;
-import com.thyrocare.utils.app.AppConstants;
-import com.thyrocare.utils.app.AppPreferenceManager;
-import com.thyrocare.utils.app.BundleConstants;
-import com.thyrocare.utils.app.GPSTracker;
-import com.thyrocare.utils.fileutils.DataParser;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -53,7 +42,23 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.thyrocare.R;
+import com.thyrocare.dao.DhbDao;
+import com.thyrocare.dao.models.OrderDetailsDao;
+import com.thyrocare.models.api.request.OrderAllocationTrackLocationRequestModel;
+import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
+import com.thyrocare.models.data.OrderVisitDetailsModel;
+import com.thyrocare.network.ApiCallAsyncTask;
+import com.thyrocare.network.ApiCallAsyncTaskDelegate;
+import com.thyrocare.network.AsyncTaskForRequest;
+import com.thyrocare.service.TrackerService;
+import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.api.NetworkUtils;
+import com.thyrocare.utils.app.AppConstants;
+import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.BundleConstants;
+import com.thyrocare.utils.app.GPSTracker;
+import com.thyrocare.utils.fileutils.DataParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,6 +73,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import static com.thyrocare.utils.api.NetworkUtils.isNetworkAvailable;
 
 
 public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
@@ -95,7 +102,9 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
     private AppPreferenceManager appPreferenceManager;
     private String MaskedPhoneNumber = "";
     private DhbDao dhbDao;
+    private Intent FirebaselocationUpdateIntent;
     private OrderDetailsDao orderDetailsDao;
+    GPSTracker gpsTracker;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,6 +112,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         setContentView(R.layout.activity_navigation_map_display);
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
+        gpsTracker = new GPSTracker(activity);
         dhbDao = new DhbDao(activity);
         orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
         Bundle bundle = new Bundle();
@@ -116,12 +126,13 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         }
         // Initializing
         MarkerPoints = new ArrayList<>();
+        FirebaselocationUpdateIntent = new Intent(this, TrackerService.class);
     }
 
     private void initData() {
         txtAge.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
         txtName.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
-        txtSrNo.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getBenId() + "");
+        txtSrNo.setText("1");//orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getBenId() + "");
         txtDistance.setText(orderVisitDetailsModel.getDistance() + "");
         txtDistance.setVisibility(View.VISIBLE);
         imgDistance.setVisibility(View.VISIBLE);
@@ -131,22 +142,39 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         txtAddress.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
     }
 
+    private void startTrackerService() {
+
+        /*if (DeviceUtils.isMyServiceRunning(TrackerService.class, activity)) {
+        } else {*/
+
+            startService(FirebaselocationUpdateIntent);
+      //  }
+    }
+
     private void setListeners() {
         btn_arrived.setOnClickListener(this);
         btn_startNav.setOnClickListener(this);
-        double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
 
-        Integertotaldiff = (int) totaldist;
+        // double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
+
+        //Integertotaldiff = (int) totaldist;
         llCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
+
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile()));
+                activity.startActivity(intent);
+
+
+
+                /*CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
                 callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
                 callPatchRequestModel.setDestNumber(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
                 callPatchRequestModel.setVisitID(orderVisitDetailsModel.getVisitId());
                 ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
                 callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-                callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
+                callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);*/
             }
         });
 //        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();
@@ -161,6 +189,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         txtAadharNo = (TextView) findViewById(R.id.txt_aadhar_no);
         txtSrNo = (TextView) findViewById(R.id.txt_sr_no);
         txtDistance = (TextView) findViewById(R.id.tv_distance);
+        txtDistance.setMaxEms(2);
         txtAddress = (TextView) findViewById(R.id.title_est_address);
         imgRelease = (ImageView) findViewById(R.id.img_release2);
         imgDistance = (ImageView) findViewById(R.id.title_distance_icon);
@@ -185,7 +214,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                     mMap.setMyLocationEnabled(true);
                 }
 //===========================
-                GPSTracker gpsTracker = new GPSTracker(activity);
+
                 if (gpsTracker.canGetLocation() && !gpsTracker.isInternetAvailable()) {
                     Log.e(TAG_FRAGMENT, "onMapReady: location : " + Double.toString(gpsTracker.getLatitude()) + "long " + gpsTracker.getLongitude());
                     final LatLng currentLocation = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
@@ -213,6 +242,15 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                         LatLng dest = destTempLocation;
                         LatLng origin = currentLocation;
                         String url = getUrl(origin, dest);
+                        Logger.error("tyanche " + destlat + "long " + destlong);
+                        Logger.error("tyanche1 " + gpsTracker.getLatitude() + "long " + gpsTracker.getLongitude());
+                        //String distanceKm=""+distFrom(gpsTracker.getLatitude(),gpsTracker.getLongitude(),destlat,destlong);
+                        if (gpsTracker.getLatitude() == 0 || gpsTracker.getLongitude() == 0 || destlat == 0 || destlong == 0) {
+                            txtDistance.setText("0 km");
+                        } else {
+                            txtDistance.setText("" + distFrom(gpsTracker.getLatitude(), gpsTracker.getLongitude(), destlat, destlong));
+                        }
+
                         Log.d("onMapClick", url.toString());
                         FetchUrl FetchUrl = new FetchUrl();
 
@@ -290,7 +328,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if (addresses!=null && addresses.size() > 0) {
+            if (addresses != null && addresses.size() > 0) {
                 Address address = addresses.get(0);
                 result.append(address.getLocality()).append("\n");
                 result.append(address.getCountryName());
@@ -423,13 +461,66 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         }*/
         super.onResume();
     }
-
+    protected BroadcastReceiver stopReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG_FRAGMENT, "received stop broadcast");
+            // Stop the service when the notification is tapped
+            unregisterReceiver(stopReceiver);
+          //  stopSelf();
+        }
+    };
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_arrived) {
-            callOrderStatusChangeApi(3);
+
+           // registerReceiver(stopReceiver, new IntentFilter("stop"));
+
+           /*
+            if (DeviceUtils.isMyServiceRunning(TrackerService.class, activity)) {
+                Log.e(TAG_FRAGMENT, "onClick1: " );
+
+            } else {
+                Log.e(TAG_FRAGMENT, "onClick2: " );
+
+            }
+*/
+
+
+
+            AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+
+            alertDialog.setMessage("Do you want to Confirm?");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            TrackerService.handler1.removeMessages(0);
+                            activity.stopService(new Intent(getApplicationContext(),TrackerService.class));
+                            callOrderStatusChangeApi(3);
+                        }
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+                        }
+                    });
+            alertDialog.show();
+
+
         } else if (v.getId() == R.id.btn_startNav) {
-            callOrderStatusChangeApi(7);
+
+            if (gpsTracker.isGPSon() /*&& !gpsTracker.isInternetAvailable()*/) {
+                startTrackerService();
+                callOrderStatusChangeApi(7);
+            }else {
+                gpsTracker.showSettingsAlert();
+                Toast.makeText(activity, "Check Internet connection and gps settings", Toast.LENGTH_SHORT).show();
+            }
+
+
         }
     }
 
@@ -459,7 +550,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         public void apiCallResult(String json, int statusCode) throws JSONException {
             Logger.error(json);
             if (statusCode == 204 || statusCode == 200) {
-                for (int i = 0; orderVisitDetailsModel.getAllOrderdetails()!=null && i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
+                for (int i = 0; orderVisitDetailsModel.getAllOrderdetails() != null && i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
                     orderVisitDetailsModel.getAllOrderdetails().get(i).setStatus("ARRIVED");
                     orderDetailsDao.insertOrUpdate(orderVisitDetailsModel.getAllOrderdetails().get(i));
                 }
@@ -467,6 +558,8 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                 Intent intent = new Intent();
                 intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
                 setResult(BundleConstants.VOMD_ARRIVED, intent);
+                SendinglatlongOrderAllocation(3);
+
                 finish();
             } else {
                 if (AppConstants.IS_DEBUG)
@@ -583,7 +676,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
             PolylineOptions lineOptions = null;
 
             // Traversing through all the routes
-            for (int i = 0; result!=null && i < result.size(); i++) {
+            for (int i = 0; result != null && i < result.size(); i++) {
                 points = new ArrayList<>();
                 lineOptions = new PolylineOptions();
 
@@ -591,7 +684,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                 List<HashMap<String, String>> path = result.get(i);
 
                 // Fetching all the points in i-th route
-                for (int j = 0; path!=null && j < path.size(); j++) {
+                for (int j = 0; path != null && j < path.size(); j++) {
                     HashMap<String, String> point = path.get(j);
 
                     double lat = Double.parseDouble(point.get("lat"));
@@ -697,8 +790,9 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                         Math.sin(dLng / 2) * Math.sin(dLng / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         float dist = (float) (earthRadius * c);
+        float distkm = (float) (dist / 1000);
 
-        return dist;
+        return distkm;
     }
 
     private class OrderStatusChangetoStartApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -715,7 +809,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                 }*/
                 btn_arrived.setVisibility(View.VISIBLE);
                 btn_startNav.setVisibility(View.GONE);
-                for (int i = 0; orderVisitDetailsModel.getAllOrderdetails()!=null && i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
+                for (int i = 0; orderVisitDetailsModel.getAllOrderdetails() != null && i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
                     orderVisitDetailsModel.getAllOrderdetails().get(i).setStatus("STARTED");
                     orderDetailsDao.insertOrUpdate(orderVisitDetailsModel.getAllOrderdetails().get(i));
                 }
@@ -723,7 +817,42 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                 Intent intent = new Intent(Intent.ACTION_VIEW,
                         //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
                         Uri.parse("google.navigation:q=" + destlat + "," + destlong));
+                SendinglatlongOrderAllocation(7);
                 startActivity(intent);
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    private void SendinglatlongOrderAllocation(int status) {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        OrderAllocationTrackLocationRequestModel orderAllocationTrackLocationRequestModel = new OrderAllocationTrackLocationRequestModel();
+
+        orderAllocationTrackLocationRequestModel.setVisitId(orderVisitDetailsModel.getVisitId());
+        orderAllocationTrackLocationRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
+        orderAllocationTrackLocationRequestModel.setStatus(status);
+        orderAllocationTrackLocationRequestModel.setLatitude(appPreferenceManager.getLatitude());
+        orderAllocationTrackLocationRequestModel.setLongitude(appPreferenceManager.getLongitude());
+
+        ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderAllocationpost(orderAllocationTrackLocationRequestModel);
+        orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderAllocationTrackLocationiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
+
+        } else {
+            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class OrderAllocationTrackLocationiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                Logger.error("" + json);
             }
         }
 

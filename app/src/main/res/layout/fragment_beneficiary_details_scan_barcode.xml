@@ -43,15 +43,26 @@
                     android:padding="@dimen/dp_10"
                     android:text="Tests:"
                     android:textSize="14sp" />
+<LinearLayout
+    android:layout_marginLeft="@dimen/dp_10"
+    android:layout_marginRight="@dimen/dp_10"
+    android:layout_marginTop="-10dp"
+    android:layout_width="match_parent"
 
+    android:layout_height="wrap_content">
+    <ImageView
+        android:background="@android:drawable/editbox_background"
+        android:id="@+id/img_view_test"
+        android:layout_marginTop="@dimen/dp_2"
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_visibility_black_24dp"
+        android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/edt_test"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/dp_10"
-                    android:layout_marginRight="@dimen/dp_10"
-                    android:layout_marginTop="-10dp"
+
                     android:background="@drawable/edittext_modified_states"
                     android:drawableEnd="@android:drawable/arrow_down_float"
                     android:ellipsize="marquee"
@@ -64,6 +75,7 @@
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:textSize="14sp" />
+</LinearLayout>
             </LinearLayout>
             <!-- temp_change -->
 
@@ -105,7 +117,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/dp_10"
-                        android:text="Venipuncture: "
+                        android:text="Beneficiary Barcode Pic: "
                         android:textSize="14sp" />
 
                     <ImageView
@@ -124,6 +136,7 @@
                     android:layout_marginTop="-10dp">
 
                     <TextView
+                        android:id="@+id/textView3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/dp_10"

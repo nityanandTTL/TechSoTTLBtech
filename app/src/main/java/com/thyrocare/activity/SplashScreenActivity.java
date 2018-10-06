@@ -1,7 +1,9 @@
 package com.thyrocare.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,21 +12,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.Controller.DeviceLogOutController;
 import com.thyrocare.R;
+import com.thyrocare.application.ApplicationController;
 import com.thyrocare.customview.CustomUpdateDailog;
 import com.thyrocare.dao.CreateOrUpgradeDbTask;
 import com.thyrocare.dao.DbHelper;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.delegate.CustomUpdateDialogOkButtonOnClickedDelegate;
-import com.thyrocare.fragment.HubListDisplayFragment;
-import com.thyrocare.fragment.LeaveIntimationFragment;
-import com.thyrocare.fragment.ScheduleYourDayFragment;
 import com.thyrocare.models.api.response.BtechAvaliabilityResponseModel;
-import com.thyrocare.models.api.response.DispatchHubDisplayDetailsResponseModel;
-import com.thyrocare.models.api.response.SelfieUploadResponseModel;
+import com.thyrocare.models.data.TSPNBT_AvilModel;
 import com.thyrocare.models.data.VersionControlMasterModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
@@ -35,11 +37,13 @@ import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
-import com.thyrocare.utils.app.BundleConstants;
+import com.thyrocare.utils.app.CommonUtils;
+import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import static android.widget.Toast.LENGTH_SHORT;
@@ -52,9 +56,11 @@ public class SplashScreenActivity extends AbstractActivity {
     CustomUpdateDailog cudd;
     private BtechAvaliabilityResponseModel btechAvaliabilityResponseModel;
     private int AppId;
+    private static Intent TImeCheckerIntent;
 
     private static Intent locationUpdateIntent;
     VersionControlMasterModel versionControlMasterModel;
+    private ArrayList<TSPNBT_AvilModel> TSP_NBTAvailArr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,7 @@ public class SplashScreenActivity extends AbstractActivity {
         setContentView(R.layout.activity_splash_screen);
         activity = this;
         AppId = AppConstants.BTECH_APP_ID;
+
         appPreferenceManager = new AppPreferenceManager(activity);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -71,6 +78,7 @@ public class SplashScreenActivity extends AbstractActivity {
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED ||
+                        ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
@@ -83,6 +91,7 @@ public class SplashScreenActivity extends AbstractActivity {
                                     Manifest.permission.CAMERA,
                                     Manifest.permission.READ_CONTACTS,
                                     Manifest.permission.CALL_PHONE,
+                                    Manifest.permission.READ_SMS,
                                     Manifest.permission.ACCESS_NETWORK_STATE,
                                     Manifest.permission.ACCESS_FINE_LOCATION,
                                     Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -98,11 +107,11 @@ public class SplashScreenActivity extends AbstractActivity {
         }, AppConstants.SPLASH_SCREEN_TIMEOUT);
         //Call Service
         Logger.error("locationUpdateIntent Executed 1");
+
         locationUpdateIntent = new Intent(this, LocationUpdateService.class);
-
-
-        Logger.error("locationUpdateIntent Executed 2");
     }
+
+
   /*void StartLocationUpdateService() {
        try {
             try {
@@ -159,51 +168,56 @@ public class SplashScreenActivity extends AbstractActivity {
                 btechAvaliabilityResponseModel = responseParser.getBtechAvaliabilityResponseModel(json, statusCode);
                 if (btechAvaliabilityResponseModel != null) {
                   /*if(btechAvaliabilityResponseModel.getNumberofDays()==0) {*/
-                    if (btechAvaliabilityResponseModel.getNumberofDays() == 0) {
+                    if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
+                        Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+                    }else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+                    } else if (btechAvaliabilityResponseModel.getNumberofDays() == 0) {
                         Logger.error("ZERRO");
-                        Bundle bundle= new Bundle();
+                        Bundle bundle = new Bundle();
 
                         Calendar c = Calendar.getInstance();
                         c.set(Calendar.MILLISECOND, 0);
                         c.set(Calendar.SECOND, 0);
                         c.set(Calendar.MINUTE, 0);
                         c.set(Calendar.HOUR_OF_DAY, 0);
-                        if (appPreferenceManager.getLoginRole().equalsIgnoreCase("9")) {
-                            Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+                        if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)) {
+                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                             i.putExtra("LEAVEINTIMATION", "0");
                             startActivity(i);
+                            finish();
                         } else {
                             if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
                                 // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
-                                Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+                                Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                                 i.putExtra("LEAVEINTIMATION", "0");
                                 startActivity(i);
+                                finish();
                             } else {
                                 switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
                             }
-
-
                         }
-                    }
-                  else if(btechAvaliabilityResponseModel.getNumberofDays()==1) {
+                    } else if (btechAvaliabilityResponseModel.getNumberofDays() == 1) {
                         Logger.error("ONEEEE");
                         Intent mIntent = new Intent(activity, ScheduleYourDayActivity.class);
                         mIntent.putExtra("WHEREFROM", "0");
                         startActivity(mIntent);
-                    }else if(btechAvaliabilityResponseModel.getNumberofDays()==3){
+                    } else if (btechAvaliabilityResponseModel.getNumberofDays() == 3) {
                         Logger.error("THREEE");
                         Intent mIntent = new Intent(activity, ScheduleYourDayActivity2.class);
                         mIntent.putExtra("WHEREFROM", "0");
                         startActivity(mIntent);
 
-                    } else if (btechAvaliabilityResponseModel.getNumberofDays()== 2) {
-                    Logger.error("FOURRRRR");
+                    } else if (btechAvaliabilityResponseModel.getNumberofDays() == 2) {
+                        Logger.error("FOURRRRR");
                         Intent mIntent = new Intent(activity, ScheduleYourDayIntentActivity.class);
                         mIntent.putExtra("WHEREFROM", "0");
                         startActivity(mIntent);
-                }
-
-
+                    }
                 } else {
                     Logger.error("else " + json);
                 }
@@ -256,6 +270,11 @@ public class SplashScreenActivity extends AbstractActivity {
                                 logoutAsyncTask.setApiCallAsyncTaskDelegate(new LogoutAsyncTaskDelegateResult());
                                 if (isNetworkAvailable(activity)) {
                                     logoutAsyncTask.execute(logoutAsyncTask);
+                                    if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+
+                                    } else {
+                                        CallLogOutDevice();
+                                    }
                                 } else {
                                     Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
                                     finishAffinity();
@@ -263,6 +282,11 @@ public class SplashScreenActivity extends AbstractActivity {
                             } else {
                                 appPreferenceManager.clearAllPreferences();
                                 new DhbDao(activity).deleteTablesonLogout();
+
+
+                                //jai
+
+
                                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionControlMasterModel.getAppUrl()));
                                 startActivity(intent);
                                 finish();
@@ -271,7 +295,7 @@ public class SplashScreenActivity extends AbstractActivity {
 
                         @Override
                         public void onOkClicked() {
-                            if (AppConstants.ANDROID_APP_VERSION < versionControlMasterModel.getAPIMinVerson()) {
+                            if (AppConstants.ANDROID_APP_VERSION < versionControlMasterModel.getAPICurrentVerson()) {
 //                                System.exit(0);
                                 finishAffinity();
                             } else {
@@ -291,6 +315,18 @@ public class SplashScreenActivity extends AbstractActivity {
 
         }
 
+        private class DownloadApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+            @Override
+            public void apiCallResult(String json, int statusCode) throws JSONException {
+                Logger.error("apiCallResult " + json);
+            }
+
+            @Override
+            public void onApiCancelled() {
+                Logger.error("onApiCancelled ");
+            }
+        }
+
         @Override
         public void onApiCancelled() {
             Logger.error(TAG_FRAGMENT + "onApiCancelled: ");
@@ -298,6 +334,30 @@ public class SplashScreenActivity extends AbstractActivity {
         }
 
 
+    }
+
+    @SuppressLint("MissingPermission")
+    private void CallLogOutDevice() {
+        try {
+            if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
+                String device_id = "";
+                try {
+                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    device_id = telephonyManager.getDeviceId();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (ApplicationController.mDeviceLogOutController != null) {
+                    ApplicationController.mDeviceLogOutController = null;
+                }
+
+                ApplicationController.mDeviceLogOutController = new DeviceLogOutController(activity);
+                ApplicationController.mDeviceLogOutController.CallLogOutDevice(appPreferenceManager.getLoginResponseModel().getUserID(), device_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private class LogoutAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -308,7 +368,10 @@ public class SplashScreenActivity extends AbstractActivity {
                 new DhbDao(activity).deleteTablesonLogout();
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionControlMasterModel.getAppUrl()));
                 startActivity(intent);
+
                 finish();
+            }else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
                 Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
                 finishAffinity();
@@ -321,6 +384,33 @@ public class SplashScreenActivity extends AbstractActivity {
         }
     }
 
+    public void CallLogOutFromDevice() {
+        try {
+            TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            appPreferenceManager.clearAllPreferences();
+            try {
+                new DhbDao(activity).deleteTablesonLogout();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
+            // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+            Intent n = new Intent(activity, LoginScreenActivity.class);
+            n.setAction(Intent.ACTION_MAIN);
+            n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(n);
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -369,7 +459,11 @@ public class SplashScreenActivity extends AbstractActivity {
         @Override
         public void dbTaskCompletedWithResult(Boolean result) {
             //   StartLocationUpdateService();
-            startService(locationUpdateIntent);
+//            startService(locationUpdateIntent);
+            if (DeviceUtils.isMyServiceRunning(LocationUpdateService.class, activity)) {
+            } else {
+                startService(locationUpdateIntent);
+            }
             if (InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
                 switchToActivity(activity, LoginScreenActivity.class, new Bundle());
             } else {
@@ -378,28 +472,84 @@ public class SplashScreenActivity extends AbstractActivity {
                 c.set(Calendar.SECOND, 0);
                 c.set(Calendar.MINUTE, 0);
                 c.set(Calendar.HOUR_OF_DAY, 0);*/
-                if (appPreferenceManager.getLoginRole().equalsIgnoreCase("9")) {
-                    Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
-                    i.putExtra("LEAVEINTIMATION", "0");
-                    startActivity(i);
+                if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)) {
+                    //                    Call_TspScreen();
+                    fetchDataForTsp();
+                } else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
+                    Logger.error("role1: " + AppConstants.NBTTSP_ROLE_ID);
+
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.MILLISECOND, 0);
+                    c.set(Calendar.SECOND, 0);
+                    c.set(Calendar.MINUTE, 0);
+                    c.set(Calendar.HOUR_OF_DAY, 0);
+
+                    if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+
+
+                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+                        finish();
+                    } else {
+                        Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+
+                    }
+
+
                 } else {
                     fetchData();
-                  /*  if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
-                        Logger.error("Selfie"+String.valueOf(appPreferenceManager.getSelfieResponseModel()));
-                        Logger.error("LOgeeererereeere"+String.valueOf(appPreferenceManager.getSelfieResponseModel().getTimeUploaded()));
-                        Logger.error("LOgeeererereeereMIllis"+String.valueOf(c.getTimeInMillis()));
-
-
-
-
-                       // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
-                        switchToActivity(activity, HomeScreenActivity.class, new Bundle());
-                    } else {
-                        switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
-                    }*/
                 }
 
             }
+        }
+    }
+
+    private void Call_TspScreen() {
+        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+        i.putExtra("LEAVEINTIMATION", "0");
+        startActivity(i);
+        finish();
+    }
+
+    private void fetchDataForTsp() {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchtspnbtavailAsyncTask = asyncTaskForRequest.getTSPNBTAvaliability(appPreferenceManager.getLoginResponseModel().getUserID());
+        fetchtspnbtavailAsyncTask.setApiCallAsyncTaskDelegate(new TSPNBTDetailDisplayApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            fetchtspnbtavailAsyncTask.execute(fetchtspnbtavailAsyncTask);
+        } else {
+            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class TSPNBTDetailDisplayApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                TSP_NBTAvailArr = new ResponseParser(activity).getTSPNBTDetailsResponseModel(json, statusCode);
+                if (TSP_NBTAvailArr.size() != 0) {
+                    Intent mIntent = new Intent(activity, Tsp_ScheduleYourDayActivity.class);
+                    mIntent.putExtra("WHEREFROM", "0");
+                    mIntent.putParcelableArrayListExtra(CommonUtils.TSP_NBT_Str, TSP_NBTAvailArr);
+                    startActivity(mIntent);
+                } else {
+                    Call_TspScreen();
+                }
+            } else {
+                /*Intent mIntent = new Intent(activity, Tsp_ScheduleYourDayActivity.class);
+                mIntent.putExtra("WHEREFROM", "0");
+                mIntent.putParcelableArrayListExtra(CommonUtils.TSP_NBT_Str, TSP_NBTAvailArr);
+                startActivity(mIntent);*/
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
         }
     }
 }

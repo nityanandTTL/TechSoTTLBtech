@@ -12,20 +12,30 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.TypedValue;
 
-import com.thyrocare.models.api.response.MessageModel;
-import com.thyrocare.utils.api.Logger;
 import com.google.gson.Gson;
+import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.R;
+import com.thyrocare.activity.LoginScreenActivity;
+import com.thyrocare.dao.DhbDao;
+import com.thyrocare.models.api.response.MessageModel;
+import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
+import com.thyrocare.utils.api.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 public class CommonUtils {
 
 	/* public static ApiResponseModel getErrorReponseModel(String msg) {
-	     Gson gson = new Gson();
+         Gson gson = new Gson();
 	     MessageModel errorModel = new MessageModel();
 
 	     errorModel.setStatus("ERROR-BUSSINESS");
@@ -39,132 +49,234 @@ public class CommonUtils {
 	     return apiResponseModel;
 	   }*/
 
-	private static CommonUtils instance = null;
-	private MessageModel messageModel;
+    private static CommonUtils instance = null;
+    private MessageModel messageModel;
+    public static String TSP_NBT_Str = "tsp_nbt_list";
 
-	protected CommonUtils() {
-		// Exists only to defeat instantiation.
-	}
+    protected CommonUtils() {
+        // Exists only to defeat instantiation.
+    }
 
-	public static CommonUtils getInstance() {
-		if (instance == null){
-			instance = new CommonUtils();
-		}
-		return instance;
-	}
+    public static CommonUtils getInstance() {
+        if (instance == null) {
+            instance = new CommonUtils();
+        }
+        return instance;
+    }
 
-	public static String encodeImage(Bitmap bm) {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-		byte[] b = baos.toByteArray();
+    public static String encodeImage(Bitmap bm) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] b = baos.toByteArray();
 
-		return Base64.encodeToString(b, Base64.DEFAULT);
-	}
-	public static String encodeImage(byte[] b) {
-		return Base64.encodeToString(b, Base64.DEFAULT);
-	}
+            return Base64.encodeToString(b, Base64.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	public static Bitmap decodeImage(String encodedImage) {
-		byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
-		return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-	}
+        return "";
+    }
 
-	public static byte[] decodedImageBytes(String encodedImage) {
-		return Base64.decode(encodedImage, Base64.DEFAULT);
-	}
+    public static String encodeImage(byte[] b) {
+        return Base64.encodeToString(b, Base64.DEFAULT);
+    }
 
-	public static float dpTopx(float dp, Context context) {
-		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-		                                     context.getResources().getDisplayMetrics());
-		return px;
-	}
+    public static Bitmap decodeImage(String encodedImage) {
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
 
-	public static float getPxFromDp(float dp, Context context) {
-		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, dp,
-		                                     context.getResources().getDisplayMetrics());
-		return px;
-	}
+    public static byte[] decodedImageBytes(String encodedImage) {
+        return Base64.decode(encodedImage, Base64.DEFAULT);
+    }
 
-	public static File createDirectory(Context activity) {
-		File directoryFile = new File(activity.getFilesDir().getAbsolutePath());
-		if (!directoryFile.exists()){
-			directoryFile.mkdirs();
-		}
-		return directoryFile;
-	}
+    public static float dpTopx(float dp, Context context) {
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                context.getResources().getDisplayMetrics());
+        return px;
+    }
 
-	public String getErrorJson(String msg) {
-		Gson gson = new Gson();
-		MessageModel errorModel = new MessageModel();
+    public static float getPxFromDp(float dp, Context context) {
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, dp,
+                context.getResources().getDisplayMetrics());
+        return px;
+    }
 
-		messageModel = new MessageModel();
-		MessageModel.FieldError f= new MessageModel.FieldError();
-		f.setField("InterNet");
-		f.setMessage(msg);
+    public static File createDirectory(Context activity) {
+        File directoryFile = new File(activity.getFilesDir().getAbsolutePath());
+        if (!directoryFile.exists()) {
+            directoryFile.mkdirs();
+        }
+        return directoryFile;
+    }
 
-		MessageModel.FieldError[] messages = new MessageModel.FieldError[] {f};
+    public String getErrorJson(String msg) {
+        Gson gson = new Gson();
+        MessageModel errorModel = new MessageModel();
 
-		errorModel.setType("ERROR");
-		errorModel.setStatusCode(400);
-		errorModel.setMessages(messages);
-		Logger.debug(gson.toJson(errorModel));
+        messageModel = new MessageModel();
+        MessageModel.FieldError f = new MessageModel.FieldError();
+        f.setField("InterNet");
+        f.setMessage(msg);
 
-		return gson.toJson(errorModel);
-	}
+        MessageModel.FieldError[] messages = new MessageModel.FieldError[]{f};
 
-	public void openAppOnMarket(Activity activity) {
-		final String appPackageName = activity.getPackageName();
-		try {
-			activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-		} catch (android.content.ActivityNotFoundException anfe){
-			activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
-		}
-	}
+        errorModel.setType("ERROR");
+        errorModel.setStatusCode(400);
+        errorModel.setMessages(messages);
+        Logger.debug(gson.toJson(errorModel));
 
-	public static String getAppVersion(Activity activity) {
-		try {
-			PackageInfo pInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
-			return pInfo.versionName;
-		} catch (PackageManager.NameNotFoundException e){
-			e.printStackTrace();
-			return "";
-		}
-	}
+        return gson.toJson(errorModel);
+    }
 
-	public static Bitmap watermarkImage(Bitmap image, String[] lines){
-		Bitmap.Config config = image.getConfig();
-		if(config == null){
-			config = Bitmap.Config.ARGB_8888;
-		}
+    public void openAppOnMarket(Activity activity) {
+        final String appPackageName = activity.getPackageName();
+        try {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
+    }
 
-		Bitmap newBitmap = Bitmap.createBitmap(image.getWidth(), image.getHeight(), image.getConfig());
-		Canvas mCanvas = new Canvas(newBitmap);
-		mCanvas.drawBitmap(image, 0, 0, null);
+    public static String getAppVersion(Activity activity) {
+        try {
+            PackageInfo pInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
+            return pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 
-		Paint mPaint = new Paint();
+    public static Bitmap watermarkImage(Bitmap image, String[] lines) {
+        Bitmap.Config config = image.getConfig();
+        if (config == null) {
+            config = Bitmap.Config.ARGB_8888;
+        }
 
-		Paint paintText = new Paint(Paint.ANTI_ALIAS_FLAG);
-		paintText.setColor(Color.parseColor("#FF444444"));
-		paintText.setTextSize((float) (image.getWidth() * 0.03));
-		paintText.setStyle(Paint.Style.FILL);
+        Bitmap newBitmap = Bitmap.createBitmap(image.getWidth(), image.getHeight(), image.getConfig());
+        Canvas mCanvas = new Canvas(newBitmap);
+        mCanvas.drawBitmap(image, 0, 0, null);
+
+        Paint mPaint = new Paint();
+
+        Paint paintText = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paintText.setColor(Color.parseColor("#FF444444"));
+        paintText.setTextSize((float) (image.getWidth() * 0.03));
+        paintText.setStyle(Paint.Style.FILL);
 
 //		int xCo = (int) (image.getWidth() * 0.70);
-		int xCo = 5;
-		int yCo = 5;
+        int xCo = 5;
+        int yCo = 5;
 
-		for(int index = 0; index < lines.length; index++){
-			String currentLine = lines[index];
-			Rect rectText = new Rect();
-			paintText.getTextBounds(currentLine, 0, currentLine.length(), rectText);
-			yCo = yCo + rectText.height()+5;
-			if(index == 2){
-				yCo = yCo + 5;
-			}
-			mCanvas.drawText(currentLine, xCo, yCo, paintText);
-		}
+        for (int index = 0; index < lines.length; index++) {
+            String currentLine = lines[index];
+            Rect rectText = new Rect();
+            paintText.getTextBounds(currentLine, 0, currentLine.length(), rectText);
+            yCo = yCo + rectText.height() + 5;
+            if (index == 2) {
+                yCo = yCo + 5;
+            }
+            mCanvas.drawText(currentLine, xCo, yCo, paintText);
+        }
 
-		return newBitmap;
+        return newBitmap;
 
-	}
+    }
 
+    public static void exportDB(Activity homeScreenActivity) {
+        File sd = Environment.getExternalStorageDirectory();
+        File data = Environment.getDataDirectory();
+        FileChannel source = null;
+        FileChannel destination = null;
+        String currentDBPath = "/data/" + homeScreenActivity.getPackageName()
+                + "/databases/dhb_db";
+        String backupDBPath = "dhb_db.db";
+        File currentDB = new File(data, currentDBPath);
+        File backupDB = new File(sd, backupDBPath);
+        try {
+            source = new FileInputStream(currentDB).getChannel();
+            destination = new FileOutputStream(backupDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            deleteDir(dir, context);
+        } catch (Exception e) {
+        }
+    }
+
+    public static boolean deleteDir(File dir, Context context) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]), context);
+                if (!success) {
+                    return false;
+                }
+            }
+            return dir.delete();
+        } else if (dir != null && dir.isFile()) {
+            return dir.delete();
+        } else {
+            return false;
+        }
+    }
+
+    public static void CallLogOutFromDevice(Context mContext, Activity mActivity, AppPreferenceManager appPreferenceManager, DhbDao dhbDao) {
+        try {
+            TastyToast.makeText(mContext, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            appPreferenceManager.clearAllPreferences();
+            dhbDao.deleteTablesonLogout();
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            mActivity.startActivity(homeIntent);
+            // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+            Intent n = new Intent(mContext, LoginScreenActivity.class);
+            n.setAction(Intent.ACTION_MAIN);
+            n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            mActivity.startActivity(n);
+            mActivity.finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static int getNotificationIcon(){
+
+        return R.mipmap.app_nlogo;
+    }
+
+    public static String getSampleCount(SampleDropDetailsbyTSPLMEDetailsModel sampleDropDetailsModel) {
+        String cnt = "";
+
+        if (sampleDropDetailsModel != null) {
+            if (sampleDropDetailsModel.getBarcodeList() != null) {
+                if (sampleDropDetailsModel.getBarcodeList().size() != 0) {
+                    int smpcnt = 0;
+                    for (int i = 0; i < sampleDropDetailsModel.getBarcodeList().size(); i++) {
+                        smpcnt = smpcnt + sampleDropDetailsModel.getBarcodeList().get(i).getSampleCount();
+                    }
+
+                    cnt = "" + smpcnt;
+                }
+            }
+        }
+
+        return cnt;
+    }
 }

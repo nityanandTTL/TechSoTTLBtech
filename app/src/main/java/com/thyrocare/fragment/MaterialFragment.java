@@ -14,6 +14,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.customview.CustomOKDialog;
@@ -52,12 +53,11 @@ public class MaterialFragment extends AbstractFragment {
     private MaterialINVResponseModel materialINVResponseModel;
     TableLayout materialtable;
     Button update;
-    LinearLayout btn_virtual,btn_material;
+    LinearLayout btn_virtual, btn_material;
     Integer finalstock;
     CustomOKDialog cdd;
-    String Category= "180";
+    String Category = "180";
     ArrayList<MaterialsStocksModel> stockModelsArr;
-
 
 
     public MaterialFragment() {
@@ -75,7 +75,13 @@ public class MaterialFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
-        activity.toolbarHome.setTitle("Virtual Stock");
+        try {
+            if (activity.toolbarHome != null) {
+                activity.toolbarHome.setTitle("Virtual Stock");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
         if (getArguments() != null) {
@@ -90,7 +96,7 @@ public class MaterialFragment extends AbstractFragment {
         rootView = inflater.inflate(R.layout.fragement_material, container, false);
         stockModelsArr = new ArrayList<>();
         initUI();
-      //  fetchMaterialsDetails();
+        //  fetchMaterialsDetails();
         fetchMaterialsINV();
         setListners();
         return rootView;
@@ -103,8 +109,8 @@ public class MaterialFragment extends AbstractFragment {
         super.initUI();
         materialtable = (TableLayout) rootView.findViewById(R.id.materialtable);
         update = (Button) rootView.findViewById(R.id.updateRecord);
-        btn_virtual=(LinearLayout) rootView.findViewById(R.id.virtual_stock);
-        btn_material=(LinearLayout) rootView.findViewById(R.id.material_order);
+        btn_virtual = (LinearLayout) rootView.findViewById(R.id.virtual_stock);
+        btn_material = (LinearLayout) rootView.findViewById(R.id.material_order);
 
     }
 
@@ -146,7 +152,7 @@ public class MaterialFragment extends AbstractFragment {
 
                 Fragment mFragment = new MaterialFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fl_homeScreen, mFragment ).commit();
+                        .replace(R.id.fl_homeScreen, mFragment).commit();
 
 
             }
@@ -158,7 +164,7 @@ public class MaterialFragment extends AbstractFragment {
 
                 Fragment mFragment = new MaterialOrderPlaceFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fl_homeScreen, mFragment ).commit();
+                        .replace(R.id.fl_homeScreen, mFragment).commit();
 
 
             }
@@ -206,7 +212,6 @@ public class MaterialFragment extends AbstractFragment {
 //                    Toast.makeText(activity, "MaterialdetailsResponseModel not null", Toast.LENGTH_SHORT).show();
 
                 }
-
 
 
             }
@@ -257,7 +262,7 @@ public class MaterialFragment extends AbstractFragment {
                 Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
                 materialtable.removeAllViews();
 
-               // fetchMaterialsDetails();
+                // fetchMaterialsDetails();
                 fetchMaterialsINV();
             }
         }
@@ -274,8 +279,8 @@ public class MaterialFragment extends AbstractFragment {
 
     private void initData() {
 
-        if (materialINVResponseModel != null && materialINVResponseModel.getBTMaterials()!= null && materialINVResponseModel.getBTMaterials().size() > 0) {
-            TableRow trmH = (TableRow)  LayoutInflater.from(activity).inflate(R.layout.item_title_materials, null);
+        if (materialINVResponseModel != null && materialINVResponseModel.getBTMaterials() != null && materialINVResponseModel.getBTMaterials().size() > 0) {
+            TableRow trmH = (TableRow) LayoutInflater.from(activity).inflate(R.layout.item_title_materials, null);
             materialtable.addView(trmH);
             for (final BTMaterialsModel btMaterialsModel :
                     materialINVResponseModel.getBTMaterials()) {
@@ -305,22 +310,26 @@ public class MaterialFragment extends AbstractFragment {
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if(!InputUtils.isNull(s.toString())) {
-                            if(Integer.parseInt(s.toString())<=Integer.parseInt(btMaterialsModel.getVirtualStock())) {
-                                MaterialsStocksModel materialsStocksModel = new MaterialsStocksModel();
-                                materialsStocksModel.setMaterialID(Integer.parseInt(btMaterialsModel.getMaterialID()));
-                                materialsStocksModel.setActualStock(Integer.parseInt(s.toString()));
-                                if (stockModelsArr.contains(materialsStocksModel)) {
-                                    stockModelsArr.remove(materialsStocksModel);
-                                    stockModelsArr.add(materialsStocksModel);
+                        if (!InputUtils.isNull(s.toString())) {
+                            try{
+                                if (Integer.parseInt(s.toString()) <= Integer.parseInt(btMaterialsModel.getVirtualStock())) {
+                                    MaterialsStocksModel materialsStocksModel = new MaterialsStocksModel();
+                                    materialsStocksModel.setMaterialID(Integer.parseInt(btMaterialsModel.getMaterialID()));
+                                    materialsStocksModel.setActualStock(Integer.parseInt(s.toString()));
+                                    if (stockModelsArr.contains(materialsStocksModel)) {
+                                        stockModelsArr.remove(materialsStocksModel);
+                                        stockModelsArr.add(materialsStocksModel);
+                                    } else {
+                                        stockModelsArr.add(materialsStocksModel);
+                                    }
                                 } else {
-                                    stockModelsArr.add(materialsStocksModel);
+                                    actual.setText(btMaterialsModel.getVirtualStock());
+                                    Toast.makeText(activity, "Actual Stock cannot be greater than Virtual Stock", Toast.LENGTH_SHORT).show();
                                 }
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
-                            else{
-                                actual.setText(btMaterialsModel.getVirtualStock());
-                                Toast.makeText(activity,"Actual Stock cannot be greater than Virtual Stock",Toast.LENGTH_SHORT).show();
-                            }
+
                         }
                     }
                 });

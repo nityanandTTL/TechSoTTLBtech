@@ -5,26 +5,37 @@ import android.content.Context;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+import com.thyrocare.models.api.request.ChatRequestModel;
 import com.thyrocare.models.api.response.BankMasterResponseModel;
 import com.thyrocare.models.api.response.BtechAvaliabilityResponseModel;
 import com.thyrocare.models.api.response.BtechClientsResponseModel;
 import com.thyrocare.models.api.response.BtechCollectionsResponseModel;
 import com.thyrocare.models.api.response.BtechEstEarningsResponseModel;
+import com.thyrocare.models.api.response.BtechImageResponseModel;
 import com.thyrocare.models.api.response.BtechwithHubResponseModel;
 import com.thyrocare.models.api.response.BusinessErrorModel;
-import com.thyrocare.models.api.response.CampScanQRResponseModel;
 import com.thyrocare.models.api.response.CampListDisplayResponseModel;
+import com.thyrocare.models.api.response.CampScanQRResponseModel;
 import com.thyrocare.models.api.response.CartAPIResponseModel;
 import com.thyrocare.models.api.response.DispatchHubDisplayDetailsResponseModel;
+import com.thyrocare.models.api.response.Emailreponsedatamodel;
 import com.thyrocare.models.api.response.ErrorModel;
 import com.thyrocare.models.api.response.ErrorResponseModel;
 import com.thyrocare.models.api.response.FetchLabAlertMasterAPIResponseModel;
 import com.thyrocare.models.api.response.FetchLedgerResponseModel;
 import com.thyrocare.models.api.response.FetchOrderDetailsResponseModel;
+import com.thyrocare.models.api.response.GetTestListResponseModel;
+import com.thyrocare.models.api.response.LeaveAppliedResponseModel;
+import com.thyrocare.models.api.response.LoginDeviceResponseModel;
 import com.thyrocare.models.api.response.LoginResponseModel;
+import com.thyrocare.models.api.response.MaterialBtechStockResponseModel;
 import com.thyrocare.models.api.response.MaterialINVResponseModel;
 import com.thyrocare.models.api.response.MessageModel;
 import com.thyrocare.models.api.response.OrderBookingResponseVisitModel;
+import com.thyrocare.models.api.response.OrderPassresponseModel;
 import com.thyrocare.models.api.response.OrderServedResponseModel;
 import com.thyrocare.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.thyrocare.models.api.response.PaymentModeMasterResponseModel;
@@ -33,30 +44,36 @@ import com.thyrocare.models.api.response.PaymentStartTransactionAPIResponseModel
 import com.thyrocare.models.api.response.RemarksResponseModel;
 import com.thyrocare.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.models.api.response.SessionExpireModel;
+import com.thyrocare.models.api.response.SubSlotMasterResponseModel;
 import com.thyrocare.models.api.response.Tsp_ScanBarcodeResponseModel;
 import com.thyrocare.models.api.response.Tsp_SendConsignment_Modes_ResponseModel;
+import com.thyrocare.models.data.AcceptOrderNotfiDetailsModel;
 import com.thyrocare.models.data.BrandMasterModel;
 import com.thyrocare.models.data.BrandTestMasterModel;
 import com.thyrocare.models.data.CampAllOrderDetailsModel;
 import com.thyrocare.models.data.CampDetailsBenMasterModel;
 import com.thyrocare.models.data.CampDetailsKitsModel;
 import com.thyrocare.models.data.CampDetailsSampleTypeModel;
+import com.thyrocare.models.data.DateWiseWLMISDetailsModel;
 import com.thyrocare.models.data.DepositRegisterModel;
+import com.thyrocare.models.data.DeviceLoginDetailsModel;
+import com.thyrocare.models.data.DispositionDataModel;
 import com.thyrocare.models.data.Earning_NewRegisterModel;
 import com.thyrocare.models.data.LeaveNatureMasterModel;
+import com.thyrocare.models.data.LocationMasterModel;
 import com.thyrocare.models.data.MaterialDetailsModel;
 import com.thyrocare.models.data.NarrationMasterModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
+import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.models.data.SlotModel;
+import com.thyrocare.models.data.TSPNBT_AvilModel;
 import com.thyrocare.models.data.VersionControlMasterModel;
+import com.thyrocare.models.data.WLMISDetailsModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AlertDialogMessage;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.DeviceUtils;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -577,6 +594,35 @@ public class ResponseParser implements AppConstants {
         return true;
     }
 
+    public GetTestListResponseModel getTestListResponseModel(String json, int statusCode) {
+        GetTestListResponseModel getTestListResponseModel = null;
+        //if (!parseIntoError(json, statusCode)){
+        getTestListResponseModel = gson.fromJson(json, GetTestListResponseModel.class);
+        //}
+        return getTestListResponseModel;
+    }
+
+    public OrderPassresponseModel getOrderPassresponseModel(String json, int statusCode) {
+        OrderPassresponseModel orderPassresponseModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            orderPassresponseModel = gson.fromJson(json, OrderPassresponseModel.class);
+        }
+        return orderPassresponseModel;
+    }
+
+    // Nityanand Start
+    //Fetch TSP NBT Response parse:
+    public ArrayList<TSPNBT_AvilModel> getTSPNBTDetailsResponseModel(String json, int statusCode) {
+        ArrayList<TSPNBT_AvilModel> slotModels = null;
+//		if (!parseIntoError(json, statusCode)){
+        TypeToken<ArrayList<TSPNBT_AvilModel>> token = new TypeToken<ArrayList<TSPNBT_AvilModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+//		}
+        return slotModels;
+    }
+    // Nityanand End
+
     public BtechwithHubResponseModel getBtechwithHubBarcodeResponseModel(String json, int statusCode) {
         BtechwithHubResponseModel btechwithHubResponseModel = null;
         if (!parseIntoError(json, statusCode)) {
@@ -593,6 +639,16 @@ public class ResponseParser implements AppConstants {
         return earning_newRegisterModel;
     }
 
+    public ArrayList<SubSlotMasterResponseModel> getSubSlotMasterResponseModel(String json, int statusCode) {
+        ArrayList<SubSlotMasterResponseModel> subSlotMasterResponseModels = null;
+//		if (!parseIntoError(json, statusCode)){
+        TypeToken<ArrayList<SubSlotMasterResponseModel>> token = new TypeToken<ArrayList<SubSlotMasterResponseModel>>() {
+        };
+        subSlotMasterResponseModels = gson.fromJson(json, token.getType());
+//		}
+        return subSlotMasterResponseModels;
+    }
+
     public Tsp_SendConsignment_Modes_ResponseModel getTspModesResponseModel(String json, int statusCode) {
         Tsp_SendConsignment_Modes_ResponseModel tsp_sendMode_dataModel = null;
         if (!parseIntoError(json, statusCode)) {
@@ -607,6 +663,14 @@ public class ResponseParser implements AppConstants {
             tsp_scanBarcodeResponseModel = gson.fromJson(json, Tsp_ScanBarcodeResponseModel.class);
         }
         return tsp_scanBarcodeResponseModel;
+    }
+
+    public Emailreponsedatamodel getemailreponsedatamodel(String json, int statusCode) {
+        Emailreponsedatamodel emailreponsedatamodel = null;
+        if (!parseIntoError(json, statusCode)) {
+            emailreponsedatamodel = gson.fromJson(json, Emailreponsedatamodel.class);
+        }
+        return emailreponsedatamodel;
     }
 
 
@@ -675,6 +739,15 @@ public class ResponseParser implements AppConstants {
         LoginResponseModel loginResponseModel = null;
         if (!parseIntoError(json, statusCode)) {
             loginResponseModel = gson.fromJson(json, LoginResponseModel.class);
+        }
+        return loginResponseModel;
+    }
+
+    // LoginDeviceId Response Parse
+    public LoginDeviceResponseModel getLoginDeviceResponseModel(String json, int statusCode) {
+        LoginDeviceResponseModel loginResponseModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            loginResponseModel = gson.fromJson(json, LoginDeviceResponseModel.class);
         }
         return loginResponseModel;
     }
@@ -957,6 +1030,14 @@ public class ResponseParser implements AppConstants {
         return materialINVResponseModel;
     }
 
+    public MaterialBtechStockResponseModel getMaterialStockDetailsResponseModel(String json, int statusCode) {
+        MaterialBtechStockResponseModel materialINVResponseModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            materialINVResponseModel = gson.fromJson(json, MaterialBtechStockResponseModel.class);
+        }
+        return materialINVResponseModel;
+    }
+
     ////Remove Beneficiary Response parse:
     public OrderVisitDetailsModel getRemoveBeneficiaryAPIResponseModel(String json, int statusCode) {
         OrderVisitDetailsModel orderVisitDetailsModel = null;
@@ -965,6 +1046,26 @@ public class ResponseParser implements AppConstants {
         }
         return orderVisitDetailsModel;
     }
+
+
+    ////Fetch Leave  details Response parse:
+    public ArrayList<ChatRequestModel> getchatMasterResponse(String json, int statusCode) {
+        ArrayList<ChatRequestModel> chatRequestModels = null;
+        TypeToken<ArrayList<ChatRequestModel>> token = new TypeToken<ArrayList<ChatRequestModel>>() {
+        };
+        chatRequestModels = gson.fromJson(json, token.getType());
+        return chatRequestModels;
+    }
+
+    ////Fetch Leave  Applied details Response parse:
+    public ArrayList<LeaveAppliedResponseModel> getLeaveAppliedResponse(String json, int statusCode) {
+        ArrayList<LeaveAppliedResponseModel> leaveAppliedResponseModels = null;
+        TypeToken<ArrayList<LeaveAppliedResponseModel>> token = new TypeToken<ArrayList<LeaveAppliedResponseModel>>() {
+        };
+        leaveAppliedResponseModels = gson.fromJson(json, token.getType());
+        return leaveAppliedResponseModels;
+    }
+
 
     ////Fetch Leave  details Response parse:
     public ArrayList<LeaveNatureMasterModel> getLeaveNatureMasterResponse(String json, int statusCode) {
@@ -1045,5 +1146,78 @@ public class ResponseParser implements AppConstants {
             cartAPIResponseModel = gson.fromJson(json, CartAPIResponseModel.class);
         }
         return cartAPIResponseModel;
+    }
+
+    public ArrayList<AcceptOrderNotfiDetailsModel> getAcceptOrderNotfiResponseModel(String json, int statusCode) {
+        ArrayList<AcceptOrderNotfiDetailsModel> materialDetailsModels = null;
+//		if (!parseIntoError(json, statusCode)){
+        TypeToken<ArrayList<AcceptOrderNotfiDetailsModel>> token = new TypeToken<ArrayList<AcceptOrderNotfiDetailsModel>>() {
+        };
+        materialDetailsModels = gson.fromJson(json, token.getType());
+//		}
+        return materialDetailsModels;
+    }
+
+    // LoginDeviceId Response Parse
+    public ErrorModel getErrorResponseModel(String json, int statusCode) {
+        ErrorModel loginResponseModel = null;
+        loginResponseModel = gson.fromJson(json, ErrorModel.class);
+        return loginResponseModel;
+    }
+
+    //Fetch Slot Details Response parse:
+    public ArrayList<DeviceLoginDetailsModel> getDeviceDetailsResponseModel(String json, int statusCode) {
+        ArrayList<DeviceLoginDetailsModel> slotModels = null;
+        TypeToken<ArrayList<DeviceLoginDetailsModel>> token = new TypeToken<ArrayList<DeviceLoginDetailsModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+        return slotModels;
+    }
+
+    public ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> getSampleDropDetailsbyTSPLMEResponseModel(String json, int statusCode) {
+        ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> slotModels = null;
+        TypeToken<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>> token = new TypeToken<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+        return slotModels;
+    }
+
+    public ArrayList<WLMISDetailsModel> getWLMISResponseModel(String json, int statusCode) {
+        ArrayList<WLMISDetailsModel> slotModels = null;
+        TypeToken<ArrayList<WLMISDetailsModel>> token = new TypeToken<ArrayList<WLMISDetailsModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+        return slotModels;
+    } public ArrayList<DateWiseWLMISDetailsModel> getDateWiseWLMISResponseModel(String json, int statusCode) {
+        ArrayList<DateWiseWLMISDetailsModel> slotModels = null;
+        TypeToken<ArrayList<DateWiseWLMISDetailsModel>> token = new TypeToken<ArrayList<DateWiseWLMISDetailsModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+        return slotModels;
+    }
+
+
+    public ArrayList<LocationMasterModel> getLocationMasterResponseModel(String json, int statusCode) {
+        ArrayList<LocationMasterModel> slotModels = null;
+        TypeToken<ArrayList<LocationMasterModel>> token = new TypeToken<ArrayList<LocationMasterModel>>() {
+        };
+        slotModels = gson.fromJson(json, token.getType());
+        return slotModels;
+    }
+
+    public BtechImageResponseModel getBTECHIMAGEModel(String json, int statusCode) {
+        BtechImageResponseModel fetchOrderSummaryResponseModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            fetchOrderSummaryResponseModel = gson.fromJson(json, BtechImageResponseModel.class);
+        }
+        return fetchOrderSummaryResponseModel;
+    }
+
+    public DispositionDataModel getDispositionAPIResponseModel(String json, int statusCode) {
+        DispositionDataModel orderVisitDetailsModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            orderVisitDetailsModel = gson.fromJson(json, DispositionDataModel.class);
+        }
+        return orderVisitDetailsModel;
     }
 }

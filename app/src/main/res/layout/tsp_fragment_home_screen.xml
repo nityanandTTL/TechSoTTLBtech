@@ -7,15 +7,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:background="@drawable/home_nav_bg_gradient"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
-            android:layout_marginTop="120dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
             android:orientation="vertical">
 
             <TextView
@@ -101,7 +101,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@color/separator"></View>
+                    android:background1="@color/separator"></View>
 
                 <LinearLayout
                     android:id="@+id/ll_payment_icon"
@@ -139,7 +139,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@color/separator"></View>
+                    android:background1="@color/separator"></View>
 
                 <LinearLayout
                     android:id="@+id/ll_orders_icon"
@@ -171,42 +171,53 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/separator"></View>
+                android:background1="@color/separator"></View>
 
         </LinearLayout>-->
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/orders_icon"
+        android:layout_width="150dp"
+        android:layout_height="110dp"
+        android:layout_marginBottom="123dp"
+        android:src="@drawable/orders_tsp"
+        android:layout_above="@+id/earning_icon"
+        android:layout_alignStart="@+id/earning_icon" />
 
     <LinearLayout
         android:id="@+id/llIcons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
 
         <ImageView
-            android:layout_marginLeft="10dp"
             android:id="@+id/receive_icon"
-            android:layout_width="150dp"
+            android:layout_width="110dp"
             android:layout_height="150dp"
+            android:layout_marginRight="40dp"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="0dp"
             android:src="@drawable/tsp_home_screen_receive" />
 
         <ImageView
-            android:layout_marginRight="10dp"
             android:id="@+id/send_icon"
-            android:layout_width="150dp"
+            android:layout_width="110dp"
             android:layout_height="150dp"
             android:layout_centerVertical="true"
+            android:layout_marginRight="0dp"
+            android:layout_marginLeft="40dp"
             android:src="@drawable/tsp_home_screen_send" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/earning_icon"
         android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_height="110dp"
         android:layout_below="@+id/llIcons"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-90dp"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="-30dp"
         android:src="@drawable/tsp_home_screen_earning" />
 </RelativeLayout>

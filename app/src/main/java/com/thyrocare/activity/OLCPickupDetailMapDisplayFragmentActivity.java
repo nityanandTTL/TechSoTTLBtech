@@ -27,17 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.thyrocare.R;
-import com.thyrocare.models.api.request.OlcStartRequestModel;
-import com.thyrocare.models.data.BtechClientsModel;
-import com.thyrocare.network.ApiCallAsyncTask;
-import com.thyrocare.network.ApiCallAsyncTaskDelegate;
-import com.thyrocare.network.AsyncTaskForRequest;
-import com.thyrocare.utils.api.Logger;
-import com.thyrocare.utils.app.AppPreferenceManager;
-import com.thyrocare.utils.app.BundleConstants;
-import com.thyrocare.utils.app.GPSTracker;
-import com.thyrocare.utils.fileutils.DataParser;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -52,7 +41,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.thyrocare.R;
+import com.thyrocare.models.api.request.OlcStartRequestModel;
+import com.thyrocare.models.data.BtechClientsModel;
+import com.thyrocare.network.ApiCallAsyncTask;
+import com.thyrocare.network.ApiCallAsyncTaskDelegate;
+import com.thyrocare.network.AsyncTaskForRequest;
+import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.api.NetworkUtils;
+import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.BundleConstants;
+import com.thyrocare.utils.app.GPSTracker;
+import com.thyrocare.utils.fileutils.DataParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -488,41 +488,43 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
             ArrayList<LatLng> points;
             PolylineOptions lineOptions = null;
+if(result!=null){
+    // Traversing through all the routes
+    for (int i = 0; i < result.size(); i++) {
+        points = new ArrayList<>();
+        lineOptions = new PolylineOptions();
 
-            // Traversing through all the routes
-            for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList<>();
-                lineOptions = new PolylineOptions();
+        // Fetching i-th route
+        List<HashMap<String, String>> path = result.get(i);
 
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
+        // Fetching all the points in i-th route
+        for (int j = 0; j < path.size(); j++) {
+            HashMap<String, String> point = path.get(j);
 
-                // Fetching all the points in i-th route
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
+            double lat = Double.parseDouble(point.get("lat"));
+            double lng = Double.parseDouble(point.get("lng"));
+            LatLng position = new LatLng(lat, lng);
 
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
+            points.add(position);
+        }
 
-                    points.add(position);
-                }
+        // Adding all the points in the route to LineOptions
+        lineOptions.addAll(points);
+        lineOptions.width(10);
+        lineOptions.color(Color.RED);
 
-                // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(10);
-                lineOptions.color(Color.RED);
+        Log.d("onPostExecute", "onPostExecute lineoptions decoded");
 
-                Log.d("onPostExecute", "onPostExecute lineoptions decoded");
+    }
 
-            }
+    // Drawing polyline in the Google Map for the i-th route
+    if (lineOptions != null) {
+        mMap.addPolyline(lineOptions);
+    } else {
+        Log.d("onPostExecute", "without Polylines drawn");
+    }
+}
 
-            // Drawing polyline in the Google Map for the i-th route
-            if (lineOptions != null) {
-                mMap.addPolyline(lineOptions);
-            } else {
-                Log.d("onPostExecute", "without Polylines drawn");
-            }
         }
     }
 

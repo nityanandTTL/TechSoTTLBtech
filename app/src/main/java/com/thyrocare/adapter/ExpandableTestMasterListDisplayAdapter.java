@@ -3,6 +3,8 @@ package com.thyrocare.adapter;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.InputUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Orion on 5/4/2017.
@@ -31,6 +34,9 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
     private ArrayList<TestTypeWiseTestRateMasterModelsList> filteredList;
     private ArrayList<TestRateMasterModel> selectedTests = new ArrayList<>();
     private EditTestExpandListAdapterCheckboxDelegate mcallback;
+    private ArrayList<TestRateMasterModel> tempselectedTests;
+    private List<String> tempselectedTests1;
+    private AlertDialog.Builder alertDialogBuilder;
 
     public ExpandableTestMasterListDisplayAdapter(Activity activity, ArrayList<TestTypeWiseTestRateMasterModelsList> testRateMasterModels1, ArrayList<TestRateMasterModel> selectedTests, EditTestExpandListAdapterCheckboxDelegate mcallback) {
         this.activity = activity;
@@ -193,6 +199,16 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
         holder.imgCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String slectedpackage = "";
+
+                if (testRateMasterModel.getTestType().equals("TEST") || testRateMasterModel.getTestType().equals("OFFER")
+                        && !InputUtils.isNull(testRateMasterModel.getDescription())) {
+                    slectedpackage = testRateMasterModel.getDescription();
+                } else {
+                    slectedpackage = testRateMasterModel.getTestCode();
+                }
+
                 if(testRateMasterModel.getTestType().equals("OFFER")&&checkIfOfferExists(selectedTests)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setTitle("Confirm Action")
@@ -216,6 +232,74 @@ public class ExpandableTestMasterListDisplayAdapter extends BaseExpandableListAd
 
                 }
                 else {
+
+                    tempselectedTests = new ArrayList<>();
+                    tempselectedTests1 = new ArrayList<>();
+if(testRateMasterModel.getChldtests()!=null ){
+    for (int i = 0; i < testRateMasterModel.getChldtests().size(); i++) {
+
+
+        //tejas t -----------------------------
+        for (int j = 0; j < selectedTests.size(); j++) {
+
+            if (testRateMasterModel.getChldtests().get(i).getChildTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
+                System.out.println("Cart selectedtestlist Description :" + selectedTests.get(j).getDescription() + "Cart selectedtestlist Code :" + selectedTests.get(j).getTestCode());
+
+                if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
+                        && !InputUtils.isNull(selectedTests.get(j).getDescription())) {
+                    tempselectedTests1.add(selectedTests.get(j).getDescription());
+                } else {
+                    tempselectedTests1.add(selectedTests.get(j).getTestCode());
+                }
+
+                tempselectedTests.add(selectedTests.get(j));
+            }
+        }
+    }
+}
+
+if (selectedTests!=null){
+    for (int j = 0; j < selectedTests.size(); j++) {
+        TestRateMasterModel selectedTestModel123 = selectedTests.get(j);
+        if (selectedTestModel123.getChldtests() != null && testRateMasterModel.getChldtests() != null && testRateMasterModel.checkIfChildsContained(selectedTestModel123)) {
+
+            if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
+                    && !InputUtils.isNull(selectedTests.get(j).getDescription())) {
+                tempselectedTests1.add(selectedTests.get(j).getDescription());
+            } else {
+                tempselectedTests1.add(selectedTests.get(j).getTestCode());
+            }
+            tempselectedTests.add(selectedTestModel123);
+        }
+    }
+
+}
+
+                    if (tempselectedTests != null && tempselectedTests.size() > 0  ) {
+                        String cartproduct = TextUtils.join(",", tempselectedTests1);
+                        alertDialogBuilder = new AlertDialog.Builder(activity);
+                        alertDialogBuilder
+                                .setMessage(Html.fromHtml("As " + "<b>" + slectedpackage + "</b>" + " already includes " + "<b>" + cartproduct + "</b>" + " test(s),We have removed " + "<b>" + cartproduct + "</b>" + " test(s) from your Selected test list"))
+                                .setCancelable(true)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+                    }
+                    if(tempselectedTests != null){
+                        for (int i = 0; i < tempselectedTests.size(); i++) {
+                            for (int j = 0; j < selectedTests.size(); j++) {
+                                if (tempselectedTests.get(i).getTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
+                                    selectedTests.remove(j);
+                                }
+                            }
+                        }
+                    }
+
+
                     selectedTests.add(testRateMasterModel);
                     mcallback.onCheckChange(selectedTests);
                 }

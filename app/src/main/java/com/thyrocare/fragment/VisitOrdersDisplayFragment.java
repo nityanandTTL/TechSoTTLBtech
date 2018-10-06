@@ -2,22 +2,45 @@ package com.thyrocare.fragment;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.activity.OrderBookingActivity;
@@ -26,20 +49,29 @@ import com.thyrocare.adapter.VisitOrderDisplayAdapter;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.BeneficiaryDetailsDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
+import com.thyrocare.delegate.CallbackforShowCaseDelegate;
 import com.thyrocare.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
+import com.thyrocare.delegate.OrderPassRecyclerViewAdapterDelegate;
 import com.thyrocare.delegate.OrderRescheduleDialogButtonClickedDelegate;
 import com.thyrocare.delegate.VisitOrderDisplayRecyclerViewAdapterDelegate;
+import com.thyrocare.delegate.VisitOrderDisplayyRecyclerViewAdapterDelegate;
 import com.thyrocare.delegate.refreshDelegate;
+import com.thyrocare.dialog.ConfirmOrderPassDialog;
 import com.thyrocare.dialog.ConfirmOrderReleaseDialog;
+import com.thyrocare.dialog.ConfirmRequestReleaseDialog;
 import com.thyrocare.dialog.RescheduleOrderDialog;
-import com.thyrocare.models.api.request.CallPatchRequestModel;
 import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
+import com.thyrocare.models.api.request.SetDispositionDataModel;
 import com.thyrocare.models.api.response.BtechEstEarningsResponseModel;
 import com.thyrocare.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.models.data.BeneficiaryDetailsModel;
+import com.thyrocare.models.data.DespositionDataModel;
+import com.thyrocare.models.data.DispositionDataModel;
+import com.thyrocare.models.data.DispositionDetailsModel;
 import com.thyrocare.models.data.KitsCountModel;
 import com.thyrocare.models.data.OrderDetailsModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
+import com.thyrocare.network.AbstractApiModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
@@ -50,9 +82,24 @@ import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.InputUtils;
+import com.wooplr.spotlight.utils.SpotlightSequence;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -77,12 +124,25 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private TextView txtNoRecord;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConfirmOrderReleaseDialog cdd;
+    private ConfirmRequestReleaseDialog crr;
+    private ConfirmOrderPassDialog Cop;
     private boolean isToFromMap = false;
     private String kits;
     private String[] kits_arr;
     private RescheduleOrderDialog rod;
     private String MaskedPhoneNumber = "";
     private boolean isFetchingOrders = false;
+    public static boolean edit;
+    private ArrayList<DispositionDetailsModel> remarksDataModelsarr;
+    private ArrayList<String> remarksarr;
+    private ArrayList<String> remarks_notc_arr;
+    private DispositionDetailsModel remarksDataModel;
+    private String remarks_notc_str = "";
+
+    Dialog dialog_ready;
+    int statusCode;
+    private ProgressDialog progressDialog;
+
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
     }
@@ -98,6 +158,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
+
         if (activity.toolbarHome != null) {
             activity.toolbarHome.setTitle("Visit Orders");
         }
@@ -106,6 +167,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         dhbDao = new DhbDao(activity);
         orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
         beneficiaryDetailsDao = new BeneficiaryDetailsDao(dhbDao.getDb());
+
         if (getArguments() != null) {
 
         }
@@ -120,7 +182,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         if (isNetworkAvailable(activity)) {
             fetchBtechEstEarningsApiAsyncTask.execute(fetchBtechEstEarningsApiAsyncTask);
         } else {
-            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, "Check internet connection", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             //  initData();
         }
     }
@@ -133,6 +196,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         initUI();
         fetchData();
         setListener();
+
         return rootView;
     }
 
@@ -140,7 +204,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Toast.makeText(activity, "refresh on realease", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "View Refreshed", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                // Toast.makeText(activity, "refresh on realease", Toast.LENGTH_SHORT).show();
                 fetchData();
             }
         });
@@ -149,17 +214,21 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                LayoutInflater inflater = activity.getLayoutInflater();
-                View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
-                builder.setView(dialogView);
-                ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
-                Button btn_edit = (Button) dialogView.findViewById(R.id.btn_edit);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_list_item_1, kits_arr);
-                lv_test_codes.setAdapter(adapter);
-                btn_edit.setVisibility(View.GONE);
-                builder.show();
+                try {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    LayoutInflater inflater = activity.getLayoutInflater();
+                    View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
+                    builder.setView(dialogView);
+                    ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
+                    Button btn_edit = (Button) dialogView.findViewById(R.id.btn_edit);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                            android.R.layout.simple_list_item_1, kits_arr);
+                    lv_test_codes.setAdapter(adapter);
+                    btn_edit.setVisibility(View.GONE);
+                    builder.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -179,7 +248,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         } else {
 
             // Permission denied, Disable the functionality that depends on activity permission.
-            Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
+            TastyToast.makeText(activity, "permission denied", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+            // Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -200,15 +270,17 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         beneficiaryDetailsDao.deleteAll();
         orderDetailsDao.deleteAll();
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask();
+        ApiCallAsyncTask fetchOrderDetailApiAsyncTask = asyncTaskForRequest.getFetchOrderDetailsRequestAsyncTask(true);
         fetchOrderDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchOrderDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
-            if(!isFetchingOrders) {
+            if (!isFetchingOrders) {
                 isFetchingOrders = true;
                 fetchOrderDetailApiAsyncTask.execute(fetchOrderDetailApiAsyncTask);
             }
         } else {
-            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+
+            // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             initData();
         }
     }
@@ -251,9 +323,14 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             }
             it.remove(); // avoids a ConcurrentModificationException
         }
+
+        String regex = "\\s*\\bKIT\\b\\s*";
+        kitsReq = kitsReq.replaceAll(regex, "");
+
         txtTotalKitsRequired.setText(kitsReq);
         prepareRecyclerView();
         swipeRefreshLayout.setRefreshing(false);
+
     }
 
     private void prepareRecyclerView() {
@@ -263,6 +340,58 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 @Override
                 public void onRefreshClicked() {
                     fetchData();
+                }
+            }, new VisitOrderDisplayyRecyclerViewAdapterDelegate() {
+
+                @Override
+                public void onItemRelease(OrderVisitDetailsModel orderVisitDetailsModel) {
+                    crr = new ConfirmRequestReleaseDialog(activity, new CConfirmOrderReleaseDialogButtonClickedDelegateResult(), orderVisitDetailsModel);
+                    crr.show();
+                }
+            }, new OrderPassRecyclerViewAdapterDelegate() {
+                @Override
+                public void onItemRelease(OrderVisitDetailsModel orderVisitDetailsModel) {
+                   /* Cop = new ConfirmOrderPassDialog(activity, new ConfirmOrderPassDialogButtonClickedDelegateResult(), orderVisitDetailsModel);
+                    Cop.show();*/
+                }
+
+                @Override
+                public void onItemReleaseto(String Pincode, OrderVisitDetailsModel orderVisitDetailsModel) {
+                   /* Cop = new ConfirmOrderPassDialog(activity, new ConfirmOrderPassDialogButtonClickedDelegateResult(),Pincode,orderVisitDetailsModel );*/
+                    Cop = new ConfirmOrderPassDialog(activity, new refreshDelegate() {
+                        @Override
+                        public void onRefreshClicked() {
+                            fetchData();
+                            swipeRefreshLayout.setRefreshing(true);
+                            pushFragments(VisitOrdersDisplayFragment.newInstance(), false, false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment.TAG_FRAGMENT);
+                        }
+                    }, Pincode, orderVisitDetailsModel);
+                    Cop.show();
+                }
+
+
+            }, new CallbackforShowCaseDelegate() {
+                @SuppressLint("LongLogTag")
+                @Override
+                public void onFirstPosition(View view, boolean isAccepted) {
+
+                    Log.e(TAG_FRAGMENT, "onFirstPosition: ");
+                    if (!appPreferenceManager.isLoadSpotlightOnOrderd()) {
+                        appPreferenceManager.setLoadSpotlightOnOrderd(true);
+
+                        loadSpotlight(view, isAccepted);
+
+                    }
+                }
+
+                @SuppressLint("LongLogTag")
+                @Override
+                public void onAcceptOrderFirstPosition(View view) {
+
+                    Log.e(TAG_FRAGMENT, "onAcceptOrderFirstPosition: ");
+
+                    loadSpotlightAfterAceepting(view);
+
                 }
             });
             recyclerView.setAdapter(visitOrderDisplayRecyclerViewAdapter);
@@ -274,6 +403,67 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         }
     }
 
+    private void loadSpotlight(final View view, final boolean isAccepted) {
+        if (view != null) {
+            view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else {
+                        view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("run", "run: ");
+                            SpotlightSequence.getInstance(activity, null)
+                                    .addSpotlight(view.findViewById(R.id.img_release2), "Order Manipulation", "You can release, Reschedule Order", "bin")
+                                    .addSpotlight(view.findViewById(R.id.img_view_test), "View Tests ", "You can view all the tests", "viewtest");
+
+
+                            /*if (!isAccepted) {
+                                SpotlightSequence.getInstance(activity, null).addSpotlight(view.findViewById(R.id.img_oas), "Accept Order ", "Accept alloted order", "accepto");
+                            } else {
+                                SpotlightSequence.getInstance(activity, null).addSpotlight(view.findViewById(R.id.call), "Call ", "Tap here to call customer", "callcustm");
+                            }
+*/
+
+                            SpotlightSequence.getInstance(activity, null).startSequence();
+                        }
+                    }, 400);
+                }
+            });
+        }
+    }
+
+    private void loadSpotlightAfterAceepting(final View view) {
+        if (view != null) {
+            view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else {
+                        view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("run11222", "run: ");
+                            SpotlightSequence.getInstance(activity, null)
+                                    .addSpotlight(view.findViewById(R.id.call), "Call Customer", "Tap here to call customer", "callcustjk")
+
+                                    .startSequence();
+                        }
+                    }, 400);
+                }
+            });
+        }
+    }
+
 
     private class FetchOrderDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
 
@@ -281,6 +471,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
 
             if (statusCode == 200) {
+                //jai
+                JSONObject jsonObject = new JSONObject(json);
                 ResponseParser responseParser = new ResponseParser(activity);
                 FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = new FetchOrderDetailsResponseModel();
                 fetchOrderDetailsResponseModel = responseParser.getFetchOrderDetailsResponseModel(json, statusCode);
@@ -321,7 +513,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         @Override
         public void onApiCancelled() {
             isFetchingOrders = false;
-            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, getString(R.string.network_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            //  Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -336,7 +529,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         txtTotalKitsRequired = (TextView) rootView.findViewById(R.id.title_est_kits);
         txtTotalKitsRequired.setSelected(true);
         txtNoRecord = (TextView) rootView.findViewById(R.id.txt_no_orders);
-
 
 
     }
@@ -379,20 +571,37 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
         @Override
         public void onCallCustomer(OrderVisitDetailsModel orderVisitDetailsModel) {
-            CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
+
+            try {
+                callgetDispositionData(orderVisitDetailsModel);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile()));
+                activity.startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+
+
+            /*CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
             callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
             callPatchRequestModel.setDestNumber(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
             Logger.error("orderVisitDetailsModelsArr"+orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
             callPatchRequestModel.setVisitID(orderVisitDetailsModel.getVisitId());
             ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
             callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-            callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
+            callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);*/
 
         }
 
         @Override
         public void onItemReschedule(OrderVisitDetailsModel orderVisitDetailsModel) {
-            rod = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(),orderVisitDetailsModel.getAllOrderdetails().get(0));
+            rod = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModel.getAllOrderdetails().get(0));
             rod.show();
         }
 
@@ -416,9 +625,258 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             if (isNetworkAvailable(activity)) {
                 orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
             } else {
-                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                //  Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public void callgetDispositionData(OrderVisitDetailsModel orderVisitDetailsModel) {
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchDispositionApiAsyncTask = asyncTaskForRequest.getDispositionAsyncTask();
+        fetchDispositionApiAsyncTask.setApiCallAsyncTaskDelegate(new fetchDispositionAsyncTaskDelegateResult(orderVisitDetailsModel));
+        if (isNetworkAvailable(activity)) {
+            fetchDispositionApiAsyncTask.execute(fetchDispositionApiAsyncTask);
+        } else {
+            TastyToast.makeText(activity, "Check Internet Connection..", TastyToast.LENGTH_LONG, TastyToast.INFO);
+        }
+    }
+
+    private void CallDespositionDialog(final OrderVisitDetailsModel orderVisitDetailsModel, ArrayList<DispositionDetailsModel> allDisp) {
+        dialog_ready = new Dialog(activity);
+        dialog_ready.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog_ready.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog_ready.setContentView(R.layout.dialog_desposition);
+//        dialog_ready.setCanceledOnTouchOutside(false);
+        dialog_ready.setCancelable(false);
+
+        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.85);
+//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.60);
+        dialog_ready.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        dialog_ready.show();
+
+        ImageView img_cnc = (ImageView) dialog_ready.findViewById(R.id.img_cnc);
+        img_cnc.setVisibility(View.GONE);
+        img_cnc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog_ready.dismiss();
+            }
+        });
+
+        TextView txt_odn = (TextView) dialog_ready.findViewById(R.id.txt_odn);
+        txt_odn.setText("" + orderVisitDetailsModel.getVisitId());
+
+        final EditText edt_desprem = (EditText) dialog_ready.findViewById(R.id.edt_desprem);
+        final LinearLayout ll_rem = (LinearLayout) dialog_ready.findViewById(R.id.ll_rem);
+        final LinearLayout ll_spnrem = (LinearLayout) dialog_ready.findViewById(R.id.ll_spnrem);
+        final Spinner spn_rem = (Spinner) dialog_ready.findViewById(R.id.spn_rem);
+
+        remarks_notc_arr = new ArrayList<>();
+        remarks_notc_arr.add("Select");
+        remarks_notc_arr.add("Ringing / No Response");
+        remarks_notc_arr.add("Busy");
+        remarks_notc_arr.add("Invalid Number");
+        remarks_notc_arr.add("Number Does Not Exist");
+        remarks_notc_arr.add("Switch off / Not reachable");
+
+        ArrayAdapter<String> spnrnotconnectedremarks = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, remarks_notc_arr);
+        spnrnotconnectedremarks.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spn_rem.setAdapter(spnrnotconnectedremarks);
+        spn_rem.setSelection(0);
+        spn_rem.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    remarks_notc_str = "";
+                } else {
+                    remarks_notc_str = remarks_notc_arr.get(position);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Spinner spn_desp = (Spinner) dialog_ready.findViewById(R.id.spn_desp);
+        remarksDataModelsarr = allDisp;
+        remarksDataModel = new DispositionDetailsModel();
+        if (remarksDataModelsarr != null && remarksDataModelsarr.size() > 0) {
+
+            remarksarr = new ArrayList<>();
+            remarksarr.add("Select");
+            if (remarksDataModelsarr != null && remarksDataModelsarr.size() > 0) {
+                for (DispositionDetailsModel remarksDataModels :
+                        remarksDataModelsarr) {
+                    remarksarr.add(remarksDataModels.getDisposition().toUpperCase());
+                }
+            }
+
+            ArrayAdapter<String> spinneradapterremarks = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, remarksarr);
+            spinneradapterremarks.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spn_desp.setAdapter(spinneradapterremarks);
+            spn_desp.setSelection(0);
+            spn_desp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position == 0) {
+                        remarksDataModel = null;
+                        ll_rem.setVisibility(View.GONE);
+                    } else {
+                        if (position == 1) {
+                            ll_rem.setVisibility(View.VISIBLE);
+                            ll_spnrem.setVisibility(View.GONE);
+                            edt_desprem.setVisibility(View.VISIBLE);
+                        } else if (position == 2) {
+                            ll_rem.setVisibility(View.VISIBLE);
+                            ll_spnrem.setVisibility(View.VISIBLE);
+                            edt_desprem.setVisibility(View.GONE);
+                        }
+                        remarksDataModel = remarksDataModelsarr.get(position - 1);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+
+        edt_desprem.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+        });
+
+        edt_desprem.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().trim().startsWith(".") || s.toString().trim().startsWith(",")) {
+                    // CommonUtils.toastytastyError(activity, "Enter valid Mobile Number ", false);
+
+                    final android.app.AlertDialog.Builder builder;
+                    builder = new android.app.AlertDialog.Builder(getActivity());
+                    builder.setCancelable(false);
+                    builder.setTitle("")
+                            .setMessage("Invalid text")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    edt_desprem.setText("");
+                                    dialog.dismiss();
+                                }
+                            })
+
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+
+                    edt_desprem.setFocusable(true);
+                }
+            }
+        });
+
+        Button btn_proceed = (Button) dialog_ready.findViewById(R.id.btn_proceed);
+        btn_proceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (remarksDataModel != null) {
+                    if (remarksDataModel.getDispId() == 0) {
+                        TastyToast.makeText(activity, "Select desposition", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                    } else if (edt_desprem.getText().toString().trim().equals("") && edt_desprem.getVisibility() == View.VISIBLE) {
+                        TastyToast.makeText(activity, "Enter Remarks", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                    } else if (remarks_notc_str.equals("") && ll_spnrem.getVisibility() == View.VISIBLE) {
+                        TastyToast.makeText(activity, "Select Remarks", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                    } else {
+                        String st = "";
+                        if (remarksDataModel.getDispId() == 1) {
+                            st = edt_desprem.getText().toString().trim();
+                        } else if (remarksDataModel.getDispId() == 2) {
+                            st = remarks_notc_str;
+                        }
+
+                        SetDispositionDataModel nm = new SetDispositionDataModel();
+                        nm.setAppId(1);
+                        nm.setDispId(remarksDataModel.getDispId());
+                        nm.setOrderNo("" + orderVisitDetailsModel.getVisitId());
+                        nm.setUserId("" + appPreferenceManager.getLoginResponseModel().getUserID());
+                        String s = "" + appPreferenceManager.getLoginResponseModel().getUserName();
+                        nm.setFrmNo("" + s.substring(0, Math.min(s.length(), 18)));
+                        Log.e(TAG_FRAGMENT, "onClick: " + s.substring(0, Math.min(s.length(), 18)));
+                        nm.setToNo("" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+                        nm.setRemarks("" + st);
+
+                        if (isNetworkAvailable(activity)) {
+                            new Btech_AsyncLoadBookingFreqApi(nm).execute();
+                        } else {
+                            TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        }
+                    }
+                } else {
+                    TastyToast.makeText(activity, "Select desposition", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                }
+            }
+        });
+
+    }
+
+    private ArrayList<DespositionDataModel> getDespData() {
+        ArrayList<DespositionDataModel> ent = new ArrayList<>();
+        DespositionDataModel e = new DespositionDataModel();
+        e.setId(0);
+        e.setDesp_key("SELECT");
+        ent.add(e);
+
+        e = new DespositionDataModel();
+        e.setId(1);
+        e.setDesp_key("Received");
+        ent.add(e);
+
+        e = new DespositionDataModel();
+        e.setId(2);
+        e.setDesp_key("Not Responding");
+        ent.add(e);
+
+        e = new DespositionDataModel();
+        e.setId(3);
+        e.setDesp_key("Busy");
+        ent.add(e);
+
+        e = new DespositionDataModel();
+        e.setId(4);
+        e.setDesp_key("Responded but busy");
+        ent.add(e);
+
+
+        return ent;
     }
 
     @Override
@@ -445,7 +903,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             if (isNetworkAvailable(activity)) {
                 orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
             } else {
-                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                //   Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -455,6 +914,52 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         }
     }
 
+    public class CConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
+        @Override
+        public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
+            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
+            orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId() + "");
+            orderStatusChangeRequestModel.setRemarks(remarks);
+            orderStatusChangeRequestModel.setStatus(27);
+            ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
+            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeApiAsyncTaskDelegateResult(orderVisitDetailsModel));
+            if (isNetworkAvailable(activity)) {
+                orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
+            } else {
+                TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                //  Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
+    }
+
+    public class ConfirmOrderPassDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
+        @Override
+        public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
+           /* AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
+            orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId() + "");
+            orderStatusChangeRequestModel.setRemarks(remarks);
+            orderStatusChangeRequestModel.setStatus(27);
+            ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
+            orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeApiAsyncTaskDelegateResult(orderVisitDetailsModel));
+            if (isNetworkAvailable(activity)) {
+                orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }*/
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
+    }
 
     private class OrderStatusChangeApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         OrderVisitDetailsModel orderVisitDetailsModel;
@@ -466,16 +971,19 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 204 || statusCode == 200) {
-                Toast.makeText(activity, "Order Released Successfully", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                // Toast.makeText(activity, "Order Released Successfully", Toast.LENGTH_SHORT).show();
                 fetchData();
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
+                // Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onApiCancelled() {
-            Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, "Network Error", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+            //   Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -490,7 +998,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 204 || statusCode == 200) {
-                Toast.makeText(activity, "Order Accepted Successfully", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "Order Accepted Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                // Toast.makeText(activity, "Order Accepted Successfully", Toast.LENGTH_SHORT).show();
                 OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
                 for (OrderDetailsModel orderDetailsModel :
                         orderVisitDetailsModel.getAllOrderdetails()) {
@@ -499,35 +1008,37 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 }
                 initData();
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
+                //  Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onApiCancelled() {
-            Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, "Network Error", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            //Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
         }
     }
 
     private class BtechEarningsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
-            int totalEarning=0;
+            int totalEarning = 0;
             HashMap<String, Integer> kitsCount = new HashMap<>();
             String kitsReq = "";
             String kitsReq1 = "";
 
-            if(statusCode==200){
+            if (statusCode == 200) {
                 ResponseParser responseParser = new ResponseParser(activity);
                 BtechEstEarningsResponseModel btechEstEarningsResponseModel = new BtechEstEarningsResponseModel();
                 btechEstEarningsResponseModel = responseParser.getBtecheSTEarningResponseModel(json, statusCode);
                 if (btechEstEarningsResponseModel != null && btechEstEarningsResponseModel.getBtechEarnings().size() > 0) {
-                    txtTotalDistance.setText(""+btechEstEarningsResponseModel.getDistance());
+                    txtTotalDistance.setText("" + btechEstEarningsResponseModel.getDistance());
                     for (int i = 0; i < btechEstEarningsResponseModel.getBtechEarnings().size(); i++) {
-                        for (int j = 0; j < btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().size() ; j++) {
-                            totalEarning=totalEarning+btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getEstIncome();
-                            Logger.error("totaldistance: "+totalEarning);
-                            txtTotalEarnings.setText(""+totalEarning);
+                        for (int j = 0; j < btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().size(); j++) {
+                            totalEarning = totalEarning + btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getEstIncome();
+                            Logger.error("totaldistance: " + totalEarning);
+                            txtTotalEarnings.setText("" + totalEarning);
 
                             for (KitsCountModel kt :
                                     btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getKits()) {
@@ -547,7 +1058,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                         HashMap.Entry pair = (HashMap.Entry) it.next();
                         if (InputUtils.isNull(kitsReq)) {
                             kitsReq = pair.getValue() + " " + pair.getKey();
-                            kitsReq1= pair.getValue() + " " + pair.getKey();
+                            kitsReq1 = pair.getValue() + " " + pair.getKey();
                         } else {
                             kitsReq = kitsReq + " | " + pair.getValue() + " " + pair.getKey();
                             kitsReq1 = kitsReq1 + "," + pair.getValue() + " " + pair.getKey();
@@ -559,6 +1070,10 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                     Logger.error("arr: " + kits_arr.toString());
                     Logger.error("test code string: " + kits);
                     //  txtTotalKitsRequired.setText(kits_arr[0]);
+
+                    String regex = "\\s*\\bKIT\\b\\s*";
+                    kitsReq = kitsReq.replaceAll(regex, "");
+
                     txtTotalKitsRequired.setText(kitsReq);
                 }
 
@@ -586,7 +1101,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             if (isNetworkAvailable(activity)) {
                 orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
             } else {
-                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                // Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -609,17 +1125,198 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                /* orderDetailsModel.setStatus("RESCHEDULED");
                 OrderDetailsDao orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
                 orderDetailsDao.insertOrUpdate(orderDetailsModel);*/
-                Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "Order rescheduled successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                //Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);
+                // Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
             }
             fetchData();
         }
 
         @Override
         public void onApiCancelled() {
-            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity, "Network Error", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            //  Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
         }
     }
 
+    private class fetchDispositionAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        OrderVisitDetailsModel orderDet;
+
+        public fetchDispositionAsyncTaskDelegateResult(OrderVisitDetailsModel orderVisitDetailsModel) {
+            this.orderDet = orderVisitDetailsModel;
+        }
+
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+
+            if (statusCode == 200) {
+
+                ResponseParser responseParser = new ResponseParser(activity);
+                DispositionDataModel dispositionDataModel = new DispositionDataModel();
+                dispositionDataModel = responseParser.getDispositionAPIResponseModel(json, statusCode);
+
+                if (dispositionDataModel != null) {
+                    System.out.println("");
+                    if (dispositionDataModel.getAllDisp() != null) {
+                        if (dispositionDataModel.getAllDisp().size() != 0) {
+                            CallDespositionDialog(orderDet, dispositionDataModel.getAllDisp());
+                        }
+                    }
+                }
+
+            } else {
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            }
+
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
+
+    public class Btech_AsyncLoadBookingFreqApi extends AsyncTask<Void, Void, String> {
+
+        SetDispositionDataModel setDispositionDataModel;
+
+        public Btech_AsyncLoadBookingFreqApi(SetDispositionDataModel nm) {
+            this.setDispositionDataModel = nm;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            CallInitialiseProgressDialog();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            HttpClient httpClient = new DefaultHttpClient();
+            StringBuilder builder = new StringBuilder();
+            String json = "";
+            try {
+                HttpPost request = new HttpPost(AbstractApiModel.SERVER_BASE_API_URL + "/api/OrderAllocation/MediaUpload");
+
+                MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+                entity.addPart("AppId", new StringBody("" + setDispositionDataModel.getAppId()));
+                entity.addPart("DispId", new StringBody("" + setDispositionDataModel.getDispId()));
+                entity.addPart("FrmNo", new StringBody("" + setDispositionDataModel.getFrmNo()));
+                entity.addPart("OrderNo", new StringBody("" + setDispositionDataModel.getOrderNo()));
+                entity.addPart("Remarks", new StringBody("" + setDispositionDataModel.getRemarks()));
+                entity.addPart("ToNo", new StringBody("" + setDispositionDataModel.getToNo()));
+                entity.addPart("UserId", new StringBody("" + setDispositionDataModel.getUserId()));
+
+                request.setEntity(entity);
+                HttpResponse response = httpClient.execute(request);
+                StatusLine statusLine = response.getStatusLine();
+                statusCode = statusLine.getStatusCode();
+                if (statusCode == 200) {
+                    HttpEntity responseEntity = response.getEntity();
+                    InputStream content = responseEntity.getContent();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    json = builder.toString();
+                    System.out.println("Nitya >> " + json);
+
+                } else {
+                    HttpEntity responseEntity = response.getEntity();
+                    InputStream content = responseEntity.getContent();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    json = builder.toString();
+                    System.out.println("Nitya >> " + json);
+                }
+
+            } catch (IllegalStateException e) {
+                Log.e("FileUpload Illegal", e.getMessage());
+            } catch (IOException e) {
+                Log.e("FileUpload IOException ", e.getMessage());
+            } catch (Exception e) {
+                Log.e("Exception ", e.getMessage());
+            } finally {
+                // close connections
+                httpClient.getConnectionManager().shutdown();
+            }
+
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(String res) {
+            super.onPostExecute(res);
+            CallCloseProgressDialog();
+            if (statusCode == 200) {
+                if (dialog_ready != null) {
+                    if (dialog_ready.isShowing()) {
+                        dialog_ready.dismiss();
+                    }
+                }
+                TastyToast.makeText(activity, "" + res, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+            } else {
+                TastyToast.makeText(activity, "" + res, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            }
+        }
+    }
+
+    private void CallInitialiseProgressDialog() {
+        if (activity != null) {
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("");
+            progressDialog.setMessage("Please wait...");
+            progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            progressDialog.setCancelable(true);
+            progressDialog.setCanceledOnTouchOutside(false);
+            try {
+                progressDialog.show();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void CallCloseProgressDialog() {
+        try {
+
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class setDispositionDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (statusCode == 200) {
+                if (dialog_ready != null) {
+                    if (dialog_ready.isShowing()) {
+                        dialog_ready.dismiss();
+                    }
+                }
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+            } else {
+                TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
 }

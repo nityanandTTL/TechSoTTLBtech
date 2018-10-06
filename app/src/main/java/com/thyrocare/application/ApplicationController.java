@@ -11,11 +11,14 @@ import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.thyrocare.Controller.DeviceLogOutController;
+import com.thyrocare.Controller.TSPLMESampleDropController;
 import com.thyrocare.dao.DbHelper;
 import com.thyrocare.utils.app.AppPreferenceManager;
 
-import io.fabric.sdk.android.Fabric;
 import java.util.Stack;
+
+import io.fabric.sdk.android.Fabric;
 
 public class ApplicationController extends MultiDexApplication {
 
@@ -34,6 +37,8 @@ public class ApplicationController extends MultiDexApplication {
 	public static final int BEEP_COUNTER_5 = 5*60*1000;
 	// after 15 min there will be two beep events 20 mins and 25 mins before completing 30 min inactive time.
 	public static final int MAX_BEEP_COUNT = 2;
+	public static DeviceLogOutController mDeviceLogOutController;
+	public static TSPLMESampleDropController mTSPLMESampleDropController;
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

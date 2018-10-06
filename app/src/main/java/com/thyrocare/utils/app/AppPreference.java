@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
+import com.google.gson.Gson;
 import com.thyrocare.R;
 import com.thyrocare.utils.api.Logger;
-import com.google.gson.Gson;
 
 public class AppPreference {
 

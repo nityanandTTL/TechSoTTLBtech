@@ -3,12 +3,12 @@ package com.thyrocare.utils.app;
 import android.app.Activity;
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.api.response.LoginResponseModel;
 import com.thyrocare.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.models.data.SlotModel;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 
@@ -21,6 +21,8 @@ public class AppPreferenceManager {
     private String APISessionKey = "ApiSessionKey";
     private String userId = "userId";
     private String totalDistance = "totalDistance";
+    private String latitude = "latitude";
+    private String longitude = "longitude";
     private String totalEarnings = "totalEarnings";
     private String totalKits = "totalKits";
     private String loginTime = "loginTime";
@@ -35,8 +37,8 @@ public class AppPreferenceManager {
     private String leaveFromDate = "leaveFromDate";
     private String leaveToDate = "leaveToDate";
     private String cameFrom = "cameFrom";
-
-
+    private String isAChatRgister = "isAChatRgister";
+    private String ChatPassword = "ChatPassword";
     private String scheduleCounter2 = "scheduleCounter2";
     private String scheduleDate2 = "scheduleDate2";
 
@@ -46,9 +48,102 @@ public class AppPreferenceManager {
     private String loginRole = "loginRole";
     private String btechID = "btechID";
     private String userID = "userID";
+    private String userNAME = "username";
+    private String userChatWith = "userChatWith";
+    private String UserDetailUserName = "userDetailUserName";
+    private String UserDetailChatWith = "userDetailChatWith";
+
+    private String isLoadSpotlightOnOrderd = "isLoadSpotlightOnOrderd";
+    private String isLoadSpotlightOnOrderdHistory = "isLoadSpotlightOnOrderdHistory";
+    private String isLoadSpotlightOnPager = "isLoadSpotlightOnPager";
+    private String isLoadSpotlightOnHome = "isLoadSpotlightOnHome";
+
+
+    //Neha G---------------------------------
+    private String ShowTimeInNotificatn="";
+    private int not_avail_tom;
+    private int Day_aftr_tom;
 
 
 
+    private int delay;
+    private int DataInVisitModel;
+    private  int NotifyOrderone ;
+    private int OrderAccept;
+
+//Neha G -------------------------------------
+
+    public int getOrderAccept() {
+        return OrderAccept;
+    }
+
+    public void setOrderAccept(int orderAccept) {
+        OrderAccept = orderAccept;
+    }
+
+    public String getShowTimeInNotificatn() {
+        return ShowTimeInNotificatn;
+    }
+
+    public void setShowTimeInNotificatn(String showTimeInNotificatn) {
+        ShowTimeInNotificatn = showTimeInNotificatn;
+    }
+
+    public int getNot_avail_tom() {
+        return not_avail_tom;
+    }
+
+    public void setNot_avail_tom(int not_avail_tom) {
+        this.not_avail_tom = not_avail_tom;
+    }
+
+    public int getDay_aftr_tom() {
+        return Day_aftr_tom;
+    }
+
+    public void setDay_aftr_tom(int day_aftr_tom) {
+        Day_aftr_tom = day_aftr_tom;
+    }
+
+    public int getDelay() {
+        return delay;
+    }
+
+    public void setDelay(int delay) {
+        this.delay = delay;
+    }
+
+    public int getDataInVisitModel() {
+        return DataInVisitModel;
+    }
+
+    public void setDataInVisitModel(int dataInVisitModel) {
+        DataInVisitModel = dataInVisitModel;
+    }
+
+    public int getNotifyOrderone() {
+        return NotifyOrderone;
+    }
+
+    public void setNotifyOrderone(int notifyOrderone) {
+        NotifyOrderone = notifyOrderone;
+    }
+
+    public String getUserDetailUserName() {
+        return appPreference.getString(userNAME, "");
+    }
+
+    public void setUserDetailUserName(String userDetailUserName) {
+        appPreference.putString(this.userNAME, userDetailUserName);
+    }
+
+    public String getUserDetailChatWith() {
+        return appPreference.getString(userChatWith, "");
+    }
+
+    public void setUserDetailChatWith(String userDetailChatWith) {
+        appPreference.putString(this.userChatWith, userDetailChatWith);
+    }
 
     public String getUserID() {
         return appPreference.getString(userID, "");
@@ -97,7 +192,13 @@ public class AppPreferenceManager {
     public void setScheduleCounter(String scheduleCounter) {
         appPreference.putString(this.scheduleCounter, scheduleCounter);
     }
+    public boolean isChatRegister() {
+        return appPreference.getBoolean(this.isAChatRgister, false);
+    }
 
+    public void setChatRegister(boolean value) {
+        appPreference.putBoolean(this.isAChatRgister, value);
+    }
     public String getScheduleCounter2() {
         return scheduleCounter2;
     }
@@ -193,7 +294,37 @@ public class AppPreferenceManager {
         appPreference.putString(this.loginTime, loginTime);
     }
 
+    public boolean isLoadSpotlightOnPager() {
+        return appPreference.getBoolean(this.isLoadSpotlightOnPager, false);
+    }
 
+    public void setLoadSpotlightOnPager(boolean value) {
+        appPreference.putBoolean(this.isLoadSpotlightOnPager, value);
+    }
+
+    public boolean isLoadSpotlightOnHome() {
+        return appPreference.getBoolean(this.isLoadSpotlightOnHome, false);
+    }
+
+    public void setLoadSpotlightOnHome(boolean value) {
+        appPreference.putBoolean(this.isLoadSpotlightOnHome, value);
+    }
+
+    public boolean isLoadSpotlightOnOrderdHistory() {
+        return appPreference.getBoolean(this.isLoadSpotlightOnOrderdHistory, false);
+    }
+
+    public void setLoadSpotlightOnOrderdHistory(boolean value) {
+        appPreference.putBoolean(this.isLoadSpotlightOnOrderdHistory, value);
+    }
+
+    public boolean isLoadSpotlightOnOrderd() {
+        return appPreference.getBoolean(this.isLoadSpotlightOnOrderd, false);
+    }
+
+    public void setLoadSpotlightOnOrderd(boolean value) {
+        appPreference.putBoolean(this.isLoadSpotlightOnOrderd, value);
+    }
     public String getTotalDistance() {
         return appPreference.getString(totalDistance, "");
     }
@@ -202,6 +333,24 @@ public class AppPreferenceManager {
         appPreference.putString(this.totalDistance, totalDistance);
     }
 
+    //jai
+    public String getLatitude() {
+        return appPreference.getString(latitude, "");
+    }
+
+    public void setLatitude(String latitude) {
+        appPreference.putString(this.latitude, latitude);
+    }
+
+    public String getLongitude() {
+        return appPreference.getString(longitude, "");
+    }
+
+    public void setLongitude(String longitude) {
+        appPreference.putString(this.longitude, longitude);
+    }
+
+    //jai
     public String getTotalEarnings() {
         return appPreference.getString(totalEarnings, "");
     }
@@ -257,7 +406,13 @@ public class AppPreferenceManager {
         appPreference.clearPreferences();
         appPreference.putBoolean(this.are_terms_and_conditions_accepted, termsAndConditionsAccepted);
     }
+    public String getChatPassword() {
+        return appPreference.getString(ChatPassword, "");
+    }
 
+    public void setChatPassword(String password) {
+        appPreference.putString(this.ChatPassword, password);
+    }
     public boolean isAfterLogin() {
         return appPreference.getBoolean(this.isAfterLogin, false);
     }

@@ -6,6 +6,10 @@ package com.thyrocare.models.api.request;
 
 public class HubStartRequestModel {
     private String BtechId;
+
+
+
+    private String Token;
     private String HubId;
     private int Type;
 
@@ -31,5 +35,12 @@ public class HubStartRequestModel {
 
     public void setType(int type) {
         Type = type;
+    }
+    public String getToken() {
+        return Token;
+    }
+
+    public void setToken(String token) {
+        Token = token;
     }
 }

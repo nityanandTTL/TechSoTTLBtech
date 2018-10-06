@@ -15,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.R;
 import com.thyrocare.activity.CampOrderBookingActivity;
 import com.thyrocare.activity.HomeScreenActivity;
@@ -24,7 +26,6 @@ import com.thyrocare.dao.models.BeneficiaryDetailsDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
 import com.thyrocare.delegate.CampListDisplayRecyclerViewAdapterDelegate;
 import com.thyrocare.dialog.ConfirmOrderReleaseDialog;
-import com.thyrocare.models.api.request.CallPatchRequestModel;
 import com.thyrocare.models.api.request.CampStartedRequestModel;
 import com.thyrocare.models.api.response.CampListDisplayResponseModel;
 import com.thyrocare.models.api.response.CampScanQRResponseModel;
@@ -40,8 +41,6 @@ import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 
@@ -249,7 +248,12 @@ public class CampListDisplayFragment extends AbstractFragment {
             }
         }
         if (i == 0) {
-            if (isNetworkAvailable(activity)) {
+
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" + campDetailModel.getLeaderContactNo()));
+            activity.startActivity(intent);
+
+     /*       if (isNetworkAvailable(activity)) {
                 CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
                 callPatchRequestModel.setSrcnumber(new AppPreferenceManager(activity).getLoginResponseModel().getUserID());
                 callPatchRequestModel.setDestNumber(campDetailModel.getLeaderContactNo()+"");
@@ -258,7 +262,7 @@ public class CampListDisplayFragment extends AbstractFragment {
                 callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
             } else {
                 Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-            }
+            }*/
 
         }
 
@@ -366,11 +370,16 @@ public class CampListDisplayFragment extends AbstractFragment {
 
         }
         if (scanningResult != null && scanningResult.getContents() != null) {
-            //  String scanned_barcode = scanningResult.getContents();
-            Logger.error("" + scanningResult);
-            Logger.error("scanned_barcode " + scanningResult.getContents());
-            Toast.makeText(activity, "" + scanningResult, Toast.LENGTH_SHORT).show();
-            callsendQRCodeApi(scanningResult.getContents());
+            if (scanningResult.getContents().startsWith("0")|| scanningResult.getContents().startsWith("$")){
+                Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
+            }else {
+                //  String scanned_barcode = scanningResult.getContents();
+                Logger.error("" + scanningResult);
+                Logger.error("scanned_barcode " + scanningResult.getContents());
+                Toast.makeText(activity, "" + scanningResult, Toast.LENGTH_SHORT).show();
+                callsendQRCodeApi(scanningResult.getContents());
+            }
+
 
         } else {
             super.onActivityResult(requestCode, resultCode, data);

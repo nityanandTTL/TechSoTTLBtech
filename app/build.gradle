@@ -16,14 +16,14 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '26.0.2'
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.thyrocare"
-        minSdkVersion 19
+        minSdkVersion 18
         targetSdkVersion 25
-        versionCode 12
-        versionName "1.0.10"
+        versionCode 43
+        versionName "1.1.35"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -54,13 +54,13 @@ android {
     productFlavors {
         BTECHdev {
             applicationId = "com.thyrocare.btech.dev"
-            versionCode 12
-            versionName "debug_1.0.10"
+            versionCode 43
+            versionName "debug_1.1.35"
         }
         BTECHprod {
             applicationId = "com.thyrocare.btech"
-            versionCode 12
-            versionName "1.0.10"
+            versionCode 43
+            versionName "1.1.35"
         }
     }
     packagingOptions {
@@ -92,6 +92,7 @@ dependencies {
     compile 'com.android.support:mediarouter-v7:25.3.1'
     compile 'com.android.support:animated-vector-drawable:25.3.1'
     compile 'com.google.android.gms:play-services:10.2.1'
+    compile 'com.google.android.gms:play-services-vision:10.2.1'
     compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -100,7 +101,19 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.google.zxing:core:3.2.1'
+    compile 'com.android.volley:volley:1.0.0'
     compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.google.firebase:firebase-crash:10.0.1'
+    compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.google.firebase:firebase-messaging:10.2.1'
+    compile 'com.google.firebase:firebase-database:10.2.1'
+    compile 'com.firebase:firebase-client-android:2.5.2'
+    compile 'com.sdsmdg.tastytoast:tastytoast:0.1.1'
+    compile 'com.android.support:cardview-v7:23.3.+'
     testCompile 'junit:junit:4.12'
+    compile 'com.github.wooplr:Spotlight:1.2.3'
+    compile 'com.microsoft.projectoxford:face:1.4.3'
 }
+
+apply plugin: 'com.google.gms.google-services'

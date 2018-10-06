@@ -4,11 +4,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thyrocare.models.data.BrandCurrencyModel;
 import com.thyrocare.models.data.BrandMasterModel;
 import com.thyrocare.utils.api.Logger;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 
@@ -45,6 +45,7 @@ public class BrandMasterDao {
 	String RECORD_STATUS = "recordStatus";
 	String SYNC_STATUS = "syncStatus";
 	String SYNC_ACTION = "syncAction";
+
 
 
 	// Constructors

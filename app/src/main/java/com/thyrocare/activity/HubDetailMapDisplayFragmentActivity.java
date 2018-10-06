@@ -24,17 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.thyrocare.R;
-import com.thyrocare.models.api.request.HubStartRequestModel;
-import com.thyrocare.models.data.HUBBTechModel;
-import com.thyrocare.network.ApiCallAsyncTask;
-import com.thyrocare.network.ApiCallAsyncTaskDelegate;
-import com.thyrocare.network.AsyncTaskForRequest;
-import com.thyrocare.utils.api.Logger;
-import com.thyrocare.utils.app.AppPreferenceManager;
-import com.thyrocare.utils.app.BundleConstants;
-import com.thyrocare.utils.app.GPSTracker;
-import com.thyrocare.utils.fileutils.DataParser;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -49,7 +38,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.thyrocare.R;
+import com.thyrocare.models.api.request.HubStartRequestModel;
+import com.thyrocare.models.data.HUBBTechModel;
+import com.thyrocare.network.ApiCallAsyncTask;
+import com.thyrocare.network.ApiCallAsyncTaskDelegate;
+import com.thyrocare.network.AsyncTaskForRequest;
+import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.api.NetworkUtils;
+import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.BundleConstants;
+import com.thyrocare.utils.app.GPSTracker;
+import com.thyrocare.utils.fileutils.DataParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -357,6 +357,8 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
         hubStartRequestModel.setHubId("" + hubBTechModel.getHubId());
         hubStartRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
         hubStartRequestModel.setType(status);
+       // hubStartRequestModel.setToken(appPreferenceManager.getLoginResponseModel().getAccess_token());
+
         ApiCallAsyncTask HubStartApiAsyncTask = asyncTaskForRequest.getHubStartRequestAsyncTask(hubStartRequestModel);
         if (status == 3) {
             HubStartApiAsyncTask.setApiCallAsyncTaskDelegate(new HubArrivedApiAsyncTaskDelegateResult());
@@ -507,32 +509,35 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
             PolylineOptions lineOptions = null;
 
             // Traversing through all the routes
-            for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList<>();
-                lineOptions = new PolylineOptions();
 
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
+         if(result!= null) {
+             for (int i = 0; i < result.size(); i++) {
+                 points = new ArrayList<>();
+                 lineOptions = new PolylineOptions();
 
-                // Fetching all the points in i-th route
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
+                 // Fetching i-th route
+                 List<HashMap<String, String>> path = result.get(i);
 
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
+                 // Fetching all the points in i-th route
+                 for (int j = 0; j < path.size(); j++) {
+                     HashMap<String, String> point = path.get(j);
 
-                    points.add(position);
-                }
+                     double lat = Double.parseDouble(point.get("lat"));
+                     double lng = Double.parseDouble(point.get("lng"));
+                     LatLng position = new LatLng(lat, lng);
 
-                // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(10);
-                lineOptions.color(Color.RED);
+                     points.add(position);
+                 }
 
-                Log.d("onPostExecute", "onPostExecute lineoptions decoded");
+                 // Adding all the points in the route to LineOptions
+                 lineOptions.addAll(points);
+                 lineOptions.width(10);
+                 lineOptions.color(Color.RED);
 
-            }
+                 Log.d("onPostExecute", "onPostExecute lineoptions decoded");
+
+             }
+         }
 
             // Drawing polyline in the Google Map for the i-th route
             if (lineOptions != null) {

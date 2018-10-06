@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.fragment.TSP_SendFragment;
 import com.thyrocare.models.data.Tsp_ScanBarcodeDataModel;
 import com.thyrocare.utils.api.Logger;
-import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 

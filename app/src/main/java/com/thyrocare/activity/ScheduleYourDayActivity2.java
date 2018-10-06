@@ -11,12 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.adapter.SlotsDisplayAdapter;
+import com.thyrocare.dao.DhbDao;
 import com.thyrocare.delegate.SlotsSelectionDelegate;
-import com.thyrocare.fragment.HomeScreenFragment;
-import com.thyrocare.fragment.LeaveIntimationFragment;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.data.SlotModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -61,6 +60,7 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
 
     private String lasScheduleDate;
     String dayAfterttomorrowAsString;
+    private String disableNo = "";
 
 
     public ScheduleYourDayActivity2() {
@@ -71,11 +71,12 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
         i.putExtra("LEAVEINTIMATION", "0");
         startActivity(i);
         activity.finish();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +88,15 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
         value = getIntent().getExtras().getString("WHEREFROM");
+
+        try {
+            if (getIntent().getExtras().getString("SHOWNO") != null) {
+                disableNo = getIntent().getExtras().getString("SHOWNO");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         calendar.add(Calendar.DAY_OF_YEAR, 2);
         Date tomorrow = calendar.getTime();
         DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
@@ -151,16 +161,16 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 //changes_5june2017
-                if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {
-                    txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
-                    txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    llSlotsDisplay.setVisibility(View.VISIBLE);
-                    isAvailable = true;
-                    btnProceed.setVisibility(View.VISIBLE);
-                    fetchData();
-                } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
+              /*  if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
+                txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
+                txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                llSlotsDisplay.setVisibility(View.VISIBLE);
+                isAvailable = true;
+                btnProceed.setVisibility(View.VISIBLE);
+                fetchData();
+              /*  } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
                     Toast.makeText(activity, "User can schedule only once per day...Please try again later.", Toast.LENGTH_SHORT).show();
-                }
+                }*/
                 //changes_5june2017
             }
         });
@@ -173,7 +183,7 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
                 btnProceed.setVisibility(View.INVISIBLE);
                 isAvailable = false;
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setMessage("Are you sure you are not available tomorrow ?")
+                builder.setMessage("Are you sure you are not available Day After tomorrow?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
@@ -187,7 +197,7 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
 
                                 setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
                                 setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
-                                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                                calendar.add(Calendar.DAY_OF_MONTH, 2);
                                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
@@ -203,6 +213,7 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+
                             }
                         });
                 builder.create().
@@ -272,6 +283,12 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
         btnProceed.setVisibility(View.INVISIBLE);
         llSlotsDisplay = (LinearLayout) findViewById(R.id.ll_slots_display);
         gvSlots = (GridView) findViewById(R.id.gv_slots);
+
+        if (disableNo.toString().equals("1")) {
+            txtNo.setVisibility(View.INVISIBLE);
+        } else {
+            txtNo.setVisibility(View.VISIBLE);
+        }
     }
 
     private class FetchSlotsAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -287,6 +304,8 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
                     }
                 }
                 initData();
+            } else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
                 Toast.makeText(activity, "Failed to Fetch Slots", Toast.LENGTH_SHORT).show();
             }
@@ -296,6 +315,34 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
         public void onApiCancelled() {
 
         }
+    }
+
+    public void CallLogOutFromDevice() {
+        try {
+            TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            appPreferenceManager.clearAllPreferences();
+            try {
+                new DhbDao(activity).deleteTablesonLogout();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
+            // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+            Intent n = new Intent(activity, LoginScreenActivity.class);
+            n.setAction(Intent.ACTION_MAIN);
+            n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(n);
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void initData() {
@@ -321,45 +368,31 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200 || statusCode == 201) {
                 Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
-                if (isAvailable) {
+                //appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json, SetBtechAvailabilityAPIRequestModel.class));
+                appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.MILLISECOND, 0);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.HOUR_OF_DAY, 0);
+                if (value.equals("0")) {
+                    if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
 
-                    //changes_5june2017
-                    appPreferenceManager.setScheduleCounter("y");
-                    String scheduledDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                    appPreferenceManager.setScheduleDate(scheduledDate);
-                    //changes_5june2017
-
-                    //appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json, SetBtechAvailabilityAPIRequestModel.class));
-                    appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
-                    Calendar c = Calendar.getInstance();
-                    c.set(Calendar.MILLISECOND, 0);
-                    c.set(Calendar.SECOND, 0);
-                    c.set(Calendar.MINUTE, 0);
-                    c.set(Calendar.HOUR_OF_DAY, 0);
-                    if(value.equals("0")){
-                        if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
-                            Logger.error("Aaata Gela");
-                            Logger.error("Selfie" + String.valueOf(appPreferenceManager.getSelfieResponseModel()));
-                            Logger.error("LOgeeererereeere" + String.valueOf(appPreferenceManager.getSelfieResponseModel().getTimeUploaded()));
-                            Logger.error("LOgeeererereeereMIllis" + String.valueOf(c.getTimeInMillis()));
-
-
-                            // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
-                            Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
-                            i.putExtra("LEAVEINTIMATION", "0");
-                            startActivity(i);
-                        } else {
-                            switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
-                        }
-                    }else{
-                        Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
                         startActivity(i);
+                    } else {
+                        switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
                     }
                 } else {
-                    pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                    Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                    i.putExtra("LEAVEINTIMATION", "0");
+                    startActivity(i);
                 }
+            } else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
+//                pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                 Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
             }
         }

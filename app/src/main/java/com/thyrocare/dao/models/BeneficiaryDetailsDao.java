@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thyrocare.models.data.BeneficiaryBarcodeDetailsModel;
 import com.thyrocare.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.models.data.BeneficiaryLabAlertsModel;
@@ -13,8 +15,6 @@ import com.thyrocare.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.InputUtils;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 
@@ -59,6 +59,8 @@ public class BeneficiaryDetailsDao {
 	private String RECORD_STATUS = "recordStatus";
 	private String SYNC_STATUS = "syncStatus";
 	private String SYNC_ACTION = "syncAction";
+	private String LEADID = "LeadId";
+
 
 
 	// Constructors
@@ -120,6 +122,7 @@ public class BeneficiaryDetailsDao {
 		beneficiaryDetailsModel.setRecordStatus(cursor.getString(cursor.getColumnIndex(RECORD_STATUS)));
 		beneficiaryDetailsModel.setSyncStatus(cursor.getString(cursor.getColumnIndex(SYNC_STATUS)));
 		beneficiaryDetailsModel.setSyncAction((cursor.getString(cursor.getColumnIndex(SYNC_ACTION))));
+		beneficiaryDetailsModel.setLeadId(cursor.getString(cursor.getColumnIndex(LEADID)));
 
 		return beneficiaryDetailsModel;
 	}
@@ -152,6 +155,11 @@ public class BeneficiaryDetailsDao {
 		values.put(RECORD_STATUS, beneficiaryDetailsModel.getRecordStatus());
 		values.put(SYNC_STATUS, beneficiaryDetailsModel.getSyncStatus());
 		values.put(SYNC_ACTION, beneficiaryDetailsModel.getSyncAction());
+		values.put(LEADID, beneficiaryDetailsModel.getLeadId());
+
+
+
+
 		return values;
 	}
 

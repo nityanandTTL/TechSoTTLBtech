@@ -14,12 +14,15 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
+import com.thyrocare.activity.LoginScreenActivity;
 import com.thyrocare.activity.ScheduleYourDayActivity;
 import com.thyrocare.activity.ScheduleYourDayActivity2;
 import com.thyrocare.activity.ScheduleYourDayIntentActivity;
 import com.thyrocare.adapter.SlotsDisplayAdapter;
+import com.thyrocare.dao.DhbDao;
 import com.thyrocare.delegate.SlotsSelectionDelegate;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.api.response.BtechAvaliabilityResponseModel;
@@ -79,8 +82,12 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         super.onCreate(savedInstanceState);
 
         activity = (HomeScreenActivity) getActivity();
-        activity.toolbarHome.setTitle("Schedule your Day");
-        activity.toolbarHome.setVisibility(View.INVISIBLE);
+        try {
+            activity.toolbarHome.setTitle("Schedule your Day");
+            activity.toolbarHome.setVisibility(View.INVISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         activity.isOnHome = false;
         appPreferenceManager = new AppPreferenceManager(activity);
 
@@ -96,14 +103,11 @@ public class ScheduleYourDayFragment extends AbstractFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_schedule_your_day1, container, false);
-        initUI();
-        initListeners();
+        rootView = inflater.inflate(R.layout.blank, container, false);
+      /*  initUI();
+        initListeners();*/
         fetchData1();
-        //changes_5june2017
-        findSchedularDate();
-        //changes_5june2017
-
+      /*  findSchedularDate();*/
         return rootView;
     }
 
@@ -129,28 +133,26 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 BtechAvaliabilityResponseModel btechAvaliabilityResponseModel = new BtechAvaliabilityResponseModel();
                 btechAvaliabilityResponseModel = responseParser.getBtechAvaliabilityResponseModel(json, statusCode);
                 if (btechAvaliabilityResponseModel != null) {
-                  /*if(btechAvaliabilityResponseModel.getNumberofDays()==0) {*/
                     if (btechAvaliabilityResponseModel.getNumberofDays()== 0) {
                         Logger.error("ZERRO");
-
-                        Bundle bundle= new Bundle();
-                        bundle.putInt(BundleConstants.WHEREFROM,1);
-                        Intent intent=new Intent(activity,HomeScreenActivity.class);
-                       // intent.putExtra("camefrom","1");
+                        Toast.makeText(activity, "Avability Already Done", Toast.LENGTH_SHORT).show();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(BundleConstants.WHEREFROM, 1);
+                        Intent intent = new Intent(activity, HomeScreenActivity.class);
+                        // intent.putExtra("camefrom","1");
                         startActivity(intent);
-                     //   switchToActivity(activity, HomeScreenActivity.class, bundle);
-                    }
-                    else if(btechAvaliabilityResponseModel.getNumberofDays()==1) {
+                        //   switchToActivity(activity, HomeScreenActivity.class, bundle);
+                    } else if (btechAvaliabilityResponseModel.getNumberofDays()== 1) {
                         Logger.error("ONEEEE");
                         Intent mIntent = new Intent(activity, ScheduleYourDayActivity.class);
                         mIntent.putExtra("WHEREFROM", "1");
                         startActivity(mIntent);
-                    }else if(btechAvaliabilityResponseModel.getNumberofDays()==3){
+                    } else if (btechAvaliabilityResponseModel.getNumberofDays() == 3) {
                         Logger.error("THREEE");
                         Intent mIntent = new Intent(activity, ScheduleYourDayActivity2.class);
                         mIntent.putExtra("WHEREFROM", "1");
                         startActivity(mIntent);
-                    } else if (btechAvaliabilityResponseModel.getNumberofDays()== 2) {
+                    } else if (btechAvaliabilityResponseModel.getNumberofDays() == 2) {
                         Logger.error("FOURRRRR");
                         Intent mIntent = new Intent(activity, ScheduleYourDayIntentActivity.class);
                         mIntent.putExtra("WHEREFROM", "1");
@@ -325,14 +327,14 @@ public class ScheduleYourDayFragment extends AbstractFragment {
     public void initUI() {
         super.initUI();
         //changes
-        txtYes = (Button) rootView.findViewById(R.id.txt_yes);
-        txtNo = (Button) rootView.findViewById(R.id.txt_no);
+     /*   txtYes = (Button) rootView.findViewById(R.id.txt_yes);
+        txtNo = (Button) rootView.findViewById(R.id.txt_no);*/
         //changes
 
-        btnProceed = (Button) rootView.findViewById(R.id.btn_proceed);
+       /* btnProceed = (Button) rootView.findViewById(R.id.btn_proceed);
         btnProceed.setVisibility(View.INVISIBLE);
         llSlotsDisplay = (LinearLayout) rootView.findViewById(R.id.ll_slots_display);
-        gvSlots = (GridView) rootView.findViewById(R.id.gv_slots);
+        gvSlots = (GridView) rootView.findViewById(R.id.gv_slots);*/
     }
 
     private class FetchSlotsAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -348,6 +350,8 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                     }
                 }
                 initData();
+            } else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
                 Toast.makeText(activity, "Failed to Fetch Slots", Toast.LENGTH_SHORT).show();
             }
@@ -357,6 +361,34 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         public void onApiCancelled() {
 
         }
+    }
+
+    public void CallLogOutFromDevice() {
+        try {
+            TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            appPreferenceManager.clearAllPreferences();
+            try {
+                new DhbDao(activity).deleteTablesonLogout();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            getActivity().startActivity(homeIntent);
+            // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+            Intent n = new Intent(activity, LoginScreenActivity.class);
+            n.setAction(Intent.ACTION_MAIN);
+            n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            getActivity().startActivity(n);
+            getActivity().finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void initData() {
@@ -381,7 +413,8 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200 || statusCode == 201) {
-                Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity,   "Availability set Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+              //  Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
                 if (isAvailable) {
 
                     //changes_5june2017
@@ -396,14 +429,18 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 } else {
                     pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                 }
+            } else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
-                Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity,  "Failed to set Availability", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                //Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onApiCancelled() {
-            Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity,  "Failed to set Availability", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+           // Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
         }
     }
 }

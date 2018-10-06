@@ -7,30 +7,44 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thyrocare.R;
+import com.thyrocare.models.api.response.FetchLedgerResponseModel;
 import com.thyrocare.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.thyrocare.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.models.api.response.PaymentStartTransactionAPIResponseModel;
+import com.thyrocare.models.data.DepositRegisterModel;
+import com.thyrocare.models.data.Earning_NewRegisterModel;
+import com.thyrocare.models.data.LedgerDetailsModeler;
 import com.thyrocare.models.data.NarrationMasterModel;
 import com.thyrocare.models.data.PaymentNameValueModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -48,14 +62,19 @@ import com.thyrocare.utils.app.InputUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Orion on 5/16/2017.
  */
 
 public class PaymentsActivity extends AbstractActivity {
+    private static final String TAG_ACTIVITY = "PaymentsActivity";
+
     private Activity activity;
     private AppPreferenceManager appPreferenceManager;
     private AsyncTaskForRequest asyncTaskForRequest;
@@ -89,6 +108,14 @@ public class PaymentsActivity extends AbstractActivity {
     int buttonDecider = 0;
     private int ModeId = 0;
     String TAG = PaymentsActivity.class.getSimpleName();
+    private FetchLedgerResponseModel fetchLedgerResponseModel;
+    private ArrayList<Earning_NewRegisterModel> earning_newRegisterModelsArr;
+    Earning_NewRegisterModel earning_newRegisterModel;
+    private ArrayList<DepositRegisterModel> depositRegisterModels;
+    private String fromdate = "", todate = "";
+    private TableLayout tlCR;
+    private int Flagcnt = 0;
+    EditText edtPaymentUserInputs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +125,7 @@ public class PaymentsActivity extends AbstractActivity {
         appPreferenceManager = new AppPreferenceManager(activity);
         asyncTaskForRequest = new AsyncTaskForRequest(activity);
         responseParser = new ResponseParser(activity);
+
         if (getIntent().getExtras() != null) {
             NarrationId = getIntent().getExtras().getInt(BundleConstants.PAYMENTS_NARRATION_ID);
             OrderNo = getIntent().getExtras().getString(BundleConstants.PAYMENTS_ORDER_NO);
@@ -108,14 +136,154 @@ public class PaymentsActivity extends AbstractActivity {
             BillingPin = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_PIN);
             BillingMob = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_MOBILE);
             Logger.error("BillingMob " + BillingMob);
-            Toast.makeText(getApplicationContext(), BillingMob, Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(getApplicationContext(), BillingMob, Toast.LENGTH_SHORT).show();
             BillingEmail = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_EMAIL);
         }
         initUI();
-
+        //today date
+        todate = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
+        //previous 7  days
+        fromdate = getCalculatedDate("yyyy-MM-dd", -7);
 //        fetchNarrationMaster();
-        fetchPaymentModes();
+
+        fetchLedgerDetails();
     }
+
+    public static String getCalculatedDate(String dateFormat, int days) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat s = new SimpleDateFormat(dateFormat);
+        cal.add(Calendar.DAY_OF_YEAR, days);
+        String previous_date = s.format(new Date(cal.getTimeInMillis()));
+        return previous_date;
+    }
+
+    private void fetchLedgerDetails() {
+        Logger.error(TAG_ACTIVITY + "--fetchData: ");
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchLedgerDetailApiAsyncTask = asyncTaskForRequest.getFetchLedgerDetailsRequestAsyncTask(fromdate, todate);
+        fetchLedgerDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchLedgerDetailsApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            fetchLedgerDetailApiAsyncTask.execute(fetchLedgerDetailApiAsyncTask);
+        } else {
+            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void fetchEarningRegister() {
+        Logger.error(TAG_ACTIVITY + "--fetchData: ");
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchEarningDetailApiAsyncTask = asyncTaskForRequest.getFetchEarningDetailsRequestAsyncTask(fromdate, todate);
+        fetchEarningDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchEarningDetailsApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            fetchEarningDetailApiAsyncTask.execute(fetchEarningDetailApiAsyncTask);
+        } else {
+            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void fetchDepositLedger() {
+        Logger.error(TAG_ACTIVITY + "--fetchData: ");
+        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+        ApiCallAsyncTask fetchDepositDetailApiAsyncTask = asyncTaskForRequest.getFetchDepositDetailsRequestAsyncTask(fromdate, todate);
+        fetchDepositDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchDepositDetailsApiAsyncTaskDelegateResult());
+        if (isNetworkAvailable(activity)) {
+            fetchDepositDetailApiAsyncTask.execute(fetchDepositDetailApiAsyncTask);
+        } else {
+            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class FetchLedgerDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            Logger.debug(TAG_ACTIVITY + "--apiCallResult: ");
+            if (statusCode == 200) {
+                ResponseParser responseParser = new ResponseParser(activity);
+                FetchLedgerResponseModel fetchLedgerDetailsResponseModel = new FetchLedgerResponseModel();
+
+                fetchLedgerDetailsResponseModel = responseParser.getFetchledgerDetailsResponseModel(json, statusCode);
+                fetchLedgerResponseModel = fetchLedgerDetailsResponseModel;
+
+                fetchEarningRegister();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Logger.error(TAG_ACTIVITY + "onApiCancelled: ");
+            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    private class FetchEarningDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            Logger.debug(TAG_ACTIVITY + "--apiCallResult: ");
+            if (statusCode == 200) {
+              /*  ResponseParser responseParser = new ResponseParser(activity);
+                earningRegisterModels = new ArrayList<>();
+
+                earningRegisterModels = responseParser.getEarningRegisterResponseModel(json, statusCode);
+                if (earningRegisterModels != null && earningRegisterModels.size() > 0) {
+
+                }*/
+
+                //earning
+                ResponseParser responseParser = new ResponseParser(activity);
+                earning_newRegisterModelsArr = new ArrayList<>();
+
+                //earning_newRegisterModelsArr = responseParser.getEarningRegisterResponseModel(json, statusCode);
+                earning_newRegisterModel = responseParser.getEarningRegisterResponseModel(json, statusCode);
+
+                if (earning_newRegisterModelsArr != null && earning_newRegisterModelsArr.size() > 0) {
+
+                }
+                fetchDepositLedger();
+            }
+
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Logger.error(TAG_ACTIVITY + "onApiCancelled: ");
+            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    private class FetchDepositDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            Logger.debug(TAG_ACTIVITY + "--apiCallResult: ");
+            if (statusCode == 200) {
+                ResponseParser responseParser = new ResponseParser(activity);
+                depositRegisterModels = new ArrayList<>();
+
+                depositRegisterModels = responseParser.getDepositRegisterResponseModel(json, statusCode);
+                if (depositRegisterModels != null && depositRegisterModels.size() > 0) {
+
+                }
+
+            }
+            fetchPaymentModes();
+            // initData();
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Logger.error(TAG_ACTIVITY + "onApiCancelled: ");
+            Toast.makeText(activity, R.string.network_error, Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -194,6 +362,7 @@ public class PaymentsActivity extends AbstractActivity {
                 Button btnNarration = new Button(activity);
                 btnNarration.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 btnNarration.setText(nmm.getNarration());
+                //jai1
                 btnNarration.setTextColor(getResources().getColor(android.R.color.white));
                 btnNarration.setPadding(5, 5, 5, 5);
                 btnNarration.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
@@ -249,15 +418,27 @@ public class PaymentsActivity extends AbstractActivity {
         if (paymentModesArr != null && paymentModesArr.size() > 0) {
             flPayments.removeAllViews();
             LinearLayout llPaymentModes = new LinearLayout(activity);
+            LinearLayout llBankModeDetails = new LinearLayout(activity);
+            LinearLayout lllist = new LinearLayout(activity);
+            TextView tv_leger = new TextView(activity);
+            tv_leger.setText("Ledger");
+            tv_leger.setTypeface(Typeface.DEFAULT_BOLD);
+            tv_leger.setTextSize(20);
+            tv_leger.setGravity(Gravity.CENTER);
             llPaymentModes.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             llPaymentModes.setOrientation(LinearLayout.VERTICAL);
             llPaymentModes.setGravity(Gravity.CENTER);
+            Flagcnt = 0;
+
             for (PaymentProcessAPIResponseModel pparm :
                     paymentModesArr) {
+
+                Flagcnt++;
                 LinearLayout llPaymentModeDetails = new LinearLayout(activity);
-                llPaymentModeDetails.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                llPaymentModeDetails.setLayoutParams(new LinearLayout.LayoutParams
+                        (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 llPaymentModeDetails.setOrientation(LinearLayout.VERTICAL);
-                llPaymentModeDetails.setGravity(Gravity.CENTER);
+                llPaymentModeDetails.setGravity(Gravity.LEFT);
                 for (PaymentNameValueModel pnvm :
                         pparm.getNameValueCollection()) {
                     if (pnvm.getKey().equals("ModeName")) {
@@ -268,6 +449,7 @@ public class PaymentsActivity extends AbstractActivity {
                         btnPaymentMode.setGravity(Gravity.CENTER);
                         btnPaymentMode.setPadding(5, 5, 5, 5);
                         btnPaymentMode.setMinEms(10);
+                        //jai2
                         btnPaymentMode.setTextColor(getResources().getColor(android.R.color.white));
                         btnPaymentMode.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
                         btnPaymentMode.setText(pnvm.getValue());
@@ -283,8 +465,128 @@ public class PaymentsActivity extends AbstractActivity {
                     }
                 }
                 llPaymentModes.addView(llPaymentModeDetails);
+//jai
+                llBankModeDetails.setLayoutParams(new LinearLayout.LayoutParams
+                        (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                llBankModeDetails.setOrientation(LinearLayout.VERTICAL);
+                llBankModeDetails.setGravity(Gravity.RIGHT);
+
+
+                Button btnBankMode = new Button(activity);
+                LinearLayout.LayoutParams txtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                txtParams.setMargins(10, 10, 10, 10);
+                btnBankMode.setLayoutParams(txtParams);
+                btnBankMode.setGravity(Gravity.CENTER);
+                btnBankMode.setPadding(5, 5, 5, 5);
+                btnBankMode.setMinEms(10);
+                //jai2
+                btnBankMode.setTextColor(getResources().getColor(android.R.color.white));
+                btnBankMode.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
+                btnBankMode.setText("BANK");
+                btnBankMode.setTag(pparm);
+                btnBankMode.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        HomeScreenActivity.isFromPayment = true;
+                        startActivity(new Intent(activity, HomeScreenActivity.class));
+                    }
+                });
+
+                if (Flagcnt == 1) {
+
+                    btnBankMode.setVisibility(View.VISIBLE);
+                } else {
+                    btnBankMode.setVisibility(View.INVISIBLE);
+                }
+
+                llBankModeDetails.addView(btnBankMode);
+
+                // llBankModeDetails.setTag(pparm);
+                //jai
+
+                lllist.setLayoutParams(new LinearLayout.LayoutParams
+                        (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                lllist.setOrientation(LinearLayout.VERTICAL);
+                lllist.setGravity(Gravity.BOTTOM);
+                lllist.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                ListView lv = new ListView(this);
+                String[] values = new String[10];
+                for (int i = 0; i < 10; i++) {
+                    values[i] = "" + i;
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, values);
+                lv.setAdapter(adapter);
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                            long arg3) {
+                        //Toast.makeText(getBaseContext(), ""+arg2,     Toast.LENGTH_SHORT).show();
+                        Log.d("DEBUG", "" + arg2);
+
+                    }
+
+                });
+                lllist.addView(lv, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             }
+
+
+            if (fetchLedgerResponseModel != null && fetchLedgerResponseModel.getLedgerDetails().size() > 0) {
+
+                tlCR = new TableLayout(activity);
+                TableRow trCrH = (TableRow) LayoutInflater.from(activity).inflate(R.layout.item_title_ledger_cash_register, null);
+                tlCR.addView(trCrH);
+                for (LedgerDetailsModeler ledgerDetailsModel :
+                        fetchLedgerResponseModel.getLedgerDetails()) {
+                        /*ledgerDetailsModel.setBTechId(ledgerDetailsModel.getBTechId());
+                        ledgerDetailsModel.setBTechName(ledgerDetailsModel.getBTechName());*/
+                    TableRow trCr = (TableRow) LayoutInflater.from(activity).inflate(R.layout.item_titlesub_ledger_cash_register, null);
+                    TextView txtDate = (TextView) trCr.findViewById(R.id.txt_date);
+                    TextView txtopeningbal = (TextView) trCr.findViewById(R.id.txt_openingbalance);
+                    TextView txtCredit = (TextView) trCr.findViewById(R.id.txt_credit);
+                    TextView txtDebit = (TextView) trCr.findViewById(R.id.txt_debit);
+                    TextView txtclosingbal = (TextView) trCr.findViewById(R.id.txt_closingBalance);
+
+                    txtDate.setText(ledgerDetailsModel.getDate() + "");
+                    txtopeningbal.setText(ledgerDetailsModel.getOpeningBal() + "");
+                    txtCredit.setText(ledgerDetailsModel.getCredit() + "");
+                    txtDebit.setText(ledgerDetailsModel.getDebit() + "");
+                    txtclosingbal.setText(ledgerDetailsModel.getClosingBal() + "");
+
+                    tlCR.addView(trCr);
+
+                }
+
+            } else {
+
+                tlCR = new TableLayout(activity);
+                TableRow trCrH = (TableRow) LayoutInflater.from(activity).inflate(R.layout.item_title_ledger_cash_register, null);
+                tlCR.addView(trCrH);
+                TableRow trCr = (TableRow) LayoutInflater.from(activity).inflate(R.layout.item_titlesub_ledger_cash_register, null);
+
+                TextView txtDate = (TextView) trCr.findViewById(R.id.txt_date);
+                TextView txtopeningbal = (TextView) trCr.findViewById(R.id.txt_openingbalance);
+                TextView txtCredit = (TextView) trCr.findViewById(R.id.txt_credit);
+                TextView txtDebit = (TextView) trCr.findViewById(R.id.txt_debit);
+                TextView txtclosingbal = (TextView) trCr.findViewById(R.id.txt_closingBalance);
+
+                txtDate.setText("-");
+                txtopeningbal.setText("-");
+                txtCredit.setText("-");
+                txtDebit.setText("-");
+                txtclosingbal.setText("-");
+
+
+                tlCR.addView(trCr);
+
+                Toast.makeText(activity, "payment history not available", Toast.LENGTH_SHORT).show();
+            }
+            //jai
+            llBankModeDetails.addView(tv_leger);
+            llBankModeDetails.addView(tlCR);
             flPayments.addView(llPaymentModes);
+            flPayments.addView(llBankModeDetails);
         }
     }
 
@@ -335,9 +637,11 @@ public class PaymentsActivity extends AbstractActivity {
             flPayments.removeAllViews();
             View v = activity.getLayoutInflater().inflate(R.layout.paymentsdesign, null);
             LinearLayout llPaymentPassInputs = (LinearLayout) v.findViewById(R.id.ll_payments_pass_inputs_data);
+
             final EditText editAmount = (EditText) v.findViewById(R.id.amount1);
             TextView textAmount = (TextView) v.findViewById(R.id.amount);
             final Button btnPaymentInputsSubmit = new Button(activity);
+
             for (int i = 0; i < paymentPassInputsModel.getNameValueCollection().size(); i++) {
                 final int currentPosition = i;
                 if (paymentPassInputsModel.getNameValueCollection().get(i).getRequired().equals("User")) {
@@ -356,8 +660,11 @@ public class PaymentsActivity extends AbstractActivity {
 
                         txtPaymentUserInputss.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                         //changes_5june2017
+                        //jai
+                        Logger.error("name " + paymentPassInputsModel.getNameValueCollection().get(i).getHint());
 
-                        edtPaymentUserInputs.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
+                        //jai
+                        edtPaymentUserInputs.setHint("Please Enter " + paymentPassInputsModel.getNameValueCollection().get(i).getHint());
                         edtPaymentUserInputs.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -376,7 +683,7 @@ public class PaymentsActivity extends AbstractActivity {
                                 String remarks = s.toString();
 
                                 //for REMARKS
-                                if (edtPaymentUserInputs.getHint().equals("Remarks")) {
+                                if (edtPaymentUserInputs.getHint().equals("Please Enter Remarks")) {
                                     if (remarks.contains("\'")) {
                                         edtPaymentUserInputs.setError("Apostroph symbol ( ' ) is not allowed.");
                                         edtPaymentUserInputs.setText("");
@@ -386,7 +693,7 @@ public class PaymentsActivity extends AbstractActivity {
                                 }
 
                                 //Mobile
-                                if (edtPaymentUserInputs.getHint().equals("Mobile")) {
+                                if (edtPaymentUserInputs.getHint().equals("Please Enter Mobile")) {
                                     Logger.error("Alloy barka");
                                     if (remarks.contains(" ")) {
                                         Logger.error("Adaklay");
@@ -402,15 +709,13 @@ public class PaymentsActivity extends AbstractActivity {
 
 
                                 //for VPA
-                                if (edtPaymentUserInputs.getHint().equals("VPA")) {
+                                if (edtPaymentUserInputs.getHint().equals("Please Enter VPA")) {
                                     if (remarks.contains(" ")) {
                                         edtPaymentUserInputs.setError("Space is not allowed.");
                                         edtPaymentUserInputs.setText("");
                                     } else
                                         paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
                                 }
-
-
                             }
                         });
                         llPaymentPassInputs.addView(v1);
@@ -533,6 +838,9 @@ public class PaymentsActivity extends AbstractActivity {
     private void fetchTransactionResponseOnStartTransaction() {
         JSONObject jsonRequest = new JSONObject();
         try {
+            // TODO only for testing
+//           /* paymentPassInputsModel.getNameValueCollection().get(2).setValue("1");*/
+
             jsonRequest.put("URLId", paymentPassInputsModel.getURLId());
             for (PaymentNameValueModel pnvm :
                     paymentPassInputsModel.getNameValueCollection()) {
@@ -547,6 +855,11 @@ public class PaymentsActivity extends AbstractActivity {
                         return;
                     }*//*----Changes done Due to blocking */
                 }
+            }
+            try {
+                jsonRequest.put("UserId", appPreferenceManager.getLoginResponseModel().getUserID());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
             startTransactionAsyncTask = asyncTaskForRequest.getStartTransactionRequestAsyncTask(jsonRequest);
             startTransactionAsyncTask.setApiCallAsyncTaskDelegate(new FetchTransactionResponseOnStartTransactionAsyncTaskDelegateResult());
@@ -580,7 +893,7 @@ public class PaymentsActivity extends AbstractActivity {
                                         finish();
                                     }
                                 }).show();
-                    } else if (NarrationId == 2 && ModeId == 1) {
+                    } else if (NarrationId == 2 && (ModeId == 1 || ModeId == 10)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                         builder.setTitle("Verify Payment")
                                 .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
@@ -603,7 +916,11 @@ public class PaymentsActivity extends AbstractActivity {
                         initDoCaptureResponseData();
                     }
                 } else {
-                    Toast.makeText(activity, paymentStartTransactionAPIResponseModel.getTokenData(), Toast.LENGTH_SHORT).show();
+                    if (paymentStartTransactionAPIResponseModel.getTokenData() != null) {
+                        Toast.makeText(activity, paymentStartTransactionAPIResponseModel.getTokenData(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(activity, paymentStartTransactionAPIResponseModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else {
                 Toast.makeText(activity, json + "", Toast.LENGTH_SHORT).show();
@@ -628,12 +945,19 @@ public class PaymentsActivity extends AbstractActivity {
             for (int i = 0; i < paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().size(); i++) {
                 final int currentPosition = i;
                 if (paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().get(i).getRequired().equals("User")) {
-                    EditText edtPaymentUserInputs = new EditText(activity);
+
+                    int maxLength = 6;
+                    InputFilter[] fArray = new InputFilter[1];
+                    fArray[0] = new InputFilter.LengthFilter(maxLength);
+
+                    edtPaymentUserInputs = new EditText(activity);
                     LinearLayout.LayoutParams edtParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     edtParams.setMargins(10, 5, 5, 10);
                     edtPaymentUserInputs.setLayoutParams(edtParams);
                     edtPaymentUserInputs.setGravity(Gravity.CENTER);
                     edtPaymentUserInputs.setMinEms(10);
+                    edtPaymentUserInputs.setFilters(fArray);
+                    edtPaymentUserInputs.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
                     edtPaymentUserInputs.setHint(paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().get(i).getHint());
                     edtPaymentUserInputs.addTextChangedListener(new TextWatcher() {
                         @Override
@@ -719,7 +1043,13 @@ public class PaymentsActivity extends AbstractActivity {
                 btnPaymentStartTransactionSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fetchDoCaptureResponse(true);
+                        if (edtPaymentUserInputs != null) {
+                            if (edtPaymentUserInputs.getText().length() == 6) {
+                                fetchDoCaptureResponse(true);
+                            } else {
+                                Toast.makeText(activity, "Enter Valid OTP.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 });
                 llPaymentStartTransaction.addView(btnPaymentStartTransactionSubmit);
@@ -731,11 +1061,17 @@ public class PaymentsActivity extends AbstractActivity {
     private void fetchDoCaptureResponse(boolean showProgressDialog) {
         JSONObject jsonRequest = new JSONObject();
         try {
+
             jsonRequest.put("URLId", paymentStartTransactionAPIResponseModel.getReqParameters().getURLId());
             for (PaymentNameValueModel pnvm :
                     paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection()) {
                 jsonRequest.put(pnvm.getKey(), pnvm.getValue());
             }
+
+            if (NarrationId == 2 && (ModeId == 1 || ModeId == 10)) {
+                jsonRequest.put("OrderNo", OrderNo);
+            }
+
             doCaptureResponseAsyncTask = asyncTaskForRequest.getDoCaptureResponseRequestAsyncTask(jsonRequest, paymentStartTransactionAPIResponseModel.getReqParameters().getAPIUrl());
             doCaptureResponseAsyncTask.setApiCallAsyncTaskDelegate(new DoCaptureResponseAsyncTaskDelegateResult(showProgressDialog));
             doCaptureResponseAsyncTask.setProgressBarVisible(showProgressDialog);
@@ -860,6 +1196,11 @@ public class PaymentsActivity extends AbstractActivity {
                     paymentDoCaptureResponseAPIResponseModel.getReqParameters().getNameValueCollection()) {
                 jsonRequest.put(pnvm.getKey(), pnvm.getValue());
             }
+
+            if (NarrationId == 2 && (ModeId == 1 || ModeId == 10)) {
+                jsonRequest.put("OrderNo", OrderNo);
+            }
+
             recheckResponseAsyncTask = asyncTaskForRequest.getDoCaptureResponseRequestAsyncTask(jsonRequest, paymentDoCaptureResponseAPIResponseModel.getReqParameters().getAPIUrl());
             recheckResponseAsyncTask.setApiCallAsyncTaskDelegate(new DoCaptureResponseAsyncTaskDelegateResult(showProgressDialog));
             recheckResponseAsyncTask.setProgressBarVisible(showProgressDialog);

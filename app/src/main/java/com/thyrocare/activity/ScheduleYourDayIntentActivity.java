@@ -11,13 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.adapter.SlotsDisplayAdapter;
+import com.thyrocare.dao.DhbDao;
 import com.thyrocare.delegate.SlotsSelectionDelegate;
-import com.thyrocare.fragment.HomeScreenFragment;
-import com.thyrocare.fragment.LeaveIntimationFragment;
-import com.thyrocare.fragment.TSP_SendFragment;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.data.SlotModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -27,6 +25,7 @@ import com.thyrocare.network.ResponseParser;
 import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
@@ -139,10 +138,11 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
     }
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+
+        /*Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
         i.putExtra("LEAVEINTIMATION", "0");
         startActivity(i);
-        activity.finish();
+        activity.finish();*/
     }
     //changes_5june2017
 
@@ -177,6 +177,11 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                               /* Intent intent=new Intent(activity,ScheduleYourDaySecondIntentActivity.class);
+                                startActivity(intent);
+                                finish();*/
+
                                 SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
                                 setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
                                 setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
@@ -197,12 +202,39 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
                                 } else {
                                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                 }
+
+                                //neha g---------------
+                                appPreferenceManager.setNot_avail_tom(2);
+                                BundleConstants.not_avail_tom=2;
+                                //neha g---------------------
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
                                 dialog.dismiss();
+
+                                /*SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
+                                setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
+                                setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                String slots = "";
+                                setBtechAvailabilityAPIRequestModel.setSlots(slots);
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
+                                Calendar calendar = Calendar.getInstance();
+
+                                setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
+                                setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
+                                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                                setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
+
+                                ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
+                                setBtechAvailabilityAsyncTask.setApiCallAsyncTaskDelegate(new SetBtechAvailabilityAsyncTaskDelegateResult(false));
+                                if (isNetworkAvailable(activity)) {
+                                    setBtechAvailabilityAsyncTask.execute(setBtechAvailabilityAsyncTask);
+                                } else {
+                                    Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                }*/
                             }
                         });
                 builder.create().
@@ -284,6 +316,8 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
                     }
                 }
                 initData();
+            }else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
                 Toast.makeText(activity, "Failed to Fetch Slots", Toast.LENGTH_SHORT).show();
             }
@@ -293,6 +327,34 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
         public void onApiCancelled() {
 
         }
+    }
+
+    public void CallLogOutFromDevice() {
+        try {
+            TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            appPreferenceManager.clearAllPreferences();
+            try {
+                new DhbDao(activity).deleteTablesonLogout();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
+            // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+            Intent n = new Intent(activity, LoginScreenActivity.class);
+            n.setAction(Intent.ACTION_MAIN);
+            n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(n);
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void initData() {
@@ -318,7 +380,8 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200 || statusCode == 201) {
-                Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity,  "Availability set Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+               // Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
                 if (isAvailable) {
 
                     //changes_5june2017
@@ -331,16 +394,22 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
                     appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
                     switchToActivity(activity, ScheduleYourDaySecondIntentActivity.class, new Bundle());
 
+                }else{
+                    switchToActivity(activity, ScheduleYourDaySecondIntentActivity.class, new Bundle());
                 }
 
+            }else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
-                Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
+                TastyToast.makeText(activity,  "Failed to set Availability", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+               // Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onApiCancelled() {
-            Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
+            TastyToast.makeText(activity,  "Failed to set Availability", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+          //  Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
         }
     }
 

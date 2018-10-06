@@ -25,6 +25,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
     private String Refcode;
     private String ProjId;//
     private int ReportHC;
+    private int UserAccessCode;
     private boolean isTestEdit;
     private boolean isAddBen;
     private ArrayList<BeneficiaryDetailsModel> benMaster;
@@ -40,10 +41,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
     private String Servicetype;
     private float EstIncome;
     private String AppointmentDate;
+    private String BtechName;
+    private boolean EditHC;
+    private boolean EditOrder;
 
     private ArrayList<KitsCountModel> kits;
 
     protected OrderDetailsModel(Parcel in) {
+        super(in);
         BrandId = in.readInt();
         OrderNo = in.readString();
         Address = in.readString();
@@ -59,6 +64,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         Refcode = in.readString();
         ProjId = in.readString();
         ReportHC = in.readInt();
+        UserAccessCode = in.readInt();
         isTestEdit = in.readByte() != 0;
         isAddBen = in.readByte() != 0;
         benMaster = in.createTypedArrayList(BeneficiaryDetailsModel.CREATOR);
@@ -74,11 +80,15 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         Servicetype = in.readString();
         EstIncome = in.readFloat();
         AppointmentDate = in.readString();
+        BtechName = in.readString();
+        EditHC = in.readByte() != 0;
+        EditOrder = in.readByte() != 0;
         kits = in.createTypedArrayList(KitsCountModel.CREATOR);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeInt(BrandId);
         dest.writeString(OrderNo);
         dest.writeString(Address);
@@ -94,6 +104,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         dest.writeString(Refcode);
         dest.writeString(ProjId);
         dest.writeInt(ReportHC);
+        dest.writeInt(UserAccessCode);
         dest.writeByte((byte) (isTestEdit ? 1 : 0));
         dest.writeByte((byte) (isAddBen ? 1 : 0));
         dest.writeTypedList(benMaster);
@@ -109,6 +120,9 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         dest.writeString(Servicetype);
         dest.writeFloat(EstIncome);
         dest.writeString(AppointmentDate);
+        dest.writeString(BtechName);
+        dest.writeByte((byte) (EditHC ? 1 : 0));
+        dest.writeByte((byte) (EditOrder ? 1 : 0));
         dest.writeTypedList(kits);
     }
 
@@ -128,6 +142,22 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
             return new OrderDetailsModel[size];
         }
     };
+
+    public boolean isEditHC() {
+        return EditHC;
+    }
+
+    public void setEditHC(boolean editHC) {
+        EditHC = editHC;
+    }
+
+    public String getBtechName() {
+        return BtechName;
+    }
+
+    public void setBtechName(String btechName) {
+        BtechName = btechName;
+    }
 
     public String getAppointmentDate() {
         return AppointmentDate;
@@ -286,6 +316,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         ReportHC = reportHC;
     }
 
+    public int getUserAccessCode() {
+        return UserAccessCode;
+    }
+
+    public void setUserAccessCode(int userAccessCode) {
+        UserAccessCode = userAccessCode;
+    }
+
     public boolean isTestEdit() {
         return isTestEdit;
     }
@@ -380,6 +418,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
 
     public void setLocation(String location) {
         Location = location;
+    }
+
+    public boolean isEditOrder() {
+        return EditOrder;
+    }
+
+    public void setEditOrder(boolean editOrder) {
+        EditOrder = editOrder;
     }
 
     @Override

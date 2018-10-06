@@ -2,8 +2,6 @@ package com.thyrocare.models.data;
 
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-
 /**
  * Created by Orion on 5/4/2017.
  */

@@ -133,13 +133,14 @@
                             android:src="@drawable/schedule_icon" />
 
                         <ImageView
-                            android:visibility="visible"
+                            android:visibility="gone"
                             android:id="@+id/bellicon"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginLeft="35dp"
                             android:src="@drawable/bell_icon"
                             android:gravity="center"
+
                             android:textColor="@android:color/white"
                             android:textSize="10sp" />
 
@@ -363,7 +364,7 @@
                             android:layout_marginLeft="30dp"
                             android:background="@drawable/badge"
                             android:gravity="center"
-                            android:text="1"
+
                             android:textColor="@android:color/white"
                             android:textSize="10sp" />
                         <!-- <TextView
@@ -374,7 +375,7 @@
                              android:id="@+id/txt_no_of_camps"
                              android:layout_width="@dimen/dp_10"
                              android:layout_height="@dimen/dp_10"
-                             android:background="@drawable/badge"
+                             android:background1="@drawable/badge"
                              android:textColor="@android:color/white"
                              android:text=""
                              android:gravity="center"

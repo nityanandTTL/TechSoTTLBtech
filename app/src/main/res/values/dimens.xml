@@ -137,4 +137,8 @@
     <dimen name="dp_1050">1050dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
+
+    <dimen name="homescreen_icons_size_600dp">80dp</dimen>
+    <dimen name="homescreen_icons_size_720dp">100dp</dimen>
+
 </resources>

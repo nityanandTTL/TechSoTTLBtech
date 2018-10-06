@@ -11,8 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.adapter.SlotsDisplayAdapter;
+import com.thyrocare.dao.DhbDao;
 import com.thyrocare.delegate.SlotsSelectionDelegate;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.data.SlotModel;
@@ -59,6 +61,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
     private int camefrom = 3;
     String value;
     String tomorrowAsString;
+    private String disableNo = "";
 
     public ScheduleYourDayActivity() {
         // Required empty public constructor
@@ -78,10 +81,18 @@ public class ScheduleYourDayActivity extends AbstractActivity {
         camefrom = bundle.getInt(BundleConstants.WHEREFROM, 0);
         Logger.error("camefrom: " + camefrom);
         //jai*/
-         value = getIntent().getExtras().getString("WHEREFROM");
-        Logger.error("value "+value );
+        value = getIntent().getExtras().getString("WHEREFROM");
+        Logger.error("value " + value);
 
-        Toast.makeText(activity, "WHere", Toast.LENGTH_SHORT).show();
+        try {
+            if (getIntent().getExtras().getString("SHOWNO") != null) {
+                disableNo = getIntent().getExtras().getString("SHOWNO");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //   Toast.makeText(activity, "WHere", Toast.LENGTH_SHORT).show();
         today = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
         savedModel = appPreferenceManager.getBtechAvailabilityAPIRequestModel();
         selectedSlotsArr = appPreferenceManager.getSelectedSlotsArr();
@@ -104,10 +115,11 @@ public class ScheduleYourDayActivity extends AbstractActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+
+       /* Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
         i.putExtra("LEAVEINTIMATION", "0");
         startActivity(i);
-        activity.finish();
+        activity.finish();*/
     }
 
     /*  activity2.toolbarHome.setTitle("Schedule your Day");
@@ -278,6 +290,12 @@ public class ScheduleYourDayActivity extends AbstractActivity {
         btnProceed.setVisibility(View.INVISIBLE);
         llSlotsDisplay = (LinearLayout) findViewById(R.id.ll_slots_display);
         gvSlots = (GridView) findViewById(R.id.gv_slots);
+
+        if (disableNo.toString().equals("1")) {
+            txtNo.setVisibility(View.INVISIBLE);
+        } else {
+            txtNo.setVisibility(View.VISIBLE);
+        }
     }
 
     private class FetchSlotsAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -293,6 +311,8 @@ public class ScheduleYourDayActivity extends AbstractActivity {
                     }
                 }
                 initData();
+            }else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
                 Toast.makeText(activity, "Failed to Fetch Slots", Toast.LENGTH_SHORT).show();
             }
@@ -302,6 +322,34 @@ public class ScheduleYourDayActivity extends AbstractActivity {
         public void onApiCancelled() {
 
         }
+    }
+
+    public void CallLogOutFromDevice() {
+        try {
+            TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            appPreferenceManager.clearAllPreferences();
+            try {
+                new DhbDao(activity).deleteTablesonLogout();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
+            // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+            Intent n = new Intent(activity, LoginScreenActivity.class);
+            n.setAction(Intent.ACTION_MAIN);
+            n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(n);
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void initData() {
@@ -341,32 +389,34 @@ public class ScheduleYourDayActivity extends AbstractActivity {
                     c.set(Calendar.MINUTE, 0);
                     c.set(Calendar.HOUR_OF_DAY, 0);
 
-                  if(value.equals("0")){
-                      if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
-                          Logger.error("Aaata Gela");
-                          Logger.error("Selfie" + String.valueOf(appPreferenceManager.getSelfieResponseModel()));
-                          Logger.error("LOgeeererereeere" + String.valueOf(appPreferenceManager.getSelfieResponseModel().getTimeUploaded()));
-                          Logger.error("LOgeeererereeereMIllis" + String.valueOf(c.getTimeInMillis()));
+                    if (value.equals("0")) {
+                        if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+                            Logger.error("Aaata Gela");
+                            Logger.error("Selfie" + String.valueOf(appPreferenceManager.getSelfieResponseModel()));
+                            Logger.error("LOgeeererereeere" + String.valueOf(appPreferenceManager.getSelfieResponseModel().getTimeUploaded()));
+                            Logger.error("LOgeeererereeereMIllis" + String.valueOf(c.getTimeInMillis()));
 
-                          // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
-                          Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
-                          i.putExtra("LEAVEINTIMATION", "0");
-                          startActivity(i);
-                      } else {
-                          switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
-                      }
-                  }else{
-                      Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
-                      i.putExtra("LEAVEINTIMATION", "0");
-                      startActivity(i);
-                  }
+                            // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
+                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                            i.putExtra("LEAVEINTIMATION", "0");
+                            startActivity(i);
+                        } else {
+                            switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
+                        }
+                    } else {
+                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+                    }
                 } else {
-                    Intent i = new Intent(getApplicationContext(),HomeScreenActivity.class);
+                    Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                     i.putExtra("LEAVEINTIMATION", "1");
                     startActivity(i);
 
                     //  pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                 }
+            } else if (statusCode == 401) {
+                CallLogOutFromDevice();
             } else {
                 Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
             }
@@ -377,6 +427,5 @@ public class ScheduleYourDayActivity extends AbstractActivity {
             Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
         }
     }
-
 
 }

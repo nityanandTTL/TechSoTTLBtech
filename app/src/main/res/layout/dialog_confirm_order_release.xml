@@ -15,10 +15,24 @@
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         android:textStyle="bold"/>
-
+    <EditText
+        android:id="@+id/edt__release_remark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_10"
+        android:layout_weight="1"
+        android:background="@drawable/bg_sample_type_heparin"
+        android:hint="Please enter remark"
+        android:lines="3"
+        android:maxLength="100"
+        android:padding="10dp"
+        android:paddingStart="@dimen/dp_10"
+        android:textAlignment="center"
+        android:textSize="14sp" />
     <Spinner
         android:padding="10dp"
         android:id="@+id/sp_remark"
+        android:visibility="gone"
         android:layout_weight="1"
         android:layout_margin="10dp"
         android:background="@android:color/white"

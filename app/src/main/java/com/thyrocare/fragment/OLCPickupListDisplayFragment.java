@@ -1,6 +1,7 @@
 package com.thyrocare.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,9 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thyrocare.R;
-import com.thyrocare.activity.OLCPickupDetailMapDisplayFragmentActivity;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.activity.OLCPickupActivity;
+import com.thyrocare.activity.OLCPickupDetailMapDisplayFragmentActivity;
 import com.thyrocare.adapter.BtechClientDetailsAdapter;
 import com.thyrocare.delegate.BtechClientDetailsAdapterOnItemClickDelegate;
 import com.thyrocare.models.api.response.BtechClientsResponseModel;
@@ -103,6 +104,13 @@ public class OLCPickupListDisplayFragment extends AbstractFragment {
             @Override
             public void onItemCallClick(BtechClientsModel btechClientsModel, int position) {
                 Logger.error("call button clicked");
+
+
+                Intent intent = new Intent(Intent.ACTION_CALL);
+
+                intent.setData(Uri.parse("tel:" + btechClientsModel.getMobile()));
+                activity.startActivity(intent);
+
                /* cod = new ConfirmCallDialog(activity, btechClientsModel);
                 cod.show();*/
             }

@@ -2,12 +2,13 @@ package com.thyrocare.network;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.thyrocare.models.api.response.MessageModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.CommonUtils;
-import com.google.gson.Gson;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -45,6 +46,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.zip.GZIPInputStream;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -132,6 +134,11 @@ public class APICall implements AppConstants {
 
             getResponseInputStream = httpEntity.getContent();
 
+            Header contentEncoding = httpResponse.getFirstHeader("Content-Encoding");
+            if (contentEncoding != null && contentEncoding.getValue().equalsIgnoreCase("gzip")) {
+                getResponseInputStream = new GZIPInputStream(getResponseInputStream);
+            }
+
             // Logger.debug(EntityUtils.toString(httpEntity));
 
         } catch (ConnectTimeoutException e) {
@@ -169,20 +176,24 @@ public class APICall implements AppConstants {
 
         }
 
-        if (getResponseInputStream != null) {
+        try {
+            if (getResponseInputStream != null) {
 
-            responseJson = getJsonStringFromInputstream(getResponseInputStream);
+                responseJson = getJsonStringFromInputstream(getResponseInputStream);
 
-            //Logger.debug("json getResponseInputStream : " + responseJson);
+                //Logger.debug("json getResponseInputStream : " + responseJson);
 
-            int maxLogSize = 1000;
-            for (int i = 0; i <= responseJson.length() / maxLogSize; i++) {
-                int start = i * maxLogSize;
-                int end = (i + 1) * maxLogSize;
-                end = end > responseJson.length() ? responseJson.length() : end;
-                Log.v("json getResponseInputStream : ", responseJson.substring(start, end));
+                int maxLogSize = 1000;
+                for (int i = 0; i <= responseJson.length() / maxLogSize; i++) {
+                    int start = i * maxLogSize;
+                    int end = (i + 1) * maxLogSize;
+                    end = end > responseJson.length() ? responseJson.length() : end;
+                    Log.v("json getResponseInputStream : ", responseJson.substring(start, end));
+                }
+
             }
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (statusCode != 200) {

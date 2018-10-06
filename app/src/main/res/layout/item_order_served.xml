@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="2dp"
@@ -13,7 +12,7 @@
     <!-- Left TITLE PART -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="165dp"
+        android:layout_height="235dp"
         android:layout_weight="3"
         android:background="@color/bgTitleRight"
         android:gravity="center_horizontal"
@@ -21,7 +20,7 @@
 
         <RelativeLayout
             android:layout_width="5dp"
-            android:layout_height="165dp"
+            android:layout_height="235dp"
             android:background="@color/colorSecondary">
             
         </RelativeLayout>
@@ -164,7 +163,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:text="12345678"
+            android:text=""
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
             android:visibility="visible" />
@@ -197,7 +196,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:text="12345678"
+            android:text=""
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
             android:visibility="visible" />
@@ -230,7 +229,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:text="12345678"
+            android:text=""
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
             android:visibility="visible" />
@@ -263,7 +262,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:text="12345678"
+            android:text=""
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
             android:visibility="visible" />
@@ -296,7 +295,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:text="12345678"
+            android:text=""
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
             android:visibility="visible" />
@@ -307,6 +306,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/tv_beneficiary_count"
             android:layout_marginStart="50dp"
+            android:visibility="visible"
             android:layout_toEndOf="@+id/title_from_to_dots"
             android:text="Fasting"
             android:textSize="12sp"/>
@@ -327,9 +327,21 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:text="12345678"
+            android:text=""
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
             android:visibility="visible" />
+        <Button
+            android:id="@+id/ereciept"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/tv_fasting"
+            android:layout_centerHorizontal="true"
+            android:visibility="visible"
+            android:text="Reciept"
+            android:background="@drawable/purple_btn_bg"
+            android:textColor="@android:color/white"
+            />
+
     </RelativeLayout>
 </LinearLayout>

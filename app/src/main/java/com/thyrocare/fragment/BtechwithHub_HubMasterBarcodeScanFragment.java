@@ -15,9 +15,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
+import com.thyrocare.activity.LoginScreenActivity;
 import com.thyrocare.adapter.BtechwithHub_HubScanBarcodeListAdapter;
+import com.thyrocare.dao.DhbDao;
 import com.thyrocare.models.api.request.BtechwithHub_MasterBarcodeMappingRequestModel;
 import com.thyrocare.models.api.response.BtechwithHubResponseModel;
 import com.thyrocare.models.data.BtechwithHub_BarcodeDataModel;
@@ -29,10 +34,9 @@ import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
+
 import java.util.ArrayList;
 /**
  *　APi Used 　　　i)/SpecimenTrack/ReceiveScannedBarcode/Btechid<br/>
@@ -133,6 +137,7 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
         masterBarcodeMappingRequestModel.setHubId(appPreferenceManager.getBtechID());
         masterBarcodeMappingRequestModel.setBtechId("");
         ArrayList<BtechwithHub_BarcodeDataModel> scannedBarcodesArr = new ArrayList<>();
+
         for (BtechwithHub_BarcodeDataModel hbm :
                 barcodeModels) {
             if (hbm.isReceived()) {
@@ -185,7 +190,11 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
                     }
                 }
 
-                hubScanBarcodeListAdapter.notifyDataSetChanged();
+                try {
+                    hubScanBarcodeListAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 master_scanned_barcode = scanningResult.getContents();
             }
@@ -256,6 +265,8 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
                 } else {
                     Toast.makeText(activity, "No records found", Toast.LENGTH_SHORT).show();
                 }
+            }else if (statusCode == 401) {
+                CallLogOutFromComDevice();
             } else {
                 if (IS_DEBUG)
                     Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
@@ -266,6 +277,40 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
         public void onApiCancelled() {
             Toast.makeText(activity, "api cancelled ", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void CallLogOutFromComDevice() {
+        try {
+            TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            try {
+                appPreferenceManager.clearAllPreferences();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                DhbDao dhbDao;
+                dhbDao = new DhbDao(activity);
+                dhbDao.deleteTablesonLogout();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            getActivity().startActivity(homeIntent);
+            // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+            Intent n = new Intent(activity, LoginScreenActivity.class);
+            n.setAction(Intent.ACTION_MAIN);
+            n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            getActivity().startActivity(n);
+            getActivity().finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private class bTECHWITHhUB_MasterBarcodeMappingApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {

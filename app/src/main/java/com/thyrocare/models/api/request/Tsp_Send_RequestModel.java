@@ -2,6 +2,7 @@ package com.thyrocare.models.api.request;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.thyrocare.models.data.Tsp_ScanBarcodeDataModel;
 
 import java.util.ArrayList;

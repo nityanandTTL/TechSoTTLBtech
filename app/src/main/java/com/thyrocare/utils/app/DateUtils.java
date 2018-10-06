@@ -31,7 +31,7 @@ public class DateUtils {
 		return instance;
 	}
 
-	public String UTC_DATE_FORMAT = "yyyy-mm-dd hh:MM:ss";
+	public static String UTC_DATE_FORMAT = "yyyy-mm-dd hh:MM:ss";
 	public long MILLISECONDS_IN_SECONDS = 1000;
 	public String MONTH_DATE_FORMAT = "MMM dd";
 	public String CHALLENGES_END_DATE_FORMAT = "MMM dd, yyyy";
@@ -40,8 +40,37 @@ public class DateUtils {
 		return null;
 
 	}
+	public static void printDifference(Date startDate, Date endDate) {
+		//milliseconds
+		long different = endDate.getTime() - startDate.getTime();
 
-	public Date dateFromUTCString(String dateStr) {
+		System.out.println("startDate : " + startDate);
+		System.out.println("endDate : "+ endDate);
+		System.out.println("different : " + different);
+
+		long secondsInMilli = 1000;
+		long minutesInMilli = secondsInMilli * 60;
+		long hoursInMilli = minutesInMilli * 60;
+		long daysInMilli = hoursInMilli * 24;
+
+		long elapsedDays = different / daysInMilli;
+		different = different % daysInMilli;
+
+		long elapsedHours = different / hoursInMilli;
+		different = different % hoursInMilli;
+
+		long elapsedMinutes = different / minutesInMilli;
+		different = different % minutesInMilli;
+
+		long elapsedSeconds = different / secondsInMilli;
+
+		System.out.printf(
+				"%d days, %d hours, %d minutes, %d seconds%n",
+				elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds);
+	}
+
+
+	public static Date dateFromUTCString(String dateStr) {
 
 		Date date = null;
 
@@ -60,7 +89,7 @@ public class DateUtils {
 		return date;
 	}
 
-	public Date dateFromString(String dateStr, SimpleDateFormat dateFormat) {
+	public static Date dateFromString(String dateStr, SimpleDateFormat dateFormat) {
 
 		Date date = null;
 
@@ -923,6 +952,24 @@ public class DateUtils {
 			return true;
 		}
 		return false;
+	}
+
+	public static String Req_Date_Req(String time, String inputPattern, String outputPattern) {
+		SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+		SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+		Date date = null;
+		String str = null;
+
+		try {
+			date = inputFormat.parse(time);
+			str = outputFormat.format(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return str;
 	}
 
 }

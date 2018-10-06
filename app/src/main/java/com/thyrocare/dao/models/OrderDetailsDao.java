@@ -4,15 +4,16 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thyrocare.models.data.KitsCountModel;
 import com.thyrocare.models.data.OrderDetailsModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.InputUtils;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by Orion on 24/11/15.
@@ -32,9 +33,11 @@ public class OrderDetailsDao {
     private String ORDER_NO = "OrderNo";
     private String VISIT_ID = "VisitId";
     private String APPOINTMENT_DATE = "AppointmentDate";
+    private String BTECHNAME = "BtechName";
     private String SLOT = "Slot";
     private String RESPONSE = "Response";
     private String BRAND_ID = "BrandId";
+    private String USER_ACCESSCODE = "UserAccessCode";
     private String SLOT_ID = "SlotId";
     private String ADDRESS = "Address";
     private String PINCODE = "Pincode";
@@ -64,6 +67,8 @@ public class OrderDetailsDao {
     private String SYNC_STATUS = "syncStatus";
     private String SYNC_ACTION = "syncAction";
     private String LOCATION = "Location";
+    private String EDITHC = "EditHC";
+    private String EDITORDER = "EditOrder";
 
 
     //changes_22june2017
@@ -96,6 +101,7 @@ public class OrderDetailsDao {
         orderDetailsModel.setAppointmentDate(cursor.getString(cursor.getColumnIndex(APPOINTMENT_DATE)));
         orderDetailsModel.setSlotId(cursor.getInt(cursor.getColumnIndex(SLOT_ID)));
         orderDetailsModel.setBrandId(cursor.getInt(cursor.getColumnIndex(BRAND_ID)));
+        orderDetailsModel.setUserAccessCode(cursor.getInt(cursor.getColumnIndex(USER_ACCESSCODE)));
         orderDetailsModel.setOrderNo(cursor.getString(cursor.getColumnIndex(ORDER_NO)));
         orderDetailsModel.setResponse(cursor.getString(cursor.getColumnIndex(RESPONSE)));
         orderDetailsModel.setAddress(cursor.getString(cursor.getColumnIndex(ADDRESS)));
@@ -118,6 +124,11 @@ public class OrderDetailsDao {
         orderDetailsModel.setTestEdit(cursor.getString(cursor.getColumnIndex(IS_TEST_EDIT)).equals("1"));
         orderDetailsModel.setAddBen(cursor.getString(cursor.getColumnIndex(IS_ADD_BEN)).equals("1"));
         orderDetailsModel.setLocation(cursor.getString(cursor.getColumnIndex(LOCATION)));
+        orderDetailsModel.setBtechName(cursor.getString(cursor.getColumnIndex(BTECHNAME)));
+        orderDetailsModel.setEditHC(cursor.getString(cursor.getColumnIndex(EDITHC)).equals("1"));
+        orderDetailsModel.setEditOrder(cursor.getString(cursor.getColumnIndex(EDITORDER)).equals("1"));
+
+
 
         TypeToken<ArrayList<KitsCountModel>> tokenBarcode = new TypeToken<ArrayList<KitsCountModel>>() {
         };
@@ -150,6 +161,7 @@ public class OrderDetailsDao {
         values.put(SLOT_ID, orderDetailsModel.getSlotId());
         values.put(RESPONSE, orderDetailsModel.getResponse());
         values.put(BRAND_ID, orderDetailsModel.getBrandId());
+        values.put(USER_ACCESSCODE, orderDetailsModel.getUserAccessCode());
         values.put(ADDRESS, orderDetailsModel.getAddress());
         values.put(PINCODE, orderDetailsModel.getPincode());
         values.put(MOBILE, orderDetailsModel.getMobile());
@@ -178,6 +190,9 @@ public class OrderDetailsDao {
         values.put(SYNC_STATUS, orderDetailsModel.getSyncStatus());
         values.put(SYNC_ACTION, orderDetailsModel.getSyncAction());
         values.put(LOCATION, orderDetailsModel.getLocation());
+        values.put(BTECHNAME, orderDetailsModel.getBtechName());
+        values.put(EDITHC, orderDetailsModel.isEditHC() ? "1" : "0");
+        values.put(EDITORDER, orderDetailsModel.isEditOrder() ? "1" : "0");
         return values;
     }
 
@@ -348,14 +363,31 @@ public class OrderDetailsDao {
                     ArrayList<OrderDetailsModel> orderDetailsModelsArr = new ArrayList<>();
                     orderDetailsModelsArr = getModelsFromVisitId(visitId);
                     ArrayList<OrderDetailsModel> orderDetailsModels = orderDetailsModelsArr;
-                    for (OrderDetailsModel orderDetailsModel :
-                            orderDetailsModels) {
+                    Iterator<OrderDetailsModel> iter = orderDetailsModels.iterator();
+//jai
+                   /* while (iter.hasNext()) {
+                        OrderDetailsModel orderDetailsModel = iter.next();
                         if (orderDetailsModel.getStatus().equalsIgnoreCase("RELEASED")
                                 || orderDetailsModel.getStatus().equalsIgnoreCase("CANCELLED")) {
+
+                            orderDetailsModelsArr.remove(orderDetailsModel);
+                            deleteByOrderNo(orderDetailsModel.getOrderNo());
+                        }
+                    }*/
+//jsi
+
+
+                    for (OrderDetailsModel orderDetailsModel :
+                            orderDetailsModels) {
+
+                        if (orderDetailsModel.getStatus().equalsIgnoreCase("RELEASED")
+                                || orderDetailsModel.getStatus().equalsIgnoreCase("CANCELLED")) {
+
                             orderDetailsModelsArr.remove(orderDetailsModel);
                             deleteByOrderNo(orderDetailsModel.getOrderNo());
                         }
                     }
+
                     if (orderDetailsModelsArr.size() > 0) {
                         OrderVisitDetailsModel orderVisitDetailsModel = new OrderVisitDetailsModel();
                         orderVisitDetailsModel.setResponse(orderDetailsModelsArr.get(0).getResponse());
@@ -365,6 +397,7 @@ public class OrderDetailsDao {
                         orderVisitDetailsModel.setDistance(orderDetailsModelsArr.get(0).getDistance());
                         orderVisitDetailsModel.setEstIncome(orderDetailsModelsArr.get(0).getEstIncome());
                         orderVisitDetailsModel.setAppointmentDate(orderDetailsModelsArr.get(0).getAppointmentDate());
+                        orderVisitDetailsModel.setBtechName(orderDetailsModelsArr.get(0).getBtechName());
                         orderVisitDetailsModel.setAllOrderdetails(orderDetailsModelsArr);
                         orderVisitDetailsModelsArr.add(orderVisitDetailsModel);
                     }

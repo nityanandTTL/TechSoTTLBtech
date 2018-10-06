@@ -7,7 +7,11 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorBackground">#E6E6E6</color>
     <color name="btn_layout_btech_camp">#61bee0</color>
-
+    <color name="test2">#FFAB91</color>
+    <color name="test1">#A5D6A7</color>
+    <color name="blue_shade">#2196F3</color>
+    <color name="status_level_10">#FF2A00</color>
+    <color name="status_level_1">#00FF00</color>
     <color name="bgBackSideColor">#f4f0ff</color>
     <color name="bgTitleLeft">#594691</color>
     <color name="bgTitleRight">#ffffff</color>
@@ -15,6 +19,7 @@
     <color name="bg_content">#ffffff</color>
     <color name="contentDividerLine">#e0e0e0</color>
     <color name="contentBadgeTitle">#a9a9a9</color>
+    <color name="celltext">#4d4646</color>
     <color name="gray">#FF8B8888</color>
     <color name="titleBadgeTitle">#adafb1</color>
     <color name="titleBadgeText">#adafb1</color>
@@ -27,10 +32,12 @@
     <color name="sample_type_heparin">#D3D3D3</color>
     <color name="sample_type_urine">#FFFFFF</color>
     <color name="black_overlay">#66000000</color>
+    <color name="black">#000000</color>
     <color name="selfie_background">#59e1e7</color>
     <color name="dialog_btn">#51cdd2</color>
     <color name="separator">#efeded</color>
     <color name="loginbg">#FFFFFF</color>
+    <color name="button_text_color">#FFFFFF</color>
 
     <!--gradients-->
     <color name="home_bg_start_grd">#57EAE8</color>
@@ -48,4 +55,13 @@
     <color name="violet">#EE82EE</color>
     <color name="red">#FF0000</color>
     <color name="light">#f5f5f5</color>
+
+    <color name="highlight_color">#e52d2e</color>
+    <color name="tertiary_color">#747474</color>
+    <color name="secondary_color">#444444</color>
+    <color name="white">#ffffff</color>
+    <color name="div_color">#cccccc</color>
+    <color name="primary_color">#252525</color>
+    <color name="zebragrey">#F5F5F5</color>
+    <color name="zebrablue">#EBF9FF</color>
 </resources>

@@ -110,7 +110,7 @@
             android:layout_marginStart="@dimen/dp_5"
             android:text="Enter Branch Name" />
 
-        <TextView
+        <EditText
             android:id="@+id/edt_branch_name"
             style="@android:style/Widget.EditText"
             android:layout_width="match_parent"
@@ -119,6 +119,8 @@
             android:background="@android:drawable/editbox_background"
             android:drawableRight="@android:drawable/arrow_down_float"
             android:elevation="4dp"
+android:editable="false"
+
             android:textColor="@color/gray"
             android:textSize="14sp" />
 
@@ -139,6 +141,8 @@
             android:background="@android:drawable/editbox_background"
             android:drawableRight="@android:drawable/arrow_down_float"
             android:elevation="4dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:textColor="@color/gray"
             android:textSize="14sp" />
 
@@ -157,6 +161,8 @@
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
             android:elevation="4dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:textColor="@android:color/darker_gray" />
 
         <TextView
@@ -174,7 +180,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
+            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
             android:elevation="4dp"
+            android:maxLength="20"
             android:textColor="@android:color/darker_gray"
             android:visibility="gone" />
 
@@ -193,8 +201,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
+            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
             android:elevation="4dp"
-
+            android:maxLength="20"
             android:textColor="@android:color/darker_gray"
             android:visibility="gone" />
 
@@ -214,6 +223,8 @@
             android:layout_margin="@dimen/dp_2"
             android:background="@android:drawable/editbox_background"
             android:elevation="4dp"
+            android:inputType="number"
+            android:maxLength="15"
             android:textColor="@android:color/darker_gray"
             android:visibility="gone" />
 
@@ -234,6 +245,7 @@
             android:background="@android:drawable/editbox_background"
             android:elevation="4dp"
             android:focusableInTouchMode="true"
+            android:maxLength="15"
             android:textColor="@android:color/darker_gray"
             android:visibility="gone" />
 
@@ -253,6 +265,7 @@
             android:background="@android:drawable/editbox_background"
             android:elevation="4dp"
             android:inputType="number"
+            android:maxLength="8"
             android:textColor="@android:color/darker_gray" />
 
         <TextView
@@ -271,6 +284,7 @@
             android:background="@android:drawable/editbox_background"
             android:elevation="4dp"
             android:inputType="number"
+            android:maxLength="8"
             android:textColor="@android:color/darker_gray" />
 
         <LinearLayout
@@ -346,7 +360,7 @@
             android:background="@android:drawable/editbox_background"
             android:elevation="8dp"
             android:lines="5"
-            android:maxLength="700"
+            android:maxLength="250"
             android:textColor="@android:color/darker_gray" />
 
         <Button
