@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/colorBackground"
+    android:weightSum="4">
+
+    <TextView
+        android:layout_weight="1.25"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:id="@+id/txt_finalitem"
+        android:layout_margin="4dp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@color/light"
+        android:textColor="@color/colorPrimaryDark"/>
+
+
+    <TextView
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:id="@+id/txt_rate"
+        android:layout_margin="4dp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@color/light"
+        android:textColor="@color/colorPrimaryDark"/>
+
+
+    <EditText
+        android:layout_weight="0.75"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:id="@+id/edit_quantity"
+        android:layout_margin="4dp"
+        android:padding="5dp"
+        android:inputType="number"
+        android:gravity="center"
+        android:maxLength="5"
+        android:background="@color/light"
+        android:textColor="@color/colorPrimaryDark"/>
+
+
+    <TextView
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:id="@+id/txt_total"
+        android:layout_margin="4dp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:background="@color/light"
+        android:textColor="@color/colorPrimaryDark"/>
+
+
+
+
+</TableRow>

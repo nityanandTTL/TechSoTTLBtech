@@ -1,0 +1,181 @@
+{
+  "project_info": {
+    "project_number": "467156575863",
+    "firebase_url": "https://btech-72bb8.firebaseio.com",
+    "project_id": "btech-72bb8",
+    "storage_bucket": "btech-72bb8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:467156575863:android:93e4e12f93c7409c",
+        "android_client_info": {
+          "package_name": "com.dhb.oms.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "467156575863-lv2ka01nr5oq712aul7858uq5qpduhhk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dhb.oms.dev",
+            "certificate_hash": "44cb42b151dee85e2cab8c38985e01eb5e60520f"
+          }
+        },
+        {
+          "client_id": "467156575863-hv3qqb7bjf1b8cvt9ab1tt8u9udt68id.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "467156575863-hv3qqb7bjf1b8cvt9ab1tt8u9udt68id.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHeA-S7CA9fiE6mAijE-KM-n0MVi2sBvY"
+        },
+        {
+          "current_key": "AIzaSyAbD78-sBhsxZMf0ib-UkMHpHN3n1scHNQ"
+        },
+        {
+          "current_key": "AIzaSyDGS2nki_25eYS4-58LdJjhH5kSmSr11Jw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "467156575863-hv3qqb7bjf1b8cvt9ab1tt8u9udt68id.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:467156575863:android:1804c30d1b612f09",
+        "android_client_info": {
+          "package_name": "com.thyrocare.btech"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "467156575863-3p8gj15dd1savsp2poh2mabpb8hfkqab.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thyrocare.btech",
+            "certificate_hash": "fb54a5958dfd56bf5b6367f16d95a0abdb2bad58"
+          }
+        },
+        {
+          "client_id": "467156575863-hv3qqb7bjf1b8cvt9ab1tt8u9udt68id.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "467156575863-hv3qqb7bjf1b8cvt9ab1tt8u9udt68id.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHeA-S7CA9fiE6mAijE-KM-n0MVi2sBvY"
+        },
+        {
+          "current_key": "AIzaSyAbD78-sBhsxZMf0ib-UkMHpHN3n1scHNQ"
+        },
+        {
+          "current_key": "AIzaSyDGS2nki_25eYS4-58LdJjhH5kSmSr11Jw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "467156575863-hv3qqb7bjf1b8cvt9ab1tt8u9udt68id.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:467156575863:android:461a2c3a00053b78",
+        "android_client_info": {
+          "package_name": "com.thyrocare.btech.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "467156575863-b0i5vhqsv4lrvuun5m14j1h0eueaa6rq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thyrocare.btech.dev",
+            "certificate_hash": "19f2d6f5721a50689b69e1e032d6557da49fb33a"
+          }
+        },
+        {
+          "client_id": "467156575863-fsl29jrcof3rl7uc7jlio73p57mdfkid.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thyrocare.btech.dev",
+            "certificate_hash": "fb54a5958dfd56bf5b6367f16d95a0abdb2bad58"
+          }
+        },
+        {
+          "client_id": "467156575863-hv3qqb7bjf1b8cvt9ab1tt8u9udt68id.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "467156575863-hv3qqb7bjf1b8cvt9ab1tt8u9udt68id.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHeA-S7CA9fiE6mAijE-KM-n0MVi2sBvY"
+        },
+        {
+          "current_key": "AIzaSyAbD78-sBhsxZMf0ib-UkMHpHN3n1scHNQ"
+        },
+        {
+          "current_key": "AIzaSyDGS2nki_25eYS4-58LdJjhH5kSmSr11Jw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "467156575863-hv3qqb7bjf1b8cvt9ab1tt8u9udt68id.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

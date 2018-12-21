@@ -1,0 +1,169 @@
+<resources>
+    <string name="app_name">BTECH</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="goto_settings">Go to Settings</string>
+    <string name="gps_disabled">GPS is disabled. Please enable it to continue using the application</string>
+    <string name="arrived">Arrived</string>
+    <string name="start">Start</string>
+    <string name="name">Ketatn Kulkarni</string>
+
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCCiIOrolfoPydvFX89njaBOqA8zHbTYME</string>
+    <string name="enable_gps_title">Enable GPS</string>
+    <string name="alert_msg">GPS alert dialogue message</string>
+    <string name="alert_settings">Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="arrive">Arrived</string>
+    <string name="plz_chk_internet">Please check your internet connection</string>
+    <string name="loading">Loading...</string>
+
+
+    <!--API call Progress Dialog Messages-->
+    <string name="progress_message_Downloading_please_wait">Downloading,\n please wait ....</string>
+    <string name="progress_message_authenticating_please_wait">Authenticating,\n please wait ....</string>
+    <string name="progress_message_uploading_selfie_please_wait">Uploading selfie to server,\n please wait ....</string>
+    <string name="progress_message_uploading_order_details_please_wait">Uploading order details to server,\n please wait ....</string>
+    <string name="progress_message_performing_work_order_please_wait">Performing work order,\n please wait ....</string>
+    <string name="progress_message_changing_order_status_please_wait">Updating order status,\n please wait ....</string>
+    <string name="progress_message_cancelling_visit_please_wait">Cancelling visit,\n please wait ....</string>
+    <string name="progress_message_fetching_order_details_please_wait">Fetching order details,\n please wait ....</string>
+    <string name="progress_message_camp_count_details_please_wait">Loading,\n Please wait ....</string>
+    <string name="progress_message_sending_master_barcode_please_wait">Sending Master barcode  details,\n please wait ....</string>
+    <string name="progress_message_fetcihng_btechwithhub_barcode_please_wait">Fetching barcode details,\n please wait ....</string>
+
+    <string name="progress_message_fetcihngtsp_modes_please_wait">Fetching mode details,\n please wait ....</string>
+
+    <string name="progress_message_getting_master_payment_mode_please_wait">Getting master payment mode,\n please wait ....</string>
+    <string name="progress_message_fetching_slot_details_please_wait">Fetching slot details,\n please wait ....</string>
+    <string name="progress_message_fetching_brand_master_please_wait">Fetching brand master,\n please wait ....</string>
+    <string name="progress_message_fetching_test_master_please_wait">Please wait\n while we update your tests list</string>
+    <string name="progress_message_fetching_Ledger_details_please_wait">Fetching ledger details,\n please wait ....</string>
+    <string name="progress_message_fetching_Earning_details_please_wait">Fetching earnings details,\n please wait ....</string>
+    <string name="progress_message_fetching_Deposit_details_please_wait">Fetching deposits details,\n please wait ....</string>
+    <string name="progress_message_hub_start_please_wait">Starting for Hub,\n please wait ....</string>
+    <string name="progress_message_olc_start_please_wait">Starting for OLC,\n please wait ....</string>
+    <string name="progress_message_mapping_master_barcode_please_wait">Mapping master barcode,\n please wait ....</string>
+
+    <string name="progress_message_tsp_send_consignment_please_wait">Sending consignment,\n please wait ....</string>
+
+    <string name="progress_message_fetching_dispatch_to_hub_details_please_wait">Fetching Hub details,\n please wait ....</string>
+    <string name="progress_message_fetching_order_serverd_details_please_wait">Fetching order served details,\n please wait ....</string>
+    <string name="progress_message_fetching_leave_applied">Fetching Leave Applied,\n Please wait ....</string>
+    <string name="progress_message_fetchingolc_picup_details_details_please_wait">Fetching OLC pickup details details,\n please wait ....</string>
+    <string name="progress_message_fetching_camp_details_please_wait">Fetching camp details,\n please wait ....</string>
+    <string name="progress_btech_est_earning_please_wait">Fetching btech EST earnings ,\n please wait ....</string>
+    <string name="progress_message_scan_barcode_check_for_duplicate_please_wait">Scanning Barcode,\n please wait ....</string>
+    <string name="progress_message_fetching_btech_collections_please_wait">Fetching btech collections,\n please wait ....</string>
+    <string name="progress_message_change_password_please_wait">Changing password, please wait ....</string>
+    <string name="progress_message_reset_password_please_wait">Reseting password, please wait ....</string>
+    <string name="progress_message_fetching_Materials_details_please_wait">Fetching materials  details, please wait ....</string>
+    <string name="progress_message_fetching_MaterialsINV_details_please_wait">Fetching materialsINV  Details, please wait ....</string>
+    <string name="progress_message_changing_MaterailsINV_please_wait">Changing material inventory, please wait ....</string>
+    <string name="progress_message_changing_MaterailsOrder_please_wait">Placing material order, please wait ....</string>
+    <!--<string name="do_you_really_want_to_Change order">Fetching MaterialsINV  Details, Please wait ....</string>-->
+
+
+    <string name="upload">Proceed</string>
+    <string name="take_photo">Capture photo</string>
+    <string name="internet_connetion_error">Check internet connection</string>
+    <string name="network_error">Network error</string>
+    <string name="add_selfie_error">Add profile photo</string>
+    <string name="my_orders">My orders</string>
+    <string name="schedule_your_day">Schedule your Day</string>
+    <string name="dispatch">Dispatch</string>
+    <string name="start_pick_up"> Start pick up </string>
+    <string name="reset_password">SUBMIT</string>
+    <string name="password_changed_successfully">Password changed successfully</string>
+    <string name="viewing_tests">Getting tests</string>
+    <string name="enter_mobile_number">Enter user name</string>
+    <string name="old_password">Old password *</string>
+    <string name="new_password">New password *</string>
+    <string name="confirm_password">Confirm password *</string>
+    <string name="virtual">Virtual\nStock</string>
+    <string name="closing">Closing\nBalance</string>
+    <string name="opening">Opening\nBalance</string>
+    <string name="datetimemsg">Date \nTime</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="start_navigation">Start navigation</string>
+    <string name="estimated_distance">Estimated distance</string>
+    <string name="dummy_address">106, Riverton Drive, Malibu, California, US</string>
+    <string name="no_allotted_orders_found">No allotted orders found.</string>
+    <string name="selfie">Selfie</string>
+    <string name="close">Close</string>
+    <string name="logout_message_offline">This feature is only available in online Mode</string>
+    <string name="sync_master_error">Error in fetching tests list</string>
+    <string name="sync_done_master_table">Finished updating tests list</string>
+    <string name="sync_no_data">No Data to Sync</string>
+    <string name="enter_remarks">Please enter remarks</string>
+    <string name="password_criteria">Password should be minimum 6 character  and maximum 12 character long</string>
+
+    <string name="tsp_routemode_criteria">Route mode should be maximum 7 character long</string>
+    <string name="tsp_empty_criteria">The field can not be empty</string>
+
+    <string name="password_do_not_match">New Password and confirm password do not match</string>
+    <string name="progress_message_Applying_Leave_please_wait">Applying leave, please wait ....</string>
+    <string name="progress_message_fetching_Leave_details_please_wait">Fetching leave  details, please wait ....</string>
+    <string name="add_sample_barcode">Enter serum barcode</string>
+    <string name="barcode_value">Enter barcode:</string>
+    <string name="barcode_value_confirm">Confirm barcode:</string>
+    <string name="alert_invalid_barcode_value">Please enter a valid barcode value</string>
+    <string name="alert_unmatched_barcode_values">Barcode and confirm barcode does not match(barcode is case sensative)</string>
+    <string name="progress_message_fetching_Version_details_please_wait">Fetching version  details, Please wait ....</string>
+    <string name="progress_message_removing_beneficiary_please_wait">Removing beneficiary, please wait …</string>
+    <string name="progress_message_updating_scanned_barcode_please_wait">Updating scanned barcode to system, please wait …</string>
+    <string name="progress_message_fetching_narration_master_please_wait">Fetching narration master, please wait …</string>
+    <string name="progress_message_fetching_payment_modes_please_wait">Fetching payment modes, please wait …</string>
+    <string name="progress_message_fetching_Order_Allocation_please_wait">Fetching order allocation, please wait …</string>
+    <string name="progress_message_start_transaction_please_wait">Sending transaction details to payment gateway, please wait …</string>
+    <string name="progress_message_payments_otp_verification_please_wait">Verifying payment details, please wait …</string>
+    <string name="progress_message_fetching_payment_status_please_wait">Obtaining payment status, please wait …</string>
+    <string name="progress_message_fetching_payment_details_please_wait">Obtaining updated payment details, please wait …</string>
+    <string name="submit">Submit</string>
+    <string name="click_to_select_clinical_history">Select clinical history</string>
+    <string name="re_enter_barcode">Re-enter valid barcode</string>
+    <string name="note">*Please select vashi branch for cash by ATM</string>
+    <string name="receiveButton">Receive</string>
+    <string name="accept_debit">Accept debit</string>
+    <string name="pls_use_valid_btech_credential_to_log_in">Please use valid BTECH credentials to log in</string>
+    <string name="enter_user_name">Enter user name</string>
+    <string name="enter_password">Enter password</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="old_pwd_and_new_pwd_should_not_be_same">Old password and new password should not be same</string>
+    <string name="no_face_detected">No face detected</string>
+    <string name="more_than_one_face_detected">More than one face detected</string>
+    <string name="addressvalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890,./- </string>
+    <string name="Namevalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="vailidatingemail">Validating emails </string>
+    <string name="Mobile_no_validation">1234567890</string>
+    <string name="Sending_Ereciept">Sending ereciept</string>
+    <string name="app_notificationorders">Order</string>
+    <string name="endpoint">https://centralindia.api.cognitive.microsoft.com/face/v1.0</string>
+    <string name="subscription_key">5b5115ebff8c49f6a36e7b361794ccef</string>
+
+    <string name="notification_text">Tracking, tap to cancel</string>
+    <string name="transport_id" translatable="false">123</string>
+    <string name="firebase_path" translatable="false">locations</string>
+    <string name="firebase_email" translatable="false">thyrocaretechnologiesp@gmail.com</string>
+    <string name="firebase_password" translatable="false">Pass@123</string>
+
+    <string-array name="payment_mode">
+        <item>Cash By ATM</item>
+        <item>Cash</item>
+        <item>Cheque</item>
+        <item>NEFT</item>
+    </string-array>
+
+    <string-array name="material">
+        <item>--Select Item--</item>
+        <item>Material Distribution(FOC)</item>
+        <item>Material Receipt</item>
+        <item>Material Distribution(B2B)</item>
+        <item>Current Stock</item>
+    </string-array>
+
+</resources>

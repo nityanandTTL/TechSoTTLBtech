@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/home/e6412@thyrocare.com/Desktop/btech_app_8_1_18/app/libs/httpmime-4.3.6.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="cf8bacbf0d476c7f2221f861269365b66447f7ec">
+        <dex dex="/home/e6412@thyrocare.com/Desktop/btech_app_8_1_18/app/build/intermediates/transforms/dex/BTECHdev/debug/folders/1000/2/httpmime-4.3.6_0873c6526b340191959097bb09c99469206d9b58/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/e6412@thyrocare.com/Desktop/btech_app_8_1_18/app/libs/httpcore-4.4.4.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="b31526a230871fbe285fbcbe2813f9c0839ae9b0">
+        <dex dex="/home/e6412@thyrocare.com/Desktop/btech_app_8_1_18/app/build/intermediates/transforms/dex/BTECHdev/debug/folders/1000/2/httpcore-4.4.4_2ceddd13d8a0b1457240cda89d4f2ac43f6ee979/classes.dex" />
+    </item>
+
+</items>

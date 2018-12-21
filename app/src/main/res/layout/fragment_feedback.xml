@@ -1,0 +1,238 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.thyrocare.fragment.FeedbackFragment">
+
+
+    <ScrollView
+        android:id="@+id/scrollView5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Related To*"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/primary_color"
+                    android:textSize="15dp"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_layout"
+                    android:padding="1dp">
+
+                    <Spinner
+                        android:id="@+id/spinType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:drawSelectorOnTop="true"
+                        android:popupBackground="@color/white"
+                        android:spinnerMode="dropdown"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/dd_arrow" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/edtName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border_layout"
+                    android:digits="@string/Namevalidation"
+                    android:ems="10"
+                    android:hint="Name"
+                    android:inputType="textCapWords|textPersonName"
+                    android:maxLength="50"
+                    android:padding="10dp"
+                    android:textColor="@color/secondary_color"
+                    android:textColorHint="@color/tertiary_color"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/edtEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border_layout"
+                    android:ems="10"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:padding="10dp"
+                    android:textColor="@color/secondary_color"
+                    android:textColorHint="@color/tertiary_color"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/edtMobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border_layout"
+                    android:digits="@string/Mobile_no_validation"
+                    android:ems="10"
+                    android:hint="Contact number"
+                    android:inputType="number"
+                    android:maxEms="10"
+                    android:maxLength="10"
+                    android:padding="10dp"
+                    android:textColor="@color/secondary_color"
+                    android:textColorHint="@color/tertiary_color"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/edtQuery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/border_layout"
+                    android:digits="@string/addressvalidation"
+                    android:ems="10"
+                    android:gravity="left|top"
+                    android:hint="Query"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:lines="5"
+                    android:maxLength="250"
+                    android:padding="10dp"
+                    android:textColor="@color/secondary_color"
+                    android:textColorHint="@color/tertiary_color"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imgHappy"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/s10" />
+
+                    <TextView
+                        android:id="@+id/txtHappy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="Happy"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/tertiary_color"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imgNeutral"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/s6" />
+
+                    <TextView
+                        android:id="@+id/txtNeutral"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="Neutral"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/tertiary_color"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imgSad"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/s1" />
+
+                    <TextView
+                        android:id="@+id/txtSad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="Sad"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/tertiary_color"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/purple_btn_bg"
+                android:text="SUBMIT"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
