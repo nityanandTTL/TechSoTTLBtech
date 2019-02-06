@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -79,6 +80,7 @@ import static com.thyrocare.utils.api.NetworkUtils.isNetworkAvailable;
 
 public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
+    //started and arrieved
     public static final String TAG_FRAGMENT = VisitOrderDetailMapDisplayFragmentActivity.class.getSimpleName();
     private GoogleMap mMap;
     private ArrayList<LatLng> MarkerPoints;
@@ -127,6 +129,8 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         // Initializing
         MarkerPoints = new ArrayList<>();
         FirebaselocationUpdateIntent = new Intent(this, TrackerService.class);
+
+
     }
 
     private void initData() {
@@ -140,14 +144,28 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         tv_orderno.setVisibility(View.INVISIBLE);
         oderno_title.setVisibility(View.INVISIBLE);
         txtAddress.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
+
+      //Abhi Call hide ad unhide
+        if(orderVisitDetailsModel.getAllOrderdetails().get(0).isDirectVisit())
+        {
+            llCall.setVisibility(View.GONE);
+        }else {
+            llCall.setVisibility(View.VISIBLE);
+        }
     }
 
     private void startTrackerService() {
 
+
         /*if (DeviceUtils.isMyServiceRunning(TrackerService.class, activity)) {
         } else {*/
 
-            startService(FirebaselocationUpdateIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            activity.startForegroundService(FirebaselocationUpdateIntent);
+        }else{
+            activity.startService(FirebaselocationUpdateIntent);
+        }
+//            startService(FirebaselocationUpdateIntent);
       //  }
     }
 
@@ -448,9 +466,9 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
 
     }
 
-    @Override
+  /*  @Override
     protected void onResume() {
-        /*double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
+        *//*double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
         Integertotaldiff = (int) totaldist;
         if (Integertotaldiff > 100 || !isStarted) {
             btn_arrived.setVisibility(View.GONE);
@@ -458,9 +476,9 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         } else {
             btn_arrived.setVisibility(View.VISIBLE);
             btn_startNav.setVisibility(View.GONE);
-        }*/
+        }*//*
         super.onResume();
-    }
+    }*/
     protected BroadcastReceiver stopReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -495,9 +513,14 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            TrackerService.handler1.removeMessages(0);
-                            activity.stopService(new Intent(getApplicationContext(),TrackerService.class));
-                            callOrderStatusChangeApi(3);
+                            try {
+//                                TrackerService.handler1.removeMessages(0);
+
+                                activity.stopService(new Intent(getApplicationContext(),TrackerService.class));
+                                callOrderStatusChangeApi(3);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
@@ -515,6 +538,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
             if (gpsTracker.isGPSon() /*&& !gpsTracker.isInternetAvailable()*/) {
                 startTrackerService();
                 callOrderStatusChangeApi(7);
+                llCall.setVisibility(View.VISIBLE);
             }else {
                 gpsTracker.showSettingsAlert();
                 Toast.makeText(activity, "Check Internet connection and gps settings", Toast.LENGTH_SHORT).show();
@@ -835,8 +859,12 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         orderAllocationTrackLocationRequestModel.setVisitId(orderVisitDetailsModel.getVisitId());
         orderAllocationTrackLocationRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
         orderAllocationTrackLocationRequestModel.setStatus(status);
-        orderAllocationTrackLocationRequestModel.setLatitude(appPreferenceManager.getLatitude());
-        orderAllocationTrackLocationRequestModel.setLongitude(appPreferenceManager.getLongitude());
+        //Latlong added
+        GPSTracker gpsTracker = new GPSTracker(activity);
+        if (gpsTracker.canGetLocation()){
+            orderAllocationTrackLocationRequestModel.setLatitude(String.valueOf(gpsTracker.getLatitude()));
+            orderAllocationTrackLocationRequestModel.setLongitude(String.valueOf(gpsTracker.getLongitude()));
+        }
 
         ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderAllocationpost(orderAllocationTrackLocationRequestModel);
         orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderAllocationTrackLocationiAsyncTaskDelegateResult());

@@ -42,6 +42,7 @@ import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
+import com.thyrocare.service.TrackerService;
 import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
@@ -121,11 +122,12 @@ public class HomeScreenFragment extends AbstractFragment {
     private TextView txtUserName, txt_no_of_camps;
     private CircularImageView rvSelfie;
     private ImageView imgPayment, imgOrders, imgSchedule, imgMaterials, imgOLCPickup, imgHub, imgCamp, ordersserved, imgLedger;
-    private ImageView bellicon, lme_orders_list, lme_mis_icon,lme_material_icon;
+    private ImageView bellicon, lme_orders_list, lme_mis_icon, lme_material_icon;
     Dialog MainDailog;
 
     //tsp
     ImageView send_icon, receive_icon, earning_icon, orders_icon;
+    private Intent FirebaselocationUpdateIntent;
 
     public HomeScreenFragment() {
         // Required empty public constructor
@@ -229,6 +231,17 @@ public class HomeScreenFragment extends AbstractFragment {
 
         setHasOptionsMenu(true);
         CallCheckUserLoginDeviceId();
+//Abhishek code to commented while made live
+      /*  FirebaselocationUpdateIntent = new Intent(activity, TrackerService.class);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            activity.startForegroundService(FirebaselocationUpdateIntent);
+        } else {
+            activity.startService(FirebaselocationUpdateIntent);
+        }*/
+
+
         return rootView;
     }
 
@@ -503,8 +516,8 @@ public class HomeScreenFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
                 // Toast.makeText(activity, "Feature Coming Soon..", Toast.LENGTH_SHORT).show();
-              //  pushFragments(MaterialFragment_new.newInstance(), false, false, MaterialFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
-               pushFragments(MaterialFragment.newInstance(), false, false, MaterialFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                //  pushFragments(MaterialFragment_new.newInstance(), false, false, MaterialFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                pushFragments(MaterialFragment.newInstance(), false, false, MaterialFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         imgOLCPickup.setOnClickListener(new View.OnClickListener() {
@@ -517,7 +530,7 @@ public class HomeScreenFragment extends AbstractFragment {
         imgCamp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Toast.makeText(activity, "Feature coming soon..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Feature coming soon..", Toast.LENGTH_SHORT).show();
                 //    pushFragments(CampListDisplayFragment.newInstance(), false, false, CampListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
@@ -603,7 +616,7 @@ public class HomeScreenFragment extends AbstractFragment {
         if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
             if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
 
-            }else {
+            } else {
                 ApiCallAsyncTask logoutDeviceAsyncTask = new AsyncTaskForRequest(activity).getLoginDeviceData(appPreferenceManager.getLoginResponseModel().getUserID());
                 logoutDeviceAsyncTask.setApiCallAsyncTaskDelegate(new LogInDeviceListAsyncTaskDelegateResult());
                 if (isNetworkAvailable(activity)) {

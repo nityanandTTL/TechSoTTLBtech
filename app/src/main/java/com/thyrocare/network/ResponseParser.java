@@ -34,6 +34,7 @@ import com.thyrocare.models.api.response.LoginResponseModel;
 import com.thyrocare.models.api.response.MaterialBtechStockResponseModel;
 import com.thyrocare.models.api.response.MaterialINVResponseModel;
 import com.thyrocare.models.api.response.MessageModel;
+import com.thyrocare.models.api.response.NewBtechAvaliabilityResponseModel;
 import com.thyrocare.models.api.response.OrderBookingResponseVisitModel;
 import com.thyrocare.models.api.response.OrderPassresponseModel;
 import com.thyrocare.models.api.response.OrderServedResponseModel;
@@ -752,14 +753,24 @@ public class ResponseParser implements AppConstants {
         return loginResponseModel;
     }
 
-    //BtechAvaliability
-    public BtechAvaliabilityResponseModel getBtechAvaliabilityResponseModel(String json, int statusCode) {
+   //BtechAvaliability
+    /* public BtechAvaliabilityResponseModel getBtechAvaliabilityResponseModel(String json, int statusCode) {
         BtechAvaliabilityResponseModel btechAvaliabilityResponseModel = null;
         if (!parseIntoError(json, statusCode)) {
             btechAvaliabilityResponseModel = gson.fromJson(json, BtechAvaliabilityResponseModel.class);
         }
         return btechAvaliabilityResponseModel;
+    }*/
+
+
+    public NewBtechAvaliabilityResponseModel getNewBtechAvaliabilityResponseModel(String json, int statusCode) {
+        NewBtechAvaliabilityResponseModel newBtechAvaliabilityResponseModel = null;
+        if (!parseIntoError(json, statusCode)) {
+            newBtechAvaliabilityResponseModel = gson.fromJson(json, NewBtechAvaliabilityResponseModel.class);
+        }
+        return newBtechAvaliabilityResponseModel;
     }
+
 
     //Fetch Slot Details Response parse:
     public ArrayList<SlotModel> getSlotDetailsResponseModel(String json, int statusCode) {

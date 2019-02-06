@@ -163,7 +163,7 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
         StringBuilder result = new StringBuilder();
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0) {
                 //   Toast.makeText(getApplicationContext(),"Address:"+addresses+"",Toast.LENGTH_SHORT).show();
                 Address address = addresses.get(0);

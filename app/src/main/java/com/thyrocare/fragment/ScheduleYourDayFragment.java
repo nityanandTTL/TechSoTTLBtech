@@ -20,12 +20,15 @@ import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.activity.LoginScreenActivity;
 import com.thyrocare.activity.ScheduleYourDayActivity;
 import com.thyrocare.activity.ScheduleYourDayActivity2;
+import com.thyrocare.activity.ScheduleYourDayActivity3;
+import com.thyrocare.activity.ScheduleYourDayActivity4;
 import com.thyrocare.activity.ScheduleYourDayIntentActivity;
 import com.thyrocare.adapter.SlotsDisplayAdapter;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.delegate.SlotsSelectionDelegate;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.api.response.BtechAvaliabilityResponseModel;
+import com.thyrocare.models.api.response.NewBtechAvaliabilityResponseModel;
 import com.thyrocare.models.data.SlotModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
@@ -130,10 +133,11 @@ public class ScheduleYourDayFragment extends AbstractFragment {
             Logger.debug(TAG_FRAGMENT + "dayssssssssss ");
             if (statusCode == 200) {
                 ResponseParser responseParser = new ResponseParser(activity);
-                BtechAvaliabilityResponseModel btechAvaliabilityResponseModel = new BtechAvaliabilityResponseModel();
-                btechAvaliabilityResponseModel = responseParser.getBtechAvaliabilityResponseModel(json, statusCode);
-                if (btechAvaliabilityResponseModel != null) {
-                    if (btechAvaliabilityResponseModel.getNumberofDays()== 0) {
+                NewBtechAvaliabilityResponseModel newBtechAvaliabilityResponseModel = new NewBtechAvaliabilityResponseModel();
+                newBtechAvaliabilityResponseModel = responseParser.getNewBtechAvaliabilityResponseModel(json, statusCode);
+                appPreferenceManager.setNEWBTECHAVALIABILITYRESPONSEMODEL(newBtechAvaliabilityResponseModel);
+                if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL() != null) {
+                    /*if (btechAvaliabilityResponseModel.getNumberofDays()== 0) {
                         Logger.error("ZERRO");
                         Toast.makeText(activity, "Avability Already Done", Toast.LENGTH_SHORT).show();
                         Bundle bundle = new Bundle();
@@ -157,9 +161,40 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                         Intent mIntent = new Intent(activity, ScheduleYourDayIntentActivity.class);
                         mIntent.putExtra("WHEREFROM", "1");
                         startActivity(mIntent);
+                    }*/
+                    if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay1()==1){
+                        Logger.error("ONEEEE");
+                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity.class);
+                        mIntent.putExtra("WHEREFROM", "0");
+                        startActivity(mIntent);
+
+                    }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay2()==1){
+                        Logger.error("THREEE");
+                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity2.class);
+                        mIntent.putExtra("WHEREFROM", "0");
+                        startActivity(mIntent);
+
+                    }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay3()==1){
+                        Logger.error("FOUR");
+                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity3.class);
+                        mIntent.putExtra("WHEREFROM", "0");
+                        startActivity(mIntent);
+
+                    }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay4()==1){
+                        Logger.error("FOUR");
+                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity4.class);
+                        mIntent.putExtra("WHEREFROM", "0");
+                        startActivity(mIntent);
+                    }else {
+                        Logger.error("ZERRO");
+                        Toast.makeText(activity, "Avability Already Done", Toast.LENGTH_SHORT).show();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(BundleConstants.WHEREFROM, 1);
+                        Intent intent = new Intent(activity, HomeScreenActivity.class);
+                        // intent.putExtra("camefrom","1");
+                        startActivity(intent);
+                        //   switchToActivity(activity, HomeScreenActivity.class, bundle);
                     }
-
-
                 } else {
                     Logger.error("else " + json);
                 }
@@ -414,7 +449,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200 || statusCode == 201) {
                 TastyToast.makeText(activity,   "Availability set Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-              //  Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
                 if (isAvailable) {
 
                     //changes_5june2017
@@ -440,7 +475,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         @Override
         public void onApiCancelled() {
             TastyToast.makeText(activity,  "Failed to set Availability", TastyToast.LENGTH_LONG, TastyToast.ERROR);
-           // Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
         }
     }
 }

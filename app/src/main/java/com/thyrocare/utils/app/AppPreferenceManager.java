@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thyrocare.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.models.api.response.LoginResponseModel;
+import com.thyrocare.models.api.response.NewBtechAvaliabilityResponseModel;
 import com.thyrocare.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.models.data.SlotModel;
 
@@ -32,6 +33,7 @@ public class AppPreferenceManager {
     private String selfieResponse = "selfieResponse";
     private String loginResponse = "loginResponse";
     private String btechAvailabilityResponseModel = "btechAvailabilityResponseModel";
+    private String NEWBTECHAVALIABILITYRESPONSEMODEL = "NEWBTECHAVALIABILITYRESPONSEMODEL";
     private String selectedSlotsArr = "selectedSlotsArr";
     private String leaveFlag = "leaveFlag";
     private String leaveFromDate = "leaveFromDate";
@@ -72,6 +74,27 @@ public class AppPreferenceManager {
     private int OrderAccept;
 
 //Neha G -------------------------------------
+
+    public NewBtechAvaliabilityResponseModel getNEWBTECHAVALIABILITYRESPONSEMODEL() {
+        String value=appPreference.getString(this.NEWBTECHAVALIABILITYRESPONSEMODEL,"");
+        return new Gson().fromJson(value,NewBtechAvaliabilityResponseModel.class);
+    }
+
+    public void setNEWBTECHAVALIABILITYRESPONSEMODEL(NewBtechAvaliabilityResponseModel newbtechavaliabilityresponsemodel) {
+       appPreference.putString(this.NEWBTECHAVALIABILITYRESPONSEMODEL,new Gson().toJson(newbtechavaliabilityresponsemodel));
+    }
+
+
+
+
+    /*public NewBtechAvaliabilityResponseModel getNEWBTECHAVALIABILITYRESPONSEMODEL() {
+        String value = appPreference.getString(this.NEWBTECHAVALIABILITYRESPONSEMODEL, "");
+        return new Gson().fromJson(value, NewBtechAvaliabilityResponseModel.class);
+    }
+
+    public void setNEWBTECHAVALIABILITYRESPONSEMODEL(NewBtechAvaliabilityResponseModel newbtechavaliabilityresponsemodel) {
+        appPreference.putString(this.NEWBTECHAVALIABILITYRESPONSEMODEL, new Gson().toJson(newbtechavaliabilityresponsemodel));
+    }*/
 
     public int getOrderAccept() {
         return OrderAccept;
@@ -436,4 +459,6 @@ public class AppPreferenceManager {
     public void setAreTermsAndConditionsAccepted(boolean areTermsAndConditionsAccepted) {
         appPreference.putBoolean(this.are_terms_and_conditions_accepted, areTermsAndConditionsAccepted);
     }
+
+
 }

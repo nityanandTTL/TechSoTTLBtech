@@ -41,10 +41,10 @@ import java.util.Locale;
  * Created by E4904 on 8/12/2017.
  */
 
-public class ScheduleYourDayActivity extends AbstractActivity {
+public class ScheduleYourDayActivity3 extends AbstractActivity {
 
     public static final String TAG_FRAGMENT = "SCHEDULE_YOUR_DAY_FRAGMENT";
-    private ScheduleYourDayActivity activity;
+    private ScheduleYourDayActivity3 activity;
     private AppPreferenceManager appPreferenceManager;
     private Button txtNo, txtYes;
     private LinearLayout llSlotsDisplay;
@@ -63,7 +63,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
     String tomorrowAsString;
     private String disableNo = "";
 
-    public ScheduleYourDayActivity() {
+    public ScheduleYourDayActivity3() {
         // Required empty public constructor
     }
 
@@ -73,7 +73,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_schedule_your_day1);
+        setContentView(R.layout.fragment_schedule_your_day3);
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
       /*  //Jai
@@ -100,7 +100,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
 
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        calendar.add(Calendar.DAY_OF_YEAR, 3);
         Date tomorrow = calendar.getTime();
         DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 
@@ -171,14 +171,14 @@ public class ScheduleYourDayActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 //changes_5june2017
- /*               if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
+//                if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {
                     txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
                     txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                     llSlotsDisplay.setVisibility(View.VISIBLE);
                     isAvailable = true;
                     btnProceed.setVisibility(View.VISIBLE);
                     fetchData();
-               /* } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
+                /*} else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
                     Toast.makeText(activity, "User can schedule only once per day...Please try again later.", Toast.LENGTH_SHORT).show();
                 }*/
                 //changes_5june2017
@@ -207,7 +207,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
 
                                 setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
                                 setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
-                                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                                calendar.add(Calendar.DAY_OF_MONTH, 3);
                                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
@@ -252,7 +252,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
 
                 setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
                 setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
-                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                calendar.add(Calendar.DAY_OF_MONTH, 3);
                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
@@ -375,9 +375,6 @@ public class ScheduleYourDayActivity extends AbstractActivity {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200 || statusCode == 201) {
                 Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
-                //Avaliablity
-
-//                if (isAvailable) {
 
                     appPreferenceManager.setScheduleCounter("y");
                     String scheduledDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
@@ -391,54 +388,34 @@ public class ScheduleYourDayActivity extends AbstractActivity {
                     c.set(Calendar.MINUTE, 0);
                     c.set(Calendar.HOUR_OF_DAY, 0);
 
-                    if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay2()==1){
-                        Logger.error("THREEE");
-                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity2.class);
-                        mIntent.putExtra("WHEREFROM", "0");
-                        startActivity(mIntent);
-
-                    }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay3()==1){
-                        Logger.error("FOUR");
-                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity3.class);
-                        mIntent.putExtra("WHEREFROM", "0");
-                        startActivity(mIntent);
-
-                    }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay4()==1){
+                     if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay4()==1){
                         Logger.error("FOUR");
                         Intent mIntent = new Intent(activity, ScheduleYourDayActivity4.class);
                         mIntent.putExtra("WHEREFROM", "0");
                         startActivity(mIntent);
                     }else {
-                        if (value.equals("0")) {
-                            if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
-                                Logger.error("Aaata Gela");
-                                Logger.error("Selfie" + String.valueOf(appPreferenceManager.getSelfieResponseModel()));
-                                Logger.error("LOgeeererereeere" + String.valueOf(appPreferenceManager.getSelfieResponseModel().getTimeUploaded()));
-                                Logger.error("LOgeeererereeereMIllis" + String.valueOf(c.getTimeInMillis()));
 
-                                // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
-                                Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                                i.putExtra("LEAVEINTIMATION", "0");
-                                startActivity(i);
-                            } else {
-                                switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
-                            }
-                        } else {
-                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                            i.putExtra("LEAVEINTIMATION", "0");
-                            startActivity(i);
-                        }
-                    }
+                         if (value.equals("0")) {
+                             if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+                                 Logger.error("Aaata Gela");
+                                 Logger.error("Selfie" + String.valueOf(appPreferenceManager.getSelfieResponseModel()));
+                                 Logger.error("LOgeeererereeere" + String.valueOf(appPreferenceManager.getSelfieResponseModel().getTimeUploaded()));
+                                 Logger.error("LOgeeererereeereMIllis" + String.valueOf(c.getTimeInMillis()));
 
+                                 // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
+                                 Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                                 i.putExtra("LEAVEINTIMATION", "0");
+                                 startActivity(i);
+                             } else {
+                                 switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
+                             }
+                         } else {
+                             Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                             i.putExtra("LEAVEINTIMATION", "0");
+                             startActivity(i);
+                         }
+                     }
 
-
-              /*  } else {
-                    Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                    i.putExtra("LEAVEINTIMATION", "0");
-                    startActivity(i);
-
-                    //  pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
-                }*/
             } else if (statusCode == 401) {
                 CallLogOutFromDevice();
             } else {

@@ -15,15 +15,15 @@ repositories {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 26
+    buildToolsVersion '28.0.3'
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.thyrocare"
         minSdkVersion 18
-        targetSdkVersion 25
-        versionCode 45
-        versionName "1.1.37"
+        targetSdkVersion 26
+        versionCode 46
+        versionName "1.1.38"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -54,13 +54,13 @@ android {
     productFlavors {
         BTECHdev {
             applicationId = "com.thyrocare.btech.dev"
-            versionCode 45
-            versionName "debug_1.1.37"
+            versionCode 46
+            versionName "debug_1.1.38"
         }
         BTECHprod {
             applicationId = "com.thyrocare.btech"
-            versionCode 45
-            versionName "1.1.37"
+            versionCode 46
+            versionName "1.1.38"
         }
     }
     packagingOptions {
@@ -79,7 +79,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -91,8 +91,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:mediarouter-v7:25.3.1'
     compile 'com.android.support:animated-vector-drawable:25.3.1'
-    compile 'com.google.android.gms:play-services:10.2.1'
-    compile 'com.google.android.gms:play-services-vision:10.2.1'
     compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -104,14 +102,17 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.google.firebase:firebase-crash:10.0.1'
-    compile 'com.google.firebase:firebase-core:10.0.1'
-    compile 'com.google.firebase:firebase-messaging:10.2.1'
-    compile 'com.google.firebase:firebase-database:10.2.1'
+    compile 'com.google.android.gms:play-services:12.0.1'
+    compile 'com.google.android.gms:play-services-vision:12.0.1'
+    compile 'com.google.firebase:firebase-crash:12.0.1'
+    compile 'com.google.firebase:firebase-core:12.0.1'
+    compile 'com.google.firebase:firebase-messaging:12.0.1'
+    compile 'com.google.firebase:firebase-database:12.0.1'
+    compile 'com.google.firebase:firebase-auth:12.0.1'
     compile 'com.firebase:firebase-client-android:2.5.2'
-    compile 'com.sdsmdg.tastytoast:tastytoast:0.1.1'
     compile 'com.firebase:geofire-android:2.3.1'
-    compile 'com.android.support:cardview-v7:23.3.+'
+    compile 'com.sdsmdg.tastytoast:tastytoast:0.1.1'
+    compile 'com.android.support:cardview-v7:25.3.+'
     testCompile 'junit:junit:4.12'
     compile 'com.github.wooplr:Spotlight:1.2.3'
     compile 'com.microsoft.projectoxford:face:1.4.3'

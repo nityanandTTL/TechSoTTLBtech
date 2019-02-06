@@ -395,20 +395,36 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
                 c.set(Calendar.SECOND, 0);
                 c.set(Calendar.MINUTE, 0);
                 c.set(Calendar.HOUR_OF_DAY, 0);
-                if (value.equals("0")) {
-                    if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
 
+                 if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay3()==1){
+                    Logger.error("FOUR");
+                    Intent mIntent = new Intent(activity, ScheduleYourDayActivity3.class);
+                    mIntent.putExtra("WHEREFROM", "0");
+                    startActivity(mIntent);
+
+                }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay4()==1){
+                    Logger.error("FOUR");
+                    Intent mIntent = new Intent(activity, ScheduleYourDayActivity4.class);
+                    mIntent.putExtra("WHEREFROM", "0");
+                    startActivity(mIntent);
+                }else {
+                    if (value.equals("0")) {
+                        if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+
+                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                            i.putExtra("LEAVEINTIMATION", "0");
+                            startActivity(i);
+                        } else {
+                            switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
+                        }
+                    } else {
                         Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
                         startActivity(i);
-                    } else {
-                        switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
                     }
-                } else {
-                    Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                    i.putExtra("LEAVEINTIMATION", "0");
-                    startActivity(i);
                 }
+
+
             } else if (statusCode == 401) {
                 CallLogOutFromDevice();
             } else {

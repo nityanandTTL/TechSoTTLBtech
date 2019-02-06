@@ -35,6 +35,8 @@ import java.util.ArrayList;
 /**
  *　APi Used BtechHubs/userid
  * Created by Orion on 7/4/2017.
+ * API: http://techso.thyrocare.cloud/techsoapi/BtechHubs
+ * Usage :
  */
 
 

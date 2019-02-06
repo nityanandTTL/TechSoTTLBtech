@@ -44,6 +44,7 @@ import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.DateUtils;
+import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
@@ -739,8 +740,12 @@ public class Tsp_OrderDisplayAdapter extends BaseAdapter {
         orderAllocationTrackLocationRequestModel.setVisitId(orderVisitDetailsModelsArr.get(pos).getVisitId());
         orderAllocationTrackLocationRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
         orderAllocationTrackLocationRequestModel.setStatus(8);
-        orderAllocationTrackLocationRequestModel.setLatitude(appPreferenceManager.getLatitude());
-        orderAllocationTrackLocationRequestModel.setLongitude(appPreferenceManager.getLongitude());
+        //Latlong added
+        GPSTracker gpsTracker = new GPSTracker(activity);
+        if (gpsTracker.canGetLocation()){
+            orderAllocationTrackLocationRequestModel.setLatitude(String.valueOf(gpsTracker.getLatitude()));
+            orderAllocationTrackLocationRequestModel.setLongitude(String.valueOf(gpsTracker.getLongitude()));
+        }
 
         ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderAllocationpost(orderAllocationTrackLocationRequestModel);
         orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderAllocationTrackLocationiAsyncTaskDelegateResult());

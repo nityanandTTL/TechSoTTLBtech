@@ -3,21 +3,57 @@
 
     <item
         is-multidex="true"
-        jar="/home/e6412@thyrocare.com/Desktop/btech_app_8_1_18/app/libs/httpmime-4.3.6.jar"
-        jumboMode="false"
+        jar="/media/M/Android Projects/btech_app_8_1_18/app/build/intermediates/incremental-runtime-classes/BTECHdev/debug/instant-run.jar"
+        jumboMode="true"
         optimize="true"
-        revision="26.0.2"
-        sha1="cf8bacbf0d476c7f2221f861269365b66447f7ec">
-        <dex dex="/home/e6412@thyrocare.com/Desktop/btech_app_8_1_18/app/build/intermediates/transforms/dex/BTECHdev/debug/folders/1000/2/httpmime-4.3.6_0873c6526b340191959097bb09c99469206d9b58/classes.dex" />
+        revision="28.0.3"
+        sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
+        <dex dex="/media/M/Android Projects/btech_app_8_1_18/app/build/intermediates/transforms/dex/BTECHdev/debug/folders/1000/10000/instant-run_2d6368fc4af98615bf5c9d49a26c62435f3e5fe9/classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="/home/e6412@thyrocare.com/Desktop/btech_app_8_1_18/app/libs/httpcore-4.4.4.jar"
+        jar="/media/M/Android Projects/btech_app_8_1_18/app/libs/httpmime-4.3.6.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="28.0.3"
+        sha1="cf8bacbf0d476c7f2221f861269365b66447f7ec">
+        <dex dex="/media/M/Android Projects/btech_app_8_1_18/app/build/intermediates/transforms/dex/BTECHdev/debug/folders/1000/2/httpmime-4.3.6_bd7d7ec49beceb2278a97d67160de5dde40f8a85/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/media/M/Android Projects/btech_app_8_1_18/app/build/intermediates/incremental-classes/BTECHdev/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="28.0.3"
+        sha1="da6aa2ff2e2babca9ab22b396ffcdf2ec45e4908">
+        <dex dex="/media/M/Android Projects/btech_app_8_1_18/app/build/intermediates/transforms/dex/BTECHdev/debug/folders/1000/10000/instant-run-bootstrap_a8a730c61dfc7c0dbc4a44a4fa8b8adee22ea59e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/media/M/Android Projects/btech_app_8_1_18/app/libs/httpmime-4.3.6.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.2"
+        revision="28.0.3"
+        sha1="cf8bacbf0d476c7f2221f861269365b66447f7ec">
+        <dex dex="/media/M/Android Projects/btech_app_8_1_18/app/build/intermediates/transforms/dex/BTECHdev/debug/folders/1000/2/httpmime-4.3.6_bd7d7ec49beceb2278a97d67160de5dde40f8a85/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/media/M/Android Projects/btech_app_8_1_18/app/libs/httpcore-4.4.4.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="28.0.3"
         sha1="b31526a230871fbe285fbcbe2813f9c0839ae9b0">
-        <dex dex="/home/e6412@thyrocare.com/Desktop/btech_app_8_1_18/app/build/intermediates/transforms/dex/BTECHdev/debug/folders/1000/2/httpcore-4.4.4_2ceddd13d8a0b1457240cda89d4f2ac43f6ee979/classes.dex" />
+        <dex dex="/media/M/Android Projects/btech_app_8_1_18/app/build/intermediates/transforms/dex/BTECHdev/debug/folders/1000/2/httpcore-4.4.4_752a5793f87db97c9bba5b499b47dfb6ff6de2d0/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/media/M/Android Projects/btech_app_8_1_18/app/libs/httpcore-4.4.4.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="28.0.3"
+        sha1="b31526a230871fbe285fbcbe2813f9c0839ae9b0">
+        <dex dex="/media/M/Android Projects/btech_app_8_1_18/app/build/intermediates/transforms/dex/BTECHdev/debug/folders/1000/2/httpcore-4.4.4_752a5793f87db97c9bba5b499b47dfb6ff6de2d0/classes.dex" />
     </item>
 
 </items>

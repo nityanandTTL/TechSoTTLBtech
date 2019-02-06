@@ -292,12 +292,16 @@ public class LeaveIntimationFragment extends AbstractFragment {
 
                             }
                         }, mYear, mMonth, mDay);
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
-                Calendar calendar = toDt;
-                calendar.add(Calendar.DAY_OF_YEAR, -1);
-                datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+                try {
+                    datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+                    Calendar calendar = toDt;
+                    calendar.add(Calendar.DAY_OF_YEAR, -1);
+                    datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
 
-                datePickerDialog.show();
+                    datePickerDialog.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         });

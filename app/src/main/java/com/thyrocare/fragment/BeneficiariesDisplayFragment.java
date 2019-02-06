@@ -60,6 +60,7 @@ import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
+import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONArray;
@@ -985,8 +986,14 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         orderAllocationTrackLocationRequestModel.setVisitId(orderVisitDetailsModel.getVisitId());
         orderAllocationTrackLocationRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
         orderAllocationTrackLocationRequestModel.setStatus(5);
-        orderAllocationTrackLocationRequestModel.setLatitude(appPreferenceManager.getLatitude());
-        orderAllocationTrackLocationRequestModel.setLongitude(appPreferenceManager.getLongitude());
+
+//Latlong added
+        GPSTracker gpsTracker = new GPSTracker(getActivity());
+        if (gpsTracker.canGetLocation()){
+            orderAllocationTrackLocationRequestModel.setLatitude(String.valueOf(gpsTracker.getLatitude()));
+            orderAllocationTrackLocationRequestModel.setLongitude(String.valueOf(gpsTracker.getLongitude()));
+        }
+
 
         ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderAllocationpost(orderAllocationTrackLocationRequestModel);
         orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderAllocationTrackLocationiAsyncTaskDelegateResult());
@@ -1372,20 +1379,21 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                         && /*jai*/isPPBSTestRemoved.equals("normal")) {
 
                                     Logger.error("isFBSTestRemoved status : " + isFBSTestRemoved);
+                                    //Dailog for PPBS after WOE Abhi//
                                     if (!isFBSTestRemoved.equals("removed")) {
 
-
-                                        Logger.error("should print revisit dialog for ppbs: ");
+                                        activity.finish();
+                                       /* Logger.error("should print revisit dialog for ppbs: ");
 
                                         Logger.error("for PPBS");
                                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                                         String testToDisplay = "";
-                                      /*
+
                                         if (test.contains(AppConstants.RBS) && isRBSTestRemoved.equals("normal")) {
                                             testToDisplay = "PPBS and RBS";
                                         } else {
                                             testToDisplay = "PPBS";
-                                        }*/
+                                        }
 
                                         builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
                                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -1404,7 +1412,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                     }
                                                 })
                                                 .setCancelable(false)
-                                                .show();
+                                                .show();*/
 
                                     }
                                     //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
@@ -1696,7 +1704,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
             Logger.error("a123mount int " + allOrderdetailsObject.getInt("AmountDue"));
 
-            totalAmountPayable = jsonObject.getInt("AmountDue");
+//            totalAmountPayable = jsonObject.getInt("AmountDue");
+            totalAmountPayable = allOrderdetailsObject.getInt("AmountDue");
 
             Logger.error("tttejas1 " + totalAmountPayable);
             if (isOnlyWOE) {

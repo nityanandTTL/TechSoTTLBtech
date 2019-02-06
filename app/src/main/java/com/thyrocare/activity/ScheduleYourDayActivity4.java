@@ -37,14 +37,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+
 /**
- * Created by E4904 on 8/12/2017.
+ * The type Schedule your day activity 2.
  */
+public class ScheduleYourDayActivity4 extends AbstractActivity {
 
-public class ScheduleYourDayActivity extends AbstractActivity {
-
+    /**
+     * The constant TAG_FRAGMENT.
+     */
     public static final String TAG_FRAGMENT = "SCHEDULE_YOUR_DAY_FRAGMENT";
-    private ScheduleYourDayActivity activity;
+    private ScheduleYourDayActivity4 activity;
     private AppPreferenceManager appPreferenceManager;
     private Button txtNo, txtYes;
     private LinearLayout llSlotsDisplay;
@@ -56,33 +59,44 @@ public class ScheduleYourDayActivity extends AbstractActivity {
     private boolean isAvailable = false;
     private SetBtechAvailabilityAPIRequestModel savedModel;
     private TextView date;
+    private String value;
+
     private String lasScheduleDate;
-    private String today;
-    private int camefrom = 3;
-    String value;
-    String tomorrowAsString;
+    /**
+     * The Day afterttomorrow as string.
+     */
+    String dayAfterttomorrowAsString;
     private String disableNo = "";
 
-    public ScheduleYourDayActivity() {
+
+    /**
+     * Instantiates a new Schedule your day activity 2.
+     */
+    public ScheduleYourDayActivity4() {
         // Required empty public constructor
     }
 
     // txt_no
 
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+        i.putExtra("LEAVEINTIMATION", "0");
+        startActivity(i);
+        activity.finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_schedule_your_day1);
+        setContentView(R.layout.fragment_schedule_your_day4);
         activity = this;
+
         appPreferenceManager = new AppPreferenceManager(activity);
-      /*  //Jai
-        Bundle bundle = new Bundle();
-        camefrom = bundle.getInt(BundleConstants.WHEREFROM, 0);
-        Logger.error("camefrom: " + camefrom);
-        //jai*/
+
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
         value = getIntent().getExtras().getString("WHEREFROM");
-        Logger.error("value " + value);
 
         try {
             if (getIntent().getExtras().getString("SHOWNO") != null) {
@@ -92,37 +106,23 @@ public class ScheduleYourDayActivity extends AbstractActivity {
             e.printStackTrace();
         }
 
-        //   Toast.makeText(activity, "WHere", Toast.LENGTH_SHORT).show();
-        today = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
-        savedModel = appPreferenceManager.getBtechAvailabilityAPIRequestModel();
-        selectedSlotsArr = appPreferenceManager.getSelectedSlotsArr();
-
-        Calendar calendar = Calendar.getInstance();
-        Date today = calendar.getTime();
-
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        calendar.add(Calendar.DAY_OF_YEAR, 4);
         Date tomorrow = calendar.getTime();
         DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 
-        tomorrowAsString = dateFormat.format(tomorrow);
-
+        dayAfterttomorrowAsString = dateFormat.format(tomorrow);
         initUI();
         initListeners();
         findSchedularDate();
+        savedModel = appPreferenceManager.getBtechAvailabilityAPIRequestModel();
+        selectedSlotsArr = appPreferenceManager.getSelectedSlotsArr();
 
 
     }
 
-    @Override
-    public void onBackPressed() {
 
-       /* Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-        i.putExtra("LEAVEINTIMATION", "0");
-        startActivity(i);
-        activity.finish();*/
-    }
 
-    /*  activity2.toolbarHome.setTitle("Schedule your Day");
+      /*  activity2.toolbarHome.setTitle("Schedule your Day");
 
       */
 
@@ -153,7 +153,6 @@ public class ScheduleYourDayActivity extends AbstractActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
             if (todayDate.after(strDate)) {
                 //Toast.makeText(activity, "after valid date", Toast.LENGTH_SHORT).show();
                 appPreferenceManager.setScheduleCounter("n");
@@ -171,14 +170,14 @@ public class ScheduleYourDayActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 //changes_5june2017
- /*               if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
-                    txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
-                    txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    llSlotsDisplay.setVisibility(View.VISIBLE);
-                    isAvailable = true;
-                    btnProceed.setVisibility(View.VISIBLE);
-                    fetchData();
-               /* } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
+              /*  if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
+                txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
+                txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                llSlotsDisplay.setVisibility(View.VISIBLE);
+                isAvailable = true;
+                btnProceed.setVisibility(View.VISIBLE);
+                fetchData();
+              /*  } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
                     Toast.makeText(activity, "User can schedule only once per day...Please try again later.", Toast.LENGTH_SHORT).show();
                 }*/
                 //changes_5june2017
@@ -193,7 +192,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
                 btnProceed.setVisibility(View.INVISIBLE);
                 isAvailable = false;
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setMessage("Are you sure you are not available tomorrow ?")
+                builder.setMessage("Are you sure you are not available Day After tomorrow?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
@@ -207,7 +206,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
 
                                 setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
                                 setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
-                                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                                calendar.add(Calendar.DAY_OF_MONTH, 4);
                                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
@@ -223,6 +222,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+
                             }
                         });
                 builder.create().
@@ -252,7 +252,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
 
                 setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
                 setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
-                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                calendar.add(Calendar.DAY_OF_MONTH, 4);
                 setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
 
                 ApiCallAsyncTask setBtechAvailabilityAsyncTask = new AsyncTaskForRequest(activity).getPostBtechAvailabilityRequestAsyncTask(setBtechAvailabilityAPIRequestModel);
@@ -261,7 +261,10 @@ public class ScheduleYourDayActivity extends AbstractActivity {
                     setBtechAvailabilityAsyncTask.execute(setBtechAvailabilityAsyncTask);
                 } else {
                     Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+
+
                 }
+
             }
         });
     }
@@ -276,16 +279,15 @@ public class ScheduleYourDayActivity extends AbstractActivity {
         }
     }
 
-
     @Override
     public void initUI() {
         super.initUI();
+        //changes
         txtYes = (Button) findViewById(R.id.txt_yes);
         txtNo = (Button) findViewById(R.id.txt_no);
+        //changes
         date = (TextView) findViewById(R.id.date);
-        Logger.error("TOdayYYYYYY" + tomorrowAsString);
-
-        date.setText(tomorrowAsString);
+        date.setText(dayAfterttomorrowAsString);
         btnProceed = (Button) findViewById(R.id.btn_proceed);
         btnProceed.setVisibility(View.INVISIBLE);
         llSlotsDisplay = (LinearLayout) findViewById(R.id.ll_slots_display);
@@ -311,7 +313,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
                     }
                 }
                 initData();
-            }else if (statusCode == 401) {
+            } else if (statusCode == 401) {
                 CallLogOutFromDevice();
             } else {
                 Toast.makeText(activity, "Failed to Fetch Slots", Toast.LENGTH_SHORT).show();
@@ -324,6 +326,9 @@ public class ScheduleYourDayActivity extends AbstractActivity {
         }
     }
 
+    /**
+     * Call log out from device.
+     */
     public void CallLogOutFromDevice() {
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
@@ -365,8 +370,16 @@ public class ScheduleYourDayActivity extends AbstractActivity {
     }
 
     private class SetBtechAvailabilityAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        /**
+         * The Is available.
+         */
         boolean isAvailable;
 
+        /**
+         * Instantiates a new Set btech availability async task delegate result.
+         *
+         * @param isAvailable the is available
+         */
         public SetBtechAvailabilityAsyncTaskDelegateResult(boolean isAvailable) {
             this.isAvailable = isAvailable;
         }
@@ -375,73 +388,31 @@ public class ScheduleYourDayActivity extends AbstractActivity {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200 || statusCode == 201) {
                 Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
-                //Avaliablity
+                //appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json, SetBtechAvailabilityAPIRequestModel.class));
+                appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.MILLISECOND, 0);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.HOUR_OF_DAY, 0);
+                if (value.equals("0")) {
+                    if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
 
-//                if (isAvailable) {
-
-                    appPreferenceManager.setScheduleCounter("y");
-                    String scheduledDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-                    appPreferenceManager.setScheduleDate(scheduledDate);
-
-                  /*  appPreferenceManager.setBtechAvailabilityResponseModel(new Gson().fromJson(json, SetBtechAvailabilityAPIRequestModel.class));*/
-                    appPreferenceManager.setSelectedSlotsArr(selectedSlotsArr);
-                    Calendar c = Calendar.getInstance();
-                    c.set(Calendar.MILLISECOND, 0);
-                    c.set(Calendar.SECOND, 0);
-                    c.set(Calendar.MINUTE, 0);
-                    c.set(Calendar.HOUR_OF_DAY, 0);
-
-                    if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay2()==1){
-                        Logger.error("THREEE");
-                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity2.class);
-                        mIntent.putExtra("WHEREFROM", "0");
-                        startActivity(mIntent);
-
-                    }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay3()==1){
-                        Logger.error("FOUR");
-                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity3.class);
-                        mIntent.putExtra("WHEREFROM", "0");
-                        startActivity(mIntent);
-
-                    }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay4()==1){
-                        Logger.error("FOUR");
-                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity4.class);
-                        mIntent.putExtra("WHEREFROM", "0");
-                        startActivity(mIntent);
-                    }else {
-                        if (value.equals("0")) {
-                            if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
-                                Logger.error("Aaata Gela");
-                                Logger.error("Selfie" + String.valueOf(appPreferenceManager.getSelfieResponseModel()));
-                                Logger.error("LOgeeererereeere" + String.valueOf(appPreferenceManager.getSelfieResponseModel().getTimeUploaded()));
-                                Logger.error("LOgeeererereeereMIllis" + String.valueOf(c.getTimeInMillis()));
-
-                                // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
-                                Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                                i.putExtra("LEAVEINTIMATION", "0");
-                                startActivity(i);
-                            } else {
-                                switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
-                            }
-                        } else {
-                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                            i.putExtra("LEAVEINTIMATION", "0");
-                            startActivity(i);
-                        }
+                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+                    } else {
+                        switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
                     }
-
-
-
-              /*  } else {
+                } else {
                     Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                     i.putExtra("LEAVEINTIMATION", "0");
                     startActivity(i);
-
-                    //  pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
-                }*/
+                }
             } else if (statusCode == 401) {
                 CallLogOutFromDevice();
             } else {
+//                pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                 Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
             }
         }
@@ -451,5 +422,6 @@ public class ScheduleYourDayActivity extends AbstractActivity {
             Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 }

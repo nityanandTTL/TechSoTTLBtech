@@ -147,9 +147,14 @@
 
     <string name="notification_text">Tracking, tap to cancel</string>
     <string name="transport_id" translatable="false">123</string>
-    <string name="firebase_path" translatable="false">locations</string>
-    <string name="firebase_email" translatable="false">thyrocaretechnologiesp@gmail.com</string>
-    <string name="firebase_password" translatable="false">Pass@123</string>
+    <string name="firebase_path" translatable="false">Thyrocare_Btech_Location_data</string>  <!-- Please Dont Change this-->
+    <string name="firebase_email1" translatable="false">thyrocaretechnologiesp@gmail.com</string>
+    <string name="firebase_password1" translatable="false">Pass@123</string>
+
+    <string name="firebase_email" translatable="false">tejas.telawane@thyrocare.com</string>
+    <string name="firebase_password" translatable="false">tejas@123</string>
+
+    <string name="BTECH_LOCATION" translatable="false">Location</string>
 
     <string-array name="payment_mode">
         <item>Cash By ATM</item>

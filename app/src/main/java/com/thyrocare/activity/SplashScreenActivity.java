@@ -26,6 +26,7 @@ import com.thyrocare.dao.DbHelper;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.delegate.CustomUpdateDialogOkButtonOnClickedDelegate;
 import com.thyrocare.models.api.response.BtechAvaliabilityResponseModel;
+import com.thyrocare.models.api.response.NewBtechAvaliabilityResponseModel;
 import com.thyrocare.models.data.TSPNBT_AvilModel;
 import com.thyrocare.models.data.VersionControlMasterModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -96,7 +97,9 @@ public class SplashScreenActivity extends AbstractActivity {
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                         ActivityCompat.checkSelfPermission(activity, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED ||
-                        ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED )
+                {
                     ActivityCompat.requestPermissions(activity,
                             new String[]{
                                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -110,7 +113,8 @@ public class SplashScreenActivity extends AbstractActivity {
                                     Manifest.permission.READ_EXTERNAL_STORAGE,
                                     Manifest.permission.VIBRATE,
                                     Manifest.permission.WAKE_LOCK,
-                                    Manifest.permission.INTERNET},
+                                    Manifest.permission.INTERNET,
+                                    Manifest.permission.READ_PHONE_STATE},
                             AppConstants.APP_PERMISSIONS);
                 } else {
                     fetchVersionControlDetails();
@@ -174,27 +178,27 @@ public class SplashScreenActivity extends AbstractActivity {
         }
     }
 
-    private class DispatchToHubDetailDisplayApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
-        @Override
-        public void apiCallResult(String json, int statusCode) throws JSONException {
-            Logger.debug(TAG_FRAGMENT + "dayssssssssss ");
-            if (statusCode == 200) {
-                ResponseParser responseParser = new ResponseParser(activity);
-                BtechAvaliabilityResponseModel btechAvaliabilityResponseModel = new BtechAvaliabilityResponseModel();
-                btechAvaliabilityResponseModel = responseParser.getBtechAvaliabilityResponseModel(json, statusCode);
-                if (btechAvaliabilityResponseModel != null) {
-                  /*if(btechAvaliabilityResponseModel.getNumberofDays()==0) {*/
-                    if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
-                        Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
-                        i.putExtra("LEAVEINTIMATION", "0");
-                        startActivity(i);
-                    }
-                    else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+    /* private class DispatchToHubDetailDisplayApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+         @Override
+         public void apiCallResult(String json, int statusCode) throws JSONException {
+             Logger.debug(TAG_FRAGMENT + "dayssssssssss ");
+             if (statusCode == 200) {
+                 ResponseParser responseParser = new ResponseParser(activity);
+                 BtechAvaliabilityResponseModel btechAvaliabilityResponseModel = new BtechAvaliabilityResponseModel();
+                 btechAvaliabilityResponseModel = responseParser.getBtechAvaliabilityResponseModel(json, statusCode);
+                 if (btechAvaliabilityResponseModel != null) {
+                   if(btechAvaliabilityResponseModel.getNumberofDays()==0) {
+                     if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
+                         Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
+                         i.putExtra("LEAVEINTIMATION", "0");
+                         startActivity(i);
+                     }
+                    *//* else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
 
                         Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
                         startActivity(i);
-                    }
+                    }*//*
                     else if (btechAvaliabilityResponseModel.getNumberofDays() == 0) {
                         Logger.error("ZERRO");
                         Bundle bundle = new Bundle();
@@ -231,7 +235,7 @@ public class SplashScreenActivity extends AbstractActivity {
                         mIntent.putExtra("WHEREFROM", "0");
                         startActivity(mIntent);
 
-                    } else if (btechAvaliabilityResponseModel.getNumberofDays() == 2) {
+                    }else if (btechAvaliabilityResponseModel.getNumberofDays() == 2) {
                         Logger.error("FOURRRRR");
                         Intent mIntent = new Intent(activity, ScheduleYourDayIntentActivity.class);
                         mIntent.putExtra("WHEREFROM", "0");
@@ -250,7 +254,92 @@ public class SplashScreenActivity extends AbstractActivity {
             Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
         }
     }
+*/
+    private class DispatchToHubDetailDisplayApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+        @Override
+        public void apiCallResult(String json, int statusCode) throws JSONException {
+            Logger.debug(TAG_FRAGMENT + "dayssssssssss ");
+            if (statusCode == 200) {
+                ResponseParser responseParser = new ResponseParser(activity);
+                NewBtechAvaliabilityResponseModel newBtechAvaliabilityResponseModel = new NewBtechAvaliabilityResponseModel();
+                newBtechAvaliabilityResponseModel = responseParser.getNewBtechAvaliabilityResponseModel(json, statusCode);
+                appPreferenceManager.setNEWBTECHAVALIABILITYRESPONSEMODEL(newBtechAvaliabilityResponseModel);
 
+
+                if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL() != null) {
+                    if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
+                        Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+                    }
+                    else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+
+                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+                    }
+                    else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay1()==1){
+                        Logger.error("ONEEEE");
+                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity.class);
+                        mIntent.putExtra("WHEREFROM", "0");
+                        startActivity(mIntent);
+
+                    }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay2()==1){
+                        Logger.error("THREEE");
+                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity2.class);
+                        mIntent.putExtra("WHEREFROM", "0");
+                        startActivity(mIntent);
+
+                    }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay3()==1){
+                        Logger.error("FOUR");
+                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity3.class);
+                        mIntent.putExtra("WHEREFROM", "0");
+                        startActivity(mIntent);
+
+                    }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay4()==1){
+                        Logger.error("FOUR");
+                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity4.class);
+                        mIntent.putExtra("WHEREFROM", "0");
+                        startActivity(mIntent);
+                    }else {
+                        Logger.error("ZERRO");
+                        Bundle bundle = new Bundle();
+
+                        Calendar c = Calendar.getInstance();
+                        c.set(Calendar.MILLISECOND, 0);
+                        c.set(Calendar.SECOND, 0);
+                        c.set(Calendar.MINUTE, 0);
+                        c.set(Calendar.HOUR_OF_DAY, 0);
+                        if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)) {
+                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                            i.putExtra("LEAVEINTIMATION", "0");
+                            startActivity(i);
+                            finish();
+                        } else {
+                            if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+                                // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
+                                Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                                i.putExtra("LEAVEINTIMATION", "0");
+                                startActivity(i);
+                                finish();
+                            } else {
+                                switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
+                            }
+                        }
+                    }
+                } else {
+                    Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+        }
+
+        @Override
+        public void onApiCancelled() {
+
+        }
+    }
 
     /**
      * go ahest with next funtion
@@ -307,11 +396,7 @@ public class SplashScreenActivity extends AbstractActivity {
                             } else {
                                 appPreferenceManager.clearAllPreferences();
                                 new DhbDao(activity).deleteTablesonLogout();
-
-
                                 //jai
-
-
                                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionControlMasterModel.getAppUrl()));
                                 startActivity(intent);
                                 finish();
@@ -398,7 +483,7 @@ public class SplashScreenActivity extends AbstractActivity {
                 startActivity(intent);
 
                 finish();
-            }else if (statusCode == 401) {
+            } else if (statusCode == 401) {
                 CallLogOutFromDevice();
             } else {
                 Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();

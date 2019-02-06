@@ -307,7 +307,9 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
 
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         OrderPassRequestModel orderPassRequestModel = new OrderPassRequestModel();
-        orderPassRequestModel.setMobile(orderallocationmodel.getMobile());
+      if(orderallocationmodel.getMobile()!=null){
+          orderPassRequestModel.setMobile(orderallocationmodel.getMobile());
+      }
         orderPassRequestModel.setVisitId(orderVisitDetailsModel.getVisitId());
         // orderPassRequestModel.setBtechId(orderallocationmodel.getBtechId());
         Logger.error("btech " + orderallocationmodel.getBtechName());

@@ -35,7 +35,11 @@ public class SmsReceiver extends BroadcastReceiver {
             b = sender.endsWith("");  //Just to fetch otp sent from WNRCRP
             String messageBody = smsMessage.getMessageBody();
             Log.e(TAG, "onReceive msg: "+messageBody );
-            otp = messageBody.replaceAll("[^0-9]", "");// here abcd contains otp which is in number format
+            try {
+                otp = messageBody.replaceAll("[^0-9]", "");// here abcd contains otp which is in number format
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             Log.e(TAG, "onReceive: otp "+otp );
             Pattern p = Pattern.compile("(\\d{4})");// represents single character (\d{6})
             Matcher m = p.matcher(otp);

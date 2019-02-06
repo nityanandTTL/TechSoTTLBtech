@@ -554,8 +554,9 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                                 //true
                                 goAheadWithNormalFlow();
 
-                            } else {
-                                AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+                            }/*validation removed for FBBS and PBBS Abhi*/
+                            else {
+                                /*AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
                                 alertDialog.setMessage(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode() + " test can be served in between " + apiMinusFifdisp + " to " + apiPlusFifdisp);
                                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                                         new DialogInterface.OnClickListener() {
@@ -564,7 +565,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
                                             }
                                         });
-                                alertDialog.show();
+                                alertDialog.show();*/
+                                goAheadWithNormalFlow();
                             }
 
                         }
@@ -1057,9 +1059,18 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.mainleft.setBackgroundColor(activity.getResources().getColor(R.color.directVisit));
                 holder.main.setBackgroundColor(activity.getResources().getColor(R.color.directVisit));
                 holder.direct_visit.setVisibility(View.VISIBLE);
+                //abhishek call hide unhide
+                holder.imgcall.setVisibility(View.GONE);
             }else {
                 holder.direct_visit.setVisibility(View.GONE);
+                holder.imgcall.setVisibility(View.VISIBLE);
             }
+
+
+
+
+
+
             holder.tvAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
 
             if (CheckPPBSisPresent(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster())) {
@@ -1245,7 +1256,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
                 //  holder.txtSrNo.setVisibility(View.INVISIBLE);
                 holder.txtSrNo.setVisibility(View.GONE);
-                // holder.imgcall.setVisibility(View.GONE);
+
                 holder.imgCBAccept.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1270,10 +1281,13 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                                 holder.txtAge.setVisibility(View.VISIBLE);
                                 holder.tvAge.setVisibility(View.VISIBLE);
                                 holder.imgFastingStatus.setVisibility(View.VISIBLE);
-                                holder.imgcall.setVisibility(View.VISIBLE);
                                 holder.imgRelease2.setVisibility(View.VISIBLE);//remove 11 validation
 
-
+                                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isDirectVisit()) {
+                                    holder.imgcall.setVisibility(View.GONE);
+                                }else {
+                                    holder.imgcall.setVisibility(View.VISIBLE);
+                                }
 
                                 visitOrderDisplayRecyclerViewAdapterDelegate.onOrderAccepted(orderVisitDetailsModelsArr.get(pos));
                                 SendinglatlongOrderAllocation(pos);
@@ -1298,10 +1312,14 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.txtName.setVisibility(View.VISIBLE);
                 holder.txtAge.setVisibility(View.VISIBLE);
                 holder.tvAge.setVisibility(View.VISIBLE);
-                holder.imgcall.setVisibility(View.VISIBLE);
-
-
+//                holder.imgcall.setVisibility(View.VISIBLE);
                 holder.txtSrNo.setVisibility(View.VISIBLE);
+//Abhi call hide and unhide
+                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isDirectVisit()) {
+                    holder.imgcall.setVisibility(View.GONE);
+                }else {
+                    holder.imgcall.setVisibility(View.VISIBLE);
+                }
             }
 
 
@@ -1436,8 +1454,13 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         orderAllocationTrackLocationRequestModel.setVisitId(orderVisitDetailsModelsArr.get(pos).getVisitId());
         orderAllocationTrackLocationRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
         orderAllocationTrackLocationRequestModel.setStatus(8);
-        orderAllocationTrackLocationRequestModel.setLatitude(appPreferenceManager.getLatitude());
-        orderAllocationTrackLocationRequestModel.setLongitude(appPreferenceManager.getLongitude());
+
+//Latlong added
+        GPSTracker gpsTracker = new GPSTracker(activity);
+        if (gpsTracker.canGetLocation()){
+            orderAllocationTrackLocationRequestModel.setLatitude(String.valueOf(gpsTracker.getLatitude()));
+            orderAllocationTrackLocationRequestModel.setLongitude(String.valueOf(gpsTracker.getLongitude()));
+        }
 
         ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderAllocationpost(orderAllocationTrackLocationRequestModel);
         orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderAllocationTrackLocationiAsyncTaskDelegateResult());

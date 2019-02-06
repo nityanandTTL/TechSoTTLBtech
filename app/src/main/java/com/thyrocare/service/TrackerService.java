@@ -1,6 +1,10 @@
 package com.thyrocare.service;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -8,13 +12,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -24,8 +31,11 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -57,6 +67,7 @@ public class TrackerService extends Service implements LocationListener, GoogleA
     @Override
     public void onCreate() {
         super.onCreate();
+          handler1 = new Handler();
         request = LocationRequest.create();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -64,34 +75,21 @@ public class TrackerService extends Service implements LocationListener, GoogleA
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        // buildNotification();
-        /*registerReceiver(stopReceiver, new IntentFilter("stop"));*/
 
-         handler1 = new Handler();
-        final int delay = 500; //milliseconds
-
-        handler1.postDelayed(new Runnable() {
-            public void run() {
-                //do something
-                Log.e(TAG, "run: ");
-                try {
-                    if (appPreferenceManager.getLoginResponseModel() != null) {
-                        if (appPreferenceManager.getLoginResponseModel().getUserID() != null) {
-                            loginToFirebase();
-                        }
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                handler1.postDelayed(this, delay);
-            }
-        }, delay);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startMyOwnForeground();
+        } else {
+            buildNotification();
+        }
 
 
-        mGoogleApiClient.connect();
         appPreferenceManager = new AppPreferenceManager(getApplicationContext());
+        mGoogleApiClient.connect();
+        if (appPreferenceManager.getLoginResponseModel() != null) {
+            if (appPreferenceManager.getLoginResponseModel().getUserID() != null) {
+                loginToFirebase();
+            }
+        }
     }
 
     private void buildNotification() {
@@ -105,17 +103,46 @@ public class TrackerService extends Service implements LocationListener, GoogleA
                 .setContentText(getString(R.string.notification_text))
                 .setOngoing(true)
                 .setContentIntent(broadcastIntent)
-                .setSmallIcon(R.drawable.ic_home_black);
+                .setSmallIcon(R.drawable.app_logo);
         startForeground(1, builder.build());
     }
 
-    protected BroadcastReceiver stopReceiver = new BroadcastReceiver() {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private void startMyOwnForeground() {
+        String stop = "stop";
+        registerReceiver(stopReceiver, new IntentFilter(stop));
+        PendingIntent broadcastIntent = PendingIntent.getBroadcast(
+                this, 0, new Intent(stop), PendingIntent.FLAG_UPDATE_CURRENT);
+        String NOTIFICATION_CHANNEL_ID = "com.thyrocare.btech.dev";
+        String channelName = "My Background Service";
+        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+        chan.setLightColor(Color.BLUE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        assert manager != null;
+        manager.createNotificationChannel(chan);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        Notification notification = notificationBuilder.setOngoing(true)
+                .setSmallIcon(R.drawable.app_logo)
+                .setContentIntent(broadcastIntent)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.notification_text))
+                .setOngoing(true)
+                .setPriority(NotificationManager.IMPORTANCE_MIN)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .build();
+        startForeground(2, notification);
+    }
+
+    public  BroadcastReceiver stopReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "received stop broadcast");
             // Stop the service when the notification is tapped
-            unregisterReceiver(stopReceiver);
             stopSelf();
+//            unregisterReceiver(stopReceiver);
+
         }
     };
 
@@ -138,145 +165,57 @@ public class TrackerService extends Service implements LocationListener, GoogleA
             }
         });
     }
-    private void loginToFirebase1() {
-        // Authenticate with Firebase, and request location updates
-        String email = getString(R.string.firebase_email);
-        String password = getString(R.string.firebase_password);
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(
-                email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "firebase auth success");
-                    requestLocationUpdates1();
-                } else {
-                    Log.d(TAG, "onComplete: " + task.getException().toString());
-                    Log.d(TAG, "firebase auth failed");
-                }
-            }
-        });
-    }
 
-    private void requestLocationUpdates() {
-        Log.e(TAG, "requestLocationUpdates: ");
-        request = new LocationRequest();
-        request.setInterval(10000);
-        request.setFastestInterval(1000);
+
+    @SuppressLint("RestrictedApi")
+    private void requestLocationUpdates1() {
+
+        LocationRequest request = new LocationRequest();
+        request.setInterval(5000);
+        request.setFastestInterval(2000);
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-
-        Log.e(TAG, "requestLocationUpdates: 22");
-
-
+        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
+//        final String path = getString(R.string.firebase_path) + "/" + rplchar(appPreferenceManager.getLoginResponseModel().getUserName().trim()) + "-" + appPreferenceManager.getLoginResponseModel().getUserID();
+     final String path = getString(R.string.firebase_path) + "/" +appPreferenceManager.getLoginResponseModel().getUserID() + "/" + getString(R.string.BTECH_LOCATION);
         int permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PackageManager.PERMISSION_GRANTED) {
-
-
-
             // Request location updates and when an update is
             // received, store the location in Firebase
+            client.requestLocationUpdates(request, new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
 
-            try {
-                GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
-                location1 = new Location("");
-                location1.setLatitude(gpsTracker.getLatitude());
-                location1.setLongitude(gpsTracker.getLongitude());
-                location1.setTime(System.currentTimeMillis());
+                    System.out.println("path : "+path);
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
+                    Location location = locationResult.getLastLocation();
+                    try {
+                        if (location != null) {
 
+                            ref.setValue(location);
+                            Log.d(TAG, "location update " + location);
 
-                final String path = getString(R.string.firebase_path) + "/" + rplchar(appPreferenceManager.getLoginResponseModel().getUserName().toString().trim()) + "-" + appPreferenceManager.getLoginResponseModel().getUserID();
+                        /* GeoFire geoFire=new GeoFire(ref);
 
+                         // geoFire.setLocation(getString(R.string.firebase_path) + "/" + rplchar(appPreferenceManager.getLoginResponseModel().getUserName().toString().trim()) + "-" + appPreferenceManager.getLoginResponseModel().getUserID(),new GeoLocation(gpsTracker.getLatitude(),gpsTracker.getLongitude()));
+                         geoFire.setLocation(getString(R.string.firebase_path) + "/" + rplchar(appPreferenceManager.getLoginResponseModel().getUserName().trim()) + "-" + appPreferenceManager.getLoginResponseModel().getUserID(), new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                             @Override
+                             public void onComplete(String key, DatabaseError error) {
 
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
-
-                if (location1 != null) {
-
-                    //   Toast.makeText(this, "last known " + location1, Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "location update " + location1);
-                    ref.child("users").push().setValue(location1);
-                    ref.setValue(location1);
-
-                   /* GeoFire geoFire=new GeoFire(ref);
-
-                   // geoFire.setLocation(getString(R.string.firebase_path) + "/" + rplchar(appPreferenceManager.getLoginResponseModel().getUserName().toString().trim()) + "-" + appPreferenceManager.getLoginResponseModel().getUserID(),new GeoLocation(gpsTracker.getLatitude(),gpsTracker.getLongitude()));
-                    geoFire.setLocation(getString(R.string.firebase_path) + "/" + rplchar(appPreferenceManager.getLoginResponseModel().getUserName().toString().trim()) + "-" + appPreferenceManager.getLoginResponseModel().getUserID(), new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()), new GeoFire.CompletionListener() {
-                        @Override
-                        public void onComplete(String key, DatabaseError error) {
+                             }
+                         });*/
 
                         }
-                    });*/
-
-
-
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+            }, null);
         }
-    }
- private void requestLocationUpdates1() {
-        Log.e(TAG, "requestLocationUpdates: ");
-        request = new LocationRequest();
-        request.setInterval(10000);
-        request.setFastestInterval(1000);
-        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-
-        Log.e(TAG, "requestLocationUpdates: 22");
-
-
-        int permission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        if (permission == PackageManager.PERMISSION_GRANTED) {
-
-
-
-            // Request location updates and when an update is
-            // received, store the location in Firebase
-
-            try {
-                GPSTracker gpsTracker = new GPSTracker(getApplicationContext());
-                mLastLocation = new Location("");
-                mLastLocation.setLatitude(gpsTracker.getLatitude());
-                mLastLocation.setLongitude(gpsTracker.getLongitude());
-                mLastLocation.setTime(System.currentTimeMillis());
-
-
-                final String path = getString(R.string.firebase_path) + "/" + rplchar(appPreferenceManager.getLoginResponseModel().getUserName().toString().trim()) + "-" + appPreferenceManager.getLoginResponseModel().getUserID();
-
-
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
-
-                if (mLastLocation != null) {
-
-                    //   Toast.makeText(this, "last known " + location1, Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "location update " + mLastLocation);
-                    ref.child("users").push().setValue(mLastLocation);
-                    ref.setValue(mLastLocation);
-
-                    GeoFire geoFire=new GeoFire(ref);
-
-                   // geoFire.setLocation(getString(R.string.firebase_path) + "/" + rplchar(appPreferenceManager.getLoginResponseModel().getUserName().toString().trim()) + "-" + appPreferenceManager.getLoginResponseModel().getUserID(),new GeoLocation(gpsTracker.getLatitude(),gpsTracker.getLongitude()));
-                    geoFire.setLocation(getString(R.string.firebase_path) + "/" + rplchar(appPreferenceManager.getLoginResponseModel().getUserName().toString().trim()) + "-" + appPreferenceManager.getLoginResponseModel().getUserID(), new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()), new GeoFire.CompletionListener() {
-                        @Override
-                        public void onComplete(String key, DatabaseError error) {
-
-                        }
-                    });
-
-
-
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
     }
 
-    public String rplchar(String s){
+    public String rplchar(String s) {
         String result = "";
 
         result = s.replaceAll("[^a-zA-Z0-9]", " ");
@@ -326,7 +265,7 @@ public class TrackerService extends Service implements LocationListener, GoogleA
         try {
             // if (appPreferenceManager.isAfterLogin()) {
 
-            final String path = getString(R.string.firebase_path) + "/" + appPreferenceManager.getLoginResponseModel().getUserName() + "-" + appPreferenceManager.getLoginResponseModel().getUserID();
+            /*final String path = getString(R.string.firebase_path) + "/" + appPreferenceManager.getLoginResponseModel().getUserName() + "-" + appPreferenceManager.getLoginResponseModel().getUserID();
 
 
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
@@ -334,23 +273,7 @@ public class TrackerService extends Service implements LocationListener, GoogleA
                 //   Toast.makeText(this, "" + location, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "location update " + location);
                 ref.setValue(location);
-            }
-
-
-
-
-
-      /*  fusedLocationProviderApi.requestLocationUpdates(mGoogleApiClient, request, new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-            }
-
-            @Override
-            public void onLocationAvailability(LocationAvailability locationAvailability) {
-                super.onLocationAvailability(locationAvailability);
-            }
-        });*/
+            }*/
 
             Log.e(TAG, "onLocationChanged: " + location.toString());
             //loginToFirebase1();
@@ -363,5 +286,9 @@ public class TrackerService extends Service implements LocationListener, GoogleA
 
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(stopReceiver);
+    }
 }

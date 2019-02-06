@@ -9,8 +9,9 @@ AppConstants {
    // public static final int ANDROID_APP_VERSION = 34;//34-12sept-RESET PASSWORD DESIGN, BARCODE 1 VALIDATION, EMAIL VALIDATION
    // public static final int ANDROID_APP_VERSION = 35;//35-12sept-RESET PASSWORD DESIGN, BARCODE 1 VALIDATION, EMAIL VALIDATION
  //   public static final int ANDROID_APP_VERSION = 36;//36-12oct-leave intimation 2 task, order pass, LME
+    //37-5Dec-last task by Jai - RBS PPBS in diffrerent vials, Direct visit
 
-    public static final int ANDROID_APP_VERSION = 37; //37-5Dec-last task by Jai - RBS PPBS in diffrerent vials, Direct visit
+    public static final int ANDROID_APP_VERSION = 38; //TECHSO APP - REMOVE VALIDATION FROM PPBS ORDER,TECHSO - MODIFICATION IN ORDERSTATUSCHANGE API WITH LATITUDE LONGITUDE,BTECH APP - CRASHLYTICS BUG FIXES,MODIFICATION IN BTECH AVAILABILITY IN TECHSO -BTECH APP, HIDE CALL OPTION FROM DIRECT VISIT ORDERS 4days 11-1-2019
 
     public static final boolean IS_DEBUG = true;
 
