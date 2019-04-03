@@ -9,10 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -771,6 +773,38 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 }
             }
         });
+
+        holder.product_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (orderVisitDetailsModelsArr != null) {
+                        if (orderVisitDetailsModelsArr.size() != 0) {
+                            if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null) {
+                                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster() != null) {
+                                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() != 0) {
+                                        CallViewTestDialog(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster(), orderVisitDetailsModelsArr.get(pos).getVisitId());
+                                    } else {
+
+                                    }
+                                } else {
+
+                                }
+                            } else {
+
+                            }
+                        } else {
+
+                        }
+                    } else {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     private void CallViewKitsDialog(ArrayList<KitsCountModel> kits) {
@@ -1085,13 +1119,13 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
             if (CheckRBSisPresent(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster())) {
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
-                    holder.img_ppbs.setVisibility(View.GONE);
+                    holder.img_rbs.setVisibility(View.GONE);
                 } else {
-                    holder.img_ppbs.setVisibility(View.VISIBLE);
-                    holder.img_ppbs.setImageResource(R.drawable.rbs_t);
+                    holder.img_rbs.setVisibility(View.VISIBLE);
+                    holder.img_rbs.setImageResource(R.drawable.rbs_t);
                 }
             } else {
-                holder.img_ppbs.setVisibility(View.GONE);
+                holder.img_rbs.setVisibility(View.GONE);
             }
 
             holder.tvName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
@@ -1105,7 +1139,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.apptDateValue.setVisibility(View.VISIBLE);
                 //anand
                 holder.apptDate.setVisibility(View.GONE);
-                holder.apptDateValue.setText(orderVisitDetailsModelsArr.get(pos).getAppointmentDate());
+                holder.apptDateValue.setText(""+orderVisitDetailsModelsArr.get(pos).getAppointmentDate());
             } else {
                 holder.apptDateValue.setVisibility(View.INVISIBLE);
                 //anand
@@ -1123,7 +1157,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null) {
                             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster() != null) {
                                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() != 0) {
-                                    holder.ben_cnt.setText("" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() + " |");
+                                    holder.ben_cnt.setText("Beneficiary : " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() );
                                 } else {
                                     holder.ben_cnt.setText("");
                                 }
@@ -1146,11 +1180,39 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             dateCheck(pos);
 
 
-            holder.txtorderno.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
+            holder.txtorderno.setText("Order ID : "+orderVisitDetailsModelsArr.get(pos).getVisitId());
             holder.txtAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
-            holder.txtName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+            holder.txtName.setText(""+orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
             holder.txtName.setSelected(true);
             holder.txtSrNo.setText(pos + 1 + "");
+
+
+            // To show Test names with hyperlink
+
+            if (orderVisitDetailsModelsArr != null && orderVisitDetailsModelsArr.size()>0 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null &&orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size()>0){
+                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster() != null && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size()>0) {
+                    ArrayList<String> productNameaArylst = new ArrayList<>();
+                    for (int i = 0; i < orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() ; i++) {
+                        productNameaArylst.add(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getTestsCode());
+                    }
+                    if (productNameaArylst.size()>0){
+                        String Allproducts = TextUtils.join(", ", productNameaArylst);
+                        String[] productary = Allproducts.split(",");
+                        if (productary.length>1){
+                            int a = productary.length -1;
+                            if (a>0){
+                                holder.product_info.setText(""+productary[0]+", +"+a);
+                            }else{
+                                holder.product_info.setText(""+productary[0]);
+                            }
+                        }else{
+                            holder.product_info.setText(""+productary[0]);
+                        }
+                        holder.product_info.setPaintFlags(holder.product_info.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+                    }
+                }
+            }
+
 //jai
 
             holder.txt_distance.setText(String.valueOf(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getDistance()) + "KM");
@@ -1249,6 +1311,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.imgCBAccept.setVisibility(View.VISIBLE);
                 holder.tvName.setVisibility(View.INVISIBLE);
                 holder.txtName.setVisibility(View.INVISIBLE);
+                holder.txt_title.setVisibility(View.INVISIBLE);
                 holder.txtAge.setVisibility(View.INVISIBLE);
                 holder.tvAge.setVisibility(View.INVISIBLE);
                 holder.imgcall.setVisibility(View.GONE);
@@ -1278,6 +1341,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                                 fastingFlagInt = 1;
                                 holder.tvName.setVisibility(View.VISIBLE);
                                 holder.txtName.setVisibility(View.VISIBLE);
+                                holder.txt_title.setVisibility(View.VISIBLE);
                                 holder.txtAge.setVisibility(View.VISIBLE);
                                 holder.tvAge.setVisibility(View.VISIBLE);
                                 holder.imgFastingStatus.setVisibility(View.VISIBLE);
@@ -1310,6 +1374,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.imgCBAccept.setVisibility(View.GONE);
                 holder.tvName.setVisibility(View.VISIBLE);
                 holder.txtName.setVisibility(View.VISIBLE);
+                holder.txt_title.setVisibility(View.VISIBLE);
                 holder.txtAge.setVisibility(View.VISIBLE);
                 holder.tvAge.setVisibility(View.VISIBLE);
 //                holder.imgcall.setVisibility(View.VISIBLE);
@@ -1873,7 +1938,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         txtorderno, /**
          * The Txt kits.
          */
-        txtKits, /**
+        txtKits,product_info, /**
          * The Timedata.
          */
         timedata, /**
@@ -1920,7 +1985,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         TextView txtSrNo, /**
          * The Txt name.
          */
-        txtName, /**
+        txtName,txt_title, /**
          * The Txt age.
          */
         txtAge, /**
@@ -1946,7 +2011,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         ImageView imgFastingStatus, /**
          * The Img ppbs.
          */
-        img_ppbs;
+        img_ppbs,img_rbs;
         /**
          * The Btn start navigation.
          */
@@ -1984,6 +2049,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             imgFastingStatus = (ImageView) itemView.findViewById(R.id.title_fasting);
             imgcall = (ImageView) itemView.findViewById(R.id.call);
             img_ppbs = (ImageView) itemView.findViewById(R.id.img_ppbs);
+            img_rbs = (ImageView) itemView.findViewById(R.id.img_rbs);
+
             locationtitle = (TextView) itemView.findViewById(R.id.location_title);
             //  locationdata = (TextView) itemView.findViewById(R.id.location_datas);
             pintitle = (TextView) itemView.findViewById(R.id.pincode_title);
@@ -1994,6 +2061,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             timetitle = (TextView) itemView.findViewById(R.id.time_title);
             txtSrNo = (TextView) itemView.findViewById(R.id.txt_sr_no);
             txtName = (TextView) itemView.findViewById(R.id.txt_name);
+            txt_title = (TextView) itemView.findViewById(R.id.txt_title);
             mainleft = (LinearLayout) itemView.findViewById(R.id.mainleft);
             mainright = (LinearLayout) itemView.findViewById(R.id.mainright);
             main = (LinearLayout) itemView.findViewById(R.id.main);
@@ -2013,6 +2081,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
             tvName.setVisibility(View.INVISIBLE);
             txtName.setVisibility(View.INVISIBLE);
+            txt_title.setVisibility(View.INVISIBLE);
             txtAge.setVisibility(View.INVISIBLE);
             tvAge.setVisibility(View.INVISIBLE);
             imgcall.setVisibility(View.GONE);
@@ -2025,6 +2094,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             imgCBAccept = (ImageView) itemView.findViewById(R.id.img_oas);
             imgRelease2 = (ImageView) itemView.findViewById(R.id.img_release2);
             img_view_test = (ImageView) itemView.findViewById(R.id.img_view_test);
+            product_info = (TextView) itemView.findViewById(R.id.product_info);
             txt_distance = (TextView) itemView.findViewById(R.id.txt_distance_1);
 
             //change22june2017
@@ -2035,7 +2105,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             timedata.setVisibility(View.VISIBLE);
             ben_cnt.setVisibility(View.VISIBLE);
             bs_kit.setVisibility(View.VISIBLE);
-            bs_kit.setVisibility(View.GONE);
+//            bs_kit.setVisibility(View.GONE);
             //anand
             timetitle.setVisibility(View.GONE);
             //anand

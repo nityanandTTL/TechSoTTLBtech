@@ -310,7 +310,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 }
             }
         }
-        txtTotalDistance.setText(totalDistance + "");
+        txtTotalDistance.setText(totalDistance + " Kms");
         int amount_estIncome = Math.round(estIncome);
         txtTotalEarnings.setText(amount_estIncome + "");
         Iterator it = kitsCount.entrySet().iterator();
@@ -368,8 +368,6 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                     }, Pincode, orderVisitDetailsModel);
                     Cop.show();
                 }
-
-
             }, new CallbackforShowCaseDelegate() {
                 @SuppressLint("LongLogTag")
                 @Override
@@ -1033,7 +1031,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 BtechEstEarningsResponseModel btechEstEarningsResponseModel = new BtechEstEarningsResponseModel();
                 btechEstEarningsResponseModel = responseParser.getBtecheSTEarningResponseModel(json, statusCode);
                 if (btechEstEarningsResponseModel != null && btechEstEarningsResponseModel.getBtechEarnings().size() > 0) {
-                    txtTotalDistance.setText("" + btechEstEarningsResponseModel.getDistance());
+                    txtTotalDistance.setText("" + btechEstEarningsResponseModel.getDistance()+" Kms");
                     for (int i = 0; i < btechEstEarningsResponseModel.getBtechEarnings().size(); i++) {
                         for (int j = 0; j < btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().size(); j++) {
                             totalEarning = totalEarning + btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getEstIncome();

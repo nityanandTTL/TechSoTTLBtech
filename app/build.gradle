@@ -10,9 +10,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
-repositories {
-    maven { url 'https://maven.fabric.io/public' }
-}
+
 
 android {
     compileSdkVersion 26
@@ -22,8 +20,8 @@ android {
         applicationId "com.thyrocare"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 46
-        versionName "1.1.38"
+        versionCode 48
+        versionName "1.1.40"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -54,13 +52,13 @@ android {
     productFlavors {
         BTECHdev {
             applicationId = "com.thyrocare.btech.dev"
-            versionCode 46
-            versionName "debug_1.1.38"
+            versionCode 48
+            versionName "debug_1.1.40"
         }
         BTECHprod {
             applicationId = "com.thyrocare.btech"
-            versionCode 46
-            versionName "1.1.38"
+            versionCode 48
+            versionName "1.1.40"
         }
     }
     packagingOptions {
@@ -116,6 +114,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.github.wooplr:Spotlight:1.2.3'
     compile 'com.microsoft.projectoxford:face:1.4.3'
+    compile 'com.crashlytics.sdk.android:crashlytics:2.9.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

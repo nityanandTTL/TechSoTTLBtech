@@ -78,12 +78,16 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
 
     // txt_no
 
+
+
+
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+//        super.onBackPressed();
+       /* Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
         i.putExtra("LEAVEINTIMATION", "0");
         startActivity(i);
-        activity.finish();
+        activity.finish();*/
     }
 
     @Override
