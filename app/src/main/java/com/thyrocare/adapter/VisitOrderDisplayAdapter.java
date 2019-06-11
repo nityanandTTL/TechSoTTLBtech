@@ -1195,6 +1195,9 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     for (int i = 0; i < orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() ; i++) {
                         productNameaArylst.add(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getTestsCode());
                     }
+
+
+
                     if (productNameaArylst.size()>0){
                         String Allproducts = TextUtils.join(", ", productNameaArylst);
                         String[] productary = Allproducts.split(",");
@@ -1326,8 +1329,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
 
                         final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
-                        builder1.setTitle("Warning ")
-                                .setMessage("Do you want to accept order?").setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                        builder1.setMessage("Do you want to accept order?").setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //neha g ---------------------
@@ -1415,15 +1417,40 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 if (isFasting && isNonFasting) {
                     holder.imgFastingStatus.setVisibility(View.VISIBLE);
                     holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_fasting_mix));
+                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isEuOrders()){
+                        holder.product_info.setText("Fasting and Non-Fasting");
+                        holder.product_info.setEnabled(false);
+                        holder.product_info.setPaintFlags(holder.product_info.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+                    }
+
+
                 } else if (isFasting && !isNonFasting) {
                     holder.imgFastingStatus.setVisibility(View.VISIBLE);
                     holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_fasting));
+                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isEuOrders()){
+                        holder.product_info.setText("Fasting");
+                        holder.product_info.setEnabled(false);
+                        holder.product_info.setPaintFlags(holder.product_info.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+                    }
+
+
                 } else if (!isFasting && isNonFasting) {
                     holder.imgFastingStatus.setVisibility(View.VISIBLE);
                     holder.imgFastingStatus.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_non_fasting));
+
+                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isEuOrders()){
+                        holder.product_info.setText("Non-Fasting");
+                        holder.product_info.setEnabled(false);
+                        holder.product_info.setPaintFlags(holder.product_info.getPaintFlags() & (~ Paint.UNDERLINE_TEXT_FLAG));
+                    }
+
+
                 } else {
                     holder.imgFastingStatus.setVisibility(View.INVISIBLE);
                 }
+            }else{
+
+                    holder.product_info.setVisibility(View.GONE);
             }
 
             holder.imgFastingStatus.setOnClickListener(new View.OnClickListener() {

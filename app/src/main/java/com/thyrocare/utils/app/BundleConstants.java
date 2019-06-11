@@ -57,6 +57,7 @@ public class BundleConstants {
     public static final String PAYMENTS_RECHECK_REQUEST = "paymentsRecheckRequest";
     public static final String PAYMENTS_RECHECK_REQUEST_URL = "paymentsRecheckRequestURL";
     public static final String IS_TEST_EDIT = "isTestEdit";
+    public static final String IS_MOBILE_EMAIL_EDIT = "isMobileEmailEdit";
     public static final String BRAND_ID = "brandId";
     public static final String SELECTED_TESTS_LIST = "selectedTestsList";
     public static final String WHEREFROM = "cameFrom";

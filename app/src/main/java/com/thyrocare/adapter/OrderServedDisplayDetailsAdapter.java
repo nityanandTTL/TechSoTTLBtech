@@ -159,10 +159,10 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
                 ResponseParser responseParser = new ResponseParser(activity);
-                if (json.equals("1") || json.equals("1\n")) {
+                if (json.equalsIgnoreCase("1") || json.equalsIgnoreCase("1\n")) {
                     Toast.makeText(activity, "E-Reciept sent Successfully", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(activity, "E-Reciept  not sent Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Failed to send E-Reciept. Please try after sometime.", Toast.LENGTH_SHORT).show();
                 }
 
             }

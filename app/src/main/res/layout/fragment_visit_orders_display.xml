@@ -13,11 +13,45 @@
         android:textSize="18sp"
         android:visibility="gone" />
 
+    <LinearLayout
+        android:id="@+id/lin_categories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_RoutineOrders"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_background_empty"
+            android:gravity="center"
+            android:text="Routine Orders"
+            android:textColor="@color/colorPrimary"
+            android:textSize="13dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_AayushmanOrders"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_background_empty"
+            android:gravity="center"
+            android:text="Aayushman Orders"
+            android:textColor="@color/colorPrimary"
+            android:textSize="13dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_visit_orders_display"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ll_visit_orders_display_footer">
+        android:layout_above="@+id/ll_visit_orders_display_footer"
+        android:layout_below="@+id/lin_categories">
 
         <ListView
             android:id="@+id/rv_visit_orders_display"

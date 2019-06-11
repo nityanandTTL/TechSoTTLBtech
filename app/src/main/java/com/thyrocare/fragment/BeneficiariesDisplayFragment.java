@@ -75,7 +75,7 @@ import java.util.Date;
 
 public class BeneficiariesDisplayFragment extends AbstractFragment {
 
-    public static final String TAG_FRAGMENT = "BENEFICIARIES_DISPLAY_FRAGMENT";
+    public static final String TAG_FRAGMENT = "BEN_DISPLAY_FRAGMENT";
     private OrderBookingActivity activity;
     private AppPreferenceManager appPreferenceManager;
     private View rootView;
@@ -113,6 +113,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     //changes_17june2017
     Date apitimeinHHMMFormat;
     private boolean isFetchingOrders = false;
+    private boolean isEditMobile_email = true;
+    private String OrderMode = "";
+    private String[] paymentItems;
 
     public BeneficiariesDisplayFragment() {
         // Required empty public constructor
@@ -136,6 +139,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         appPreferenceManager = new AppPreferenceManager(activity);
         if (getArguments() != null) {
             this.orderVisitDetailsModel = getArguments().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
+
         }
     }
 
@@ -152,7 +156,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             fetchOrderDetailByVisitRefreshAmountDue();
         } else {
             Logger.error("totalAmountPayable else1 " + totalAmountPayable);
+            isEditMobile_email = orderVisitDetailsModel.getAllOrderdetails().get(0).isEditME();
         }
+
+
 
         // fetchDataOfVisitOrderForRefreshAmountDue();
         initListeners();
@@ -273,9 +280,28 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         btnProceedPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Logger.error("btn proceed coming");
 
-                //changes_17june2017
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setMessage("Please verify Name/Age/gender once again")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    ProceedWOEonSubmit();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setCancelable(true)
+                            .show();
+
+            }
+        });
+    }
+
+    private void ProceedWOEonSubmit() {
+        Logger.error("btn proceed coming");
+
+        //changes_17june2017
                /* if (title_add_beneficiary.getText().equals("Next Beneficiary")) {
                     title_add_beneficiary.setError("Proceed to next beneficiary...");
                     //Toast.makeText(activity, "next ben.", Toast.LENGTH_SHORT).show();
@@ -283,76 +309,82 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                     title_add_beneficiary.setError("test run");
                     //Toast.makeText(activity, "add ben.", Toast.LENGTH_SHORT).show();
                 }*/
-                //changes_17june2017
-
-                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
-                if (validate(orderBookingRequestModel)) {
-                    Logger.error("Selcted testssssssss" + orderBookingRequestModel.getBendtl().get(0).getTests());
+        //changes_17june2017
 
 
-                    if (isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
-
-                        //llAddBeneficiary.setEnabled(false);
-                        //Toast.makeText(activity, "This"+orderBookingRequestModel.getBendtl().get(0).getTests()+" Test Here you cannot Add Benificary  ", Toast.LENGTH_SHORT).show();
-                        Logger.error("for PPBS");
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setMessage("Payment already received. Please proceed")
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        PaymentMode = 1;
-                                        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
-                                        ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
-
-                                        Logger.error("isINSPPTestRemoved status : " + isINSPPTestRemoved);
-                                        Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
 
 
-                                        workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
-                                        if (isNetworkAvailable(activity)) {
-                                            workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
-                                        } else {
-                                            Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).show();
-                        //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
+        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
+        if (validate(orderBookingRequestModel)) {
+            Logger.error("Selcted testssssssss" + orderBookingRequestModel.getBendtl().get(0).getTests());
+
+            if (isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
+
+                //llAddBeneficiary.setEnabled(false);
+                //Toast.makeText(activity, "This"+orderBookingRequestModel.getBendtl().get(0).getTests()+" Test Here you cannot Add Benificary  ", Toast.LENGTH_SHORT).show();
+                Logger.error("for PPBS");
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setMessage("Payment already received. Please proceed")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                PaymentMode = 1;
+                                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
+                                ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
+
+                                Logger.error("isINSPPTestRemoved status : " + isINSPPTestRemoved);
+                                Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
 
 
-                        //neha g -----------------------------------
-                        CheckDelay();
-
-                        if (BundleConstants.delay != 0) {
-                            System.out.println("notify enter");
-                            showNotiication();
-
-//neha g---------------------
-                        }
-                    } else {
-                        Logger.error("Other than PPBS");
-
-                        if (validate(orderBookingRequestModel)) {
-                            ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(orderBookingRequestModel);
-                            orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new OrderBookingAPIAsyncTaskDelegateResult());
-                            if (isNetworkAvailable(activity)) {
-                                orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
-                            } else {
-                                Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
+                                if (isNetworkAvailable(activity)) {
+                                    workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
+                                } else {
+                                    Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+                //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
+
+
+                //neha g -----------------------------------
+                CheckDelay();
+
+                if (BundleConstants.delay != 0) {
+                    System.out.println("notify enter");
+                    showNotiication();
+//neha g---------------------
+                }
+            } else if (!isEditMobile_email) {
+                OrderBookingRequestModel orderBookingRequestModel1 = generateOrderBookingRequestModel("work_order_entry_prepaid");
+                ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel1);
+                workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
+                if (isNetworkAvailable(activity)) {
+                    workOrderEntryRequestAsyncTask.execute(workOrderEntryRequestAsyncTask);
+                } else {
+                    Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Logger.error("Other than PPBS");
+
+                if (validate(orderBookingRequestModel)) {
+                    ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(orderBookingRequestModel);
+                    orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new OrderBookingAPIAsyncTaskDelegateResult());
+                    if (isNetworkAvailable(activity)) {
+                        orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
+                    } else {
+                        Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                     }
                 }
-
-
             }
-        });
+        }
     }
 
     private boolean isValidForEditing(String tests) {
@@ -1038,7 +1070,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 if (btnProceedPayment.getText().equals("PAY")) {
 
-                                    final String[] paymentItems = new String[]{"Cash", "Digital"};
+                                    if (OrderMode.equalsIgnoreCase("LTD-BLD") || OrderMode.equalsIgnoreCase("LTD-NBLD")){
+                                         paymentItems = new String[]{"Cash"};
+                                    }else{
+                                        paymentItems = new String[]{"Cash", "Digital"};
+                                    }
+
                                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                                     builder.setTitle("Choose payment mode")
                                             .setItems(paymentItems, new DialogInterface.OnClickListener() {
@@ -1705,6 +1742,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             Logger.error("a123mount int " + allOrderdetailsObject.getInt("AmountDue"));
 
 //            totalAmountPayable = jsonObject.getInt("AmountDue");
+
+            OrderMode = allOrderdetailsObject.optString("OrderMode","");
+            isEditMobile_email = allOrderdetailsObject.optBoolean("EditME",true);
             totalAmountPayable = allOrderdetailsObject.getInt("AmountDue");
 
             Logger.error("tttejas1 " + totalAmountPayable);

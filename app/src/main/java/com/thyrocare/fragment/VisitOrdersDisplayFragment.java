@@ -15,9 +15,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -60,6 +60,7 @@ import com.thyrocare.dialog.ConfirmOrderPassDialog;
 import com.thyrocare.dialog.ConfirmOrderReleaseDialog;
 import com.thyrocare.dialog.ConfirmRequestReleaseDialog;
 import com.thyrocare.dialog.RescheduleOrderDialog;
+import com.thyrocare.models.api.request.CallPatchRequestModel;
 import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.models.api.request.SetDispositionDataModel;
 import com.thyrocare.models.api.response.BtechEstEarningsResponseModel;
@@ -121,6 +122,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     private TextView txtTotalEarnings;
     private TextView txtTotalKitsRequired;
     private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels = new ArrayList<>();
+    private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels_RoutineOrders = new ArrayList<>();
+    private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels_AayushmanOrders = new ArrayList<>();
     private TextView txtNoRecord;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConfirmOrderReleaseDialog cdd;
@@ -142,6 +145,9 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     Dialog dialog_ready;
     int statusCode;
     private ProgressDialog progressDialog;
+    private TextView tv_RoutineOrders, tv_AayushmanOrders;
+    private LinearLayout ll_visit_orders_display_footer,lin_categories;
+    private boolean isClicledonAayushmanOrders = false;
 
     public VisitOrdersDisplayFragment() {
         // Required empty public constructor
@@ -201,6 +207,54 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     }
 
     private void setListener() {
+
+
+        tv_RoutineOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                isClicledonAayushmanOrders = false;
+                tv_RoutineOrders.setBackgroundResource(R.drawable.rounded_background_filled);
+                tv_AayushmanOrders.setBackgroundResource(R.drawable.rounded_background_empty);
+                tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.white));
+                tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+
+                ll_visit_orders_display_footer.setVisibility(View.VISIBLE);
+                if (orderDetailsResponseModels_RoutineOrders.size() > 0) {
+                    prepareRecyclerView(orderDetailsResponseModels_RoutineOrders);
+                    swipeRefreshLayout.setRefreshing(false);
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    txtNoRecord.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+        tv_AayushmanOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                isClicledonAayushmanOrders = true;
+
+                tv_RoutineOrders.setBackgroundResource(R.drawable.rounded_background_empty);
+                tv_AayushmanOrders.setBackgroundResource(R.drawable.rounded_background_filled);
+                tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+                tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.white));
+                ll_visit_orders_display_footer.setVisibility(View.GONE);
+                if (orderDetailsResponseModels_AayushmanOrders.size() > 0) {
+                    prepareRecyclerView(orderDetailsResponseModels_AayushmanOrders);
+                    swipeRefreshLayout.setRefreshing(false);
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    txtNoRecord.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -328,12 +382,72 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         kitsReq = kitsReq.replaceAll(regex, "");
 
         txtTotalKitsRequired.setText(kitsReq);
-        prepareRecyclerView();
+
+        if (orderDetailsResponseModels_RoutineOrders != null) {
+            orderDetailsResponseModels_RoutineOrders = null;
+        }
+        orderDetailsResponseModels_RoutineOrders = new ArrayList<>();
+
+        if (orderDetailsResponseModels_AayushmanOrders != null) {
+            orderDetailsResponseModels_AayushmanOrders = null;
+        }
+        orderDetailsResponseModels_AayushmanOrders = new ArrayList<>();
+
+
+        if (orderDetailsResponseModels.size() > 0) {
+
+            for (int i = 0; i < orderDetailsResponseModels.size(); i++) {
+                for (int j = 0; j < orderDetailsResponseModels.get(i).getAllOrderdetails().size(); j++) {
+                    if (!orderDetailsResponseModels.get(i).getAllOrderdetails().get(j).isEuOrders()) {
+                        orderDetailsResponseModels_RoutineOrders.add(orderDetailsResponseModels.get(i));
+                    } else {
+                        orderDetailsResponseModels_AayushmanOrders.add(orderDetailsResponseModels.get(i));
+                    }
+                }
+
+            }
+        }
+
+
+        // TODO By default show Routine Orders
+
+        tv_RoutineOrders.setText("Routine Orders (" + orderDetailsResponseModels_RoutineOrders.size() + ")");
+        tv_AayushmanOrders.setText("Aayushman Orders (" + orderDetailsResponseModels_AayushmanOrders.size() + ")");
+
+        if (isClicledonAayushmanOrders) {
+            tv_RoutineOrders.setBackgroundResource(R.drawable.rounded_background_empty);
+            tv_AayushmanOrders.setBackgroundResource(R.drawable.rounded_background_filled);
+            tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+            tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.white));
+            ll_visit_orders_display_footer.setVisibility(View.GONE);
+            prepareRecyclerView(orderDetailsResponseModels_AayushmanOrders);
+        } else {
+
+            tv_RoutineOrders.setBackgroundResource(R.drawable.rounded_background_filled);
+            tv_AayushmanOrders.setBackgroundResource(R.drawable.rounded_background_empty);
+            tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.white));
+            tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+            prepareRecyclerView(orderDetailsResponseModels_RoutineOrders);
+        }
+
+        if (orderDetailsResponseModels_AayushmanOrders.size() > 0) {
+            lin_categories.setVisibility(View.VISIBLE);
+            tv_RoutineOrders.setBackgroundResource(R.drawable.rounded_background_filled);
+            tv_AayushmanOrders.setBackgroundResource(R.drawable.rounded_background_empty);
+            tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.white));
+            tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
+            prepareRecyclerView(orderDetailsResponseModels_RoutineOrders);
+        } else {
+
+            prepareRecyclerView(orderDetailsResponseModels_RoutineOrders);
+            lin_categories.setVisibility(View.GONE);
+        }
+
         swipeRefreshLayout.setRefreshing(false);
 
     }
 
-    private void prepareRecyclerView() {
+    private void prepareRecyclerView(ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels) {
 
         if (orderDetailsResponseModels.size() > 0) {
             VisitOrderDisplayAdapter visitOrderDisplayRecyclerViewAdapter = new VisitOrderDisplayAdapter(activity, orderDetailsResponseModels, new VisitOrderDisplayRecyclerViewAdapterDelegateResult(), new refreshDelegate() {
@@ -357,7 +471,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
 
                 @Override
                 public void onItemReleaseto(String Pincode, OrderVisitDetailsModel orderVisitDetailsModel) {
-                   /* Cop = new ConfirmOrderPassDialog(activity, new ConfirmOrderPassDialogButtonClickedDelegateResult(),Pincode,orderVisitDetailsModel );*/
+                    /* Cop = new ConfirmOrderPassDialog(activity, new ConfirmOrderPassDialogButtonClickedDelegateResult(),Pincode,orderVisitDetailsModel );*/
                     Cop = new ConfirmOrderPassDialog(activity, new refreshDelegate() {
                         @Override
                         public void onRefreshClicked() {
@@ -417,8 +531,8 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                         public void run() {
                             Log.e("run", "run: ");
                             SpotlightSequence.getInstance(activity, null)
-                                    .addSpotlight(view.findViewById(R.id.img_release2), "Order manipulation", "You can release, reschedule Order", "bin")
-                                    .addSpotlight(view.findViewById(R.id.img_view_test), "View tests ", "You can view all the tests", "viewtest");
+                                    .addSpotlight(view.findViewById(R.id.img_release2), "Order manipulation", "You can release, reschedule Order", "bin");
+//                                    .addSpotlight(view.findViewById(R.id.img_view_test), "View tests ", "You can view all the tests", "viewtest");
 
 
                             /*if (!isAccepted) {
@@ -519,9 +633,12 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
     @Override
     public void initUI() {
 
-
+        tv_RoutineOrders = (TextView) rootView.findViewById(R.id.tv_RoutineOrders);
+        tv_AayushmanOrders = (TextView) rootView.findViewById(R.id.tv_AayushmanOrders);
         recyclerView = (ListView) rootView.findViewById(R.id.rv_visit_orders_display);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.srl_visit_orders_display);
+        ll_visit_orders_display_footer = (LinearLayout) rootView.findViewById(R.id.ll_visit_orders_display_footer);
+        lin_categories = (LinearLayout) rootView.findViewById(R.id.lin_categories);
         txtTotalDistance = (TextView) rootView.findViewById(R.id.title_est_distance);
         txtTotalEarnings = (TextView) rootView.findViewById(R.id.title_est_earnings);
         txtTotalKitsRequired = (TextView) rootView.findViewById(R.id.title_est_kits);
@@ -539,6 +656,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                     Intent intent = new Intent(Intent.ACTION_CALL);
                     MaskedPhoneNumber = json;
                     intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
+//                    intent.setData(Uri.parse("tel:" + "02248900190"));
                     if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(activity,
                                 new String[]{
@@ -575,25 +693,23 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            try {
+            /*try {
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse("tel:" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile()));
                 activity.startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
 
 
-
-
-            /*CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
+            CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
             callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
             callPatchRequestModel.setDestNumber(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
-            Logger.error("orderVisitDetailsModelsArr"+orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+            Logger.error("orderVisitDetailsModelsArr" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
             callPatchRequestModel.setVisitID(orderVisitDetailsModel.getVisitId());
             ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
             callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-            callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);*/
+            callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
 
         }
 
@@ -1031,7 +1147,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                 BtechEstEarningsResponseModel btechEstEarningsResponseModel = new BtechEstEarningsResponseModel();
                 btechEstEarningsResponseModel = responseParser.getBtecheSTEarningResponseModel(json, statusCode);
                 if (btechEstEarningsResponseModel != null && btechEstEarningsResponseModel.getBtechEarnings().size() > 0) {
-                    txtTotalDistance.setText("" + btechEstEarningsResponseModel.getDistance()+" Kms");
+                    txtTotalDistance.setText("" + btechEstEarningsResponseModel.getDistance() + " Kms");
                     for (int i = 0; i < btechEstEarningsResponseModel.getBtechEarnings().size(); i++) {
                         for (int j = 0; j < btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().size(); j++) {
                             totalEarning = totalEarning + btechEstEarningsResponseModel.getBtechEarnings().get(i).getVisitEarnings().get(j).getEstIncome();

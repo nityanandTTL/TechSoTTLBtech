@@ -191,6 +191,50 @@
                     android:background="@color/separator"></View>
 
                 <LinearLayout
+                    android:id="@+id/ll_materials_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_1">
+
+                    <ImageView
+                        android:id="@+id/materials_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/materials_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Materials"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimaryDark" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/separator"></View>
+
+            <LinearLayout
+                android:id="@+id/row_2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:layout_toEndOf="@id/row_1"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <LinearLayout
                     android:id="@+id/ll_orders_icon"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -215,48 +259,8 @@
                         android:textColor="@color/colorPrimaryDark" />
 
                 </LinearLayout>
-            </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/separator"></View>
 
-            <LinearLayout
-                android:id="@+id/row_2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:visibility="gone"
-                android:layout_gravity="center"
-                android:layout_toEndOf="@id/row_1"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:weightSum="3">
-
-                <LinearLayout
-                    android:id="@+id/ll_materials_icon"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:padding="@dimen/dp_1">
-
-                    <ImageView
-                        android:id="@+id/materials_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/materials_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Materials"
-                        android:textAlignment="center"
-                        android:textColor="@color/colorPrimaryDark" />
-                </LinearLayout>
 
                 <View
                     android:layout_width="1dp"

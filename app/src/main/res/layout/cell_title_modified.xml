@@ -156,9 +156,9 @@
 
                         <ImageView
                             android:id="@+id/img_oas"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_weight="1"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="0.8"
                             android:src="@drawable/tick_icon"
                             android:visibility="gone" />
                     </LinearLayout>

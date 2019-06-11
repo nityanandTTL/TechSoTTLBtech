@@ -113,6 +113,8 @@ public class AsyncTaskForRequest {
             nameValuePairs.add(new BasicNameValuePair("DestNumber", callPatchRequestModel.getDestNumber()));
             nameValuePairs.add(new BasicNameValuePair("VisitID", callPatchRequestModel.getVisitID()));
 
+            System.out.println("Request : "+nameValuePairs.toString());
+
             abstractApiModel.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_X_WWW_FROM_URLENCODED));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.PATCH_CALL_REQUEST);

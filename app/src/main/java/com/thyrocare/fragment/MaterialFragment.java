@@ -1,7 +1,9 @@
 package com.thyrocare.fragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -32,6 +34,7 @@ import com.thyrocare.network.ResponseParser;
 import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
@@ -58,6 +61,7 @@ public class MaterialFragment extends AbstractFragment {
     CustomOKDialog cdd;
     String Category = "180";
     ArrayList<MaterialsStocksModel> stockModelsArr;
+    private AlertDialog.Builder alertDialogBuilder;
 
 
     public MaterialFragment() {
@@ -121,23 +125,40 @@ public class MaterialFragment extends AbstractFragment {
                 cdd = new CustomOKDialog(activity, new CustomOkDialogOkButtonOnClickedDelegate() {
                     @Override
                     public void onClicked(String remarks) {
-                        BtechsRequestModel btechsRequestModel = new BtechsRequestModel();
 
-                        BtechIdModel btechIdModel = new BtechIdModel();
-                        btechIdModel.setBTechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-                        btechIdModel.setRemarks(remarks);
+                        if (InputUtils.isNull(remarks.trim())){
+                            alertDialogBuilder = new AlertDialog.Builder(activity);
+                            alertDialogBuilder
+                                    .setMessage("Please enter remarks.")
+                                    .setCancelable(true)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+                            alertDialog.show();
 
-                        btechsRequestModel.setBTechs(btechIdModel);
+                        }else{
+                            BtechsRequestModel btechsRequestModel = new BtechsRequestModel();
 
-                        btechsRequestModel.setStocks(stockModelsArr);
-                        AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-                        ApiCallAsyncTask setMaterialDetailApiAsyncTask = asyncTaskForRequest.getPostMaterialInvRequestAsyncTask(btechsRequestModel);
-                        setMaterialDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new setMaterialsDetailsApiAsyncTaskDelegateResult());
-                        if (isNetworkAvailable(activity)) {
-                            setMaterialDetailApiAsyncTask.execute(setMaterialDetailApiAsyncTask);
-                        } else {
-                            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                            BtechIdModel btechIdModel = new BtechIdModel();
+                            btechIdModel.setBTechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                            btechIdModel.setRemarks(remarks);
+
+                            btechsRequestModel.setBTechs(btechIdModel);
+
+                            btechsRequestModel.setStocks(stockModelsArr);
+                            AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
+                            ApiCallAsyncTask setMaterialDetailApiAsyncTask = asyncTaskForRequest.getPostMaterialInvRequestAsyncTask(btechsRequestModel);
+                            setMaterialDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new setMaterialsDetailsApiAsyncTaskDelegateResult());
+                            if (isNetworkAvailable(activity)) {
+                                setMaterialDetailApiAsyncTask.execute(setMaterialDetailApiAsyncTask);
+                            } else {
+                                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                            }
                         }
+
                     }
                 });
                 cdd.show();

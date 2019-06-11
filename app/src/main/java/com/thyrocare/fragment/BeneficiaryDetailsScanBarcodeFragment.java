@@ -193,16 +193,30 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         rootview.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                     }
 
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.e("run", "run: ");
-                            SpotlightSequence.getInstance(activity, null)
-                                    .addSpotlight(rootview.findViewById(R.id.img_view_test), "View test", "View all the tests", "viewtest1")
-                                    .addSpotlight(rootview.findViewById(R.id.img_edit), "Edit order ", "", "Edit your order hare")
-                                    .startSequence();
-                        }
-                    }, 400);
+                    if (rootview.findViewById(R.id.img_edit).getVisibility() == View.VISIBLE){
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.e("run", "run: ");
+                                SpotlightSequence.getInstance(activity, null)
+                                        .addSpotlight(rootview.findViewById(R.id.img_view_test), "View test", "View all the tests", "viewtest1")
+                                        .addSpotlight(rootview.findViewById(R.id.img_edit), "Edit order ", "", "Edit your order hare")
+                                        .startSequence();
+                            }
+                        }, 400);
+                    }else{
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.e("run", "run: ");
+                                SpotlightSequence.getInstance(activity, null)
+                                        .addSpotlight(rootview.findViewById(R.id.img_view_test), "View test", "View all the tests", "viewtest1")
+                                        .startSequence();
+                            }
+                        }, 400);
+                    }
+
+
                 }
             });
 
@@ -277,6 +291,12 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 imgHC.setEnabled(true);
                 btnRelease.setVisibility(View.VISIBLE);
                 btnEdit.setVisibility(View.VISIBLE);
+            }
+
+            if (orderDetailsModel.isEditME()){
+                btnEdit.setVisibility(View.VISIBLE);
+            }else{
+                btnEdit.setVisibility(View.GONE);
             }
             //here to add
             txtSrNo.setText("1");
@@ -425,6 +445,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
                 intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_EDIT, true);
                 intentEdit.putExtra(BundleConstants.IS_TEST_EDIT, true);
+                intentEdit.putExtra(BundleConstants.IS_MOBILE_EMAIL_EDIT, orderDetailsModel.isEditME());
                 startActivityForResult(intentEdit, BundleConstants.EDIT_START);
             }
         });

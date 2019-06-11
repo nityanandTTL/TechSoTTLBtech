@@ -120,6 +120,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private IntentIntegrator intentIntegrator;
     private boolean isAdd = false;
     private boolean isScanAadhar = false;
+    private boolean isEdit_Mobile_email = false;
     private AadharDataModel aadharDataModel = new AadharDataModel();
     private ImageView imgAadhar;
     ImageView img_view_test;
@@ -155,6 +156,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
         isEdit = getIntent().getExtras().getBoolean(BundleConstants.IS_BENEFICIARY_EDIT, false);
         isAdd = getIntent().getExtras().getBoolean(BundleConstants.IS_BENEFICIARY_ADD, false);
+        isEdit_Mobile_email = getIntent().getExtras().getBoolean(BundleConstants.IS_MOBILE_EMAIL_EDIT, true);
+
         initUI();
         initData();
         initListeners();
@@ -400,7 +403,36 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 if (validate()) {
-                    getemailvalidation();
+
+                    if (isEdit_Mobile_email){
+                        getemailvalidation();
+                    }else{
+                        beneficiaryDetailsModel.setName(edtBenName.getText().toString().trim());
+                        beneficiaryDetailsModel.setAge(Integer.parseInt(edtAge.getText().toString().trim()));
+                        beneficiaryDetailsModel.setGender(isM ? "M" : "F");
+                        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
+                        beneficiaryDetailsModel.setTestsCode(edtTests.getText().toString());
+                        beneficiaryDetailsModel.setTests(edtTests.getText().toString());
+                        beneficiaryDetailsModel.setRemarks(edtRemarks.getText().toString());
+                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                        orderDetailsModel.setReportHC(isHC ? 1 : 0);
+                        orderDetailsModel.setAddress(edt_addressnew.getText().toString());
+                        orderDetailsModel.setMobile(""+edt_Mobilenew.getText().toString());
+                        orderDetailsModel.setEmail(""+edt_emailnew.getText().toString());
+
+                        orderDetailsModel.setAddBen(isAdd);
+
+                        orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                        OrderBookingRequestModel obrm = generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
+                        ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(obrm);
+                        orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
+                        if (isNetworkAvailable(activity)) {
+                            orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
+                        } else {
+                            Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
                 }
             }
         });
@@ -970,13 +1002,13 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         } else if (InputUtils.isNull(edtTests.getText().toString())) {
             Toast.makeText(activity, "Beneficiary Tests List is required", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (InputUtils.isNull(edt_emailnew.getText().toString())) {
+        } else if (isEdit_Mobile_email && InputUtils.isNull(edt_emailnew.getText().toString())) {
             Toast.makeText(activity, "Email Address is required", Toast.LENGTH_SHORT).show();
             return false;
         } else if (InputUtils.isNull(edt_addressnew.getText().toString())) {
             Toast.makeText(activity, "Address is required", Toast.LENGTH_SHORT).show();
             return false;
-        } else if (InputUtils.isNull(edt_Mobilenew.getText().toString())) {
+        } else if (isEdit_Mobile_email && InputUtils.isNull(edt_Mobilenew.getText().toString())) {
             Toast.makeText(activity, "Mobile is required", Toast.LENGTH_SHORT).show();
             return false;
         } else if (edt_Mobilenew.getText().toString().length() != 10) {
@@ -1006,6 +1038,14 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         } else {
             imgHC.setImageDrawable(getResources().getDrawable(R.drawable.green_tick_icon));
             isHC = true;
+        }
+
+        if (!isEdit_Mobile_email){
+            edt_Mobilenew.setEnabled(false);
+            edt_emailnew.setEnabled(false);
+        }else{
+            edt_Mobilenew.setEnabled(true);
+            edt_emailnew.setEnabled(true);
         }
 
         if (orderDetailsModel.isEditHC()) {

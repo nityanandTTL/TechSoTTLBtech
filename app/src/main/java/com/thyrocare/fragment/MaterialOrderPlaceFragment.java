@@ -538,7 +538,12 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
                 Quantity = (EditText) trm.findViewById(R.id.edit_quantity);
                 Total = (TextView) trm.findViewById(R.id.txt_total);
 
-                item.setText(finalMaterialModels.getMaterialDetailsModel().getMaterialName() + " (" + finalMaterialModels.getMaterialDetailsModel().getUnitSize() + ")");
+                if(!InputUtils.isNull( finalMaterialModels.getMaterialDetailsModel().getUnitSize())){
+                    item.setText(finalMaterialModels.getMaterialDetailsModel().getMaterialName() + " (" + finalMaterialModels.getMaterialDetailsModel().getUnitSize() + ")");
+                }else{
+                    item.setText(finalMaterialModels.getMaterialDetailsModel().getMaterialName());
+                }
+
 
                 Rate.setText(finalMaterialModels.getMaterialDetailsModel().getUnitCost() + "");
 

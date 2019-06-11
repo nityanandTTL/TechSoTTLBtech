@@ -45,6 +45,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
     private boolean EditHC;
     private boolean DirectVisit;
     private boolean EditOrder;
+    private boolean EuOrders;
+    private boolean EditME;
 
     private ArrayList<KitsCountModel> kits;
 
@@ -85,6 +87,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         EditHC = in.readByte() != 0;
         DirectVisit = in.readByte() != 0;
         EditOrder = in.readByte() != 0;
+        EuOrders = in.readByte() != 0;
+        EditME = in.readByte() != 0;
         kits = in.createTypedArrayList(KitsCountModel.CREATOR);
     }
 
@@ -126,6 +130,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         dest.writeByte((byte) (EditHC ? 1 : 0));
         dest.writeByte((byte) (DirectVisit ? 1 : 0));
         dest.writeByte((byte) (EditOrder ? 1 : 0));
+        dest.writeByte((byte) (EuOrders ? 1 : 0));
+        dest.writeByte((byte) (EditME ? 1 : 0));
         dest.writeTypedList(kits);
     }
 
@@ -437,6 +443,22 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
 
     public void setEditOrder(boolean editOrder) {
         EditOrder = editOrder;
+    }
+
+    public boolean isEuOrders() {
+        return EuOrders;
+    }
+
+    public void setEuOrders(boolean euOrders) {
+        EuOrders = euOrders;
+    }
+
+    public boolean isEditME() {
+        return EditME;
+    }
+
+    public void setEditME(boolean editME) {
+        EditME = editME;
     }
 
     @Override

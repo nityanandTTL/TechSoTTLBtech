@@ -69,6 +69,8 @@ public class OrderDetailsDao {
     private String LOCATION = "Location";
     private String EDITHC = "EditHC";
     private String EDITORDER = "EditOrder";
+    private String EUORDERS = "EuOrders";
+    private String EDITME = "EditME";
     private String DIRECT_VISIT = "DirectVisit";
 
 
@@ -129,6 +131,8 @@ public class OrderDetailsDao {
         orderDetailsModel.setEditHC(cursor.getString(cursor.getColumnIndex(EDITHC)).equals("1"));
         orderDetailsModel.setEditOrder(cursor.getString(cursor.getColumnIndex(EDITORDER)).equals("1"));
         orderDetailsModel.setDirectVisit(cursor.getString(cursor.getColumnIndex(DIRECT_VISIT)).equals("1"));
+        orderDetailsModel.setEuOrders(cursor.getString(cursor.getColumnIndex(EUORDERS)).equals("1"));
+        orderDetailsModel.setEditME(cursor.getString(cursor.getColumnIndex(EDITME)).equals("1"));
 
 
 
@@ -195,6 +199,8 @@ public class OrderDetailsDao {
         values.put(BTECHNAME, orderDetailsModel.getBtechName());
         values.put(EDITHC, orderDetailsModel.isEditHC() ? "1" : "0");
         values.put(EDITORDER, orderDetailsModel.isEditOrder() ? "1" : "0");
+        values.put(EUORDERS, orderDetailsModel.isEuOrders() ? "1" : "0");
+        values.put(EDITME, orderDetailsModel.isEditME() ? "1" : "0");
         values.put(DIRECT_VISIT, orderDetailsModel.isDirectVisit() ? "1" : "0");
         return values;
     }

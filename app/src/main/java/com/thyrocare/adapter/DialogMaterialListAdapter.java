@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.thyrocare.R;
 import com.thyrocare.fragment.MaterialOrderPlaceFragment;
 import com.thyrocare.models.data.MaterialOrderDataModel;
+import com.thyrocare.utils.app.InputUtils;
 
 import java.util.ArrayList;
 
@@ -46,7 +47,12 @@ public class DialogMaterialListAdapter extends RecyclerView.Adapter<DialogMateri
     @Override
     public void onBindViewHolder(DialogMaterialListAdapter.MyViewHolder holder, final int pos) {
 
-        holder.txt_finalitem.setText(""+materialOrders.get(pos).getItem_name()+" ("+materialOrders.get(pos).getItem_UnitSize()+")");
+        if (!InputUtils.isNull(materialOrders.get(pos).getItem_UnitSize())){
+            holder.txt_finalitem.setText(""+materialOrders.get(pos).getItem_name()+" ("+materialOrders.get(pos).getItem_UnitSize()+")");
+        }else{
+            holder.txt_finalitem.setText(""+materialOrders.get(pos).getItem_name());
+        }
+
         holder.edit_quantity.setText(""+materialOrders.get(pos).getOrderQty());
         holder.txt_rate.setText(""+materialOrders.get(pos).getItem_UnitCost());
 

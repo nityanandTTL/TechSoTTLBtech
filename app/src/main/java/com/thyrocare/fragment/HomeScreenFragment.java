@@ -157,9 +157,10 @@ public class HomeScreenFragment extends AbstractFragment {
                             SpotlightSequence.getInstance(activity, null)
                                     .addSpotlight(view.findViewById(R.id.schedule_icon), "Schedule", "Schedule your availability ", "Schedule")
                                     .addSpotlight(view.findViewById(R.id.orders_booked), "Orders", "Orders assigned to you are here ", "orderassigng")
-                                    .addSpotlight(view.findViewById(R.id.payment_icon), "Payments", "You can make payments from here", "payments")
+                                    .addSpotlight(view.findViewById(R.id.materials_icon), "Materials", "Your can order materials here", "materails")
+                                    .addSpotlight(view.findViewById(R.id.hub_icon), "Hub", "You can check you hubs assigned to you", "shub")
                                     .addSpotlight(view.findViewById(R.id.ordersserved), "Served Orders", "Order history is here", "sorders")
-
+                                    .addSpotlight(view.findViewById(R.id.Ledger_icon), "Ledger", "You can check you ledger here", "ledger")
                                     .startSequence();
                         }
                     }, 400);
@@ -216,7 +217,7 @@ public class HomeScreenFragment extends AbstractFragment {
             initData();
             initListeners_NBT();
         } else {//for btech & hub login
-            rootView = inflater.inflate(R.layout.fragment_home_screen, container, false);
+            rootView = inflater.inflate(R.layout.fragment_home_screen_sixmenu, container, false);
             initUI();
             initData();
             getCampDetailCount();
