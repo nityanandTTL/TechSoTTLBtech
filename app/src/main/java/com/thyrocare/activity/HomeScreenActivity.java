@@ -41,6 +41,7 @@ import com.thyrocare.Controller.DeviceLogOutController;
 import com.thyrocare.R;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.dao.DhbDao;
+import com.thyrocare.fragment.ClientEntryFragment;
 import com.thyrocare.fragment.CreditFragment;
 import com.thyrocare.fragment.FeedbackFragment;
 import com.thyrocare.fragment.HomeScreenFragment;
@@ -108,8 +109,8 @@ public class HomeScreenActivity extends AbstractActivity
             e.printStackTrace();
         }
         if (value.equals("1")) {
-            pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
 
+            pushFragments(LeaveIntimationFragment.newInstance(), false, false, LeaveIntimationFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
 
         } else {
 
@@ -367,7 +368,11 @@ public class HomeScreenActivity extends AbstractActivity
         } else if (id == R.id.nav_change_password) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(ResetPasswordFragment.newInstance(), false, false, ResetPasswordFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-        } else if (id == R.id.nav_credit) {
+        } else if (id == R.id.nav_clientEntry) {
+            toolbarHome.setVisibility(View.VISIBLE);
+            pushFragments(ClientEntryFragment.newInstance(), false, false,
+                    ClientEntryFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        }else if (id == R.id.nav_credit) {
             if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
                 Toast.makeText(activity, "You are not authorize to view this module.", Toast.LENGTH_LONG).show();
             } else {

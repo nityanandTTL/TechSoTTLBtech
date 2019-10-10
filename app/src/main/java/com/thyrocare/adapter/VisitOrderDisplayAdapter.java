@@ -66,6 +66,7 @@ import com.thyrocare.utils.app.DateUtils;
 import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.app.InputUtils;
 
+import org.joda.time.DateTimeComparator;
 import org.json.JSONException;
 
 import java.sql.Time;
@@ -268,6 +269,19 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
+                boolean toShowResheduleOption = false;
+                if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAppointmentDate())) {
+                    Date DeviceDate = new Date();
+                    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+                    Date AppointDate  = DateUtils.dateFromString(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(),format);
+                    int daycount = DateTimeComparator.getDateOnlyInstance().compare(AppointDate, DeviceDate);
+                    if (daycount == 0){
+                        toShowResheduleOption = true;
+                    }else {
+                        toShowResheduleOption = false;
+                    }
+                }
+
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")
                         || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
 
@@ -277,11 +291,14 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         cancelVisit = "y";
 
                     } else {
-                        items = new String[]{"Order Reschedule",
-                                "Order Release", "Order Pass"};
+
+                       if (toShowResheduleOption){
+                           items = new String[]{"Order Reschedule",
+                                   "Order Release", "Order Pass"};
+                       }else{
+                           items = new String[]{"Order Release", "Order Pass"};
+                       }
                     }
-
-
 
                 } else {
 
@@ -291,8 +308,14 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
                     } else {
 
-                        items = new String[]{"Order Reschedule",
-                                "Request Release", "Order Pass"};
+                        if (toShowResheduleOption){
+                            items = new String[]{"Order Reschedule",
+                                    "Request Release", "Order Pass"};
+                        }else{
+                            items = new String[]{"Request Release", "Order Pass"};
+                        }
+
+
                     }
 
                 }
@@ -308,7 +331,6 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                             userChoosenReleaseTask = "Order Reschedule";
                             cdd = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0));
                             cdd.show();
-
 
                         } else if (items[item].equals("Order Release")) {
 
@@ -420,6 +442,21 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         holder.imgRelease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                boolean toShowResheduleOption = false;
+                if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAppointmentDate())) {
+                    Date DeviceDate = new Date();
+                    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+                    Date AppointDate  = DateUtils.dateFromString(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(),format);
+                    int daycount = DateTimeComparator.getDateOnlyInstance().compare(AppointDate, DeviceDate);
+                    if (daycount == 0){
+                        toShowResheduleOption = true;
+                    }else {
+                        toShowResheduleOption = false;
+                    }
+                }
+
+
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")
                         || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
 
@@ -427,9 +464,14 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         items = new String[]{"Do you want to cancel the visit?"};
                         cancelVisit = "y";
                     } else {
-                        items = new String[]{"Order Reschedule",
-                                "Order Release", "Order Pass"};
-                        Toast.makeText(activity, "Reschedule,Release", Toast.LENGTH_SHORT).show();
+
+                        if (toShowResheduleOption){
+                            items = new String[]{"Order Reschedule",
+                                    "Order Release", "Order Pass"};
+                        }else{
+                            items = new String[]{"Order Release", "Order Pass"};
+                        }
+
                     }
 
                 } else {
@@ -439,8 +481,12 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                         items = new String[]{"Do you want to cancel the visit?"};
                         cancelVisit = "y";
                     } else {
-                        items = new String[]{"Order Reschedule",
-                                "Request Release", "Order Pass"};
+                        if (toShowResheduleOption){
+                            items = new String[]{"Order Reschedule",
+                                    "Request Release", "Order Pass"};
+                        }else {
+                            items = new String[]{"Request Release", "Order Pass"};
+                        }
                     }
                 }
 

@@ -1094,7 +1094,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
                                                                         Logger.error("isINSPPTestRemoved status : " + isINSPPTestRemoved);
                                                                         Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
-
+                                                                        Logger.error("test123 : " + test.toUpperCase());
 
 //jai testing
 
@@ -1420,6 +1420,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                     if (!isFBSTestRemoved.equals("removed")) {
 
                                         activity.finish();
+
                                        /* Logger.error("should print revisit dialog for ppbs: ");
 
                                         Logger.error("for PPBS");

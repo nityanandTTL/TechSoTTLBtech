@@ -20,14 +20,14 @@ android {
         applicationId "com.thyrocare"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 52
-        versionName "1.1.44"
+        versionCode 55
+        versionName "1.1.47"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
@@ -52,13 +52,13 @@ android {
     productFlavors {
         BTECHdev {
             applicationId = "com.thyrocare.btech.dev"
-            versionCode 52
-            versionName "debug_1.1.44"
+            versionCode 55
+            versionName "debug_1.1.46"
         }
         BTECHprod {
             applicationId = "com.thyrocare.btech"
-            versionCode 52
-            versionName "1.1.44"
+            versionCode 55
+            versionName "1.1.46"
         }
     }
     packagingOptions {
@@ -115,6 +115,7 @@ dependencies {
     compile 'com.github.wooplr:Spotlight:1.2.3'
     compile 'com.microsoft.projectoxford:face:1.4.3'
     compile 'com.crashlytics.sdk.android:crashlytics:2.9.3'
+    compile 'joda-time:joda-time:2.9.9'
 }
 
 apply plugin: 'com.google.gms.google-services'

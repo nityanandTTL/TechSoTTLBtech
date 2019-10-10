@@ -118,6 +118,7 @@ public class DateUtils {
 		return date;
 	}
 
+
 	public String fromDate(Date date, String timezone, SimpleDateFormat dateFormat) {
 
 		String dateStr = "";

@@ -1048,6 +1048,10 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             edt_emailnew.setEnabled(true);
         }
 
+        // TODO Input received to hide mobile field
+            edt_Mobilenew.setVisibility(View.GONE);
+
+
         if (orderDetailsModel.isEditHC()) {
             imgHC.setVisibility(View.VISIBLE);
             textView3.setVisibility(View.VISIBLE);

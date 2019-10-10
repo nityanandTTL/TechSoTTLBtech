@@ -3,6 +3,7 @@ package com.thyrocare.utils.app;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -318,5 +319,39 @@ public class Global {
             e.printStackTrace();
         }
         return value;
+    }
+
+    public void showalert_OK(String message, Context context) {
+
+        android.support.v7.app.AlertDialog.Builder alertDialogBuilder;
+        alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
+        alertDialogBuilder
+                .setMessage(message)
+                .setCancelable(true)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.dismiss();
+                    }
+                });
+        android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public void showAlert_OK_WithTitle(String message, Context context, String title) {
+        android.support.v7.app.AlertDialog.Builder alertDialogBuilder;
+        alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
+        alertDialogBuilder
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(true)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.dismiss();
+                    }
+                });
+        android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }

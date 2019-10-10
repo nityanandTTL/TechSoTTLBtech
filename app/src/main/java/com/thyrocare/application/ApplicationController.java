@@ -11,6 +11,7 @@ import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.thyrocare.Controller.ClientEntryController;
 import com.thyrocare.Controller.DeviceLogOutController;
 import com.thyrocare.Controller.TSPLMESampleDropController;
 import com.thyrocare.dao.DbHelper;
@@ -39,6 +40,7 @@ public class ApplicationController extends MultiDexApplication {
 	public static final int MAX_BEEP_COUNT = 2;
 	public static DeviceLogOutController mDeviceLogOutController;
 	public static TSPLMESampleDropController mTSPLMESampleDropController;
+	public static ClientEntryController clientEntryController;
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

@@ -366,7 +366,6 @@ public class HomeScreenFragment extends AbstractFragment {
                 Logger.error("Role" + appPreferenceManager.getLoginRole());
                 pushFragments(HubListDisplayFragment.newInstance(), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
 
-
             }
         });
     }

@@ -34,8 +34,10 @@ public class DisplaySelectedTestsListForCancellationAdapter extends BaseAdapter 
     private boolean isPPBSpresent = false;
     private boolean isRBSpresent = false;
     private boolean isFBSpresent = false;
+    private boolean isINSFApresent = false;
     private boolean isFastingPresent = false;
     boolean isFBSpresentInSuperSet = false;
+    boolean isINSFApresentInSuperSet = false;
     private int FastingCount = 0;
 
     public DisplaySelectedTestsListForCancellationAdapter(Activity activity, ArrayList<BeneficiaryTestDetailsModel> selectedTestsListArr, RemoveSelectedTestFromListDelegate removeSelectedTestFromListDelegate) {
@@ -97,8 +99,12 @@ public class DisplaySelectedTestsListForCancellationAdapter extends BaseAdapter 
                         }
                         if (selectedTestsListArr.get(i).getTests().equalsIgnoreCase(AppConstants.FBS)) {
                             isFBSpresent = true;
-
                         }
+                        if (selectedTestsListArr.get(i).getTests().equalsIgnoreCase(AppConstants.INSFA)) {
+                            isINSFApresent = true;
+                        }
+
+
                         if (selectedTestsListArr.get(i).getFasting().equalsIgnoreCase("Fasting")) {
                             FastingCount = FastingCount + 1;
                             Logger.error("FastingCount " + FastingCount);
@@ -114,15 +120,21 @@ public class DisplaySelectedTestsListForCancellationAdapter extends BaseAdapter 
                             if (btdm.getChldtests().size() != 0) {
                                 for (int i = 0; i < btdm.getChldtests().size(); i++) {
                                     if (btdm.getChldtests().get(i).getChildTestCode() != null) {
-                                        if (btdm.getChldtests().get(i).getChildTestCode().toString().trim().equalsIgnoreCase(AppConstants.FBS)) {
+                                        if (btdm.getChldtests().get(i).getChildTestCode().trim().equalsIgnoreCase(AppConstants.FBS)) {
                                             isFBSpresent = true;
                                             isFBSpresentInSuperSet = true;
+                                        }else if (btdm.getChldtests().get(i).getChildTestCode().trim().equalsIgnoreCase(AppConstants.INSFA)) {
+                                            isINSFApresent = true;
+                                            isINSFApresentInSuperSet = true;
                                         }
+
+
                                     }
                                 }
                             }
                         }
                     }
+
 
                     if (selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.FBS) && isFBSpresent && isPPBSpresent ||
                             selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.FBS) && isFBSpresent && isRBSpresent ||
@@ -177,10 +189,7 @@ public class DisplaySelectedTestsListForCancellationAdapter extends BaseAdapter 
                         builder1.show();
 
 
-                    }
-
-                    //jai
-                    else if (selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.PPBS)) {
+                    } else if (selectedTestsListArr.get(pos).getTests().equalsIgnoreCase(AppConstants.PPBS)) {
                         BeneficiariesDisplayFragment.isPPBSTestRemoved = "ppbs removed";
                         isPPBSpresent = false;
                         Logger.error("removing PPBS");

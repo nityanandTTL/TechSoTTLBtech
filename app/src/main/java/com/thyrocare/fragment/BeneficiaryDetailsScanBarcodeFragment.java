@@ -84,13 +84,17 @@ import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
+import com.thyrocare.utils.app.DateUtils;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
 import com.wooplr.spotlight.utils.SpotlightSequence;
 
+import org.joda.time.DateTimeComparator;
 import org.json.JSONException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
@@ -139,6 +143,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     public static BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModelRBS;
     GetTestListResponseModel TestListResponseModel;
     CharSequence[] items;
+    private int scanposition = 0;
 
     public BeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
@@ -345,6 +350,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                             beneficiaryDetailsModel.getSampleType()) {
                         if (bbdm.getSamplType().equals(bstdm.getSampleType())) {
                             sameSampleTypeCnt++;
+                            break;
                         }
                     }
                 }
@@ -493,116 +499,143 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                 "Visit Cancellation"};
                     }*/
 
-                    //TODO Visit Cancellation Removed
-                    if (orderDetailsModel.isEditOrder()) {
-                        items = new String[]{"Order Reschedule", "Remove Beneficiary"};
-                    } else {
-                        items = new String[]{"Order Reschedule"};
+                    boolean toShowResheduleOption = false;
+                    if (!InputUtils.isNull(orderDetailsModel.getAppointmentDate())) {
+                        Date DeviceDate = new Date();
+                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+                        Date AppointDate  = DateUtils.dateFromString(orderDetailsModel.getAppointmentDate(),format);
+                        int daycount = DateTimeComparator.getDateOnlyInstance().compare(AppointDate, DeviceDate);
+                        if (daycount == 0){
+                            toShowResheduleOption = true;
+                        }else {
+                            toShowResheduleOption = false;
+                        }
                     }
+
+                    if (toShowResheduleOption){
+                        if (orderDetailsModel.isEditOrder()) {
+                            items = new String[]{"Order Reschedule", "Remove Beneficiary"};
+                        } else {
+                            items = new String[]{"Order Reschedule"};
+                        }
+                    }else{
+                        if (orderDetailsModel.isEditOrder()) {
+                            items = new String[]{"Remove Beneficiary"};
+                        } else {
+//                            items = new String[]{"Order Reschedule"};
+                        }
+                    }
+
+                    //TODO Visit Cancellation Removed
+
 
                 }
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setTitle("Select Action");
-                builder.setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int item) {
-                        if (items[item].equals("Order Reschedule")) {
-                            userChoosenReleaseTask = "Order Reschedule";
-                            cdd = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(), orderDetailsModel);
-                            cdd.show();
-                        } else if (items[item].equals("Visit Cancellation")) {
-                            userChoosenReleaseTask = "Visit Cancellation";
-                            cod = new CancelOrderDialog(activity, new OrderCancelDialogButtonClickedDelegateResult(), orderDetailsModel);
-                            cod.show();
-                        } else if (items[item].equals("Remove Beneficiary")) {
-                            userChoosenReleaseTask = "Remove Beneficiary";
-                            AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
-                            builder1.setTitle("Confirm Action")
-                                    .setMessage("Do you really want to remove beneficiary?")
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(final DialogInterface dialog, int which) {
-                                            RemoveBeneficiaryAPIRequestModel rb = new RemoveBeneficiaryAPIRequestModel();
-                                            rb.setBenId(beneficiaryDetailsModel.getBenId());
-                                            rb.setOrderNo(beneficiaryDetailsModel.getOrderNo());
-                                            rb.setIsAdded(orderDetailsModel.isAddBen() ? "1" : "0");
+                if (items != null && items.length > 0){
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setTitle("Select Action");
+                    builder.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int item) {
+                            if (items[item].equals("Order Reschedule")) {
+                                userChoosenReleaseTask = "Order Reschedule";
+                                cdd = new RescheduleOrderDialog(activity, new OrderRescheduleDialogButtonClickedDelegateResult(), orderDetailsModel);
+                                cdd.show();
+                            } else if (items[item].equals("Visit Cancellation")) {
+                                userChoosenReleaseTask = "Visit Cancellation";
+                                cod = new CancelOrderDialog(activity, new OrderCancelDialogButtonClickedDelegateResult(), orderDetailsModel);
+                                cod.show();
+                            } else if (items[item].equals("Remove Beneficiary")) {
+                                userChoosenReleaseTask = "Remove Beneficiary";
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+                                builder1.setTitle("Confirm Action")
+                                        .setMessage("Do you really want to remove beneficiary?")
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(final DialogInterface dialog, int which) {
+                                                RemoveBeneficiaryAPIRequestModel rb = new RemoveBeneficiaryAPIRequestModel();
+                                                rb.setBenId(beneficiaryDetailsModel.getBenId());
+                                                rb.setOrderNo(beneficiaryDetailsModel.getOrderNo());
+                                                rb.setIsAdded(orderDetailsModel.isAddBen() ? "1" : "0");
 
-                                            //set id for Remove ben SMS
-                                            BundleConstants.RemoveBenId = beneficiaryDetailsModel.getBenId();
+                                                //set id for Remove ben SMS
+                                                BundleConstants.RemoveBenId = beneficiaryDetailsModel.getBenId();
 
-                                            ApiCallAsyncTask removeBeneficiaryAsyncTask = new AsyncTaskForRequest(activity).getRemoveBeneficiaryRequestAsyncTask(rb);
-                                            removeBeneficiaryAsyncTask.setApiCallAsyncTaskDelegate(new ApiCallAsyncTaskDelegate() {
-                                                @Override
-                                                public void apiCallResult(String json, int statusCode) throws JSONException {
-                                                    if (statusCode == 200) {
-                                                        ResponseParser responseParser = new ResponseParser(activity);
-                                                        OrderVisitDetailsModel orderVisitDetailsModel = responseParser.getRemoveBeneficiaryAPIResponseModel(json, statusCode);
-                                                        if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
-                                                            orderDetailsDao.deleteByVisitId(orderVisitDetailsModel.getVisitId());
+                                                ApiCallAsyncTask removeBeneficiaryAsyncTask = new AsyncTaskForRequest(activity).getRemoveBeneficiaryRequestAsyncTask(rb);
+                                                removeBeneficiaryAsyncTask.setApiCallAsyncTaskDelegate(new ApiCallAsyncTaskDelegate() {
+                                                    @Override
+                                                    public void apiCallResult(String json, int statusCode) throws JSONException {
+                                                        if (statusCode == 200) {
+                                                            ResponseParser responseParser = new ResponseParser(activity);
+                                                            OrderVisitDetailsModel orderVisitDetailsModel = responseParser.getRemoveBeneficiaryAPIResponseModel(json, statusCode);
+                                                            if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+                                                                orderDetailsDao.deleteByVisitId(orderVisitDetailsModel.getVisitId());
 //                                                            beneficiaryDetailsDao.deleteByBenId(beneficiaryDetailsModel.getBenId() + "");
-                                                            for (OrderDetailsModel orderDetailsModel :
-                                                                    orderVisitDetailsModel.getAllOrderdetails()) {
-                                                                orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
-                                                                orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
-                                                                orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
-                                                                orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
-                                                                orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
-                                                                orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
-                                                                //jai
-                                                                // orderDetailsModel.setEditOrder(orderVisitDetailsModel.get());
-                                                                // jai
+                                                                for (OrderDetailsModel orderDetailsModel :
+                                                                        orderVisitDetailsModel.getAllOrderdetails()) {
+                                                                    orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+                                                                    orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
+                                                                    orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
+                                                                    orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
+                                                                    orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
+                                                                    orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
+                                                                    //jai
+                                                                    // orderDetailsModel.setEditOrder(orderVisitDetailsModel.get());
+                                                                    // jai
 
 
-                                                                if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
-                                                                    for (BeneficiaryDetailsModel beneficiaryDetailsModel :
-                                                                            orderDetailsModel.getBenMaster()) {
-                                                                        beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
-                                                                        beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
-                                                                        for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
-                                                                            beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                                                    if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
+                                                                        for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                                                                                orderDetailsModel.getBenMaster()) {
+                                                                            beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                                                                            beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
+                                                                            for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
+                                                                                beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                                                            }
+                                                                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
                                                                         }
-                                                                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                                                                        orderDetailsDao.insertOrUpdate(orderDetailsModel);
                                                                     }
-                                                                    orderDetailsDao.insertOrUpdate(orderDetailsModel);
                                                                 }
+                                                                //CallApiForRemoveBenSMS(BundleConstants.RemoveBenId, orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderNo(), orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
+                                                                Toast.makeText(activity, "Beneficiary Removed Successfully", Toast.LENGTH_SHORT).show();
+                                                                refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId()));
                                                             }
-                                                            //CallApiForRemoveBenSMS(BundleConstants.RemoveBenId, orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderNo(), orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
-                                                            Toast.makeText(activity, "Beneficiary Removed Successfully", Toast.LENGTH_SHORT).show();
-                                                            refreshBeneficiariesSliderDelegateResult.onRefreshActionCallbackReceived(orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId()));
+                                                        } else {
+                                                            Toast.makeText(activity, "Failed to remove beneficiary", Toast.LENGTH_SHORT).show();
                                                         }
-                                                    } else {
-                                                        Toast.makeText(activity, "Failed to remove beneficiary", Toast.LENGTH_SHORT).show();
                                                     }
-                                                }
 
-                                                @Override
-                                                public void onApiCancelled() {
-                                                    Toast.makeText(activity, "Failed to remove beneficiary", Toast.LENGTH_SHORT).show();
-                                                    dialog.dismiss();
+                                                    @Override
+                                                    public void onApiCancelled() {
+                                                        Toast.makeText(activity, "Failed to remove beneficiary", Toast.LENGTH_SHORT).show();
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                if (orderDetailsModel.getBenMaster().size() > 1) {
+                                                    removeBeneficiaryAsyncTask.execute(removeBeneficiaryAsyncTask);
+                                                } else {
+                                                    Toast.makeText(activity, "Cannot remove if only 1 Beneficiary in Order!", Toast.LENGTH_SHORT).show();
                                                 }
-                                            });
-                                            if (orderDetailsModel.getBenMaster().size() > 1) {
-                                                removeBeneficiaryAsyncTask.execute(removeBeneficiaryAsyncTask);
-                                            } else {
-                                                Toast.makeText(activity, "Cannot remove if only 1 Beneficiary in Order!", Toast.LENGTH_SHORT).show();
                                             }
-                                        }
-                                    }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                                        }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).show();
+                            }
                         }
-                    }
-                }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.show();
+                    }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.show();
+                }
+
+
             }
         });
         edtRemarks.addTextChangedListener(new TextWatcher() {
@@ -868,8 +901,12 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             tlBarcodes.removeAllViews();
 
 
-            for (final BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel :
-                    beneficiaryDetailsModel.getBarcodedtl()) {
+           /* for (final BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel :
+                    beneficiaryDetailsModel.getBarcodedtl()) {*/
+                for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                    final BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = beneficiaryDetailsModel.getBarcodedtl().get(i);
+
+
                 TableRow tr = (TableRow) activity.getLayoutInflater().inflate(R.layout.item_scan_barcode, null);
                 TextView txtSampleType = (TextView) tr.findViewById(R.id.txt_sample_type);
 
@@ -933,12 +970,14 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 edtBarcodeRBS.setText("" + rbsbarcode);
 
 
-                imgScan.setOnClickListener(new View.OnClickListener() {
+                    final int finalI = i;
+                    imgScan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         isRBSScan = false;
                         Logger.error("sample type img scan click " + beneficiaryBarcodeDetailsModel.getSamplType());
                         currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
+                        scanposition = finalI;
 
                         intentIntegrator = new IntentIntegrator(activity) {
                             @Override
@@ -1013,7 +1052,9 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                                 //size 4
                                                 if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
                                                         && !InputUtils.isNull(currentScanSampleType)
-                                                        && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType()) /*&& currentScanBarcode.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())*/) {
+                                                        && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                                        && scanposition == i
+                                                    /*&& currentScanBarcode.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())*/) {
 
                                                     //CHECK for duplicate barcode scanned for the same visit
                                                     OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
@@ -1026,12 +1067,14 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                                                         bdm.getBarcodedtl()) {
 
                                                                     if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
-                                                                        if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
+                                                                        Toast.makeText(activity, "Same barcode already scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                                        return;
+                                                                        /*if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
 
                                                                         } else {
                                                                             Toast.makeText(activity, "Same barcode already scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
                                                                             return;
-                                                                        }
+                                                                        }*/
                                                                     }
                                                                 }
                                                             }
@@ -1041,14 +1084,20 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                                     if (isRBSScan) {
                                                         Log.e(TAG_FRAGMENT, "onClick: isRBSScan " );
                                                         rbsbarcode = scanned_barcode;
+
                                                     } else {
                                                         Log.e(TAG_FRAGMENT, "onClick: !isRBSScan " );
-                                                        beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
-                                                        //   Logger.error("getBarcodedtl "+beneficiaryDetailsModel);
-                                                        beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
-                                                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                                                    }
+                                                        /*if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())){
 
+                                                        }else{*/
+                                                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                                                            //   Logger.error("getBarcodedtl "+beneficiaryDetailsModel);
+                                                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+
+                                                        /*}*/
+
+                                                    }
 
                                                     break;
                                                 }
@@ -1352,7 +1401,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 TestListResponseModel = new GetTestListResponseModel();
                 TestListResponseModel = responseParser.getTestListResponseModel(json, statusCode);
 
-                CustomDialogClass cdd = new CustomDialogClass(activity);
+                BeneficiaryDetailsScanBarcodeFragment.CustomDialogClass cdd = new BeneficiaryDetailsScanBarcodeFragment.CustomDialogClass(activity);
                 cdd.show();
 
             } else {

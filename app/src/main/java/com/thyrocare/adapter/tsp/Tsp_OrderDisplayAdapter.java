@@ -47,6 +47,7 @@ import com.thyrocare.utils.app.DateUtils;
 import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.app.InputUtils;
 
+import org.joda.time.DateTimeComparator;
 import org.json.JSONException;
 
 import java.text.ParseException;
@@ -162,15 +163,40 @@ public class Tsp_OrderDisplayAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
+                boolean toShowResheduleOption = false;
+                if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAppointmentDate())) {
+                    Date DeviceDate = new Date();
+                    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+                    Date AppointDate  = DateUtils.dateFromString(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(),format);
+                    int daycount = DateTimeComparator.getDateOnlyInstance().compare(AppointDate, DeviceDate);
+                    if (daycount == 0){
+                        toShowResheduleOption = true;
+                    }else {
+                        toShowResheduleOption = false;
+                    }
+                }
+
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment") || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
 
-                    items = new String[]{"Order Reschedule",
-                            "Order Release", "Order Pass"};
-                    Toast.makeText(activity, "Reschedule,Release,Order Pass", Toast.LENGTH_SHORT).show();
+                    if (toShowResheduleOption){
+                        items = new String[]{"Order Reschedule",
+                                "Order Release", "Order Pass"};
+                    }else{
+                        items = new String[]{"Order Release", "Order Pass"};
+                    }
+
+
+//                    Toast.makeText(activity, "Reschedule,Release,Order Pass", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    items = new String[]{"Order Reschedule",
-                            "Request Release", "Order Pass"};
+                    if (toShowResheduleOption){
+                        items = new String[]{"Order Reschedule",
+                                "Request Release", "Order Pass"};
+                    }else{
+                        items = new String[]{"Request Release", "Order Pass"};
+                    }
+
+
                     Toast.makeText(activity, "Reschedule,Request,order  pass", Toast.LENGTH_SHORT).show();
                 }
 
@@ -249,17 +275,39 @@ public class Tsp_OrderDisplayAdapter extends BaseAdapter {
         holder.imgRelease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                boolean toShowResheduleOption = false;
+                if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAppointmentDate())) {
+                    Date DeviceDate = new Date();
+                    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+                    Date AppointDate  = DateUtils.dateFromString(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(),format);
+                    int daycount = DateTimeComparator.getDateOnlyInstance().compare(AppointDate, DeviceDate);
+                    if (daycount == 0){
+                        toShowResheduleOption = true;
+                    }else {
+                        toShowResheduleOption = false;
+                    }
+                }
+
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment") || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
 
-                    items = new String[]{"Order Reschedule",
-                            "Order Release"};
-                    Toast.makeText(activity, "Reschedule,Release", Toast.LENGTH_SHORT).show();
+
+                    if (toShowResheduleOption){
+                        items = new String[]{"Order Reschedule", "Order Release"};
+                    }else{
+                        items = new String[]{"Order Release"};
+                    }
+
+//                    Toast.makeText(activity, "Reschedule,Release", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    items = new String[]{"Order Reschedule",
-                            "Request Release"};
-                    Toast.makeText(activity, "Reschedule,Request", Toast.LENGTH_SHORT).show();
+                    if (toShowResheduleOption){
+                        items = new String[]{"Order Reschedule", "Request Release"};
+                    }else{
+                        items = new String[]{"Request Release"};
+                    }
 
+//                    Toast.makeText(activity, "Reschedule,Request", Toast.LENGTH_SHORT).show();
 
                 }
 

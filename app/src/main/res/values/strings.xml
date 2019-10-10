@@ -11,7 +11,8 @@
     <string name="start">Start</string>
     <string name="name">Ketatn Kulkarni</string>
 
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCCiIOrolfoPydvFX89njaBOqA8zHbTYME</string>
+    <!--<string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCCiIOrolfoPydvFX89njaBOqA8zHbTYME</string>-->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBcm2CJDh69483Z9dZrSNRqjX1l-nuNo-o</string>
     <string name="enable_gps_title">Enable GPS</string>
     <string name="alert_msg">GPS alert dialogue message</string>
     <string name="alert_settings">Settings</string>
@@ -155,6 +156,22 @@
     <string name="firebase_password" translatable="false">tejas@123</string>
 
     <string name="BTECH_LOCATION" translatable="false">Location</string>
+
+
+    <string name="newClientEntry">NEW CLIENT ENTRY</string>
+    <string name="clientEntry">Client Entry</string>
+    <string name="clientName">Name*</string>
+    <string name="mobile">Mobile No.*</string>
+    <string name="email">Email Id</string>
+    <string name="location">Location*</string>
+    <string name="address">Address*</string>
+    <string name="pincode">Pin-code*</string>
+    <string name="inchargeName">Incharge Name*</string>
+    <string name="uploadImage">Upload Image*</string>
+    <string name="btnUpload">Upload</string>
+    <string name="imageNote">*Name Board or Visiting Card</string>
+    <string name="txtNote">Note</string>
+    <string name="clientNote">Rs. 50 per new Lab/Hospital/Doctor activated in system</string>
 
     <string-array name="payment_mode">
         <item>Cash By ATM</item>

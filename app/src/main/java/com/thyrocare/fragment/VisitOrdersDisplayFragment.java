@@ -531,7 +531,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
                         public void run() {
                             Log.e("run", "run: ");
                             SpotlightSequence.getInstance(activity, null)
-                                    .addSpotlight(view.findViewById(R.id.img_release2), "Order manipulation", "You can release, reschedule Order", "bin");
+                                    .addSpotlight(view.findViewById(R.id.img_release2), "Order Edit", "You can release, reschedule Order", "bin");
 //                                    .addSpotlight(view.findViewById(R.id.img_view_test), "View tests ", "You can view all the tests", "viewtest");
 
 

@@ -140,7 +140,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/dp_10"
-                        android:text="Hard copy: \u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020"
+                        android:text="Hard copy:"
                         android:textSize="14sp" />
 
                     <ImageView

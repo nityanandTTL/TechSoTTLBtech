@@ -43,7 +43,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/edittext_modified_states"
                     android:gravity="center"
-                    android:hint="Enter barcode"
+                    android:hint="Scan barcode"
                     android:maxLength="8"
                     android:minEms="6"
                     android:padding="@dimen/dp_5"
