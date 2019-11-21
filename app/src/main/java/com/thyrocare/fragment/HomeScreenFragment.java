@@ -49,6 +49,7 @@ import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
+import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
 import com.wooplr.spotlight.utils.SpotlightSequence;
 
@@ -648,8 +649,7 @@ public class HomeScreenFragment extends AbstractFragment {
                     if (materialDetailsModels.size() != 0) {
                         String device_id = "";
                         try {
-                            TelephonyManager telephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-                            device_id = telephonyManager.getDeviceId();
+                            device_id = DeviceUtils.getDeviceId(activity);
 
                             if (!device_id.toString().trim().equalsIgnoreCase("")) {
                                 if (!device_id.toString().trim().equalsIgnoreCase(materialDetailsModels.get(0).getDeviceId())) {

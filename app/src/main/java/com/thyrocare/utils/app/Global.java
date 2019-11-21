@@ -8,10 +8,13 @@ import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.thyrocare.R;
 
 import org.json.JSONException;
@@ -148,7 +151,7 @@ public class Global {
         toast.show();
     }
 
-    public void showcenterCustomToast(Activity activity, String message) {
+    public void showcenterCustomToast(Activity activity, String message, int lengthLong) {
         Context context = activity.getApplicationContext();
         LayoutInflater inflater = activity.getLayoutInflater();
 
@@ -162,7 +165,7 @@ public class Global {
         Toast toast = new Toast(context);
         toast.setView(toastRoot);
         toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setDuration(lengthLong);
         toast.show();
     }
     public void setLoadingGIF(Activity activity) {
@@ -201,6 +204,25 @@ public class Global {
     public void showProgressDialog() {
         if (!progressDialog.isShowing())
             progressDialog.show();
+    }
+    public void showProgressDialog(Activity activity , String msg){
+
+        progressDialog = new ProgressDialog(activity);
+        progressDialog.setTitle(null);
+        progressDialog.setMessage(msg);
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+
+        try {
+            if (progressDialog != null && !progressDialog.isShowing())
+
+                if (!((Activity) context).isFinishing()) {
+                    progressDialog.show();
+                }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void hideProgressDialog() {
@@ -354,4 +376,16 @@ public class Global {
         android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
+    public void DisplayImagewithoutDefaultImage(Activity activity, String Url, ImageView imageView) {
+
+        Glide.get(activity).clearMemory();
+        Glide.with(activity).load(Url)
+                .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(imageView);
+
+    }
+
 }

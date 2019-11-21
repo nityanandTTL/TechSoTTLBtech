@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.Settings;
 import android.util.Base64;
 import android.util.TypedValue;
 

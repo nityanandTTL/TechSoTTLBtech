@@ -59,6 +59,12 @@ public class AbstractApiModel implements AppConstants {
 
 
 
+
+    public static String MAINURL = "http://techso.thyrocare.cloud/techsoapi";//live new server
+
+
+    public static String B2B =SERVER_BASE_API_URL_PROD.equalsIgnoreCase(MAINURL) ? "https://www.thyrocare.com/API/B2B/": "https://www.thyrocare.com/API_BETA/B2B/";
+
     public static String SERVER_BASE_API_URL = appEnvironment.equals("DEVELOPMENT") ? SERVER_BASE_API_URL_DEV : appEnvironment.equals("DEMO") ? SERVER_BASE_API_URL_DEMO : appEnvironment.equals("PRODUCTION") ? SERVER_BASE_API_URL_PROD : SERVER_BASE_API_URL_DEV;
 
 

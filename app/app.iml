@@ -121,33 +121,32 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/multi-dex" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/pre-dexed" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/proguard-rules" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/shaders" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/reports" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 26 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 27 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="Gradle: com.android.support.constraint:constraint-layout-solver:1.0.2@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-dynamic-links-12.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="Gradle: com.android.support.test.espresso:espresso-idling-resource-2.2.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-gass-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.crashlytics.sdk.android:crashlytics-core-2.6.3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:animated-vector-drawable-27.0.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-compat-27.0.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-games-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.akexorcist:RoundCornerProgressBar-2.0.3" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-cast-framework-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.firebase:geofire-android-2.3.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-analytics-impl-12.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="Gradle: com.android.support.test:rules-0.5" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-core-utils-27.0.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-storage-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-iid-12.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-annotations:26.1.0@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.ramotion.foldingcell:folding-cell-1.1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-cast-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.firebase:firebase-client-jvm:2.5.2@jar" level="project" />
@@ -156,9 +155,6 @@
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-gass-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="Gradle: javax.inject:javax.inject:1@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-safetynet-12.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: android.arch.lifecycle:common:1.0.0@jar" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-vector-drawable-26.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-core-ui-26.1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.android.support:cardview-v7-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-iid-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="Gradle: com.android.support:multidex-instrumentation-1.0.1" level="project" />
@@ -169,9 +165,11 @@
     <orderEntry type="library" exported="" name="Gradle: io.fabric.sdk.android:fabric-1.4.3" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-instantapps-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-places-12.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.github.tcking:viewquery-1.6" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-storage-common-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-database-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-auth-api-phone-license-12.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: pl.droidsonroids.gif:android-gif-drawable-1.2.10" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-dynamic-links-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-appindexing-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-crash-license-12.0.1" level="project" />
@@ -179,13 +177,11 @@
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-tagmanager-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.microsoft.projectoxford:face-1.4.3" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.android.support:mediarouter-v7-26.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:recyclerview-v7-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-auth-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-maps-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.github.bumptech.glide:glide:3.7.0@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-messaging-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-tagmanager-api-license-12.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:animated-vector-drawable-26.1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-vision-common-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-location-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-ads-lite-license-12.0.1" level="project" />
@@ -194,19 +190,27 @@
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-tasks-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-config-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-tagmanager-api-12.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-fragment-26.1.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-v4-27.0.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-vision-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-awareness-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-analytics-license-12.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.squareup.retrofit2:converter-gson:2.5.0@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-appinvite-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.android.volley:volley-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-core-ui-27.0.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-media-compat-27.0.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-nearby-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: joda-time:joda-time:2.9.9@jar" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.github.tcking:giraffeplayer2-0.1.25-lazyLoad" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-auth-api-phone-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-analytics-license-12.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-annotations:27.0.2@jar" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="Gradle: com.google.code.findbugs:jsr305:2.0.1@jar" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.github.tcking:ijkplayer-java-0.8.8" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-fragment-27.0.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-storage-12.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3@jar" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.squareup.retrofit2:retrofit:2.5.0@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.2.2@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: __local_jars__:/home/e5561@thyrocare.com/Github upload Folder/BTECH/Latest Btech App/app/libs/httpmime-4.3.6.jar:unspecified@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-analytics-12.0.1" level="project" />
@@ -216,36 +220,38 @@
     <orderEntry type="library" exported="" name="Gradle: com.crashlytics.sdk.android:crashlytics-2.9.3" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-base-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-auth-license-12.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.squareup.retrofit2:converter-scalars:2.5.0@jar" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.squareup.okio:okio:1.15.0@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-tagmanager-v4-impl-license-12.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: android.arch.lifecycle:runtime-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: android.arch.lifecycle:runtime-1.0.3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: android.arch.lifecycle:common:1.0.3@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-auth-12.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:transition-27.0.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-plus-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-ads-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-fitness-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-iid-12.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.squareup.okhttp3:okhttp:3.12.1@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-instantapps-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-awareness-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-cast-12.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="Gradle: com.android.support.test.espresso:espresso-core-2.2.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.android.support:multidex-1.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="Gradle: com.squareup:javawriter:2.1.1@jar" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-vector-drawable-27.0.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.mikhaellopez:circularimageview-3.0.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.journeyapps:zxing-android-embedded-3.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-media-compat-26.1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-maps-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.firebase:geofire-common:2.3.1@jar" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-v4-26.1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-games-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-vision-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-nearby-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-common-12.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="Gradle: com.android.support.test:runner-0.5" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-core-utils-26.1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-config-12.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="Gradle: com.android.support.test:exposed-instrumentation-api-publish-0.5" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-drive-license-12.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:design-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-database-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-auth-base-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-analytics-impl-12.0.1" level="project" />
@@ -263,22 +269,21 @@
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-common-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-safetynet-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-gcm-12.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:appcompat-v7-26.1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-vision-common-license-12.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:recyclerview-v7-27.0.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: android.arch.core:common:1.0.0@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-crash-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-analytics-impl-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-core-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-base-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-basement-license-12.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:transition-25.3.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-compat-26.1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.sdsmdg.tastytoast:tastytoast-0.1.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-database-connection-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-tagmanager-v4-impl-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-places-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-identity-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-basement-12.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.squareup.okhttp3:logging-interceptor:3.12.1@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-ads-lite-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-storage-common-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-ads-license-12.0.1" level="project" />
@@ -290,8 +295,10 @@
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-panorama-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-plus-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-messaging-license-12.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:design-27.0.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-identity-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.github.wooplr:Spotlight-1.2.3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: com.android.support:appcompat-v7-27.0.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-appindexing-license-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.2.2@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.code.gson:gson:2.8.2@jar" level="project" />
@@ -301,6 +308,6 @@
     <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-auth-base-12.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.crashlytics.sdk.android:answers-1.4.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.android.support:palette-v7-26.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.apache.http.legacy-android-26" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.apache.http.legacy-android-27" level="project" />
   </component>
 </module>

@@ -49,6 +49,7 @@ import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
+import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
@@ -231,12 +232,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         try {
             if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
                 String device_id = "";
-                try {
-                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                    device_id = telephonyManager.getDeviceId();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                device_id = DeviceUtils.getDeviceId(activity);
 
                 if (ApplicationController.mDeviceLogOutController != null) {
                     ApplicationController.mDeviceLogOutController = null;

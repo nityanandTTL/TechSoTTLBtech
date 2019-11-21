@@ -14,6 +14,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -144,6 +145,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     GetTestListResponseModel TestListResponseModel;
     CharSequence[] items;
     private int scanposition = 0;
+
 
     public BeneficiaryDetailsScanBarcodeFragment() {
         // Required empty public constructor
@@ -758,7 +760,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                             bstdm.setBenId(beneficiaryDetailsModel.getBenId());
                                             bstdm.setSampleType(tstm.getSampleType());
                                             bstdm.setId(tstm.getId());
-                                            if (!samples.contains(bstdm)) {
+                                            if (!samples.contains(bstdm)) {   /// TODO  ---> code to handle for 2 serums
                                                 samples.add(bstdm);
                                             }
                                         }
@@ -1019,7 +1021,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         if (requestCode == BundleConstants.START_BARCODE_SCAN) {
             IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if ((scanningResult != null) && (scanningResult.getContents() != null)) {
-                final String scanned_barcode = scanningResult.getContents();
+                final String scanned_barcode = scanningResult.getContents().trim();
 
 
                 if (!isRBSScan && scanned_barcode.equals(rbsbarcode)) {
@@ -1028,7 +1030,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     Toast.makeText(activity, "Same barcode not allowed", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    if (!scanned_barcode.equals("") || !InputUtils.isNull(scanned_barcode)) {
+                    if (!InputUtils.isNull(scanned_barcode) /*&& Character.isDigit(scanned_barcode.charAt(0))*/) {
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
                         builder1.setTitle("Check the Barcode ")
                                 .setMessage("Do you want to proceed with this barcode entry " + scanned_barcode + "?")
@@ -1042,7 +1044,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.e(TAG_FRAGMENT, "onClick: " + scanned_barcode);
 
-                                if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ")) {
+                                if (TextUtils.isEmpty(scanned_barcode) || scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ") /*|| Character.isDigit(scanned_barcode.charAt(0))*/) {
                                     Toast.makeText(activity, "Invalid barcode", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Log.e(TAG_FRAGMENT, "onClick:length " + scanned_barcode.length());

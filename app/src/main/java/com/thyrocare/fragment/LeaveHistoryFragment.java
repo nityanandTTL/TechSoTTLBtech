@@ -200,6 +200,7 @@ public class LeaveHistoryFragment extends AbstractFragment {
                     Intent mIntent = new Intent(activity, ScheduleYourDayActivity.class);
                     mIntent.putExtra("WHEREFROM", "0");
                     mIntent.putExtra("SHOWNO", "1");
+                    mIntent.putExtra("canBackpress", true);
                     startActivity(mIntent);
                 } else if (Integer.parseInt(currStringDate.substring(8, 10)) == Integer.parseInt(date.substring(8, 10))) {
                     Logger.error("today");
@@ -208,6 +209,7 @@ public class LeaveHistoryFragment extends AbstractFragment {
                     Intent mIntent = new Intent(activity, ScheduleYourDayActivity2.class);
                     mIntent.putExtra("WHEREFROM", "0");
                     mIntent.putExtra("SHOWNO", "1");
+                    mIntent.putExtra("canBackpress", true);
                     startActivity(mIntent);
                 } else {
                     Toast.makeText(activity, "cannot edit availability", Toast.LENGTH_SHORT).show();

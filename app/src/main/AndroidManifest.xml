@@ -177,6 +177,13 @@
             android:name=".activity.Chat"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".activity.ThyrocareVideos"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="face" />

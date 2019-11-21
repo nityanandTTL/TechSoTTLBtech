@@ -32,6 +32,11 @@
             android:title="Communicate" />
 
         <item
+            android:id="@+id/nav_Video"
+            android:icon="@drawable/play_icon"
+            android:title="Videos" />
+
+        <item
             android:id="@+id/nav_feedback"
             android:icon="@drawable/feedback"
             android:title="Feedback" />
@@ -39,8 +44,6 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/logout"
             android:title="Logout" />
-
-
 
     </group>
 

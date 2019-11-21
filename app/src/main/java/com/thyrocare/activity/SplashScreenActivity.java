@@ -454,12 +454,7 @@ public class SplashScreenActivity extends AbstractActivity {
         try {
             if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
                 String device_id = "";
-                try {
-                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                    device_id = telephonyManager.getDeviceId();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                device_id = DeviceUtils.getDeviceId(activity);
 
                 if (ApplicationController.mDeviceLogOutController != null) {
                     ApplicationController.mDeviceLogOutController = null;

@@ -83,6 +83,9 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
 
     @Override
     public void onBackPressed() {
+        if (getIntent().hasExtra("canBackpress") && getIntent().getBooleanExtra("canBackpress",false)) {
+            super.onBackPressed();
+        }
 //        super.onBackPressed();
        /* Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
         i.putExtra("LEAVEINTIMATION", "0");
@@ -109,6 +112,8 @@ public class ScheduleYourDayActivity2 extends AbstractActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
 
         calendar.add(Calendar.DAY_OF_YEAR, 2);
         Date tomorrow = calendar.getTime();
