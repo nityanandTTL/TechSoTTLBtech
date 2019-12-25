@@ -77,6 +77,5 @@
         android:visibility="gone"
         android:text="Currently, there are no Videos available, Please come back later to see new videos"/>
 
-
-
 </RelativeLayout>
+

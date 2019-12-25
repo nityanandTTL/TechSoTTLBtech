@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -46,6 +45,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.thyrocare.R;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
+import com.thyrocare.models.api.request.CallPatchRequestModel;
 import com.thyrocare.models.api.request.OrderAllocationTrackLocationRequestModel;
 import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
@@ -180,19 +180,18 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(Intent.ACTION_CALL);
+                /*Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse("tel:" + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile()));
-                activity.startActivity(intent);
+                activity.startActivity(intent);*/
 
 
-
-                /*CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
+                CallPatchRequestModel callPatchRequestModel = new CallPatchRequestModel();
                 callPatchRequestModel.setSrcnumber(appPreferenceManager.getLoginResponseModel().getUserID());
                 callPatchRequestModel.setDestNumber(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
                 callPatchRequestModel.setVisitID(orderVisitDetailsModel.getVisitId());
                 ApiCallAsyncTask callPatchRequestAsyncTask = new AsyncTaskForRequest(activity).getCallPatchRequestAsyncTask(callPatchRequestModel);
                 callPatchRequestAsyncTask.setApiCallAsyncTaskDelegate(new CallPatchRequestAsyncTaskDelegateResult());
-                callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);*/
+                callPatchRequestAsyncTask.execute(callPatchRequestAsyncTask);
             }
         });
 //        Toast.makeText(getApplicationContext(),"totaldist"+Integertotaldiff,Toast.LENGTH_SHORT).show();

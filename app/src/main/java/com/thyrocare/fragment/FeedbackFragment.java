@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -163,6 +165,44 @@ public class FeedbackFragment extends Fragment {
 
                 strRating = "SAD";
                 strEmotionsType = ":-(";
+            }
+        });
+
+        edtQuery.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().startsWith(" ")){
+                    edtQuery.setText("");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        edtName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().startsWith(" ")){
+                    edtName.setText("");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 

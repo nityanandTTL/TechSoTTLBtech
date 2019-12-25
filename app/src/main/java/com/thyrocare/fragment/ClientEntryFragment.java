@@ -33,10 +33,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -49,7 +47,6 @@ import com.thyrocare.Controller.ClientEntryController;
 import com.thyrocare.R;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.models.api.request.NewClientModel;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -64,29 +61,46 @@ import static com.thyrocare.utils.app.AppConstants.BDNAPIKEY;
  * A simple {@link Fragment} subclass.
  */
 
-public class ClientEntryFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener{
+public class ClientEntryFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     public static final String TAG_FRAGMENT = ClientEntryFragment.class.getSimpleName();
     EditText edtName, edtMobile, edtEmail, edtAddress, edtPincode, edtInchargeName;
-    TextView txtLocation,btnUpload;
+    public static final String TAG_Fragment = "NEW_CLIENT_ENTRY";
     Button btnSubmit;
     ImageView btnCamera;
 
 
     private int Cmera_REQUEST_CODE = 100;
     private int Storage_Request_Code = 101;
-    private  int Gallary  = 1;
-    private  int Camera  = 2;
+    public static String longitude, latitude, img_64;
+    TextView txtLocation, btnUpload;
     NewClientModel newClientpostmodel;
-    public static String longitude,latitude,img_64;
+    private int Gallary = 1;
     ProgressDialog progressDialog;
 
     static ClientEntryFragment fragment;
-    public  static  final String TAG_Fragment = "NEW_CLIENT_ENTRY";
+    private int Camera = 2;
     private GoogleApiClient mgoogleApiClient;
-    private  int PLACE_PICKER_REQUEST = 4;
+    private int PLACE_PICKER_REQUEST = 4;
 
     public ClientEntryFragment() {
         // Required empty public constructor
+    }
+
+    public static String getFileToByte(String filePath) {
+        Bitmap bmp = null;
+        ByteArrayOutputStream bos = null;
+        byte[] bt = null;
+        String encodeString = null;
+        try {
+            bmp = BitmapFactory.decodeFile(filePath);
+            bos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bt = bos.toByteArray();
+            encodeString = Base64.encodeToString(bt, Base64.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return encodeString;
     }
 
     @Override
@@ -117,20 +131,15 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
         progressDialog = new ProgressDialog(getContext());
 
 
-
-
-
-
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ShowImagepickerDialog();
-                if (checkImagepermission()){
+                if (checkImagepermission()) {
 
-                }
-                else {
-                    ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
-                    ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.CAMERA},1);
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 1);
                 }
 
             }
@@ -139,19 +148,18 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
         txtLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkpermissionLocation()){
+                if (checkpermissionLocation()) {
 
                     PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                    try{
-                        startActivityForResult(builder.build(getActivity()),PLACE_PICKER_REQUEST);
+                    try {
+                        startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
                     } catch (GooglePlayServicesNotAvailableException e) {
                         e.printStackTrace();
                     } catch (GooglePlayServicesRepairableException e) {
                         e.printStackTrace();
                     }
-                }
-                else {
-                    ActivityCompat.requestPermissions(getActivity(),new String[] {Manifest.permission.ACCESS_FINE_LOCATION},1);
+                } else {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                 }
 
 
@@ -166,10 +174,10 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String str_pincode = charSequence.toString();
-                if (str_pincode.startsWith("0")||str_pincode.startsWith("9")){
-                    if (str_pincode.length()>0){
+                if (str_pincode.startsWith("0") || str_pincode.startsWith("9")) {
+                    if (str_pincode.length() > 0) {
                         edtPincode.setText(str_pincode.substring(1));
-                    }else {
+                    } else {
                         edtPincode.setText("");
                     }
                 }
@@ -190,12 +198,12 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String str_mobileno  =  charSequence.toString();
+                String str_mobileno = charSequence.toString();
 
-                if (str_mobileno.startsWith("0")||str_mobileno.startsWith("1")||str_mobileno.startsWith("2")||str_mobileno.startsWith("3")||str_mobileno.startsWith("4")||str_mobileno.startsWith("5")){
-                    if (str_mobileno.length()>0){
+                if (str_mobileno.startsWith("0") || str_mobileno.startsWith("1") || str_mobileno.startsWith("2") || str_mobileno.startsWith("3") || str_mobileno.startsWith("4") || str_mobileno.startsWith("5")) {
+                    if (str_mobileno.length() > 0) {
                         edtMobile.setText(str_mobileno.substring(1));
-                    }else {
+                    } else {
                         edtMobile.setText("");
                     }
                 }
@@ -215,10 +223,10 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String str_name  =  charSequence.toString();
+                String str_name = charSequence.toString();
 
                 //Toast.makeText(getContext(),str_name.length()+"",Toast.LENGTH_LONG).show();
-                if (str_name.startsWith(" ")){
+                if (str_name.startsWith(" ")) {
                     edtAddress.setText("");
                 }
 
@@ -234,16 +242,18 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
+
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String str_name  =  charSequence.toString();
+                String str_name = charSequence.toString();
 
                 //Toast.makeText(getContext(),str_name.length()+"",Toast.LENGTH_LONG).show();
-                if (str_name.startsWith(" ")){
+                if (str_name.startsWith(" ")) {
                     edtName.setText("");
                 }
 
             }
+
             @Override
             public void afterTextChanged(Editable editable) {
 
@@ -254,14 +264,16 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
+
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String str_name  =  charSequence.toString();
-                if (str_name.startsWith(" ")){
+                String str_name = charSequence.toString();
+                if (str_name.startsWith(" ")) {
                     edtInchargeName.setText("");
                 }
 
             }
+
             @Override
             public void afterTextChanged(Editable editable) {
 
@@ -276,10 +288,10 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String str_name  =  charSequence.toString();
+                String str_name = charSequence.toString();
 
                 //Toast.makeText(getContext(),str_name.length()+"",Toast.LENGTH_LONG).show();
-                if (str_name.startsWith(" ")){
+                if (str_name.startsWith(" ")) {
                     edtEmail.setText("");
                 }
 
@@ -294,7 +306,7 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(submitEntry()){
+                if (submitEntry()) {
                     call_newclient_entry_apicontroller();
                 }
             }
@@ -302,6 +314,13 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
 
 
         return view;
+    }
+
+    public static ClientEntryFragment newInstance() {
+        ClientEntryFragment fragment = new ClientEntryFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public boolean submitEntry() {
@@ -316,44 +335,47 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
             edtName.setError("Enter Client Name");
             edtName.requestFocus();
             return false;
-        } else if (TextUtils.isEmpty(mobile)) {
+        }
+        if (TextUtils.isEmpty(mobile)) {
             edtMobile.setError("Enter Mobile No.");
             edtMobile.requestFocus();
             return false;
-        } else if (!TextUtils.isEmpty(email)){
-            if (edtEmail.getText().length()>0&&! Patterns.EMAIL_ADDRESS.matcher(edtEmail.getText()).matches()){
-                edtEmail.setError("Enter Valid Email Id");
+        }
+        if (!TextUtils.isEmpty(edtEmail.getText())) {
+            if (edtEmail.getText().length() > 0 && !Patterns.EMAIL_ADDRESS.matcher(edtEmail.getText().toString()).matches()) {
+                edtEmail.setError("Enter valid Email Id");
+                edtEmail.requestFocus();
+                // Toast.makeText(getContext(),"Please enter valid emailId",Toast.LENGTH_LONG).show();
                 return false;
             }
-        }else if (TextUtils.isEmpty(location)) {
+
+        }
+        if (TextUtils.isEmpty(location)) {
             txtLocation.setError("Select Location");
             txtLocation.requestFocus();
             return false;
-        } else if (TextUtils.isEmpty(address)) {
+        }
+        if (TextUtils.isEmpty(address)) {
             edtAddress.setError("Enter Address");
             edtAddress.requestFocus();
             return false;
-        } else if (TextUtils.isEmpty(pincode)) {
+        }
+        if (TextUtils.isEmpty(pincode)) {
             edtPincode.setError("Enter Pincode");
             edtPincode.requestFocus();
             return false;
         }
-        else if (TextUtils.isEmpty(incharge)) {
+        if (TextUtils.isEmpty(incharge)) {
             edtInchargeName.setError("Enter Incharge Name");
             edtInchargeName.requestFocus();
             return false;
-        }else if (TextUtils.isEmpty(btnUpload.getText().toString())){
+        }
+        if (TextUtils.isEmpty(btnUpload.getText().toString())) {
             btnUpload.setError("Please upload image to proceed");
             edtInchargeName.requestFocus();
+            return false;
         }
         return true;
-    }
-
-    public static ClientEntryFragment newInstance() {
-        ClientEntryFragment fragment = new ClientEntryFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     private void postapi_call() {
@@ -361,7 +383,7 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
         newClientpostmodel.setAddress(edtAddress.getText().toString());
         newClientpostmodel.setBrand("TTL");
         newClientpostmodel.setChannel("MOBILE APPLICATION");
-        newClientpostmodel.setCountry( "India");
+        newClientpostmodel.setCountry("India");
         newClientpostmodel.setEmail(edtEmail.getText().toString());
         newClientpostmodel.setInchargeName(edtInchargeName.getText().toString());
         newClientpostmodel.setName(edtName.getText().toString());
@@ -375,7 +397,7 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
         newClientpostmodel.setWebsite("");
         newClientpostmodel.setAPP("BDN-LeggyT");
         newClientpostmodel.setFile(btnUpload.getText().toString());
-        newClientpostmodel.setOpType( "entry");
+        newClientpostmodel.setOpType("entry");
         newClientpostmodel.setLatitute(latitude);
         newClientpostmodel.setLongitude(longitude);
         newClientpostmodel.setVisiting_Card(img_64);
@@ -383,15 +405,15 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
 
     private void call_newclient_entry_apicontroller() {
 
-        if (ApplicationController.clientEntryController != null){
+        if (ApplicationController.clientEntryController != null) {
             ApplicationController.clientEntryController = null;
         }
         postapi_call();
-        ApplicationController.clientEntryController = new ClientEntryController(getContext(),this);
+        ApplicationController.clientEntryController = new ClientEntryController(getContext(), this);
         ApplicationController.clientEntryController.PostRegisterapicall(newClientpostmodel);
     }
 
-    public  void RefreshFields() {
+    public void RefreshFields() {
         txtLocation.setText("");
         edtPincode.setText("");
         edtAddress.setText("");
@@ -418,17 +440,6 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
         alertDialog.show();
     }
 
-
-    private boolean checkImagepermission() {
-
-        if (ContextCompat.checkSelfPermission(getContext(),Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED&&
-                ContextCompat.checkSelfPermission(getContext(),Manifest.permission.READ_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED){
-            return true;
-
-        }
-        else return false;
-    }
-
     private void ShowImagepickerDialog() {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
@@ -450,26 +461,27 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
 
     }
 
+    private boolean checkImagepermission() {
+
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            return true;
+
+        } else return false;
+    }
+
     private void showCamera() {
         Intent cameraintent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraintent,Camera);
+        startActivityForResult(cameraintent, Camera);
     }
 
     private void showGallery() {
 
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent,Gallary);
+        startActivityForResult(galleryIntent, Gallary);
 
 
     }
-
-    private boolean checkpermissionLocation() {
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
-            return false;
-        }
-        else return true;
-    }
-
 
 
     @Override
@@ -490,14 +502,20 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
 
    }*/
 
+    private boolean checkpermissionLocation() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        } else return true;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data!= null){
+        if (data != null) {
 
-            if(requestCode == PLACE_PICKER_REQUEST){
-                Place place = (Place) PlacePicker.getPlace(getContext(),data);
+            if (requestCode == PLACE_PICKER_REQUEST) {
+                Place place = (Place) PlacePicker.getPlace(getContext(), data);
                 txtLocation.setText(place.getName());
                 txtLocation.setError(null);
                 edtAddress.setText(place.getAddress());
@@ -505,9 +523,9 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
                 try {
                     longitude = String.valueOf(place.getLatLng().longitude);
                     latitude = String.valueOf(place.getLatLng().latitude);
-                    List<Address> addresses = geocoder.getFromLocation(place.getLatLng().latitude,place.getLatLng().longitude,1);
-                    for (Address address:addresses){
-                        if (address.getLocality()!=null&&address.getPostalCode()!=null){
+                    List<Address> addresses = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
+                    for (Address address : addresses) {
+                        if (address.getLocality() != null && address.getPostalCode() != null) {
                             edtPincode.setText(address.getPostalCode());
                         }
                     }
@@ -516,9 +534,7 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
                 }
 
 
-
-            }
-            else if (requestCode == Camera){
+            } else if (requestCode == Camera) {
                 Bundle extras = data.getExtras();
                 // Uri selectedimage = data.getData();
                 Bitmap imagebitmap = (Bitmap) extras.get("data");
@@ -527,21 +543,20 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
                 btnCamera.setImageBitmap(imagebitmap);
                 /*String image_Path = getPath(getContext().getContentResolver(),selectedimage);
                 tv_imagename.setText(image_Path);*/
-                File finalFile = new File(getPath(getContext().getContentResolver(),selectedimage));
+                File finalFile = new File(getPath(getContext().getContentResolver(), selectedimage));
                 String imagename = finalFile.getName();
                 btnUpload.setText(imagename);
                 btnUpload.setError(null);
                 img_64 = getFileToByte(finalFile.getPath());
 
-            }
-            else if (requestCode == Gallary){
+            } else if (requestCode == Gallary) {
                 final Uri imageuri = data.getData();
                 try {
                     final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageuri);
-                    final  Bitmap   selectImage = BitmapFactory.decodeStream(imageStream);
+                    final Bitmap selectImage = BitmapFactory.decodeStream(imageStream);
                     btnCamera.setImageBitmap(selectImage);
                     Uri selectedimage = data.getData();
-                    String image_Path = getPath(getContext().getContentResolver(),selectedimage);
+                    String image_Path = getPath(getContext().getContentResolver(), selectedimage);
                     File f = new File(image_Path);
                     String imageName = f.getName();
                     btnUpload.setText(imageName);
@@ -554,22 +569,6 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
             }
         }
 
-    }
-    public static String getFileToByte(String filePath){
-        Bitmap bmp = null;
-        ByteArrayOutputStream bos = null;
-        byte[] bt = null;
-        String encodeString = null;
-        try{
-            bmp = BitmapFactory.decodeFile(filePath);
-            bos = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            bt = bos.toByteArray();
-            encodeString = Base64.encodeToString(bt, Base64.DEFAULT);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return encodeString;
     }
 
     private Object getImageUri(Context context, Bitmap imagebitmap) {
@@ -596,7 +595,7 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
 
         }
         return result;*/
-        if (selectedimage!=null) {
+        if (selectedimage != null) {
 
 
             Cursor cursor = contentResolver.query(selectedimage, null, null, null, null);

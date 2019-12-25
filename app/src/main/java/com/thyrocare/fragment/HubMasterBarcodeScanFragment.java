@@ -139,11 +139,21 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ll_scan_master_barcode) {
-            isMasterBarcode = true;
-            scanFromFragment();
+            if (barcodeModels!=null&&barcodeModels.size()>0){
+                isMasterBarcode = true;
+                scanFromFragment();
+            }
+            else {
+                Toast.makeText(activity, "No barcode to scan.", Toast.LENGTH_SHORT).show();
+            }
         } else if (v.getId() == R.id.ll_scan_vial_barcode) {
-            isMasterBarcode = false;
-            scanFromFragment();
+            if (barcodeModels!=null&&barcodeModels.size()>0){
+                isMasterBarcode = false;
+                scanFromFragment();
+            }else {
+                Toast.makeText(activity, "No barcode to scan.", Toast.LENGTH_SHORT).show();
+            }
+
         } else if (v.getId() == R.id.btn_dispatch) {
             if (validate()) {
                 callMasterBarcodeMapApi();
@@ -181,7 +191,15 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
     }
 
     private boolean validate() {
-        if (master_scanned_barcode.equals("")) {
+        if (barcodeModels==null){
+            Toast.makeText(activity, "you cannot dispatch", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if (barcodeModels.size()<=0){
+            Toast.makeText(activity, "you cannot dispatch", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if (master_scanned_barcode.equals("")) {
             Toast.makeText(activity, "scan for master barcode first", Toast.LENGTH_SHORT).show();
             return false;
         }else if (master_scanned_barcode.toString().trim().length() != 8) {

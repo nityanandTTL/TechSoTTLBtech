@@ -910,6 +910,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
 
                 TableRow tr = (TableRow) activity.getLayoutInflater().inflate(R.layout.item_scan_barcode, null);
+
                 TextView txtSampleType = (TextView) tr.findViewById(R.id.txt_sample_type);
 
                 TextView txtSampleTypeRBS = (TextView) tr.findViewById(R.id.txt_sample_type_rb);

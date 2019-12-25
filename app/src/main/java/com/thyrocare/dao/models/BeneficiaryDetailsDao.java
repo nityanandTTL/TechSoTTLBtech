@@ -14,7 +14,6 @@ import com.thyrocare.models.data.BeneficiaryTestDetailsModel;
 import com.thyrocare.models.data.BeneficiaryTestWiseClinicalHistoryModel;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.CommonUtils;
-import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
 
 import java.util.ArrayList;
@@ -213,8 +212,7 @@ public class BeneficiaryDetailsDao {
 				int updateValue = (int) db.update(TABLE_NAME, contentValues, BEN_ID + "="+model.getBenId(), new String[] {});
 				Logger.debug("insertOrUpdateBeneficiaryDetailsModel: update : " + updateValue);
                 return true;
-			}
-			else{
+			} else{
 				contentValues = this.getContentValuesFromModel(model);
 				int insertValue = (int) db.insert(TABLE_NAME, null, contentValues);
 				Logger.debug("insertOrUpdateBeneficiaryDetailsModel: insert : " + insertValue);

@@ -100,12 +100,11 @@ public class DeviceUtils {
             TelephonyManager tm = (TelephonyManager) activity
                     .getSystemService(Activity.TELEPHONY_SERVICE);
 
-            device_id = "";
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                return "";
+                return device_id;
             }
 
-            if (tm.getDeviceId() != null) {
+            if (tm != null && tm.getDeviceId() != null) {
                 device_id = tm.getDeviceId();
                 System.out.println("<<device imei>>:  " + device_id);
             } else {
