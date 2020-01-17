@@ -13,11 +13,14 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.Controller.DeviceLogOutController;
+import com.thyrocare.Controller.NotificationMappingController;
 import com.thyrocare.R;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.customview.CustomUpdateDailog;
@@ -25,6 +28,7 @@ import com.thyrocare.dao.CreateOrUpgradeDbTask;
 import com.thyrocare.dao.DbHelper;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.delegate.CustomUpdateDialogOkButtonOnClickedDelegate;
+import com.thyrocare.models.api.request.NotificationMappingModel;
 import com.thyrocare.models.api.response.BtechAvaliabilityResponseModel;
 import com.thyrocare.models.api.response.NewBtechAvaliabilityResponseModel;
 import com.thyrocare.models.data.TSPNBT_AvilModel;
@@ -68,6 +72,9 @@ public class SplashScreenActivity extends AbstractActivity {
     private int AppId;
     private static Intent TImeCheckerIntent;
 
+    Boolean isFromNotification = false;
+    int screenCategory;
+
     private static Intent locationUpdateIntent;
     /**
      * The Version control master model.
@@ -81,6 +88,11 @@ public class SplashScreenActivity extends AbstractActivity {
         setContentView(R.layout.activity_splash_screen);
         activity = this;
         AppId = AppConstants.BTECH_APP_ID;
+
+        if (getIntent().hasExtra("isFromNotification") &&  getIntent().hasExtra("screenCategory") ){
+            isFromNotification = getIntent().getBooleanExtra("isFromNotification",false);
+            screenCategory = getIntent().getIntExtra("screenCategory",0);
+        }
 
         appPreferenceManager = new AppPreferenceManager(activity);
         new Handler().postDelayed(new Runnable() {
@@ -275,6 +287,8 @@ public class SplashScreenActivity extends AbstractActivity {
                     else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
 
                         Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                        i.putExtra("isFromNotification",isFromNotification);
+                        i.putExtra("screenCategory",screenCategory);
                         i.putExtra("LEAVEINTIMATION", "0");
                         startActivity(i);
                     }
@@ -313,6 +327,8 @@ public class SplashScreenActivity extends AbstractActivity {
                         if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)) {
                             Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                             i.putExtra("LEAVEINTIMATION", "0");
+                            i.putExtra("isFromNotification",isFromNotification);
+                            i.putExtra("screenCategory",screenCategory);
                             startActivity(i);
                             finish();
                         } else {
@@ -320,6 +336,8 @@ public class SplashScreenActivity extends AbstractActivity {
                                 // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
                                 Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                                 i.putExtra("LEAVEINTIMATION", "0");
+                                i.putExtra("isFromNotification",isFromNotification);
+                                i.putExtra("screenCategory",screenCategory);
                                 startActivity(i);
                                 finish();
                             } else {
@@ -578,6 +596,8 @@ public class SplashScreenActivity extends AbstractActivity {
             if (InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
                 switchToActivity(activity, LoginScreenActivity.class, new Bundle());
             } else {
+
+                notificationMapping();
               /*  Calendar c = Calendar.getInstance();
                 c.set(Calendar.MILLISECOND, 0);
                 c.set(Calendar.SECOND, 0);
@@ -600,6 +620,8 @@ public class SplashScreenActivity extends AbstractActivity {
 
                         Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
+                        i.putExtra("isFromNotification",isFromNotification);
+                        i.putExtra("screenCategory",screenCategory);
                         startActivity(i);
                         finish();
                     } else {
@@ -624,6 +646,8 @@ public class SplashScreenActivity extends AbstractActivity {
     private void Call_TspScreen() {
         Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
         i.putExtra("LEAVEINTIMATION", "0");
+        i.putExtra("isFromNotification",isFromNotification);
+        i.putExtra("screenCategory",screenCategory);
         startActivity(i);
         finish();
     }
@@ -667,6 +691,35 @@ public class SplashScreenActivity extends AbstractActivity {
         @Override
         public void onApiCancelled() {
             Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void notificationMapping() {
+        NotificationMappingModel notificationMappingModel = new NotificationMappingModel();
+
+        String clientID = appPreferenceManager.getLoginResponseModel().getUserID();
+        String token = FirebaseInstanceId.getInstance().getToken();
+        System.out.println("Token : "+token);
+        String appName = "BTech_AllDevices";
+        String entryBy = appPreferenceManager.getLoginResponseModel().getUserID();
+        String topic = "";
+
+        notificationMappingModel.setAppName(appName);
+        notificationMappingModel.setClient_Id(clientID);
+        notificationMappingModel.setEnterBy(entryBy);
+        notificationMappingModel.setToken(token);
+        notificationMappingModel.setTopic(topic);
+
+        if (!TextUtils.isEmpty(notificationMappingModel.getToken())) {
+            if (ApplicationController.notificationMappingController != null) {
+                ApplicationController.notificationMappingController = null;
+            }
+
+            ApplicationController.notificationMappingController = new NotificationMappingController(activity);
+            ApplicationController.notificationMappingController.getNotificationMapping(notificationMappingModel);
+            Log.e("shami -- ", "notificationMapping: Token Generated" );
+        } else {
+            Log.e("shami -- ", "notificationMapping: Token not generated" );
         }
     }
 }

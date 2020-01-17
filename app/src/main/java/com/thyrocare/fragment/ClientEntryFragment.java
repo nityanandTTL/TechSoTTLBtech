@@ -1,6 +1,7 @@
 package com.thyrocare.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -45,6 +46,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.thyrocare.Controller.ClientEntryController;
 import com.thyrocare.R;
+import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.models.api.request.NewClientModel;
 
@@ -69,6 +71,7 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
     ImageView btnCamera;
 
 
+    HomeScreenActivity mActivity;
     private int Cmera_REQUEST_CODE = 100;
     private int Storage_Request_Code = 101;
     public static String longitude, latitude, img_64;
@@ -103,6 +106,14 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
         return encodeString;
     }
 
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //you can set the title for your toolbar here for different fragments different titles
+        getActivity().setTitle("Client Entry");
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -120,6 +131,10 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
         btnCamera = view.findViewById(R.id.btnCamera);
         btnSubmit = view.findViewById(R.id.btnSubmit);
         edtInchargeName = view.findViewById(R.id.edtInchargeName);
+        mActivity = (HomeScreenActivity) getActivity();
+        if (mActivity.toolbarHome != null) {
+            mActivity.toolbarHome.setTitle("Client Entry");
+        }
 
 
         mgoogleApiClient = new GoogleApiClient.Builder(getActivity())
@@ -336,6 +351,8 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
             edtName.requestFocus();
             return false;
         }
+
+
         if (TextUtils.isEmpty(mobile)) {
             edtMobile.setError("Enter Mobile No.");
             edtMobile.requestFocus();
@@ -372,6 +389,18 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
         }
         if (TextUtils.isEmpty(btnUpload.getText().toString())) {
             btnUpload.setError("Please upload image to proceed");
+            edtInchargeName.requestFocus();
+            return false;
+        }
+
+        if (!TextUtils.isEmpty(name) && name.trim().length() < 2) {
+            edtName.setError("Client name should be of minimum 2 characters");
+            edtName.requestFocus();
+            return false;
+        }
+
+        if (!TextUtils.isEmpty(incharge) && incharge.trim().length() < 2) {
+            edtInchargeName.setError("Incharge name should be of minimum 2 characters");
             edtInchargeName.requestFocus();
             return false;
         }

@@ -143,6 +143,17 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activity.StockAvailabilityActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activity.HomeScreenActivity" />
+        <activity
+            android:name=".activity.UpdateMaterialActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activity.StockAvailabilityActivity"/>
         <activity
             android:name=".activity.ScheduleYourDayIntentActivity"
             android:label="@string/app_name"

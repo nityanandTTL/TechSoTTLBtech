@@ -27,6 +27,11 @@
             android:title="Credit" />
 
         <item
+            android:id="@+id/nav_stock"
+            android:icon="@drawable/ic_stock"
+            android:title="Stock Availability" />
+
+        <item
             android:id="@+id/nav_communication"
             android:icon="@drawable/communication"
             android:title="Communicate" />
@@ -44,6 +49,15 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/logout"
             android:title="Logout" />
+
+        <item
+            android:enabled="false"
+            android:title="" />
+
+        <item
+            android:enabled="false"
+            android:title="" />
+
 
     </group>
 

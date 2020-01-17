@@ -1,6 +1,8 @@
 
 package com.thyrocare.activity;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.Controller.NotificationMappingController;
 import com.thyrocare.R;
 
 
@@ -12,6 +14,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +41,7 @@ import com.thyrocare.activity.SplashScreenActivity;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.models.api.request.DownloadDetailsRequestModel;
 import com.thyrocare.models.api.request.LoginRequestModel;
+import com.thyrocare.models.api.request.NotificationMappingModel;
 import com.thyrocare.models.api.response.BtechAvaliabilityResponseModel;
 import com.thyrocare.models.api.response.LoginResponseModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -247,22 +252,31 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
             appPreferenceManager.setUserID(loginResponseModel.getUserID());
 
             if (loginResponseModel.getRole().equals(AppConstants.BTECH_ROLE_ID) || loginResponseModel.getRole().equals(AppConstants.HUB_ROLE_ID) || loginResponseModel.getRole().equals(AppConstants.NBT_ROLE_ID)) {//4 is for btech login & 6 is for hub 13 is for NBT
+
                 Logger.error("" + loginResponseModel.getUserID());
                 appPreferenceManager.setLoginResponseModel(loginResponseModel);
                 appPreferenceManager.setAPISessionKey(loginResponseModel.getAccess_token());
                 //switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
+                notificationMapping();
                 switchToActivity(activity, SplashScreenActivity.class, new Bundle());
+
             } else if (loginResponseModel.getRole().equals(AppConstants.TSP_ROLE_ID)) {//this is for tsp
+
+
                 appPreferenceManager.setLoginResponseModel(loginResponseModel);
                 appPreferenceManager.setAPISessionKey(loginResponseModel.getAccess_token());
                        /* Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
                         startActivity(i);*/
-
+                notificationMapping();
                 switchToActivity(activity, SplashScreenActivity.class, new Bundle());
             } else if (loginResponseModel.getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
+
+
                 appPreferenceManager.setLoginResponseModel(loginResponseModel);
                 appPreferenceManager.setAPISessionKey(loginResponseModel.getAccess_token());
+
+                notificationMapping();
                 //jai
                 Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
                 // Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
@@ -271,13 +285,18 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
                 i.putExtra("LEAVEINTIMATION", "0");
                 startActivity(i);
             } else if (loginResponseModel.getRole().equals(AppConstants.LME_ROLE_ID)) {
+
+
                 appPreferenceManager.setLoginResponseModel(loginResponseModel);
                 appPreferenceManager.setAPISessionKey(loginResponseModel.getAccess_token());
+                notificationMapping();
                 switchToActivity(activity, SplashScreenActivity.class, new Bundle());
             } else {
                 TastyToast.makeText(activity, getString(R.string.pls_use_valid_btech_credential_to_log_in), TastyToast.LENGTH_LONG, TastyToast.WARNING);
                 //   Toast.makeText(activity, "Please use valid BTECH credentials to log in", Toast.LENGTH_SHORT).show();
             }
+
+
 
         }
 
@@ -363,6 +382,37 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
         @Override
         public void onApiCancelled() {
 
+        }
+    }
+
+    public void notificationMapping() {
+
+
+        NotificationMappingModel notificationMappingModel = new NotificationMappingModel();
+
+        String clientID = appPreferenceManager.getLoginResponseModel().getUserID();
+        String token = FirebaseInstanceId.getInstance().getToken();
+
+        String appName = "BTech_AllDevices";
+        String entryBy = appPreferenceManager.getLoginResponseModel().getUserID();
+        String topic = "";
+
+        notificationMappingModel.setAppName(appName);
+        notificationMappingModel.setClient_Id(clientID);
+        notificationMappingModel.setEnterBy(entryBy);
+        notificationMappingModel.setToken(token);
+        notificationMappingModel.setTopic(topic);
+
+        if (!TextUtils.isEmpty(notificationMappingModel.getToken())) {
+            if (ApplicationController.notificationMappingController != null) {
+                ApplicationController.notificationMappingController = null;
+            }
+
+            ApplicationController.notificationMappingController = new NotificationMappingController(activity);
+            ApplicationController.notificationMappingController.getNotificationMapping(notificationMappingModel);
+            Log.e("shami -- ", "notificationMapping: Token Generated" );
+        } else {
+            Log.e("shami -- ", "notificationMapping: Token not generated" );
         }
     }
 }

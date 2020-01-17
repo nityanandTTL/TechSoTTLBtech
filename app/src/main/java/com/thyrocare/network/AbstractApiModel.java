@@ -47,23 +47,20 @@ public class AbstractApiModel implements AppConstants {
 
     //TODO Stag
 
-    /*public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
+    public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
     public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
-    public static final String BDN_API_VERSION = "http://www.thyrocare.local/API/BDN/";*/
+    public static final String BDN_API_VERSION = "http://www.thyrocare.local/API/BDN/";
 
     //TODO Live
-      public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
-      public static final String API_VERSION = "https://www.thyrocare.com/APIs";
-    public static final String BDN_API_VERSION = "https://www.thyrocare.com/API/BDN/";
-
-
-
+   /* public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
+    public static final String API_VERSION = "https://www.thyrocare.com/APIs";
+    public static final String BDN_API_VERSION = "https://www.thyrocare.com/API/BDN/";*/
 
 
     public static String MAINURL = "http://techso.thyrocare.cloud/techsoapi";//live new server
 
 
-    public static String B2B =SERVER_BASE_API_URL_PROD.equalsIgnoreCase(MAINURL) ? "https://www.thyrocare.com/API/B2B/": "https://www.thyrocare.com/API_BETA/B2B/";
+    public static String B2B = SERVER_BASE_API_URL_PROD.equalsIgnoreCase(MAINURL) ? "https://www.thyrocare.com/API/B2B/" : "https://www.thyrocare.com/API_BETA/B2B/";
 
     public static String SERVER_BASE_API_URL = appEnvironment.equals("DEVELOPMENT") ? SERVER_BASE_API_URL_DEV : appEnvironment.equals("DEMO") ? SERVER_BASE_API_URL_DEMO : appEnvironment.equals("PRODUCTION") ? SERVER_BASE_API_URL_PROD : SERVER_BASE_API_URL_DEV;
 
@@ -93,6 +90,9 @@ public class AbstractApiModel implements AppConstants {
     public String TRACK_BTECH_LOCATION = VERSION_API_URL + "/OrderAllocation/TrackBtechLocation";
 
     public String SELFIE_UPLOAD = VERSION_API_URL + "/SelfiUpload";
+
+    public static String StockAvailability = B2B + "COMMON.svc/StockAvailability";
+    public static String Materialupdate = B2B + "COMMON.svc/Materialupdate";
 
 
     //    public String FETCH_ORDER_DETAIL = VERSION_API_URL + "/OrderVisitDetails";
@@ -138,6 +138,9 @@ public class AbstractApiModel implements AppConstants {
     public String FETCH_LEDGER_DETAIL = VERSION_API_URL + "/Ledger/CashRegister";
 
     public String SET_BTECH_MATERIAL_INV = VERSION_API_URL + "/Inventory/DailyInvUpdate";
+
+    public static String NotificationMapping = B2B + "COMMON.svc/Mapping";
+
 
     // public String FETCH_EARNINGREGISTER_DETAIL = VERSION_API_URL + "/Ledger/EarningRegister";
 

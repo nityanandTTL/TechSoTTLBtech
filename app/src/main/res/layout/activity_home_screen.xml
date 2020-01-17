@@ -22,20 +22,31 @@
         app:itemIconTint="@android:color/black"
         app:menu="@menu/activity_home_screen_drawer">
 
-        <ImageView
-            android:id="@+id/img_thyrocare"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="@dimen/dp_7"
-            android:src="@drawable/logo_thyrocare"
-           />
-        <TextView
-            android:id="@+id/txt_version_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:text="jdfyutyutyutyutyuhj" />
+            android:gravity="bottom"
+            android:background="@color/white">
+
+
+            <ImageView
+                android:id="@+id/img_thyrocare"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+
+                android:src="@drawable/logo_thyrocare"
+                />
+            <TextView
+                android:id="@+id/txt_version_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="" />
+        </LinearLayout>
+
 
     </android.support.design.widget.NavigationView>
 

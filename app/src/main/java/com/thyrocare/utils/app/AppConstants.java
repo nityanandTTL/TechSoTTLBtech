@@ -11,7 +11,7 @@ AppConstants {
  //   public static final int ANDROID_APP_VERSION = 36;//36-12oct-leave intimation 2 task, order pass, LME
     //37-5Dec-last task by Jai - RBS PPBS in diffrerent vials, Direct visit
 
-    public static final int ANDROID_APP_VERSION = 49; //TECHSO APP - REMOVE VALIDATION FROM PPBS ORDER,TECHSO - MODIFICATION IN ORDERSTATUSCHANGE API WITH LATITUDE LONGITUDE,BTECH APP - CRASHLYTICS BUG FIXES,MODIFICATION IN BTECH AVAILABILITY IN TECHSO -BTECH APP, HIDE CALL OPTION FROM DIRECT VISIT ORDERS 4days 11-1-2019
+    public static final int ANDROID_APP_VERSION = 50; //TECHSO APP - REMOVE VALIDATION FROM PPBS ORDER,TECHSO - MODIFICATION IN ORDERSTATUSCHANGE API WITH LATITUDE LONGITUDE,BTECH APP - CRASHLYTICS BUG FIXES,MODIFICATION IN BTECH AVAILABILITY IN TECHSO -BTECH APP, HIDE CALL OPTION FROM DIRECT VISIT ORDERS 4days 11-1-2019
 
     public static final boolean IS_DEBUG = true;
 
@@ -72,7 +72,7 @@ AppConstants {
 
     public static final String EXTERNAL_DIR = "/DHB";
 
-    public static final String OFFLINE_STATUS_ACTION_DONE = "com.app.thyrocare.offlineStatusDone";
+     String OFFLINE_STATUS_ACTION_DONE = "com.app.thyrocare.offlineStatusDone";
     public static final String OFFLINE_STATUS_ACTION_NO_DATA = "com.app.thyrocare.offlineStatusNoData";
     public static final String OFFLINE_STATUS_ACTION_ISSUE = "com.app.thyrocare.offlineStatusIssue";
     public static final String OFFLINE_STATUS_ACTION_IN_PROGRESS = "com.app.thyrocare.offlineStatusInProgress";
@@ -87,6 +87,21 @@ AppConstants {
     public static final String MASTER_TABLE_UPDATE_ACTION_ISSUE = "com.app.thyrocare.masterTableUpdateStatusIssue";
 
 
+    public static final int HOME = 1;
+    public static final int LEAVES = 2;
+    public static final int CHANGEPASSWORD = 3;
+    public static final int CLIENTENTRY = 4;
+    public static final int CREDIT = 5;
+    public static final int STOCKAVAILABILITY = 6;
+    public static final int COMMUNICATE = 7;
+    public static final int VIDEOS = 8;
+    public static final int FEEDBACK = 9;
+    public static final int SCHEDULE = 10;
+    public static final int ORDERS = 11;
+    public static final int MATERIALS = 12;
+    public static final int HUB = 13;
+    public static final int ORDERSERVED = 14;
+    public static final int LEDGER = 15;
 
     public static final String MASTER_TABLE_UPDATE_TOTAL_COUNT = "master_table_update_total_count";
     public static final String MASTER_TABLE_UPDATE_COMPLETED_COUNT = "master_table_update_completed_count";
@@ -107,6 +122,6 @@ AppConstants {
     public static final String API_KEY = "dNBJfkhL5z8ng3lsNOuAEL2D73G@FDOC0z3fvmKQjiw=";
     public static final String APP_ID_FOT_EMAIL_VALIDATION = "5";
 
-
+    public static final String STOCKAPIKEY = "68rbZ40eNeRephUzIDTos9SsQIm4mHlT3lCNnqI)Ivk=";
     public static final String BDNAPIKEY = "D8AraV9)0HSBOe6A2LNfH15mJag8Jlf8VhsK9cVUDFuqDsMr4CdFSp3a11uU@2lPhjVzWG81bOA=";
 }

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.thyrocare.activity.StockAvailabilityActivity">
+
+    <LinearLayout
+        android:id="@+id/ll_tableView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tv_note"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_1"
+                android:layout_weight="0.6"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:padding="@dimen/dp_3"
+                android:singleLine="true"
+                android:text="SN"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dp_7"
+                android:visibility="visible" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_1"
+                android:layout_weight="2.7"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:padding="@dimen/dp_3"
+                android:singleLine="true"
+                android:text="Material"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dp_7" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_1"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:padding="@dimen/dp_3"
+                android:singleLine="true"
+                android:text="OS"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dp_7" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_1"
+                android:layout_weight="0.7"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:padding="@dimen/dp_3"
+                android:singleLine="true"
+                android:text="CS"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dp_7" />
+        </TableRow>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableLayout
+                android:id="@+id/tablelayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_noResult"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Records not found"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:padding="@dimen/dp_5"
+        android:background="@color/white"
+        android:text="OS - Opening stock    CS - Closing stock"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_5"
+        android:textStyle="bold" />
+
+</RelativeLayout>

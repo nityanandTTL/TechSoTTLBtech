@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +17,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -47,13 +47,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
 public class LeaveIntimationFragment extends AbstractFragment {
 
-    public static final String TAG_FRAGMENT = "LEAVE_INTIMATION_FRAGMENT";
+    public static final String TAG_FRAGMENT = "LEAVE_INTIMATION";
     HomeScreenActivity activity;
     AppPreferenceManager appPreferenceManager;
     TextView fromdate, todate, leavetype, leaveremark, days, textcalender;
@@ -89,6 +88,13 @@ public class LeaveIntimationFragment extends AbstractFragment {
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //you can set the title for your toolbar here for different fragments different titles
+        getActivity().setTitle("Leave Intimation");
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
@@ -101,8 +107,14 @@ public class LeaveIntimationFragment extends AbstractFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.activity_leave_intimation_modified, container, false);
+
+
+
         fromDt = Calendar.getInstance();
+        fromDt.add(Calendar.DAY_OF_MONTH, 1);
+
         toDt = Calendar.getInstance();
+        toDt.add(Calendar.DAY_OF_MONTH, 1);
 
         initUI();
 
@@ -151,23 +163,25 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 activity.toolbarHome.setTitle("Leave Intimation");
             }
             activity.isOnHome = false;
-            defdate = getCalculatedDate("dd-MM-yyyy", 1);
+            defdate = getCalculatedDate("dd-MM-yyyy", 2);
             todate.setVisibility(View.INVISIBLE);
 
-            Date c = Calendar.getInstance().getTime();
+            Calendar cal1 = Calendar.getInstance();
+            cal1.add(Calendar.DAY_OF_MONTH, 1);
+
+            Date c = cal1.getTime();
             System.out.println("Current time => " + c);
 
             SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
             String formattedDate = df.format(c);
 
             fromdate.setText("" + formattedDate);
-            // fromdate.setText("from2 "+defdate);
             Log.e(TAG_FRAGMENT, "todate1: " + defdate);
 
           //  Calendar calendar = toDt;//.add(Calendar.HOUR, 24);
-            Calendar calendar=fromDt;
-            calendar.add(Calendar.HOUR,24);
-            Date c1 = Calendar.getInstance().getTime();
+            Calendar calendar=Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH,2);
+            Date c1 = calendar.getTime();
 
             SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
             String formattedDate1 = df1.format(c1);
@@ -182,51 +196,33 @@ public class LeaveIntimationFragment extends AbstractFragment {
         return rootView;
     }
 
-    private int getDifferenceBetweenDate(String fromDate, String toDate) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        int difference_in_days = 0;
-        try {
-            Date date1 = simpleDateFormat.parse("" + fromDate);
-            Date date2 = simpleDateFormat.parse("" + toDate);
+    @Override
+    public void initUI() {
+        super.initUI();
+        fromdate = (TextView) rootView.findViewById(R.id.txt_from_date);
+        sp = (Spinner) rootView.findViewById(R.id.sp_leave_nature);
+        todate = (TextView) rootView.findViewById(R.id.txt_to_date);
+        Applyleave = (Button) rootView.findViewById(R.id.btn_leave_apply);
+        showHistory = (Button) rootView.findViewById(R.id.btn_show_history);
+        /*leavetype = (EditText) rootView.findViewById(R.id.et_leave_type);*/
+        leaveremark = (EditText) rootView.findViewById(R.id.et_leave_days_remark);
+        one = (RadioButton) rootView.findViewById(R.id.radio_one);
+        more = (RadioButton) rootView.findViewById(R.id.radio_more);
+        img_view_applied_leaves = (TextView) rootView.findViewById(R.id.img_view_applied_leaves);
+        ll_leave_days=(LinearLayout)rootView.findViewById(R.id.ll_leave_days);
+        group = (RadioGroup) rootView.findViewById(R.id.group);
+        textcalender = (TextView) rootView.findViewById(R.id.Calendertextview);
+        days = (TextView) rootView.findViewById(R.id.et_leave_days_value);
+        apply_leave = (FloatingActionButton) rootView.findViewById(R.id.apply_leave);
+        Fl_list_history = (FrameLayout) rootView.findViewById(R.id.Fl_list_history);
+        sc_leave = (ScrollView) rootView.findViewById(R.id.sc_leave);
+        /*String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String defdate = (today).toString();*/
 
-            difference_in_days = printDifference(date1, date2);
 
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return difference_in_days;
     }
 
-    private int printDifference(Date startDate, Date endDate) {
-        //milliseconds
-        long different = endDate.getTime() - startDate.getTime();
 
-        System.out.println("startDate : " + startDate);
-        System.out.println("endDate : " + endDate);
-        System.out.println("different : " + different);
-
-        long secondsInMilli = 1000;
-        long minutesInMilli = secondsInMilli * 60;
-        long hoursInMilli = minutesInMilli * 60;
-        long daysInMilli = hoursInMilli * 24;
-
-        long elapsedDays = different / daysInMilli;
-        different = different % daysInMilli;
-
-        long elapsedHours = different / hoursInMilli;
-        different = different % hoursInMilli;
-
-        long elapsedMinutes = different / minutesInMilli;
-        different = different % minutesInMilli;
-
-        long elapsedSeconds = different / secondsInMilli;
-
-        System.out.printf(
-                "%d days, %d hours, %d minutes, %d seconds%n",
-                elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds);
-        int y=(int)elapsedDays;
-        return y+1;
-    }
 
 
     private void setListners() {
@@ -263,9 +259,9 @@ public class LeaveIntimationFragment extends AbstractFragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 fromdate.setText("" + DateUtils.Req_Date_Req(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year, "dd-MM-yyyy", "dd-MM-yyyy"));
-                                fromDt.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
+                                fromDt.set(year, monthOfYear, dayOfMonth , 0, 0, 0);
                                 try {
-                                    if (toDt != null) {
+                                    if (toDt != null && more.isChecked()) {
                                         if (fromDt.getTimeInMillis() <= toDt.getTimeInMillis()) {
 
                                             int tempDiff=getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
@@ -284,6 +280,10 @@ public class LeaveIntimationFragment extends AbstractFragment {
                                       /*  if(fromDt.getTimeInMillis()>toDt.getTimeInMillis()){
                                             Toast.makeText(activity, "from date cannot be greater than To Date", Toast.LENGTH_SHORT).show();
                                         }*/
+                                    }else{
+                                        daysdiff = 1;
+                                        days.setText(1 + "");
+
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -293,10 +293,10 @@ public class LeaveIntimationFragment extends AbstractFragment {
                             }
                         }, mYear, mMonth, mDay);
                 try {
-                    datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
-                    Calendar calendar = toDt;
-                    calendar.add(Calendar.DAY_OF_YEAR, -1);
-                    datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                    datePickerDialog.getDatePicker().setMinDate(cal.getTimeInMillis());
 
                     datePickerDialog.show();
                 } catch (Exception e) {
@@ -343,7 +343,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
                             }
                         }, mYear, mMonth, mDay);
                 Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.DAY_OF_YEAR, 1);
+                cal.add(Calendar.DAY_OF_MONTH, 2);
                 datePickerDialog.getDatePicker().setMinDate(cal.getTimeInMillis());
 if(one.isChecked()){
     datePickerDialog.getDatePicker().setMaxDate(cal.getTimeInMillis());
@@ -393,9 +393,54 @@ if(one.isChecked()){
         });
     }
 
+    private int getDifferenceBetweenDate(String fromDate, String toDate) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        int difference_in_days = 0;
+        try {
+            Date date1 = simpleDateFormat.parse("" + fromDate);
+            Date date2 = simpleDateFormat.parse("" + toDate);
+
+            difference_in_days = printDifference(date1, date2);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return difference_in_days;
+    }
+
+    private int printDifference(Date startDate, Date endDate) {
+        //milliseconds
+        long different = endDate.getTime() - startDate.getTime();
+
+        System.out.println("startDate : " + startDate);
+        System.out.println("endDate : " + endDate);
+        System.out.println("different : " + different);
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        long elapsedSeconds = different / secondsInMilli;
+
+        System.out.printf(
+                "%d days, %d hours, %d minutes, %d seconds%n",
+                elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds);
+        int y=(int)elapsedDays;
+        return y+1;
+    }
+
     private void leaveApply() {
         if (validate()) {
-            calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
 
 //                Toast.makeText(getActivity(), "Days:" + daysdiff, LENGTH_SHORT).show();
 
@@ -421,7 +466,7 @@ if(one.isChecked()){
                 applyLeaveRequestModel.setDays(daysdiff);
             } else {
                 int tempDiff=getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
-                calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
+                daysdiff = tempDiff;
                 days.setText(tempDiff + "");
                // days.setText(daysdiff + "");
                 applyLeaveRequestModel.setTodate(DateUtils.Req_Date_Req(todate.getText().toString(), "dd-MM-yyyy", "yyyy-MM-dd"));
@@ -463,13 +508,15 @@ if(one.isChecked()){
     }
 
     private void calNumDays(long toTime, long fromTime) {
-        String to = new SimpleDateFormat("MM/dd/yyyy").format(new Date(toTime));
+       /* String to = new SimpleDateFormat("MM/dd/yyyy").format(new Date(toTime));
         String from = new SimpleDateFormat("MM/dd/yyyy").format(new Date(fromTime));
+
+        System.out.println(from +"   "+to);
         long diffTime = toTime - fromTime;
-        daysdiff = (int) (diffTime / (1000 * 60 * 60 * 24));
+        daysdiff = (int) (diffTime / (1000 * 60 * 60 * 24));*/
 
-
-        // daysdiff= daysdiff+1;
+        int tempDiff=getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
+        daysdiff = tempDiff;
     }
 
 
@@ -521,7 +568,7 @@ if(one.isChecked()){
         public void apiCallResult(String json, int statusCode) throws JSONException {
             Logger.debug(TAG_FRAGMENT + "--apiCallResult: ");
             if (statusCode == 200) {
-                Toast.makeText(getActivity(), "" + json, LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Leave applied Successfully", LENGTH_SHORT).show();
                 appPreferenceManager.setLeaveFlag(0);
                 appPreferenceManager.setCameFrom(0);
                 activity.toolbarHome.setVisibility(View.VISIBLE);
@@ -623,7 +670,10 @@ if(one.isChecked()){
                 } else {
                     ll_leave_days.setVisibility(View.GONE);
 
-                    Date c = Calendar.getInstance().getTime();
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.DAY_OF_MONTH, 1);
+
+                    Date c = cal.getTime();
                     System.out.println("Current time => " + c);
 
                     SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -654,31 +704,7 @@ if(one.isChecked()){
 
     }
 
-    @Override
-    public void initUI() {
-        super.initUI();
-        fromdate = (TextView) rootView.findViewById(R.id.txt_from_date);
-        sp = (Spinner) rootView.findViewById(R.id.sp_leave_nature);
-        todate = (TextView) rootView.findViewById(R.id.txt_to_date);
-        Applyleave = (Button) rootView.findViewById(R.id.btn_leave_apply);
-        showHistory = (Button) rootView.findViewById(R.id.btn_show_history);
-        /*leavetype = (EditText) rootView.findViewById(R.id.et_leave_type);*/
-        leaveremark = (EditText) rootView.findViewById(R.id.et_leave_days_remark);
-        one = (RadioButton) rootView.findViewById(R.id.radio_one);
-        more = (RadioButton) rootView.findViewById(R.id.radio_more);
-        img_view_applied_leaves = (TextView) rootView.findViewById(R.id.img_view_applied_leaves);
-        ll_leave_days=(LinearLayout)rootView.findViewById(R.id.ll_leave_days);
-        group = (RadioGroup) rootView.findViewById(R.id.group);
-        textcalender = (TextView) rootView.findViewById(R.id.Calendertextview);
-        days = (TextView) rootView.findViewById(R.id.et_leave_days_value);
-        apply_leave = (FloatingActionButton) rootView.findViewById(R.id.apply_leave);
-        Fl_list_history = (FrameLayout) rootView.findViewById(R.id.Fl_list_history);
-        sc_leave = (ScrollView) rootView.findViewById(R.id.sc_leave);
-        /*String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        String defdate = (today).toString();*/
 
-
-    }
 
 
 }

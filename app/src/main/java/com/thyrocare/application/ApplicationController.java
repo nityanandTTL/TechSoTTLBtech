@@ -13,7 +13,10 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.thyrocare.Controller.ClientEntryController;
 import com.thyrocare.Controller.DeviceLogOutController;
+import com.thyrocare.Controller.GetAvailableStockController;
+import com.thyrocare.Controller.NotificationMappingController;
 import com.thyrocare.Controller.TSPLMESampleDropController;
+import com.thyrocare.Controller.UpdateStockController;
 import com.thyrocare.dao.DbHelper;
 import com.thyrocare.utils.app.AppPreferenceManager;
 
@@ -31,7 +34,8 @@ public class ApplicationController extends MultiDexApplication {
 	public static Runnable timerRunnable;
 //	private File cacheDir;
 	public static String selectedService;
-	private AppPreferenceManager appPreferenceManager;
+	public static NotificationMappingController notificationMappingController;
+    private AppPreferenceManager appPreferenceManager;
 	MediaPlayer player;
 	public static int beepCouner = 0;
 	public static final int BEEP_COUNTER_15 = 15*60*1000;
@@ -41,6 +45,8 @@ public class ApplicationController extends MultiDexApplication {
 	public static DeviceLogOutController mDeviceLogOutController;
 	public static TSPLMESampleDropController mTSPLMESampleDropController;
 	public static ClientEntryController clientEntryController;
+	public static UpdateStockController updateStockController;
+	public static GetAvailableStockController getAvailableStockController;
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

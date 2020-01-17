@@ -3,6 +3,7 @@ package com.thyrocare.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -61,6 +62,13 @@ public class HubListDisplayFragment extends AbstractFragment {
     public static Fragment newInstance(int i) {//for btech_hub flow
         flowDecider = i;
         return new HubListDisplayFragment();
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //you can set the title for your toolbar here for different fragments different titles
+        getActivity().setTitle("Hub List");
     }
 
     @Override

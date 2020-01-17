@@ -45,8 +45,14 @@ import com.thyrocare.fragment.ClientEntryFragment;
 import com.thyrocare.fragment.CreditFragment;
 import com.thyrocare.fragment.FeedbackFragment;
 import com.thyrocare.fragment.HomeScreenFragment;
+import com.thyrocare.fragment.HubListDisplayFragment;
 import com.thyrocare.fragment.LeaveIntimationFragment;
+import com.thyrocare.fragment.LedgerDisplayFragment;
+import com.thyrocare.fragment.MaterialFragment;
+
+import com.thyrocare.fragment.OrderServedFragment;
 import com.thyrocare.fragment.ResetPasswordFragment;
+import com.thyrocare.fragment.ScheduleYourDayFragment;
 import com.thyrocare.fragment.VisitOrdersDisplayFragment;
 import com.thyrocare.fragment.tsp.TSP_OrdersDisplayFragment;
 import com.thyrocare.network.AbstractApiModel;
@@ -92,6 +98,9 @@ public class HomeScreenActivity extends AbstractActivity
     String y = "";
     public static String mCurrentFragmentName = "";//jai
     CharSequence[] items;
+
+    Boolean isFromNotification = false;
+    int screenCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +174,13 @@ public class HomeScreenActivity extends AbstractActivity
         if (isFromPayment) {
             pushFragments(CreditFragment.newInstance(), false, false,
                     CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        }
+
+        if (getIntent().hasExtra("isFromNotification") &&  getIntent().hasExtra("screenCategory") ){
+            isFromNotification = getIntent().getBooleanExtra("isFromNotification",false);
+            screenCategory = getIntent().getIntExtra("screenCategory",0);
+            getNotification(navigationView);
+
         }
     }
 
@@ -418,6 +434,9 @@ public class HomeScreenActivity extends AbstractActivity
                 showOptionsinAlert();
             }
 
+        }else if (id == R.id.nav_stock) {
+            Intent intent = new Intent(HomeScreenActivity.this,StockAvailabilityActivity.class);
+            startActivity(intent);
         }else if (id == R.id.nav_Video) {
             Intent intent = new Intent(HomeScreenActivity.this,ThyrocareVideos.class);
             startActivity(intent);
@@ -570,6 +589,49 @@ public class HomeScreenActivity extends AbstractActivity
         @Override
         public void onApiCancelled() {
 
+        }
+    }
+
+
+    private void getNotification(NavigationView navigationView) {
+        if (screenCategory == HOME){
+            navigationView.getMenu().performIdentifierAction(R.id.nav_home, 0);
+        }
+        else if (screenCategory == LEAVES){
+            navigationView.getMenu().performIdentifierAction(R.id.nav_leave, 0);
+        }
+        else if (screenCategory == CHANGEPASSWORD){
+            navigationView.getMenu().performIdentifierAction(R.id.nav_change_password, 0);
+        }
+        else if (screenCategory == CLIENTENTRY){
+            navigationView.getMenu().performIdentifierAction(R.id.nav_clientEntry, 0);
+        }
+        else if (screenCategory == CREDIT){
+            navigationView.getMenu().performIdentifierAction(R.id.nav_credit, 0);
+        }
+        else if (screenCategory==AppConstants.STOCKAVAILABILITY){
+            navigationView.getMenu().performIdentifierAction(R.id.nav_stock, 0);
+        }
+        else if (screenCategory == COMMUNICATE){
+            navigationView.getMenu().performIdentifierAction(R.id.nav_communication, 0);
+        }
+        else if (screenCategory == VIDEOS){
+            navigationView.getMenu().performIdentifierAction(R.id.nav_Video, 0);
+        }
+        else if (screenCategory == FEEDBACK){
+            navigationView.getMenu().performIdentifierAction(R.id.nav_feedback, 0);
+        } else if (screenCategory == SCHEDULE) {
+            pushFragments(ScheduleYourDayFragment.newInstance(), false, false, ScheduleYourDayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        } else if (screenCategory == ORDERS) {
+            pushFragments(VisitOrdersDisplayFragment.newInstance(), false, false, VisitOrdersDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        } else if (screenCategory == MATERIALS) {
+            pushFragments(MaterialFragment.newInstance(), false, false, MaterialFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        } else if (screenCategory == HUB) {
+            pushFragments(HubListDisplayFragment.newInstance(), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        } else if (screenCategory == ORDERSERVED) {
+            pushFragments(OrderServedFragment.newInstance(), false, false, OrderServedFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        } else if (screenCategory == LEDGER) {
+            pushFragments(LedgerDisplayFragment.newInstance(), false, false, LedgerDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         }
     }
 
