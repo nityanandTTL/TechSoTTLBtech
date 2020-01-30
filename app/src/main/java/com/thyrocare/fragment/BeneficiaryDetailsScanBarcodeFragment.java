@@ -1,6 +1,7 @@
 package com.thyrocare.fragment;
 
 import android.app.Activity;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -200,7 +202,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         rootview.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                     }
 
-                    if (rootview.findViewById(R.id.img_edit).getVisibility() == View.VISIBLE){
+                    if (rootview.findViewById(R.id.img_edit).getVisibility() == View.VISIBLE) {
                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -211,7 +213,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                         .startSequence();
                             }
                         }, 400);
-                    }else{
+                    } else {
                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -300,9 +302,9 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 btnEdit.setVisibility(View.VISIBLE);
             }
 
-            if (orderDetailsModel.isEditME()){
+            if (orderDetailsModel.isEditME()) {
                 btnEdit.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 btnEdit.setVisibility(View.GONE);
             }
             //here to add
@@ -366,16 +368,21 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 } else {
                     beneficiaryDetailsModel.getBarcodedtl().clear();
                 }
-                for (BeneficiarySampleTypeDetailsModel sampleTypes :
-                        beneficiaryDetailsModel.getSampleType()) {
-                    Logger.error("sample type: " + beneficiaryDetailsModel.getSampleType());
-                    BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
-                    beneficiaryBarcodeDetailsModel.setBenId(beneficiaryDetailsModel.getBenId());
-                    beneficiaryBarcodeDetailsModel.setId(DeviceUtils.getRandomUUID());
-                    beneficiaryBarcodeDetailsModel.setSamplType(sampleTypes.getSampleType());
-                    beneficiaryBarcodeDetailsModel.setOrderNo(beneficiaryDetailsModel.getOrderNo());
-                    beneficiaryDetailsModel.getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
+
+                if (beneficiaryDetailsModel != null && beneficiaryDetailsModel.getSampleType() != null){
+                    for (BeneficiarySampleTypeDetailsModel sampleTypes :
+                            beneficiaryDetailsModel.getSampleType()) {
+                        Logger.error("sample type: " + beneficiaryDetailsModel.getSampleType());
+                        BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
+                        beneficiaryBarcodeDetailsModel.setBenId(beneficiaryDetailsModel.getBenId());
+                        beneficiaryBarcodeDetailsModel.setId(DeviceUtils.getRandomUUID());
+                        beneficiaryBarcodeDetailsModel.setSamplType(sampleTypes.getSampleType());
+                        beneficiaryBarcodeDetailsModel.setOrderNo(beneficiaryDetailsModel.getOrderNo());
+                        beneficiaryDetailsModel.getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
+                    }
                 }
+
+
 
                 if (beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase("RBS,PPBS") || beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase("PPBS,RBS")) {
                     beneficiaryBarcodeDetailsModelRBS = new BeneficiaryBarcodeDetailsModel();
@@ -413,25 +420,27 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
     private boolean isValidForEditing(String tests) {
 
-        if (tests.equalsIgnoreCase(AppConstants.PPBS)
-                || tests.equalsIgnoreCase(AppConstants.INSPP)
-                || tests.equalsIgnoreCase(AppConstants.RBS)
-                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)
-                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS)
-                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS + "," + AppConstants.INSPP)
-                || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP + "," + AppConstants.RBS)
+        if (!TextUtils.isEmpty(tests)) {
+            if (tests.equalsIgnoreCase(AppConstants.PPBS)
+                    || tests.equalsIgnoreCase(AppConstants.INSPP)
+                    || tests.equalsIgnoreCase(AppConstants.RBS)
+                    || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP)
+                    || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS)
+                    || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS + "," + AppConstants.INSPP)
+                    || tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.INSPP + "," + AppConstants.RBS)
 
-                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS)
-                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP)
-                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS + "," + AppConstants.INSPP)
-                || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP + "," + AppConstants.PPBS)
+                    || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS)
+                    || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP)
+                    || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS + "," + AppConstants.INSPP)
+                    || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.INSPP + "," + AppConstants.PPBS)
 
-                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS)
-                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS)
-                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS + "," + AppConstants.RBS)
-                || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS + "," + AppConstants.PPBS)
-                ) {
-            return true;
+                    || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS)
+                    || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS)
+                    || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS + "," + AppConstants.RBS)
+                    || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS + "," + AppConstants.PPBS)
+            ) {
+                return true;
+            }
         }
 
 
@@ -505,22 +514,22 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     if (!InputUtils.isNull(orderDetailsModel.getAppointmentDate())) {
                         Date DeviceDate = new Date();
                         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-                        Date AppointDate  = DateUtils.dateFromString(orderDetailsModel.getAppointmentDate(),format);
+                        Date AppointDate = DateUtils.dateFromString(orderDetailsModel.getAppointmentDate(), format);
                         int daycount = DateTimeComparator.getDateOnlyInstance().compare(AppointDate, DeviceDate);
-                        if (daycount == 0){
+                        if (daycount == 0) {
                             toShowResheduleOption = true;
-                        }else {
+                        } else {
                             toShowResheduleOption = false;
                         }
                     }
 
-                    if (toShowResheduleOption){
+                    if (toShowResheduleOption) {
                         if (orderDetailsModel.isEditOrder()) {
                             items = new String[]{"Order Reschedule", "Remove Beneficiary"};
                         } else {
                             items = new String[]{"Order Reschedule"};
                         }
-                    }else{
+                    } else {
                         if (orderDetailsModel.isEditOrder()) {
                             items = new String[]{"Remove Beneficiary"};
                         } else {
@@ -533,7 +542,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
                 }
 
-                if (items != null && items.length > 0){
+                if (items != null && items.length > 0) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setTitle("Select Action");
                     builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -667,7 +676,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             public void onClick(View view) {
                 if (beneficiaryDetailsModel.getLeadId() == null) {
                     Logger.error("Lead ID null");
-                   /* getviewTestData("SP33337413");*/
+                    /* getviewTestData("SP33337413");*/
                 } else {
                     Logger.error("Lead ID " + beneficiaryDetailsModel.getLeadId());
                     getviewTestData(beneficiaryDetailsModel.getLeadId());
@@ -902,16 +911,30 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 && beneficiaryDetailsModel.getBarcodedtl().size() > 0) {
             tlBarcodes.removeAllViews();
 
+            // TODO code to show Primary and secondary serum
+            boolean PrimarySerumAdded = false;
+            int serumCount = 0;
+            for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                if (beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType().equalsIgnoreCase("SERUM")) {
+                    serumCount++;
+                }
+            }
+
+            // TODO code to show Primary and secondary serum
 
            /* for (final BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel :
                     beneficiaryDetailsModel.getBarcodedtl()) {*/
-                for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
-                    final BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = beneficiaryDetailsModel.getBarcodedtl().get(i);
+            for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                final BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = beneficiaryDetailsModel.getBarcodedtl().get(i);
 
 
                 TableRow tr = (TableRow) activity.getLayoutInflater().inflate(R.layout.item_scan_barcode, null);
 
+                TextView tv_serumtype = (TextView) tr.findViewById(R.id.tv_serumtype);
+
                 TextView txtSampleType = (TextView) tr.findViewById(R.id.txt_sample_type);
+
+                LinearLayout lin_sampleType = (LinearLayout) tr.findViewById(R.id.lin_sampleType);
 
                 TextView txtSampleTypeRBS = (TextView) tr.findViewById(R.id.txt_sample_type_rb);
 
@@ -940,27 +963,45 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 }
 
 
+                // TODO code to show Primary and secondary serum
+                if (beneficiaryBarcodeDetailsModel.getSamplType().equals("SERUM")) {
+                    if (serumCount > 1) {
+                        if (PrimarySerumAdded) {
+                            tv_serumtype.setText("(SECONDARY)");
+                        } else {
+                            PrimarySerumAdded = true;
+                            tv_serumtype.setText("(PRIMARY)");
+                        }
+                    } else {
+                        tv_serumtype.setVisibility(View.GONE);
+                    }
+                } else {
+                    tv_serumtype.setVisibility(View.GONE);
+                }
+                // TODO code to show Primary and secondary serum
+
                 txtSampleType.setText(beneficiaryBarcodeDetailsModel.getSamplType());
                 txtSampleTypeRBS.setText(beneficiaryBarcodeDetailsModel.getSamplType() + " RBS");
                 txtSampleTypeRBS.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
 
                 if (beneficiaryBarcodeDetailsModel.getSamplType().equals("SERUM")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("EDTA")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("HEPARIN")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("URINE")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE-F")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE-R")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE-PP")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
                 }
+
                 Logger.error("beneficiaryBarcodeDetailsModel.getBarcode() " + beneficiaryBarcodeDetailsModel.getBarcode());
                 Logger.error("barcode value: " + beneficiaryBarcodeDetailsModel.getBarcode());
 
@@ -973,8 +1014,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 edtBarcodeRBS.setText("" + rbsbarcode);
 
 
-                    final int finalI = i;
-                    imgScan.setOnClickListener(new View.OnClickListener() {
+                final int finalI = i;
+                imgScan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         isRBSScan = false;
@@ -1027,7 +1068,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
                 if (!isRBSScan && scanned_barcode.equals(rbsbarcode)) {
                     Toast.makeText(activity, "Same barcode not allowed", Toast.LENGTH_SHORT).show();
-                } else if (beneficiaryDetailsModel.getBarcodedtl().get(0).getBarcode()!=null && isRBSScan && beneficiaryDetailsModel.getBarcodedtl().get(0).getBarcode().equals(scanned_barcode)) {
+                } else if (beneficiaryDetailsModel.getBarcodedtl().get(0).getBarcode() != null && isRBSScan && beneficiaryDetailsModel.getBarcodedtl().get(0).getBarcode().equals(scanned_barcode)) {
                     Toast.makeText(activity, "Same barcode not allowed", Toast.LENGTH_SHORT).show();
                 } else {
 
@@ -1035,12 +1076,12 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
                         builder1.setTitle("Check the Barcode ")
                                 .setMessage("Do you want to proceed with this barcode entry " + scanned_barcode + "?")
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                     }
-                                }).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                }).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.e(TAG_FRAGMENT, "onClick: " + scanned_barcode);
@@ -1085,18 +1126,18 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                                                     }
                                                     Log.e(TAG_FRAGMENT, "scanned_barcode rbsbarcode : ");
                                                     if (isRBSScan) {
-                                                        Log.e(TAG_FRAGMENT, "onClick: isRBSScan " );
+                                                        Log.e(TAG_FRAGMENT, "onClick: isRBSScan ");
                                                         rbsbarcode = scanned_barcode;
 
                                                     } else {
-                                                        Log.e(TAG_FRAGMENT, "onClick: !isRBSScan " );
+                                                        Log.e(TAG_FRAGMENT, "onClick: !isRBSScan ");
                                                         /*if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())){
 
                                                         }else{*/
-                                                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
-                                                            //   Logger.error("getBarcodedtl "+beneficiaryDetailsModel);
-                                                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
-                                                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+                                                        beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                                                        //   Logger.error("getBarcodedtl "+beneficiaryDetailsModel);
+                                                        beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
 
                                                         /*}*/
 
@@ -1147,6 +1188,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private void onCaptureImageResult(Intent data) {
         thumbnail = (Bitmap) data.getExtras().get("data");
         encodedVanipunctureImg = CommonUtils.encodeImage(thumbnail);
+//        encodedVanipunctureImg = "Tejas";
         if (!InputUtils.isNull(encodedVanipunctureImg)) {
             imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
         } else {

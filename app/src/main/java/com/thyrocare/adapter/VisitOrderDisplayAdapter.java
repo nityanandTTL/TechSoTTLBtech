@@ -1529,7 +1529,18 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                     System.out.println("Nitya >> Matched");
                     return true;
                 }
+
+                if (benMaster.get(i).getSampleType() != null && benMaster.get(i).getSampleType().size() > 0){
+
+                    for (int j = 0; j < benMaster.get(i).getSampleType().size(); j++) {
+                        if (benMaster.get(i).getSampleType().get(j).getTests().equalsIgnoreCase(AppConstants.PPBS)){
+                            return true;
+                        }
+                    }
+                }
+
             }
+
             return false;
         } else {
             return false;
@@ -1543,6 +1554,15 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 if (benMaster.get(i).getTestsCode().contains(AppConstants.RBS)) {
                     System.out.println("Nitya >> Matched");
                     return true;
+                }
+
+                if (benMaster.get(i).getSampleType() != null && benMaster.get(i).getSampleType().size() > 0){
+
+                    for (int j = 0; j < benMaster.get(i).getSampleType().size(); j++) {
+                        if (benMaster.get(i).getSampleType().get(j).getTests().equalsIgnoreCase(AppConstants.RBS)){
+                            return true;
+                        }
+                    }
                 }
             }
             return false;

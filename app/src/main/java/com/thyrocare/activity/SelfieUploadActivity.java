@@ -840,12 +840,17 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     // Start detecting in image specified by index.
     private void detect(Bitmap bitmap, int index) {
         // Put the image into an input stream for detection.
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(output.toByteArray());
-
-        // Start a background task to detect faces in the image.
-        new DetectionTask(index).execute(inputStream);
+        try{
+            if (bitmap!=null){
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+                ByteArrayInputStream inputStream = new ByteArrayInputStream(output.toByteArray());
+                // Start a background task to detect faces in the image.
+                new DetectionTask(index).execute(inputStream);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     // Background task of face detection.

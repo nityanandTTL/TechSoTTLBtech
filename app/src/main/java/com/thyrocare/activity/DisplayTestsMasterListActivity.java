@@ -70,6 +70,8 @@ public class DisplayTestsMasterListActivity extends AbstractActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setFinishOnTouchOutside(false);
         setContentView(R.layout.activity_edit_test_list);
+
+
         activity = this;
         dhbDao = new DhbDao(activity);
         bdd = new BeneficiaryDetailsDao(dhbDao.getDb());
@@ -84,6 +86,8 @@ public class DisplayTestsMasterListActivity extends AbstractActivity {
         initUI();
         initData();
         initListener();
+
+
     }
 
     private void initListener() {

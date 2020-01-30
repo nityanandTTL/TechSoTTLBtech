@@ -235,8 +235,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         Logger.debug("tempOrderDetailsModel:" + new Gson().toJson(tempOrderDetailsModel));
                         Logger.debug("orderVisitDetailsModel 2 :" + new Gson().toJson(orderVisitDetailsModel));
                         ArrayList<BeneficiaryDetailsModel> beneficiaries = new ArrayList<BeneficiaryDetailsModel>();
-
                         */
+
+
                             tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
 
                             //**********************
@@ -249,6 +250,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                             //**************************
                             tempBeneficiaryDetailsModel.setOrderNo(orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderNo());
                             tempBeneficiaryDetailsModel.setBenId((int) (Math.random() * 999));
+
+
                             beneficiaryDetailsDao.insertOrUpdate(tempBeneficiaryDetailsModel);
                         /*
                         beneficiaries.add(tempBeneficiaryDetailsModel);
@@ -257,19 +260,24 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         orderDetailsDao.insertOrUpdate(tempOrderDetailsModel);*/
 
                             OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
+
                             orderDetailsModel = orderVisitDetailsModel.getAllOrderdetails().get(0);
                             orderDetailsModel.setAddBen(true);
                             orderDetailsModel.setTestEdit(false);
+
                             orderDetailsDao.insertOrUpdate(orderDetailsModel);
 
                             orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().add(tempBeneficiaryDetailsModel);
                             orderVisitDetailsModel.getAllOrderdetails().get(0).setAddBen(true);
                             orderVisitDetailsModel.getAllOrderdetails().get(0).setTestEdit(false);
                             Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
+
                             intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, tempBeneficiaryDetailsModel);
+
                             intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderVisitDetailsModel.getAllOrderdetails().get(0));
                             intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_ADD, true);
                             intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_EDIT, false);
+
                             startActivityForResult(intentEdit, BundleConstants.ADD_START);
                         }
                     }).show();
@@ -798,20 +806,23 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
         try {
             for (int i = 0; i < orderBookingRequestModel.getBendtl().size(); i++) {
-                test = test + orderBookingRequestModel.getBendtl().get(i).getTests().toString();
+                test = test + orderBookingRequestModel.getBendtl().get(i).getTests();
             }
         } catch (Exception e) {
             e.printStackTrace();
             test = "";
         }
-        Log.e(TAG_FRAGMENT, "initUI: " + orderBookingRequestModel.getBendtl().get(0).getTests());
-        if (orderBookingRequestModel.getBendtl().get(0).getTests() != null) {
-            if (isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
+
+        if (orderBookingRequestModel!=null && orderBookingRequestModel.getBendtl().size()>0){
+            Log.e(TAG_FRAGMENT, "initUI: " + orderBookingRequestModel.getBendtl().get(0).getTests());
+            if (orderBookingRequestModel.getBendtl().get(0).getTests() != null) {
+                if (isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
 
 
-                llAddBeneficiary.setEnabled(false);
-                isOnlyWOE = true;
+                    llAddBeneficiary.setEnabled(false);
+                    isOnlyWOE = true;
 
+                }
             }
         }
         //changes_17june2017

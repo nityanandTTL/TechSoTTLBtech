@@ -59,6 +59,7 @@ import com.thyrocare.models.data.TestClinicalHistoryModel;
 import com.thyrocare.models.data.TestGroupListModel;
 import com.thyrocare.models.data.TestRateMasterModel;
 import com.thyrocare.models.data.TestSampleTypeModel;
+import com.thyrocare.models.data.Venupunture_Temporary_ImageModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
@@ -69,8 +70,10 @@ import com.thyrocare.utils.app.AadharUtils;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
+import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DateUtils;
 import com.thyrocare.utils.app.DeviceUtils;
+import com.thyrocare.utils.app.Global;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
@@ -132,6 +135,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     public void onBackPressed() {
         if (isAdd) {
             beneficiaryDetailsDao.deleteByBenId(beneficiaryDetailsModel.getBenId() + "");
+
+//           Global.DeleteBenFromVenupumtureTempGlobalArry(beneficiaryDetailsModel.getBenId());   // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+
         }
         super.onBackPressed();
     }
@@ -140,17 +146,22 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_beneficiary);
+
+
         activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
         dhbDao = new DhbDao(activity);
+
         beneficiaryDetailsDao = new BeneficiaryDetailsDao(dhbDao.getDb());
         orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
         orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
         labAlertMasterDao = new LabAlertMasterDao(dhbDao.getDb());
 
+
         labAlertsArr = labAlertMasterDao.getAllModels();
         benCHArr = new ArrayList<>();
         benLAArr = new ArrayList<>();
+
         beneficiaryDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
         orderDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.ORDER_DETAILS_MODEL);
 
@@ -158,34 +169,72 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         isAdd = getIntent().getExtras().getBoolean(BundleConstants.IS_BENEFICIARY_ADD, false);
         isEdit_Mobile_email = getIntent().getExtras().getBoolean(BundleConstants.IS_MOBILE_EMAIL_EDIT, true);
 
+
         initUI();
         initData();
         initListeners();
+
+
     }
 
     private void initScanBarcodeView() {
+
+
         if (beneficiaryDetailsModel != null
                 && beneficiaryDetailsModel.getBarcodedtl() != null
                 && beneficiaryDetailsModel.getBarcodedtl().size() > 0) {
             tlBarcodes.removeAllViews();
+
+            // TODO code to show Primary and secondary serum
+            boolean PrimarySerumAdded = false;
+            int serumCount = 0;
+            for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                if (beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType().equalsIgnoreCase("SERUM")) {
+                    serumCount++;
+                }
+            }
+
+            // TODO code to show Primary and secondary serum
+
             for (final BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel :
                     beneficiaryDetailsModel.getBarcodedtl()) {
                 TableRow tr = (TableRow) activity.getLayoutInflater().inflate(R.layout.item_scan_barcode, null);
                 TextView txtSampleType = (TextView) tr.findViewById(R.id.txt_sample_type);
                 TextView edtBarcode = (TextView) tr.findViewById(R.id.edt_barcode);
                 ImageView imgScan = (ImageView) tr.findViewById(R.id.scan_barcode_button);
+                TextView tv_serumtype = (TextView) tr.findViewById(R.id.tv_serumtype);
+                LinearLayout lin_sampleType = (LinearLayout) tr.findViewById(R.id.lin_sampleType);
+
+
                 txtSampleType.setText(beneficiaryBarcodeDetailsModel.getSamplType());
 
+                // TODO code to show Primary and secondary serum
                 if (beneficiaryBarcodeDetailsModel.getSamplType().equals("SERUM")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
+                    if (serumCount > 1) {
+                        if (PrimarySerumAdded) {
+                            tv_serumtype.setText("(SECONDARY)");
+                        } else {
+                            PrimarySerumAdded = true;
+                            tv_serumtype.setText("(PRIMARY)");
+                        }
+                    } else {
+                        tv_serumtype.setVisibility(View.GONE);
+                    }
+                } else {
+                    tv_serumtype.setVisibility(View.GONE);
+                }
+                // TODO code to show Primary and secondary serum
+
+                if (beneficiaryBarcodeDetailsModel.getSamplType().equals("SERUM")) {
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_serum));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("EDTA")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_edta));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("FLUORIDE")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("HEPARIN")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_heparin));
                 } else if (beneficiaryBarcodeDetailsModel.getSamplType().equals("URINE")) {
-                    txtSampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
+                    lin_sampleType.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_sample_type_urine));
                 }
 
                 if (edtBarcode.getText().toString().startsWith("0") || edtBarcode.getText().toString().startsWith("$")) {
@@ -269,6 +318,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             }
             llBarcodes.setVisibility(View.VISIBLE);
         }
+
+
     }
 
     private class AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -402,7 +453,16 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (validate()) {
+
+                    /*// TODO code to reduce the size of Json by temporary storing Venupunture in global array
+                    Global.AddVenupumtureInTempGlobalArry(encodedVanipunctureImg,
+                            beneficiaryDetailsModel.getBenId(),
+                            edtBenName.getText().toString().trim(),
+                            edtAge.getText().toString().trim(),
+                            isM ? "M" : "F");
+                    // TODO code to reduce the size of Json by temporary storing Venupunture in global array*/
 
                     if (isEdit_Mobile_email){
                         getemailvalidation();
@@ -410,7 +470,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                         beneficiaryDetailsModel.setName(edtBenName.getText().toString().trim());
                         beneficiaryDetailsModel.setAge(Integer.parseInt(edtAge.getText().toString().trim()));
                         beneficiaryDetailsModel.setGender(isM ? "M" : "F");
-                        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
+                        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+//                        beneficiaryDetailsModel.setVenepuncture(""); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
                         beneficiaryDetailsModel.setTestsCode(edtTests.getText().toString());
                         beneficiaryDetailsModel.setTests(edtTests.getText().toString());
                         beneficiaryDetailsModel.setRemarks(edtRemarks.getText().toString());
@@ -424,6 +485,11 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
                         orderDetailsDao.insertOrUpdate(orderDetailsModel);
                         OrderBookingRequestModel obrm = generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
+
+                        // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+                        // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+
+
                         ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(obrm);
                         orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
                         if (isNetworkAvailable(activity)) {
@@ -603,6 +669,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                 }, new AddTestListDialogDelegate() {
                     @Override
                     public void onItemClick(ArrayList<BeneficiaryTestDetailsModel> selectedTestsList) {
+
+
                         Intent intentAddTests = new Intent(activity, DisplayTestsMasterListActivity.class);
                         intentAddTests.putExtra(BundleConstants.SELECTED_TESTS_LIST, selectedTestsList);
                         intentAddTests.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderDetailsModel);
@@ -1029,6 +1097,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     }
 
     private void initData() {
+
         beneficiaryDetailsModel = beneficiaryDetailsDao.getModelFromId(beneficiaryDetailsModel.getBenId());
         orderDetailsModel = orderDetailsDao.getModelFromId(orderDetailsModel.getOrderNo());
 
@@ -1219,6 +1288,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             }
         }
         initScanBarcodeView();
+
     }
 
     @Override
@@ -1314,12 +1384,14 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     private void onCaptureImageResult(Intent data) {
         thumbnail = (Bitmap) data.getExtras().get("data");
         encodedVanipunctureImg = encodeImage(thumbnail);
+
         if (!InputUtils.isNull(encodedVanipunctureImg)) {
             imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
         } else {
             imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.cameraa));
         }
         beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
+//        beneficiaryDetailsModel.setVenepuncture(""); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
     }
 

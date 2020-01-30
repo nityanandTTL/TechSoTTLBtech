@@ -145,11 +145,10 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         oderno_title.setVisibility(View.INVISIBLE);
         txtAddress.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
 
-      //Abhi Call hide ad unhide
-        if(orderVisitDetailsModel.getAllOrderdetails().get(0).isDirectVisit())
-        {
+        //Abhi Call hide ad unhide
+        if (orderVisitDetailsModel.getAllOrderdetails().get(0).isDirectVisit()) {
             llCall.setVisibility(View.GONE);
-        }else {
+        } else {
             llCall.setVisibility(View.VISIBLE);
         }
     }
@@ -162,11 +161,11 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             activity.startForegroundService(FirebaselocationUpdateIntent);
-        }else{
+        } else {
             activity.startService(FirebaselocationUpdateIntent);
         }
 //            startService(FirebaselocationUpdateIntent);
-      //  }
+        //  }
     }
 
     private void setListeners() {
@@ -375,7 +374,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
 
     private void movingCurrentLocation(GPSTracker gpsTracker, LatLng currentLocation) {
 
-            /*Marker marker =*/
+        /*Marker marker =*/
         mMap.addMarker(new MarkerOptions()
                 .flat(true)
                 .icon(BitmapDescriptorFactory
@@ -447,27 +446,24 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        mCurrLocationMarker = mMap.addMarker(markerOptions);
-        currentlat = location.getLatitude();
-        currentlong = location.getLongitude();
+        if (mMap != null) {
+            mCurrLocationMarker = mMap.addMarker(markerOptions);
+            currentlat = location.getLatitude();
+            currentlong = location.getLongitude();
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-//        Toast.makeText(getApplicationContext(),latLng+"", Toast.LENGTH_SHORT).show();
-//        Toast.makeText(getApplicationContext(),currentlat+"", Toast.LENGTH_SHORT).show();
-//        Toast.makeText(getApplicationContext(),currentlong+"", Toast.LENGTH_SHORT).show();
-        //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+            if (mGoogleApiClient != null) {
+                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            }
 
-        //stop location updates
-        if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
 
     }
 
-  /*  @Override
-    protected void onResume() {
-        *//*double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
+    /*  @Override
+      protected void onResume() {
+          *//*double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
         Integertotaldiff = (int) totaldist;
         if (Integertotaldiff > 100 || !isStarted) {
             btn_arrived.setVisibility(View.GONE);
@@ -484,14 +480,15 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
             Log.d(TAG_FRAGMENT, "received stop broadcast");
             // Stop the service when the notification is tapped
             unregisterReceiver(stopReceiver);
-          //  stopSelf();
+            //  stopSelf();
         }
     };
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_arrived) {
 
-           // registerReceiver(stopReceiver, new IntentFilter("stop"));
+            // registerReceiver(stopReceiver, new IntentFilter("stop"));
 
            /*
             if (DeviceUtils.isMyServiceRunning(TrackerService.class, activity)) {
@@ -504,7 +501,6 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
 */
 
 
-
             AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
 
             alertDialog.setMessage("Do you want to confirm?");
@@ -515,7 +511,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                             try {
 //                                TrackerService.handler1.removeMessages(0);
 
-                                activity.stopService(new Intent(getApplicationContext(),TrackerService.class));
+                                activity.stopService(new Intent(getApplicationContext(), TrackerService.class));
                                 callOrderStatusChangeApi(3);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -538,7 +534,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                 startTrackerService();
                 callOrderStatusChangeApi(7);
                 llCall.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 gpsTracker.showSettingsAlert();
                 Toast.makeText(activity, "Check Internet connection and gps settings", Toast.LENGTH_SHORT).show();
             }
@@ -754,7 +750,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                 if (grantResults.length > 0) {
                     boolean allGranted = true;
                     for (int result : grantResults
-                            ) {
+                    ) {
                         if (result != PackageManager.PERMISSION_GRANTED) {
                             allGranted = false;
                             break;
@@ -860,7 +856,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         orderAllocationTrackLocationRequestModel.setStatus(status);
         //Latlong added
         GPSTracker gpsTracker = new GPSTracker(activity);
-        if (gpsTracker.canGetLocation()){
+        if (gpsTracker.canGetLocation()) {
             orderAllocationTrackLocationRequestModel.setLatitude(String.valueOf(gpsTracker.getLatitude()));
             orderAllocationTrackLocationRequestModel.setLongitude(String.valueOf(gpsTracker.getLongitude()));
         }

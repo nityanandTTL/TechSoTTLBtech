@@ -409,7 +409,7 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
 
     private void postapi_call() {
         newClientpostmodel = new NewClientModel();
-        newClientpostmodel.setAddress(edtAddress.getText().toString());
+        newClientpostmodel.setAddress(edtAddress.getText().toString().replace("+",""));
         newClientpostmodel.setBrand("TTL");
         newClientpostmodel.setChannel("MOBILE APPLICATION");
         newClientpostmodel.setCountry("India");

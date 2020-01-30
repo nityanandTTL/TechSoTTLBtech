@@ -381,11 +381,15 @@ if(one.isChecked()){
                         }
                     };
 
+                    String leave_str;
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setMessage("Are you sure you want to apply for leave?").setPositiveButton("Yes", dialogClickListener)
+                    if (sp.getSelectedItem().equals("CANCEL")) {
+                        leave_str = "Are you sure you want to cancel your leave ?";
+                    } else {
+                        leave_str = "Are you sure you want to apply for leave?";
+                    }
+                    builder.setMessage(leave_str).setPositiveButton("Yes", dialogClickListener)
                             .setNegativeButton("No", dialogClickListener).show();
-
-
                 }
 
 

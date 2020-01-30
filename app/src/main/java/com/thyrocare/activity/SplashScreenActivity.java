@@ -3,6 +3,9 @@ package com.thyrocare.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -57,7 +60,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 /**
  * The type Splash screen activity.
  */
-public class SplashScreenActivity extends AbstractActivity {
+public class SplashScreenActivity extends AbstractActivity{
     private Activity activity;
     private AppPreferenceManager appPreferenceManager;
     /**
@@ -73,6 +76,7 @@ public class SplashScreenActivity extends AbstractActivity {
     private static Intent TImeCheckerIntent;
 
     Boolean isFromNotification = false;
+
     int screenCategory;
 
     private static Intent locationUpdateIntent;
@@ -591,7 +595,9 @@ public class SplashScreenActivity extends AbstractActivity {
 //            startService(locationUpdateIntent);
             if (DeviceUtils.isMyServiceRunning(LocationUpdateService.class, activity)) {
             } else {
-                startService(locationUpdateIntent);
+                if (!DeviceUtils.isAppIsInBackground(SplashScreenActivity.this)){
+                    startService(locationUpdateIntent);
+                }
             }
             if (InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
                 switchToActivity(activity, LoginScreenActivity.class, new Bundle());
@@ -722,4 +728,5 @@ public class SplashScreenActivity extends AbstractActivity {
             Log.e("shami -- ", "notificationMapping: Token not generated" );
         }
     }
+
 }

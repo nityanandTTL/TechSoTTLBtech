@@ -35,6 +35,7 @@ import com.thyrocare.utils.app.BundleConstants;
 
 import org.json.JSONException;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -224,17 +225,45 @@ public class LedgerDisplayFragment extends AbstractFragment {
         btnFilter.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-                                             tlCR.removeAllViews();
-                                             t1ER.removeAllViews();
-                                             //t1DR.removeAllViews();
-                                             fetchLedgerDetails();
-                                             seven.setVisibility(View.GONE);
-                                             sevenlay.setVisibility(View.GONE);
+                                             if (validate_date()) {
+                                                 tlCR.removeAllViews();
+                                                 t1ER.removeAllViews();
+                                                 //t1DR.removeAllViews();
+                                                 fetchLedgerDetails();
+                                                 seven.setVisibility(View.GONE);
+                                                 sevenlay.setVisibility(View.GONE);
+                                             } else {
+                                                 Toast.makeText(activity, "Invalid date selection", Toast.LENGTH_SHORT).show();
+                                             }
 
 
                                          }
                                      }
         );
+    }
+
+    private boolean validate_date() {
+
+        SimpleDateFormat simpleDateFormat_date = new SimpleDateFormat("yyyy-mm-dd", Locale.US);
+        Date date_fromtime = null,date_totime = null;
+        try {
+            date_fromtime = simpleDateFormat_date.parse(txtFromDate.getText().toString());
+            date_totime = simpleDateFormat_date.parse(txtToDate.getText().toString());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println("rohit from date :"+ date_fromtime.toString());
+        System.out.println("rohit to date :"+ date_totime.toString());
+        try {
+            if (date_fromtime.before(date_totime)||date_fromtime.equals(date_totime)){
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
 

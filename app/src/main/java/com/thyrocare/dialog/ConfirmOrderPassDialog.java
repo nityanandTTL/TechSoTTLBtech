@@ -302,14 +302,15 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
 
         return true;
     }
-
     private void PostSendOTPOrderpass() {
 
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
         OrderPassRequestModel orderPassRequestModel = new OrderPassRequestModel();
-      if(orderallocationmodel.getMobile()!=null){
-          orderPassRequestModel.setMobile(orderallocationmodel.getMobile());
-      }
+        if (orderallocationmodel != null) {
+            if (orderallocationmodel.getMobile() != null && orderallocationmodel.getMobile().length() > 0) {
+                orderPassRequestModel.setMobile(orderallocationmodel.getMobile());
+            }
+        }
         orderPassRequestModel.setVisitId(orderVisitDetailsModel.getVisitId());
         // orderPassRequestModel.setBtechId(orderallocationmodel.getBtechId());
         Logger.error("btech " + orderallocationmodel.getBtechName());

@@ -40,21 +40,21 @@ public class AbstractApiModel implements AppConstants {
     // New DB changes Amazon Production
     // https://www.dxscloud.com/techso
     //public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.
-    // 0com/btsapi";
+    // 0com/btsapi";-*9-
 
 //public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.com/techsoapi";//staging
 //        public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";//live
 
     //TODO Stag
 
-    public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
+   /* public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
     public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
-    public static final String BDN_API_VERSION = "http://www.thyrocare.local/API/BDN/";
+    public static final String BDN_API_VERSION = "http://www.thyrocare.local/API/BDN/";*/
 
     //TODO Live
-   /* public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
+    public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
     public static final String API_VERSION = "https://www.thyrocare.com/APIs";
-    public static final String BDN_API_VERSION = "https://www.thyrocare.com/API/BDN/";*/
+    public static final String BDN_API_VERSION = "https://www.thyrocare.com/API/BDN/";
 
 
     public static String MAINURL = "http://techso.thyrocare.cloud/techsoapi";//live new server

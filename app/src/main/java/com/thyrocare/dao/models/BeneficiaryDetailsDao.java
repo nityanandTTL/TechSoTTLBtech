@@ -143,6 +143,7 @@ public class BeneficiaryDetailsDao {
         values.put(IS_TEST_EDIT, beneficiaryDetailsModel.isTestEdit() ? "1" : "0");
         values.put(IS_ADD_BEN, beneficiaryDetailsModel.isAddBen() ? "1" : "0");
 		values.put(VENEPUNCTURE, CommonUtils.decodedImageBytes(InputUtils.isNull(beneficiaryDetailsModel.getVenepuncture())?"":beneficiaryDetailsModel.getVenepuncture()));
+//		values.put(VENEPUNCTURE, "Tejas");
 		values.put(BARCODE_DTL, new Gson().toJson(beneficiaryDetailsModel.getBarcodedtl()));
 		values.put(SAMPLE_TYPE, new Gson().toJson(beneficiaryDetailsModel.getSampleType()));
 		values.put(TEST_SAMPLE_TYPE, new Gson().toJson(beneficiaryDetailsModel.getTestSampleType()));

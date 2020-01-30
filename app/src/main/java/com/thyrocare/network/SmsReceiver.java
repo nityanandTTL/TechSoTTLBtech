@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.thyrocare.delegate.SmsListner;
@@ -40,6 +41,7 @@ public class SmsReceiver extends BroadcastReceiver {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            otp = !TextUtils.isEmpty(otp) ? otp : "";
             Log.e(TAG, "onReceive: otp "+otp );
             Pattern p = Pattern.compile("(\\d{4})");// represents single character (\d{6})
             Matcher m = p.matcher(otp);

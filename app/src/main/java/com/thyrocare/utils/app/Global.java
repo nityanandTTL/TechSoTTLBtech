@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.thyrocare.R;
+import com.thyrocare.models.data.Venupunture_Temporary_ImageModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +52,7 @@ public class Global {
     public String tableOfferChilds = "Offer_childs";
     public String tableOfferCartChilds = "OfferCart_childs";
     public String tableThyronomicOfferCartChilds = "ThyronomicOfferCart_childs";
+
 
     public String tableCart = "Cart";
 //Live ---------------------------
@@ -387,5 +389,38 @@ public class Global {
                 .into(imageView);
 
     }
+
+
+    public static void AddVenupumtureInTempGlobalArry(String encodedVanipunctureImg, int BenID , String name, String Age, String Gender) {
+        if (!InputUtils.isNull(encodedVanipunctureImg)) {
+            Venupunture_Temporary_ImageModel model = new Venupunture_Temporary_ImageModel();
+            model.setVenupuntureBase64string(encodedVanipunctureImg);
+            model.setBenID(BenID);
+            model.setBenname(name);
+            model.setBenAge(Age);
+            model.setBenGender(Gender);
+            BundleConstants.TempVenuImageArylist.add(model);
+        }
+    }
+
+    public static void DeleteBenFromVenupumtureTempGlobalArry(int BenID) {
+
+        boolean benremoved = false;
+        for (int i = 0; i < BundleConstants.TempVenuImageArylist.size(); i++) {
+            if (BundleConstants.TempVenuImageArylist.get(i).getBenID() == BenID){
+                BundleConstants.TempVenuImageArylist.remove(BundleConstants.TempVenuImageArylist.get(i));
+                benremoved = true;
+                break;
+            }
+        }
+
+        if (benremoved){
+            System.out.println("Ben details removed from Temporary Venupunture Arraylist");
+        }else{
+            System.out.println("Ben details not found in Temporary Venupunture Arraylist");
+        }
+
+    }
+
 
 }

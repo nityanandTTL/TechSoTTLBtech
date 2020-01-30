@@ -1,6 +1,9 @@
 package com.thyrocare.utils.app;
 
 import com.thyrocare.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
+import com.thyrocare.models.data.Venupunture_Temporary_ImageModel;
+
+import java.util.ArrayList;
 
 /**
  * Created by Orion on 4/27/2017.
@@ -89,4 +92,5 @@ public class BundleConstants {
     public static boolean b_facedetection = true;
     public static SampleDropDetailsbyTSPLMEDetailsModel setsampleDropDetailsModel;
     public static String locationText="Select Location";
+    public static ArrayList <Venupunture_Temporary_ImageModel> TempVenuImageArylist = new ArrayList<>();
 }
