@@ -93,4 +93,5 @@ public class BundleConstants {
     public static SampleDropDetailsbyTSPLMEDetailsModel setsampleDropDetailsModel;
     public static String locationText="Select Location";
     public static ArrayList <Venupunture_Temporary_ImageModel> TempVenuImageArylist = new ArrayList<>();
+    public static  boolean isBarcodeConfirmPopupShown = false;
 }

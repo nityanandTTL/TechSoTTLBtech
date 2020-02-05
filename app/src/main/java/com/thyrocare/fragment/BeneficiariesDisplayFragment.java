@@ -62,6 +62,7 @@ import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.GPSTracker;
 import com.thyrocare.utils.app.InputUtils;
+import com.thyrocare.utils.app.VenuPuntureUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -322,7 +323,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
 
 
-        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
+        // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+        OrderBookingRequestModel orderBookingRequestModel = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel("Button_proceed_payment"));
         if (validate(orderBookingRequestModel)) {
             Logger.error("Selcted testssssssss" + orderBookingRequestModel.getBendtl().get(0).getTests());
 
@@ -371,7 +373,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 //neha g---------------------
                 }
             } else if (!isEditMobile_email) {
-                OrderBookingRequestModel orderBookingRequestModel1 = generateOrderBookingRequestModel("work_order_entry_prepaid");
+                // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+                OrderBookingRequestModel orderBookingRequestModel1 = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel("work_order_entry_prepaid"));
                 ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel1);
                 workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
                 if (isNetworkAvailable(activity)) {
@@ -937,7 +940,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         if (requestCode == BundleConstants.PAYMENTS_START && resultCode == BundleConstants.PAYMENTS_FINISH) {
             boolean isPaymentSuccess = data.getBooleanExtra(BundleConstants.PAYMENT_STATUS, false);
             if (isPaymentSuccess) {
-                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_digital");
+                // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+                OrderBookingRequestModel orderBookingRequestModel = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel("work_order_entry_digital"));
                 orderBookingRequestModel = fixForAddBeneficiary(orderBookingRequestModel);
                 ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
                 workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
@@ -1100,179 +1104,13 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                                     @Override
                                                                     public void onClick(DialogInterface dialog, int which) {
                                                                         PaymentMode = 1;
-                                                                        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
+                                                                        // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+                                                                        OrderBookingRequestModel orderBookingRequestModel = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel("work_order_entry_cash"));
                                                                         ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
 
                                                                         Logger.error("isINSPPTestRemoved status : " + isINSPPTestRemoved);
                                                                         Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
                                                                         Logger.error("test123 : " + test.toUpperCase());
-
-//jai testing
-
-                                                                      /*  Logger.error("isPPBSTestRemoved status : " + isPPBSTestRemoved);
-                                                                        Logger.error("isRBSTestRemoved status : " + isRBSTestRemoved);
-                                                                        Logger.error("isINSPPTestRemoved status : " + isINSPPTestRemoved);
-                                                                        Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
-                                                                        Logger.error("test123 : " + test.toUpperCase());
-
-                                                                        if (test.toUpperCase().contains(AppConstants.PPBS)) {
-                                                                            Logger.error("contains PPBS : ");
-                                                                        } else {
-                                                                            Logger.error("not contains PPBS : ");
-                                                                        }
-                                                                        if (test.toUpperCase().contains(AppConstants.FBS)) {
-                                                                            Logger.error("contains FBS : ");
-                                                                        } else {
-                                                                            Logger.error("not contains FBS : ");
-                                                                        }
-
-
-                                                                        if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS) && *//*jai*//*isPPBSTestRemoved.equals("normal")
-                                                                                && test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA") && *//*jai*//*isINSPPTestRemoved.equals("normal")
-                                                                                && test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS) && *//*jai*//*isRBSTestRemoved.equals("normal")
-                                                                                )
-
-                                                                        {
-                                                                            if (!isINSFATestRemoved.equals("removed") && !isFBSTestRemoved.equals("removed")) {
-                                                                                Logger.error("should print revisit dialog for both: ");
-                                                                                Logger.error("for both");
-
-
-                                                                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                                                                builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS/RBS and INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
-                                                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                                                            @Override
-                                                                                            public void onClick(DialogInterface dialog, int which) {
-
-                                                                                                activity.finish();
-
-
-                                                                                            }
-                                                                                        })
-                                                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                                                            @Override
-                                                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                                                dialog.dismiss();
-                                                                                            }
-                                                                                        })
-                                                                                        .setCancelable(false)
-                                                                                        .show();
-                                                                            }
-
-                                                                        } else if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
-                                                                                && *//*jai*//*isPPBSTestRemoved.equals("normal")) {
-
-                                                                            Logger.error("isFBSTestRemoved status : " + isFBSTestRemoved);
-                                                                            if (!isFBSTestRemoved.equals("removed")) {
-
-                                                                                Logger.error("should print revisit dialog for ppbs: ");
-
-                                                                                Logger.error("for PPBS");
-                                                                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                                                                String testToDisplay = "";
-                                                                                if (test.contains(AppConstants.RBS) && isRBSTestRemoved.equals("normal")) {
-                                                                                    testToDisplay = "PPBS and RBS";
-                                                                                } else {
-                                                                                    testToDisplay = "PPBS";
-                                                                                }
-
-                                                                                builder.setMessage("Please note you have to revisit at customer place to collect sample for " + testToDisplay + " in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
-                                                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                                                            @Override
-                                                                                            public void onClick(DialogInterface dialog, int which) {
-
-                                                                                                activity.finish();
-
-
-                                                                                            }
-                                                                                        })
-                                                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                                                            @Override
-                                                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                                                dialog.dismiss();
-                                                                                            }
-                                                                                        })
-                                                                                        .setCancelable(false)
-                                                                                        .show();
-
-                                                                            }
-                                                                            //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
-                                                                        } else if (test.toUpperCase().contains(AppConstants.INSPP) && test.toUpperCase().contains(AppConstants.INSFA)
-                                                                                && *//*jai*//*isINSPPTestRemoved.equals("normal")) {
-
-                                                                            Logger.error("isINSFATestRemoved status : " + isINSFATestRemoved);
-                                                                            if (!isINSFATestRemoved.equals("removed")) {
-
-                                                                                Logger.error("should print revisit dialog for insfa: ");
-
-                                                                                Logger.error("for INSPP");
-                                                                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                                                                builder.setMessage("Please note you have to revisit at customer place to collect sample for INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
-                                                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                                                            @Override
-                                                                                            public void onClick(DialogInterface dialog, int which) {
-
-                                                                                                activity.finish();
-
-
-                                                                                            }
-                                                                                        })
-                                                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                                                            @Override
-                                                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                                                dialog.dismiss();
-                                                                                            }
-                                                                                        })
-                                                                                        .setCancelable(false)
-                                                                                        .show();
-                                                                            }
-                                                                            //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
-                                                                        } else if (test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS)
-                                                                                && *//*jai*//*isRBSTestRemoved.equals("normal")) {
-
-                                                                            Logger.error("isRBSTestRemoved status : " + isFBSTestRemoved);
-                                                                            if (!isFBSTestRemoved.equals("removed")) {
-
-                                                                                Logger.error("should print revisit dialog for rbs: ");
-
-                                                                                Logger.error("for rbs");
-                                                                                String testToDisplay = "";
-                                                                                if (test.contains(AppConstants.PPBS)) {
-                                                                                    testToDisplay = "PPBS and RBS";
-                                                                                } else {
-                                                                                    testToDisplay = "RBS";
-                                                                                }
-
-                                                                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                                                                builder.setMessage("Please note you have to revisit at customer place to collect sample for RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
-                                                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                                                            @Override
-                                                                                            public void onClick(DialogInterface dialog, int which) {
-
-                                                                                                activity.finish();
-
-
-                                                                                            }
-                                                                                        })
-                                                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                                                            @Override
-                                                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                                                dialog.dismiss();
-                                                                                            }
-                                                                                        })
-                                                                                        .setCancelable(false)
-                                                                                        .show();
-                                                                            }
-                                                                            //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
-                                                                        } else {
-                                                                            Logger.error("testcode in else " + test.toUpperCase());
-                                                                            activity.finish();
-                                                                        }
-
-
-*/
-//jai testing
-
 
                                                                         workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
                                                                         if (isNetworkAvailable(activity)) {
@@ -1316,7 +1154,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                 }
                                             }).show();
                                 } else if (btnProceedPayment.getText().equals("Submit Work Order")) {
-                                    OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_prepaid");
+                                    // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+                                    OrderBookingRequestModel orderBookingRequestModel = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel("work_order_entry_prepaid"));
                                     ApiCallAsyncTask workOrderEntryRequestAsyncTask = new AsyncTaskForRequest(activity).getWorkOrderEntryRequestAsyncTask(orderBookingRequestModel);
                                     workOrderEntryRequestAsyncTask.setApiCallAsyncTaskDelegate(new WorkOrderEntryAsyncTaskDelegateResult());
                                     if (isNetworkAvailable(activity)) {

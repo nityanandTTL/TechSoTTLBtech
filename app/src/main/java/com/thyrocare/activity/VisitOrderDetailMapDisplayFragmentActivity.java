@@ -59,6 +59,7 @@ import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.GPSTracker;
+import com.thyrocare.utils.app.VenuPuntureUtils;
 import com.thyrocare.utils.fileutils.DataParser;
 
 import org.json.JSONException;
@@ -510,7 +511,7 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
                             dialog.dismiss();
                             try {
 //                                TrackerService.handler1.removeMessages(0);
-
+                                VenuPuntureUtils.ClearVenupumtureTempGlobalArry();
                                 activity.stopService(new Intent(getApplicationContext(), TrackerService.class));
                                 callOrderStatusChangeApi(3);
                             } catch (Exception e) {

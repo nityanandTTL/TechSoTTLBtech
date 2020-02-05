@@ -2,6 +2,7 @@ package com.thyrocare.fragment;
 
 import android.app.Activity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,20 +15,23 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -90,6 +94,7 @@ import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DateUtils;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
+import com.thyrocare.utils.app.VenuPuntureUtils;
 import com.wooplr.spotlight.utils.SpotlightSequence;
 
 import org.joda.time.DateTimeComparator;
@@ -98,6 +103,8 @@ import org.json.JSONException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static com.thyrocare.utils.app.BundleConstants.isBarcodeConfirmPopupShown;
 
 
 public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
@@ -243,8 +250,9 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             if (beneficiaryDetailsModel.getLabAlert() != null) {
                 benLAArr = beneficiaryDetailsModel.getLabAlert();
             }
-            if (beneficiaryDetailsModel.getVenepuncture() != null) {
+            if (!InputUtils.isNull(beneficiaryDetailsModel.getVenepuncture())) {
                 encodedVanipunctureImg = beneficiaryDetailsModel.getVenepuncture();
+                imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
             }
             String chS = "";
             if (benCHArr != null && benCHArr.size() > 0) {
@@ -369,7 +377,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     beneficiaryDetailsModel.getBarcodedtl().clear();
                 }
 
-                if (beneficiaryDetailsModel != null && beneficiaryDetailsModel.getSampleType() != null){
+                if (beneficiaryDetailsModel != null && beneficiaryDetailsModel.getSampleType() != null) {
                     for (BeneficiarySampleTypeDetailsModel sampleTypes :
                             beneficiaryDetailsModel.getSampleType()) {
                         Logger.error("sample type: " + beneficiaryDetailsModel.getSampleType());
@@ -381,7 +389,6 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         beneficiaryDetailsModel.getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
                     }
                 }
-
 
 
                 if (beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase("RBS,PPBS") || beneficiaryDetailsModel.getTestsCode().equalsIgnoreCase("PPBS,RBS")) {
@@ -410,9 +417,6 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
 
                 beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-            }
-            if (!InputUtils.isNull(beneficiaryDetailsModel.getVenepuncture())) {
-                imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
             }
             initScanBarcodeView();
         }
@@ -1023,6 +1027,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
                         scanposition = finalI;
 
+                        intentIntegrator = null;
                         intentIntegrator = new IntentIntegrator(activity) {
                             @Override
                             protected void startActivityForResult(Intent intent, int code) {
@@ -1039,7 +1044,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         isRBSScan = true;
                         Logger.error("sample type img scan click1 " + beneficiaryBarcodeDetailsModel.getSamplType());
                         currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
-
+                        intentIntegrator = null;
                         intentIntegrator = new IntentIntegrator(activity) {
                             @Override
                             protected void startActivityForResult(Intent intent, int code) {
@@ -1073,89 +1078,16 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 } else {
 
                     if (!InputUtils.isNull(scanned_barcode) /*&& Character.isDigit(scanned_barcode.charAt(0))*/) {
-                        AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
-                        builder1.setTitle("Check the Barcode ")
-                                .setMessage("Do you want to proceed with this barcode entry " + scanned_barcode + "?")
-                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Log.e(TAG_FRAGMENT, "onClick: " + scanned_barcode);
-
-                                if (TextUtils.isEmpty(scanned_barcode) || scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ") /*|| Character.isDigit(scanned_barcode.charAt(0))*/) {
-                                    Toast.makeText(activity, "Invalid barcode", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Log.e(TAG_FRAGMENT, "onClick:length " + scanned_barcode.length());
-                                    if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
-                                        if (beneficiaryDetailsModel.getBarcodedtl() != null) {
-                                            for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
-                                                //size 4
-                                                if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
-                                                        && !InputUtils.isNull(currentScanSampleType)
-                                                        && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
-                                                        && scanposition == i
-                                                    /*&& currentScanBarcode.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())*/) {
-
-                                                    //CHECK for duplicate barcode scanned for the same visit
-                                                    OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
-                                                    for (OrderDetailsModel odm :
-                                                            orderVisitDetailsModel.getAllOrderdetails()) {
-                                                        for (BeneficiaryDetailsModel bdm :
-                                                                odm.getBenMaster()) {
-                                                            if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
-                                                                for (BeneficiaryBarcodeDetailsModel bbdm :
-                                                                        bdm.getBarcodedtl()) {
-
-                                                                    if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
-                                                                        Toast.makeText(activity, "Same barcode already scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
-                                                                        return;
-                                                                        /*if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
-
-                                                                        } else {
-                                                                            Toast.makeText(activity, "Same barcode already scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
-                                                                            return;
-                                                                        }*/
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    Log.e(TAG_FRAGMENT, "scanned_barcode rbsbarcode : ");
-                                                    if (isRBSScan) {
-                                                        Log.e(TAG_FRAGMENT, "onClick: isRBSScan ");
-                                                        rbsbarcode = scanned_barcode;
-
-                                                    } else {
-                                                        Log.e(TAG_FRAGMENT, "onClick: !isRBSScan ");
-                                                        /*if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())){
-
-                                                        }else{*/
-                                                        beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
-                                                        //   Logger.error("getBarcodedtl "+beneficiaryDetailsModel);
-                                                        beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
-                                                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-
-                                                        /*}*/
-
-                                                    }
-
-                                                    break;
-                                                }
-                                            }
-                                            initData();
-                                        } else {
-                                            Toast.makeText(activity, "Failed to update scanned barcode value", Toast.LENGTH_SHORT).show();
-                                        }
-                                    } else {
-                                        Toast.makeText(activity, "Failed to scan barcode", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
+                            public void run() {
+                                OpenBarcodeConfirnationDialog(scanned_barcode);
                             }
-                        }).show();
+                        }, 500);
+
+
                     } else {
                         Toast.makeText(activity, "Retry scanning barcode", Toast.LENGTH_SHORT).show();
                     }
@@ -1188,13 +1120,22 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     private void onCaptureImageResult(Intent data) {
         thumbnail = (Bitmap) data.getExtras().get("data");
         encodedVanipunctureImg = CommonUtils.encodeImage(thumbnail);
-//        encodedVanipunctureImg = "Tejas";
         if (!InputUtils.isNull(encodedVanipunctureImg)) {
             imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
         } else {
             imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.cameraa));
         }
-        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
+//        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
+        beneficiaryDetailsModel.setVenepuncture("filled"); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+
+        // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+        VenuPuntureUtils.AddVenupumtureInTempGlobalArry(encodedVanipunctureImg,
+                beneficiaryDetailsModel.getBenId(),
+                beneficiaryDetailsModel.getName(),
+                beneficiaryDetailsModel.getAge() > 0 ? String.valueOf(beneficiaryDetailsModel.getAge()) : "",
+                beneficiaryDetailsModel.getGender());
+        // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
     }
 
@@ -1535,4 +1476,173 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
 
         }
     }
+
+    public void OpenBarcodeConfirnationDialog( final String scanned_barcode) {
+
+        try {
+
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+            builder1.setTitle("Check the Barcode ")
+                    .setMessage("Do you want to proceed with this barcode entry " + scanned_barcode + "?")
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.e(TAG_FRAGMENT, "onClick: " + scanned_barcode);
+
+                    if (TextUtils.isEmpty(scanned_barcode) || scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ") /*|| Character.isDigit(scanned_barcode.charAt(0))*/) {
+                        Toast.makeText(activity, "Invalid barcode", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.e(TAG_FRAGMENT, "onClick:length " + scanned_barcode.length());
+                        if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                            if (beneficiaryDetailsModel.getBarcodedtl() != null) {
+                                for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                                    //size 4
+                                    if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                            && !InputUtils.isNull(currentScanSampleType)
+                                            && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                            && scanposition == i
+                                        /*&& currentScanBarcode.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())*/) {
+
+                                        //CHECK for duplicate barcode scanned for the same visit
+                                        OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
+                                        for (OrderDetailsModel odm :
+                                                orderVisitDetailsModel.getAllOrderdetails()) {
+                                            for (BeneficiaryDetailsModel bdm :
+                                                    odm.getBenMaster()) {
+                                                if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
+                                                    for (BeneficiaryBarcodeDetailsModel bbdm :
+                                                            bdm.getBarcodedtl()) {
+
+                                                        if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
+                                                            Toast.makeText(activity, "Same barcode already scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                            return;
+                                                                        /*if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
+
+                                                                        } else {
+                                                                            Toast.makeText(activity, "Same barcode already scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                                            return;
+                                                                        }*/
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        Log.e(TAG_FRAGMENT, "scanned_barcode rbsbarcode : ");
+                                        if (isRBSScan) {
+                                            Log.e(TAG_FRAGMENT, "onClick: isRBSScan ");
+                                            rbsbarcode = scanned_barcode;
+
+                                        } else {
+                                            Log.e(TAG_FRAGMENT, "onClick: !isRBSScan ");
+                                                        /*if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())){
+
+                                                        }else{*/
+                                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                                            //   Logger.error("getBarcodedtl "+beneficiaryDetailsModel);
+                                            beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+
+                                            /*}*/
+
+                                        }
+
+                                        break;
+                                    }
+                                }
+                                initData();
+                            } else {
+                                Toast.makeText(activity, "Failed to update scanned barcode value", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(activity, "Failed to scan barcode", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            try {
+                Log.e(TAG_FRAGMENT, "onClick: " + scanned_barcode);
+
+                if (TextUtils.isEmpty(scanned_barcode) || scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ") /*|| Character.isDigit(scanned_barcode.charAt(0))*/) {
+                    Toast.makeText(activity, "Invalid barcode", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.e(TAG_FRAGMENT, "onClick:length " + scanned_barcode.length());
+                    if (!InputUtils.isNull(scanned_barcode) && scanned_barcode.length() == 8) {
+                        if (beneficiaryDetailsModel.getBarcodedtl() != null) {
+                            for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
+                                //size 4
+                                if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                        && !InputUtils.isNull(currentScanSampleType)
+                                        && currentScanSampleType.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType())
+                                        && scanposition == i
+                                    /*&& currentScanBarcode.equals(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())*/) {
+
+                                    //CHECK for duplicate barcode scanned for the same visit
+                                    OrderVisitDetailsModel orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId());
+                                    for (OrderDetailsModel odm :
+                                            orderVisitDetailsModel.getAllOrderdetails()) {
+                                        for (BeneficiaryDetailsModel bdm :
+                                                odm.getBenMaster()) {
+                                            if (bdm.getBarcodedtl() != null && bdm.getBarcodedtl().size() > 0) {
+                                                for (BeneficiaryBarcodeDetailsModel bbdm :
+                                                        bdm.getBarcodedtl()) {
+
+                                                    if (!InputUtils.isNull(bbdm.getBarcode()) && bbdm.getBarcode().equals(scanned_barcode)) {
+                                                        Toast.makeText(activity, "Same barcode already scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                        return;
+                                                                            /*if (bbdm.getSamplType().equals(currentScanSampleType) && bbdm.getBenId() == beneficiaryDetailsModel.getBenId()) {
+
+                                                                            } else {
+                                                                                Toast.makeText(activity, "Same barcode already scanned for " + bdm.getName() + " - " + bbdm.getSamplType(), Toast.LENGTH_SHORT).show();
+                                                                                return;
+                                                                            }*/
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    Log.e(TAG_FRAGMENT, "scanned_barcode rbsbarcode : ");
+                                    if (isRBSScan) {
+                                        Log.e(TAG_FRAGMENT, "onClick: isRBSScan ");
+                                        rbsbarcode = scanned_barcode;
+
+                                    } else {
+                                        Log.e(TAG_FRAGMENT, "onClick: !isRBSScan ");
+                                                            /*if (!InputUtils.isNull(beneficiaryDetailsModel.getBarcodedtl().get(i).getBarcode())){
+
+                                                            }else{*/
+                                        beneficiaryDetailsModel.getBarcodedtl().get(i).setBarcode(scanned_barcode);
+                                        //   Logger.error("getBarcodedtl "+beneficiaryDetailsModel);
+                                        beneficiaryDetailsModel.getBarcodedtl().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+
+                                        /*}*/
+
+                                    }
+
+                                    break;
+                                }
+                            }
+                            initData();
+                        } else {
+                            Toast.makeText(activity, "Failed to update scanned barcode value", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(activity, "Failed to scan barcode", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+}
+
 }

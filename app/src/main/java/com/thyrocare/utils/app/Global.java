@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.thyrocare.R;
+import com.thyrocare.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.models.data.Venupunture_Temporary_ImageModel;
 
 import org.json.JSONException;
@@ -55,7 +56,7 @@ public class Global {
 
 
     public String tableCart = "Cart";
-//Live ---------------------------
+    //Live ---------------------------
     public static String BASE_URL = "https://www.thyrocare.com/APIs/";
     public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";
 
@@ -170,6 +171,7 @@ public class Global {
         toast.setDuration(lengthLong);
         toast.show();
     }
+
     public void setLoadingGIF(Activity activity) {
 		/*InputStream stream = null;
 		try {
@@ -207,7 +209,8 @@ public class Global {
         if (!progressDialog.isShowing())
             progressDialog.show();
     }
-    public void showProgressDialog(Activity activity , String msg){
+
+    public void showProgressDialog(Activity activity, String msg) {
 
         progressDialog = new ProgressDialog(activity);
         progressDialog.setTitle(null);
@@ -391,36 +394,7 @@ public class Global {
     }
 
 
-    public static void AddVenupumtureInTempGlobalArry(String encodedVanipunctureImg, int BenID , String name, String Age, String Gender) {
-        if (!InputUtils.isNull(encodedVanipunctureImg)) {
-            Venupunture_Temporary_ImageModel model = new Venupunture_Temporary_ImageModel();
-            model.setVenupuntureBase64string(encodedVanipunctureImg);
-            model.setBenID(BenID);
-            model.setBenname(name);
-            model.setBenAge(Age);
-            model.setBenGender(Gender);
-            BundleConstants.TempVenuImageArylist.add(model);
-        }
-    }
 
-    public static void DeleteBenFromVenupumtureTempGlobalArry(int BenID) {
-
-        boolean benremoved = false;
-        for (int i = 0; i < BundleConstants.TempVenuImageArylist.size(); i++) {
-            if (BundleConstants.TempVenuImageArylist.get(i).getBenID() == BenID){
-                BundleConstants.TempVenuImageArylist.remove(BundleConstants.TempVenuImageArylist.get(i));
-                benremoved = true;
-                break;
-            }
-        }
-
-        if (benremoved){
-            System.out.println("Ben details removed from Temporary Venupunture Arraylist");
-        }else{
-            System.out.println("Ben details not found in Temporary Venupunture Arraylist");
-        }
-
-    }
 
 
 }

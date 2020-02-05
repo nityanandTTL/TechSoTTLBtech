@@ -397,7 +397,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
 
     private void initData() {
-        if (fetchLedgerResponseModel != null && fetchLedgerResponseModel.getLedgerDetails().size() > 0) {
+        if (fetchLedgerResponseModel != null && fetchLedgerResponseModel.getLedgerDetails() != null && fetchLedgerResponseModel.getLedgerDetails().size() > 0) {
 
 
             TableRow trCrH = (TableRow) LayoutInflater.from(activity).inflate(R.layout.item_title_ledger_cash_register, null);

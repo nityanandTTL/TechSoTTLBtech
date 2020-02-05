@@ -456,7 +456,7 @@ public class ClientEntryFragment extends Fragment implements GoogleApiClient.Con
         android.support.v7.app.AlertDialog.Builder alertDialogBuilder;
         alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(getActivity());
         alertDialogBuilder
-                .setMessage("Clint Registered Successfully")
+                .setMessage("Client Registered Successfully")
                 .setCancelable(true)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

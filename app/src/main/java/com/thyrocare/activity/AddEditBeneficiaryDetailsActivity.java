@@ -75,6 +75,7 @@ import com.thyrocare.utils.app.DateUtils;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.Global;
 import com.thyrocare.utils.app.InputUtils;
+import com.thyrocare.utils.app.VenuPuntureUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -136,7 +137,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         if (isAdd) {
             beneficiaryDetailsDao.deleteByBenId(beneficiaryDetailsModel.getBenId() + "");
 
-//           Global.DeleteBenFromVenupumtureTempGlobalArry(beneficiaryDetailsModel.getBenId());   // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+           VenuPuntureUtils.DeleteBenFromVenupumtureTempGlobalArry(beneficiaryDetailsModel.getBenId());   // TODO code to reduce the size of Json by temporary storing Venupunture in global array
 
         }
         super.onBackPressed();
@@ -365,6 +366,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                                         odm.getBenMaster()) {
                                     for (OrderBookingResponseBeneficiaryModel obrbm :
                                             orderBookingResponseBeneficiaryModelArr) {
+                                        VenuPuntureUtils.UpdateBenID_IN_VenupumtureTempGlobalArry(obrbm.getOldBenIds(),obrbm.getNewBenIds()); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
                                         //CHECK if old beneficiary id from API response equals beneficiary Id of local Order Detail Model
                                         // AND API response old beneficiary Id not equals new beneficiary Id
                                         if ((bdm.getBenId() + "").equals(obrbm.getOldBenIds())) {
@@ -456,13 +458,13 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
                 if (validate()) {
 
-                    /*// TODO code to reduce the size of Json by temporary storing Venupunture in global array
-                    Global.AddVenupumtureInTempGlobalArry(encodedVanipunctureImg,
+                    // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+                    VenuPuntureUtils.AddVenupumtureInTempGlobalArry(encodedVanipunctureImg,
                             beneficiaryDetailsModel.getBenId(),
                             edtBenName.getText().toString().trim(),
                             edtAge.getText().toString().trim(),
                             isM ? "M" : "F");
-                    // TODO code to reduce the size of Json by temporary storing Venupunture in global array*/
+                    // TODO code to reduce the size of Json by temporary storing Venupunture in global array
 
                     if (isEdit_Mobile_email){
                         getemailvalidation();
@@ -470,8 +472,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                         beneficiaryDetailsModel.setName(edtBenName.getText().toString().trim());
                         beneficiaryDetailsModel.setAge(Integer.parseInt(edtAge.getText().toString().trim()));
                         beneficiaryDetailsModel.setGender(isM ? "M" : "F");
-                        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
-//                        beneficiaryDetailsModel.setVenepuncture(""); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+//                        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
+                        beneficiaryDetailsModel.setVenepuncture("filled"); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
                         beneficiaryDetailsModel.setTestsCode(edtTests.getText().toString());
                         beneficiaryDetailsModel.setTests(edtTests.getText().toString());
                         beneficiaryDetailsModel.setRemarks(edtRemarks.getText().toString());
@@ -484,12 +486,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                         orderDetailsModel.setAddBen(isAdd);
 
                         orderDetailsDao.insertOrUpdate(orderDetailsModel);
-                        OrderBookingRequestModel obrm = generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
-
-                        // TODO code to reduce the size of Json by temporary storing Venupunture in global array
-                        // TODO code to reduce the size of Json by temporary storing Venupunture in global array
-
-
+                        // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+                        OrderBookingRequestModel obrm = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
                         ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(obrm);
                         orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
                         if (isNetworkAvailable(activity)) {
@@ -929,7 +927,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     beneficiaryDetailsModel.setName(edtBenName.getText().toString().trim());
                     beneficiaryDetailsModel.setAge(Integer.parseInt(edtAge.getText().toString().trim()));
                     beneficiaryDetailsModel.setGender(isM ? "M" : "F");
-                    beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
+//                    beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
+                    beneficiaryDetailsModel.setVenepuncture("filled");// TODO code to reduce the size of Json by temporary storing Venupunture in global array
                     beneficiaryDetailsModel.setTestsCode(edtTests.getText().toString());
                     beneficiaryDetailsModel.setTests(edtTests.getText().toString());
                     beneficiaryDetailsModel.setRemarks(edtRemarks.getText().toString());
@@ -938,11 +937,11 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
                     orderDetailsModel.setAddress(edt_addressnew.getText().toString());
                     orderDetailsModel.setMobile(edt_Mobilenew.getText().toString());
                     orderDetailsModel.setEmail(edt_emailnew.getText().toString());
-
                     orderDetailsModel.setAddBen(isAdd);
-
                     orderDetailsDao.insertOrUpdate(orderDetailsModel);
-                    OrderBookingRequestModel obrm = generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
+                    // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+                    OrderBookingRequestModel obrm = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
+
                     ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(obrm);
                     orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
                     if (isNetworkAvailable(activity)) {
@@ -964,56 +963,6 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
         }
     }
-
-    /*class GetEmaildelegateTaskResult implements ApiCallAsyncTaskDelegate {
-        @Override
-        public void apiCallResult(String json, int statusCode) throws JSONException {
-            if (statusCode == 200) {
-                Logger.error("" + json);
-
-                ResponseParser responseParser = new ResponseParser(activity);
-                Emailreponsedatamodel emailreponsedatamodel = new Emailreponsedatamodel();
-
-                emailreponsedatamodel = responseParser.getemailreponsedatamodel(json, statusCode);
-                if (emailreponsedatamodel.getResult().equalsIgnoreCase("valid")) {
-                    beneficiaryDetailsModel.setName(edtBenName.getText().toString().trim());
-                    beneficiaryDetailsModel.setAge(Integer.parseInt(edtAge.getText().toString().trim()));
-                    beneficiaryDetailsModel.setGender(isM ? "M" : "F");
-                    beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
-                    beneficiaryDetailsModel.setTestsCode(edtTests.getText().toString());
-                    beneficiaryDetailsModel.setTests(edtTests.getText().toString());
-                    beneficiaryDetailsModel.setRemarks(edtRemarks.getText().toString());
-                    beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                    orderDetailsModel.setReportHC(isHC ? 1 : 0);
-                    orderDetailsModel.setAddress(edt_addressnew.getText().toString());
-                    orderDetailsModel.setMobile(edt_Mobilenew.getText().toString());
-                    orderDetailsModel.setEmail(edt_emailnew.getText().toString());
-
-                    orderDetailsModel.setAddBen(isAdd);
-
-                    orderDetailsDao.insertOrUpdate(orderDetailsModel);
-                    OrderBookingRequestModel obrm = generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId()));
-                    ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(obrm);
-                    orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
-                    if (isNetworkAvailable(activity)) {
-                        orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
-                    } else {
-                        Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(activity, "INVALID EMAIL", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Logger.error("" + json);
-            }
-
-        }
-
-        @Override
-        public void onApiCancelled() {
-
-        }
-    }*/
 
     private void getviewTestData(String leadId) {
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
@@ -1081,6 +1030,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             return false;
         } else if (edt_Mobilenew.getText().toString().length() != 10) {
             Toast.makeText(activity, "Invalid Mobile", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if (InputUtils.isNull(encodedVanipunctureImg)) {
+            Toast.makeText(activity, "Please capture beneficiary barcode image", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -1390,8 +1342,8 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         } else {
             imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.cameraa));
         }
-        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
-//        beneficiaryDetailsModel.setVenepuncture(""); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+//        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
+        beneficiaryDetailsModel.setVenepuncture("filled"); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
     }
 
