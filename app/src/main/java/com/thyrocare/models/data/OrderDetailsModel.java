@@ -47,6 +47,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
     private boolean EditOrder;
     private boolean EuOrders;
     private boolean EditME;
+    private String SecondVisitTest;
 
     private ArrayList<KitsCountModel> kits;
 
@@ -85,10 +86,11 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         AppointmentDate = in.readString();
         BtechName = in.readString();
         EditHC = in.readByte() != 0;
-        DirectVisit = in.readByte() != 0;
         EditOrder = in.readByte() != 0;
+        DirectVisit = in.readByte() != 0;
         EuOrders = in.readByte() != 0;
         EditME = in.readByte() != 0;
+        SecondVisitTest = in.readString();
         kits = in.createTypedArrayList(KitsCountModel.CREATOR);
     }
 
@@ -127,9 +129,10 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         dest.writeFloat(EstIncome);
         dest.writeString(AppointmentDate);
         dest.writeString(BtechName);
+        dest.writeString(SecondVisitTest);
+        dest.writeByte((byte) (EditOrder ? 1 : 0));
         dest.writeByte((byte) (EditHC ? 1 : 0));
         dest.writeByte((byte) (DirectVisit ? 1 : 0));
-        dest.writeByte((byte) (EditOrder ? 1 : 0));
         dest.writeByte((byte) (EuOrders ? 1 : 0));
         dest.writeByte((byte) (EditME ? 1 : 0));
         dest.writeTypedList(kits);
@@ -459,6 +462,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
 
     public void setEditME(boolean editME) {
         EditME = editME;
+    }
+
+    public String getSecondVisitTest() {
+        return SecondVisitTest;
+    }
+
+    public void setSecondVisitTest(String secondVisitTest) {
+        SecondVisitTest = secondVisitTest;
     }
 
     @Override

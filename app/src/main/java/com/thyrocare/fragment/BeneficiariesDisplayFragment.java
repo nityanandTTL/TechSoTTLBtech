@@ -105,7 +105,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     public static String isINSPPTestRemoved = "normal";
     public static String isFBSTestRemoved = "normal";
     public static String isINSFATestRemoved = "normal";
-    boolean isOnlyWOE = false;
+    boolean isOnlyWOE = false, isaddbeneficiary = false;
     //neha g -----------
     String datefrom_model = "";
     //neha g -------------
@@ -161,7 +161,6 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         }
 
 
-
         // fetchDataOfVisitOrderForRefreshAmountDue();
         initListeners();
 
@@ -206,27 +205,29 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
 
-                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");/*BeneficiaryDetailsModel*/
 
-                Log.e(TAG_FRAGMENT, "tests: " + orderBookingRequestModel.getBendtl().get(0).getTests());
+                if (isaddbeneficiary) {
+                    OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");/*BeneficiaryDetailsModel*/
 
-                if (isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
-                    //llAddBeneficiary.setEnabled(false);
-                    Toast.makeText(activity, "This " + orderBookingRequestModel.getBendtl().get(0).getTests() + " Test Here you cannot Add Benificary  ", Toast.LENGTH_SHORT).show();
-                    isOnlyWOE = true;
-                } else {
-                    //0   Toast.makeText(getActivity(),"Feature Coming Soon Stay tuned...... ",Toast.LENGTH_SHORT).show();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setTitle("Confirm action")
-                            .setMessage("Do you want to add a new beneficiary?")
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                    Log.e(TAG_FRAGMENT, "tests: " + orderBookingRequestModel.getBendtl().get(0).getTests());
+
+                    if (isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
+                        //llAddBeneficiary.setEnabled(false);
+                        Toast.makeText(activity, "This " + orderBookingRequestModel.getBendtl().get(0).getTests() + " Test Here you cannot Add Benificary  ", Toast.LENGTH_SHORT).show();
+                        isOnlyWOE = true;
+                    } else {
+                        //0   Toast.makeText(getActivity(),"Feature Coming Soon Stay tuned...... ",Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setTitle("Confirm action")
+                                .setMessage("Do you want to add a new beneficiary?")
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
                         /*Logger.debug("orderVisitDetailsModel 1 :" + new Gson().toJson(orderVisitDetailsModel));
                         tempOrderDetailsModel.setOrderNo("TEMP_"+DeviceUtils.randomString(8));
                         tempOrderDetailsModel.setAddBen(true);
@@ -239,50 +240,54 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         */
 
 
-                            tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
+                                tempBeneficiaryDetailsModel = new BeneficiaryDetailsModel();
 
-                            //**********************
-
-
-                            tempBeneficiaryDetailsModel.setFasting("");
-                            tempBeneficiaryDetailsModel.setAddBen(true);
-                            tempBeneficiaryDetailsModel.setTestEdit(false);
-
-                            //**************************
-                            tempBeneficiaryDetailsModel.setOrderNo(orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderNo());
-                            tempBeneficiaryDetailsModel.setBenId((int) (Math.random() * 999));
+                                //**********************
 
 
-                            beneficiaryDetailsDao.insertOrUpdate(tempBeneficiaryDetailsModel);
+                                tempBeneficiaryDetailsModel.setFasting("");
+                                tempBeneficiaryDetailsModel.setAddBen(true);
+                                tempBeneficiaryDetailsModel.setTestEdit(false);
+
+                                //**************************
+                                tempBeneficiaryDetailsModel.setOrderNo(orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderNo());
+                                tempBeneficiaryDetailsModel.setBenId((int) (Math.random() * 999));
+
+
+                                beneficiaryDetailsDao.insertOrUpdate(tempBeneficiaryDetailsModel);
                         /*
                         beneficiaries.add(tempBeneficiaryDetailsModel);
 
                         tempOrderDetailsModel.setBenMaster(beneficiaries);
                         orderDetailsDao.insertOrUpdate(tempOrderDetailsModel);*/
 
-                            OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
+                                OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
 
-                            orderDetailsModel = orderVisitDetailsModel.getAllOrderdetails().get(0);
-                            orderDetailsModel.setAddBen(true);
-                            orderDetailsModel.setTestEdit(false);
+                                orderDetailsModel = orderVisitDetailsModel.getAllOrderdetails().get(0);
+                                orderDetailsModel.setAddBen(true);
+                                orderDetailsModel.setTestEdit(false);
 
-                            orderDetailsDao.insertOrUpdate(orderDetailsModel);
+                                orderDetailsDao.insertOrUpdate(orderDetailsModel);
 
-                            orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().add(tempBeneficiaryDetailsModel);
-                            orderVisitDetailsModel.getAllOrderdetails().get(0).setAddBen(true);
-                            orderVisitDetailsModel.getAllOrderdetails().get(0).setTestEdit(false);
-                            Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
+                                orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().add(tempBeneficiaryDetailsModel);
+                                orderVisitDetailsModel.getAllOrderdetails().get(0).setAddBen(true);
+                                orderVisitDetailsModel.getAllOrderdetails().get(0).setTestEdit(false);
+                                Intent intentEdit = new Intent(activity, AddEditBeneficiaryDetailsActivity.class);
 
-                            intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, tempBeneficiaryDetailsModel);
+                                intentEdit.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, tempBeneficiaryDetailsModel);
 
-                            intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderVisitDetailsModel.getAllOrderdetails().get(0));
-                            intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_ADD, true);
-                            intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_EDIT, false);
+                                intentEdit.putExtra(BundleConstants.ORDER_DETAILS_MODEL, orderVisitDetailsModel.getAllOrderdetails().get(0));
+                                intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_ADD, true);
+                                intentEdit.putExtra(BundleConstants.IS_BENEFICIARY_EDIT, false);
 
-                            startActivityForResult(intentEdit, BundleConstants.ADD_START);
-                        }
-                    }).show();
+                                startActivityForResult(intentEdit, BundleConstants.ADD_START);
+                            }
+                        }).show();
+                    }
+                } else {
+                    Toast.makeText(activity, "You cannot edit this Order", Toast.LENGTH_SHORT).show();
                 }
+
 
             }
         });
@@ -290,18 +295,18 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setMessage("Please verify Name/Age/gender once again")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setMessage("Please verify Name/Age/gender once again")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                                    ProceedWOEonSubmit();
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setCancelable(true)
-                            .show();
+                                ProceedWOEonSubmit();
+                                dialog.dismiss();
+                            }
+                        })
+                        .setCancelable(true)
+                        .show();
 
             }
         });
@@ -319,8 +324,6 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                     //Toast.makeText(activity, "add ben.", Toast.LENGTH_SHORT).show();
                 }*/
         //changes_17june2017
-
-
 
 
         // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
@@ -417,17 +420,19 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS)
                 || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.PPBS + "," + AppConstants.RBS)
                 || tests.equalsIgnoreCase(AppConstants.INSPP + "," + AppConstants.RBS + "," + AppConstants.PPBS)
-                ) {
+        ) {
             return true;
         }
 
 
         return false;
-    }   private boolean isValidForEditingRBS(String tests) {
+    }
+
+    private boolean isValidForEditingRBS(String tests) {
 
         if (tests.equalsIgnoreCase(AppConstants.PPBS + "," + AppConstants.RBS)
                 || tests.equalsIgnoreCase(AppConstants.RBS + "," + AppConstants.PPBS)
-                ) {
+        ) {
             return true;
         }
 
@@ -437,8 +442,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
     private boolean validate(OrderBookingRequestModel orderBookingRequestModel) {
         Logger.error("on btn proceed: " + AddEditBeneficiaryDetailsActivity.testEdit);
-        if(isValidForEditingRBS(orderBookingRequestModel.getBendtl().get(0).getTests()) && BeneficiaryDetailsScanBarcodeFragment.rbsbarcode.equals("")){
-            Toast.makeText(activity, "Please scan all barcodes  " , Toast.LENGTH_SHORT).show();
+        if (isValidForEditingRBS(orderBookingRequestModel.getBendtl().get(0).getTests()) && BeneficiaryDetailsScanBarcodeFragment.rbsbarcode.equals("")) {
+            Toast.makeText(activity, "Please scan all barcodes  ", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -447,10 +452,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             if (InputUtils.isNull(barcodesModel.getBarcode())) {
                 for (BeneficiaryDetailsModel bdm : orderBookingRequestModel.getBendtl()) {
                     if (barcodesModel.getBenId() == bdm.getBenId()) {
-                        if(!BeneficiaryDetailsScanBarcodeFragment.IS_RBS_PPBS){
+                        if (!BeneficiaryDetailsScanBarcodeFragment.IS_RBS_PPBS) {
                             Toast.makeText(activity, "Please scan all barcodes for " + bdm.getName(), Toast.LENGTH_SHORT).show();
                             return false;
-                        }else {
+                        } else {
                             return true;
                         }
 
@@ -633,14 +638,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         ArrayList<BeneficiaryLabAlertsModel> benLAArr = new ArrayList<>();
 
 
-
 //jai last task
 
-        if(BeneficiaryDetailsScanBarcodeFragment.IS_RBS_PPBS==true){
-            BeneficiaryDetailsScanBarcodeFragment.IS_RBS_PPBS=false;
-         benBarcodeArr.add(0,BeneficiaryDetailsScanBarcodeFragment.beneficiaryBarcodeDetailsModelRBS);
+        if (BeneficiaryDetailsScanBarcodeFragment.IS_RBS_PPBS == true) {
+            BeneficiaryDetailsScanBarcodeFragment.IS_RBS_PPBS = false;
+            benBarcodeArr.add(0, BeneficiaryDetailsScanBarcodeFragment.beneficiaryBarcodeDetailsModelRBS);
         }
-
 
 
         for (BeneficiaryDetailsModel beneficiaryDetailsModel :
@@ -665,9 +668,6 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
 
         orderBookingRequestModel.setBarcodedtl(benBarcodeArr);
-
-
-
 
 
         //SET BENEFICIARY Barcode Details Models Array - END
@@ -787,10 +787,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
         orderDetailsModel = orderVisitDetailsModel.getAllOrderdetails().get(0);
         if (orderDetailsModel.isEditOrder()) {
-            llAddBeneficiary.setEnabled(true);
+//            llAddBeneficiary.setEnabled(true);
+            isaddbeneficiary = true;
             Logger.error("isEditOrder " + orderDetailsModel.isEditOrder());
         } else {
-            llAddBeneficiary.setEnabled(false);
+//            llAddBeneficiary.setEnabled(false);
+            isaddbeneficiary = false;
             Logger.error("isEditOrder " + orderDetailsModel.isEditOrder());
         }
         //jai
@@ -816,13 +818,13 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             test = "";
         }
 
-        if (orderBookingRequestModel!=null && orderBookingRequestModel.getBendtl().size()>0){
+        if (orderBookingRequestModel != null && orderBookingRequestModel.getBendtl().size() > 0) {
             Log.e(TAG_FRAGMENT, "initUI: " + orderBookingRequestModel.getBendtl().get(0).getTests());
             if (orderBookingRequestModel.getBendtl().get(0).getTests() != null) {
                 if (isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
 
-
-                    llAddBeneficiary.setEnabled(false);
+//                    llAddBeneficiary.setEnabled(false);
+                    isaddbeneficiary = false;
                     isOnlyWOE = true;
 
                 }
@@ -1036,7 +1038,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
 //Latlong added
         GPSTracker gpsTracker = new GPSTracker(getActivity());
-        if (gpsTracker.canGetLocation()){
+        if (gpsTracker.canGetLocation()) {
             orderAllocationTrackLocationRequestModel.setLatitude(String.valueOf(gpsTracker.getLatitude()));
             orderAllocationTrackLocationRequestModel.setLongitude(String.valueOf(gpsTracker.getLongitude()));
         }
@@ -1085,9 +1087,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 if (btnProceedPayment.getText().equals("PAY")) {
 
-                                    if (OrderMode.equalsIgnoreCase("LTD-BLD") || OrderMode.equalsIgnoreCase("LTD-NBLD")){
-                                         paymentItems = new String[]{"Cash"};
-                                    }else{
+                                    if (OrderMode.equalsIgnoreCase("LTD-BLD") || OrderMode.equalsIgnoreCase("LTD-NBLD")) {
+                                        paymentItems = new String[]{"Cash"};
+                                    } else {
                                         paymentItems = new String[]{"Cash", "Digital"};
                                     }
 
@@ -1210,7 +1212,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                             /*   if (test.toUpperCase().contains("PPBS") && test.toUpperCase().contains("FBS"))  {*/
+                                /*   if (test.toUpperCase().contains("PPBS") && test.toUpperCase().contains("FBS"))  {*/
                                 //  llAddBeneficiary.setEnabled(false);
                                 Logger.error("isPPBSTestRemoved status : " + isPPBSTestRemoved);
                                 Logger.error("isRBSTestRemoved status : " + isRBSTestRemoved);
@@ -1232,14 +1234,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
                                 if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS) && /*jai*/isPPBSTestRemoved.equals("normal")
                                         && test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA") && /*jai*/isINSPPTestRemoved.equals("normal")
-                                        && test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS) && /*jai*/isRBSTestRemoved.equals("normal")
-                                        )
+                                        && test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS) && /*jai*/isRBSTestRemoved.equals("normal")) {
 
-                                {
                                     if (!isINSFATestRemoved.equals("removed") && !isFBSTestRemoved.equals("removed")) {
                                         Logger.error("should print revisit dialog for both: ");
-                                        Logger.error("for both");
-
 
                                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                                         builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS/RBS and INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
@@ -1262,35 +1260,24 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                 .show();
                                     }
 
-                                } else if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
-                                        && /*jai*/isPPBSTestRemoved.equals("normal")) {
+                                } else if (test.toUpperCase().contains(AppConstants.PPBS) && /*jai*/isPPBSTestRemoved.equals("normal")
+                                        && test.toUpperCase().contains(AppConstants.RBS) && /*jai*/isRBSTestRemoved.equals("normal")
+                                        && test.toUpperCase().contains(AppConstants.FBS)) {
 
                                     Logger.error("isFBSTestRemoved status : " + isFBSTestRemoved);
                                     //Dailog for PPBS after WOE Abhi//
                                     if (!isFBSTestRemoved.equals("removed")) {
 
-                                        activity.finish();
+                                        Logger.error("should print revisit dialog for ppbs and rbs: ");
 
-                                       /* Logger.error("should print revisit dialog for ppbs: ");
-
-                                        Logger.error("for PPBS");
+                                        Logger.error("for PPBS and RBS");
                                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                        String testToDisplay = "";
 
-                                        if (test.contains(AppConstants.RBS) && isRBSTestRemoved.equals("normal")) {
-                                            testToDisplay = "PPBS and RBS";
-                                        } else {
-                                            testToDisplay = "PPBS";
-                                        }
-
-                                        builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                        builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS and RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
                                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
-
                                                         activity.finish();
-
-
                                                     }
                                                 })
                                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -1300,7 +1287,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                                     }
                                                 })
                                                 .setCancelable(false)
-                                                .show();*/
+                                                .show();
 
                                     }
                                     //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
@@ -1343,15 +1330,39 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                         Logger.error("should print revisit dialog for rbs: ");
 
                                         Logger.error("for rbs");
-                                        String testToDisplay = "";
-                                        if (test.contains(AppConstants.PPBS)) {
-                                            testToDisplay = "PPBS and RBS";
-                                        } else {
-                                            testToDisplay = "RBS";
-                                        }
 
                                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                                         builder.setMessage("Please note you have to revisit at customer place to collect sample for RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                        activity.finish();
+
+
+                                                    }
+                                                })
+                                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                })
+                                                .setCancelable(false)
+                                                .show();
+                                    }
+                                    //  Logger.error("Selcted testssssssss"+orderBookingRequestModel.getBendtl().get(i).getTests());
+                                } else if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS) && isPPBSTestRemoved.equals("normal")) {
+
+                                    Logger.error("isPPBSTestRemoved status : " + isFBSTestRemoved);
+                                    if (!isFBSTestRemoved.equals("removed")) {
+
+                                        Logger.error("should print revisit dialog for rbs: ");
+
+                                        Logger.error("for ppbs");
+
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                        builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
                                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
@@ -1594,9 +1605,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
 //            totalAmountPayable = jsonObject.getInt("AmountDue");
 
-            OrderMode = allOrderdetailsObject.optString("OrderMode","");
-            isEditMobile_email = allOrderdetailsObject.optBoolean("EditME",true);
+            OrderMode = allOrderdetailsObject.optString("OrderMode", "");
+            isEditMobile_email = allOrderdetailsObject.optBoolean("EditME", true);
             totalAmountPayable = allOrderdetailsObject.getInt("AmountDue");
+            isaddbeneficiary = allOrderdetailsObject.optBoolean("EditOrder", false);
 
             Logger.error("tttejas1 " + totalAmountPayable);
             if (isOnlyWOE) {

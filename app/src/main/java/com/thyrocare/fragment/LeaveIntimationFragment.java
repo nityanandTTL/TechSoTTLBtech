@@ -3,10 +3,15 @@ package com.thyrocare.fragment;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,11 +30,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.models.api.request.ApplyLeaveRequestModel;
+
 import com.thyrocare.models.data.LeaveNatureMasterModel;
+import com.thyrocare.network.AbstractApiModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
@@ -38,7 +52,9 @@ import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.DateUtils;
+import com.thyrocare.utils.app.Global;
 
+import org.joda.time.DateTimeComparator;
 import org.json.JSONException;
 
 import java.text.DateFormat;
@@ -47,6 +63,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -75,6 +92,9 @@ public class LeaveIntimationFragment extends AbstractFragment {
     private FrameLayout Fl_list_history;
     private FloatingActionButton apply_leave;
     private TextView img_view_applied_leaves;
+
+    EditText edt_test_id;
+
 
     public LeaveIntimationFragment() {
         // Required empty public constructor
@@ -109,7 +129,6 @@ public class LeaveIntimationFragment extends AbstractFragment {
         rootView = inflater.inflate(R.layout.activity_leave_intimation_modified, container, false);
 
 
-
         fromDt = Calendar.getInstance();
         fromDt.add(Calendar.DAY_OF_MONTH, 1);
 
@@ -119,6 +138,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
         initUI();
 
 
+        isAutoTimeSelected();
         setListners();
         if (appPreferenceManager.getCameFrom() == 1) {
             todate.setVisibility(View.VISIBLE);
@@ -151,10 +171,10 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 appPreferenceManager.setCameFrom(3);
                 sp.setEnabled(false);
                 sp.setClickable(false);
-                int tempDiff=getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
+                int tempDiff = getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
                 calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
                 days.setText(tempDiff + "");
-              //  days.setText(daysdiff + "");
+                //  days.setText(daysdiff + "");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -178,22 +198,29 @@ public class LeaveIntimationFragment extends AbstractFragment {
             fromdate.setText("" + formattedDate);
             Log.e(TAG_FRAGMENT, "todate1: " + defdate);
 
-          //  Calendar calendar = toDt;//.add(Calendar.HOUR, 24);
-            Calendar calendar=Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_MONTH,2);
+            //  Calendar calendar = toDt;//.add(Calendar.HOUR, 24);
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, 2);
             Date c1 = calendar.getTime();
 
             SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
             String formattedDate1 = df1.format(c1);
 
             todate.setText("" + formattedDate1);
-           // todate.setText("" + defdate);
+            // todate.setText("" + defdate);
         }
 
 
         fetchLeaveDetails();
 
+
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isAutoTimeSelected();
     }
 
     @Override
@@ -209,7 +236,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
         one = (RadioButton) rootView.findViewById(R.id.radio_one);
         more = (RadioButton) rootView.findViewById(R.id.radio_more);
         img_view_applied_leaves = (TextView) rootView.findViewById(R.id.img_view_applied_leaves);
-        ll_leave_days=(LinearLayout)rootView.findViewById(R.id.ll_leave_days);
+        ll_leave_days = (LinearLayout) rootView.findViewById(R.id.ll_leave_days);
         group = (RadioGroup) rootView.findViewById(R.id.group);
         textcalender = (TextView) rootView.findViewById(R.id.Calendertextview);
         days = (TextView) rootView.findViewById(R.id.et_leave_days_value);
@@ -220,9 +247,10 @@ public class LeaveIntimationFragment extends AbstractFragment {
         String defdate = (today).toString();*/
 
 
+//        edt_test_id = rootView.findViewById(R.id.edt_test_id);
+
+
     }
-
-
 
 
     private void setListners() {
@@ -259,28 +287,28 @@ public class LeaveIntimationFragment extends AbstractFragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 fromdate.setText("" + DateUtils.Req_Date_Req(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year, "dd-MM-yyyy", "dd-MM-yyyy"));
-                                fromDt.set(year, monthOfYear, dayOfMonth , 0, 0, 0);
+                                fromDt.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
                                 try {
                                     if (toDt != null && more.isChecked()) {
                                         if (fromDt.getTimeInMillis() <= toDt.getTimeInMillis()) {
 
-                                            int tempDiff=getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
+                                            int tempDiff = getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
 
                                             calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
-                                            if(String.valueOf(tempDiff).contains("-")){
+                                            if (String.valueOf(tempDiff).contains("-")) {
                                                 Toast.makeText(activity, "From Date cannot be greater than To Date", Toast.LENGTH_SHORT).show();
-                                            }else {
+                                            } else {
                                                 days.setText(tempDiff + "");
                                             }
 
-                                        //    days.setText(daysdiff + "");
+                                            //    days.setText(daysdiff + "");
                                         } else {
                                             Toast.makeText(activity, "From Date cannot be greater than To Date", LENGTH_SHORT).show();
                                         }
                                       /*  if(fromDt.getTimeInMillis()>toDt.getTimeInMillis()){
                                             Toast.makeText(activity, "from date cannot be greater than To Date", Toast.LENGTH_SHORT).show();
                                         }*/
-                                    }else{
+                                    } else {
                                         daysdiff = 1;
                                         days.setText(1 + "");
 
@@ -332,11 +360,11 @@ public class LeaveIntimationFragment extends AbstractFragment {
                                     toDt.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
                                     toDt.add(Calendar.HOUR, 24);
 
-                                    int tempDiff=getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
+                                    int tempDiff = getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
                                     calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
 
                                     days.setText(tempDiff + "");
-                                   // days.setText(daysdiff + "");
+                                    // days.setText(daysdiff + "");
                                 } else {
                                     Toast.makeText(activity, "From Date cannot be greater than To Date", LENGTH_SHORT).show();
                                 }
@@ -345,9 +373,9 @@ public class LeaveIntimationFragment extends AbstractFragment {
                 Calendar cal = Calendar.getInstance();
                 cal.add(Calendar.DAY_OF_MONTH, 2);
                 datePickerDialog.getDatePicker().setMinDate(cal.getTimeInMillis());
-if(one.isChecked()){
-    datePickerDialog.getDatePicker().setMaxDate(cal.getTimeInMillis());
-}
+                if (one.isChecked()) {
+                    datePickerDialog.getDatePicker().setMaxDate(cal.getTimeInMillis());
+                }
                 datePickerDialog.show();
 
 
@@ -363,39 +391,178 @@ if(one.isChecked()){
         Applyleave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validate()) {
-                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    //Yes button clicked
-                                    leaveApply();
-                                    break;
 
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    //No button clicked
-                                    dialog.dismiss();
-                                    break;
-                            }
-                        }
-                    };
-
-                    String leave_str;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    if (sp.getSelectedItem().equals("CANCEL")) {
-                        leave_str = "Are you sure you want to cancel your leave ?";
-                    } else {
-                        leave_str = "Are you sure you want to apply for leave?";
-                    }
-                    builder.setMessage(leave_str).setPositiveButton("Yes", dialogClickListener)
-                            .setNegativeButton("No", dialogClickListener).show();
+//                if (validate()){
+                if (isAutoTimeSelected()) {
+                    timegrtsix();
                 }
+              /*     leaveApply();
+                }*/
+
+//                alertdialogfunction();
 
 
             }
         });
     }
+
+    private void alertdialogfunction() {
+        if (validate()) {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            //Yes button clicked
+//                            timegrtsix();
+                            leaveApply();
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            //No button clicked
+                            dialog.dismiss();
+                            break;
+                    }
+                }
+            };
+            String leave_str;
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            if (sp.getSelectedItem().equals("CANCEL")) {
+                leave_str = "Are you sure you want to cancel your leave ?";
+            } else {
+                leave_str = "Are you sure you want to apply for leave?";
+            }
+            builder.setMessage(leave_str).setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+
+
+        }
+    }
+
+    private void timegrtsix() {
+
+
+        Date resultdate, date_to_check_six_pm = null, current_date = null, fromdate_tv = null, yyyy_mm_dd_date_from_autotime = null, yyyy_mm_dd_fromdate_tv = null, autodatetime_to_date = null, yyyy_mm_dd_date_from_autotime_new = null;
+        Calendar c;
+        int datediff = 0;
+
+        c = Calendar.getInstance();
+        resultdate = c.getTime();
+
+
+        SimpleDateFormat simpleDateFormat_from = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.US);  //{"time":"2020-01-23 03:30 PM"
+        SimpleDateFormat simpleDateFormat_to = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        SimpleDateFormat simpleDateFormat_convert = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+
+        try {
+//                            String dateform = DateUtils.Req_Date_Req(getcurrentTimeModel.getTime(), "yyyy-mm-dd hh:mm a", "yyyy-mm-dd");
+            String str_auto_datetime = simpleDateFormat_from.format(resultdate);
+            autodatetime_to_date = simpleDateFormat_from.parse(str_auto_datetime);
+
+            System.out.println("rohit : " + autodatetime_to_date);
+
+            String dateform = simpleDateFormat_to.format(autodatetime_to_date);
+
+            date_to_check_six_pm = simpleDateFormat_from.parse(dateform + " " + "06:00 PM");
+
+            current_date = simpleDateFormat_from.parse(str_auto_datetime);
+            fromdate_tv = simpleDateFormat_convert.parse(fromdate.getText().toString());
+            String date_from_tv = simpleDateFormat_to.format(fromdate_tv);
+
+            yyyy_mm_dd_fromdate_tv = simpleDateFormat_to.parse(date_from_tv);
+
+            yyyy_mm_dd_date_from_autotime = simpleDateFormat_to.parse(dateform);
+
+
+            c = Calendar.getInstance();
+            c.setTime(yyyy_mm_dd_date_from_autotime);
+            c.add(Calendar.DAY_OF_MONTH, 1);  // number of days to add, can also use Calendar.DAY_OF_MONTH in place of Calendar.DATE
+            Date resultdate_added = c.getTime();
+            String str_yyyy_mm_dd_date_from_server_new = simpleDateFormat_to.format(resultdate_added);
+
+            yyyy_mm_dd_date_from_autotime_new = simpleDateFormat_to.parse(str_yyyy_mm_dd_date_from_server_new);
+
+            System.out.println("\n rohit k :" + autodatetime_to_date + " current date and time");
+            System.out.println("rohit k :" + date_to_check_six_pm + " validate date and time");
+            System.out.println("rohit k :" + yyyy_mm_dd_fromdate_tv + " textview date");
+            System.out.println("rohit k :" + yyyy_mm_dd_date_from_autotime + " current date");
+            System.out.println("rohit k :" + yyyy_mm_dd_date_from_autotime_new + " curent date with 1 day added \n");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (current_date != null && date_to_check_six_pm != null) {
+            if (current_date.before(date_to_check_six_pm)) {
+
+                alertdialogfunction();
+                System.out.println("rohit : " + current_date.toString() + " befor " + date_to_check_six_pm.toString());
+//                        Toast.makeText(getContext(), current_date.toString() + " befor " + date_to_check_six_pm.toString(), Toast.LENGTH_SHORT).show();
+            } else {
+                if (yyyy_mm_dd_date_from_autotime_new != null && yyyy_mm_dd_fromdate_tv != null) {
+                    if (yyyy_mm_dd_date_from_autotime_new.equals(yyyy_mm_dd_fromdate_tv)) {
+
+                        System.out.println("rohit : not  allow as between " + yyyy_mm_dd_fromdate_tv.toString() + " and " + yyyy_mm_dd_date_from_autotime.toString() + " date diff is " + datediff);
+                        if (sp.getSelectedItem().equals("CANCEL")) {
+                            Toast.makeText(getContext(), "You cannot apply to cancel leave for next day after 6 pm", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "You cannot apply for leave for next day after 6 pm", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        alertdialogfunction();
+                        System.out.println("rohit :  allow as between " + yyyy_mm_dd_fromdate_tv.toString() + " and " + yyyy_mm_dd_date_from_autotime.toString() + " date diff is " + datediff);
+                        // Toast.makeText(getContext(), "allowed for leave", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(activity, "Some thing went wrong", LENGTH_SHORT).show();
+                }
+
+
+            }
+
+        }
+
+
+    }
+
+
+    private boolean isAutoTimeSelected() {
+        final boolean[] isAutoTimeSelected = new boolean[1];
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                if (Settings.Global.getInt(getContext().getContentResolver(), Settings.Global.AUTO_TIME) == 1 && Settings.Global.getInt(getContext().getContentResolver(), Settings.Global.AUTO_TIME_ZONE) == 1) {
+                    isAutoTimeSelected[0] = true;
+                } else {
+                    final AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+                    builder1.setTitle("Warning ").setMessage("You have to Enable Automatic date and time/Timezone settings").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(Settings.ACTION_DATE_SETTINGS));
+                            try {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                    if (Settings.Global.getInt(getContext().getContentResolver(), Settings.Global.AUTO_TIME) == 1) {
+                                        isAutoTimeSelected[0] = true;
+                                    } else {
+                                        isAutoTimeSelected[0] = false;
+
+                                    }
+                                }
+                            } catch (Settings.SettingNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    builder1.setCancelable(false);
+                    builder1.show();
+                }
+
+            }
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        return isAutoTimeSelected[0];
+    }
+
 
     private int getDifferenceBetweenDate(String fromDate, String toDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -439,8 +606,8 @@ if(one.isChecked()){
         System.out.printf(
                 "%d days, %d hours, %d minutes, %d seconds%n",
                 elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds);
-        int y=(int)elapsedDays;
-        return y+1;
+        int y = (int) elapsedDays;
+        return y + 1;
     }
 
     private void leaveApply() {
@@ -469,10 +636,10 @@ if(one.isChecked()){
                 applyLeaveRequestModel.setTodate(DateUtils.Req_Date_Req(fromdate.getText().toString(), "dd-MM-yyyy", "yyyy-MM-dd"));
                 applyLeaveRequestModel.setDays(daysdiff);
             } else {
-                int tempDiff=getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
+                int tempDiff = getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
                 daysdiff = tempDiff;
                 days.setText(tempDiff + "");
-               // days.setText(daysdiff + "");
+                // days.setText(daysdiff + "");
                 applyLeaveRequestModel.setTodate(DateUtils.Req_Date_Req(todate.getText().toString(), "dd-MM-yyyy", "yyyy-MM-dd"));
                 applyLeaveRequestModel.setDays(daysdiff);
             }
@@ -485,6 +652,8 @@ if(one.isChecked()){
                 Toast.makeText(activity, R.string.internet_connetion_error, LENGTH_SHORT).show();
             }
         }
+
+
     }
 
     private boolean validate() {
@@ -519,7 +688,7 @@ if(one.isChecked()){
         long diffTime = toTime - fromTime;
         daysdiff = (int) (diffTime / (1000 * 60 * 60 * 24));*/
 
-        int tempDiff=getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
+        int tempDiff = getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
         daysdiff = tempDiff;
     }
 
@@ -572,7 +741,7 @@ if(one.isChecked()){
         public void apiCallResult(String json, int statusCode) throws JSONException {
             Logger.debug(TAG_FRAGMENT + "--apiCallResult: ");
             if (statusCode == 200) {
-                Toast.makeText(getActivity(), "Leave applied Successfully", LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), json, LENGTH_SHORT).show();
                 appPreferenceManager.setLeaveFlag(0);
                 appPreferenceManager.setCameFrom(0);
                 activity.toolbarHome.setVisibility(View.VISIBLE);
@@ -668,9 +837,9 @@ if(one.isChecked()){
                         calendar.add(Calendar.HOUR, 24);
                         calNumDays(toDt.getTimeInMillis(), fromDt.getTimeInMillis());
                     }
-                    int tempDiff=getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
+                    int tempDiff = getDifferenceBetweenDate(fromdate.getText().toString(), todate.getText().toString());
                     days.setText("" + tempDiff);
-                  //  days.setText("" + daysdiff);
+                    //  days.setText("" + daysdiff);
                 } else {
                     ll_leave_days.setVisibility(View.GONE);
 
@@ -707,8 +876,6 @@ if(one.isChecked()){
         return previous_date;
 
     }
-
-
 
 
 }

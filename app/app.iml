@@ -154,8 +154,8 @@
     <orderEntry type="library" exported="" name="Gradle: com.squareup.retrofit2:converter-gson:2.5.0@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.squareup.okhttp3:logging-interceptor:3.12.1@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.squareup.retrofit2:converter-scalars:2.5.0@jar" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: __local_jars__:/home/e5561@thyrocare.com/Github upload Folder/BTECH/Latest Btech App/app/libs/httpmime-4.3.6.jar:unspecified@jar" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: __local_jars__:/home/e5561@thyrocare.com/Github upload Folder/BTECH/Latest Btech App/app/libs/httpcore-4.4.4.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: __local_jars__:/home/e5561@thyrocare.com/Android projects/Latest Btech App_new/Latest Btech App/app/libs/httpmime-4.3.6.jar:unspecified@jar" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: __local_jars__:/home/e5561@thyrocare.com/Android projects/Latest Btech App_new/Latest Btech App/app/libs/httpcore-4.4.4.jar:unspecified@jar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.android.support:multidex:1.0.1@aar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.crashlytics.sdk.android:crashlytics:2.9.3@aar" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.crashlytics.sdk.android:answers:1.4.2@aar" level="project" />

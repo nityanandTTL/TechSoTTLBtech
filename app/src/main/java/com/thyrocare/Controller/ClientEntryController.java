@@ -46,6 +46,7 @@ public class ClientEntryController {
 
         requestQueue = Volley.newRequestQueue(context);
         String url = BDN_API_VERSION+ "api/ClientEntry/PostRegister";
+        System.out.println("rohit : "+BDN_API_VERSION+ "api/ClientEntry/PostRegister");
         JSONObject jsonObject = new JSONObject();
         try {
 
@@ -71,6 +72,7 @@ public class ClientEntryController {
             jsonObject.put("Longitude",newClientpostmodel.getLongitude());
             jsonObject.put("Visiting_Card",newClientpostmodel.getVisiting_Card());
 
+            System.out.println("rohit : "+jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

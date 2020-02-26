@@ -34,6 +34,7 @@ public class OrderDetailsDao {
     private String VISIT_ID = "VisitId";
     private String APPOINTMENT_DATE = "AppointmentDate";
     private String BTECHNAME = "BtechName";
+    private String SECONDVISITTEST = "SecondVisitTest";
     private String SLOT = "Slot";
     private String RESPONSE = "Response";
     private String BRAND_ID = "BrandId";
@@ -128,6 +129,7 @@ public class OrderDetailsDao {
         orderDetailsModel.setAddBen(cursor.getString(cursor.getColumnIndex(IS_ADD_BEN)).equals("1"));
         orderDetailsModel.setLocation(cursor.getString(cursor.getColumnIndex(LOCATION)));
         orderDetailsModel.setBtechName(cursor.getString(cursor.getColumnIndex(BTECHNAME)));
+        orderDetailsModel.setSecondVisitTest(cursor.getString(cursor.getColumnIndex(SECONDVISITTEST)));
         orderDetailsModel.setEditHC(cursor.getString(cursor.getColumnIndex(EDITHC)).equals("1"));
         orderDetailsModel.setEditOrder(cursor.getString(cursor.getColumnIndex(EDITORDER)).equals("1"));
         orderDetailsModel.setDirectVisit(cursor.getString(cursor.getColumnIndex(DIRECT_VISIT)).equals("1"));
@@ -197,6 +199,7 @@ public class OrderDetailsDao {
         values.put(SYNC_ACTION, orderDetailsModel.getSyncAction());
         values.put(LOCATION, orderDetailsModel.getLocation());
         values.put(BTECHNAME, orderDetailsModel.getBtechName());
+        values.put(SECONDVISITTEST, orderDetailsModel.getSecondVisitTest());
         values.put(EDITHC, orderDetailsModel.isEditHC() ? "1" : "0");
         values.put(EDITORDER, orderDetailsModel.isEditOrder() ? "1" : "0");
         values.put(EUORDERS, orderDetailsModel.isEuOrders() ? "1" : "0");

@@ -2,6 +2,7 @@ package com.thyrocare.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class StockAvailabilityActivity extends AppCompatActivity {
     private LinearLayout ll_tableView;
     AppPreferenceManager appPreferenceManager;
     String dac_code;
+    int oStock = 0, uStock = 0, cStock = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +122,17 @@ public class StockAvailabilityActivity extends AppCompatActivity {
             tv_materialName.setText(materialDetailsModelArrayList.get(i).getMaterialName());
             tv_opStock.setText(materialDetailsModelArrayList.get(i).getOpeningStock());
 
-            tv_clStock.setOnClickListener(new View.OnClickListener() {
+
+            tv_materialName.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+            tv_opStock.setText(materialDetailsModelArrayList.get(i).getOpeningStock());
+
+            oStock = (int) Double.parseDouble(materialDetailsModelArrayList.get(i).getOpeningStock());
+            uStock = (int) Double.parseDouble(materialDetailsModelArrayList.get(i).getUsedStock());
+
+            cStock = oStock - uStock;
+            tv_clStock.setText(""+cStock);
+
+            tv_materialName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     TableRow row = (TableRow) v.getParent();

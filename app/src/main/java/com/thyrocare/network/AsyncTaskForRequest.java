@@ -160,6 +160,8 @@ public class AsyncTaskForRequest {
             abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.UserLoginDevicePostUserLogOut);
+            System.out.println("logout : "+ AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.UserLoginDevicePostUserLogOut);
+            System.out.println("logout : "+postJson);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -779,6 +781,7 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_BRAND_MASTER);
+            System.out.println("rohit : "+AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.FETCH_BRAND_MASTER);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -1338,6 +1341,8 @@ public class AsyncTaskForRequest {
             abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.SET_APPLY_LEAVE);
+            System.out.println("leave : "+AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.SET_APPLY_LEAVE);
+            System.out.println("leave :"+postJson);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);

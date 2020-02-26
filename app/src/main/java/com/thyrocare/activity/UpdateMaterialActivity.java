@@ -55,7 +55,7 @@ public class UpdateMaterialActivity extends AppCompatActivity {
         dac_code = getIntent().getStringExtra("main_model");
         materialDetailsModel = getIntent().getExtras().getParcelable("material_model");
         if (materialDetailsModel != null) {
-            opStock = Integer.parseInt(materialDetailsModel.getOpeningStock());
+            opStock = (int) Double.parseDouble(materialDetailsModel.getOpeningStock());
         }
     }
 
@@ -71,7 +71,7 @@ public class UpdateMaterialActivity extends AppCompatActivity {
                 wastFlag = false;
                 defFlag = false;
                 if (!edt_usedStock.getText().toString().trim().isEmpty()) {
-                    usedStock = Integer.parseInt(edt_usedStock.getText().toString().trim());
+                    usedStock = (int) Double.parseDouble(edt_usedStock.getText().toString().trim());
                 } else
                     usedStock = 0;
 

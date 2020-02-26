@@ -428,7 +428,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary));
             tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.white));
             ll_visit_orders_display_footer.setVisibility(View.GONE);
-            prepareRecyclerView(orderDetailsResponseModels_AayushmanOrders);
+                prepareRecyclerView(orderDetailsResponseModels_AayushmanOrders);
         } else {
 
             tv_RoutineOrders.setBackgroundResource(R.drawable.rounded_background_filled);

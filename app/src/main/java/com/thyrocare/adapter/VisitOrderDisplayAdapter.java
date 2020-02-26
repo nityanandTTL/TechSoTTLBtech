@@ -1153,7 +1153,7 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
 
             holder.tvAge.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getAge() + " Y | " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getGender());
 
-            if (CheckPPBSisPresent(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster())) {
+            if (CheckPPBSisPresent(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster(),orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getSecondVisitTest())) {
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
                     holder.img_ppbs.setVisibility(View.GONE);
                 } else {
@@ -1163,7 +1163,8 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
                 holder.img_ppbs.setVisibility(View.GONE);
             }
 
-            if (CheckRBSisPresent(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster())) {
+            if (CheckRBSisPresent(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster(),orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getSecondVisitTest())) {
+
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
                     holder.img_rbs.setVisibility(View.GONE);
                 } else {
@@ -1521,54 +1522,89 @@ public class VisitOrderDisplayAdapter extends BaseAdapter {
         }
     }
 
-    private boolean CheckPPBSisPresent(ArrayList<BeneficiaryDetailsModel> benMaster) {
+    private boolean CheckPPBSisPresent(ArrayList<BeneficiaryDetailsModel> benMaster, String secondVisitTest) {
 
-        if (benMaster.size() != 0) {
-            for (int i = 0; i < benMaster.size(); i++) {
-                if (benMaster.get(i).getTestsCode().contains(AppConstants.PPBS)) {
-                    System.out.println("Nitya >> Matched");
-                    return true;
-                }
-
-                if (benMaster.get(i).getSampleType() != null && benMaster.get(i).getSampleType().size() > 0){
-
-                    for (int j = 0; j < benMaster.get(i).getSampleType().size(); j++) {
-                        if (benMaster.get(i).getSampleType().get(j).getTests().equalsIgnoreCase(AppConstants.PPBS)){
-                            return true;
-                        }
-                    }
-                }
-
-            }
-
-            return false;
-        } else {
+        if (!InputUtils.isNull(secondVisitTest) && secondVisitTest.contains(AppConstants.PPBS)) {
+            System.out.println("Nitya >> Matched");
+            return true;
+        }else{
             return false;
         }
+
+        // TODO commented as per sachin Sir instruction
+    /*if (benMaster.size() != 0) {
+        for (int i = 0; i < benMaster.size(); i++) {
+            if (benMaster.get(i).getTestsCode().contains(AppConstants.PPBS)) {
+                System.out.println("Nitya >> Matched");
+                return true;
+            }
+
+            if (benMaster.get(i).getSampleType() != null && benMaster.get(i).getSampleType().size() > 0){
+
+                for (int j = 0; j < benMaster.get(i).getSampleType().size(); j++) {
+                    if (benMaster.get(i).getSampleType().get(j).getTests().equalsIgnoreCase(AppConstants.PPBS)){
+                        return true;
+                    }
+                }
+            }
+
+        }
+        if (!InputUtils.isNull(secondVisitTest) && secondVisitTest.contains(AppConstants.PPBS)) {
+            System.out.println("Nitya >> Matched");
+            return true;
+        }else{
+            return false;
+        }
+    } else {
+        if (!InputUtils.isNull(secondVisitTest) && secondVisitTest.contains(AppConstants.PPBS)) {
+            System.out.println("Nitya >> Matched");
+            return true;
+        }else{
+            return false;
+        }
+    }*/
     }
 
-    private boolean CheckRBSisPresent(ArrayList<BeneficiaryDetailsModel> benMaster) {
+    private boolean CheckRBSisPresent(ArrayList<BeneficiaryDetailsModel> benMaster, String secondVisitTest) {
 
-        if (benMaster.size() != 0) {
-            for (int i = 0; i < benMaster.size(); i++) {
-                if (benMaster.get(i).getTestsCode().contains(AppConstants.RBS)) {
-                    System.out.println("Nitya >> Matched");
-                    return true;
-                }
+        if (!InputUtils.isNull(secondVisitTest) && secondVisitTest.contains(AppConstants.RBS)) {
+            System.out.println("Nitya >> Matched");
+            return true;
+        }else{
+            return false;
+        }
 
-                if (benMaster.get(i).getSampleType() != null && benMaster.get(i).getSampleType().size() > 0){
+    /*// TODO commented as per sachin Sir instruction
+    if (benMaster.size() != 0) {
+        for (int i = 0; i < benMaster.size(); i++) {
+            if (benMaster.get(i).getTestsCode().contains(AppConstants.RBS)) {
+                System.out.println("Nitya >> Matched");
+                return true;
+            }
 
-                    for (int j = 0; j < benMaster.get(i).getSampleType().size(); j++) {
-                        if (benMaster.get(i).getSampleType().get(j).getTests().equalsIgnoreCase(AppConstants.RBS)){
-                            return true;
-                        }
+            if (benMaster.get(i).getSampleType() != null && benMaster.get(i).getSampleType().size() > 0){
+
+                for (int j = 0; j < benMaster.get(i).getSampleType().size(); j++) {
+                    if (benMaster.get(i).getSampleType().get(j).getTests().equalsIgnoreCase(AppConstants.RBS)){
+                        return true;
                     }
                 }
             }
-            return false;
-        } else {
+        }
+        if (!InputUtils.isNull(secondVisitTest) && secondVisitTest.contains(AppConstants.RBS)) {
+            System.out.println("Nitya >> Matched");
+            return true;
+        }else{
             return false;
         }
+    } else {
+        if (!InputUtils.isNull(secondVisitTest) && secondVisitTest.contains(AppConstants.RBS)) {
+            System.out.println("Nitya >> Matched");
+            return true;
+        }else{
+            return false;
+        }
+    }*/
     }
 
     /**
