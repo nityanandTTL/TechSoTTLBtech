@@ -107,7 +107,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="2">
 
                 <LinearLayout
                     android:id="@+id/ll_payment_icon"
@@ -185,15 +185,17 @@
                         android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>
 
+
+
                 <View
                     android:layout_width="1dp"
+                    android:visibility="gone"
                     android:layout_height="match_parent"
                     android:background="@color/separator"></View>
 
-
-
                 <LinearLayout
                     android:id="@+id/ll_materials_icon"
+                    android:visibility="gone"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -368,7 +370,7 @@
                 android:layout_toEndOf="@id/row_2"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="2">
 
                 <LinearLayout
                     android:id="@+id/ll_hub_icon"
@@ -428,11 +430,13 @@
 
                 <View
                     android:layout_width="1dp"
+                    android:visibility="gone"
                     android:layout_height="match_parent"
                     android:background="@color/separator"></View>
 
                 <LinearLayout
                     android:id="@+id/ll_feedback_icon"
+                    android:visibility="gone"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

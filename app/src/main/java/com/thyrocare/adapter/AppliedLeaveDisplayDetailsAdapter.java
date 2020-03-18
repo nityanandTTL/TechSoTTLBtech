@@ -70,7 +70,7 @@ public class AppliedLeaveDisplayDetailsAdapter extends RecyclerView.Adapter<Appl
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            holder.tv_remark.setText("Remark: " + btechOLeaveAppliedResponseModelrderModel.getRemarks());
+            holder.tv_remark.setText(""+btechOLeaveAppliedResponseModelrderModel.getRemarks());
 
             int sr_no= position +1;
             holder.tv_sr.setText(" "+sr_no);

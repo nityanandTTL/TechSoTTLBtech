@@ -124,7 +124,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:padding="@dimen/dp_5"
-                    android:text="Nature of Leave:"
+                    android:text="Nature of Leave* :"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -275,7 +275,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:padding="@dimen/dp_5"
-                        android:text="Leave On:"
+                        android:text="Leave On* :"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -368,7 +368,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textStyle="bold"
-                    android:text="Remark:" />
+                    android:text="Remark* :" />
 
                 <EditText
                     android:id="@+id/et_leave_days_remark"

@@ -3,6 +3,9 @@ package com.thyrocare.Retrofit;
 
 
 import com.thyrocare.models.api.request.GetVideoLanguageWiseRequestModel;
+import com.thyrocare.models.api.request.OrderPassRequestModel;
+import com.thyrocare.models.api.request.SendOTPRequestModel;
+import com.thyrocare.models.api.response.CommonResponseModel;
 import com.thyrocare.models.api.response.VideosResponseModel;
 
 import java.util.ArrayList;
@@ -25,6 +28,12 @@ public interface PostAPIInteface {
 
     @POST("COMMON.svc/Showvideo")
     Call<VideosResponseModel> getVideobasedOnLanguage(@Body GetVideoLanguageWiseRequestModel languageWiseRequestModel);
+
+    @POST("api/OrderAllocation/EditNameToSendOTP")
+    Call<CommonResponseModel> CallSendOTPAPI(@Body SendOTPRequestModel sendOTPRequestModel);
+
+    @POST("api/AllSMS/PostVerifyOTP")
+    Call<String> CallValidateOTPAPI(@Body OrderPassRequestModel orderPassRequestModel);
 
 
 

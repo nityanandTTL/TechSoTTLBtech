@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.thyrocare.network.AbstractApiModel.BDN_API_VERSION;
+import static com.thyrocare.network.AbstractApiModel.SERVER_BASE_API_URL_PROD;
 
 
 public class ClientEntryController {
@@ -84,22 +85,26 @@ public class ClientEntryController {
                     progressDialog.dismiss();
                 }
 
-                try {
-                    if (response.getString("Response").equalsIgnoreCase("Success")){
-                        responsenewCliententryModel = new ResponseClientEntryModel();
-                        responsenewCliententryModel.setResponse(response.getString("Response"));
-                        responsenewCliententryModel.setMessage(response.getString("message"));
-                        responsenewCliententryModel.setDocStatus(response.getString("docStatus"));
-                        responsenewCliententryModel.setResId(response.getString("ResId"));
+                if (response!=null){
+                    System.out.println("response : "+response.toString() );
+                    try {
+                        if (response.getString("Response").equalsIgnoreCase("Success")){
+                            responsenewCliententryModel = new ResponseClientEntryModel();
+                            responsenewCliententryModel.setResponse(response.getString("Response"));
+                            responsenewCliententryModel.setMessage(response.getString("message"));
+                            responsenewCliententryModel.setDocStatus(response.getString("docStatus"));
+                            responsenewCliententryModel.setResId(response.getString("ResId"));
 
-                        Toast.makeText(context,response.getString("Response"),Toast.LENGTH_LONG).show();
-                        newClientEntry.RefreshFields();
-                    }else{
-                        globalclass.showalert_OK(response.optString("message","Something went wrong, please try after sometime."),context);
+                            Toast.makeText(context,response.getString("Response"),Toast.LENGTH_LONG).show();
+                            newClientEntry.RefreshFields();
+                        }else{
+                            globalclass.showalert_OK(response.optString("message","Something went wrong, please try after sometime."),context);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
+
 
             }
         }, new Response.ErrorListener() {

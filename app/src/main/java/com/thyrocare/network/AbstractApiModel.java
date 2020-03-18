@@ -48,9 +48,9 @@ public class AbstractApiModel implements AppConstants {
     //TODO Stag
     public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi";//staging new server
     public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
-    public static final String BDN_API_VERSION = "http://www.thytejasrocare.local/API/BDN/";
+    public static final String BDN_API_VERSION = "http://www.thyrocare.local/API/BDN/";
     //TODO Live
-   /* public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
+/*    public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
     public static final String API_VERSION = "https://www.thyrocare.com/APIs";
     public static final String BDN_API_VERSION = "https://www.thyrocare.com/API/BDN/";*/
 

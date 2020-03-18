@@ -9,14 +9,19 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -25,10 +30,13 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.R;
+import com.thyrocare.Retrofit.PostAPIInteface;
+import com.thyrocare.Retrofit.RetroFit_APIClient;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.BeneficiaryDetailsDao;
 import com.thyrocare.dao.models.LabAlertMasterDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
+import com.thyrocare.dao.utils.ConnectionDetector;
 import com.thyrocare.delegate.AddTestListDialogDelegate;
 import com.thyrocare.delegate.CloseTestsDisplayDialogButtonDialogDelegate;
 import com.thyrocare.delegate.SelectClinicalHistoryCheckboxDelegate;
@@ -37,6 +45,9 @@ import com.thyrocare.dialog.ClinicalHistorySelectorDialog;
 import com.thyrocare.dialog.DisplaySelectedTestsListForCancellationDialog;
 import com.thyrocare.dialog.LabAlertSelectorDialog;
 import com.thyrocare.models.api.request.OrderBookingRequestModel;
+import com.thyrocare.models.api.request.OrderPassRequestModel;
+import com.thyrocare.models.api.request.SendOTPRequestModel;
+import com.thyrocare.models.api.response.CommonResponseModel;
 import com.thyrocare.models.api.response.Emailreponsedatamodel;
 import com.thyrocare.models.api.response.GetTestListResponseModel;
 import com.thyrocare.models.api.response.OrderBookingResponseBeneficiaryModel;
@@ -82,6 +93,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.thyrocare.network.AbstractApiModel.SERVER_BASE_API_URL;
 import static com.thyrocare.utils.app.CommonUtils.encodeImage;
 
 /**
@@ -131,6 +147,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
     ArrayList<TestGroupListModel> testGroupListModelArrayList;
     public static String testEdit = "no";
     GetTestListResponseModel TestListResponseModel;
+    private Global globalclass;
+    private Dialog CustomDialogforOTPValidation;
+    private ConnectionDetector cd;
 
     @Override
     public void onBackPressed() {
@@ -150,6 +169,9 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
 
         activity = this;
+        globalclass = new Global(activity);
+        globalclass.setLoadingGIF(activity);
+        cd = new ConnectionDetector(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
         dhbDao = new DhbDao(activity);
 
@@ -457,46 +479,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             public void onClick(View v) {
 
                 if (validate()) {
-
-                    // TODO code to reduce the size of Json by temporary storing Venupunture in global array
-                    VenuPuntureUtils.AddVenupumtureInTempGlobalArry(encodedVanipunctureImg,
-                            beneficiaryDetailsModel.getBenId(),
-                            edtBenName.getText().toString().trim(),
-                            edtAge.getText().toString().trim(),
-                            isM ? "M" : "F");
-                    // TODO code to reduce the size of Json by temporary storing Venupunture in global array
-
-                    if (isEdit_Mobile_email){
-                        getemailvalidation();
-                    }else{
-                        beneficiaryDetailsModel.setName(edtBenName.getText().toString().trim());
-                        beneficiaryDetailsModel.setAge(Integer.parseInt(edtAge.getText().toString().trim()));
-                        beneficiaryDetailsModel.setGender(isM ? "M" : "F");
-//                        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
-                        beneficiaryDetailsModel.setVenepuncture("filled"); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
-                        beneficiaryDetailsModel.setTestsCode(edtTests.getText().toString());
-                        beneficiaryDetailsModel.setTests(edtTests.getText().toString());
-                        beneficiaryDetailsModel.setRemarks(edtRemarks.getText().toString());
-                        beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
-                        orderDetailsModel.setReportHC(isHC ? 1 : 0);
-                        orderDetailsModel.setAddress(edt_addressnew.getText().toString());
-                        orderDetailsModel.setMobile(""+edt_Mobilenew.getText().toString());
-                        orderDetailsModel.setEmail(""+edt_emailnew.getText().toString());
-
-                        orderDetailsModel.setAddBen(isAdd);
-
-                        orderDetailsDao.insertOrUpdate(orderDetailsModel);
-                        // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
-                        OrderBookingRequestModel obrm = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
-                        ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(obrm);
-                        orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
-                        if (isNetworkAvailable(activity)) {
-                            orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
-                        } else {
-                            Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
+                    CallsendOTPAPIforOrderEdit();
                 }
             }
         });
@@ -1345,6 +1328,182 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 //        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
         beneficiaryDetailsModel.setVenepuncture("filled"); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+    }
+
+
+    private void CallSaveButtonFunction() {
+        // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+        VenuPuntureUtils.AddVenupumtureInTempGlobalArry(encodedVanipunctureImg,
+                beneficiaryDetailsModel.getBenId(),
+                edtBenName.getText().toString().trim(),
+                edtAge.getText().toString().trim(),
+                isM ? "M" : "F");
+        // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+
+        if (isEdit_Mobile_email) {
+            getemailvalidation();
+        } else {
+            beneficiaryDetailsModel.setName(edtBenName.getText().toString().trim());
+            beneficiaryDetailsModel.setAge(Integer.parseInt(edtAge.getText().toString().trim()));
+            beneficiaryDetailsModel.setGender(isM ? "M" : "F");
+//                        beneficiaryDetailsModel.setVenepuncture(encodedVanipunctureImg);
+            beneficiaryDetailsModel.setVenepuncture("filled"); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+            beneficiaryDetailsModel.setTestsCode(edtTests.getText().toString());
+            beneficiaryDetailsModel.setTests(edtTests.getText().toString());
+            beneficiaryDetailsModel.setRemarks(edtRemarks.getText().toString());
+            beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
+            orderDetailsModel.setReportHC(isHC ? 1 : 0);
+            orderDetailsModel.setAddress(edt_addressnew.getText().toString());
+            orderDetailsModel.setMobile("" + edt_Mobilenew.getText().toString());
+            orderDetailsModel.setEmail("" + edt_emailnew.getText().toString());
+
+            orderDetailsModel.setAddBen(isAdd);
+
+            orderDetailsDao.insertOrUpdate(orderDetailsModel);
+            // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+            OrderBookingRequestModel obrm = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
+            ApiCallAsyncTask orderBookingAPIAsyncTask = new AsyncTaskForRequest(activity).getOrderBookingRequestAsyncTask(obrm);
+            orderBookingAPIAsyncTask.setApiCallAsyncTaskDelegate(new AddBeneficiaryOrderBookingAPIAsyncTaskDelegateResult(orderDetailsDao.getOrderVisitModel(orderDetailsModel.getVisitId())));
+            if (isNetworkAvailable(activity)) {
+                orderBookingAPIAsyncTask.execute(orderBookingAPIAsyncTask);
+            } else {
+                Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void CallsendOTPAPIforOrderEdit() {
+
+        SendOTPRequestModel model = new SendOTPRequestModel();
+        model.setMobile(orderDetailsModel.getMobile());
+        model.setOrderno(orderDetailsModel.getVisitId());
+        PostAPIInteface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, SERVER_BASE_API_URL).create(PostAPIInteface.class);
+        Call<CommonResponseModel> responseCall = apiInterface.CallSendOTPAPI(model);
+        globalclass.showProgressDialog(activity, "Requesting for OTP. Please wait..");
+        responseCall.enqueue(new Callback<CommonResponseModel>() {
+            @Override
+            public void onResponse(Call<CommonResponseModel> call, Response<CommonResponseModel> response) {
+                globalclass.hideProgressDialog();
+                if (response.isSuccessful() && response.body() != null) {
+                    CommonResponseModel responseModel = response.body();
+                    if (!TextUtils.isEmpty(responseModel.getRES_ID()) && responseModel.getRES_ID().equalsIgnoreCase("RES0000")) {
+                        globalclass.showCustomToast(activity, "OTP send successfully to mobile number mapped to this order.");
+                        ShowDialogToVerifyOTP();
+                    } else {
+                        globalclass.showCustomToast(activity, "OTP Generation Failed.");
+                    }
+                } else {
+                    globalclass.showCustomToast(activity, MSG_SERVER_EXCEPTION);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CommonResponseModel> call, Throwable t) {
+                globalclass.hideProgressDialog();
+                globalclass.showCustomToast(activity, MSG_SERVER_EXCEPTION);
+            }
+        });
+    }
+
+    private void ShowDialogToVerifyOTP() {
+        CustomDialogforOTPValidation = new Dialog(activity);
+        CustomDialogforOTPValidation.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        CustomDialogforOTPValidation.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        CustomDialogforOTPValidation.setContentView(R.layout.validate_otp_dialog);
+        CustomDialogforOTPValidation.setCancelable(false);
+
+        RelativeLayout rel_main = (RelativeLayout) CustomDialogforOTPValidation.findViewById(R.id.rel_main);
+        TextView tv_header = (TextView) CustomDialogforOTPValidation.findViewById(R.id.tv_header);
+        ImageView img_btn_validateOTP = (ImageView) CustomDialogforOTPValidation.findViewById(R.id.img_btn_validateOTP);
+        ImageView img_close = (ImageView) CustomDialogforOTPValidation.findViewById(R.id.img_close);
+        final EditText edt_OTP = (EditText) CustomDialogforOTPValidation.findViewById(R.id.edt_OTP);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        int height = 0,width = 0;
+        if (displayMetrics != null) {
+            try {
+                height = displayMetrics.heightPixels;
+                width = displayMetrics.widthPixels;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width - 150, FrameLayout.LayoutParams.WRAP_CONTENT);
+        rel_main.setLayoutParams(lp);
+
+        CustomDialogforOTPValidation.show();
+
+        img_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CustomDialogforOTPValidation.dismiss();
+            }
+        });
+
+
+        img_btn_validateOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String strOTP = edt_OTP.getText().toString().trim();
+                if (!InputUtils.isNull(strOTP) && strOTP.length() != 4) {
+                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4",activity);
+                    edt_OTP.requestFocus();
+                } else {
+                    OrderPassRequestModel model = new OrderPassRequestModel();
+
+                    model.setMobile(orderDetailsModel.getMobile());
+                    model.setOTP(strOTP);
+                    model.setVisitId(orderDetailsModel.getVisitId());
+                    if (cd.isConnectingToInternet()) {
+                        CallValidateOTPAPI(model);
+                    } else {
+                        globalclass.showCustomToast(activity, activity.getResources().getString(R.string.plz_chk_internet));
+                    }
+                }
+
+            }
+        });
+
+    }
+
+    private void CallValidateOTPAPI(OrderPassRequestModel model) {
+
+        PostAPIInteface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, SERVER_BASE_API_URL).create(PostAPIInteface.class);
+        Call<String> responseCall = apiInterface.CallValidateOTPAPI(model);
+        globalclass.showProgressDialog(activity, "Requesting for OTP. Please wait..");
+        responseCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                globalclass.hideProgressDialog();
+                if (response.isSuccessful() && response.body() != null) {
+                    String strresponse = response.body();
+                    if (!TextUtils.isEmpty(strresponse) && strresponse.toUpperCase().contains("SUCCESS")) {
+                        globalclass.showCustomToast(activity, "OTP Validated Successfully.");
+                        if (!activity.isFinishing() && CustomDialogforOTPValidation != null && CustomDialogforOTPValidation.isShowing()){
+                            CustomDialogforOTPValidation.dismiss();
+                        }
+                        CallSaveButtonFunction();
+                    } else {
+                        globalclass.showCustomToast(activity, "Invalid OTP.");
+                    }
+                } else if (response.code() == 401) {
+                    globalclass.showCustomToast(activity, "Invalid OTP.");
+                } else {
+                    globalclass.showCustomToast(activity, MSG_SERVER_EXCEPTION);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                globalclass.hideProgressDialog();
+                globalclass.showCustomToast(activity, MSG_SERVER_EXCEPTION);
+            }
+        });
+
     }
 
     private OrderBookingRequestModel generateOrderBookingRequestModel(OrderVisitDetailsModel orderVisitDetailsModel) {

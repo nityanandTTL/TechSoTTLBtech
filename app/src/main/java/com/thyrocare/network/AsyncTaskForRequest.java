@@ -88,6 +88,7 @@ public class AsyncTaskForRequest {
             abstractApiModel.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_X_WWW_FROM_URLENCODED));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.LOGIN);
+            System.out.println(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.LOGIN);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_X_WWW_FROM_URLENCODED);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -118,6 +119,7 @@ public class AsyncTaskForRequest {
             abstractApiModel.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_X_WWW_FROM_URLENCODED));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.PATCH_CALL_REQUEST);
+            System.out.println("call : "+ AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.PATCH_CALL_REQUEST);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_X_WWW_FROM_URLENCODED);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -183,6 +185,8 @@ public class AsyncTaskForRequest {
             abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.UserLoginDevicePostUserLogin);
+            System.out.println(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.UserLoginDevicePostUserLogin);
+            System.out.println("post : "+postJson);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);

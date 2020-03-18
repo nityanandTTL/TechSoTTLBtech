@@ -37,11 +37,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.models.api.request.ApplyLeaveRequestModel;
 
+import com.thyrocare.models.api.response.Leaveapplied_responsemodel;
 import com.thyrocare.models.data.LeaveNatureMasterModel;
 import com.thyrocare.network.AbstractApiModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -56,6 +58,7 @@ import com.thyrocare.utils.app.Global;
 
 import org.joda.time.DateTimeComparator;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -92,6 +95,8 @@ public class LeaveIntimationFragment extends AbstractFragment {
     private FrameLayout Fl_list_history;
     private FloatingActionButton apply_leave;
     private TextView img_view_applied_leaves;
+    Gson gson;
+    Leaveapplied_responsemodel leaveapplied_responsemodel;
 
     EditText edt_test_id;
 
@@ -243,6 +248,8 @@ public class LeaveIntimationFragment extends AbstractFragment {
         apply_leave = (FloatingActionButton) rootView.findViewById(R.id.apply_leave);
         Fl_list_history = (FrameLayout) rootView.findViewById(R.id.Fl_list_history);
         sc_leave = (ScrollView) rootView.findViewById(R.id.sc_leave);
+        gson = new Gson();
+        ///leaveapplied_responsemodel = new Leaveapplied_responsemodel();
         /*String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         String defdate = (today).toString();*/
 
@@ -677,6 +684,10 @@ public class LeaveIntimationFragment extends AbstractFragment {
             return false;
 
         }
+        if(TextUtils.isEmpty(leaveremark.getText().toString())){
+            TastyToast.makeText(activity, "Kindly Enter Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+            return false;
+        }
         return true;
     }
 
@@ -740,7 +751,47 @@ public class LeaveIntimationFragment extends AbstractFragment {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             Logger.debug(TAG_FRAGMENT + "--apiCallResult: ");
-            if (statusCode == 200) {
+            if (!TextUtils.isEmpty(json)){
+                JSONObject jsonObject=new JSONObject(json);
+                try {
+
+                    leaveapplied_responsemodel = gson.fromJson(jsonObject.toString(),Leaveapplied_responsemodel.class);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (leaveapplied_responsemodel!=null&&leaveapplied_responsemodel.getRES_ID()!=null){
+                    if (leaveapplied_responsemodel.getRES_ID().equalsIgnoreCase("RES0000")){
+                        Toast.makeText(getActivity(), leaveapplied_responsemodel.getRESPONSE().toString(), LENGTH_SHORT).show();
+                        appPreferenceManager.setLeaveFlag(0);
+                        appPreferenceManager.setCameFrom(0);
+                        activity.toolbarHome.setVisibility(View.VISIBLE);
+                        pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+
+                    }
+                    else {
+                        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+
+                        alertDialog.setMessage("" + leaveapplied_responsemodel.getRESPONSE().toString());
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+                }else {
+                    Toast.makeText(activity, "Some thing went wrong.", LENGTH_SHORT).show();
+                }
+
+            }else {
+                Toast.makeText(activity, "Some thing went wrong.", LENGTH_SHORT).show();
+            }
+
+            /*if (statusCode == 200) {
+
+
                 Toast.makeText(getActivity(), json, LENGTH_SHORT).show();
                 appPreferenceManager.setLeaveFlag(0);
                 appPreferenceManager.setCameFrom(0);
@@ -763,7 +814,7 @@ public class LeaveIntimationFragment extends AbstractFragment {
 
                 alertDialog.show();
 
-            }
+            }*/
         }
 
         @Override

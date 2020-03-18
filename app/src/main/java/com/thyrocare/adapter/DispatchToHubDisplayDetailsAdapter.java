@@ -26,19 +26,19 @@ public class DispatchToHubDisplayDetailsAdapter extends RecyclerView.Adapter<Dis
     DispatchToHubAdapterOnItemClickedDelegate mcallback;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_sr_no, tv_name, tv_age, tv_aadhar_no,txtorder_no,txt_title;//, tv_distance, tv_kits;
+        TextView tv_sr_no, tv_name, tv_age, tv_aadhar_no, txtorder_no, txt_title;//, tv_distance, tv_kits;
         public ImageView img_release, img_edit, title_aadhar_icon;//, title_distance_icon, title_kits_icon;
         View itemView;
 
         public MyViewHolder(View view) {
             super(view);
-            this.itemView =  view;
+            this.itemView = view;
             initComp(view);
         }
 
         private void initComp(View view) {
-            txtorder_no=(TextView) view.findViewById(R.id.tv_orderno);
-            txt_title=(TextView) view.findViewById(R.id.oderno_title);
+            txtorder_no = (TextView) view.findViewById(R.id.tv_orderno);
+            txt_title = (TextView) view.findViewById(R.id.oderno_title);
 
             tv_sr_no = (TextView) view.findViewById(R.id.txt_sr_no);
             tv_name = (TextView) view.findViewById(R.id.txt_name);
@@ -85,13 +85,12 @@ public class DispatchToHubDisplayDetailsAdapter extends RecyclerView.Adapter<Dis
             holder.title_aadhar_icon.setVisibility(View.GONE);
             holder.txtorder_no.setVisibility(View.GONE);
             holder.txt_title.setVisibility(View.GONE);
-            holder.tv_sr_no.setText(pos+1+"");
-            if(holder.itemView.getParent()!=null)
-                ((ViewGroup)holder.itemView.getParent()).removeView(holder.itemView);
+            holder.tv_sr_no.setText(pos + 1 + "");
+            if (holder.itemView.getParent() != null)
+                ((ViewGroup) holder.itemView.getParent()).removeView(holder.itemView);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     mcallback.onItemClicked(hubbTechModel);
                     //activity.pushFragments(HubDetailMapDisplayFragmentActivity.newInstance(hubbTechModels.get(pos)), false, false, HubDetailMapDisplayFragmentActivity.TAG_FRAGMENT, R.id.fl_homeScreen, HubListDisplayFragment.TAG_FRAGMENT);
                 }
