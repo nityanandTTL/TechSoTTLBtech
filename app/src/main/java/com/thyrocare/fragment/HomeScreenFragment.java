@@ -160,10 +160,10 @@ public class HomeScreenFragment extends AbstractFragment {
                             SpotlightSequence.getInstance(activity, null)
                                     .addSpotlight(view.findViewById(R.id.schedule_icon), "Schedule", "Schedule your availability ", "Schedule")
                                     .addSpotlight(view.findViewById(R.id.orders_booked), "Orders", "Orders assigned to you are here ", "orderassigng")
-                                   // .addSpotlight(view.findViewById(R.id.materials_icon), "Materials", "Your can order materials here", "materails")
+                                    // .addSpotlight(view.findViewById(R.id.materials_icon), "Materials", "Your can order materials here", "materails")
                                     .addSpotlight(view.findViewById(R.id.hub_icon), "Hub", "You can check you hubs assigned to you", "shub")
                                     .addSpotlight(view.findViewById(R.id.ordersserved), "Served Orders", "Order history is here", "sorders")
-                                   // .addSpotlight(view.findViewById(R.id.Ledger_icon), "Ledger", "You can check you ledger here", "ledger")
+                                    // .addSpotlight(view.findViewById(R.id.Ledger_icon), "Ledger", "You can check you ledger here", "ledger")
                                     .startSequence();
                         }
                     }, 400);
@@ -231,6 +231,7 @@ public class HomeScreenFragment extends AbstractFragment {
                 loadSpotlight(rootView);
             }
 
+
         }
 
         setHasOptionsMenu(true);
@@ -250,6 +251,7 @@ public class HomeScreenFragment extends AbstractFragment {
     }
 
     private void initListeners_LME() {
+
         lme_orders_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -464,11 +466,10 @@ public class HomeScreenFragment extends AbstractFragment {
                 //btech_hub
                 //for btech with hub login...role will be 6 for this
                 Logger.error("Role" + appPreferenceManager.getLoginRole());
-                if (appPreferenceManager.getLoginRole().equals("6")) {//loginRole.equalsIgnoreCase("6")
+                if (appPreferenceManager.getLoginRole().equals("6")) {
                     MainDailog = new Dialog(getActivity());
                     MainDailog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     MainDailog.setContentView(R.layout.btech_dialog_btechwithhub);
-
                     LinearLayout send, receive;
                     send = (LinearLayout) MainDailog.findViewById(R.id.send);
                     receive = (LinearLayout) MainDailog.findViewById(R.id.receive);

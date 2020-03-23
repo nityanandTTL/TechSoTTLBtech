@@ -197,7 +197,6 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
                 }
             } else {
                 master_scanned_barcode = scanningResult.getContents();
-                //Toast.makeText(activity, "Btechwithhub_hubmaster "+scanningResult.getContents(), Toast.LENGTH_SHORT).show();
             }
         } else {
             Logger.error("Cancelled from fragment");

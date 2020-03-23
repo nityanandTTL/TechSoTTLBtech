@@ -42,6 +42,7 @@ import com.thyrocare.models.api.response.PaymentDoCaptureResponseAPIResponseMode
 import com.thyrocare.models.api.response.PaymentModeMasterResponseModel;
 import com.thyrocare.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.models.api.response.PaymentStartTransactionAPIResponseModel;
+import com.thyrocare.models.api.response.RemarksRequestToReleaseResponseModel;
 import com.thyrocare.models.api.response.RemarksResponseModel;
 import com.thyrocare.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.models.api.response.SessionExpireModel;
@@ -788,6 +789,16 @@ public class ResponseParser implements AppConstants {
         ArrayList<RemarksResponseModel> remarksResponseModels = null;
 //		if (!parseIntoError(json, statusCode)){
         TypeToken<ArrayList<RemarksResponseModel>> token = new TypeToken<ArrayList<RemarksResponseModel>>() {
+        };
+        remarksResponseModels = gson.fromJson(json, token.getType());
+//		}
+        return remarksResponseModels;
+    }
+
+    public ArrayList<RemarksRequestToReleaseResponseModel> getRemarksRequestReleaseResponseModel(String json, int statusCode) {
+        ArrayList<RemarksRequestToReleaseResponseModel> remarksResponseModels = null;
+//		if (!parseIntoError(json, statusCode)){
+        TypeToken<ArrayList<RemarksRequestToReleaseResponseModel>> token = new TypeToken<ArrayList<RemarksRequestToReleaseResponseModel>>() {
         };
         remarksResponseModels = gson.fromJson(json, token.getType());
 //		}

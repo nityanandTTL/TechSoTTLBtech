@@ -12,6 +12,7 @@ public class RemarksResponseModel implements Parcelable {
     private int Id;
     private String Reason;
 
+
     protected RemarksResponseModel(Parcel in) {
         Id = in.readInt();
         Reason = in.readString();

@@ -51,7 +51,7 @@
         android:layout_margin="10dp"
         android:layout_weight="1"
         android:background="@android:color/white"
-        android:hint="Please enter reason to reschedule"
+        android:hint="Please enter remarks to reschedule"
         android:padding="10dp"
         android:singleLine="true"
         android:textSize="14sp" />
@@ -63,7 +63,7 @@
         android:layout_margin="10dp"
         android:layout_weight="1"
         android:background="@android:color/white"
-        android:hint="Please enter reason to reschedule"
+        android:hint="Please enter remarks to reschedule"
         android:padding="10dp"
         android:singleLine="true"
         android:textSize="14sp"

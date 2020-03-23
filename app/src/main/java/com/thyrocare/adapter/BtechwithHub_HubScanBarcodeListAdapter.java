@@ -38,12 +38,13 @@ public class BtechwithHub_HubScanBarcodeListAdapter extends RecyclerView.Adapter
         }
 
         private void initComp(View view) {
+
             btech_name = (TextView) view.findViewById(R.id.btech_name);
             barcodetype = (TextView) view.findViewById(R.id.barcodetype);
-
             editBarcode = (TextView) view.findViewById(R.id.editbarcode);
             imgGreenTick = (ImageView) view.findViewById(R.id.scanned_status_green);
             imgRedCross = (ImageView) view.findViewById(R.id.scanned_status_red);
+
         }
     }
 

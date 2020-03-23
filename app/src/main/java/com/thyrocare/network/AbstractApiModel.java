@@ -50,7 +50,7 @@ public class AbstractApiModel implements AppConstants {
     public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
     public static final String BDN_API_VERSION = "http://www.thyrocare.local/API/BDN/";
     //TODO Live
-/*    public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
+    /*public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi";//live new server
     public static final String API_VERSION = "https://www.thyrocare.com/APIs";
     public static final String BDN_API_VERSION = "https://www.thyrocare.com/API/BDN/";*/
 
@@ -189,6 +189,8 @@ public class AbstractApiModel implements AppConstants {
     public String OLC_PICKUP_SUBMIT_SCAN_BARCODE = VERSION_API_URL + "/ScanPickup";
 
     public String REMARKS = VERSION_API_URL + "/Masters/ReleaseRemarksMasterNew";
+
+    public String REQUESTRELEASEREMARKS = VERSION_API_URL + "/Masters/OrderRemarks";
 
     public String SCHEDULEOPEN = VERSION_API_URL + "/BtechAvaibilityNew/BtechMarkedAvailability";
 

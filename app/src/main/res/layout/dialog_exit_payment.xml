@@ -18,7 +18,7 @@
 
     <EditText
         android:textSize="14sp"
-        android:hint="Please enter reason to release"
+        android:hint="Please enter remarks to release"
         android:singleLine="true"
         android:padding="10dp"
         android:id="@+id/edt_emark"

@@ -88,7 +88,8 @@ public class AsyncTaskForRequest {
             abstractApiModel.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             abstractApiModel.setHeader(getHeaderContentType(AbstractApiModel.APPLICATION_X_WWW_FROM_URLENCODED));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.LOGIN);
-            System.out.println(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.LOGIN);
+            System.out.println("login - "+AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.LOGIN);
+            System.out.println("login - "+nameValuePairs.toString());
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_X_WWW_FROM_URLENCODED);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -1552,6 +1553,25 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.REMARKS + "/" + id);
+            apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
+            apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
+            apiCallAsyncTask.setApiModel(abstractApiModel);
+            apiCallAsyncTask.setProgressBarMessage(context.getResources()
+                    .getString(R.string.progress_message_fetching_payment_modes_please_wait));
+            apiCallAsyncTask.setProgressBarVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return apiCallAsyncTask;
+    }
+
+    public ApiCallAsyncTask getremarksForRequestToReleaseRequestAsyncTask(int id) {
+        apiCallAsyncTask = null;
+        try {
+            apiCallAsyncTask = new ApiCallAsyncTask(context);
+            abstractApiModel = new AbstractApiModel();
+            abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
+            abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.REQUESTRELEASEREMARKS + "/" + id);
             apiCallAsyncTask.setHttpMethod((APICall.GET_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);

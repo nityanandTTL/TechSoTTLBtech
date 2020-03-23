@@ -1,5 +1,6 @@
 
 package com.thyrocare.activity;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.Controller.NotificationMappingController;
@@ -297,7 +298,6 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
             }
 
 
-
         }
 
         Bundle bundle = new Bundle();
@@ -324,13 +324,17 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
     private class LoginApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
+            if (!TextUtils.isEmpty(json)) {
+                System.out.println("login - " + json);
+            }
             if (statusCode == 200) {
+                System.out.println("login - " + json);
                 ResponseParser responseParser = new ResponseParser(activity);
                 loginResponseModel = new LoginResponseModel();
                 loginResponseModel = responseParser.getLoginResponseModel(json, statusCode);
                 if (loginResponseModel != null) {
                     if (loginResponseModel.getRole().equals(AppConstants.LME_ROLE_ID)) {
-                      setLoginDeviceResponse();
+                        setLoginDeviceResponse();
                     } else {
                         CallDeviceIDLoginAPI(loginResponseModel);
                     }
@@ -410,9 +414,9 @@ public class LoginScreenActivity extends AbstractActivity implements View.OnClic
 
             ApplicationController.notificationMappingController = new NotificationMappingController(activity);
             ApplicationController.notificationMappingController.getNotificationMapping(notificationMappingModel);
-            Log.e("shami -- ", "notificationMapping: Token Generated" );
+            Log.e("shami -- ", "notificationMapping: Token Generated");
         } else {
-            Log.e("shami -- ", "notificationMapping: Token not generated" );
+            Log.e("shami -- ", "notificationMapping: Token not generated");
         }
     }
 }

@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:layout_weight="1"
-        android:text="Enter the reason for Stock Changes"
+        android:text="Enter the remarks for Stock Changes"
         android:textColor="@android:color/white"
         android:textSize="15dp"
         android:textStyle="bold" />

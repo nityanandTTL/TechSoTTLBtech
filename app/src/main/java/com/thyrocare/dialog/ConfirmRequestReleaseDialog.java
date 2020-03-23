@@ -12,8 +12,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.R;
 import com.thyrocare.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
+import com.thyrocare.models.api.response.RemarksRequestToReleaseResponseModel;
 import com.thyrocare.models.api.response.RemarksResponseModel;
 import com.thyrocare.models.data.OrderVisitDetailsModel;
 import com.thyrocare.network.ApiCallAsyncTask;
@@ -40,11 +42,12 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
 
     private EditText edt__release_remark;
     private Spinner edt_remark;
-    private RemarksResponseModel remarksResponseModelmain;
-    private ArrayList<RemarksResponseModel> remarksResponseModelsarr;
+    private RemarksRequestToReleaseResponseModel remarksResponseModelmain;
+    private ArrayList<RemarksRequestToReleaseResponseModel> remarksResponseModelsarr;
     private ArrayList<String> remarks;
     private ConfirmOrderReleaseDialogButtonClickedDelegate confirmOrderReleaseDialogButtonClickedDelegate;
     private OrderVisitDetailsModel orderVisitDetailsModel;
+
     public ConfirmRequestReleaseDialog(Context activity, ConfirmOrderReleaseDialogButtonClickedDelegate confirmOrderReleaseDialogButtonClickedDelegate, OrderVisitDetailsModel orderVisitDetailsModel) {
         super(activity);
         this.activity = activity;
@@ -67,14 +70,12 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
         btn_yes.setOnClickListener(this);
 
     }
+
     private void fetchremarks() {
         AsyncTaskForRequest asyncTaskForRequest = new AsyncTaskForRequest(activity);
-        ApiCallAsyncTask fetchLeaveDetailApiAsyncTask = asyncTaskForRequest.getremarksRequestAsyncTask(27);
+        ApiCallAsyncTask fetchLeaveDetailApiAsyncTask = asyncTaskForRequest.getremarksForRequestToReleaseRequestAsyncTask(27);
         fetchLeaveDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchRemarksDetailsApiAsyncTaskDelegateResult());
-
-            fetchLeaveDetailApiAsyncTask.execute(fetchLeaveDetailApiAsyncTask);
-
-
+        fetchLeaveDetailApiAsyncTask.execute(fetchLeaveDetailApiAsyncTask);
     }
 
     private class FetchRemarksDetailsApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
@@ -85,55 +86,51 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
                 ResponseParser responseParser = new ResponseParser(activity);
                 remarksResponseModelsarr = new ArrayList<>();
 
-                remarksResponseModelsarr = responseParser.getRemarksResponseModel(json, statusCode);
+                remarksResponseModelsarr = responseParser.getRemarksRequestReleaseResponseModel(json, statusCode);
                 if (remarksResponseModelsarr != null) {
                     remarks = new ArrayList<>();
-                  remarks.add(0,"--SELECT--");
-                    for (final RemarksResponseModel remarksResponseModelss:
+                    remarks.add(0, "--SELECT--");
+                    for (final RemarksRequestToReleaseResponseModel remarksResponseModelss :
                             remarksResponseModelsarr) {
-                        remarks.add(remarksResponseModelss.getReason().toUpperCase());
-                        remarksResponseModelmain = new RemarksResponseModel();
-                        ArrayAdapter<String> spinneradapter71 = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, remarks);
-                        spinneradapter71.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        edt_remark.setAdapter(spinneradapter71);
-                        edt_remark.setSelection(0);
-                        remarksResponseModelmain = remarksResponseModelsarr.get(0);
+                        remarks.add(remarksResponseModelss.getRemarks().toUpperCase());
+                    }
 
-                        edt_remark.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                //jai
-                                /*remarksResponseModelmain = remarksResponseModelsarr.get(position);
-                                String Remarksstr = remarks.get(position);*/
-                                if(position>0){
-                                    remarksResponseModelmain = remarksResponseModelsarr.get(position-1);
-                                    String Remarksstr = remarks.get(position-1);
-                                    //jai
-                                    for (RemarksResponseModel RRM :
-                                            remarksResponseModelsarr) {
-                                        if (RRM.getReason().equals(Remarksstr)) {
-                                            remarksResponseModelmain = RRM;
+                    remarksResponseModelmain = new RemarksRequestToReleaseResponseModel();
+                    ArrayAdapter<String> spinneradapter71 = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, remarks);
+                    spinneradapter71.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    edt_remark.setAdapter(spinneradapter71);
+                    edt_remark.setSelection(0);
+                    remarksResponseModelmain = remarksResponseModelsarr.get(0);
 
-                                            break;
-                                        }
+                    edt_remark.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                            if (position > 0) {
+                                remarksResponseModelmain = remarksResponseModelsarr.get(position - 1);
+                                String Remarksstr = remarks.get(position);
+                                for (RemarksRequestToReleaseResponseModel RRM :
+                                        remarksResponseModelsarr) {
+                                    if (RRM.getRemarks().equals(Remarksstr)) {
+                                        remarksResponseModelmain = RRM;
+                                        break;
                                     }
                                 }
 
-
+                                if(Remarksstr.equalsIgnoreCase("other") || Remarksstr.equalsIgnoreCase("others")){
+                                    edt__release_remark.setVisibility(View.VISIBLE);
+                                }else {
+                                    edt__release_remark.setVisibility(View.GONE);
+                                }
                             }
+                        }
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
 
-                            }
-                        });
-                    }
-
-
-
+                        }
+                    });
                 }
-
-
             }
         }
 
@@ -145,7 +142,6 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
 
 
     }
-
 
 
     private void initUI() {
@@ -160,23 +156,43 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
-            if (/*!InputUtils.isNull(remarksResponseModelmain.getReason().trim())
-                || remarksResponseModelmain.getReason().trim()!="--SELECT--"*/!edt__release_remark.getText().toString().equals("")) {
-                //  Logger.error("reason "+remarksResponseModelmain.getReason());
-                Logger.error("reason " + edt__release_remark.getText().toString());
-
-                confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel, edt__release_remark.getText().toString().trim());
-                //   confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel,remarksResponseModelmain.getReason().trim());
-//                confirmOrderReleaseDialogButtonClickedDelegate.onCancelButtonClicked();
-                dismiss();
+            if (edt_remark.getSelectedItem().equals("--SELECT--")) {
+                TastyToast.makeText(activity, "Select Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+            } else if (ifOTHERRemarksVisible()) {
 
             } else {
-                Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
+                Logger.error("reason " + edt__release_remark.getText().toString());
+                confirmOrderReleaseDialogButtonClickedDelegate.onOkButtonClicked(orderVisitDetailsModel, getReasonRemarks());
+                dismiss();
             }
         }
         if (v.getId() == R.id.btn_no) {
             confirmOrderReleaseDialogButtonClickedDelegate.onCancelButtonClicked();
             dismiss();
         }
+    }
+
+    private boolean ifOTHERRemarksVisible() {
+        if(edt__release_remark.getVisibility() == View.VISIBLE){
+            if (edt__release_remark.getText().toString().equals("")) {
+                Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
+                return true;
+            }else {
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+
+    private String getReasonRemarks() {
+        String st = "";
+        if(edt__release_remark.getVisibility() == View.VISIBLE){
+            st = remarksResponseModelmain.getRemarks().toString().trim()+" - "+edt__release_remark.getText().toString().trim();
+        }else {
+            st = remarksResponseModelmain.getRemarks().toString().trim();
+        }
+
+        return st;
     }
 }
