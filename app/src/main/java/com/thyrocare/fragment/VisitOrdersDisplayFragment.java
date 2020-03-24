@@ -1022,12 +1022,12 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             orderStatusChangeRequestModel.setStatus(6);
             ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
             orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeApiAsyncTaskDelegateResult(orderVisitDetailsModel));
-           /* if (isNetworkAvailable(activity)) {
+            if (isNetworkAvailable(activity)) {
                 orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
             } else {
                 TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
                 //   Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-            }*/
+            }
         }
 
         @Override
@@ -1046,12 +1046,12 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
             orderStatusChangeRequestModel.setStatus(27);
             ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderStatusChangeRequestAsyncTask(orderStatusChangeRequestModel);
             orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderStatusChangeApiAsyncTaskDelegateResult(orderVisitDetailsModel));
-            /*if (isNetworkAvailable(activity)) {
+            if (isNetworkAvailable(activity)) {
                 orderStatusChangeApiAsyncTask.execute(orderStatusChangeApiAsyncTask);
             } else {
                 TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
                 //  Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-            }*/
+            }
         }
 
         @Override
