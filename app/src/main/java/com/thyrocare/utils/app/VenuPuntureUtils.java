@@ -7,16 +7,22 @@ import java.util.ArrayList;
 
 public class VenuPuntureUtils {
 
-    public static void AddVenupumtureInTempGlobalArry(String encodedVanipunctureImg, int BenID, String name, String Age, String Gender) {
-        if (!InputUtils.isNull(encodedVanipunctureImg)) {
+    public static void AddVenupumtureInTempGlobalArry(String encodedVanipunctureImg, int BenID, String name, String Age, String Gender, String TRFImagePath) {
+
+        for (int i = 0; i < BundleConstants.TempVenuImageArylist.size(); i++) {
+            if (BundleConstants.TempVenuImageArylist.get(i).getBenID() == BenID){
+                BundleConstants.TempVenuImageArylist.remove(i);
+            }
+        }
             Venupunture_Temporary_ImageModel model = new Venupunture_Temporary_ImageModel();
             model.setVenupuntureBase64string(encodedVanipunctureImg);
             model.setBenID(BenID);
             model.setBenname(name);
             model.setBenAge(Age);
             model.setBenGender(Gender);
+            model.setTRFImagePath(TRFImagePath);
             BundleConstants.TempVenuImageArylist.add(model);
-        }
+
     }
 
     public static void ClearVenupumtureTempGlobalArry() {

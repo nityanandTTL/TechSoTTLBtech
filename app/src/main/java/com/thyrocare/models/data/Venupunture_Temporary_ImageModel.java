@@ -9,6 +9,7 @@ public class Venupunture_Temporary_ImageModel implements Serializable {
     String Benname;
     String BenGender;
     String BenAge;
+    String TRFImagePath = "";
 
     public String getVenupuntureBase64string() {
         return VenupuntureBase64string;
@@ -49,5 +50,13 @@ public class Venupunture_Temporary_ImageModel implements Serializable {
 
     public void setBenAge(String benAge) {
         BenAge = benAge;
+    }
+
+    public String getTRFImagePath() {
+        return TRFImagePath;
+    }
+
+    public void setTRFImagePath(String TRFImagePath) {
+        this.TRFImagePath = TRFImagePath;
     }
 }

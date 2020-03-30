@@ -6,6 +6,7 @@ import com.thyrocare.models.api.request.GetVideoLanguageWiseRequestModel;
 import com.thyrocare.models.api.request.OrderPassRequestModel;
 import com.thyrocare.models.api.request.SendOTPRequestModel;
 import com.thyrocare.models.api.response.CommonResponseModel;
+import com.thyrocare.models.api.response.CommonResponseModel1;
 import com.thyrocare.models.api.response.VideosResponseModel;
 
 import java.util.ArrayList;
@@ -34,6 +35,11 @@ public interface PostAPIInteface {
 
     @POST("api/AllSMS/PostVerifyOTP")
     Call<String> CallValidateOTPAPI(@Body OrderPassRequestModel orderPassRequestModel);
+
+    @Multipart
+    @POST("api/OrderAllocation/TRFUPLOAD")
+    Call<CommonResponseModel1> uploadTRFToServer(@Part MultipartBody.Part TRFImage,
+                                                 @Part("BENID") RequestBody BENID);
 
 
 

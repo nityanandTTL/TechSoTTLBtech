@@ -464,6 +464,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         EditME = editME;
     }
 
+
     public String getSecondVisitTest() {
         return SecondVisitTest;
     }

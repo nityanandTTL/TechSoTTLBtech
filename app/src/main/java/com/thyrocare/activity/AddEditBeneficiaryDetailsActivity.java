@@ -1333,11 +1333,22 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
     private void CallSaveButtonFunction() {
         // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+
+
+        String TRFImagePath = "";
+        if (BundleConstants.TempVenuImageArylist != null){
+            for (int i = 0; i < BundleConstants.TempVenuImageArylist.size(); i++) {
+                if (BundleConstants.TempVenuImageArylist.get(i).getBenID() == beneficiaryDetailsModel.getBenId()){
+                    TRFImagePath = !InputUtils.isNull(BundleConstants.TempVenuImageArylist.get(i).getTRFImagePath()) ? BundleConstants.TempVenuImageArylist.get(i).getTRFImagePath() : "";
+                }
+            }
+        }
         VenuPuntureUtils.AddVenupumtureInTempGlobalArry(encodedVanipunctureImg,
                 beneficiaryDetailsModel.getBenId(),
                 edtBenName.getText().toString().trim(),
                 edtAge.getText().toString().trim(),
-                isM ? "M" : "F");
+                isM ? "M" : "F"
+        ,TRFImagePath);
         // TODO code to reduce the size of Json by temporary storing Venupunture in global array
 
         if (isEdit_Mobile_email) {

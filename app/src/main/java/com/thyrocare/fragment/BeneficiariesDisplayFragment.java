@@ -477,6 +477,19 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             } else {
                 Logger.error("bdm not null " + bdm.getVenepuncture());
             }
+
+            // TODO code for validating TRF upload
+            if (bdm.isTRF()){
+                for (int i = 0; i < BundleConstants.TempVenuImageArylist.size(); i++) {
+                    if (BundleConstants.TempVenuImageArylist.get(i).getBenID() == bdm.getBenId()){
+                        if (InputUtils.isNull(BundleConstants.TempVenuImageArylist.get(i).getTRFImagePath())){
+                            Toast.makeText(activity, "Please upload TRF for " + bdm.getName(), Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                    }
+                }
+            }
+            // TODO code for validating TRF upload
         }
 
 
@@ -1518,16 +1531,15 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 //jai
                 JSONObject jsonObject = new JSONObject(json);
 
-                Logger.error("tejas0");
 
                 ResponseParser responseParser = new ResponseParser(activity);
                 FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = new FetchOrderDetailsResponseModel();
                 fetchOrderDetailsResponseModel = responseParser.getFetchOrderDetailsResponseModel(json, statusCode);
                 if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
-                    Logger.error("tejas1");
+
                     for (OrderVisitDetailsModel orderVisitDetailsModel :
                             fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
-                        Logger.error("tejas2");
+
 
                         if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
                             Logger.error("tejas3");
@@ -1538,19 +1550,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                 Logger.error("tejas5 " + orderDetailsModel.getAmountDue());
                             }
 
-
                             totalAmountPayable = orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue();
                             Logger.error("tttejas1 " + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
 
-
                             txtAmtPayable.setText("" + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
-
-
-/*
- totalAmountPayable=orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue-1).getAmountDue();
-                            Logger.error("tttejas1 "+orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue-1).getAmountDue());
-                            txtAmtPayable.setText(""+orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue-1).getAmountDue());
-*/
 
                             for (OrderDetailsModel orderDetailsModel :
                                     orderVisitDetailsModel.getAllOrderdetails()) {
@@ -1558,15 +1561,6 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                 Logger.error("tttejas2 " + orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue).getAmountDue());
                                 txtAmtPayable.setText("" + orderVisitDetailsModel.getAllOrderdetails().get(VisitOrderDisplayAdapter.posForAmountDue).getAmountDue());
                             }
-
-                            /*txtAmtPayable.setText("" + totalAmountPayable + "/-");
-                            if (totalAmountPayable == 0) {
-                                btnProceedPayment.setText("Submit Work Order");
-                            } else {
-                                btnProceedPayment.setText("Proceed for Payment");
-                            }
-*/
-
 
                         }
                     }

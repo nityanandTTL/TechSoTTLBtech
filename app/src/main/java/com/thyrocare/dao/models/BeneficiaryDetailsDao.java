@@ -48,6 +48,7 @@ public class BeneficiaryDetailsDao {
 	private String BARCODE_DTL = "barcodedtl";
 	private String IS_TEST_EDIT = "isTestEdit";
 	private String IS_ADD_BEN = "isAddBen";
+	private String IS_TRF = "isTRF";
 	private String CLINICAL_HISTORY = "clHistory";
 	private String LAB_ALERT = "labAlert";
 	private String SAMPLE_TYPE = "sampleType";
@@ -93,6 +94,7 @@ public class BeneficiaryDetailsDao {
 		beneficiaryDetailsModel.setVenepuncture(CommonUtils.encodeImage(cursor.getBlob(cursor.getColumnIndex(VENEPUNCTURE))));
 		beneficiaryDetailsModel.setTestEdit(cursor.getString(cursor.getColumnIndex(IS_TEST_EDIT)).equals("1"));
 		beneficiaryDetailsModel.setAddBen(cursor.getString(cursor.getColumnIndex(IS_ADD_BEN)).equals("1"));
+		beneficiaryDetailsModel.setTRF(cursor.getString(cursor.getColumnIndex(IS_TRF)).equals("1"));
 
 		TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>> tokenBarcode = new TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>>(){};
 		ArrayList<BeneficiaryBarcodeDetailsModel> bmArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(BARCODE_DTL)),tokenBarcode.getType());
@@ -142,6 +144,7 @@ public class BeneficiaryDetailsDao {
 		values.put(REMARKS, beneficiaryDetailsModel.getRemarks());
         values.put(IS_TEST_EDIT, beneficiaryDetailsModel.isTestEdit() ? "1" : "0");
         values.put(IS_ADD_BEN, beneficiaryDetailsModel.isAddBen() ? "1" : "0");
+        values.put(IS_TRF, beneficiaryDetailsModel.isTRF() ? "1" : "0");
 		values.put(VENEPUNCTURE, CommonUtils.decodedImageBytes(InputUtils.isNull(beneficiaryDetailsModel.getVenepuncture())?"":beneficiaryDetailsModel.getVenepuncture()));
 //		values.put(VENEPUNCTURE, "Tejas");
 		values.put(BARCODE_DTL, new Gson().toJson(beneficiaryDetailsModel.getBarcodedtl()));

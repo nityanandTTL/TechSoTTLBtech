@@ -138,6 +138,7 @@ public class OrderDetailsDao {
 
 
 
+
         TypeToken<ArrayList<KitsCountModel>> tokenBarcode = new TypeToken<ArrayList<KitsCountModel>>() {
         };
         ArrayList<KitsCountModel> kitsArr = new Gson().fromJson(cursor.getString(cursor.getColumnIndex(KITS)), tokenBarcode.getType());

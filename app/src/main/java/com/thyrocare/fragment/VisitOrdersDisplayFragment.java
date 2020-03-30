@@ -1094,7 +1094,7 @@ public class VisitOrdersDisplayFragment extends AbstractFragment {
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 204 || statusCode == 200) {
                 TastyToast.makeText(activity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-                // Toast.makeText(activity, "Order Released Successfully", Toast.LENGTH_SHORT).show();
+                // Toast.makeT(activity, "Order Released Successfully", Toast.LENGTH_SHORT).show();
                 fetchData();
             } else {
                 TastyToast.makeText(activity, "" + json, TastyToast.LENGTH_LONG, TastyToast.INFO);

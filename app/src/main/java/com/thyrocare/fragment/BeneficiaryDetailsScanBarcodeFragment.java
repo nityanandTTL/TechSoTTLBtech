@@ -1,5 +1,6 @@
 package com.thyrocare.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 
 import android.app.AlertDialog;
@@ -18,20 +19,16 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -39,7 +36,12 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+import com.mindorks.paracamera.Camera;
 import com.thyrocare.R;
+import com.thyrocare.Retrofit.PostAPIInteface;
+import com.thyrocare.Retrofit.RetroFit_APIClient;
 import com.thyrocare.activity.AddEditBeneficiaryDetailsActivity;
 import com.thyrocare.activity.DisplayTestsMasterListActivity;
 import com.thyrocare.activity.OrderBookingActivity;
@@ -47,6 +49,7 @@ import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.BeneficiaryDetailsDao;
 import com.thyrocare.dao.models.LabAlertMasterDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
+import com.thyrocare.dao.utils.ConnectionDetector;
 import com.thyrocare.delegate.AddTestListDialogDelegate;
 import com.thyrocare.delegate.CloseTestsDisplayDialogButtonDialogDelegate;
 import com.thyrocare.delegate.OrderCancelDialogButtonClickedDelegate;
@@ -62,6 +65,7 @@ import com.thyrocare.dialog.RescheduleOrderDialog;
 import com.thyrocare.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.models.api.request.RemoveBeneficiaryAPIRequestModel;
+import com.thyrocare.models.api.response.CommonResponseModel1;
 import com.thyrocare.models.api.response.GetTestListResponseModel;
 import com.thyrocare.models.api.response.OrderBookingResponseBeneficiaryModel;
 import com.thyrocare.models.api.response.OrderBookingResponseOrderModel;
@@ -93,6 +97,7 @@ import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DateUtils;
 import com.thyrocare.utils.app.DeviceUtils;
+import com.thyrocare.utils.app.Global;
 import com.thyrocare.utils.app.InputUtils;
 import com.thyrocare.utils.app.VenuPuntureUtils;
 import com.wooplr.spotlight.utils.SpotlightSequence;
@@ -100,11 +105,21 @@ import com.wooplr.spotlight.utils.SpotlightSequence;
 import org.joda.time.DateTimeComparator;
 import org.json.JSONException;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import static com.thyrocare.utils.app.BundleConstants.isBarcodeConfirmPopupShown;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static android.app.Activity.RESULT_OK;
+import static com.thyrocare.network.AbstractApiModel.SERVER_BASE_API_URL;
 
 
 public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
@@ -154,6 +169,14 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
     GetTestListResponseModel TestListResponseModel;
     CharSequence[] items;
     private int scanposition = 0;
+    private LinearLayout lin_TRFUpload;
+    ImageView selectTRFImage;
+    Button btn_SubmitTRF;
+    private Camera camera;
+    Global globalclass;
+    private File TRFimagefile;
+    ConnectionDetector cd;
+
 
 
     public BeneficiaryDetailsScanBarcodeFragment() {
@@ -172,6 +195,8 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                              Bundle savedInstanceState) {
         rootview = inflater.inflate(R.layout.fragment_beneficiary_details_scan_barcode, container, false);
         activity = (OrderBookingActivity) getActivity();
+        globalclass = new Global(activity);
+        cd = new ConnectionDetector(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
 
         dhbDao = new DhbDao(activity);
@@ -254,6 +279,23 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 encodedVanipunctureImg = beneficiaryDetailsModel.getVenepuncture();
                 imgVenipuncture.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_blue));
             }
+
+            for (int i = 0; i < BundleConstants.TempVenuImageArylist.size(); i++) {
+                if (BundleConstants.TempVenuImageArylist.get(i).getBenID() == beneficiaryDetailsModel.getBenId()){
+                    if ( !InputUtils.isNull(BundleConstants.TempVenuImageArylist.get(i).getTRFImagePath())){
+                        TRFimagefile = null;
+                        TRFimagefile = new File(BundleConstants.TempVenuImageArylist.get(i).getTRFImagePath());
+                        if (TRFimagefile != null && TRFimagefile.exists()){
+                            btn_SubmitTRF.setText("Re-Upload");
+                            globalclass.DisplayImagewithoutDefaultImage(activity,TRFimagefile.getAbsolutePath(),selectTRFImage);
+                        }else{
+                            selectTRFImage.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_icon));
+                        }
+                    }
+                }
+            }
+
+
             String chS = "";
             if (benCHArr != null && benCHArr.size() > 0) {
                 for (BeneficiaryTestWiseClinicalHistoryModel chm :
@@ -348,6 +390,15 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                     Logger.error("isEditOrder scan " + orderDetailsModel.isEditOrder());
                 }
             }
+
+
+
+            if (beneficiaryDetailsModel.isTRF()){
+                lin_TRFUpload.setVisibility(View.VISIBLE);
+            }else{
+                lin_TRFUpload.setVisibility(View.GONE);
+            }
+
 
             //jai
             boolean isBarcodeAndSampleListSame = false;
@@ -871,6 +922,66 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                 }
             }
         });
+
+
+        selectTRFImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                TedPermission.with(activity)
+                        .setPermissions(Manifest.permission.CAMERA)
+                        .setRationaleMessage("We need permission to capture photo from your camera to Upload TRF.")
+                        .setRationaleConfirmText("OK")
+                        .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission > Camera")
+                        .setPermissionListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted() {
+                                selectImage();
+                            }
+
+                            @Override
+                            public void onPermissionDenied(List<String> deniedPermissions) {
+                                Toast.makeText(activity, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .check();
+            }
+        });
+
+        btn_SubmitTRF.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (TRFimagefile != null && TRFimagefile.exists()){
+                    if (cd.isConnectingToInternet()) {
+                        CallTRFUploadAPI(String.valueOf(beneficiaryDetailsModel.getBenId()), TRFimagefile);
+                    } else {
+                        globalclass.showCustomToast(activity, activity.getResources().getString(R.string.plz_chk_internet));
+                    }
+                }else{
+                    globalclass.showCustomToast(activity, "Please Capture TRF to proceed.");
+                }
+            }
+        });
+    }
+
+    private void selectImage() {
+
+        camera = new Camera.Builder()
+                .resetToCorrectOrientation(true)// it will rotate the camera bitmap to the correct orientation from meta data
+                .setTakePhotoRequestCode(1)
+                .setDirectory("BtechApp/TRFUploads")
+                .setName("img" + System.currentTimeMillis())
+                .setImageFormat(Camera.IMAGE_JPEG)
+                .setCompression(80)
+                .setImageHeight(1000)// it will try to achieve this height as close as possible maintaining the aspect ratio;
+                .build(this);
+        try {
+            camera.takePicture();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void getviewTestData(String leadId) {
@@ -906,6 +1017,11 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         edtRemarks = (EditText) rootview.findViewById(R.id.customer_sign);
         llBarcodes = (LinearLayout) rootview.findViewById(R.id.ll_barcodes);
         tlBarcodes = (TableLayout) rootview.findViewById(R.id.tl_barcodes);
+
+
+        lin_TRFUpload = (LinearLayout) rootview.findViewById(R.id.lin_TRFUpload);
+        selectTRFImage = (ImageView) rootview.findViewById(R.id.selectTRFImage);
+        btn_SubmitTRF = (Button) rootview.findViewById(R.id.btn_Submit);
         //
     }
 
@@ -1097,6 +1213,20 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             }
 
         }
+        if (requestCode == Camera.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            String imageurl = "";
+            try {
+                imageurl = camera.getCameraBitmapPath();
+                TRFimagefile = new File(imageurl);
+                if (TRFimagefile != null && TRFimagefile.exists()){
+                    globalclass.DisplayImagewithoutDefaultImage(activity,TRFimagefile.getAbsolutePath(),selectTRFImage);
+                }else{
+                    selectTRFImage.setImageDrawable(activity.getResources().getDrawable(R.drawable.camera_icon));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         if (requestCode == REQUEST_CAMERA && resultCode == Activity.RESULT_OK) {
             onCaptureImageResult(data);
         }
@@ -1129,11 +1259,21 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         beneficiaryDetailsModel.setVenepuncture("filled"); // TODO code to reduce the size of Json by temporary storing Venupunture in global array
 
         // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+
+
+        String TRFImagePath = "";
+        if (BundleConstants.TempVenuImageArylist != null){
+            for (int i = 0; i < BundleConstants.TempVenuImageArylist.size(); i++) {
+                if (BundleConstants.TempVenuImageArylist.get(i).getBenID() == beneficiaryDetailsModel.getBenId()){
+                    TRFImagePath = !InputUtils.isNull(BundleConstants.TempVenuImageArylist.get(i).getTRFImagePath()) ? BundleConstants.TempVenuImageArylist.get(i).getTRFImagePath() : "";
+                }
+            }
+        }
         VenuPuntureUtils.AddVenupumtureInTempGlobalArry(encodedVanipunctureImg,
                 beneficiaryDetailsModel.getBenId(),
                 beneficiaryDetailsModel.getName(),
                 beneficiaryDetailsModel.getAge() > 0 ? String.valueOf(beneficiaryDetailsModel.getAge()) : "",
-                beneficiaryDetailsModel.getGender());
+                beneficiaryDetailsModel.getGender(),TRFImagePath);
         // TODO code to reduce the size of Json by temporary storing Venupunture in global array
 
         beneficiaryDetailsDao.insertOrUpdate(beneficiaryDetailsModel);
@@ -1644,5 +1784,47 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
         }
 
 }
+
+    private void CallTRFUploadAPI(String benid, final File imagefile) {
+        RequestBody BENID = RequestBody.create(MediaType.parse("multipart/form-data"), benid);
+        MultipartBody.Part ImageFileMultiBody = null;
+        if(imagefile != null && imagefile.exists()){
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imagefile);
+            ImageFileMultiBody = MultipartBody.Part.createFormData("Files", imagefile.getName(), requestFile);
+        }
+        PostAPIInteface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, SERVER_BASE_API_URL).create(PostAPIInteface.class);
+        Call<CommonResponseModel1> responseCall = apiInterface.uploadTRFToServer(ImageFileMultiBody,BENID);
+        globalclass.showProgressDialog(activity,"Please wait will we upload TRF..");
+        responseCall.enqueue(new Callback<CommonResponseModel1>() {
+            @Override
+            public void onResponse(Call<CommonResponseModel1> call, Response<CommonResponseModel1> response) {
+                globalclass.hideProgressDialog();
+                if (response.isSuccessful() && response.body() != null) {
+                    CommonResponseModel1 model = response.body();
+                    if (model.getRes_id() != null && model.getRes_id().equalsIgnoreCase("RES0000")){
+                        btn_SubmitTRF.setText("Re-Upload");
+                        // TODO to keep a flag for TRF Upload
+                        VenuPuntureUtils.AddVenupumtureInTempGlobalArry(encodedVanipunctureImg,
+                                beneficiaryDetailsModel.getBenId(),
+                                beneficiaryDetailsModel.getName(),
+                                beneficiaryDetailsModel.getAge() > 0 ? String.valueOf(beneficiaryDetailsModel.getAge()) : "",
+                                beneficiaryDetailsModel.getGender(),imagefile.getAbsolutePath());
+                        // TODO to keep a flag for TRF Upload
+                        globalclass.showalert_OK( "TRF Uploaded Successfully",activity);
+                    }else{
+                        globalclass.showCustomToast(activity, "Failed to upload TRF");
+                    }
+                }else{
+                    globalclass.showCustomToast(activity, "Failed to Upload TRF");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CommonResponseModel1> call, Throwable t) {
+                globalclass.hideProgressDialog();
+                globalclass.showcenterCustomToast(activity, MSG_SERVER_EXCEPTION,Toast.LENGTH_LONG);
+            }
+        });
+    }
 
 }
