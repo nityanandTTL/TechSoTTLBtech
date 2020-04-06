@@ -67,6 +67,10 @@
     <string name="progress_message_changing_MaterailsOrder_please_wait">Placing material order, please wait ....</string>
     <!--<string name="do_you_really_want_to_Change order">Fetching MaterialsINV  Details, Please wait ....</string>-->
 
+    <string name="forget_pass">Forget password?</string>
+    <string name="login">Login </string>
+    <string name="join_our_network">Join our Network</string>
+    <string name="logout">Logout</string>
 
     <string name="upload">Proceed</string>
     <string name="take_photo">Capture photo</string>

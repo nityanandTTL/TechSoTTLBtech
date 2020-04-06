@@ -2,7 +2,7 @@ package com.thyrocare.models.api.response;
 
 import java.io.Serializable;
 
-public class CommonResponseModel implements Serializable {
+public class CommonResponseModel2 implements Serializable {
 
     String RES_ID;
     String RESPONSE;

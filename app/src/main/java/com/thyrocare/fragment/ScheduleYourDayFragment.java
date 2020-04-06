@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.activity.LoginScreenActivity;
@@ -424,7 +425,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                /* finish();
                 finishAffinity();*/
 
-            Intent n = new Intent(activity, LoginScreenActivity.class);
+            Intent n = new Intent(activity, LoginActivity.class);
             n.setAction(Intent.ACTION_MAIN);
             n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             getActivity().startActivity(n);

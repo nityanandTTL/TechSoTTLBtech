@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.NewScreenDesigns.Activities.SplashActivity;
 import com.thyrocare.R;
 import com.thyrocare.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.thyrocare.dialog.ConfirmRequestReleaseDialog;
@@ -157,7 +158,7 @@ public class NotificationClickActivity extends AppCompatActivity {
                         .getLaunchIntentForPackage(getBaseContext().getPackageName());
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);*/
 
-                Intent i = new Intent(mContext, SplashScreenActivity.class);
+                Intent i = new Intent(mContext, SplashActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);
                 mActivity.finish();

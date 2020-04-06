@@ -479,7 +479,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             }
 
             // TODO code for validating TRF upload
-            if (bdm.isTRF()){
+           /* if (bdm.isTRF()){
                 for (int i = 0; i < BundleConstants.TempVenuImageArylist.size(); i++) {
                     if (BundleConstants.TempVenuImageArylist.get(i).getBenID() == bdm.getBenId()){
                         if (InputUtils.isNull(BundleConstants.TempVenuImageArylist.get(i).getTRFImagePath())){
@@ -488,7 +488,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         }
                     }
                 }
-            }
+            }*/
             // TODO code for validating TRF upload
         }
 

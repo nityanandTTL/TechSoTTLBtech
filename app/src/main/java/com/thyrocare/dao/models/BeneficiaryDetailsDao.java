@@ -94,7 +94,8 @@ public class BeneficiaryDetailsDao {
 		beneficiaryDetailsModel.setVenepuncture(CommonUtils.encodeImage(cursor.getBlob(cursor.getColumnIndex(VENEPUNCTURE))));
 		beneficiaryDetailsModel.setTestEdit(cursor.getString(cursor.getColumnIndex(IS_TEST_EDIT)).equals("1"));
 		beneficiaryDetailsModel.setAddBen(cursor.getString(cursor.getColumnIndex(IS_ADD_BEN)).equals("1"));
-		beneficiaryDetailsModel.setTRF(cursor.getString(cursor.getColumnIndex(IS_TRF)).equals("1"));
+//		beneficiaryDetailsModel.setTRF(cursor.getString(cursor.getColumnIndex(IS_TRF)).equals("1"));
+		beneficiaryDetailsModel.setTRF(false); // TODO Kept False TRF option as per input received by management
 
 		TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>> tokenBarcode = new TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>>(){};
 		ArrayList<BeneficiaryBarcodeDetailsModel> bmArr =new Gson().fromJson(cursor.getString(cursor.getColumnIndex(BARCODE_DTL)),tokenBarcode.getType());
@@ -144,7 +145,7 @@ public class BeneficiaryDetailsDao {
 		values.put(REMARKS, beneficiaryDetailsModel.getRemarks());
         values.put(IS_TEST_EDIT, beneficiaryDetailsModel.isTestEdit() ? "1" : "0");
         values.put(IS_ADD_BEN, beneficiaryDetailsModel.isAddBen() ? "1" : "0");
-        values.put(IS_TRF, beneficiaryDetailsModel.isTRF() ? "1" : "0");
+		values.put(IS_TRF, beneficiaryDetailsModel.isTRF() ? "0" : "0");// TODO Kept False TRF option as per input received by management
 		values.put(VENEPUNCTURE, CommonUtils.decodedImageBytes(InputUtils.isNull(beneficiaryDetailsModel.getVenepuncture())?"":beneficiaryDetailsModel.getVenepuncture()));
 //		values.put(VENEPUNCTURE, "Tejas");
 		values.put(BARCODE_DTL, new Gson().toJson(beneficiaryDetailsModel.getBarcodedtl()));

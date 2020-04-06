@@ -10,6 +10,7 @@ public class LoginResponseModel {
     String userName;
     String userID;
     String role;
+    String error_description;
     int expires_in;
 
     public String getAccess_token() {
@@ -58,5 +59,13 @@ public class LoginResponseModel {
 
     public void setExpires_in(int expires_in) {
         this.expires_in = expires_in;
+    }
+
+    public String getError_description() {
+        return error_description;
+    }
+
+    public void setError_description(String error_description) {
+        this.error_description = error_description;
     }
 }

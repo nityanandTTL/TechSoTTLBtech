@@ -19,6 +19,7 @@ import android.util.TypedValue;
 
 import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.R;
 import com.thyrocare.activity.LoginScreenActivity;
 import com.thyrocare.dao.DhbDao;
@@ -246,7 +247,7 @@ public class CommonUtils {
                /* finish();
                 finishAffinity();*/
 
-            Intent n = new Intent(mContext, LoginScreenActivity.class);
+            Intent n = new Intent(mContext, LoginActivity.class);
             n.setAction(Intent.ACTION_MAIN);
             n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             mActivity.startActivity(n);

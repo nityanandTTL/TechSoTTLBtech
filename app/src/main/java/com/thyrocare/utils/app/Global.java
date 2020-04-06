@@ -1,10 +1,15 @@
 package com.thyrocare.utils.app;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Build;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -154,6 +159,24 @@ public class Global {
         toast.show();
     }
 
+    public void showCustomToast(Activity activity, String message, int Length) {
+        Context context = activity.getApplicationContext();
+        LayoutInflater inflater = activity.getLayoutInflater();
+
+        View toastRoot = inflater.inflate(R.layout.custom_toast, null);
+        RelativeLayout relItem = (RelativeLayout) toastRoot.findViewById(R.id.relItem);
+        TextView txtToast = (TextView) toastRoot.findViewById(R.id.txtToast);
+
+        relItem.getBackground().setAlpha(204);
+        txtToast.setText(message);
+
+        Toast toast = new Toast(context);
+        toast.setView(toastRoot);
+        //toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setDuration(Length);
+        toast.show();
+    }
+
     public void showcenterCustomToast(Activity activity, String message, int lengthLong) {
         Context context = activity.getApplicationContext();
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -230,9 +253,51 @@ public class Global {
         }
     }
 
+    public void showProgressDialog(Activity activity, String msg, boolean IsCancelable) {
+
+        progressDialog = new ProgressDialog(activity);
+        progressDialog.setTitle(null);
+        progressDialog.setMessage(msg);
+        progressDialog.setIndeterminate(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(IsCancelable);
+
+        try {
+            if (progressDialog != null && !progressDialog.isShowing())
+
+                if (!((Activity) context).isFinishing()) {
+                    progressDialog.show();
+                }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void hideProgressDialog() {
         if (progressDialog.isShowing())
             progressDialog.dismiss();
+    }
+
+    public String getDeviceIMEI(Activity mActivity) {
+        String deviceUniqueIdentifier = "";
+        TelephonyManager tm = (TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return deviceUniqueIdentifier;
+        }
+        if (null != tm) {
+            try {
+                if (tm.getDeviceId() != null){
+                    deviceUniqueIdentifier = tm.getDeviceId();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                deviceUniqueIdentifier = null;
+            }
+        }
+        if (InputUtils.isNull(deviceUniqueIdentifier)) {
+            deviceUniqueIdentifier = Settings.Secure.getString(mActivity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        }
+        return deviceUniqueIdentifier;
     }
 
     public String formatDate(String currentFormat, String outputFormat, String date) {

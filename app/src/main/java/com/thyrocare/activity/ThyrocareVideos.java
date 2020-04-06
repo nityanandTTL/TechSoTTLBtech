@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,19 +17,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thyrocare.R;
-import com.thyrocare.Retrofit.GetAPIInteface;
-import com.thyrocare.Retrofit.PostAPIInteface;
+import com.thyrocare.Retrofit.GetAPIInterface;
+import com.thyrocare.Retrofit.PostAPIInterface;
 import com.thyrocare.Retrofit.RetroFit_APIClient;
 import com.thyrocare.adapter.DisplayVideoListAdapter;
 import com.thyrocare.dao.utils.ConnectionDetector;
@@ -164,7 +160,7 @@ public class ThyrocareVideos extends AppCompatActivity {
 
     private void CallVideoLanguagesAPI() {
         globalclass.showProgressDialog(mActivity, "please wait..");
-        GetAPIInteface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, B2B).create(GetAPIInteface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, B2B).create(GetAPIInterface.class);
         Call<VideoLangaugesResponseModel> responseCall = apiInterface.getVideoLanguages();
         responseCall.enqueue(new Callback<VideoLangaugesResponseModel>() {
             @Override
@@ -274,7 +270,7 @@ public class ThyrocareVideos extends AppCompatActivity {
         model.setApp("3"); // TODO Change this to 3 during live
         model.setLanguage(LanguageID);
 
-        PostAPIInteface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, B2B).create(PostAPIInteface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, B2B).create(PostAPIInterface.class);
         Call<VideosResponseModel> responseCall = apiInterface.getVideobasedOnLanguage(model);
         globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.loading));
         responseCall.enqueue(new Callback<VideosResponseModel>() {

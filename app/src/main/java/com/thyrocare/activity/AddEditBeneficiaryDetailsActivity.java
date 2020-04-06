@@ -30,7 +30,7 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.R;
-import com.thyrocare.Retrofit.PostAPIInteface;
+import com.thyrocare.Retrofit.PostAPIInterface;
 import com.thyrocare.Retrofit.RetroFit_APIClient;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.BeneficiaryDetailsDao;
@@ -47,8 +47,7 @@ import com.thyrocare.dialog.LabAlertSelectorDialog;
 import com.thyrocare.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.models.api.request.OrderPassRequestModel;
 import com.thyrocare.models.api.request.SendOTPRequestModel;
-import com.thyrocare.models.api.response.CommonResponseModel;
-import com.thyrocare.models.api.response.Emailreponsedatamodel;
+import com.thyrocare.models.api.response.CommonResponseModel2;
 import com.thyrocare.models.api.response.GetTestListResponseModel;
 import com.thyrocare.models.api.response.OrderBookingResponseBeneficiaryModel;
 import com.thyrocare.models.api.response.OrderBookingResponseOrderModel;
@@ -70,7 +69,6 @@ import com.thyrocare.models.data.TestClinicalHistoryModel;
 import com.thyrocare.models.data.TestGroupListModel;
 import com.thyrocare.models.data.TestRateMasterModel;
 import com.thyrocare.models.data.TestSampleTypeModel;
-import com.thyrocare.models.data.Venupunture_Temporary_ImageModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
@@ -81,7 +79,6 @@ import com.thyrocare.utils.app.AadharUtils;
 import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
-import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DateUtils;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.Global;
@@ -1388,15 +1385,15 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
         SendOTPRequestModel model = new SendOTPRequestModel();
         model.setMobile(orderDetailsModel.getMobile());
         model.setOrderno(orderDetailsModel.getVisitId());
-        PostAPIInteface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, SERVER_BASE_API_URL).create(PostAPIInteface.class);
-        Call<CommonResponseModel> responseCall = apiInterface.CallSendOTPAPI(model);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, SERVER_BASE_API_URL).create(PostAPIInterface.class);
+        Call<CommonResponseModel2> responseCall = apiInterface.CallSendOTPAPI(model);
         globalclass.showProgressDialog(activity, "Requesting for OTP. Please wait..");
-        responseCall.enqueue(new Callback<CommonResponseModel>() {
+        responseCall.enqueue(new Callback<CommonResponseModel2>() {
             @Override
-            public void onResponse(Call<CommonResponseModel> call, Response<CommonResponseModel> response) {
+            public void onResponse(Call<CommonResponseModel2> call, Response<CommonResponseModel2> response) {
                 globalclass.hideProgressDialog();
                 if (response.isSuccessful() && response.body() != null) {
-                    CommonResponseModel responseModel = response.body();
+                    CommonResponseModel2 responseModel = response.body();
                     if (!TextUtils.isEmpty(responseModel.getRES_ID()) && responseModel.getRES_ID().equalsIgnoreCase("RES0000")) {
                         globalclass.showCustomToast(activity, "OTP send successfully to mobile number mapped to this order.");
                         ShowDialogToVerifyOTP();
@@ -1409,7 +1406,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
             }
 
             @Override
-            public void onFailure(Call<CommonResponseModel> call, Throwable t) {
+            public void onFailure(Call<CommonResponseModel2> call, Throwable t) {
                 globalclass.hideProgressDialog();
                 globalclass.showCustomToast(activity, MSG_SERVER_EXCEPTION);
             }
@@ -1483,7 +1480,7 @@ public class AddEditBeneficiaryDetailsActivity extends AbstractActivity {
 
     private void CallValidateOTPAPI(OrderPassRequestModel model) {
 
-        PostAPIInteface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, SERVER_BASE_API_URL).create(PostAPIInteface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, SERVER_BASE_API_URL).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallValidateOTPAPI(model);
         globalclass.showProgressDialog(activity, "Requesting for OTP. Please wait..");
         responseCall.enqueue(new Callback<String>() {
