@@ -15,6 +15,8 @@ import com.thyrocare.models.api.request.NotificationMappingModel;
 
 import com.thyrocare.models.api.response.NotificationMappingResponseModel;
 import com.thyrocare.network.AbstractApiModel;
+import com.thyrocare.utils.app.Global;
+
 import org.json.JSONObject;
 
 public class NotificationMappingController {
@@ -30,7 +32,7 @@ public class NotificationMappingController {
 
     public void getNotificationMapping(final NotificationMappingModel notificationMappingModel) {
         if (requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(activity);
+            requestQueue = Global.setVolleyReq(activity);
 
             String jsonString = gson.toJson(notificationMappingModel);
 

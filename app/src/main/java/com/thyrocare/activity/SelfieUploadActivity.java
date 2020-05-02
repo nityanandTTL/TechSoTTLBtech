@@ -31,7 +31,6 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.Controller.DeviceLogOutController;
-import com.thyrocare.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.R;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.customview.TouchImageView;
@@ -215,7 +214,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     if (isNetworkAvailable(activity)) {
                         logoutAsyncTask.execute(logoutAsyncTask);
                         if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
-
                         } else {
                             CallLogOutDevice();
                         }
@@ -255,7 +253,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     appPreferenceManager.clearAllPreferences();
                     dhbDao.deleteTablesonLogout();
 
-                    Intent n = new Intent(activity, LoginActivity.class);
+                    Intent n = new Intent(activity, LoginScreenActivity.class);
                     n.setAction(Intent.ACTION_MAIN);
                     n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(n);

@@ -24,7 +24,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.Controller.DeviceLogOutController;
 import com.thyrocare.Controller.NotificationMappingController;
-import com.thyrocare.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.R;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.customview.CustomUpdateDailog;
@@ -49,6 +48,7 @@ import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
+import com.thyrocare.utils.app.LogUserActivityTagging;
 
 import org.json.JSONException;
 
@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.thyrocare.utils.app.BundleConstants.LOGIN;
 
 
 /**
@@ -145,6 +146,38 @@ public class SplashScreenActivity extends AbstractActivity{
     }
 
 
+  /*void StartLocationUpdateService() {
+       try {
+            try {
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.SECOND, 1);
+                if (!IsAlarmSet()) {
+                    PendingIntent pintent = PendingIntent.getService(this, 0,
+                            locationUpdateIntent, 0);
+                    AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    Logger.error("locationUpdateIntent Executed 1");
+                    alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 1000*5L,
+                            pintent);
+                    Logger.error("locationUpdateIntent Executed 2");
+                   *//**//* alarm.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis()+6000 ,
+                            pintent);*//**//*
+                       //Initially it was 5 min and change to 1 minute//
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Logger.error("locationUpdateIntent Executed 3");
+            startService(locationUpdateIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    boolean IsAlarmSet() {
+        return PendingIntent.getBroadcast(this, 0, locationUpdateIntent,
+                PendingIntent.FLAG_NO_CREATE) != null;
+    }*/
 
 
     /**
@@ -163,7 +196,83 @@ public class SplashScreenActivity extends AbstractActivity{
         }
     }
 
+    /* private class DispatchToHubDetailDisplayApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+         @Override
+         public void apiCallResult(String json, int statusCode) throws JSONException {
+             Logger.debug(TAG_FRAGMENT + "dayssssssssss ");
+             if (statusCode == 200) {
+                 ResponseParser responseParser = new ResponseParser(activity);
+                 BtechAvaliabilityResponseModel btechAvaliabilityResponseModel = new BtechAvaliabilityResponseModel();
+                 btechAvaliabilityResponseModel = responseParser.getBtechAvaliabilityResponseModel(json, statusCode);
+                 if (btechAvaliabilityResponseModel != null) {
+                   if(btechAvaliabilityResponseModel.getNumberofDays()==0) {
+                     if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
+                         Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
+                         i.putExtra("LEAVEINTIMATION", "0");
+                         startActivity(i);
+                     }
+                    *//* else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
 
+                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+                    }*//*
+                    else if (btechAvaliabilityResponseModel.getNumberofDays() == 0) {
+                        Logger.error("ZERRO");
+                        Bundle bundle = new Bundle();
+
+                        Calendar c = Calendar.getInstance();
+                        c.set(Calendar.MILLISECOND, 0);
+                        c.set(Calendar.SECOND, 0);
+                        c.set(Calendar.MINUTE, 0);
+                        c.set(Calendar.HOUR_OF_DAY, 0);
+                        if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)) {
+                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                            i.putExtra("LEAVEINTIMATION", "0");
+                            startActivity(i);
+                            finish();
+                        } else {
+                            if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+                                // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
+                                Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                                i.putExtra("LEAVEINTIMATION", "0");
+                                startActivity(i);
+                                finish();
+                            } else {
+                                switchToActivity(activity, SelfieUploadActivity.class, new Bundle());
+                            }
+                        }
+                    } else if (btechAvaliabilityResponseModel.getNumberofDays() == 1) {
+                        Logger.error("ONEEEE");
+                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity.class);
+                        mIntent.putExtra("WHEREFROM", "0");
+                        startActivity(mIntent);
+                    } else if (btechAvaliabilityResponseModel.getNumberofDays() == 3) {
+                        Logger.error("THREEE");
+                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity2.class);
+                        mIntent.putExtra("WHEREFROM", "0");
+                        startActivity(mIntent);
+
+                    }else if (btechAvaliabilityResponseModel.getNumberofDays() == 2) {
+                        Logger.error("FOURRRRR");
+                        Intent mIntent = new Intent(activity, ScheduleYourDayIntentActivity.class);
+                        mIntent.putExtra("WHEREFROM", "0");
+                        startActivity(mIntent);
+                    }
+                } else {
+                    Logger.error("else " + json);
+                }
+            } else {
+                Toast.makeText(activity, "" + json, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onApiCancelled() {
+            Toast.makeText(activity, "Network Error", Toast.LENGTH_SHORT).show();
+        }
+    }
+*/
     private class DispatchToHubDetailDisplayApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
@@ -276,6 +385,7 @@ public class SplashScreenActivity extends AbstractActivity{
         fetchVersionDetailApiAsyncTask.setApiCallAsyncTaskDelegate(new FetchVersionDetailsApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {
             fetchVersionDetailApiAsyncTask.execute(fetchVersionDetailApiAsyncTask);
+            trackUserActivity();
         } else {
             Toast.makeText(activity, R.string.internet_connetion_error, LENGTH_SHORT).show();
         }
@@ -289,7 +399,6 @@ public class SplashScreenActivity extends AbstractActivity{
             if (statusCode == 200) {
                 ResponseParser responseParser = new ResponseParser(activity);
                 versionControlMasterModel = responseParser.getVersionControlMasterResponse(json, statusCode);
-
                 if (AppConstants.ANDROID_APP_VERSION < versionControlMasterModel.getAPICurrentVerson()) {
                     cudd = new CustomUpdateDailog(activity, new CustomUpdateDialogOkButtonOnClickedDelegate() {
                         @Override
@@ -340,6 +449,20 @@ public class SplashScreenActivity extends AbstractActivity{
 
         }
 
+        /**
+         *
+         */
+        private class DownloadApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
+            @Override
+            public void apiCallResult(String json, int statusCode) throws JSONException {
+                Logger.error("apiCallResult " + json);
+            }
+
+            @Override
+            public void onApiCancelled() {
+                Logger.error("onApiCancelled ");
+            }
+        }
 
         @Override
         public void onApiCancelled() {
@@ -448,7 +571,7 @@ public class SplashScreenActivity extends AbstractActivity{
                         builder.create().
                                 show();
                     } else {
-                        goAhead();
+                        fetchVersionControlDetails();
                     }
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -608,4 +731,7 @@ public class SplashScreenActivity extends AbstractActivity{
         }
     }
 
+    private void trackUserActivity() {
+        new LogUserActivityTagging(activity, "");
+    }
 }

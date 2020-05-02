@@ -296,8 +296,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             public void onClick(View v) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setMessage("Please verify Name/Age/gender once again")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setMessage("Have you verified Name/Age/gender of all beneficiary")
+                        .setPositiveButton("Yes (Proceed)", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
@@ -305,7 +305,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                 dialog.dismiss();
                             }
                         })
-                        .setCancelable(true)
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).setCancelable(true)
                         .show();
 
             }
@@ -479,7 +484,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             }
 
             // TODO code for validating TRF upload
-           /* if (bdm.isTRF()){
+            /*if (bdm.isTRF()){
                 for (int i = 0; i < BundleConstants.TempVenuImageArylist.size(); i++) {
                     if (BundleConstants.TempVenuImageArylist.get(i).getBenID() == bdm.getBenId()){
                         if (InputUtils.isNull(BundleConstants.TempVenuImageArylist.get(i).getTRFImagePath())){

@@ -45,7 +45,7 @@ public class ClientEntryController {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        requestQueue = Volley.newRequestQueue(context);
+        requestQueue = Global.setVolleyReq(context);
         String url = BDN_API_VERSION+ "api/ClientEntry/PostRegister";
         System.out.println("rohit : "+BDN_API_VERSION+ "api/ClientEntry/PostRegister");
         JSONObject jsonObject = new JSONObject();

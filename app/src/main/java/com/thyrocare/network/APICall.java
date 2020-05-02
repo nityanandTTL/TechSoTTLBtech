@@ -230,7 +230,7 @@ public class APICall implements AppConstants {
         if (requestModel.getRequestUrl().startsWith("https"))
             httpClient = sslClient(httpClient);
 
-        Logger.debug(requestModel.getRequestUrl());
+//        Logger.debug(requestModel.getRequestUrl());
 
 		/* For supporting Domain names using emulators */
         httpput.getParams().setParameter(
@@ -358,7 +358,7 @@ public class APICall implements AppConstants {
         if (requestModel.getRequestUrl().startsWith("https"))
             httpClient = sslClient(httpClient);
 
-        Logger.debug(requestModel.getRequestUrl());
+//        Logger.debug(requestModel.getRequestUrl());
 
 		/* For supporting Domain names using emulators */
         httpPost.getParams().setParameter(
@@ -485,7 +485,7 @@ public class APICall implements AppConstants {
         if (requestModel.getRequestUrl().startsWith("https"))
             httpClient = sslClient(httpClient);
 
-        Logger.debug(requestModel.getRequestUrl());
+//        Logger.debug(requestModel.getRequestUrl());
 
 		/* For supporting Domain names using emulators */
         httpPost.getParams().setParameter(

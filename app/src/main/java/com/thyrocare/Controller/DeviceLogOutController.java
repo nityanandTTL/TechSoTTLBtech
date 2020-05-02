@@ -1,19 +1,24 @@
 package com.thyrocare.Controller;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.activity.LoginScreenActivity;
 import com.thyrocare.models.api.request.Post_DeviceID;
 import com.thyrocare.models.api.response.LoginDeviceResponseModel;
+import com.thyrocare.models.data.AcceptOrderNotfiDetailsModel;
 import com.thyrocare.network.ApiCallAsyncTask;
 import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
+import com.thyrocare.utils.app.LogUserActivityTagging;
 
 import org.json.JSONException;
 
 import static com.thyrocare.utils.api.NetworkUtils.isNetworkAvailable;
+import static com.thyrocare.utils.app.BundleConstants.LOGIN;
+import static com.thyrocare.utils.app.BundleConstants.LOGOUT;
 
 /**
  * Created by E5233 on 4/30/2018.
@@ -23,6 +28,7 @@ public class DeviceLogOutController {
 
     Context mContext;
     LoginScreenActivity mLoginScreenActivity;
+    Activity activity;
 
     public DeviceLogOutController(Context activity) {
         this.mContext = activity;
@@ -30,6 +36,11 @@ public class DeviceLogOutController {
 
     public DeviceLogOutController(LoginScreenActivity activity) {
         this.mLoginScreenActivity = activity;
+        this.mContext = activity;
+    }
+
+    public DeviceLogOutController(Activity activity) {
+        this.activity = activity;
         this.mContext = activity;
     }
 
@@ -42,6 +53,7 @@ public class DeviceLogOutController {
         ApiCallAsyncTask logoutDeviceAsyncTask = new AsyncTaskForRequest(mContext).getPostUserLogOutRequestAsyncTask(n);
         logoutDeviceAsyncTask.setApiCallAsyncTaskDelegate(new LogoutDeviceAsyncTaskDelegateResult());
         if (isNetworkAvailable(mContext)) {
+            new LogUserActivityTagging(activity, LOGOUT);
             logoutDeviceAsyncTask.execute(logoutDeviceAsyncTask);
         } else {
 //            Toast.makeText(mContext, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
@@ -52,7 +64,6 @@ public class DeviceLogOutController {
         @Override
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
-
             }
         }
 
@@ -87,6 +98,7 @@ public class DeviceLogOutController {
                 if (loginResponseModel != null) {
                     if (loginResponseModel.getRespId() == 1) {
                         mLoginScreenActivity.setLoginDeviceResponse();
+                        new LogUserActivityTagging(mLoginScreenActivity, LOGIN);
                     } else if (loginResponseModel.getRespId() == 0) {
                         TastyToast.makeText(mContext, "" + loginResponseModel.getRespMessage(), TastyToast.LENGTH_LONG, TastyToast.ERROR);
                     } else {

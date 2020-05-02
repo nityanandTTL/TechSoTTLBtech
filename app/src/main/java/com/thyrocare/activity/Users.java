@@ -31,6 +31,7 @@ import com.android.volley.toolbox.Volley;
 import com.thyrocare.R;
 import com.thyrocare.uiutils.AbstractActivity;
 import com.thyrocare.utils.api.Logger;
+import com.thyrocare.utils.app.Global;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,7 +103,7 @@ public class Users extends AbstractActivity {
             }
         });
 
-        RequestQueue rQueue = Volley.newRequestQueue(Users.this);
+        RequestQueue rQueue = Global.setVolleyReq(Users.this);
         rQueue.add(request);
 
         usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

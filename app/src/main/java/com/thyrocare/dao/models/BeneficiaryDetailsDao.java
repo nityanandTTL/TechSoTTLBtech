@@ -94,7 +94,7 @@ public class BeneficiaryDetailsDao {
 		beneficiaryDetailsModel.setVenepuncture(CommonUtils.encodeImage(cursor.getBlob(cursor.getColumnIndex(VENEPUNCTURE))));
 		beneficiaryDetailsModel.setTestEdit(cursor.getString(cursor.getColumnIndex(IS_TEST_EDIT)).equals("1"));
 		beneficiaryDetailsModel.setAddBen(cursor.getString(cursor.getColumnIndex(IS_ADD_BEN)).equals("1"));
-//		beneficiaryDetailsModel.setTRF(cursor.getString(cursor.getColumnIndex(IS_TRF)).equals("1"));
+		//		beneficiaryDetailsModel.setTRF(cursor.getString(cursor.getColumnIndex(IS_TRF)).equals("1"));
 		beneficiaryDetailsModel.setTRF(false); // TODO Kept False TRF option as per input received by management
 
 		TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>> tokenBarcode = new TypeToken<ArrayList<BeneficiaryBarcodeDetailsModel>>(){};

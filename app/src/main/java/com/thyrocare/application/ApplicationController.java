@@ -16,6 +16,7 @@ import com.thyrocare.Controller.DeviceLogOutController;
 import com.thyrocare.Controller.GetAvailableStockController;
 import com.thyrocare.Controller.NotificationMappingController;
 import com.thyrocare.Controller.TSPLMESampleDropController;
+import com.thyrocare.Controller.TrackUserActivityController;
 import com.thyrocare.Controller.UpdateStockController;
 import com.thyrocare.dao.DbHelper;
 import com.thyrocare.utils.app.AppPreferenceManager;
@@ -47,6 +48,7 @@ public class ApplicationController extends MultiDexApplication {
 	public static ClientEntryController clientEntryController;
 	public static UpdateStockController updateStockController;
 	public static GetAvailableStockController getAvailableStockController;
+	public static TrackUserActivityController trackUserActivityController;
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

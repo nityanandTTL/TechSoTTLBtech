@@ -40,7 +40,7 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.mindorks.paracamera.Camera;
 import com.thyrocare.R;
-import com.thyrocare.Retrofit.PostAPIInterface;
+import com.thyrocare.Retrofit.PostAPIInteface;
 import com.thyrocare.Retrofit.RetroFit_APIClient;
 import com.thyrocare.activity.AddEditBeneficiaryDetailsActivity;
 import com.thyrocare.activity.DisplayTestsMasterListActivity;
@@ -1793,7 +1793,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imagefile);
             ImageFileMultiBody = MultipartBody.Part.createFormData("Files", imagefile.getName(), requestFile);
         }
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, SERVER_BASE_API_URL).create(PostAPIInterface.class);
+        PostAPIInteface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, SERVER_BASE_API_URL).create(PostAPIInteface.class);
         Call<CommonResponseModel1> responseCall = apiInterface.uploadTRFToServer(ImageFileMultiBody,BENID);
         globalclass.showProgressDialog(activity,"Please wait will we upload TRF..");
         responseCall.enqueue(new Callback<CommonResponseModel1>() {

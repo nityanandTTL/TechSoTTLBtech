@@ -94,7 +94,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         kits = in.createTypedArrayList(KitsCountModel.CREATOR);
     }
 
-    @Override
+    /*@Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeInt(BrandId);
@@ -135,6 +135,50 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         dest.writeByte((byte) (DirectVisit ? 1 : 0));
         dest.writeByte((byte) (EuOrders ? 1 : 0));
         dest.writeByte((byte) (EditME ? 1 : 0));
+        dest.writeTypedList(kits);
+    }*/
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeInt(BrandId);
+        dest.writeString(OrderNo);
+        dest.writeString(Address);
+        dest.writeString(Pincode);
+        dest.writeString(Mobile);
+        dest.writeString(Email);
+        dest.writeString(PayType);
+        dest.writeInt(AmountDue);
+        dest.writeInt(AmountPayable);
+        dest.writeInt(Margin);
+        dest.writeString(Location);
+        dest.writeInt(Discount);
+        dest.writeString(Refcode);
+        dest.writeString(ProjId);
+        dest.writeInt(ReportHC);
+        dest.writeInt(UserAccessCode);
+        dest.writeByte((byte) (isTestEdit ? 1 : 0));
+        dest.writeByte((byte) (isAddBen ? 1 : 0));
+        dest.writeTypedList(benMaster);
+        dest.writeString(VisitId);
+        dest.writeString(Slot);
+        dest.writeString(CampId);
+        dest.writeString(Response);
+        dest.writeInt(SlotId);
+        dest.writeFloat(Distance);
+        dest.writeString(Latitude);
+        dest.writeString(Longitude);
+        dest.writeString(Status);
+        dest.writeString(Servicetype);
+        dest.writeFloat(EstIncome);
+        dest.writeString(AppointmentDate);
+        dest.writeString(BtechName);
+        dest.writeByte((byte) (EditHC ? 1 : 0));
+        dest.writeByte((byte) (DirectVisit ? 1 : 0));
+        dest.writeByte((byte) (EditOrder ? 1 : 0));
+        dest.writeByte((byte) (EuOrders ? 1 : 0));
+        dest.writeByte((byte) (EditME ? 1 : 0));
+        dest.writeString(SecondVisitTest);
         dest.writeTypedList(kits);
     }
 

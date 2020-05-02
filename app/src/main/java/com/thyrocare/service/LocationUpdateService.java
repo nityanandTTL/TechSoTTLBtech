@@ -23,7 +23,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
-import com.thyrocare.NewScreenDesigns.Activities.SplashActivity;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.activity.NotificationClickActivity;
@@ -679,7 +678,7 @@ public class LocationUpdateService extends IntentService {
     }
 
     public void startBlockBtechnotification() {
-        Intent intent = new Intent(this, SplashActivity.class);
+        Intent intent = new Intent(this, SplashScreenActivity.class);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         getApplicationContext(),
@@ -707,7 +706,7 @@ public class LocationUpdateService extends IntentService {
     }
 
     public void startAcceptordernotification() {
-        Intent intent = new Intent(this, SplashActivity.class);
+        Intent intent = new Intent(this, SplashScreenActivity.class);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         getApplicationContext(),
@@ -735,7 +734,7 @@ public class LocationUpdateService extends IntentService {
 
     private void sendNotification(String OrderNo, int i) {
         try {
-            Intent intent = new Intent(this, SplashActivity.class);
+            Intent intent = new Intent(this, SplashScreenActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, i /* Request code */, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT);

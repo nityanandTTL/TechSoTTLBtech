@@ -12,7 +12,8 @@
     <string name="name">Ketatn Kulkarni</string>
 
     <!--<string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCCiIOrolfoPydvFX89njaBOqA8zHbTYME</string>-->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBcm2CJDh69483Z9dZrSNRqjX1l-nuNo-o</string>
+    <!--<string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBcm2CJDh69483Z9dZrSNRqjX1l-nuNo-o</string>-->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAww8RakZDf5cTyFl6yr3KgynfCsJGFMGQ</string>
     <string name="enable_gps_title">Enable GPS</string>
     <string name="alert_msg">GPS alert dialogue message</string>
     <string name="alert_settings">Settings</string>
@@ -67,10 +68,6 @@
     <string name="progress_message_changing_MaterailsOrder_please_wait">Placing material order, please wait ....</string>
     <!--<string name="do_you_really_want_to_Change order">Fetching MaterialsINV  Details, Please wait ....</string>-->
 
-    <string name="forget_pass">Forget password?</string>
-    <string name="login">Login </string>
-    <string name="join_our_network">Join our Network</string>
-    <string name="logout">Logout</string>
 
     <string name="upload">Proceed</string>
     <string name="take_photo">Capture photo</string>

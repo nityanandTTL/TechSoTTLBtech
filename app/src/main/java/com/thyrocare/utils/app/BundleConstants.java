@@ -94,4 +94,8 @@ public class BundleConstants {
     public static String locationText="Select Location";
     public static ArrayList <Venupunture_Temporary_ImageModel> TempVenuImageArylist = new ArrayList<>();
     public static  boolean isBarcodeConfirmPopupShown = false;
+
+    public static final int APPID_TRACKACTIVITY = 2;
+    public static final String LOGIN = "LOGIN";
+    public static final String LOGOUT = "LOGOUT";
 }

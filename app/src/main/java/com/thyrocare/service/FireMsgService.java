@@ -13,7 +13,6 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.thyrocare.NewScreenDesigns.Activities.SplashActivity;
 import com.thyrocare.R;
 import com.thyrocare.activity.HomeScreenActivity;
 import com.thyrocare.activity.SplashScreenActivity;
@@ -81,7 +80,7 @@ public class FireMsgService extends FirebaseMessagingService {
             Log.e(TAG, "Screen_category ----->" + screenCategory);
 
             if (!TextUtils.isEmpty(App_ID) && App_ID.equalsIgnoreCase(String.valueOf(AppConstants.BTECH_APP_ID))) {
-                Intent resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                Intent resultIntent = new Intent(getApplicationContext(), SplashScreenActivity.class);
                 resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 resultIntent.putExtra("isFromNotification", true);
                 resultIntent.putExtra("screenCategory", screenCategory);

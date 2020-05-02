@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -18,6 +19,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.HttpStack;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.thyrocare.R;
@@ -75,6 +79,29 @@ public class Global {
     public Global(Context context) {
         this.context = context;
     }
+
+    public String getDeviceIMEI(Activity mActivity) {
+        String deviceUniqueIdentifier = "";
+        TelephonyManager tm = (TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return deviceUniqueIdentifier;
+        }
+        if (null != tm) {
+            try {
+                if (tm.getDeviceId() != null){
+                    deviceUniqueIdentifier = tm.getDeviceId();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                deviceUniqueIdentifier = null;
+            }
+        }
+        if (InputUtils.isNull(deviceUniqueIdentifier)) {
+            deviceUniqueIdentifier = Settings.Secure.getString(mActivity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        }
+        return deviceUniqueIdentifier;
+    }
+
 
 
     public String getBtsSchema() {
@@ -159,24 +186,6 @@ public class Global {
         toast.show();
     }
 
-    public void showCustomToast(Activity activity, String message, int Length) {
-        Context context = activity.getApplicationContext();
-        LayoutInflater inflater = activity.getLayoutInflater();
-
-        View toastRoot = inflater.inflate(R.layout.custom_toast, null);
-        RelativeLayout relItem = (RelativeLayout) toastRoot.findViewById(R.id.relItem);
-        TextView txtToast = (TextView) toastRoot.findViewById(R.id.txtToast);
-
-        relItem.getBackground().setAlpha(204);
-        txtToast.setText(message);
-
-        Toast toast = new Toast(context);
-        toast.setView(toastRoot);
-        //toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-        toast.setDuration(Length);
-        toast.show();
-    }
-
     public void showcenterCustomToast(Activity activity, String message, int lengthLong) {
         Context context = activity.getApplicationContext();
         LayoutInflater inflater = activity.getLayoutInflater();
@@ -253,51 +262,9 @@ public class Global {
         }
     }
 
-    public void showProgressDialog(Activity activity, String msg, boolean IsCancelable) {
-
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setTitle(null);
-        progressDialog.setMessage(msg);
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(IsCancelable);
-
-        try {
-            if (progressDialog != null && !progressDialog.isShowing())
-
-                if (!((Activity) context).isFinishing()) {
-                    progressDialog.show();
-                }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void hideProgressDialog() {
         if (progressDialog.isShowing())
             progressDialog.dismiss();
-    }
-
-    public String getDeviceIMEI(Activity mActivity) {
-        String deviceUniqueIdentifier = "";
-        TelephonyManager tm = (TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE);
-        if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            return deviceUniqueIdentifier;
-        }
-        if (null != tm) {
-            try {
-                if (tm.getDeviceId() != null){
-                    deviceUniqueIdentifier = tm.getDeviceId();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                deviceUniqueIdentifier = null;
-            }
-        }
-        if (InputUtils.isNull(deviceUniqueIdentifier)) {
-            deviceUniqueIdentifier = Settings.Secure.getString(mActivity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-        }
-        return deviceUniqueIdentifier;
     }
 
     public String formatDate(String currentFormat, String outputFormat, String date) {
@@ -459,7 +426,47 @@ public class Global {
     }
 
 
+    public static String getHeaderValue(Context pContext) {
+        String header;
+        header = "Btech app/" + getCurrentAppVersionName(pContext) + "(" + getCurrentVersionCode(pContext) + ")/" + getSerialnum(pContext);
+        return header;
+    }
 
+    public static int getCurrentVersionCode(Context pContext) {
+        int currentAppVersion = 0;
+        try {
+            currentAppVersion = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return currentAppVersion;
+    }
+
+    public static String getCurrentAppVersionName(Context pContext) {
+        String versionName = "";
+        try {
+            PackageInfo packageInfo = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), 0);
+            versionName = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
+
+    public static String getSerialnum(Context pContext) {
+        String imeiNo = "";
+        try {
+            imeiNo = Settings.Secure.getString(pContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return imeiNo;
+    }
+
+    public static RequestQueue setVolleyReq(Context mContext) {
+        HttpStack stack = new MyHurlStack(mContext);
+        return Volley.newRequestQueue(mContext,stack);
+    }
 
 
 }

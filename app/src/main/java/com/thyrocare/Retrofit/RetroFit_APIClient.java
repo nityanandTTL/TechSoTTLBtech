@@ -5,6 +5,8 @@ import android.app.Activity;
 
 
 import com.thyrocare.BuildConfig;
+import com.thyrocare.utils.app.AppConstants;
+import com.thyrocare.utils.app.Global;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +53,8 @@ public class RetroFit_APIClient {
         client.addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request request = chain.request();
+//                Request request = chain.request();
+                Request request = chain.request().newBuilder().addHeader(AppConstants.HEADER_USER_AGENT, Global.getHeaderValue(mActivity)).build();
                 return chain.proceed(request);
             }
         });

@@ -42,7 +42,9 @@ import com.thyrocare.models.api.request.UpdateMaterial;
 import com.thyrocare.models.data.EmailValidationRequestModel;
 import com.thyrocare.models.data.REMOVEBENSMSPOSTDATAModel;
 import com.thyrocare.utils.api.Logger;
+import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.Global;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -186,8 +188,6 @@ public class AsyncTaskForRequest {
             abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
             abstractApiModel.setRequestUrl(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.UserLoginDevicePostUserLogin);
-            System.out.println(AbstractApiModel.SERVER_BASE_API_URL + abstractApiModel.UserLoginDevicePostUserLogin);
-            System.out.println("post : "+postJson);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
@@ -233,17 +233,6 @@ public class AsyncTaskForRequest {
             abstractApiModel = new AbstractApiModel();
 
             String postJson = new Gson().toJson(orderBookingRequestModel);
-            /*// Logging the response that is too large for logcat in multiple lines -- START
-            int maxLogSize = 500;
-            for (int i = 0; i <= postJson.length() / maxLogSize; i++) {
-                int start = i * maxLogSize;
-                int end = (i + 1) * maxLogSize;
-                end = end > postJson.length() ? postJson.length() : end;
-                Log.v(AddEditBeneficiaryDetailsActivity.class.getSimpleName(), postJson.substring(start, end));
-            }
-            // Logging the response that is too large for logcat in multiple lines -- END
-*/
-
 
             abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
@@ -1753,9 +1742,14 @@ public class AsyncTaskForRequest {
         headerData1.setHeaderKey("Content-Type");
         headerData1.setHeaderValue(contentType);
 
+        HeaderData headerData2 = new HeaderData();
+        headerData2.setHeaderKey(AppConstants.HEADER_USER_AGENT);
+        headerData2.setHeaderValue(Global.getHeaderValue(context));
+
         List<HeaderData> header = new ArrayList<>();
         header.add(headerData);
         header.add(headerData1);
+        header.add(headerData2);
         return header;
     }
 
@@ -1764,8 +1758,13 @@ public class AsyncTaskForRequest {
         headerData1.setHeaderKey("Content-Type");
         headerData1.setHeaderValue("multipart/form-data");
 
+        HeaderData headerData2 = new HeaderData();
+        headerData2.setHeaderKey(AppConstants.HEADER_USER_AGENT);
+        headerData2.setHeaderValue(Global.getHeaderValue(context));
+
         List<HeaderData> header = new ArrayList<>();
         header.add(headerData1);
+        header.add(headerData2);
         return header;
     }
 
@@ -1786,11 +1785,16 @@ public class AsyncTaskForRequest {
         headerData3.setHeaderKey("Content-Encoding");
         headerData3.setHeaderValue("gzip");
 
+        HeaderData headerData4 = new HeaderData();
+        headerData4.setHeaderKey(AppConstants.HEADER_USER_AGENT);
+        headerData4.setHeaderValue(Global.getHeaderValue(context));
+
         List<HeaderData> header = new ArrayList<>();
         header.add(headerData);
         header.add(headerData1);
         header.add(headerData2);
         header.add(headerData3);
+        header.add(headerData4);
         return header;
     }
 
@@ -1808,10 +1812,15 @@ public class AsyncTaskForRequest {
         headerData1.setHeaderKey("Content-Type");
         headerData1.setHeaderValue(contentType);
 
+        HeaderData headerData3 = new HeaderData();
+        headerData3.setHeaderKey(AppConstants.HEADER_USER_AGENT);
+        headerData3.setHeaderValue(Global.getHeaderValue(context));
+
         List<HeaderData> header = new ArrayList<>();
         header.add(headerData);
         header.add(headerData1);
         header.add(headerData2);
+        header.add(headerData3);
         return header;
     }
 
@@ -1826,9 +1835,14 @@ public class AsyncTaskForRequest {
         headerData1.setHeaderKey("Content-Type");
         headerData1.setHeaderValue(contentType);
 
+        HeaderData headerData2 = new HeaderData();
+        headerData2.setHeaderKey(AppConstants.HEADER_USER_AGENT);
+        headerData2.setHeaderValue(Global.getHeaderValue(context));
+
         List<HeaderData> header = new ArrayList<>();
         header.add(headerData);
         header.add(headerData1);
+        header.add(headerData2);
         return header;
     }
 
@@ -1837,8 +1851,13 @@ public class AsyncTaskForRequest {
         headerData1.setHeaderKey("Content-Type");
         headerData1.setHeaderValue(contentType);
 
+        HeaderData headerData2 = new HeaderData();
+        headerData2.setHeaderKey(AppConstants.HEADER_USER_AGENT);
+        headerData2.setHeaderValue(Global.getHeaderValue(context));
+
         List<HeaderData> header = new ArrayList<>();
         header.add(headerData1);
+        header.add(headerData2);
         return header;
     }
 

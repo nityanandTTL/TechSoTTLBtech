@@ -35,7 +35,7 @@ public class GetAvailableStockController {
             globalClass = new Global(mActivity);
             globalClass.showProgressDialog(mActivity, "Loading...");
             if (requestQueue == null)
-                requestQueue = Volley.newRequestQueue(mActivity);
+                requestQueue = Global.setVolleyReq(mActivity);
             String url = AbstractApiModel.StockAvailability;
             Log.e(TAG, "getAvailableStockAPI: " + url);
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {

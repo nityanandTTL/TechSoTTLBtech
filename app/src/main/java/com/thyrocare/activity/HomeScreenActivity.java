@@ -38,7 +38,6 @@ import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thyrocare.Controller.DeviceLogOutController;
-import com.thyrocare.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.R;
 import com.thyrocare.application.ApplicationController;
 import com.thyrocare.dao.DhbDao;
@@ -67,6 +66,7 @@ import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DeviceUtils;
+import com.thyrocare.utils.app.Global;
 import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
@@ -552,7 +552,7 @@ public class HomeScreenActivity extends AbstractActivity
             }
         });
 
-        RequestQueue rQueue = Volley.newRequestQueue(HomeScreenActivity.this);
+        RequestQueue rQueue = Global.setVolleyReq(HomeScreenActivity.this);
         rQueue.add(request);
     }
 
@@ -571,7 +571,7 @@ public class HomeScreenActivity extends AbstractActivity
                /* finish();
                 finishAffinity();*/
 
-                    Intent n = new Intent(activity, LoginActivity.class);
+                    Intent n = new Intent(activity, LoginScreenActivity.class);
                     n.setAction(Intent.ACTION_MAIN);
                     n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(n);
