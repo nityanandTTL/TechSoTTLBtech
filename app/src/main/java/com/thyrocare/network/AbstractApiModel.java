@@ -47,14 +47,14 @@ public class AbstractApiModel implements AppConstants {
 
     //TODO Stag
     /*public static String SERVER_BASE_API_URL_PROD = "http://techsostng.thyrocare.cloud/techsoapi/";//staging new server
-    public static final String API_VERSION = "https://www.thyrocare.com/API_BETA";
+    public static final String B2C_API_VERSION = "https://www.thyrocare.com/API_BETA/";
     public static final String BDN_API_VERSION = "http://www.thyrocare.local/API/BDN/";*/
     //TODO Live
     public static String SERVER_BASE_API_URL_PROD = "http://techso.thyrocare.cloud/techsoapi/";//live new server
-    public static final String API_VERSION = "https://www.thyrocare.com/APIs";
+    public static final String B2C_API_VERSION = "https://www.thyrocare.com/APIs/";
     public static final String BDN_API_VERSION = "https://www.thyrocare.com/API/BDN/";
 
-    public static String MAINURL = "http://techso.thyrocare.cloud/techsoapi";//live new server
+    public static String MAINURL = "http://techso.thyrocare.cloud/techsoapi/";//live new server
 
 
     public static String B2B = SERVER_BASE_API_URL_PROD.equalsIgnoreCase(MAINURL) ? "https://www.thyrocare.com/API/B2B/" : "https://www.thyrocare.com/API_BETA/B2B/";
@@ -72,9 +72,9 @@ public class AbstractApiModel implements AppConstants {
     public static String APP_NAME = "BTECH";
 
     // Version Specific Base URL
-    public String VERSION_API_URL = "/api";
+    public String VERSION_API_URL = "api";
 
-    public String LOGIN = "/Token";
+    public String LOGIN = "Token";
 
     public String LOG_OUT = VERSION_API_URL + "/Account/Logout";
 
@@ -220,7 +220,7 @@ public class AbstractApiModel implements AppConstants {
     public String TSP_BARCODE = VERSION_API_URL + "/SpecimenTrack/ReceiveHubBarcode";
     public String GET_ERecipt = VERSION_API_URL + "/Ledger/OrderReceipt";
     public String POST_REMOVE_BEN_SMS = VERSION_API_URL + "/AllSMS/PostRemoveBenSMS";
-    public String EmailValidate = "/MASTER.svc/EmailValidate";
+    public String EmailValidate = "MASTER.svc/EmailValidate";
 
     public String LOCUS_PUSH_LOCATIONS_API = "https://api.locus.sh/v1/client/thyrocare/user/";
 
@@ -250,7 +250,7 @@ public class AbstractApiModel implements AppConstants {
 
     public String ADD_BENEFICIARY = "/api/AddBeneficiary";
 
-    public static final String AppUserActivity = API_VERSION+"/order.svc/Appuser";
+    public static final String AppUserActivity = B2C_API_VERSION +"order.svc/Appuser";
 
     public static final String X_API_KEY = "x-api-key";
 

@@ -49,6 +49,7 @@ import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
+import com.thyrocare.utils.app.LogUserActivityTagging;
 
 import org.json.JSONException;
 
@@ -64,6 +65,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
+
+import static com.thyrocare.utils.app.BundleConstants.LOGOUT;
 
 public class SelfieUploadActivity_F extends AbstractActivity implements View.OnClickListener {
     private static final String TAG = SelfieUploadActivity.class.getSimpleName();
@@ -563,6 +566,7 @@ public class SelfieUploadActivity_F extends AbstractActivity implements View.OnC
             //Toast.makeText(activity, getString(R.string.logout_message_offline), Toast.LENGTH_LONG).show();
 
             if (appPreferenceManager != null) {
+                new LogUserActivityTagging(activity, LOGOUT);
                 appPreferenceManager.clearAllPreferences();
             }
 

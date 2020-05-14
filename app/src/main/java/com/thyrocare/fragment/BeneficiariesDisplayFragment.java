@@ -2,6 +2,7 @@ package com.thyrocare.fragment;
 
 
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,31 +10,46 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.Controller.GetAcessTokenAndOTPAPIController;
 import com.thyrocare.R;
+import com.thyrocare.Retrofit.PostAPIInteface;
+import com.thyrocare.Retrofit.RetroFit_APIClient;
 import com.thyrocare.activity.AddEditBeneficiaryDetailsActivity;
 import com.thyrocare.activity.OrderBookingActivity;
 import com.thyrocare.activity.PaymentsActivity;
 import com.thyrocare.adapter.BeneficiaryScreenSlidePagerAdapter;
 import com.thyrocare.adapter.VisitOrderDisplayAdapter;
+import com.thyrocare.application.ApplicationController;
 import com.thyrocare.dao.DhbDao;
 import com.thyrocare.dao.models.BeneficiaryDetailsDao;
 import com.thyrocare.dao.models.OrderDetailsDao;
+import com.thyrocare.dao.utils.ConnectionDetector;
 import com.thyrocare.delegate.RefreshBeneficiariesSliderDelegate;
 import com.thyrocare.models.api.request.CartAPIRequestModel;
 import com.thyrocare.models.api.request.OrderAllocationTrackLocationRequestModel;
 import com.thyrocare.models.api.request.OrderBookingRequestModel;
+import com.thyrocare.models.api.request.OrderPassRequestModel;
+import com.thyrocare.models.api.request.RequestOTPModel;
+import com.thyrocare.models.api.request.WOEOtpValidationRequestModel;
 import com.thyrocare.models.api.response.CartAPIResponseModel;
+import com.thyrocare.models.api.response.CommonPOSTResponseModel;
 import com.thyrocare.models.api.response.ErrorModel;
 import com.thyrocare.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.models.api.response.OrderBookingResponseBeneficiaryModel;
@@ -61,6 +77,7 @@ import com.thyrocare.utils.app.AppConstants;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.GPSTracker;
+import com.thyrocare.utils.app.Global;
 import com.thyrocare.utils.app.InputUtils;
 import com.thyrocare.utils.app.VenuPuntureUtils;
 
@@ -73,6 +90,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.thyrocare.network.AbstractApiModel.B2C_API_VERSION;
+import static com.thyrocare.network.AbstractApiModel.SERVER_BASE_API_URL;
+import static com.thyrocare.utils.app.BundleConstants.API_FOR_OTP;
 
 public class BeneficiariesDisplayFragment extends AbstractFragment {
 
@@ -117,6 +142,13 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private boolean isEditMobile_email = true;
     private String OrderMode = "";
     private String[] paymentItems;
+    private Dialog CustomDialogfor_WOE_OTPValidation;
+    Global globalclass;
+    private ConnectionDetector cd;
+    private Button btn_MobileGetOTP,btn_MobileVerifyOTP,btn_MobileVerified,btn_EmailGetOTP,btn_EmailVerifyOTP,btn_EmailVerified;
+    private boolean isMobilenoOTPVerfied = false,isEmailIDOTPVerfied = false;
+    private EditText edt_mobileOTP,edt_EmailOTP;
+
 
     public BeneficiariesDisplayFragment() {
         // Required empty public constructor
@@ -138,6 +170,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         orderDetailsDao = new OrderDetailsDao(dhbDao.getDb());
         beneficiaryDetailsDao = new BeneficiaryDetailsDao(dhbDao.getDb());
         appPreferenceManager = new AppPreferenceManager(activity);
+        globalclass = new Global(activity);
+        globalclass.setLoadingGIF(activity);
+        cd = new ConnectionDetector(activity);
         if (getArguments() != null) {
             this.orderVisitDetailsModel = getArguments().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
 
@@ -300,8 +335,15 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         .setPositiveButton("Yes (Proceed)", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                OrderBookingRequestModel orderBookingRequestModel = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel("Button_proceed_payment"));
+                                if (!isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
+                                    if (validate(orderBookingRequestModel)) {
+                                        ShowDialogToVerifyOTP();
+                                    }
+                                }else{
+                                    ProceedWOEonSubmit();
+                                }
 
-                                ProceedWOEonSubmit();
                                 dialog.dismiss();
                             }
                         })
@@ -318,18 +360,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     }
 
     private void ProceedWOEonSubmit() {
+
         Logger.error("btn proceed coming");
-
-        //changes_17june2017
-               /* if (title_add_beneficiary.getText().equals("Next Beneficiary")) {
-                    title_add_beneficiary.setError("Proceed to next beneficiary...");
-                    //Toast.makeText(activity, "next ben.", Toast.LENGTH_SHORT).show();
-                } else {
-                    title_add_beneficiary.setError("test run");
-                    //Toast.makeText(activity, "add ben.", Toast.LENGTH_SHORT).show();
-                }*/
-        //changes_17june2017
-
 
         // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
         OrderBookingRequestModel orderBookingRequestModel = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel("Button_proceed_payment"));
@@ -448,7 +480,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     private boolean validate(OrderBookingRequestModel orderBookingRequestModel) {
         Logger.error("on btn proceed: " + AddEditBeneficiaryDetailsActivity.testEdit);
         if (isValidForEditingRBS(orderBookingRequestModel.getBendtl().get(0).getTests()) && BeneficiaryDetailsScanBarcodeFragment.rbsbarcode.equals("")) {
-            Toast.makeText(activity, "Please scan all barcodes  ", Toast.LENGTH_SHORT).show();
+            globalclass.showalert_OK("Please scan all barcodes  ",activity);
             return false;
         }
 
@@ -458,7 +490,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 for (BeneficiaryDetailsModel bdm : orderBookingRequestModel.getBendtl()) {
                     if (barcodesModel.getBenId() == bdm.getBenId()) {
                         if (!BeneficiaryDetailsScanBarcodeFragment.IS_RBS_PPBS) {
-                            Toast.makeText(activity, "Please scan all barcodes for " + bdm.getName(), Toast.LENGTH_SHORT).show();
+                            globalclass.showalert_OK("Please scan all barcodes for " + bdm.getName(),activity);
                             return false;
                         } else {
                             return true;
@@ -472,12 +504,12 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
         for (BeneficiaryDetailsModel bdm : orderBookingRequestModel.getBendtl()) {
             if (InputUtils.isNull(bdm.getTests())) {
-                Toast.makeText(activity, "Please select atleast one test for " + bdm.getName(), Toast.LENGTH_SHORT).show();
+                globalclass.showalert_OK("Please select atleast one test for " + bdm.getName(),activity);
                 return false;
             }
             if (bdm.getVenepuncture() == null
                     || bdm.getVenepuncture().toString().equalsIgnoreCase("null") || bdm.getVenepuncture().isEmpty()) {
-                Toast.makeText(activity, "Please capture Beneficiary Barcode image for " + bdm.getName(), Toast.LENGTH_SHORT).show();
+                globalclass.showalert_OK("Please capture Beneficiary Barcode image for " + bdm.getName(),activity);
                 return false;
             } else {
                 Logger.error("bdm not null " + bdm.getVenepuncture());
@@ -488,7 +520,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 for (int i = 0; i < BundleConstants.TempVenuImageArylist.size(); i++) {
                     if (BundleConstants.TempVenuImageArylist.get(i).getBenID() == bdm.getBenId()){
                         if (InputUtils.isNull(BundleConstants.TempVenuImageArylist.get(i).getTRFImagePath())){
-                            Toast.makeText(activity, "Please upload TRF for " + bdm.getName(), Toast.LENGTH_SHORT).show();
+                             globalclass.showalert_OK("Please upload TRF for " + bdm.getName(),activity);
                             return false;
                         }
                     }
@@ -506,9 +538,9 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             if (bdm.getGender().equalsIgnoreCase("F") && (bdm.getTests().contains("PSA"))) {
 
                 if (bdm.getTests().contains("FPSA")) {
-                    Toast.makeText(activity, "FPSA test is not for Womens. Please change it for " + bdm.getName(), Toast.LENGTH_SHORT).show();
+                    globalclass.showalert_OK("FPSA test is not for Womens. Please change it for " + bdm.getName(),activity);
                 } else {
-                    Toast.makeText(activity, "PSA test is not for Womens. Please change it for " + bdm.getName(), Toast.LENGTH_SHORT).show();
+                    globalclass.showalert_OK("PSA test is not for Womens. Please change it for " + bdm.getName(),activity);
                 }
                 return false;
             }
@@ -1624,4 +1656,275 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
         }
     }
+
+
+    private void ShowDialogToVerifyOTP() {
+        isMobilenoOTPVerfied = false;
+        isEmailIDOTPVerfied = false;
+
+        CustomDialogfor_WOE_OTPValidation = new Dialog(activity);
+        CustomDialogfor_WOE_OTPValidation.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        CustomDialogfor_WOE_OTPValidation.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        CustomDialogfor_WOE_OTPValidation.setContentView(R.layout.woe_otp_validation_dialog);
+        CustomDialogfor_WOE_OTPValidation.setCancelable(false);
+
+        RelativeLayout rel_main = (RelativeLayout) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.rel_main);
+        ImageView img_close = (ImageView) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.img_close);
+
+        edt_mobileOTP = (EditText) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.edt_mobileOTP);
+        edt_EmailOTP = (EditText) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.edt_EmailOTP);
+        btn_MobileGetOTP = (Button) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.btn_MobileGetOTP);
+        btn_MobileVerifyOTP = (Button) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.btn_MobileVerifyOTP);
+        btn_MobileVerified = (Button) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.btn_MobileVerified);
+        btn_EmailGetOTP = (Button) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.btn_EmailGetOTP);
+        btn_EmailVerifyOTP = (Button) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.btn_EmailVerifyOTP);
+        btn_EmailVerified = (Button) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.btn_EmailVerified);
+        Button btn_proceed_afterOTP = (Button) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.btn_proceed_afterOTP);
+
+
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        int height = 0,width = 0;
+        if (displayMetrics != null) {
+            try {
+                height = displayMetrics.heightPixels;
+                width = displayMetrics.widthPixels;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width - 150, FrameLayout.LayoutParams.WRAP_CONTENT);
+        rel_main.setLayoutParams(lp);
+
+        final String mobileNo = orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile();
+        final String OrderNo = orderVisitDetailsModel.getVisitId();
+
+        CustomDialogfor_WOE_OTPValidation.show();
+
+        img_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CustomDialogfor_WOE_OTPValidation.dismiss();
+            }
+        });
+
+        btn_MobileGetOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cd.isConnectingToInternet()) {
+                    CallGenerateOTPApi(mobileNo,"SENDOTPALL","Mobile",OrderNo);
+                } else {
+                    globalclass.showCustomToast(activity, activity.getResources().getString(R.string.plz_chk_internet));
+                }
+            }
+        });
+
+
+        btn_MobileVerifyOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String strOTP = edt_mobileOTP.getText().toString().trim();
+                if (InputUtils.isNull(strOTP) ) {
+                    globalclass.showalert_OK("Please enter OTP",activity);
+                    edt_mobileOTP.requestFocus();
+                }else if (strOTP.length() != 4) {
+                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4",activity);
+                    edt_mobileOTP.requestFocus();
+                } else {
+                    WOEOtpValidationRequestModel model = new WOEOtpValidationRequestModel();
+                    model.setOrderno(OrderNo);
+                    model.setOtp(strOTP);
+                    model.setOtpTo("Mobile");
+                    if (cd.isConnectingToInternet()) {
+                        CallValidateOTPAPI(model);
+                    } else {
+                        globalclass.showCustomToast(activity, activity.getResources().getString(R.string.plz_chk_internet));
+                    }
+                }
+
+            }
+        });
+
+        btn_EmailGetOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cd.isConnectingToInternet()) {
+                    CallGenerateOTPApi(mobileNo,"SENDOTPALL","Email",OrderNo);
+                } else {
+                    globalclass.showCustomToast(activity, activity.getResources().getString(R.string.plz_chk_internet));
+                }
+            }
+        });
+
+
+        btn_EmailVerifyOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String strOTP = edt_EmailOTP.getText().toString().trim();
+                if (InputUtils.isNull(strOTP) ) {
+                    globalclass.showalert_OK("Please enter OTP",activity);
+                    edt_EmailOTP.requestFocus();
+                }else if ( strOTP.length() != 4) {
+                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4",activity);
+                    edt_EmailOTP.requestFocus();
+                } else {
+                    WOEOtpValidationRequestModel model = new WOEOtpValidationRequestModel();
+                    model.setOrderno(OrderNo);
+                    model.setOtp(strOTP);
+                    model.setOtpTo("Email");
+                    if (cd.isConnectingToInternet()) {
+                        CallValidateOTPAPI(model);
+                    } else {
+                        globalclass.showCustomToast(activity, activity.getResources().getString(R.string.plz_chk_internet));
+                    }
+                }
+
+            }
+        });
+
+        btn_proceed_afterOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isMobilenoOTPVerfied){
+                    globalclass.showalert_OK("Please verify OTP for Mobile number.",activity);
+                    edt_mobileOTP.requestFocus();
+                }else if (!isEmailIDOTPVerfied) {
+                    android.support.v7.app.AlertDialog.Builder alertDialogBuilder;
+                    alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(activity);
+                    alertDialogBuilder
+                            .setMessage("Do you want to proceed without verifying Email-ID OTP ?")
+                            .setCancelable(true)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    ProceedWOEonSubmit();
+                                    if (CustomDialogfor_WOE_OTPValidation!= null && CustomDialogfor_WOE_OTPValidation.isShowing()){
+                                        CustomDialogfor_WOE_OTPValidation.dismiss();
+                                    }
+                                    dialog.dismiss();
+                                }
+                            })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }else{
+
+                    if (CustomDialogfor_WOE_OTPValidation!= null && CustomDialogfor_WOE_OTPValidation.isShowing()){
+                        CustomDialogfor_WOE_OTPValidation.dismiss();
+                    }
+                    ProceedWOEonSubmit();
+                }
+            }
+        });
+
+    }
+
+    private void CallGenerateOTPApi(String mobileNumber, String Purpose, final String OTPVia, String orderno) {
+
+        if (ApplicationController.getAcessTokenAndOTPAPIController != null) {
+            ApplicationController.getAcessTokenAndOTPAPIController = null;
+        }
+
+        ApplicationController.getAcessTokenAndOTPAPIController = new GetAcessTokenAndOTPAPIController(activity);
+        ApplicationController.getAcessTokenAndOTPAPIController.CallGetTokenAPIForOTP(mobileNumber, Purpose,OTPVia,orderno);
+        ApplicationController.getAcessTokenAndOTPAPIController.setOnResponseListener(new GetAcessTokenAndOTPAPIController.OnResponseListener() {
+            @Override
+            public void onSuccess(CommonPOSTResponseModel commonPOSTResponseModel) {
+                onGetOTPResponseReceived(commonPOSTResponseModel,OTPVia);
+            }
+
+            @Override
+            public void onfailure(CommonPOSTResponseModel commonPOSTResponseModel) {
+                onGetOTPResponseReceived(commonPOSTResponseModel,OTPVia);
+            }
+        });
+    }
+
+    private void onGetOTPResponseReceived(CommonPOSTResponseModel model1,String OtpVia) {
+
+        if (!InputUtils.isNull(model1.getResponse1()) && model1.getResponse1().equalsIgnoreCase("SUCCESS")) {
+            if (OtpVia.equalsIgnoreCase("Mobile")){
+                btn_MobileGetOTP.setVisibility(View.GONE);
+                btn_MobileVerified.setVisibility(View.GONE);
+                btn_MobileVerifyOTP.setVisibility(View.VISIBLE);
+                edt_mobileOTP.setVisibility(View.VISIBLE);
+            }else if (OtpVia.equalsIgnoreCase("Email")){
+                btn_EmailGetOTP.setVisibility(View.GONE);
+                btn_EmailVerified.setVisibility(View.GONE);
+                btn_EmailVerifyOTP.setVisibility(View.VISIBLE);
+                edt_EmailOTP.setVisibility(View.VISIBLE);
+            }
+        } else if (!InputUtils.isNull(model1.getResponse1()) && ( model1.getResponse1().contains("Mailbox unavailable") || model1.getResponse1().contains("Failure sending mail"))) {
+            if (OtpVia.equalsIgnoreCase("Mobile")){
+                btn_MobileGetOTP.setVisibility(View.GONE);
+                btn_MobileVerified.setVisibility(View.GONE);
+                btn_MobileVerifyOTP.setVisibility(View.VISIBLE);
+                edt_mobileOTP.setVisibility(View.VISIBLE);
+
+            }else if (OtpVia.equalsIgnoreCase("Email")){
+                btn_EmailGetOTP.setVisibility(View.GONE);
+                btn_EmailVerified.setVisibility(View.GONE);
+                btn_EmailVerifyOTP.setVisibility(View.VISIBLE);
+                edt_EmailOTP.setVisibility(View.VISIBLE);
+            }
+        } else {
+            globalclass.showalert_OK(!InputUtils.isNull(model1.getResponse1()) ? model1.getResponse1() : "Sorry we are facing issue while sending OTP. Please try again later.",activity);
+
+        }
+
+    }
+
+    private void CallValidateOTPAPI(final WOEOtpValidationRequestModel model) {
+
+        PostAPIInteface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, SERVER_BASE_API_URL).create(PostAPIInteface.class);
+        Call<CommonPOSTResponseModel> responseCall = apiInterface.ValidateWoeOTPAPI(model);
+        globalclass.showProgressDialog();
+        responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {
+            @Override
+            public void onResponse(Call<CommonPOSTResponseModel> call, Response<CommonPOSTResponseModel> response) {
+                globalclass.hideProgressDialog();
+                if (response.isSuccessful() && response.body() != null) {
+                    CommonPOSTResponseModel ResponseModel = response.body();
+                    if (ResponseModel != null && !InputUtils.isNull(ResponseModel.getResponse1()) && ResponseModel.getResponse1().equalsIgnoreCase("SUCCESS")){
+
+                        if (model.getOtpTo().equalsIgnoreCase("Mobile")){
+                            btn_MobileVerified.setVisibility(View.VISIBLE);
+                            btn_MobileVerifyOTP.setVisibility(View.GONE);
+                            btn_MobileGetOTP.setVisibility(View.GONE);
+                            edt_mobileOTP.setEnabled(false);
+                            isMobilenoOTPVerfied = true;
+                        }else  if (model.getOtpTo().equalsIgnoreCase("Email")){
+                            btn_EmailVerified.setVisibility(View.VISIBLE);
+                            btn_EmailVerifyOTP.setVisibility(View.GONE);
+                            btn_EmailGetOTP.setVisibility(View.GONE);
+                            edt_EmailOTP.setEnabled(false);
+                            isEmailIDOTPVerfied = true;
+                        }
+
+                    }else{
+                        globalclass.showCustomToast(activity, "OTP Validation Failed. Please enter Valid OTP.");
+                    }
+                } else {
+                    globalclass.showCustomToast(activity, "Unable to connect to the server. Please try after sometime.");
+
+                }
+            }
+            @Override
+            public void onFailure(Call<CommonPOSTResponseModel> call, Throwable t) {
+                globalclass.hideProgressDialog();
+                globalclass.showCustomToast(activity, "Something went wrong. Please try after sometime.");
+            }
+        });
+
+    }
+
 }

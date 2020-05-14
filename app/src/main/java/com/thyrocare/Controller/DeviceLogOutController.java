@@ -53,7 +53,7 @@ public class DeviceLogOutController {
         ApiCallAsyncTask logoutDeviceAsyncTask = new AsyncTaskForRequest(mContext).getPostUserLogOutRequestAsyncTask(n);
         logoutDeviceAsyncTask.setApiCallAsyncTaskDelegate(new LogoutDeviceAsyncTaskDelegateResult());
         if (isNetworkAvailable(mContext)) {
-            new LogUserActivityTagging(activity, LOGOUT);
+//            new LogUserActivityTagging(activity, LOGOUT);
             logoutDeviceAsyncTask.execute(logoutDeviceAsyncTask);
         } else {
 //            Toast.makeText(mContext, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();

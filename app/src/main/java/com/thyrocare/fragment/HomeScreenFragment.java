@@ -53,12 +53,15 @@ import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
+import com.thyrocare.utils.app.LogUserActivityTagging;
 import com.wooplr.spotlight.utils.SpotlightSequence;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static com.thyrocare.utils.app.BundleConstants.LOGOUT;
 
 /**
  * <br/> <b>*TITLE:-HUB</b><br/>
@@ -685,6 +688,7 @@ public class HomeScreenFragment extends AbstractFragment {
             @Override
             public void onOkClicked() {
                 try {
+                    new LogUserActivityTagging(activity, LOGOUT);
                     appPreferenceManager.clearAllPreferences();
                     DhbDao dhbDao = new DhbDao(activity);
                     dhbDao.deleteTablesonLogout();

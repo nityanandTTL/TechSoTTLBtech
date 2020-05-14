@@ -34,10 +34,14 @@ import com.thyrocare.uiutils.AbstractFragment;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
+import com.thyrocare.utils.app.LogUserActivityTagging;
 
 import org.json.JSONException;
 
 import java.util.ArrayList;
+
+import static com.thyrocare.utils.app.BundleConstants.LOGOUT;
+
 /**
  *　APi Used 　　　i)/SpecimenTrack/ReceiveScannedBarcode/Btechid<br/>
  　*　ii)/SpecimenTrack/ReceiveBarcodes
@@ -283,6 +287,7 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
             try {
+                new LogUserActivityTagging(activity, LOGOUT);
                 appPreferenceManager.clearAllPreferences();
             } catch (Exception e) {
                 e.printStackTrace();

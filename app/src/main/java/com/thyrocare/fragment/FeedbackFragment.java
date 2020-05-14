@@ -395,7 +395,7 @@ public class FeedbackFragment extends Fragment {
                 try {
                     HttpClient client = new DefaultHttpClient();
 //                    String getURL = pref.getString("domain", "") + "MASTER.svc/"+pref.getString("api_key","")+"/FEEDBACK/getlist";
-                    String getURL = AbstractApiModel.API_VERSION+"/MASTER.svc/"+ AppConstants.API_KEY+"/FEEDBACK/getlist";
+                    String getURL = AbstractApiModel.B2C_API_VERSION +"MASTER.svc/"+ AppConstants.API_KEY+"/FEEDBACK/getlist";
                     System.out.println(getURL);
                     HttpGet httpGet = new HttpGet(getURL);
                     httpGet.setHeader("Content-Type", "application/json");
@@ -482,7 +482,7 @@ public class FeedbackFragment extends Fragment {
         protected JSONObject doInBackground(Void... params) {
 
 //            String strUrl=pref.getString("domain", "")+"MASTER.svc/feedback";
-            String strUrl=AbstractApiModel.API_VERSION+"/MASTER.svc/feedback";
+            String strUrl=AbstractApiModel.B2C_API_VERSION +"MASTER.svc/feedback";
 
             JSONObject jobj = new JSONObject();
             try {

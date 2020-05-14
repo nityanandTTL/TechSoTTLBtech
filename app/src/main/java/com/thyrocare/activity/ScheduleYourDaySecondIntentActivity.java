@@ -32,6 +32,7 @@ import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
 import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.InputUtils;
+import com.thyrocare.utils.app.LogUserActivityTagging;
 
 import org.json.JSONException;
 
@@ -43,6 +44,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import static com.thyrocare.utils.app.BundleConstants.LOGOUT;
 
 /**
  * Created by E4904 on 8/12/2017.
@@ -328,6 +331,7 @@ public class ScheduleYourDaySecondIntentActivity extends AbstractActivity {
     public void CallLogOutFromDevice() {
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            new LogUserActivityTagging(activity, LOGOUT);
             appPreferenceManager.clearAllPreferences();
             try {
                 new DhbDao(activity).deleteTablesonLogout();

@@ -26,13 +26,14 @@ import static android.content.Context.TELEPHONY_SERVICE;
 
 public class LogUserActivityTagging {
     public static final String TAG = LogUserActivityTagging.class.getSimpleName();
-
+    SharedPreferences sharedPreferencesUserActivity;
+    SharedPreferences.Editor editorUserActivity;
     public LogUserActivityTagging(Activity activity, String screen) {
         try {
             String appversion = CommonUtils.getAppVersion(activity);
             String os = "ANDROID " + Build.VERSION.RELEASE;
-            SharedPreferences sharedPreferencesUserActivity = activity.getSharedPreferences("TrackUserActivity", MODE_PRIVATE);
-            SharedPreferences.Editor editorUserActivity = sharedPreferencesUserActivity.edit();
+            sharedPreferencesUserActivity = activity.getSharedPreferences("TrackUserActivity", MODE_PRIVATE);
+            editorUserActivity = sharedPreferencesUserActivity.edit();
             Boolean isFirstInstall = sharedPreferencesUserActivity.getBoolean("firstInstall", true);
 
             if (isFirstInstall) {
@@ -127,5 +128,11 @@ public class LogUserActivityTagging {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void clearPreferences() {
+        editorUserActivity.clear();
+        editorUserActivity.commit();
     }
 }

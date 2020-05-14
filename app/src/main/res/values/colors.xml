@@ -48,6 +48,9 @@
     <color name="btn_login_start_grd">#5E3C85</color>
     <color name="btn_login_end_grd">#61BEE0</color>
 
+    <color name="btn_green_start_grd">#088F0E</color>
+    <color name="btn_green_end_grd">#5BC35F</color>
+
     <color name="colorFAB1">#2196F3</color>
     <color name="colorFAB2">#E040FB</color>
     <color name="green">#00FF00</color>

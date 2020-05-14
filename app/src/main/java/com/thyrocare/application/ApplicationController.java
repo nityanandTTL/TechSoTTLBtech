@@ -13,6 +13,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.thyrocare.Controller.ClientEntryController;
 import com.thyrocare.Controller.DeviceLogOutController;
+import com.thyrocare.Controller.GetAcessTokenAndOTPAPIController;
 import com.thyrocare.Controller.GetAvailableStockController;
 import com.thyrocare.Controller.NotificationMappingController;
 import com.thyrocare.Controller.TSPLMESampleDropController;
@@ -49,6 +50,7 @@ public class ApplicationController extends MultiDexApplication {
 	public static UpdateStockController updateStockController;
 	public static GetAvailableStockController getAvailableStockController;
 	public static TrackUserActivityController trackUserActivityController;
+	public static GetAcessTokenAndOTPAPIController getAcessTokenAndOTPAPIController;
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

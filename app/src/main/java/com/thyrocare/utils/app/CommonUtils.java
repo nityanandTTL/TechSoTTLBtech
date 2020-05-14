@@ -33,6 +33,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
+import static com.thyrocare.utils.app.BundleConstants.LOGOUT;
+
 public class CommonUtils {
 
 	/* public static ApiResponseModel getErrorReponseModel(String msg) {
@@ -236,6 +238,7 @@ public class CommonUtils {
     public static void CallLogOutFromDevice(Context mContext, Activity mActivity, AppPreferenceManager appPreferenceManager, DhbDao dhbDao) {
         try {
             TastyToast.makeText(mContext, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
+            new LogUserActivityTagging(mActivity, LOGOUT);
             appPreferenceManager.clearAllPreferences();
             dhbDao.deleteTablesonLogout();
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);

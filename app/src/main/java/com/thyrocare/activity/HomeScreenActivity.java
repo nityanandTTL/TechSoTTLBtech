@@ -68,11 +68,14 @@ import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.Global;
 import com.thyrocare.utils.app.InputUtils;
+import com.thyrocare.utils.app.LogUserActivityTagging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import static com.thyrocare.utils.app.BundleConstants.LOGOUT;
 
 public class HomeScreenActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -561,6 +564,7 @@ public class HomeScreenActivity extends AbstractActivity
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
                 try {
+                    new LogUserActivityTagging(activity, LOGOUT);
                     appPreferenceManager.clearAllPreferences();
                     dhbDao.deleteTablesonLogout();
                     Intent homeIntent = new Intent(Intent.ACTION_MAIN);

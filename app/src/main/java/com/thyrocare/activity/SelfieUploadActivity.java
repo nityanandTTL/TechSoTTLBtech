@@ -51,6 +51,7 @@ import com.thyrocare.utils.app.BundleConstants;
 import com.thyrocare.utils.app.CommonUtils;
 import com.thyrocare.utils.app.DeviceUtils;
 import com.thyrocare.utils.app.InputUtils;
+import com.thyrocare.utils.app.LogUserActivityTagging;
 
 import org.json.JSONException;
 
@@ -66,6 +67,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
+
+import static com.thyrocare.utils.app.BundleConstants.LOGOUT;
 
 public class SelfieUploadActivity extends AbstractActivity implements View.OnClickListener {
     private static final String TAG = SelfieUploadActivity.class.getSimpleName();
@@ -250,6 +253,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         public void apiCallResult(String json, int statusCode) throws JSONException {
             if (statusCode == 200) {
                 try {
+                    new LogUserActivityTagging(activity, LOGOUT);
                     appPreferenceManager.clearAllPreferences();
                     dhbDao.deleteTablesonLogout();
 

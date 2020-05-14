@@ -98,4 +98,7 @@ public class BundleConstants {
     public static final int APPID_TRACKACTIVITY = 2;
     public static final String LOGIN = "LOGIN";
     public static final String LOGOUT = "LOGOUT";
+
+
+    public static final String API_FOR_OTP = "sNhdlQjqvoD7zCbzf56sxppBJX3MmdWSAomi@RBhXRrVcGyko7hIzQ==";
 }

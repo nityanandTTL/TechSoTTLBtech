@@ -2142,7 +2142,7 @@ public class AsyncTaskForRequest {
             String postJson = new Gson().toJson(EmailValidationRequestModel);
             abstractApiModel.setPostData(postJson);
             abstractApiModel.setHeader(getHeader(AbstractApiModel.APPLICATION_JSON));
-            abstractApiModel.setRequestUrl(AbstractApiModel.API_VERSION + abstractApiModel.EmailValidate);
+            abstractApiModel.setRequestUrl(AbstractApiModel.B2C_API_VERSION + abstractApiModel.EmailValidate);
             apiCallAsyncTask.setHttpMethod((APICall.POST_METHOD));
             apiCallAsyncTask.setContentType(AbstractApiModel.APPLICATION_JSON);
             apiCallAsyncTask.setApiModel(abstractApiModel);
