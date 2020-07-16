@@ -376,6 +376,7 @@ public class DisplayTestsMasterListActivity extends AbstractActivity {
                                     if (testTypeWiseTestRateMasterModels.get(i).getAccessUserCode() != null) {
                                         if (testTypeWiseTestRateMasterModels.get(i).getAccessUserCode().size() != 0) {
                                             for (int j = 0; j < testTypeWiseTestRateMasterModels.get(i).getAccessUserCode().size(); j++) {
+
                                                 if (Integer.parseInt(testTypeWiseTestRateMasterModels.get(i).getAccessUserCode().get(j).getAccessCode()) == orderDetailsModel.getUserAccessCode()) {
                                                     testTypeWiseTestRateMasterModels_new.add(testTypeWiseTestRateMasterModels.get(i));
                                                 }

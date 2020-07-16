@@ -199,7 +199,10 @@ public class ScheduleYourDayActivity3 extends AbstractActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
                                 setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
-                                setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())){
+                                    setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt( appPreferenceManager.getLoginResponseModel().getUserID()));
+                                }
+
                                 String slots = "";
                                 setBtechAvailabilityAPIRequestModel.setSlots(slots);
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);

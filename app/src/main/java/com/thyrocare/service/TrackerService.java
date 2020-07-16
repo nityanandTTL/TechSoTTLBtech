@@ -171,8 +171,8 @@ public class TrackerService extends Service implements LocationListener, GoogleA
     private void requestLocationUpdates1() {
 
         LocationRequest request = new LocationRequest();
-        request.setInterval(5000);
-        request.setFastestInterval(2000);
+        request.setInterval(13000);
+        request.setFastestInterval(9000);
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
 //        final String path = getString(R.string.firebase_path) + "/" + rplchar(appPreferenceManager.getLoginResponseModel().getUserName().trim()) + "-" + appPreferenceManager.getLoginResponseModel().getUserID();

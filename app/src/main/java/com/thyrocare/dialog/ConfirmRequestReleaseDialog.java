@@ -23,6 +23,7 @@ import com.thyrocare.network.ApiCallAsyncTaskDelegate;
 import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.utils.api.Logger;
+import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
 
@@ -156,7 +157,7 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_yes) {
-            if (edt_remark.getSelectedItem().equals("--SELECT--")) {
+            if (edt_remark != null && edt_remark.getSelectedItem() != null && !InputUtils.isNull(edt_remark.getSelectedItem().toString()) && edt_remark.getSelectedItem().equals("--SELECT--")) {
                 TastyToast.makeText(activity, "Select Remark", TastyToast.LENGTH_LONG, TastyToast.WARNING);
             } else if (ifOTHERRemarksVisible()) {
 

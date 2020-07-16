@@ -193,7 +193,14 @@
 
         </LinearLayout>
 
-
+        <TextView
+            android:id="@+id/tv_reSendMobileOTP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Resend OTP"
+            android:textColor="@color/black"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <LinearLayout
@@ -283,6 +290,14 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tv_reSendEmailOTP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Resend OTP"
+            android:textColor="@color/black"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

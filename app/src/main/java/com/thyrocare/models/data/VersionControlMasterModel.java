@@ -19,6 +19,8 @@ public class VersionControlMasterModel implements Parcelable {
     String AppUrl;
     String PlaystoreVersonName;
     int PlaystoreVerson;
+    int OTPEnabled;
+    int SSLPinning;
 
     public VersionControlMasterModel() {
     }
@@ -34,6 +36,8 @@ public class VersionControlMasterModel implements Parcelable {
         AppUrl = in.readString();
         PlaystoreVersonName = in.readString();
         PlaystoreVerson = in.readInt();
+        OTPEnabled = in.readInt();
+        SSLPinning = in.readInt();
     }
 
     @Override
@@ -47,6 +51,8 @@ public class VersionControlMasterModel implements Parcelable {
         dest.writeString(AppUrl);
         dest.writeString(PlaystoreVersonName);
         dest.writeInt(PlaystoreVerson);
+        dest.writeInt(OTPEnabled);
+        dest.writeInt(SSLPinning);
     }
 
     @Override
@@ -140,5 +146,21 @@ public class VersionControlMasterModel implements Parcelable {
 
     public void setStatus(boolean status) {
         Status = status;
+    }
+
+    public int getOTPEnabled() {
+        return OTPEnabled;
+    }
+
+    public void setOTPEnabled(int OTPEnabled) {
+        this.OTPEnabled = OTPEnabled;
+    }
+
+    public int getSSLPinning() {
+        return SSLPinning;
+    }
+
+    public void setSSLPinning(int SSLPinning) {
+        this.SSLPinning = SSLPinning;
     }
 }

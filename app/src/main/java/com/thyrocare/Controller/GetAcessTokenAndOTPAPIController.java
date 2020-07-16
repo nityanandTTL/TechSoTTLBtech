@@ -85,7 +85,7 @@ public class GetAcessTokenAndOTPAPIController {
     }
 
     private void CallGetOTPAPI(RequestOTPModel model) {
-        globalClass.showCustomToast(mActivity, "Sending OTP please wait..");
+        globalClass.showCustomToast(mActivity, "Generating OTP. Please wait..");
         PostAPIInteface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, SERVER_BASE_API_URL).create(PostAPIInteface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.RequestForOTPAPI(model);
         globalClass.showProgressDialog();

@@ -1144,6 +1144,7 @@ public class BeneficiaryDetailsScanBarcodeFragment extends AbstractFragment {
                         currentScanSampleType = beneficiaryBarcodeDetailsModel.getSamplType();
                         scanposition = finalI;
 
+//                        OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
                         intentIntegrator = null;
                         intentIntegrator = new IntentIntegrator(activity) {
                             @Override

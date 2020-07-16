@@ -51,6 +51,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
 
     private ArrayList<KitsCountModel> kits;
 
+
     protected OrderDetailsModel(Parcel in) {
         super(in);
         BrandId = in.readInt();
@@ -86,57 +87,13 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         AppointmentDate = in.readString();
         BtechName = in.readString();
         EditHC = in.readByte() != 0;
-        EditOrder = in.readByte() != 0;
         DirectVisit = in.readByte() != 0;
+        EditOrder = in.readByte() != 0;
         EuOrders = in.readByte() != 0;
         EditME = in.readByte() != 0;
         SecondVisitTest = in.readString();
         kits = in.createTypedArrayList(KitsCountModel.CREATOR);
     }
-
-    /*@Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeInt(BrandId);
-        dest.writeString(OrderNo);
-        dest.writeString(Address);
-        dest.writeString(Pincode);
-        dest.writeString(Mobile);
-        dest.writeString(Email);
-        dest.writeString(PayType);
-        dest.writeInt(AmountDue);
-        dest.writeInt(AmountPayable);
-        dest.writeInt(Margin);
-        dest.writeString(Location);
-        dest.writeInt(Discount);
-        dest.writeString(Refcode);
-        dest.writeString(ProjId);
-        dest.writeInt(ReportHC);
-        dest.writeInt(UserAccessCode);
-        dest.writeByte((byte) (isTestEdit ? 1 : 0));
-        dest.writeByte((byte) (isAddBen ? 1 : 0));
-        dest.writeTypedList(benMaster);
-        dest.writeString(VisitId);
-        dest.writeString(Slot);
-        dest.writeString(CampId);
-        dest.writeString(Response);
-        dest.writeInt(SlotId);
-        dest.writeFloat(Distance);
-        dest.writeString(Latitude);
-        dest.writeString(Longitude);
-        dest.writeString(Status);
-        dest.writeString(Servicetype);
-        dest.writeFloat(EstIncome);
-        dest.writeString(AppointmentDate);
-        dest.writeString(BtechName);
-        dest.writeString(SecondVisitTest);
-        dest.writeByte((byte) (EditOrder ? 1 : 0));
-        dest.writeByte((byte) (EditHC ? 1 : 0));
-        dest.writeByte((byte) (DirectVisit ? 1 : 0));
-        dest.writeByte((byte) (EuOrders ? 1 : 0));
-        dest.writeByte((byte) (EditME ? 1 : 0));
-        dest.writeTypedList(kits);
-    }*/
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -199,89 +156,6 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         }
     };
 
-    public boolean isDirectVisit() {
-        return DirectVisit;
-    }
-
-    public void setDirectVisit(boolean directVisit) {
-        DirectVisit = directVisit;
-    }
-
-    public boolean isEditHC() {
-        return EditHC;
-    }
-
-    public void setEditHC(boolean editHC) {
-        EditHC = editHC;
-    }
-
-    public String getBtechName() {
-        return BtechName;
-    }
-
-    public void setBtechName(String btechName) {
-        BtechName = btechName;
-    }
-
-    public String getAppointmentDate() {
-        return AppointmentDate;
-    }
-
-    public void setAppointmentDate(String appointmentDate) {
-        AppointmentDate = appointmentDate;
-    }
-
-    public String getCampId() {
-        return CampId;
-    }
-
-    public void setCampId(String campId) {
-        CampId = campId;
-    }
-
-    public OrderDetailsModel() {
-        super();
-    }
-
-    public String getServicetype() {
-        return Servicetype;
-    }
-
-    public void setServicetype(String servicetype) {
-        Servicetype = servicetype;
-    }
-
-    public String getVisitId() {
-        return VisitId;
-    }
-
-    public void setVisitId(String visitId) {
-        VisitId = visitId;
-    }
-
-    public String getSlot() {
-        return Slot;
-    }
-
-    public void setSlot(String slot) {
-        Slot = slot;
-    }
-
-    public String getResponse() {
-        return Response;
-    }
-
-    public void setResponse(String response) {
-        Response = response;
-    }
-
-    public int getSlotId() {
-        return SlotId;
-    }
-
-    public void setSlotId(int slotId) {
-        SlotId = slotId;
-    }
 
     public int getBrandId() {
         return BrandId;
@@ -347,6 +221,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         AmountDue = amountDue;
     }
 
+    public int getAmountPayable() {
+        return AmountPayable;
+    }
+
+    public void setAmountPayable(int amountPayable) {
+        AmountPayable = amountPayable;
+    }
+
     public int getMargin() {
         return Margin;
     }
@@ -355,6 +237,21 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         Margin = margin;
     }
 
+    public String getLocation() {
+        return Location;
+    }
+
+    public void setLocation(String location) {
+        Location = location;
+    }
+
+    public int getDiscount() {
+        return Discount;
+    }
+
+    public void setDiscount(int discount) {
+        Discount = discount;
+    }
 
     public String getRefcode() {
         return Refcode;
@@ -412,20 +309,44 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         this.benMaster = benMaster;
     }
 
-    public ArrayList<KitsCountModel> getKits() {
-        return kits;
+    public String getVisitId() {
+        return VisitId;
     }
 
-    public void setKits(ArrayList<KitsCountModel> kits) {
-        this.kits = kits;
+    public void setVisitId(String visitId) {
+        VisitId = visitId;
     }
 
-    public int getDiscount() {
-        return Discount;
+    public String getSlot() {
+        return Slot;
     }
 
-    public void setDiscount(int discount) {
-        Discount = discount;
+    public void setSlot(String slot) {
+        Slot = slot;
+    }
+
+    public String getCampId() {
+        return CampId;
+    }
+
+    public void setCampId(String campId) {
+        CampId = campId;
+    }
+
+    public String getResponse() {
+        return Response;
+    }
+
+    public void setResponse(String response) {
+        Response = response;
+    }
+
+    public int getSlotId() {
+        return SlotId;
+    }
+
+    public void setSlotId(int slotId) {
+        SlotId = slotId;
     }
 
     public float getDistance() {
@@ -460,6 +381,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         Status = status;
     }
 
+    public String getServicetype() {
+        return Servicetype;
+    }
+
+    public void setServicetype(String servicetype) {
+        Servicetype = servicetype;
+    }
+
     public float getEstIncome() {
         return EstIncome;
     }
@@ -468,20 +397,36 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         EstIncome = estIncome;
     }
 
-    public int getAmountPayable() {
-        return AmountPayable;
+    public String getAppointmentDate() {
+        return AppointmentDate;
     }
 
-    public void setAmountPayable(int amountPayable) {
-        AmountPayable = amountPayable;
+    public void setAppointmentDate(String appointmentDate) {
+        AppointmentDate = appointmentDate;
     }
 
-    public String getLocation() {
-        return Location;
+    public String getBtechName() {
+        return BtechName;
     }
 
-    public void setLocation(String location) {
-        Location = location;
+    public void setBtechName(String btechName) {
+        BtechName = btechName;
+    }
+
+    public boolean isEditHC() {
+        return EditHC;
+    }
+
+    public void setEditHC(boolean editHC) {
+        EditHC = editHC;
+    }
+
+    public boolean isDirectVisit() {
+        return DirectVisit;
+    }
+
+    public void setDirectVisit(boolean directVisit) {
+        DirectVisit = directVisit;
     }
 
     public boolean isEditOrder() {
@@ -508,13 +453,24 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         EditME = editME;
     }
 
-
     public String getSecondVisitTest() {
         return SecondVisitTest;
     }
 
     public void setSecondVisitTest(String secondVisitTest) {
         SecondVisitTest = secondVisitTest;
+    }
+
+    public ArrayList<KitsCountModel> getKits() {
+        return kits;
+    }
+
+    public void setKits(ArrayList<KitsCountModel> kits) {
+        this.kits = kits;
+    }
+
+    public OrderDetailsModel() {
+        super();
     }
 
     @Override

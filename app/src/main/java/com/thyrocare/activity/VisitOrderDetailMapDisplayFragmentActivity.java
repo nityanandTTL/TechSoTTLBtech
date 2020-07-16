@@ -442,22 +442,26 @@ public class VisitOrderDetailMapDisplayFragmentActivity extends FragmentActivity
         }
 
         //Place current location marker
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        if (mMap != null) {
-            mCurrLocationMarker = mMap.addMarker(markerOptions);
-            currentlat = location.getLatitude();
-            currentlong = location.getLongitude();
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        try {
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.title("Current Position");
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            if (mMap != null) {
+                mCurrLocationMarker = mMap.addMarker(markerOptions);
+                currentlat = location.getLatitude();
+                currentlong = location.getLongitude();
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-            if (mGoogleApiClient != null) {
-                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+                if (mGoogleApiClient != null) {
+                    LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+                }
+
             }
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

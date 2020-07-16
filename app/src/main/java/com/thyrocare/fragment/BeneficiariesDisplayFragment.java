@@ -7,9 +7,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -146,8 +150,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
     Global globalclass;
     private ConnectionDetector cd;
     private Button btn_MobileGetOTP,btn_MobileVerifyOTP,btn_MobileVerified,btn_EmailGetOTP,btn_EmailVerifyOTP,btn_EmailVerified;
+    private TextView tv_reSendMobileOTP,tv_reSendEmailOTP;
     private boolean isMobilenoOTPVerfied = false,isEmailIDOTPVerfied = false;
     private EditText edt_mobileOTP,edt_EmailOTP;
+    private CountDownTimer MobileResendOTPcdTimer,EmailResendOTPcdTimer;
 
 
     public BeneficiariesDisplayFragment() {
@@ -198,6 +204,45 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
         // fetchDataOfVisitOrderForRefreshAmountDue();
         initListeners();
+
+
+        MobileResendOTPcdTimer = new CountDownTimer(60000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                tv_reSendMobileOTP.setText("Didn't receive OTP? \nPlease Wait: " + millisUntilFinished / 1000);
+                tv_reSendMobileOTP.setTextColor(getResources().getColor(R.color.black));
+
+                tv_reSendMobileOTP.setEnabled(false);
+                //here you can have your logic to set text to edittext
+            }
+
+            public void onFinish() {
+                tv_reSendMobileOTP.setEnabled(true);
+                tv_reSendMobileOTP.setTextColor(getResources().getColor(R.color.colorPrimary));
+                String mystring = new String("Resend OTP");
+                SpannableString content = new SpannableString(mystring);
+                content.setSpan(new UnderlineSpan(), 0, mystring.length(), 0);
+                tv_reSendMobileOTP.setText(content);
+            }
+        };
+
+        EmailResendOTPcdTimer = new CountDownTimer(60000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                tv_reSendEmailOTP.setText("Didn't receive OTP? \nPlease Wait: " + millisUntilFinished / 1000);
+                tv_reSendEmailOTP.setTextColor(getResources().getColor(R.color.black));
+
+                tv_reSendEmailOTP.setEnabled(false);
+                //here you can have your logic to set text to edittext
+            }
+
+            public void onFinish() {
+                tv_reSendEmailOTP.setEnabled(true);
+                tv_reSendEmailOTP.setTextColor(getResources().getColor(R.color.colorPrimary));
+                String mystring = new String("Resend OTP");
+                SpannableString content = new SpannableString(mystring);
+                content.setSpan(new UnderlineSpan(), 0, mystring.length(), 0);
+                tv_reSendEmailOTP.setText(content);
+            }
+        };
 
         return rootView;
     }
@@ -335,14 +380,20 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                         .setPositiveButton("Yes (Proceed)", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                OrderBookingRequestModel orderBookingRequestModel = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel("Button_proceed_payment"));
-                                if (!isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
-                                    if (validate(orderBookingRequestModel)) {
-                                        ShowDialogToVerifyOTP();
+                               SharedPreferences prefVersionControlFags = activity.getSharedPreferences("VersionControlFlags", 0);
+                                if (prefVersionControlFags.getInt("OTPEnabled",0) == 1){
+                                    OrderBookingRequestModel orderBookingRequestModel = VenuPuntureUtils.ADD_ALL_VenupumturesInMainBookingRequestModel(generateOrderBookingRequestModel("Button_proceed_payment"));
+                                    if (!isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTests())) {
+                                        if (validate(orderBookingRequestModel)) {
+                                            ShowDialogToVerifyOTP();
+                                        }
+                                    }else{
+                                        ProceedWOEonSubmit();
                                     }
                                 }else{
                                     ProceedWOEonSubmit();
                                 }
+
 
                                 dialog.dismiss();
                             }
@@ -747,8 +798,10 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         totalAmountPayable = 0;
         Logger.debug(orderVisitDetailsModel.getVisitId());
         orderVisitDetailsModel = orderDetailsDao.getOrderVisitModel(orderVisitDetailsModel.getVisitId());
-        for (OrderDetailsModel orderDetailsModel : orderVisitDetailsModel.getAllOrderdetails()) {
-            totalAmountPayable = totalAmountPayable + orderDetailsModel.getAmountPayable();
+        if (orderVisitDetailsModel != null && orderVisitDetailsModel.getAllOrderdetails() != null){
+            for (OrderDetailsModel orderDetailsModel : orderVisitDetailsModel.getAllOrderdetails()) {
+                totalAmountPayable = totalAmountPayable + orderDetailsModel.getAmountPayable();
+            }
         }
 
         if (isOnlyWOE) {
@@ -1258,6 +1311,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Order Status")
                         .setMessage("Work order entry successful!\nPlease note ref id - " + orderVisitDetailsModel.getVisitId() + " for future references.")
+                        .setCancelable(false)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -1679,6 +1733,8 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
         btn_EmailGetOTP = (Button) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.btn_EmailGetOTP);
         btn_EmailVerifyOTP = (Button) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.btn_EmailVerifyOTP);
         btn_EmailVerified = (Button) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.btn_EmailVerified);
+        tv_reSendMobileOTP = (TextView) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.tv_reSendMobileOTP);
+        tv_reSendEmailOTP = (TextView) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.tv_reSendEmailOTP);
         Button btn_proceed_afterOTP = (Button) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.btn_proceed_afterOTP);
 
 
@@ -1708,10 +1764,31 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             @Override
             public void onClick(View view) {
                 CustomDialogfor_WOE_OTPValidation.dismiss();
+                try {
+                    if (MobileResendOTPcdTimer != null){
+                        MobileResendOTPcdTimer.cancel();
+                    }
+                    if (EmailResendOTPcdTimer != null){
+                        EmailResendOTPcdTimer.cancel();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         btn_MobileGetOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cd.isConnectingToInternet()) {
+                    CallGenerateOTPApi(mobileNo,"SENDOTPALL","Mobile",OrderNo);
+                } else {
+                    globalclass.showCustomToast(activity, activity.getResources().getString(R.string.plz_chk_internet));
+                }
+            }
+        });
+
+        tv_reSendMobileOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (cd.isConnectingToInternet()) {
@@ -1760,6 +1837,16 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             }
         });
 
+        tv_reSendEmailOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cd.isConnectingToInternet()) {
+                    CallGenerateOTPApi(mobileNo,"SENDOTPALL","Email",OrderNo);
+                } else {
+                    globalclass.showCustomToast(activity, activity.getResources().getString(R.string.plz_chk_internet));
+                }
+            }
+        });
 
         btn_EmailVerifyOTP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1805,6 +1892,16 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                                     if (CustomDialogfor_WOE_OTPValidation!= null && CustomDialogfor_WOE_OTPValidation.isShowing()){
                                         CustomDialogfor_WOE_OTPValidation.dismiss();
                                     }
+                                    try {
+                                        if (MobileResendOTPcdTimer != null){
+                                            MobileResendOTPcdTimer.cancel();
+                                        }
+                                        if (EmailResendOTPcdTimer != null){
+                                            EmailResendOTPcdTimer.cancel();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                     dialog.dismiss();
                                 }
                             })
@@ -1820,6 +1917,16 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
 
                     if (CustomDialogfor_WOE_OTPValidation!= null && CustomDialogfor_WOE_OTPValidation.isShowing()){
                         CustomDialogfor_WOE_OTPValidation.dismiss();
+                    }
+                    try {
+                        if (MobileResendOTPcdTimer != null){
+                            MobileResendOTPcdTimer.cancel();
+                        }
+                        if (EmailResendOTPcdTimer != null){
+                            EmailResendOTPcdTimer.cancel();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     ProceedWOEonSubmit();
                 }
@@ -1857,6 +1964,7 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
                 btn_MobileVerified.setVisibility(View.GONE);
                 btn_MobileVerifyOTP.setVisibility(View.VISIBLE);
                 edt_mobileOTP.setVisibility(View.VISIBLE);
+
             }else if (OtpVia.equalsIgnoreCase("Email")){
                 btn_EmailGetOTP.setVisibility(View.GONE);
                 btn_EmailVerified.setVisibility(View.GONE);
@@ -1878,8 +1986,30 @@ public class BeneficiariesDisplayFragment extends AbstractFragment {
             }
         } else {
             globalclass.showalert_OK(!InputUtils.isNull(model1.getResponse1()) ? model1.getResponse1() : "Sorry we are facing issue while sending OTP. Please try again later.",activity);
+            if (OtpVia.equalsIgnoreCase("Mobile")){
+                btn_MobileGetOTP.setVisibility(View.GONE);
+                btn_MobileVerified.setVisibility(View.GONE);
+                btn_MobileVerifyOTP.setVisibility(View.VISIBLE);
+                edt_mobileOTP.setVisibility(View.VISIBLE);
 
+            }else if (OtpVia.equalsIgnoreCase("Email")){
+                btn_EmailGetOTP.setVisibility(View.GONE);
+                btn_EmailVerified.setVisibility(View.GONE);
+                btn_EmailVerifyOTP.setVisibility(View.VISIBLE);
+                edt_EmailOTP.setVisibility(View.VISIBLE);
+            }
         }
+
+        if (OtpVia.equalsIgnoreCase("Mobile")){
+            MobileResendOTPcdTimer.start();
+            tv_reSendMobileOTP.setVisibility(View.VISIBLE);
+        }else if (OtpVia.equalsIgnoreCase("Email")){
+            EmailResendOTPcdTimer.start();
+            tv_reSendMobileOTP.setVisibility(View.VISIBLE);
+        }
+
+
+
 
     }
 

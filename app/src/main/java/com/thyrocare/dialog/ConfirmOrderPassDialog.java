@@ -35,6 +35,7 @@ import com.thyrocare.network.AsyncTaskForRequest;
 import com.thyrocare.network.ResponseParser;
 import com.thyrocare.utils.api.Logger;
 import com.thyrocare.utils.app.AppPreferenceManager;
+import com.thyrocare.utils.app.InputUtils;
 
 import org.json.JSONException;
 
@@ -312,9 +313,6 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
             }
         }
         orderPassRequestModel.setVisitId(orderVisitDetailsModel.getVisitId());
-        // orderPassRequestModel.setBtechId(orderallocationmodel.getBtechId());
-        Logger.error("btech " + orderallocationmodel.getBtechName());
-
         ApiCallAsyncTask orderStatusChangeApiAsyncTask = asyncTaskForRequest.getOrderPassSendOtpRequestModelAsyncTask(orderPassRequestModel);
         orderStatusChangeApiAsyncTask.setApiCallAsyncTaskDelegate(new OrderPassApiAsyncTaskDelegateResult());
         if (isNetworkAvailable(activity)) {

@@ -387,117 +387,37 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     private void onCaptureImageResult(Intent data) {
-
-
-        /*try {
-            //This image is for upload purpose...
-            thumbnail = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outPutfileUri);
+        thumbnail = (Bitmap) data.getExtras().get("data");
+        if (thumbnail != null){
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 10, bytes);
+
+            if (BundleConstants.Flag_facedetection == 1) {
+                detect(thumbnail, 1);
+            } else if (BundleConstants.Flag_facedetection == 2) {
+                detect(thumbnail, 1);
+            } else {
+                faceCount(thumbnail);
+            }
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
             encodedProImg = CommonUtils.encodeImage(thumbnail);
 
-            String uri = outPutfileUri.toString();
-            Log.e("uri-:", uri);
-            //Toast.makeText(this, outPutfileUri.toString(), Toast.LENGTH_LONG).show();
-
             if (!InputUtils.isNull(encodedProImg)) {
-                //Toast.makeText(activity, "if", Toast.LENGTH_SHORT).show();
-
-                btn_uploadPhoto.setVisibility(View.VISIBLE);
-                btn_takePhoto.setVisibility(View.INVISIBLE);
+                if (BundleConstants.Flag_facedetection == 1) {
+                } else {
+                    btn_uploadPhoto.setVisibility(View.VISIBLE);
+                    btn_takePhoto.setVisibility(View.INVISIBLE);
+                }
             } else {
-                //Toast.makeText(activity, "else", Toast.LENGTH_SHORT).show();
-
                 btn_uploadPhoto.setVisibility(View.INVISIBLE);
                 btn_takePhoto.setVisibility(View.VISIBLE);
             }
 
-            //This image is for display purpose...
-            thumbnailToDisplay = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outPutfileUri);
-            ByteArrayOutputStream bytesToDisplay = new ByteArrayOutputStream();
-            thumbnailToDisplay.compress(Bitmap.CompressFormat.JPEG, 90, bytesToDisplay);
-            Drawable img = new BitmapDrawable(getResources(), thumbnailToDisplay);
-            img_user_picture.setImageDrawable(img);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
-        /*************************************************************************************/
-
-        thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-
-        if (BundleConstants.Flag_facedetection == 1) {
-            detect(thumbnail, 1);
-        } else if (BundleConstants.Flag_facedetection == 2) {
-            detect(thumbnail, 1);
-        } else {
-            faceCount(thumbnail);
+            img_user_picture.setImageBitmap(thumbnail);
         }
-        //===========================
-        /*FaceDetector faceDetector=new FaceDetector(thumbnail.getWidth(),thumbnail.getHeight(),1);
-        FaceDetector.Face[] face = new FaceDetector.Face[1];
-        try{
-            int f=faceDetector.findFaces(thumbnail,face);
-            Logger.error("faces "+f);
-        }catch (Exception e){
-            e.printStackTrace();
-            Logger.error("error123 "+e);
-        }*/
-        //=================================
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-
-        encodedProImg = CommonUtils.encodeImage(thumbnail);
-
-        if (!InputUtils.isNull(encodedProImg)) {
-            //Toast.makeText(activity, "if", Toast.LENGTH_SHORT).show();
-
-            if (BundleConstants.Flag_facedetection == 1) {
-
-            } else {
-                /*if (faceDetected == 0) {
-                    TastyToast.makeText(activity, getString(R.string.no_face_detected), TastyToast.LENGTH_LONG, TastyToast.WARNING);
-                    btn_takePhoto.setVisibility(View.VISIBLE);
-                    btn_uploadPhoto.setVisibility(View.GONE);
-                }else if (faceDetected > 1) {
-                    TastyToast.makeText(activity, "Image contain more than 1 faces", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-                    btn_takePhoto.setVisibility(View.VISIBLE);
-                    btn_uploadPhoto.setVisibility(View.GONE);
-                } else {
-                    btn_uploadPhoto.setVisibility(View.VISIBLE);
-                    btn_takePhoto.setVisibility(View.INVISIBLE);
-                }*/
-
-                btn_uploadPhoto.setVisibility(View.VISIBLE);
-                btn_takePhoto.setVisibility(View.INVISIBLE);
-            }
-        } else {
-            //Toast.makeText(activity, "else", Toast.LENGTH_SHORT).show();
-
-            btn_uploadPhoto.setVisibility(View.INVISIBLE);
-            btn_takePhoto.setVisibility(View.VISIBLE);
-        }
-
-
-        img_user_picture.setImageBitmap(thumbnail);
     }
 
-    private void showImage(Bitmap bm) {
-
-        final Dialog dialog = new Dialog(activity);
-        dialog.setContentView(R.layout.dialog_full_image_display);
-        TouchImageView imgFullDisplay = (TouchImageView) dialog.findViewById(R.id.img_selfie_full);
-        Button btnClose = (Button) dialog.findViewById(R.id.btn_selfie_close);
-        imgFullDisplay.setImageBitmap(bm);
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-    }
 
     private class SelfieApiAsyncTaskDelegateResult implements ApiCallAsyncTaskDelegate {
         @Override
