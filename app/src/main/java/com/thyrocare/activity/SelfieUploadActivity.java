@@ -390,7 +390,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         thumbnail = (Bitmap) data.getExtras().get("data");
         if (thumbnail != null){
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-
             if (BundleConstants.Flag_facedetection == 1) {
                 detect(thumbnail, 1);
             } else if (BundleConstants.Flag_facedetection == 2) {
