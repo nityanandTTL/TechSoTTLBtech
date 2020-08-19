@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/dp_10">
+
+   <TextView
+        android:id="@+id/txtClose"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/dp_10"
+       android:layout_marginLeft="@dimen/dp_10"
+       android:layout_alignParentEnd="true"
+       android:layout_alignParentRight="true"
+        android:background="@drawable/ic_dialog_close_light"
+       />
+
+    <LinearLayout
+        android:id="@+id/search_option"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtClose"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true">
+
+        <SearchView
+            android:id="@+id/sv_testsList1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false">
+
+        </SearchView>
+
+
+    </LinearLayout>
+
+    <ExpandableListView
+        android:id="@+id/exp_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ll_btn"
+        android:layout_below="@+id/search_option"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:groupIndicator="@null">
+
+    </ExpandableListView>
+
+    <LinearLayout
+        android:id="@+id/ll_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background_filled_oranged"
+            android:minEms="8"
+            android:text="Save"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</RelativeLayout>

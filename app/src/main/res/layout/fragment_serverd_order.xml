@@ -1,0 +1,71 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".btechapp.NewScreenDesigns.Fragments.ServerdOrderFragment">
+
+    <RelativeLayout
+        android:id="@+id/rel_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rel_dateSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/img_calenderIcon"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/_5sdp"
+                android:src="@drawable/calender_icon_orange" />
+
+            <TextView
+                android:id="@+id/tv_selectedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/img_calenderIcon"
+                android:padding="@dimen/_5sdp"
+                android:text=""
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+
+
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/edt_Search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rel_dateSelector"
+            android:layout_margin="@dimen/_5sdp"
+            android:background="@drawable/border_layout"
+            android:drawableLeft="@drawable/search_icon_orange"
+            android:gravity="center_vertical"
+            android:hint="Search by OrderNo or Name"
+            android:padding="@dimen/_5sdp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_servedOrders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edt_Search"
+            android:layout_margin="@dimen/_5sdp" />
+
+        <TextView
+            android:id="@+id/tv_noDatafound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="No data found"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+</FrameLayout>

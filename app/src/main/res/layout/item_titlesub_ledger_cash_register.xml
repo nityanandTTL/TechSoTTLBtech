@@ -4,69 +4,101 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:weightSum="5">
+    android:weightSum="5"
+    android:background="@color/colorOrange">
 
-
-    <TextView
-        android:id="@+id/txt_date"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_margin="4dp"
+        android:layout_marginBottom="@dimen/_1sdp"
+        android:layout_marginRight="@dimen/_1sdp"
         android:layout_weight="1"
-        android:background="@color/light"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text=""
-        android:textColor="@color/colorPrimaryDark"/>
+        android:background="@color/white">
 
-    <TextView
-        android:id="@+id/txt_openingbalance"
+        <TextView
+            android:id="@+id/txt_date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light"
+            android:gravity="center"
+            android:padding="@dimen/_5sdp"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_margin="4dp"
+        android:layout_marginBottom="@dimen/_1sdp"
+        android:layout_marginRight="@dimen/_1sdp"
         android:layout_weight="1"
-        android:background="@color/light"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text=""
-        android:textColor="@color/colorPrimaryDark"/>
+        android:background="@color/white">
 
-    <TextView
-        android:id="@+id/txt_credit"
+        <TextView
+            android:id="@+id/txt_openingbalance"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light"
+            android:gravity="center"
+            android:padding="@dimen/_5sdp"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_margin="4dp"
+        android:layout_marginBottom="@dimen/_1sdp"
+        android:layout_marginRight="@dimen/_1sdp"
         android:layout_weight="1"
-        android:background="@color/light"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text=""
-        android:textColor="@color/colorPrimaryDark"/>
+        android:background="@color/white">
 
-    <TextView
-        android:id="@+id/txt_debit"
+        <TextView
+            android:id="@+id/txt_credit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light"
+            android:gravity="center"
+            android:padding="@dimen/_5sdp"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_margin="4dp"
+        android:layout_marginBottom="@dimen/_1sdp"
+        android:layout_marginRight="@dimen/_1sdp"
         android:layout_weight="1"
-        android:background="@color/light"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text=""
-        android:textColor="@color/colorPrimaryDark"/>
+        android:background="@color/white">
 
-    <TextView
-        android:id="@+id/txt_closingBalance"
+        <TextView
+            android:id="@+id/txt_debit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light"
+            android:gravity="center"
+            android:padding="@dimen/_5sdp"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_margin="4dp"
+        android:layout_marginBottom="@dimen/_1sdp"
         android:layout_weight="1"
-        android:background="@color/light"
-        android:gravity="center"
-        android:padding="5dp"
-        android:text=""
-        android:textColor="@color/colorPrimaryDark"/>
+        android:background="@color/white">
 
+        <TextView
+            android:id="@+id/txt_closingBalance"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light"
+            android:gravity="center"
+            android:padding="@dimen/_5sdp"
+            android:textColor="@color/black"/>
+    </LinearLayout>
 
 </TableRow>
 

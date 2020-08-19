@@ -12,7 +12,7 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".activity.VisitOrderDetailMapDisplayFragmentActivity" />
+            tools:context=".btechapp.activity.VisitOrderDetailMapDisplayFragmentActivity" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -29,10 +29,10 @@
             android:layout_above="@+id/ll_scrm"
             android:layout_below="@+id/il_cell_title">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recy_barcode_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+                android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
 

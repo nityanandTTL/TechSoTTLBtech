@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thyrocare.fragment.ClientEntryFragment"
+    tools:context="fragment.ClientEntryFragment"
     android:orientation="vertical">
 
     <ScrollView
@@ -31,234 +31,107 @@
                 android:orientation="vertical"
                 android:layout_margin="@dimen/dp_5">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="3"
-                    android:layout_margin="@dimen/dp_2">
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@color/black"
-                        android:text="@string/clientName"/>
+                        android:hint="@string/clientName">
 
-                    <TextView
-                        android:layout_width="0dp"
+                        <EditText
+                            android:id="@+id/edtName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:maxLength="50"
+                            android:digits="@string/Namevalidation"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:textColor="@color/black"
-                        android:text=":"/>
+                        android:hint="@string/mobile">
 
-                    <EditText
-                        android:id="@+id/edtName"
-                        android:layout_width="0dp"
+                        <EditText
+                            android:id="@+id/edtMobile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="phone"
+                            android:digits="@string/Mobile_no_validation"
+                            android:maxLength="10"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1.9"
-                        android:background="@android:drawable/edit_text"
-                        android:inputType="textPersonName"
-                        android:digits="@string/Namevalidation"/>
+                        android:hint="@string/email">
 
-                </LinearLayout>
+                        <EditText
+                            android:id="@+id/edtEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textEmailAddress"
+                            android:maxLength="80"
+                            android:digits="@string/emailIDandMobilenumberValidation"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="3"
-                    android:layout_margin="@dimen/dp_2">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/mobile"
-                        android:textColor="@color/black"
-                        android:layout_weight="1"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:textColor="@color/black"
-                        android:text=":"/>
-
-                    <EditText
-                        android:id="@+id/edtMobile"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.9"
-                        android:background="@android:drawable/edit_text"
-                        android:inputType="phone"
-                        android:digits="@string/Mobile_no_validation"
-                        android:maxLength="10"/>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="3"
-                    android:layout_margin="@dimen/dp_2">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/email"
-                        android:textColor="@color/black"
-                        android:layout_weight="1"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:textColor="@color/black"
-                        android:text=":"/>
-
-                    <EditText
-                        android:id="@+id/edtEmail"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.9"
-                        android:background="@android:drawable/edit_text"
-                        android:inputType="textEmailAddress" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="3"
-                    android:layout_margin="@dimen/dp_2">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@color/black"
-                        android:text="@string/location"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:textColor="@color/black"
-                        android:text=":"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
                         android:id="@+id/txtLocation"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1.9"
+                        android:layout_marginTop="@dimen/_10sdp"
                         android:background="@android:drawable/edit_text"
-                        android:gravity="center"
+                        android:hint="@string/location"
+                        android:gravity="center_vertical"
                         android:textColor="@color/black"
                         android:drawableRight="@drawable/location"/>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="3"
-                    android:layout_margin="@dimen/dp_2">
-
-                    <TextView
-                        android:layout_width="0dp"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@color/black"
-                        android:text="@string/address"/>
+                        android:hint="@string/address">
 
-                    <TextView
-                        android:layout_width="0dp"
+                        <EditText
+                            android:id="@+id/edtAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPostalAddress"
+                            android:maxLines="3"
+                            android:maxLength="250"
+                            android:digits="@string/addressvalidation"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:textColor="@color/black"
-                        android:text=":"/>
+                        android:hint="@string/pincode">
 
-                    <EditText
-                        android:id="@+id/edtAddress"
-                        android:layout_width="0dp"
+                        <EditText
+                            android:id="@+id/edtPincode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:digits="@string/Mobile_no_validation"
+                            android:maxLength="6"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1.9"
-                        android:background="@android:drawable/edit_text"
-                        android:inputType="textPostalAddress"
-                        android:lines="2"
-                        android:digits="@string/addressvalidation"/>
+                        android:hint="@string/inchargeName">
 
+                        <EditText
+                            android:id="@+id/edtInchargeName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName"
+                            android:maxLength="50"
+                            android:digits="@string/Namevalidation"/>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="3"
-                    android:layout_margin="@dimen/dp_2">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/pincode"
-                        android:textColor="@color/black"
-                        android:layout_weight="1"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:textColor="@color/black"
-                        android:text=":"/>
-
-                    <EditText
-                        android:id="@+id/edtPincode"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.9"
-                        android:background="@android:drawable/edit_text"
-                        android:inputType="number"
-                        android:digits="@string/Mobile_no_validation"
-                        android:maxLength="6"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="3"
-                    android:layout_margin="@dimen/dp_2">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@color/black"
-                        android:text="@string/inchargeName"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:textColor="@color/black"
-                        android:text=":"/>
-
-                    <EditText
-                        android:id="@+id/edtInchargeName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.9"
-                        android:background="@android:drawable/edit_text"
-                        android:inputType="textPersonName"
-                        android:digits="@string/Namevalidation"/>
-
-                </LinearLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
                 <LinearLayout

@@ -133,7 +133,7 @@
                         android:layout_gravity="center"
                         android:text="Orders"
                         android:textAlignment="center"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:textColor="@color/white" />
                 </LinearLayout>
 
                 <View
@@ -162,7 +162,7 @@
                         android:layout_gravity="center"
                         android:text="Orders Served"
                         android:textAlignment="center"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:textColor="@color/white" />
                 </LinearLayout>
 
 
@@ -194,7 +194,7 @@
                         android:layout_gravity="center"
                         android:text="Hub"
                         android:textAlignment="center"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:textColor="@color/white" />
                 </LinearLayout>
             </LinearLayout>
 

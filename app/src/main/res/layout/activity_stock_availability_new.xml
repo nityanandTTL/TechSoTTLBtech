@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".btechapp.NewScreenDesigns.Activities.StockAvailabilityActivityNew">
+
+    <com.google.android.material.appbar.AppBarLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/appbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarStockAvailablity"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_tableView"
+        android:layout_below="@+id/appbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <!--<TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_1"
+                android:layout_weight="0.6"
+                android:background="@color/colorOrange"
+                android:gravity="center"
+                android:padding="@dimen/dp_3"
+                android:singleLine="true"
+                android:text="SN"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dp_7"
+                android:visibility="visible" />-->
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_1sdp"
+                android:layout_weight="1"
+                android:background="@color/colorOrange"
+                android:gravity="center"
+                android:padding="@dimen/_5sdp"
+                android:singleLine="true"
+                android:text="@string/item"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_1sdp"
+                android:layout_weight="1"
+                android:background="@color/colorOrange"
+                android:gravity="center"
+                android:padding="@dimen/_5sdp"
+                android:singleLine="true"
+                android:text="@string/expected_stock"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_1sdp"
+                android:layout_weight="1"
+                android:background="@color/colorOrange"
+                android:gravity="center"
+                android:padding="@dimen/_5sdp"
+                android:singleLine="true"
+                android:text="@string/actual_stock"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13sdp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_1sdp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_noResult"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Records not found"
+        android:textSize="@dimen/_20sdp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <!--<TextView
+        android:id="@+id/tv_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:padding="@dimen/dp_5"
+        android:background="@color/white"
+        android:text="OS - Opening stock    CS - Closing stock"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_5"
+        android:textStyle="bold" />-->
+
+</RelativeLayout>

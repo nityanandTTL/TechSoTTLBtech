@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorOrange"
+    android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_margin="@dimen/_10sdp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1"
+                android:layout_margin="@dimen/_3sdp"
+                android:padding="@dimen/_3sdp"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btn_apply_leaves_id"
+                    android:layout_weight="0.5"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:background="@drawable/background_btn_orange_"
+                    android:text="@string/Apply_for_leaves"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <Button
+                    android:id="@+id/btn_applied_leaved_id"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/border_checkout_"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="@string/Applied_leaves"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <RelativeLayout
+                android:id="@+id/rl_applyforleave_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ScrollView
+                    android:layout_margin="@dimen/_3sdp"
+                    android:fillViewport="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:id="@+id/lin_applyleavemain"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:id="@+id/ll_layout_nature_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="3"
+                            android:layout_margin="@dimen/_3sdp"
+                            android:padding="@dimen/_4sdp"
+                            android:background="@drawable/borde_rect"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:textColor="@color/black"
+                                android:layout_weight="1"
+                                android:text="@string/nature"
+                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent" />
+                            <LinearLayout
+                                android:id="@+id/ll_spinner_nature_id"
+                                android:background="@drawable/borde_rect"
+                                android:layout_weight="2"
+                                android:layout_width="wrap_content"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/_2sdp"
+                                android:orientation="horizontal">
+                                <Spinner
+                                    android:id="@+id/spinner_select_nature_id"
+                                    android:layout_weight="1.5"
+                                    android:background="@color/white"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent" />
+                                <ImageView
+                                    android:src="@drawable/icons8_drop_down_32_leave_new"
+                                    android:layout_weight="0.5"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:background="@drawable/borde_rect"
+                            android:gravity="center"
+                            android:layout_margin="@dimen/_3sdp"
+                            android:padding="@dimen/_3sdp"
+                            android:weightSum="1">
+                            <RadioGroup
+                                android:id="@+id/radio_group_id"
+                                android:layout_width="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_height="wrap_content">
+                                <RadioButton
+                                    android:id="@+id/radio_one_day_id"
+                                    android:layout_margin="@dimen/_3sdp"
+                                    android:gravity="center"
+                                    android:checked="true"
+                                    android:layout_weight="0.5"
+                                    android:text="@string/One_day"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                                <RadioButton
+                                    android:id="@+id/radio_more_day_id"
+                                    android:layout_margin="@dimen/_3sdp"
+                                    android:layout_weight="0.5"
+                                    android:checked="false"
+                                    android:gravity="center"
+                                    android:text="@string/more_than_one_day"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                            </RadioGroup>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/ll_layout_from_date_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/borde_rect"
+                            android:weightSum="3"
+                            android:layout_margin="@dimen/_3sdp"
+                            android:padding="@dimen/_3sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tv_display_from_date_id"
+                                android:textColor="@color/black"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="@string/date_hint" />
+                            <LinearLayout
+                                android:id="@+id/ll_datepicker_1_id"
+                                android:layout_weight="2"
+                                android:weightSum="2"
+                                android:orientation="horizontal"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/tv_from_date_id"
+                                    android:textColor="@color/black"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:hint="@string/date_hint"/>
+                                <ImageView
+                                    android:id="@+id/img_from_date_id"
+                                    android:src="@drawable/icons8_leave_32_menu_item"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"/>
+                            </LinearLayout>
+
+
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/ll_layout_to_date_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="3"
+                            android:padding="@dimen/_3sdp"
+                            android:visibility="gone"
+                            android:layout_margin="@dimen/_3sdp"
+                            android:background="@drawable/borde_rect"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:textColor="@color/black"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="@string/to_date" />
+                            <LinearLayout
+                                android:id="@+id/ll_datepicker_2_id"
+                                android:layout_weight="2"
+                                android:weightSum="2"
+                                android:orientation="horizontal"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:id="@+id/tv_to_day_id"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:textColor="@color/black"
+                                    android:gravity="center"
+                                    android:hint="@string/date_hint"/>
+                                <ImageView
+                                    android:id="@+id/img_to_day_id"
+                                    android:src="@drawable/icons8_leave_32_menu_item"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"/>
+                            </LinearLayout>
+
+
+
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/Linear_layout_reason_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="3"
+                            android:layout_margin="@dimen/_3sdp"
+                            android:padding="@dimen/_3sdp"
+                            android:background="@drawable/borde_rect"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:textColor="@color/black"
+                                android:layout_weight="1"
+                                android:text="@string/reason"
+                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent" />
+                            <LinearLayout
+                                android:background="@drawable/borde_rect"
+                                android:layout_weight="2"
+                                android:layout_width="wrap_content"
+                                android:layout_margin="@dimen/_3sdp"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/_3sdp"
+                                android:orientation="horizontal">
+                                <Spinner
+                                    android:id="@+id/spinner_select_reason_id"
+                                    android:layout_weight="1"
+                                    android:background="@color/white"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent" />
+                                <ImageView
+                                    android:src="@drawable/icons8_drop_down_32_leave_new"
+                                    android:layout_weight="1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/ll_layout_remark_id"
+                            android:layout_width="match_parent"
+                            android:visibility="visible"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/borde_rect"
+                            android:layout_margin="@dimen/_3sdp"
+                            android:orientation="vertical">
+                            <Button
+                                android:text="@string/remarks"
+                                android:background="@color/colorOrange"
+                                android:textColor="@color/white"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                            <EditText
+                                android:id="@+id/edt_remark_id"
+                                android:background="@color/transparent"
+                                android:layout_width="match_parent"
+                                android:layout_margin="@dimen/_5sdp"
+                                android:padding="@dimen/_5sdp"
+                                android:hint="@string/leave_remark"
+                                android:maxLength="250"
+                                android:digits="@string/addressvalidation"
+                                android:textColorHint="@color/black"
+                                android:textColor="@color/black"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+                    </LinearLayout>
+                    <Button
+                        android:id="@+id/btn_submit_leave_id"
+                        android:layout_below="@+id/lin_applyleavemain"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:text="@string/submit"
+                        android:background="@color/colorOrange"
+                        android:layout_width="@dimen/_100sdp"
+                        android:textColor="@color/white"
+                        android:layout_marginBottom="@dimen/_20sdp"
+                        android:layout_height="wrap_content" />
+
+                </RelativeLayout>
+            </ScrollView>
+
+            </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/ll_showapplied_leaved"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_show_applied_leaves_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+</RelativeLayout>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".NewScreenDesigns.Activities.StartAndArriveActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/appbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarStockAvailablity"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyle_OrderDetail"
+        android:layout_below="@+id/appbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lin_bottom"/>
+
+    <TextView
+        android:id="@+id/txtNoRecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Data not found"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="@dimen/_17sdp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+    <com.thyrocare.btechapp.customview.CircleImageView
+        android:id="@+id/btn_floating_add_ben"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:src="@drawable/add_ben_icon"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/lin_bottom"
+        android:background="@drawable/circle_bg"
+        android:layout_margin="@dimen/_10sdp"
+        android:elevation="@dimen/_5sdp"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/lin_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/rounded_background_empty_orange"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:padding="@dimen/_5sdp"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/txt_amount"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorOrange"
+            android:textSize="@dimen/_20sdp"
+            android:gravity="center"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Start"
+            android:background="@drawable/rounded_background_filled_oranged"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15sdp"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btn_arrive"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Arrive"
+            android:background="@drawable/rounded_background_filled_oranged"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15sdp" />
+
+        <Button
+            android:id="@+id/btn_Proceed"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Proceed"
+            android:background="@drawable/rounded_background_filled_oranged"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15sdp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

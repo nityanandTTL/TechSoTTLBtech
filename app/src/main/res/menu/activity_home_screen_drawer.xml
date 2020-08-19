@@ -16,6 +16,11 @@
             android:title="Change password" />
 
         <item
+            android:id="@+id/nav_Hub"
+            android:icon="@drawable/hub_icon"
+            android:title="Hub" />
+
+        <item
             android:id="@+id/nav_clientEntry"
             android:icon="@drawable/client_entry_icon"
             android:title="@string/clientEntry" />
@@ -40,6 +45,11 @@
             android:id="@+id/nav_Video"
             android:icon="@drawable/play_icon"
             android:title="Videos" />
+
+        <item
+            android:id="@+id/nav_faq"
+            android:icon="@drawable/faqbtech_icon"
+            android:title="FAQ" />
 
         <item
             android:id="@+id/nav_feedback"

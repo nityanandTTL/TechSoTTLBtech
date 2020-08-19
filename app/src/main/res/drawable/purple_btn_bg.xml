@@ -7,8 +7,14 @@
         android:bottomLeftRadius="@dimen/dp_50"
         android:topLeftRadius="@dimen/dp_50"
         android:topRightRadius="@dimen/dp_50"/>
-    <gradient
+   <!-- <gradient
         android:angle="-90"
         android:endColor="@color/btn_purple_end_grd"
-        android:startColor="@color/btn_purple_start_grd" />
+        android:startColor="@color/btn_purple_start_grd" />-->
+
+    <gradient
+        android:angle="-90"
+        android:endColor="@color/btn_orange_start_grd"
+        android:startColor="@color/btn_orange_end_grd" />
+
 </shape>

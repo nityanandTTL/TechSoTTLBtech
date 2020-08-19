@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/_5sdp">
+
+    <EditText
+        android:id="@+id/edt_enterBarcode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:digits="@string/barcodevalidation"
+        android:maxLength="8"
+        android:gravity="center"
+        android:layout_margin="@dimen/_40sdp"
+        android:hint="Enter Barcode"/>
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_below="@+id/edt_enterBarcode"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"/>
+
+    <ImageView
+        android:id="@+id/img_close"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_margin="@dimen/_5sdp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/white"
+        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+</RelativeLayout>

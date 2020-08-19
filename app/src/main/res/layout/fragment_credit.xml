@@ -110,6 +110,8 @@
             android:layout_marginStart="@dimen/dp_5"
             android:text="Enter Branch Name" />
 
+
+
         <EditText
             android:id="@+id/edt_branch_name"
             style="@android:style/Widget.EditText"
@@ -119,8 +121,7 @@
             android:background="@android:drawable/editbox_background"
             android:drawableRight="@android:drawable/arrow_down_float"
             android:elevation="4dp"
-android:editable="false"
-
+            android:editable="false"
             android:textColor="@color/gray"
             android:textSize="14sp" />
 
@@ -146,146 +147,152 @@ android:editable="false"
             android:textColor="@color/gray"
             android:textSize="14sp" />
 
-        <TextView
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tv_date_of_deposit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:layout_marginStart="@dimen/dp_5"
-            android:text="Date of deposit" />
+            android:hint="Date of deposit">
 
-        <EditText
-            android:id="@+id/edt_deposit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_2"
-            android:background="@android:drawable/editbox_background"
-            android:elevation="4dp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:textColor="@android:color/darker_gray" />
+            <EditText
+                android:id="@+id/edt_deposit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:background="@android:drawable/editbox_background"
+                android:elevation="4dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:textColor="@android:color/darker_gray" />
 
-        <TextView
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tv_transaction_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:layout_marginStart="@dimen/dp_5"
-            android:text="Enter Transcation No."
-            android:visibility="gone" />
+            android:hint="Enter Transaction No."
+            android:visibility="gone">
 
-        <EditText
-            android:id="@+id/edt_transaction_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_2"
-            android:background="@android:drawable/editbox_background"
-            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-            android:elevation="4dp"
-            android:maxLength="20"
-            android:textColor="@android:color/darker_gray"
-            android:visibility="gone" />
+            <EditText
+                android:id="@+id/edt_transaction_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:background="@android:drawable/editbox_background"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                android:elevation="4dp"
+                android:maxLength="20"
+                android:textColor="@android:color/darker_gray"
+                android:visibility="gone" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/re_renter_transcation_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:layout_marginStart="@dimen/dp_5"
-            android:text="Re-Enter Transcation No."
-            android:visibility="gone" />
+            android:hint="Re-Enter Transaction No."
+            android:visibility="gone">
 
-        <EditText
-            android:id="@+id/edt_re_enter_transcation_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_2"
-            android:background="@android:drawable/editbox_background"
-            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-            android:elevation="4dp"
-            android:maxLength="20"
-            android:textColor="@android:color/darker_gray"
-            android:visibility="gone" />
+            <EditText
+                android:id="@+id/edt_re_enter_transcation_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:background="@android:drawable/editbox_background"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                android:elevation="4dp"
+                android:maxLength="20"
+                android:textColor="@android:color/darker_gray"
+                android:visibility="gone" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tv_cheque_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:layout_marginStart="@dimen/dp_5"
-            android:text="Enter Cheque No."
-            android:visibility="gone" />
+            android:hint="Enter Cheque No."
+            android:visibility="gone">
 
-        <EditText
-            android:id="@+id/edt_cheque_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_2"
-            android:background="@android:drawable/editbox_background"
-            android:elevation="4dp"
-            android:inputType="number"
-            android:maxLength="15"
-            android:textColor="@android:color/darker_gray"
-            android:visibility="gone" />
+            <EditText
+                android:id="@+id/edt_cheque_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:background="@android:drawable/editbox_background"
+                android:elevation="4dp"
+                android:inputType="number"
+                android:maxLength="15"
+                android:textColor="@android:color/darker_gray"
+                android:visibility="gone" />
 
-        <TextView
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tv_re_enter_cheque_no"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:layout_marginStart="@dimen/dp_5"
-            android:text="Re-Enter Cheque No."
-            android:visibility="gone" />
+            android:hint="Re-Enter Cheque No."
+            android:visibility="gone">
 
-        <EditText
-            android:id="@+id/edt_re_enter_cheque_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_2"
-            android:background="@android:drawable/editbox_background"
-            android:elevation="4dp"
-            android:focusableInTouchMode="true"
-            android:maxLength="15"
-            android:textColor="@android:color/darker_gray"
-            android:visibility="gone" />
+            <EditText
+                android:id="@+id/edt_re_enter_cheque_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:background="@android:drawable/editbox_background"
+                android:elevation="4dp"
+                android:focusableInTouchMode="true"
+                android:maxLength="15"
+                android:textColor="@android:color/darker_gray"
+                android:visibility="gone" />
 
-        <TextView
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tv_enter_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:layout_marginStart="@dimen/dp_5"
-            android:text="Enter Amount." />
+            android:hint="Enter Amount.">
 
-        <EditText
-            android:id="@+id/edt_amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_2"
-            android:background="@android:drawable/editbox_background"
-            android:elevation="4dp"
-            android:inputType="number"
-            android:maxLength="8"
-            android:textColor="@android:color/darker_gray" />
+            <EditText
+                android:id="@+id/edt_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:background="@android:drawable/editbox_background"
+                android:elevation="4dp"
+                android:inputType="number"
+                android:maxLength="8"
+                android:textColor="@android:color/darker_gray" />
 
-        <TextView
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tv_re_enter_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:layout_marginStart="@dimen/dp_5"
-            android:text="Re-Enter Amount." />
+            android:hint="Re-Enter Amount.">
 
-        <EditText
-            android:id="@+id/edt_re_enter_amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_2"
-            android:background="@android:drawable/editbox_background"
-            android:elevation="4dp"
-            android:inputType="number"
-            android:maxLength="8"
-            android:textColor="@android:color/darker_gray" />
+            <EditText
+                android:id="@+id/edt_re_enter_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:background="@android:drawable/editbox_background"
+                android:elevation="4dp"
+                android:inputType="number"
+                android:maxLength="8"
+                android:textColor="@android:color/darker_gray" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -344,24 +351,25 @@ android:editable="false"
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tv_re_enter_remark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_5"
-            android:layout_marginStart="@dimen/dp_5"
-            android:text="Remarks" />
+            android:hint="Remarks">
+            <EditText
+                android:id="@+id/edt_remark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_2"
+                android:background="@android:drawable/editbox_background"
+                android:elevation="8dp"
+                android:lines="5"
+                android:maxLength="250"
+                android:textColor="@android:color/darker_gray" />
 
-        <EditText
-            android:id="@+id/edt_remark"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_2"
-            android:background="@android:drawable/editbox_background"
-            android:elevation="8dp"
-            android:lines="5"
-            android:maxLength="250"
-            android:textColor="@android:color/darker_gray" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
 
         <Button
             android:id="@+id/btn_submit"

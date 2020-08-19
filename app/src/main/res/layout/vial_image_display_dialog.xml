@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:id="@+id/lin_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linButtons"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/dp_2"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:background="@color/light_gray"
+            android:src="@drawable/female_icon_orange"/>
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/img_close"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_margin="@dimen/_5sdp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/white"
+        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <LinearLayout
+        android:id="@+id/linButtons"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_Capture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Capture Image"
+            android:layout_margin="@dimen/_2sdp"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"/>
+        <Button
+            android:id="@+id/btn_Upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/_2sdp"
+            android:text="Upload"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"/>
+
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

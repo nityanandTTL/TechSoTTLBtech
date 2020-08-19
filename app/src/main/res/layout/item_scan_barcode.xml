@@ -5,25 +5,26 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/dp_2">
 
-    <LinearLayout android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_2sdp"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/lin_sampleType"
-                android:layout_width="120dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingTop="@dimen/dp_3"
-                android:paddingBottom="@dimen/dp_2"
-                android:paddingLeft="@dimen/dp_4"
-                android:paddingRight="@dimen/dp_4"
                 android:layout_marginTop="@dimen/dp_1"
+                android:layout_marginRight="@dimen/_5sdp"
                 android:layout_marginBottom="@dimen/dp_1"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="@dimen/dp_5"
+                android:layout_weight="4"
                 android:background="@drawable/bg_sample_type_edta"
                 android:orientation="vertical">
 
@@ -31,112 +32,133 @@
                     android:id="@+id/txt_sample_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/dp_1"
-                    android:ellipsize="marquee"
-                    android:gravity="bottom|center"
                     android:layout_gravity="center_vertical"
+                    android:ellipsize="marquee"
+                    android:gravity="center"
                     android:marqueeRepeatLimit="marquee_forever"
+                    android:minEms="7"
+                    android:padding="@dimen/_5sdp"
                     android:singleLine="true"
-                    android:minEms="8"
                     android:text="FLUORIDE-PP"
                     android:textColor="@android:color/black"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/_15sdp" />
 
                 <TextView
                     android:id="@+id/tv_serumtype"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/_minus5sdp"
                     android:elevation="6dp"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="-2dp"
-                    android:textStyle="bold"
+                    android:text="Primary"
                     android:textColor="@color/black"
-                    android:textSize="10dp" />
+                    android:textSize="@dimen/_8sdp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/edt_barcode"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="horizontal">
+                android:layout_marginRight="@dimen/_5sdp"
+                android:layout_weight="4"
+                android:background="@drawable/edittext_modified_states"
+                android:gravity="center"
+                android:hint="Scan Barcode"
+                android:paddingTop="@dimen/_5sdp"
+                android:paddingBottom="@dimen/_5sdp"
+                android:textSize="@dimen/_15sdp" />
 
-                <TextView
-                    android:id="@+id/edt_barcode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/edittext_modified_states"
-                    android:gravity="center"
-                    android:hint="Scan barcode"
-                    android:maxLength="8"
-                    android:minEms="6"
-                    android:padding="@dimen/dp_5"
-                    android:textSize="20sp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginStart="@dimen/_5sdp">
 
                 <ImageView
                     android:id="@+id/scan_barcode_button"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/camera_icon" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
+                    android:src="@drawable/camera_icon" />
+
+                <ImageView
+                    android:id="@+id/imgDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
+                    android:src="@drawable/red_cross_icon"
+                    android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_rbs"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_2sdp"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/txt_sample_type_rb"
-                android:layout_width="120dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:layout_weight="4"
                 android:background="@drawable/bg_sample_type_fluoride"
                 android:elevation="6dp"
                 android:ellipsize="marquee"
                 android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:maxLines="1"
-                android:minEms="8"
-                android:padding="@dimen/dp_5"
+                android:padding="@dimen/_6sdp"
+                android:singleLine="true"
                 android:text="FLUORIDE-RBS"
                 android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:textSize="@dimen/_15sdp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/edt_barcode_rb"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_weight="4"
                     android:background="@drawable/edittext_modified_states"
                     android:gravity="center"
                     android:hint="Enter Barcode"
                     android:maxLength="8"
-                    android:minEms="6"
-                    android:padding="@dimen/dp_5"
-                    android:textSize="20sp" />
+                    android:paddingTop="@dimen/_5sdp"
+                    android:paddingBottom="@dimen/_5sdp"
+                    android:textSize="@dimen/_15sdp" />
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
                 <ImageView
                     android:id="@+id/scan_barcode_button_rb"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center"
                     android:background="@drawable/camera_icon" />
+
+                <ImageView
+                    android:id="@+id/imgDelete_rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1.5"
+                    android:src="@drawable/red_cross_icon"
+                    android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/bg_content"
-    tools:context="com.thyrocare.fragment.ScheduleYourDayFragment"
+    tools:context=".btechapp.fragment.ScheduleYourDayFragment"
     android:weightSum="6">
     <TextView
         android:layout_width="match_parent"

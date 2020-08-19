@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#594691</color>
+    <color name="colorPrimary">#EA6610</color>
+    <color name="colorSecondary">#F68C47</color>
+    <color name="colorPrimaryDark">#AF4602</color>
+    <color name="colorSecondaryDark">#DC5F0C</color>
+    <color name="colorAccent">#EA6610</color>
+   <!-- <color name="colorPrimary">#594691</color>
     <color name="colorSecondary">#5BE4DE</color>
     <color name="colorPrimaryDark">#3e2d70</color>
     <color name="colorSecondaryDark">#5ebade</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#FF4081</color>-->
+
+    <color name="colorOrange">#FA7821</color>
+    <color name="lightOrange">#F4A36E</color>
+    <!--<color name="colorOrange">#FF7A22</color>-->
+    <!--<color name="colorOrange">#FF5722</color>-->
+    <color name="transparent">#00000000</color>
+    <color name="transblack">#92000000</color>
+    <color name="transblack1">#40000000</color>
+    <color name="transColorPrimary">#4FFA7821</color>
+    <color name="light_gray">#D3D3D3</color>
+    <color name="grey1">#f7f7f7</color>
     <color name="colorBackground">#e6e6e6</color>
     <color name="btn_layout_btech_camp">#61bee0</color>
-    <color name="test2">#FFAB91</color>
+    <color name="test2">#FF916F</color>
     <color name="directVisit">#9aef0202</color>
-    <color name="test1">#A5D6A7</color>
+    <color name="test1">#82D185</color>
     <color name="blue_shade">#2196F3</color>
     <color name="status_level_10">#FF2A00</color>
     <color name="status_level_1">#00FF00</color>
@@ -19,9 +35,10 @@
     <color name="bgContentTop">#594691</color>
     <color name="bg_content">#f3eeee</color>
     <color name="contentDividerLine">#e0e0e0</color>
-    <color name="contentBadgeTitle">#a9a9a9</color>
+    <color name="contentBadgeTitle">#C3C2C2</color>
     <color name="celltext">#4d4646</color>
     <color name="gray">#FF8B8888</color>
+    <color name="lightgray">#BDBDBD</color>
     <color name="titleBadgeTitle">#adafb1</color>
     <color name="titleBadgeText">#adafb1</color>
     <color name="calender_text">#444444</color>
@@ -41,8 +58,16 @@
     <color name="button_text_color">#FFFFFF</color>
 
     <!--gradients-->
-    <color name="home_bg_start_grd">#57EAE8</color>
-    <color name="home_bg_end_grd">#61BEE0</color>
+
+    <color name="home_bg_start_grd">#DF7C3A</color>
+    <color name="home_bg_end_grd">#FA7821</color>
+
+    <!--<color name="home_bg_start_grd">#57EAE8</color>
+    <color name="home_bg_end_grd">#61BEE0</color>-->
+
+    <color name="btn_orange_start_grd">#F3792A</color>
+    <color name="btn_orange_end_grd">#EA6610</color>
+
     <color name="btn_purple_start_grd">#3A2058</color>
     <color name="btn_purple_end_grd">#5C338C</color>
     <color name="btn_login_start_grd">#5E3C85</color>
@@ -68,4 +93,5 @@
     <color name="primary_color">#252525</color>
     <color name="zebragrey">#F5F5F5</color>
     <color name="zebrablue">#EBF9FF</color>
+    <color name="lightorange">#F4C3A2</color>
 </resources>

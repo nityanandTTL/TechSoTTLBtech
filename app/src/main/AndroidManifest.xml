@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.thyrocare">
+    package="com.thyrocare.btechapp">
+
+    <uses-sdk tools:overrideLibrary="com.microsoft.projectoxford.face" />
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
@@ -19,9 +21,6 @@
     <uses-permission android:name="com.dhb.btech.dev.permission.MAPS_RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-sdk tools:overrideLibrary="com.microsoft.projectoxford.face" />
-
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
@@ -33,7 +32,7 @@
         android:smallScreens="true" />
 
     <application
-        android:name=".application.ApplicationController"
+        android:name="application.ApplicationController"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/app_logo"
@@ -42,8 +41,49 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
+
         <activity
-            android:name=".activity.SplashScreenActivity"
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="portrait"
+            tools:replace="screenOrientation" />
+
+
+        <activity android:name=".NewScreenDesigns.AddRemoveTestProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".NewScreenDesigns.Activities.AddEditBenificaryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".NewScreenDesigns.Activities.NewCampWOEModuleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewScreenDesigns.Activities.CheckoutWoeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewScreenDesigns.Activities.ScanBarcodeWoeActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            tools:replace="screenOrientation"/>
+        <activity
+            android:name=".NewScreenDesigns.Activities.StartAndArriveActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewScreenDesigns.Activities.StockAvailabilityActivityNew"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewScreenDesigns.Activities.LoginActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name=".NewScreenDesigns.Activities.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -59,32 +99,22 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.NotificationClickActivity"
             android:label="@string/app_notificationorders"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".activity.LoginScreenActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.SelfieUploadActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activity.VisitOrderDetailMapDisplayFragmentActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.HubDetailMapDisplayFragmentActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -98,14 +128,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.OrderBookingActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activity.ForgetPasswordActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -113,11 +138,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dialog" />
-        <activity
-            android:name=".activity.AddEditBeneficiaryDetailsActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.OLCPickupActivity"
             android:label="@string/app_name"
@@ -143,17 +163,16 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.StockAvailabilityActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activity.HomeScreenActivity" />
+            android:parentActivityName=".activity.HomeScreenActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.UpdateMaterialActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activity.StockAvailabilityActivity"/>
+            android:parentActivityName=".activity.StockAvailabilityActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ScheduleYourDayIntentActivity"
             android:label="@string/app_name"
@@ -174,7 +193,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.ScheduleYourDayActivity4"
             android:label="@string/app_name"
@@ -183,17 +201,12 @@
         <activity
             android:name=".dialog.MyDialog"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".activity.Users" />
-        <activity
-            android:name=".activity.Chat"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.ThyrocareVideos"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
@@ -219,36 +232,27 @@
             android:enabled="true"
             android:exported="true"
             android:stopWithTask="true" />
-
         <service
             android:name=".service.TrackerService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.imageprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/provider"
+                tools:replace="android:resource" />
         </provider>
-
         <!--
             <meta-data
             android:name="io.fabric.ApiKey"
             android:value="2a0670c74854a2ed0477442a4f32c168dc57d1ba" />
         -->
-
-        <service
-            android:name=".service.FireIDService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
         <service
             android:name=".service.FireMsgService"
             android:enabled="true"

@@ -11,15 +11,15 @@
     <string name="start">Start</string>
     <string name="name">Ketatn Kulkarni</string>
 
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyC7k_bncYw3TwSQle8-YWT1N-uWYnHThKA</string>
     <string name="enable_gps_title">Enable GPS</string>
     <string name="alert_msg">GPS alert dialogue message</string>
     <string name="alert_settings">Settings</string>
     <string name="cancel">Cancel</string>
     <string name="arrive">Arrived</string>
     <string name="plz_chk_internet">Please check your internet connection</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Please wait...</string>
     <string name="view"><u>View</u></string>
+    <string name="rupee_symbol">\u20B9</string>
 
 
     <!--API call Progress Dialog Messages-->
@@ -66,6 +66,10 @@
     <string name="progress_message_changing_MaterailsOrder_please_wait">Placing material order, please wait ....</string>
     <!--<string name="do_you_really_want_to_Change order">Fetching MaterialsINV  Details, Please wait ....</string>-->
 
+    <string name="forget_pass">Forgot password?</string>
+    <string name="login">Login </string>
+    <string name="join_our_network">Join our Network</string>
+    <string name="logout">Logout</string>
 
     <string name="upload">Proceed</string>
     <string name="take_photo">Capture photo</string>
@@ -77,7 +81,7 @@
     <string name="dispatch">Dispatch</string>
     <string name="start_pick_up"> Start pick up </string>
     <string name="reset_password">SUBMIT</string>
-    <string name="password_changed_successfully">Password changed successfully</string>
+    <string name="password_changed_successfully">Password changed successfully.\nPlease re- login.</string>
     <string name="viewing_tests">Getting tests</string>
     <string name="enter_mobile_number">Enter user name</string>
     <string name="old_password">Old password *</string>
@@ -137,33 +141,25 @@
     <string name="old_pwd_and_new_pwd_should_not_be_same">Old password and new password should not be same</string>
     <string name="no_face_detected">No face detected</string>
     <string name="more_than_one_face_detected">More than one face detected</string>
+    <string name="barcodevalidation">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
     <string name="addressvalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890,./- </string>
     <string name="Namevalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="emailIDandMobilenumberValidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!#$%&amp;\'*+-/=?^_`{|}~.@</string>
     <string name="vailidatingemail">Validating emails </string>
     <string name="Mobile_no_validation">1234567890</string>
+    <string name="temperature_validation">1234567890.</string>
     <string name="Sending_Ereciept">Sending ereciept</string>
     <string name="app_notificationorders">Order</string>
-    <string name="endpoint">https://centralindia.api.cognitive.microsoft.com/face/v1.0</string>
-    <string name="subscription_key">5b5115ebff8c49f6a36e7b361794ccef</string>
 
     <string name="notification_text">Tracking, tap to cancel</string>
-    <string name="transport_id" translatable="false">123</string>
-    <string name="firebase_path" translatable="false">Thyrocare_Btech_Location_data</string>  <!-- Please Dont Change this-->
-    <string name="firebase_email1" translatable="false">thyrocaretechnologiesp@gmail.com</string>
-    <string name="firebase_password1" translatable="false">Pass@123</string>
-
-    <string name="firebase_email" translatable="false">tejas.telawane@thyrocare.com</string>
-    <string name="firebase_password" translatable="false">tejas@123</string>
-
-    <string name="BTECH_LOCATION" translatable="false">Location</string>
 
 
     <string name="newClientEntry">NEW CLIENT ENTRY</string>
     <string name="clientEntry">Client Entry</string>
     <string name="clientName">Name*</string>
     <string name="mobile">Mobile No.*</string>
-    <string name="email">Email Id</string>
-    <string name="location">Location*</string>
+    <string name="email">Email Id *</string>
+    <string name="location">Select Location*</string>
     <string name="address">Address*</string>
     <string name="pincode">Pin-code*</string>
     <string name="inchargeName">Incharge Name*</string>
@@ -188,5 +184,107 @@
         <item>Material Distribution(B2B)</item>
         <item>Current Stock</item>
     </string-array>
+
+
+    <string name="expectedStock">Expected Stock</string>
+    <string name="actualStock">Actual Stock</string>
+    <string name="Reason">Reason</string>
+    <string name="wastedStock">Wasted Stock</string>
+    <string name="defectiveStock">Defective Stock</string>
+    <string name="closingStock">Closing Stock</string>
+    <string name="enterFeedback">Enter Feedback</string>
+    <string name="selectFeedbackType">Select Feedback Type</string>
+    <string name="feedbackSubmitted">Thank you, for your valuable Feedback</string>
+    <string name="fetchingStocks">Fetching Stocks...</string>
+    <string name="fetchingFeedbacklist">Fetching Feedback list...</string>
+    <string name="submittingFeedback">Submitting Feedback...</string>
+    <string name="enterProperValues">Enter proper values</string>
+    <string name="stockUpdated">Stock updated successfully</string>
+    <string name="stockAPIKey">68rbZ40eNeRephUzIDTos9SsQIm4mHlT3lCNnqI)Ivk=</string>
+    <string name="updatingStock">Updating Stock...</string>
+    <string name="item">Item</string>
+    <string name="expected_stock">Expected Stock</string>
+    <string name="actual_stock">Actual Stock</string>
+    <string name="enter_feedback">Enter Feedback</string>
+    <string name="select_feedback_type">Select Feedback Type</string>
+    <string name="feedback_submitted">Thank you, for your valuable Feedback</string>
+    <string name="loading_stocks">Loading Stocks...</string>
+    <string name="loading_feedbacklist">Loading Feedback list...</string>
+    <string name="submitting_feedback">Submitting Feedback...</string>
+
+    <string name="Apply_for_leaves">Apply for Leaves</string>
+    <string name="Applied_leaves">Applied Leaves</string>
+    <string name="One_day">One Day</string>
+    <string name="more_than_one_day">More than 1 day</string>
+    <string name="from_date">From Date</string>
+    <string name="to_date">To   Date</string>
+    <string name="date_hint">Date</string>
+    <string name="reason">Reason</string>
+    <string name="remarks">Remarks</string>
+    <string name="progress_message_Applying_Leave_please_wait_new">Processig your request....</string>
+    <string name="nature">Nature</string>
+    <string name="leave_remark">Enter remark</string>
+    <string name="error_nature">Please select nature</string>
+    <string name="error_date">Invalid date</string>
+    <string name="Select_date">Please select date</string>
+    <string name="Select_both_date">Please select both from and to date to proceed</string>
+    <string name="error_reason">Please select reason</string>
+    <string name="error_remark">Please enter Remarks</string>
+    <string name="error_samedate">You cannot select same date.</string>
+    <string name="error_FromDatebigger">From date cannot be afterward of to date.</string>
+    <string-array name="Reason_mode">
+        <item>--Select--</item>
+        <item>Unwell</item>
+        <item>Personal Work</item>
+        <item>Festival</item>
+        <item>Others</item>
+    </string-array>
+
+    <string-array name="Cancel_Reason_mode">
+        <item>--Select--</item>
+        <item>Plan Cancelled</item>
+        <item>Plan Postponed</item>
+        <item>Feeling Well Now</item>
+        <item>Others</item>
+    </string-array>
+
+    <string name="last_7_day_details"><u>Last 7 day details</u></string>
+    <string name="outstanding_balance">Outstanding Balance :</string>
+    <string name="Deposit_Register"><u>Deposit Register</u></string>
+    <string name="NO_RECORDS_FOUND">NO RECORDS FOUND</string>
+    <string name="Earning">Earning</string>
+    <string name="value">value</string>
+    <string name="Last_credit_given_date">Last credit given date : </string>
+    <string name="Last_credit_amount">Last credit amount :</string>
+    <string name="Fasting_orders">Fasting orders :</string>
+    <string name="Non_Fasting_orders">Non-Fasting orders :</string>
+    <string name="Estimate_earning">Estimate earning :</string>
+    <string name="validdate">Select valid date</string>
+    <string name="View"><u>View</u></string>
+
+    <string name="BtechName">Btech Name :</string>
+    <string name="orderNo">Order No :</string>
+    <string name="beneficiary">Beneficiary :</string>
+    <string name="samples">No of Sample :</string>
+    <string name="kits">Kits : </string>
+    <string name="accept">Accept</string>
+    <string name="release">Release</string>
+    <string name="noAllottedOrdersFound">No allotted orders found</string>
+    <string name="fetchingOrders">Fetching order details\nPlease wait...</string>
+    <string name="btechName">BTech Name :</string>
+    <string name="pincode1">Pincode :</string>
+    <string name="updatingOrderDetails">Updating Order Details\nPlease wait...</string>
+    <string name="fetchingRemarkslist">Fetching Remarks list...</string>
+    <string name="selectRemarks">Select Remarks</string>
+    <string name="fetchingBtechEarnings">Fetching BTech Earnings\nPlease wait...</string>
+    <string name="selectDateOfAppointment">Please select Date for Next Appointment</string>
+    <string name="rescheduleOrderConfirm">Do you really want to Reschedule this Order ?</string>
+    <string name="enterReason">Please Enter Reason to Reschedule</string>
+    <string name="date">Date</string>
+    <string name="fasting_requried_Msg">10–12 hrs fasting is essential for this beneficiary.</string>
+    <string name="hardcopycharges">Softcopy report are freely available for all orders, but for hardcopy report Rs 75/- is charged as courier charges</string>
+    <string name="fasting">Fasting : </string>
+    <string name="address1"><u>View Address</u></string>
+    <string name="vailImage"><u>Vial Image</u></string>
 
 </resources>

@@ -140,7 +140,7 @@
                 android:textSize="@dimen/dp_9"
                 android:inputType="number"
                 android:digits="@string/Mobile_no_validation"
-                android:maxLength="6"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:hint="Enter OTP"
                 android:layout_margin="@dimen/dp_4"
@@ -201,6 +201,8 @@
             android:textColor="@color/black"
             android:layout_marginLeft="@dimen/dp_10"
             android:visibility="gone"/>
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -237,7 +239,7 @@
                 android:textSize="@dimen/dp_9"
                 android:inputType="number"
                 android:digits="@string/Mobile_no_validation"
-                android:maxLength="6"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:hint="Enter OTP"
                 android:layout_margin="@dimen/dp_4"
@@ -298,7 +300,6 @@
             android:textColor="@color/black"
             android:layout_marginLeft="@dimen/dp_10"
             android:visibility="gone"/>
-
     </LinearLayout>
 
 

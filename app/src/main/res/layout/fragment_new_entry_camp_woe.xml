@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewScreenDesigns.Fragments.NewEntryCampWoeFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/lin_spinners"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginRight="@dimen/_4sdp">
+            <RelativeLayout
+                android:id="@+id/rel_CampSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/_2sdp"
+                android:background="@drawable/rounded_background_empty_orange">
+
+                <Spinner
+                    android:id="@+id/spn_Camp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:inputType="textPersonName" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rel_serach"
+                android:layout_below="@+id/rel_CampSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_2sdp"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:background="@drawable/rounded_background_empty_orange">
+
+                <ImageView
+                    android:id="@+id/img_search"
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/search_icon_orange" />
+
+                <EditText
+                    android:id="@+id/edt_search"
+                    android:hint="Search Patient"
+                   android:layout_centerVertical="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_18sdp"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:layout_toLeftOf="@+id/img_search"
+                    android:imeOptions="actionDone"
+                    android:background="@color/transparent" />
+
+                <com.thyrocare.btechapp.NewScreenDesigns.Utils.SearchableSpinner
+                    android:id="@+id/spn_Search"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_18sdp"
+                    android:layout_centerVertical="true"
+                    android:background="@color/transparent"
+                    android:inputType="textPersonName"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:layout_below="@+id/lin_spinners"
+            android:layout_above="@+id/lin_new_existingEntry">
+
+            <RelativeLayout
+                android:id="@+id/rel_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:visibility="gone">
+
+                <!--<com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_name"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_2sdp"
+                    android:layout_marginRight="@dimen/_2sdp"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:hint="Name *">
+
+                    <EditText
+                        android:id="@+id/edt_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_30sdp"
+                        android:background="@drawable/rounded_background_empty_orange"
+                        android:digits="@string/Namevalidation"
+                        android:maxLength="50" />
+
+                </com.google.android.material.textfield.TextInputLayout>-->
+
+                <EditText
+                    android:id="@+id/edt_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_2sdp"
+                    android:background="@drawable/rounded_background_empty_orange"
+                    android:digits="@string/Namevalidation"
+                    android:hint="Enter Name *"
+                    android:maxLength="40" />
+
+                <LinearLayout
+                    android:id="@+id/lin_AgeGender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/edt_name"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                   <!-- <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/til_name"
+                        android:layout_marginLeft="@dimen/_2sdp"
+                        android:layout_marginRight="@dimen/_2sdp"
+                        android:layout_marginBottom="@dimen/_2sdp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="2"
+                        android:hint="Age *">
+
+                        <EditText
+                            android:id="@+id/edt_Age"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_margin="@dimen/_2sdp"
+                            android:background="@drawable/rounded_background_empty_orange"
+                            android:digits="@string/Mobile_no_validation"
+                            android:inputType="number"
+                            android:maxLength="3" />
+
+                    </com.google.android.material.textfield.TextInputLayout>-->
+
+                    <EditText
+                        android:id="@+id/edt_Age"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:layout_margin="@dimen/_2sdp"
+                        android:background="@drawable/rounded_background_empty_orange"
+                        android:digits="@string/Mobile_no_validation"
+                        android:inputType="number"
+                        android:hint="Age *"
+                        android:maxLength="3" />
+
+                    <RadioGroup
+                        android:id="@+id/rg_gender"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="8"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:weightSum="10"
+                        android:layout_marginLeft="@dimen/_10sdp">
+
+                        <RadioButton
+                            android:id="@+id/rb_male"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Male" />
+
+                        <RadioButton
+                            android:id="@+id/rb_female"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:text="Female" />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycle_ScanBarcode"
+                    android:layout_below="@+id/lin_AgeGender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/lin_uploadVial"
+                    android:layout_below="@+id/recycle_ScanBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="10"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tv_uploadVailPhoto"
+                        android:layout_width="0dp"
+                        android:layout_weight="4"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="@dimen/_3sdp"
+                        android:layout_marginRight="@dimen/_7sdp"
+                        android:text="Vial Image"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_14sdp"/>
+
+                    <TextView
+                        android:id="@+id/tv_viewVailPhoto"
+                        android:layout_width="0dp"
+                        android:layout_weight="4"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="@dimen/_6sdp"
+                        android:layout_margin="@dimen/_2sdp"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold"
+                        android:background="@drawable/rounded_background_empty_orange"
+                        android:textColor="@color/colorPrimary"
+                        android:text="Upload"/>
+
+                    <ImageView
+                        android:id="@+id/img_CapturePhoto"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="@dimen/_30sdp"
+                        android:src="@drawable/camera_icon"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:id="@+id/img_deletephoto"
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="@dimen/_30sdp"
+                        android:src="@drawable/red_cross_icon"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_submit"
+                    android:layout_below="@+id/lin_uploadVial"
+                    android:text="submit"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_centerHorizontal="true"
+                    android:padding="@dimen/_2sdp"
+                    android:background="@drawable/button_ripple_effect">
+
+
+                </Button>
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/lin_new_existingEntry"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_1sdp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_existing"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:textSize="@dimen/_14sdp"
+                android:padding="@dimen/_6sdp"
+                android:background="@drawable/selectedtab_white"
+                android:text="Existing"/>
+
+            <TextView
+                android:id="@+id/tv_new"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="@dimen/_14sdp"
+                android:text="New"
+                android:padding="@dimen/_6sdp"
+                android:background="@drawable/unselected_tab_grey"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

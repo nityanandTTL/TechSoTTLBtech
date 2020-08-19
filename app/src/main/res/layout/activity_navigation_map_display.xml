@@ -12,7 +12,7 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".activity.VisitOrderDetailMapDisplayFragmentActivity" />
+            tools:context=".btechapp.activity.VisitOrderDetailMapDisplayFragmentActivity" />
     </RelativeLayout>
 
     <include
@@ -40,14 +40,14 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="2dp"
                 android:layout_weight="3"
-                android:background="@drawable/footer_bg"
+                android:background="@color/colorOrange"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20"
                     android:layout_gravity="center"
-                    android:src="@drawable/call_icon" />
+                    android:src="@drawable/call_icon_orange" />
 
                 <TextView
                     android:id="@+id/title_est_call"
@@ -57,7 +57,8 @@
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:text="Call"
-                    android:textColor="@color/colorPrimary"
+                    android:paddingLeft="@dimen/_5sdp"
+                    android:textColor="@color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -67,14 +68,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_weight="1"
-                android:background="@drawable/footer_bg">
+                android:background="@color/colorOrange">
 
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20"
                     android:layout_gravity="center"
-                    android:src="@drawable/hub_home_icon" />
+                    android:src="@drawable/home_icon_white"
+                    android:padding="@dimen/_7sdp"/>
 
                 <TextView
                     android:id="@+id/title_est_address"
@@ -84,7 +86,7 @@
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:text="11, Sushila App, Panchavati, Nashik-422003"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>

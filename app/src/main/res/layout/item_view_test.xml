@@ -12,7 +12,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:background="@color/blue_shade"
+        android:background="@color/colorPrimary"
         android:drawableRight="@android:drawable/arrow_down_float"
         android:gravity="left"
         android:paddingBottom="8dp"

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="Welcome,"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/txt_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:gravity="center"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_user_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/orders_icon"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_80sdp"
+        android:layout_marginBottom="@dimen/_93sdp"
+        android:layout_above="@+id/earning_icon"
+        android:layout_alignStart="@+id/earning_icon"
+        android:src="@drawable/orders_tsp" />
+
+    <LinearLayout
+        android:id="@+id/llIcons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:id="@+id/receive_icon"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="@dimen/_120sdp"
+            android:layout_marginEnd="@dimen/_40sdp"
+            android:src="@drawable/tsp_home_screen_receive" />
+
+        <ImageView
+            android:id="@+id/send_icon"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="@dimen/_120sdp"
+            android:layout_marginStart="@dimen/_40sdp"
+            android:src="@drawable/tsp_home_screen_send" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/earning_icon"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_80sdp"
+        android:layout_marginTop="@dimen/_minus30sdp"
+        android:layout_below="@+id/llIcons"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/tsp_home_screen_earning" />
+</RelativeLayout>

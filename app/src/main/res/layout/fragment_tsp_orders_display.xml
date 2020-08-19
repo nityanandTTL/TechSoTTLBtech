@@ -13,17 +13,17 @@
         android:textSize="18sp"
         android:visibility="gone" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/srl_visit_orders_display"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_visit_orders_display_footer">
 
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recy_Orderlist"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
 
         <!--<ListView
             android:id="@+id/rv_visit_orders_display"
@@ -31,7 +31,7 @@
             android:layout_height="match_parent">
 
         </ListView>-->
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/ll_visit_orders_display_footer"

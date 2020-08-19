@@ -16,7 +16,7 @@
         android:textStyle="bold"
         android:layout_gravity="center"
         android:textAlignment="center"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/lightgray"
         android:textSize="18sp"
         android:text="9:30 AM" />
 </LinearLayout>

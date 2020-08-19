@@ -28,8 +28,8 @@
             android:layout_marginRight="10dp"
             android:id="@+id/btnScanBarcode"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/scan_vial_barcode" />
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_scanbarcode_withbackground" />
 
         <ImageView
             android:id="@+id/scanned_status_green"

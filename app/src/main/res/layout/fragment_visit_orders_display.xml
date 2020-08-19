@@ -46,7 +46,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/srl_visit_orders_display"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -59,7 +59,7 @@
             android:layout_height="match_parent">
 
         </ListView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/ll_visit_orders_display_footer"

@@ -5,7 +5,7 @@
     android:background="@color/bg_content"
     android:orientation="vertical"
     android:weightSum="6"
-    tools:context="com.thyrocare.activity.ScheduleYourDayActivity">
+    tools:context=".btechapp.activity.ScheduleYourDayActivity">
 
     <TextView
         android:layout_width="match_parent"

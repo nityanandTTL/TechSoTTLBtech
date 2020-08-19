@@ -17,18 +17,18 @@
         android:text="No Record Found"
         android:visibility="gone" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="3">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/ll_hub_display_footer"
@@ -47,21 +47,20 @@
             android:orientation="horizontal"
             android:weightSum="2">
 
-
             <LinearLayout
                 android:id="@+id/ll_scan_vial_barcode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="2dp"
                 android:layout_weight="1"
-                android:background="@drawable/footer_bg"
+                android:background="@color/colorOrange"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
                 <ImageView
                     android:layout_height="@dimen/dp_20"
                     android:layout_width="0dp"
-                    android:src="@drawable/scan_vial_barcode"
+                    android:src="@drawable/ic_scanbarcode"
                     android:layout_weight="0.5"
                     android:layout_gravity="center_vertical"/>
 
@@ -73,7 +72,7 @@
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:text="Scan Barcode"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/white"
                     android:textSize="14sp"
                     android:layout_weight="1.5"/>
 
@@ -85,15 +84,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"
-                android:background="@drawable/footer_bg"
+                android:background="@color/colorOrange"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
                 <ImageView
                     android:layout_height="@dimen/dp_20"
                     android:layout_width="0dp"
-                    android:src="@drawable/scan_master_barcode"
+                    android:src="@drawable/barcode_icon_white"
                     android:layout_weight="0.5"
+                    android:paddingLeft="@dimen/_5sdp"
+                    android:paddingRight="@dimen/_5sdp"
                     android:layout_gravity="center_vertical"/>
 
                 <TextView
@@ -104,8 +105,9 @@
                     android:layout_weight="1.5"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
+                    android:paddingLeft="@dimen/_5sdp"
                     android:text="Scan Master Barcode"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/white"
                     android:textSize="14sp" />
 
             </LinearLayout>

@@ -1,0 +1,34 @@
+Keystore password - Btech@123
+Keystore Alias - Btech
+Key password - Btech@123
+
+
+private void GetEncodedString() {
+
+        //API URLS ----------------------------------------------------
+        System.out.println("Encrypt code BASE_URL_TOCHECK "+ EncryptionUtils.EncodeString64("https://www.thyrocare.com/APIs/"));
+
+        System.out.println("Encrypt code MAINURL  -->  "+ EncryptionUtils.EncodeString64("https://www.thyrocare.com/APIs/"));
+        System.out.println("Encrypt code B2B_URL -->  "+ EncryptionUtils.EncodeString64("https://www.thyrocare.com/API/"));
+        System.out.println("Encrypt code NUCLEAR_URL -->  "+ EncryptionUtils.EncodeString64("http://api.nueclear.com/WebAPI/API/"));
+        System.out.println("Encrypt code TECHSO_URL -->  "+ EncryptionUtils.EncodeString64("https://techso.thyrocare.cloud/techsoapi/"));
+
+        System.out.println("Encrypt code MAINURL stng -->  "+ EncryptionUtils.EncodeString64("https://www.thyrocare.com/API_BETA/"));
+        System.out.println("Encrypt code B2B_URL stng -->  "+ EncryptionUtils.EncodeString64("https://www.thyrocare.com/API_beta/"));
+        System.out.println("Encrypt code NUCLEAR_URL stng -->  "+ EncryptionUtils.EncodeString64("http://stagingapi.nueclear.com/WebAPI/API/"));
+        System.out.println("Encrypt code TECHSO_URL stng -->  "+ EncryptionUtils.EncodeString64("http://techsostng.thyrocare.cloud/techsoapi/"));
+
+
+        // Google API key and Facebook IDs  --------------------------------------------
+
+         System.out.println("Encrypt code google_places_debug_key "+ EncryptionUtils.EncodeString64("AIzaSyABUSTJeefuE66E57bpUTO9sAvb0EG7e04"));
+
+
+        // Firebase Database credentials  --------------------------------------------
+        System.out.println("Encrypt code firebase_email "+ EncryptionUtils.EncodeString64("tejas.telawane@thyrocare.com"));
+        System.out.println("Encrypt code firebase_password "+ EncryptionUtils.EncodeString64("tejas@123"));
+        System.out.println("Encrypt code firebase_path_location "+ EncryptionUtils.EncodeString64("Thyrocare_Btech_Location_data"));
+        System.out.println("Encrypt code transport_id "+ EncryptionUtils.EncodeString64("locations"));
+        System.out.println("Encrypt code BTECH_ID "+ EncryptionUtils.EncodeString64("884544334"));
+
+    }

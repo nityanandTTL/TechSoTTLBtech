@@ -10,12 +10,12 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.dhb.activity.OrderBookingActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -32,13 +32,13 @@
                 android:textColor="@android:color/white"
                 android:layout_marginStart="@dimen/dp_15"
                 android:text="OLC Pickup Details"
-                android:textSize="@dimen/cast_expanded_controller_margin_between_status_text_and_seek_bar"
+                android:textSize="@dimen/_12sdp"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
         android:id="@+id/fl_olc_pickup"

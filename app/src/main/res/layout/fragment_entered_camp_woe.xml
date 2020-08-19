@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewScreenDesigns.Fragments.EnteredCampWoeFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/lin_SearchAndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="10"
+            android:padding="@dimen/_2sdp">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/_5sdp"
+                android:background="@drawable/rounded_background_empty_orange_less_padding">
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:text="Select Date"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_12sdp"
+                    android:padding="@dimen/_4sdp"/>
+
+                <ImageView
+                    android:id="@+id/img_dateIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_calendar"/>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rel_serach"
+                android:layout_width="0dp"
+                android:layout_weight="6"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_2sdp"
+                android:padding="@dimen/_3sdp"
+                android:background="@drawable/rounded_background_empty_orange_less_padding">
+
+                <ImageView
+                    android:id="@+id/img_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/search_icon_orange" />
+
+                <EditText
+                    android:id="@+id/edt_Search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@color/transparent"
+                    android:digits="@string/addressvalidation"
+                    android:hint="Patient Name"
+                    android:inputType="textPersonName" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_CampWOEMIS"
+            android:layout_below="@+id/lin_SearchAndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_2sdp"/>
+
+        <TextView
+            android:id="@+id/tv_noDatafound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Data Found"
+            android:textSize="@dimen/_20sdp"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+
+
+
+
+</FrameLayout>

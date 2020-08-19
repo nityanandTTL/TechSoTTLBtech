@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bgBackSideColor"
-    tools:context="com.thyrocare.fragment.Material_consumptions">
+    tools:context=".btechapp.fragment.Material_consumptions">
 
     <!-- TODO: Update blank fragment layout -->
 

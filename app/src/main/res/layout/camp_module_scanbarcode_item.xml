@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lin_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="10"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/tv_barcodeType"
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:layout_margin="@dimen/_6sdp"
+        android:text="Serum"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14sdp"/>
+
+    <TextView
+        android:id="@+id/tv_enteredBarcode"
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/_6sdp"
+        android:layout_margin="@dimen/_2sdp"
+        android:textColorHint="@color/colorPrimary"
+        android:textSize="@dimen/_14sdp"
+        android:textStyle="bold"
+        android:background="@drawable/rounded_background_empty_orange"
+        android:hint="Scan Barcode"/>
+
+    <ImageView
+        android:id="@+id/img_scan"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="@dimen/_30sdp"
+        android:src="@drawable/camera_icon"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/img_deleteBarcode"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="@dimen/_30sdp"
+        android:src="@drawable/red_cross_icon"
+        android:visibility="gone"/>
+
+</LinearLayout>
