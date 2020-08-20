@@ -71,7 +71,6 @@ import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.btechapp.models.api.response.VideosResponseModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 
-import org.json.JSONObject;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -243,10 +242,10 @@ public interface PostAPIInterface {
     Call<PaymentProcessAPIResponseModel> CallgetTransactionInputsRequestApi(@Body JsonObject jsonRequest);
 
     @POST("api/PayThyrocare/StartTransaction")
-    Call<PaymentStartTransactionAPIResponseModel> CallFetchTransactionResponseOnStartTransactionApi(@Body JSONObject jsonRequest);
+    Call<PaymentStartTransactionAPIResponseModel> CallFetchTransactionResponseOnStartTransactionApi(@Body JsonObject jsonRequest);
 
     @POST
-    Call<PaymentDoCaptureResponseAPIResponseModel> CallgetDoCaptureResponseRequestApi(@Url String URL, @Body JSONObject jsonRequest);
+    Call<PaymentDoCaptureResponseAPIResponseModel> CallgetDoCaptureResponseRequestApi(@Url String URL, @Body JsonObject jsonRequest);
 
     @Headers("Content-Type: application/json")
     @POST

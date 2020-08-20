@@ -66,15 +66,11 @@ import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -742,19 +738,19 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
     private void fetchTransactionResponseOnStartTransaction() {
-        JSONObject jsonRequest = new JSONObject();
+        JsonObject jsonRequest = new JsonObject();
         try {
             // TODO only for testing
 //           /* paymentPassInputsModel.getNameValueCollection().get(2).setValue("1");*/
 
-            jsonRequest.put("URLId", paymentPassInputsModel.getURLId());
+            jsonRequest.addProperty("URLId", paymentPassInputsModel.getURLId());
             for (PaymentNameValueModel pnvm :
                     paymentPassInputsModel.getNameValueCollection()) {
                 if (pnvm.getKey().equals("SourceCode")) {
-                    jsonRequest.put(pnvm.getKey(), appPreferenceManager.getLoginResponseModel().getUserID());
+                    jsonRequest.addProperty(pnvm.getKey(), appPreferenceManager.getLoginResponseModel().getUserID());
                 } else {
                     Logger.error("Key" + pnvm.getKey() + "Value" + pnvm.getValue());
-                    jsonRequest.put(pnvm.getKey(), pnvm.getValue());
+                    jsonRequest.addProperty(pnvm.getKey(), pnvm.getValue());
 
                    /* if (pnvm.getRequired().equals("User") && InputUtils.isNull(pnvm.getValue())) {
                         Toast.makeText(activity, "All input fields are necessary"+pnvm.getKey().toString(), Toast.LENGTH_SHORT).show();
@@ -762,11 +758,7 @@ public class PaymentsActivity extends AbstractActivity {
                     }*//*----Changes done Due to blocking */
                 }
             }
-            try {
-                jsonRequest.put("UserId", appPreferenceManager.getLoginResponseModel().getUserID());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            jsonRequest.addProperty("UserId", appPreferenceManager.getLoginResponseModel().getUserID());
 
             if (isNetworkAvailable(activity)) {
                 CallFetchTransactionResponseOnStartTransactionApi(jsonRequest);
@@ -778,7 +770,7 @@ public class PaymentsActivity extends AbstractActivity {
         }
     }
 
-    private void CallFetchTransactionResponseOnStartTransactionApi(JSONObject jsonRequest){
+    private void CallFetchTransactionResponseOnStartTransactionApi(JsonObject jsonRequest){
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<PaymentStartTransactionAPIResponseModel> responseCall = apiInterface.CallFetchTransactionResponseOnStartTransactionApi(jsonRequest);
         global.showProgressDialog(activity,"Please wait..");
@@ -969,17 +961,17 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
     private void fetchDoCaptureResponse(boolean showProgressDialog) {
-        JSONObject jsonRequest = new JSONObject();
+        JsonObject jsonRequest = new JsonObject();
         try {
 
-            jsonRequest.put("URLId", paymentStartTransactionAPIResponseModel.getReqParameters().getURLId());
+            jsonRequest.addProperty("URLId", paymentStartTransactionAPIResponseModel.getReqParameters().getURLId());
             for (PaymentNameValueModel pnvm :
                     paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection()) {
-                jsonRequest.put(pnvm.getKey(), pnvm.getValue());
+                jsonRequest.addProperty(pnvm.getKey(), pnvm.getValue());
             }
 
             if (NarrationId == 2 && (ModeId == 1 || ModeId == 10)) {
-                jsonRequest.put("OrderNo", OrderNo);
+                jsonRequest.addProperty("OrderNo", OrderNo);
             }
 
             if (isNetworkAvailable(activity)) {
@@ -994,16 +986,16 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
     private void fetchRecheckResponseData() {
-        JSONObject jsonRequest = new JSONObject();
+        JsonObject jsonRequest = new JsonObject();
         try {
-            jsonRequest.put("URLId", paymentDoCaptureResponseAPIResponseModel.getReqParameters().getURLId());
+            jsonRequest.addProperty("URLId", paymentDoCaptureResponseAPIResponseModel.getReqParameters().getURLId());
             for (PaymentNameValueModel pnvm :
                     paymentDoCaptureResponseAPIResponseModel.getReqParameters().getNameValueCollection()) {
-                jsonRequest.put(pnvm.getKey(), pnvm.getValue());
+                jsonRequest.addProperty(pnvm.getKey(), pnvm.getValue());
             }
 
             if (NarrationId == 2 && (ModeId == 1 || ModeId == 10)) {
-                jsonRequest.put("OrderNo", OrderNo);
+                jsonRequest.addProperty("OrderNo", OrderNo);
             }
 
             if (isNetworkAvailable(activity)) {
@@ -1017,7 +1009,7 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
 
-    private void CallgetDoCaptureResponseRequestApi(JSONObject jsonRequest, String URL){
+    private void CallgetDoCaptureResponseRequestApi(JsonObject jsonRequest, String URL){
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<PaymentDoCaptureResponseAPIResponseModel> responseCall = apiInterface.CallgetDoCaptureResponseRequestApi(URL,jsonRequest);
         global.showProgressDialog(activity,"Please wait..");
