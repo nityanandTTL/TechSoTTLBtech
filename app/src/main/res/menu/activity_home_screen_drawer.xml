@@ -37,6 +37,11 @@
             android:title="Stock Availability" />
 
         <item
+            android:id="@+id/nav_certificates"
+            android:icon="@drawable/certificate_icon"
+            android:title="My Certificates" />
+
+        <item
             android:id="@+id/nav_communication"
             android:icon="@drawable/communication"
             android:title="Communicate" />

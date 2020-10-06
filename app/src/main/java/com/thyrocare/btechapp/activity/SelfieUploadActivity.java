@@ -482,6 +482,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 .setDirectory("BtechApp/SelfieUploads")
                 .setName("img" + System.currentTimeMillis())
                 .setImageFormat(Camera.IMAGE_JPG)
+                .setCompression(60)
+                .setImageHeight(720)// it will try to achieve this height as close as possible maintaining the aspect ratio;
                 .build(this);
         try {
             camera.takePicture();

@@ -286,5 +286,7 @@
     <string name="fasting">Fasting : </string>
     <string name="address1"><u>View Address</u></string>
     <string name="vailImage"><u>Vial Image</u></string>
+    <string name="DataNotFound">No Data Found</string>
+    <string name="NoCertificates">No Certificates Uploaded yet.</string>
 
 </resources>

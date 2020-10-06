@@ -446,6 +446,19 @@ public class Global {
 
     }
 
+    public void DisplayImagewithDefaultImage(Activity activity, String Url, ImageView imageView) {
+
+        Glide.get(activity).clearMemory();
+        Glide.with(activity).load(Url)
+                .asBitmap()
+                .placeholder(R.drawable.app_logo).dontAnimate()
+                .error(R.drawable.app_logo)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(imageView);
+
+    }
+
     public  void OpenImageDialog(String imgUrl, Activity mActivity) {
 
         try {
@@ -511,10 +524,24 @@ public class Global {
     }
 
 
+
     public static String getHeaderValue(Context pContext) {
         String header;
-        header = "Btech app/" + getCurrentAppVersionName(pContext) + "(" + getCurrentVersionCode(pContext) + ")/" + getSerialnum(pContext);
+        header = "Btech app/" + getCurrentAppVersionName(pContext) + "(" + getCurrentVersionCode(pContext) + ")/" + getSerialnum(pContext) +getUserCode(pContext);
         return header;
+    }
+
+
+    public static String getUserCode(Context pContext) {
+        String usercode = "";
+        try {
+            AppPreferenceManager appPreferenceManager = new AppPreferenceManager(pContext);
+            usercode = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()) ? " /"+appPreferenceManager.getLoginResponseModel().getUserID() : "" ;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return usercode;
     }
 
     public static int getCurrentVersionCode(Context pContext) {

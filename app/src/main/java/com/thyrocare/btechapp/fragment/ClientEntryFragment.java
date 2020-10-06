@@ -575,8 +575,8 @@ public class ClientEntryFragment extends Fragment  {
                     .setDirectory("BtechApp/ClientEntry")
                     .setName("Client_" + System.currentTimeMillis())
                     .setImageFormat(com.mindorks.paracamera.Camera.IMAGE_JPEG)
-                    .setCompression(80)
-                    .setImageHeight(1000)// it will try to achieve this height as close as possible maintaining the aspect ratio;
+                    .setCompression(60)
+                    .setImageHeight(480)// it will try to achieve this height as close as possible maintaining the aspect ratio;
                     .build(this);
             try {
                 camera.takePicture();

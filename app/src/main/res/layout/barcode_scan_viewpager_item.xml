@@ -123,18 +123,11 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/ll_barcodes"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyle_barcode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="@dimen/_25sdp">
-                        <TableLayout
-                            android:id="@+id/tl_barcodes"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                        </TableLayout>
-                    </LinearLayout>
+                        android:layout_marginTop="@dimen/_25sdp"/>
 
                     <LinearLayout
                         android:id="@+id/lin_BenbarcodePic"
@@ -159,15 +152,15 @@
                                 android:textSize="@dimen/_14sdp"
                                 android:textStyle="bold"
                                 android:padding="@dimen/_5sdp"
-                                android:layout_marginRight="@dimen/_10sdp"/>
+                                />
 
                             <TextView
                                 android:id="@+id/txt_captureBenBarcodePic"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="4.1"
+                                android:layout_weight="4"
                                 android:layout_gravity="center"
-                                android:background="@drawable/edittext_modified_states"
+                                android:background="@drawable/editbox_bg"
                                 android:gravity="center"
                                 android:padding="@dimen/_5sdp"
                                 android:textSize="@dimen/_13sdp" />
@@ -175,7 +168,7 @@
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1.9"
+                                android:layout_weight="2"
                                 android:gravity="center"
                                 android:orientation="horizontal">
 

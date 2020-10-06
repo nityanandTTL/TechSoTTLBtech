@@ -434,7 +434,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
             fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
                 @Override
                 public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
-                    globalclass.hideProgressDialog();
+                    globalclass.hideProgressDialog(mActivity);
 
                     FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
                     if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails() != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
@@ -477,12 +477,12 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
-                    globalclass.hideProgressDialog();
+                    globalclass.hideProgressDialog(mActivity);
                     globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
-            globalclass.hideProgressDialog();
+            globalclass.hideProgressDialog(mActivity);
             e.printStackTrace();
             globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
         }
@@ -1365,14 +1365,19 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 if (response.code() == 200 || response.code() == 204) {
                     onOrderStatusChangedResponseReceived(strButton);
                 } else {
-                    Toast.makeText(mActivity, response.body(), Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(mActivity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(mActivity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalclass.hideProgressDialog();
-                MessageLogger.LogDebug("Errror", t.getMessage());
+                Toast.makeText(mActivity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
     }

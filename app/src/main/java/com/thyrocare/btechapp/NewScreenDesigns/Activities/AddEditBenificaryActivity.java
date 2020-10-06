@@ -707,8 +707,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         if (StringUtils.isNull(edtBenAge.getText().toString().trim())) {
             edtBenAge.setError("Age is Required");
             return false;
-        } else if (Integer.parseInt(edtBenAge.getText().toString().trim()) < 1 || Integer.parseInt(edtBenAge.getText().toString().trim()) > 135) {
-            edtBenAge.setError("Age should be between 1 to 135");
+        } else if (Integer.parseInt(edtBenAge.getText().toString().trim()) < 1 || Integer.parseInt(edtBenAge.getText().toString().trim()) > 120) {
+            edtBenAge.setError("Age should be between 1 to 120");
             return false;
         } else if (StringUtils.isNull(edtBenName.getText().toString().trim())) {
             edtBenName.setError("Name is Required");
@@ -749,8 +749,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         }else if (StringUtils.isNull(edtBenAge.getText().toString().trim())) {
             edtBenAge.setError("Age is Required");
             return false;
-        } else if (Integer.parseInt(edtBenAge.getText().toString().trim()) < 1 || Integer.parseInt(edtBenAge.getText().toString().trim()) > 135) {
-            edtBenAge.setError("Age should be between 1 to 135");
+        } else if (Integer.parseInt(edtBenAge.getText().toString().trim()) < 1 || Integer.parseInt(edtBenAge.getText().toString().trim()) > 120) {
+            edtBenAge.setError("Age should be between 1 to 120");
             return false;
         } else if (StringUtils.isNull(txtTestsList.getText().toString().trim())) {
             txtTestsList.setError("Tests List is Required");

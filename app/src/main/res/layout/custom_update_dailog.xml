@@ -35,12 +35,12 @@
             android:layout_gravity="center"
             android:id="@+id/btn_Update"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_marginLeft="5dp"
             android:background="@color/colorSecondary"
             android:clickable="true"
             android:text="Update"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/white"
             android:textStyle="bold" />
         <Button
             android:layout_margin="@dimen/dp_10"
@@ -48,11 +48,11 @@
             android:layout_gravity="center"
             android:id="@+id/btn_ok"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="@dimen/_30sdp"
             android:background="@color/colorSecondary"
             android:clickable="true"
             android:text="EXIT"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>
 

@@ -30,10 +30,13 @@ import com.thyrocare.btechapp.utils.app.Global;
 
 import org.json.JSONException;
 
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 public class NotificationClickActivity extends AppCompatActivity {
@@ -181,14 +184,19 @@ public class NotificationClickActivity extends AppCompatActivity {
                     }
                     CallRestartApp();
                 } else {
-                    Toast.makeText(mActivity, response.body(), Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(mActivity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(mActivity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog();
-                MessageLogger.LogDebug("Errror", t.getMessage());
+                Toast.makeText(mActivity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -950,13 +950,13 @@ public class DateUtil {
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 
         Date date = null;
-        String str = null;
+        String str = "";
 
         try {
             date = inputFormat.parse(time);
             str = outputFormat.format(date);
         } catch (ParseException e) {
-            dateFromStringForAMPM(time,inputPattern,outputPattern);
+            str = dateFromStringForAMPM(time,inputPattern,outputPattern);
             e.printStackTrace();
         }
         return str;

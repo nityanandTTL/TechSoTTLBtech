@@ -35,6 +35,7 @@ import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.NewCampWOEModuleActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.StockAvailabilityActivityNew;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.BtechCertificateFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.FAQ_Fragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.FeedbackFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.Leave_intimation_fragment_new;
@@ -254,7 +255,12 @@ public class HomeScreenActivity extends AbstractActivity
             nav_Menu.findItem(R.id.nav_leave).setVisible(false);
             Menu nav_Menu1 = navigationView.getMenu();
             nav_Menu1.findItem(R.id.nav_credit).setVisible(false);
+            if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)){
+                Menu nav_Menu2 = navigationView.getMenu();
+                nav_Menu2.findItem(R.id.nav_certificates).setVisible(false);
+            }
         }
+
 
         /**/
 
@@ -442,6 +448,9 @@ public class HomeScreenActivity extends AbstractActivity
             Intent intent = new Intent(HomeScreenActivity.this,ThyrocareVideos.class);
             startActivity(intent);
 
+        }else if (id == R.id.nav_certificates) {
+            toolbarHome.setVisibility(View.VISIBLE);
+            pushFragments(BtechCertificateFragment.newInstance(), false, false, BtechCertificateFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         }else if (id == R.id.nav_Hub) {
             //btech_hub
             //for btech with hub login...role will be 6 for this
@@ -502,6 +511,7 @@ public class HomeScreenActivity extends AbstractActivity
                /* finish();
                 finishAffinity();*/
 
+               globalclass.showCustomToast(activity,"Logout successfully");
                         Intent n = new Intent(activity, LoginActivity.class);
                         n.setAction(Intent.ACTION_MAIN);
                         n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

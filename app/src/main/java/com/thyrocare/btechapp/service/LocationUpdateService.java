@@ -233,7 +233,7 @@ public class LocationUpdateService extends IntentService {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    if (response.body() != null && !TextUtils.isEmpty(response.body()) && !response.body().trim().equalsIgnoreCase("[]")) {
+                    if (!TextUtils.isEmpty(response.body()) && !response.body().trim().equalsIgnoreCase("[]")) {
                         JSONObject jsonObject = null;
                         try {
                             JSONArray jsonArray = new JSONArray(response.body());

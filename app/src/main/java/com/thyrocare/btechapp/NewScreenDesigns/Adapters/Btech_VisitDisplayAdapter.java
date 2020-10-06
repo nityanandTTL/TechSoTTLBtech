@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -49,6 +50,7 @@ import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import org.joda.time.DateTimeComparator;
 
+import java.io.IOException;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -64,6 +66,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitDisplayAdapter.MyViewHolder> {
@@ -107,7 +110,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         this.activity = activity;
         this.orderVisitDetailsModelsArr = orderDetailsResponseModels;
         layoutInflater = LayoutInflater.from(activity);
-        current_date = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(new Date());
+        current_date = DateUtil.getDateFromLong(System.currentTimeMillis(),"dd-MM-yyyy");
         appPreferenceManager = new AppPreferenceManager(activity);
         gpsTracker = new GPSTracker(activity);
         this.homeScreenActivity = homeScreenActivity;
@@ -217,21 +220,17 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             public void onClick(View view) {
 
                 if (pos == 0) {
-                    if (!orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED") && !orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")) {
-                        String appointmentDate = orderVisitDetailsModelsArr.get(pos).getAppointmentDate();
-                        Date ApptTime = DateUtil.dateFromString(appointmentDate + " "+ orderVisitDetailsModelsArr.get(pos).getSlot(),"dd-MM-yyyy hh:mm a");
-                        Date CurrentTime = new Date();
-                        long difference = ApptTime.getTime() - CurrentTime.getTime();
-                        int days = (int) (difference / (1000*60*60*24));
-                        int hours = (int) ((difference - (1000*60*60*24*days)) / (1000*60*60));
-                        if (hours < 3){
-                            onStartClicked(pos,holder);
-                        }else{
-                            globalClass.showalert_OK("You Cannot start order before 3 hours of Appointment Time.", activity);
-                        }
-
-                    } else {
-                        Toast.makeText(activity, "Please accept the order first", Toast.LENGTH_SHORT).show();
+                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPPE()){
+                        final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+                        builder1.setMessage(ConstantsMessages.EnsureToWearPPE).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                PerformStartFunction(pos, holder);
+                            }
+                        });
+                        builder1.show();
+                    }else{
+                        PerformStartFunction(pos, holder);
                     }
                 } else {
                     Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
@@ -265,6 +264,25 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                         }).show();
             }
         });
+    }
+
+    private void PerformStartFunction(int pos, MyViewHolder holder) {
+        if (!orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED") && !orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")) {
+            String appointmentDate = orderVisitDetailsModelsArr.get(pos).getAppointmentDate();
+            Date ApptTime = DateUtil.dateFromString(appointmentDate + " "+ orderVisitDetailsModelsArr.get(pos).getSlot(),"dd-MM-yyyy hh:mm a");
+            Date CurrentTime = new Date();
+            long difference = ApptTime.getTime() - CurrentTime.getTime();
+            int days = (int) (difference / (1000*60*60*24));
+            int hours = (int) ((difference - (1000*60*60*24*days)) / (1000*60*60));
+            if (hours < 3){
+                onStartClicked(pos,holder);
+            }else{
+                globalClass.showalert_OK("You Cannot start order before 3 hours of Appointment Time.", activity);
+            }
+
+        } else {
+            Toast.makeText(activity, "Please accept the order first", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void DisplayDayWiselayoutColor(int pos , MyViewHolder holder) {
@@ -618,8 +636,32 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     }
 
     private void onAcceptButtonClicked(final MyViewHolder holder, final int pos) {
+
+        if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPPE()){
+            final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+            String msg = !InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getPPE_AlertMsg()) ? orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getPPE_AlertMsg() : ConstantsMessages.CustomerOptedForPPE;
+            builder1.setMessage(msg).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ShowAcceptAlert(holder, pos);
+                }
+            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder1.show();
+        }else{
+            ShowAcceptAlert(holder, pos);
+        }
+
+
+    }
+
+    private void ShowAcceptAlert(final MyViewHolder holder, final int pos) {
         final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
-        builder1.setMessage("Do you want to accept order?").setNeutralButton("Accept", new DialogInterface.OnClickListener() {
+        builder1.setMessage("Do you want to accept order?").setPositiveButton("Accept", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //neha g ---------------------
@@ -643,7 +685,6 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             }
         });
         builder1.show();
-
     }
 
     private void onReleaseButtonClicked(final int pos, MyViewHolder holder) {
@@ -851,13 +892,18 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                         }
                     }
                 } else {
-                    Toast.makeText(activity, response.body(), Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalClass.hideProgressDialog();
-                MessageLogger.LogDebug("Errror", t.getMessage());
+                Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
 

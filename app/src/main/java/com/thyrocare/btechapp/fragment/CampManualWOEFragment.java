@@ -458,8 +458,8 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             edt_age.setError("Enter Age");
             edt_age.requestFocus();
             return false;
-        } else if (Integer.parseInt(edt_age.getText().toString()) > 135 || Integer.parseInt(edt_age.getText().toString()) < 1) {
-            edt_age.setError("Age Should be minimum 1 year and maximum 135 year");
+        } else if (Integer.parseInt(edt_age.getText().toString()) > 120 || Integer.parseInt(edt_age.getText().toString()) < 1) {
+            edt_age.setError("Age Should be minimum 1 year and maximum 120 years");
             edt_age.requestFocus();
             return false;
         } else if (!isGenderSelected) {

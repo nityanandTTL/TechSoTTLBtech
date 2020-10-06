@@ -60,6 +60,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
     private String OrderMode;
     private int CHC;
     private boolean displayProduct;
+    private boolean IsPPE;
+    private String PPE_AlertMsg;
 
 
     protected OrderDetailsModel(Parcel in) {
@@ -112,6 +114,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         OrderMode = in.readString();
         CHC = in.readInt();
         displayProduct = in.readByte() != 0;
+        IsPPE = in.readByte() != 0;
+        PPE_AlertMsg = in.readString();
     }
 
     @Override
@@ -165,6 +169,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         dest.writeString(OrderMode);
         dest.writeInt(CHC);
         dest.writeByte((byte) (displayProduct ? 1 : 0));
+        dest.writeByte((byte) (IsPPE ? 1 : 0));
+        dest.writeString(PPE_AlertMsg);
     }
 
     @Override
@@ -572,6 +578,22 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
 
     public void setDisplayProduct(boolean displayProduct) {
         this.displayProduct = displayProduct;
+    }
+
+    public boolean isPPE() {
+        return IsPPE;
+    }
+
+    public void setPPE(boolean PPE) {
+        IsPPE = PPE;
+    }
+
+    public String getPPE_AlertMsg() {
+        return PPE_AlertMsg;
+    }
+
+    public void setPPE_AlertMsg(String PPE_AlertMsg) {
+        this.PPE_AlertMsg = PPE_AlertMsg;
     }
 
     @Override

@@ -606,8 +606,8 @@ public class NewEntryCampWoeFragment extends Fragment {
                 .setDirectory("BtechApp/CampVailsPhotos")
 //                .setName(orderVisitDetailsModel.getVisitId() + "_" + System.currentTimeMillis())
                 .setImageFormat(Camera.IMAGE_JPEG)
-                .setCompression(80)
-                .setImageHeight(1000)// it will try to achieve this height as close as possible maintaining the aspect ratio;
+                .setCompression(60)
+                .setImageHeight(480)// it will try to achieve this height as close as possible maintaining the aspect ratio;
                 .build(this);
         try {
             camera.takePicture();

@@ -728,8 +728,12 @@ public class HomeScreenFragment extends AbstractFragment {
                 }
             }
         });
-        cudd.show();
-        cudd.setCancelable(false);
+        if (!activity.isFinishing()){
+            cudd.setCancelable(false);
+            cudd.show();
+        }
+
+
     }
 
     @Override

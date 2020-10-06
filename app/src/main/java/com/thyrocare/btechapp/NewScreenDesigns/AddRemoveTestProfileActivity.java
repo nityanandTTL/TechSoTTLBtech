@@ -355,11 +355,17 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
     private void InitTestListView(BrandTestMasterModel result,String Category) {
 
-        final ArrayList<TestRateMasterModel> allEvents = result.getTstratemaster();
+        ArrayList<TestRateMasterModel> allEvents = new ArrayList<>();
+        if (result != null && result.getTstratemaster() != null){
+            allEvents = result.getTstratemaster();
+        }
+
         ArrayList<String> testTypesArr = new ArrayList<String>();
         try {
-            for (int i = 0; i < allEvents.size(); i++) {
-                testTypesArr.add(allEvents.get(i).getTestType());
+            if (allEvents != null){
+                for (int i = 0; i < allEvents.size(); i++) {
+                    testTypesArr.add(allEvents.get(i).getTestType());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

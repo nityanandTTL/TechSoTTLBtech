@@ -404,7 +404,13 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
                         Intent intent = new Intent(Intent.ACTION_VIEW,
                                 //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
                                 Uri.parse("google.navigation:q=" + destlat + "," + destlong));
-                        startActivity(intent);
+                        try {
+                            if (intent.resolveActivity(getPackageManager()) != null) {
+                                startActivity(intent);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }else{
                     global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);

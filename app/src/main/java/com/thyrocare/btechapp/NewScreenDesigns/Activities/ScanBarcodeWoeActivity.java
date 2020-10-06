@@ -33,6 +33,7 @@ import com.google.zxing.integration.android.IntentResult;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.mindorks.paracamera.Camera;
+import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.ScanBarcodeViewPagerAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -370,9 +371,13 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                BenIDToScan = BenID;
                BarcodepositionToScan = barcodePosition;
                BenPositionForScan = BenPosition;
-               OpenScanBarcodeScreen();
-//               EnterBarocodeManually();
-//               OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
+               if (BuildConfig.DEBUG){
+                   OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
+//                   EnterBarocodeManually();
+//                   OpenScanBarcodeScreen();
+               }else{
+                   OpenScanBarcodeScreen();
+               }
            }
 
            @Override
@@ -528,8 +533,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 .setDirectory("BtechApp/BenBarcodePics")
                 .setName(orderVisitDetailsModel.getVisitId() + "_" + System.currentTimeMillis())
                 .setImageFormat(Camera.IMAGE_JPEG)
-                .setCompression(80)
-                .setImageHeight(1000)// it will try to achieve this height as close as possible maintaining the aspect ratio;
+                .setCompression(40)
+                .setImageHeight(480)// it will try to achieve this height as close as possible maintaining the aspect ratio;
                 .build(this);
         try {
             camera.takePicture();

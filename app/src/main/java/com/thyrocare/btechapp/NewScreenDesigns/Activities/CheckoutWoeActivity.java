@@ -34,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.CheckoutWoeAdapter;
@@ -81,6 +82,7 @@ import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
@@ -95,6 +97,7 @@ import retrofit2.Response;
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PLEASE_WAIT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 
 
@@ -140,6 +143,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         appPreferenceManager = new AppPreferenceManager(mActivity);
         orderVisitDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
         beneficaryWiseArylst = getIntent().getExtras().getParcelableArrayList(BundleConstants.BENEFICIARY_DETAILS_MODEL);
+        TrimTheNameOfCustomers();
 
         insertBase64BarcodeImageInMainModel();
 
@@ -147,6 +151,22 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         initData();
         initListener();
         initToolBar();
+    }
+
+    private void TrimTheNameOfCustomers() {
+        if (orderVisitDetailsModel != null &&  orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0 && orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster() != null){
+            for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
+                String strname =  !InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getName()) ? orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getName().trim() : "" ;
+                orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).setName(strname);
+            }
+        }
+
+        if (beneficaryWiseArylst != null && beneficaryWiseArylst.size() > 0){
+            for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                String strname =  !InputUtils.isNull(beneficaryWiseArylst.get(i).getName()) ? beneficaryWiseArylst.get(i).getName().trim() : "" ;
+                beneficaryWiseArylst.get(i).setName(strname);
+            }
+        }
     }
 
     private void insertBase64BarcodeImageInMainModel() {
@@ -347,6 +367,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
 
         //SET BENEFICIARY Details Models Array - START
+
         ArrayList<BeneficiaryDetailsModel> benArr = orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster();
 
 
@@ -409,6 +430,8 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     public void CallOrderBookingApi(OrderBookingRequestModel orderBookingRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+       String postrequest  = new Gson().toJson(orderBookingRequestModel);
+        System.out.println(postrequest);
         Call<OrderBookingResponseVisitModel> responseCall = apiInterface.CallOrderBookingApi(orderBookingRequestModel);
         globalclass.showProgressDialog(mActivity,mActivity.getResources().getString(R.string.progress_message_uploading_order_details_please_wait),false);
         responseCall.enqueue(new Callback<OrderBookingResponseVisitModel>() {
@@ -511,8 +534,18 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                     dialog.dismiss();
                                 }
                             }).show();
+
                 }else{
-                    globalclass.showCustomToast(mActivity, ConstantsMessages.SOMETHING_WENT_WRONG,Toast.LENGTH_LONG);
+                    try {
+                        if (response.errorBody() != null){
+                            JSONObject jObjError = new JSONObject(response.errorBody().string());
+                            globalclass.showCustomToast( mActivity, jObjError.optString("Message",SOMETHING_WENT_WRONG));
+                        }else{
+                            globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG);
+                        }
+                    } catch (Exception e) {
+                        globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG);
+                    }
                 }
 
             }
@@ -674,7 +707,17 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                     }
 
                 }else{
-                    Toast.makeText(mActivity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                    try {
+                        if (res.errorBody() != null){
+                            JSONObject jObjError = new JSONObject(res.errorBody().string());
+                            globalclass.showCustomToast( mActivity, jObjError.optString("Message",SOMETHING_WENT_WRONG));
+                        }else{
+                            globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG);
+                        }
+                    } catch (Exception e) {
+                        globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG);
+                    }
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                     builder.setTitle("Order Status")
                             .setMessage("Work Order Entry Failed!")

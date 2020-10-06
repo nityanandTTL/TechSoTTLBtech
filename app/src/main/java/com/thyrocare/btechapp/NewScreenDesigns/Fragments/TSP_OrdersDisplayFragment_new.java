@@ -8,11 +8,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -54,6 +56,7 @@ import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.btechapp.models.api.request.SetDispositionDataModel;
 import com.thyrocare.btechapp.models.api.response.BtechImageResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
+import com.thyrocare.btechapp.models.api.response.LoginResponseModel;
 import com.thyrocare.btechapp.models.api.response.VideosResponseModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.DispositionDataModel;
@@ -63,12 +66,12 @@ import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 
 
-
 import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
+import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -141,7 +144,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activity =(HomeScreenActivity) getActivity();
+        activity = (HomeScreenActivity) getActivity();
         global = new Global(activity);
         connectionDetector = new ConnectionDetector(activity);
         orderDetailsResponseModels = new ArrayList<>();
@@ -154,7 +157,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.fragment_tsp__orders_display_new, container, false);
+        View v = inflater.inflate(R.layout.fragment_tsp__orders_display_new, container, false);
         initUI(v);
         initListeners();
 
@@ -187,7 +190,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
         try {
             GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID());
-            global.showProgressDialog(activity,  activity.getResources().getString(R.string.fetchingOrders), false);
+            global.showProgressDialog(activity, activity.getResources().getString(R.string.fetchingOrders), false);
             fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
                 @Override
                 public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
@@ -221,7 +224,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
                                     }
                                 }
                                 orderDetailsResponseModels.add(orderVisitDetailsModel);
-                                MessageLogger.LogError(TAG_FRAGMENT, "onResponse: "+orderDetailsResponseModels.size());
+                                MessageLogger.LogError(TAG_FRAGMENT, "onResponse: " + orderDetailsResponseModels.size());
                             }
                         }
                     }
@@ -287,11 +290,11 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
             recyOrderList.setVisibility(View.VISIBLE);
             txtNoRecord.setVisibility(View.GONE);
 
-            if (tsp_orderDisplayAdapter_new != null){
+            if (tsp_orderDisplayAdapter_new != null) {
                 tsp_orderDisplayAdapter_new.UpdateList(orderDetailsResponseModels);
                 tsp_orderDisplayAdapter_new.notifyDataSetChanged();
-            }else{
-                tsp_orderDisplayAdapter_new = new TSP_OrderDisplayAdapterNew(activity,activity, orderDetailsResponseModels);
+            } else {
+                tsp_orderDisplayAdapter_new = new TSP_OrderDisplayAdapterNew(activity, activity, orderDetailsResponseModels);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
                 recyOrderList.setLayoutManager(mLayoutManager);
                 recyOrderList.setAdapter(tsp_orderDisplayAdapter_new);
@@ -299,7 +302,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
 
             tsp_orderDisplayAdapter_new.setOnItemClickListener(new TSP_OrderDisplayAdapterNew.OnClickListeners() {
                 @Override
-                public void onAcceptClicked( OrderVisitDetailsModel orderVisitDetailsModel) {
+                public void onAcceptClicked(OrderVisitDetailsModel orderVisitDetailsModel) {
                     onOrderAccepted(orderVisitDetailsModel);
                 }
 
@@ -311,6 +314,14 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    /*if (orderVisitDetailsModels != null && orderVisitDetailsModels.getAllOrderdetails() != null && orderVisitDetailsModels.getAllOrderdetails().size() > 0) {
+                        String strnumber = !InputUtils.isNull(orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile()) ? orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile() : "";
+                        CallCustomerDirectly(strnumber);
+                    } else {
+                        global.showCustomToast(activity, "Mobile number no found");
+                    }*/
+
 
                     if (connectionDetector.isConnectingToInternet()) {
                         CallPatchRequestAPI(orderVisitDetailsModels);
@@ -336,6 +347,32 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
         }
     }
 
+    private void CallCustomerDirectly(final String strnumber) {
+        TedPermission.with(activity)
+                .setPermissions(Manifest.permission.CALL_PHONE)
+                .setRationaleMessage("We need permission to make call from your device.")
+                .setRationaleConfirmText("OK")
+                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission > Telephone")
+                .setPermissionListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted() {
+                        if (!InputUtils.isNull(strnumber)) {
+                            Intent intent = new Intent(Intent.ACTION_CALL);
+                            intent.setData(Uri.parse("tel:" + strnumber));
+                            activity.startActivity(intent);
+                        } else {
+                            global.showCustomToast(activity, "Invalid mobile number");
+                        }
+
+                    }
+
+                    @Override
+                    public void onPermissionDenied(List<String> deniedPermissions) {
+                        Toast.makeText(activity, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }).check();
+    }
+
     private void onOrderAccepted(OrderVisitDetailsModel orderVisitDetailsModel) {
         OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
         orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId() + "");
@@ -351,8 +388,8 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
     private void CallOrderStatusChangeAPIAfterAcceptButtonClicked(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel,orderStatusChangeRequestModel.getId());
-        global.showProgressDialog(activity,activity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
+        Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
+        global.showProgressDialog(activity, activity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -363,20 +400,27 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
                     TastyToast.makeText(activity, "Order Accepted Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     fetchData();
                 } else {
-                    Toast.makeText(activity, response.body(), Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog();
-                MessageLogger.LogDebug("Error", t.getMessage());
+                Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void CallPatchRequestAPI(OrderVisitDetailsModel orderVisitDetailsModels){
+    private void CallPatchRequestAPI(OrderVisitDetailsModel orderVisitDetailsModels) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallpatchRequestAPI(appPreferenceManager.getLoginResponseModel().getUserID(),orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile(),orderVisitDetailsModels.getVisitId());
+        LoginResponseModel model = appPreferenceManager.getLoginResponseModel();
+        Call<String> responseCall = apiInterface.CallpatchRequestAPI(model.getUserID(), orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile(), orderVisitDetailsModels.getVisitId());
         global.showProgressDialog(activity, activity.getResources().getString(R.string.loading));
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -449,6 +493,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
                     global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
+
             @Override
             public void onFailure(Call<DispositionDataModel> call, Throwable t) {
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
@@ -817,14 +862,19 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
                     TastyToast.makeText(activity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     fetchData();
                 } else {
-                    Toast.makeText(activity, response.body(), Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog();
-                MessageLogger.LogDebug("Errror", t.getMessage());
+                Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
     }

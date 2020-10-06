@@ -325,9 +325,9 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
 
 
     private void CallgetTspModeDataApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<Tsp_SendMode_DataModel>> responseCall = apiInterface.CallgetTspModeDataApi();
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<ArrayList<Tsp_SendMode_DataModel>>() {
             @Override
             public void onResponse(Call<ArrayList<Tsp_SendMode_DataModel>> call, retrofit2.Response<ArrayList<Tsp_SendMode_DataModel>> response) {
@@ -370,13 +370,13 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
                         }
                     });
                 } else {
-                    global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+                    global.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
             @Override
             public void onFailure(Call<ArrayList<Tsp_SendMode_DataModel>> call, Throwable t) {
                 global.hideProgressDialog();
-                global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+                global.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
     }
@@ -396,9 +396,9 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
 
 
     private void CallgetTspScanBarcodeApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<Tsp_ScanBarcodeResponseModel> responseCall = apiInterface.CallgetTspScanBarcodeApi(appPreferenceManager.getBtechID());
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<Tsp_ScanBarcodeResponseModel>() {
             @Override
             public void onResponse(Call<Tsp_ScanBarcodeResponseModel> call, retrofit2.Response<Tsp_ScanBarcodeResponseModel> response) {
@@ -426,13 +426,13 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
                         alertDialog.show();
                     }
                 } else {
-                    global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+                    global.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
             @Override
             public void onFailure(Call<Tsp_ScanBarcodeResponseModel> call, Throwable t) {
                 global.hideProgressDialog();
-                global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+                global.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
     }

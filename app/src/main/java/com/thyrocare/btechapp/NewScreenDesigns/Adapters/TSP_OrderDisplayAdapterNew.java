@@ -40,6 +40,7 @@ import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import org.joda.time.DateTimeComparator;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDisplayAdapterNew.MyViewHolder> {
@@ -222,7 +224,11 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
             e.printStackTrace();
         }
         if (displayBencount){
-            holder.txtBeneficiary.setText(""+Bencount);
+            if (Bencount == 1) {
+                holder.txtBeneficiary.setText("" + Bencount + " Beneficiary");
+            } else {
+                holder.txtBeneficiary.setText("" + Bencount + " Beneficiaries");
+            }
         }else{
             holder.lin_bencount.setVisibility(View.GONE);
         }
@@ -730,13 +736,18 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                         }
                     }
                 } else {
-                    Toast.makeText(activity, response.body(), Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalClass.hideProgressDialog();
-                MessageLogger.LogDebug("Errror", t.getMessage());
+                Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
 

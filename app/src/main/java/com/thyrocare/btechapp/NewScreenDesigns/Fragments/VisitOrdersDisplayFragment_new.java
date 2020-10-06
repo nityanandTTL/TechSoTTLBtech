@@ -141,7 +141,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     private ConfirmOrderReleaseDialog cdd;
     private ConfirmRequestReleaseDialog crr;
     private ConfirmOrderPassDialog Cop;
-    private boolean isToFromMap = false;
+
     private String kits;
     private String[] kits_arr;
     private RescheduleOrderDialog rod;
@@ -165,6 +165,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     private ConnectionDetector connectionDetector;
     private GPSTracker gpsTracker;
     private Intent FirebaselocationUpdateIntent;
+    private boolean isphonecallstarted = false;
 
     public VisitOrdersDisplayFragment_new() {
         // Required empty public constructor
@@ -310,9 +311,12 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     @Override
     public void onResume() {
         super.onResume();
-        fetchData();
-        isToFromMap = false;
         gpsTracker = new GPSTracker(activity);
+        if (isphonecallstarted){
+            isphonecallstarted = false;
+        }else{
+            fetchData();
+        }
     }
 
     private void fetchData() {
@@ -591,6 +595,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                                     @Override
                                     public void onPermissionGranted() {
                                         if (!StringUtils.isNull(MaskedPhoneNumber)){
+                                            isphonecallstarted = true;
                                             Intent intent = new Intent(Intent.ACTION_CALL);
                                             intent.setData(Uri.parse("tel:" + MaskedPhoneNumber.replace("\"","")));
                                             activity.startActivity(intent);
@@ -899,14 +904,19 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                 if (response.code() == 200 || response.code() == 204) {
                     onOrderStatusChangedResponseReceived(orderVisitDetailsModel);
                 } else {
-                    Toast.makeText(activity, response.body(), Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog();
-                MessageLogger.LogDebug("Errror", t.getMessage());
+                Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -946,7 +956,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                         Uri.parse("google.navigation:q=" + orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude() + "," + orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude()));
                 startActivity(intent);
             }
-            isToFromMap = true;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -998,7 +1008,12 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                     TastyToast.makeText(activity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     fetchData();
                 } else {
-                    Toast.makeText(activity, response.body(), Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
             @Override
@@ -1025,14 +1040,19 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                     TastyToast.makeText(activity, "Order Accepted Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     fetchData();
                 } else {
-                    Toast.makeText(activity, response.body(), Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog();
-                MessageLogger.LogDebug("Error", t.getMessage());
+                Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
 

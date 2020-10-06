@@ -123,4 +123,6 @@ public class ConstantsMessages {
     public static String ENterBodyTemperature = "Please Enter Body Temperature in Fahrenheit (°F)";
     public static String BodyTempLimit = "Body Temperature should between 80°F to 150°F Fahrenheit";
     public static String SelecAarogyaSetuAppIsInstalled = "Please tell us if you have Aarogya Setu App installed in your device.";
+    public static String CustomerOptedForPPE = "This customer has opted for collection with PPE. Ensure to have PPE with you then only accept the order";
+    public static String EnsureToWearPPE = "Ensure to wear PPE before serving this patient";
 }

@@ -260,11 +260,11 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             } else if (appPreferenceManager.getLoginResponseModel().getRole().equals(Constants.LME_ROLE_ID)) {
 
-                globalclass.showCustomToast(mActivity,SUCCESS_LOGIN,Toast.LENGTH_LONG);
-                notificationMapping();
+                globalclass.showCustomToast(mActivity,"Your are not authorized to use this App.\nUser type found : LME",Toast.LENGTH_LONG);
+                /*notificationMapping();
                 Intent mIntent = new Intent(mActivity, SplashActivity.class);
                 startActivity(mIntent);
-                finish();
+                finish();*/
             } else {
                 globalclass.showCustomToast(mActivity,VALID_BTECH_CREDENTIAL_ALERT,Toast.LENGTH_LONG);
             }

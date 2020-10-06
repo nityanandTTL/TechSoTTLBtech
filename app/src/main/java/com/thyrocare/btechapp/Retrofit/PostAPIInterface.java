@@ -10,12 +10,14 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampWisePati
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampWoeMISReuestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.FeedbackModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetAccessTokenForOTPRequestModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetBtechCertificateRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetSSLKeyRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SubmitCampWoeRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampModuleMISResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampPatientSearchDetailResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampWisePatientDetailResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampWoeResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetBtechCertifcateResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.LeaveIntimation_SubmitModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.LogoutRequestModel;
@@ -232,7 +234,7 @@ public interface PostAPIInterface {
     @POST("COMMON.svc/SSLKey")
     Call<GetSSLKeyResponseModel> CallGetSSLAPI(@Body GetSSLKeyRequestModel model);
 
-    @POST("/Account/ResetPassword")
+    @POST("api/Account/ResetPassword")
     Call<String> CallResetPasswordAPI(@Body ResetPasswordRequestModel model);
 
     @POST("api/ScanPickup")
@@ -294,5 +296,8 @@ public interface PostAPIInterface {
                                                  @Part("uniqueID") RequestBody uniqueID,
                                                  @Part("woepatientID") RequestBody woepatientID,
                                                  @Part("campID") RequestBody campID);
+
+    @POST("api/OrderAllocation/AdditionalTechnicianDTL")
+    Call<GetBtechCertifcateResponseModel> CallGetBtechCertificatesAPI (@Body GetBtechCertificateRequestModel btechCertificateRequestModel);
 
 }
