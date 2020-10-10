@@ -452,7 +452,7 @@ public class HomeScreenFragment extends AbstractFragment {
         txtUserName.setText(appPreferenceManager.getLoginResponseModel().getUserName());
         if (appPreferenceManager.getSelfieResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
 
-            globalclass.DisplayImagewithoutDefaultImage(activity,appPreferenceManager.getSelfieResponseModel().getPic(),rvSelfie);
+            globalclass.DisplayDeviceImages(activity,appPreferenceManager.getSelfieResponseModel().getPic(),rvSelfie);
 //            rvSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
 
         }

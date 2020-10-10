@@ -29,6 +29,8 @@ import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.R;
 
@@ -437,29 +439,72 @@ public class Global {
 
     public void DisplayImagewithoutDefaultImage(Activity activity, String Url, ImageView imageView) {
 
-        Glide.get(activity).clearMemory();
-        Glide.with(activity).load(Url)
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(imageView);
+        try {
+            if (!InputUtils.isNull(Url)){
+                GlideUrl glideUrl = new GlideUrl(Url, new LazyHeaders.Builder()
+                        .addHeader(Constants.HEADER_USER_AGENT, getHeaderValue(activity))
+                        .build());
+
+                Glide.with(activity)
+                        .asBitmap()
+                        .load(glideUrl)
+    //                .diskCacheStrategy(DiskCacheStrategy.NONE)
+    //                .skipMemoryCache(true)
+                        .into(imageView);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void DisplayDeviceImages(Activity activity, String Url, ImageView imageView) {
+
+        try {
+            Glide.with(activity)
+                    .load(Url.replace("\\","/"))
+                    .placeholder(R.drawable.app_logo)
+                    .error(R.drawable.app_logo)
+                    .into(imageView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
     public void DisplayImagewithDefaultImage(Activity activity, String Url, ImageView imageView) {
 
-        Glide.get(activity).clearMemory();
-        Glide.with(activity).load(Url)
-                .asBitmap()
-                .placeholder(R.drawable.app_logo).dontAnimate()
-                .error(R.drawable.app_logo)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .into(imageView);
+        try {
+            if (!InputUtils.isNull(Url)){
+                GlideUrl glideUrl = new GlideUrl(Url, new LazyHeaders.Builder()
+                        .addHeader(Constants.HEADER_USER_AGENT, getHeaderValue(activity))
+                        .build());
+
+                Glide.with(activity)
+                        .asBitmap()
+                        .load(glideUrl)
+                        .placeholder(R.drawable.app_logo).dontAnimate()
+                        .error(R.drawable.app_logo)
+    //                .diskCacheStrategy(DiskCacheStrategy.NONE)
+    //                .skipMemoryCache(true)
+                        .into(imageView);
+            }else{
+                Glide.with(activity)
+                        .asBitmap()
+                        .load("")
+                        .placeholder(R.drawable.app_logo).dontAnimate()
+                        .error(R.drawable.app_logo)
+    //                .diskCacheStrategy(DiskCacheStrategy.NONE)
+    //                .skipMemoryCache(true)
+                        .into(imageView);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 
-    public  void OpenImageDialog(String imgUrl, Activity mActivity) {
+    public  void OpenImageDialog(String imgUrl, Activity mActivity,boolean isFromURL) {
 
         try {
             final Dialog openDialog = new Dialog(mActivity);
@@ -478,11 +523,13 @@ public class Global {
             });
 
             ImageView imageview = (ImageView) openDialog.findViewById(R.id.imageview);
-            Glide.with(mActivity)
-                    .load(imgUrl.replace("\\","/"))
-                    .placeholder(R.drawable.app_logo)
-                    .error(R.drawable.app_logo)
-                    .into(imageview);
+            if (isFromURL){
+                DisplayImagewithDefaultImage(mActivity,imgUrl.replace("\\","/"),imageview);
+            }else{
+
+                DisplayDeviceImages(mActivity,imgUrl.replace("\\","/"),imageview);
+            }
+
 
             openDialog.show();
         } catch (Exception e) {
@@ -510,9 +557,10 @@ public class Global {
 
             ImageView imageview = (ImageView) openDialog.findViewById(R.id.imageview);
             byte[] imageByteArray = Base64.decode(base64Image, Base64.DEFAULT);
+
             Glide.with(mActivity)
-                    .load(imageByteArray)
                     .asBitmap()
+                    .load(imageByteArray)
                     .placeholder(R.drawable.app_logo).dontAnimate()
                     .error(R.drawable.app_logo)
                     .into(imageview);
@@ -527,21 +575,25 @@ public class Global {
 
     public static String getHeaderValue(Context pContext) {
         String header;
-        header = "Btech app/" + getCurrentAppVersionName(pContext) + "(" + getCurrentVersionCode(pContext) + ")/" + getSerialnum(pContext) +getUserCode(pContext);
+        header = "BtechApp/"  +getUserCode(pContext)+ getCurrentAppVersionName(pContext) + "(" + getCurrentVersionCode(pContext) + ")/" + getSerialnum(pContext);
         return header;
     }
 
 
     public static String getUserCode(Context pContext) {
+        String user = "";
         String usercode = "";
+        String userEmail = "";
         try {
             AppPreferenceManager appPreferenceManager = new AppPreferenceManager(pContext);
-            usercode = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()) ? " /"+appPreferenceManager.getLoginResponseModel().getUserID() : "" ;
+            usercode = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()) ? appPreferenceManager.getLoginResponseModel().getUserID()+"/" : "" ;
+            userEmail = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getEmailId()) ? appPreferenceManager.getLoginResponseModel().getEmailId()+"/" : "" ;
+            user = usercode+userEmail;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return usercode;
+        return user;
     }
 
     public static int getCurrentVersionCode(Context pContext) {

@@ -408,11 +408,8 @@ public class EnteredCampWoeFragment extends Fragment {
                 }
             });
 
-            Glide.with(mActivity)
-                    .load(VialPhotoFile.getAbsolutePath())
-                    .placeholder(R.drawable.app_logo).dontAnimate()
-                    .error(R.drawable.app_logo)
-                    .into(imageview);
+            globalclass.DisplayDeviceImages(mActivity,VialPhotoFile.getAbsolutePath(),imageview);
+
 
             if (!mActivity.isFinishing() && openDialog != null ){
                 openDialog.show();

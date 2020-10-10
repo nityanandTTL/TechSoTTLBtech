@@ -899,6 +899,7 @@ public class PaymentsActivity extends AbstractActivity {
                         }
                     });
                     WebSettings settings = wvQRDisplay.getSettings();
+                    settings.setUserAgentString(Global.getHeaderValue(activity));
                     settings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
                     wvQRDisplay.setVerticalScrollBarEnabled(false);
                     wvQRDisplay.setHorizontalScrollBarEnabled(false);

@@ -223,7 +223,7 @@ public class HomeScreenActivity extends AbstractActivity
 
         if (appPreferenceManager.getSelfieResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
 
-            globalclass.DisplayImagewithoutDefaultImage(activity,appPreferenceManager.getSelfieResponseModel().getPic(),rivSelfie);
+            globalclass.DisplayDeviceImages(activity,appPreferenceManager.getSelfieResponseModel().getPic(),rivSelfie);
 //            rivSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
 
         }

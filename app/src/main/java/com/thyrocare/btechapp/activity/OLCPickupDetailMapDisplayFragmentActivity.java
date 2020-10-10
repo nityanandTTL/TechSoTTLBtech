@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
@@ -432,7 +433,7 @@ public class OLCPickupDetailMapDisplayFragmentActivity extends FragmentActivity 
 
             // Creating an http connection to communicate with url
             urlConnection = (HttpURLConnection) url.openConnection();
-
+            urlConnection.setRequestProperty(Constants.HEADER_USER_AGENT, Global.getHeaderValue(activity));
             // Connecting to url
             urlConnection.connect();
 

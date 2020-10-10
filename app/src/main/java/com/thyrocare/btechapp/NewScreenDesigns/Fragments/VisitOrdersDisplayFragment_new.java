@@ -208,6 +208,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         setListener();
 //        fetchData();
         getBtechEstEarnings();
+        fetchData();
         return rootView;
     }
 
@@ -315,7 +316,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         if (isphonecallstarted){
             isphonecallstarted = false;
         }else{
-            fetchData();
+//            fetchData();
         }
     }
 

@@ -289,7 +289,7 @@ public class NewEntryCampWoeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isVialPhotoCaptured){
-                    globalclass.OpenImageDialog(VialPhotoFile.getAbsolutePath(),mActivity);
+                    globalclass.OpenImageDialog(VialPhotoFile.getAbsolutePath(),mActivity,false);
                 }else{
                     AskPermissionAndOpenCamera();
                 }

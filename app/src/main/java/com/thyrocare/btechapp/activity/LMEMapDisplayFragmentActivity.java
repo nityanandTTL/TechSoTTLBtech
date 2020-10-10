@@ -48,6 +48,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.TSPLMESampleDropController;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
@@ -643,7 +644,7 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
 
             // Creating an http connection to communicate with url
             urlConnection = (HttpURLConnection) url.openConnection();
-
+            urlConnection.setRequestProperty(Constants.HEADER_USER_AGENT, Global.getHeaderValue(activity));
             // Connecting to url
             urlConnection.connect();
 

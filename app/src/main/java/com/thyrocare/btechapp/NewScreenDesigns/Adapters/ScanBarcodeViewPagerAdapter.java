@@ -151,7 +151,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 if (txt_captureBenBarcodePic.getText().toString().equalsIgnoreCase("View Image")) {
-                    globalclass.OpenImageDialog(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(), mActivity);
+                    globalclass.OpenImageDialog(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(), mActivity,false);
                 } else if (txt_captureBenBarcodePic.getText().toString().equalsIgnoreCase("Upload Image")) {
                     if (onClickListeners != null) {
                         onClickListeners.onVenupunturePhotoClicked(beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position);

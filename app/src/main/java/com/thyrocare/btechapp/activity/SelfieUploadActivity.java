@@ -43,6 +43,7 @@ import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampPatientSearchDetailResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonPOSTResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
@@ -573,7 +574,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             btn_uploadPhoto.setVisibility(View.INVISIBLE);
             btn_takePhoto.setVisibility(View.VISIBLE);
         }
-        globalClass.DisplayImagewithoutDefaultImage(activity,camera.getCameraBitmapPath(),img_user_picture);
+        globalClass.DisplayDeviceImages(activity,camera.getCameraBitmapPath(),img_user_picture);
     }
 
     private void onCaptureImageResult(Intent data) {
@@ -913,10 +914,11 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
     }
 
-    public static Bitmap getBitmapFromURL(String src) {
+    public  Bitmap getBitmapFromURL(String src) {
         try {
             URL url = new URL(src);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty(Constants.HEADER_USER_AGENT, Global.getHeaderValue(activity));
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();

@@ -113,7 +113,7 @@ public class CampWOE_MIS_Adpter extends RecyclerView.Adapter<CampWOE_MIS_Adpter.
             @Override
             public void onClick(View v) {
                 if (!StringUtils.isNull(filterArryList.get(position).getVialImage())){
-                    globalClass.OpenImageDialog(filterArryList.get(position).getVialImage(),activity);
+                    globalClass.OpenImageDialog(filterArryList.get(position).getVialImage(),activity,true);
                 }else{
                     if (onClickListeners != null){
                         onClickListeners.onUploadVialImageClicked(filterArryList.get(position));

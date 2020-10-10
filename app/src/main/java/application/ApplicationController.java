@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import androidx.multidex.MultiDex;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.thyrocare.btechapp.Controller.ClientEntryController;
 import com.thyrocare.btechapp.Controller.DeviceLogOutController;
@@ -20,6 +21,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Controllers.GetAcessTokenAndOTPAP
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.PostEmailValidationController;
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.TrackUserActivityController;
 import com.thyrocare.btechapp.dao.DbHelper;
+import com.thyrocare.btechapp.service.GlideCacheClearAsyncTask;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 
 import java.util.Stack;
@@ -68,7 +70,7 @@ public class ApplicationController extends Application {
 		Fabric.with(this, new Crashlytics());
 
 		applicationController = this;
-
+		new GlideCacheClearAsyncTask(getApplicationContext()).execute();
 		DbHelper.init(applicationController);
 		appPreferenceManager=new AppPreferenceManager(getApplicationContext());
 

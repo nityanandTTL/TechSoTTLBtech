@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
+import com.thyrocare.btechapp.utils.app.Global;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -104,7 +106,7 @@ public class FileUtils {
 			HttpURLConnection connection = (HttpURLConnection) urll
 			                               .openConnection();
 			connection.setDoInput(true);
-
+			connection.setRequestProperty(Constants.HEADER_USER_AGENT, Global.getHeaderValue(context));
 //			connection.addRequestProperty(CONSUMERID, CONSUMER_ID);
 //			connection.addRequestProperty(CONSUMERSECERET, CONSUMER_SECERET);
 //			connection.addRequestProperty(XSESSIONKEY, new AppPreferenceManager(context).getAPISessionKey());
