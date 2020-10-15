@@ -294,7 +294,10 @@ public class SplashActivity extends AppCompatActivity {
                     }
                 });
             cudd.setCancelable(false);
+            if (!mActivity.isFinishing()){
                 cudd.show();
+            }
+
 
 
         }else{

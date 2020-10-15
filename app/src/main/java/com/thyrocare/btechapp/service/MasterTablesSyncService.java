@@ -168,14 +168,18 @@ public class MasterTablesSyncService extends Service {
                             masterTableTotalToBeUploaded.set(MASTER_TABLE_BRANDS,0);
 
                             ////////////////// FOR HANDLING BRAND WISE TEST MASTER FETCH API CALL
-                            for (int i = uploadTotalCount; i < uploadTotalCount + brandMastersArr.size(); i++){
-                                masterTableUploaded.add(i,0);
-                                masterTableTotalToBeUploaded.add(i, 1);
+                            if (brandMastersArr != null && brandMastersArr.size() > 0){
+                                for (int i = uploadTotalCount; i < uploadTotalCount + brandMastersArr.size(); i++){
+                                    masterTableUploaded.add(i,0);
+                                    masterTableTotalToBeUploaded.add(i, 1);
+                                }
                             }
-                            uploadTotalCount = uploadTotalCount + brandMastersArr.size();
+
+                              int size = brandMastersArr != null ? brandMastersArr.size() : 0;
+                                uploadTotalCount = uploadTotalCount + size;
                             ///////////////// END OF FOR HANDLING BRAND WISE TEST MASTER FETCH API CALL
 
-                            if (brandMastersArr.size() > 0) {
+                            if ( brandMastersArr != null && brandMastersArr.size() > 0) {
                                 for (BrandMasterModel brandMaster : brandMastersArr) {
                                     BrandMasterDao brandMasterDao = new BrandMasterDao(dhbDao.getDb());
                                     brandMasterDao.insertOrUpdate(brandMaster);

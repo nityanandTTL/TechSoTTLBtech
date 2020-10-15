@@ -74,7 +74,7 @@ public class BtechCertificateFragment extends Fragment {
         globalclass = new Global(activity);
         cd = new ConnectionDetector(activity);
         try {
-            activity.toolbarHome.setTitle("My Certificatess");
+            activity.toolbarHome.setTitle("My Certificates");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -125,4 +125,5 @@ public class ConstantsMessages {
     public static String SelecAarogyaSetuAppIsInstalled = "Please tell us if you have Aarogya Setu App installed in your device.";
     public static String CustomerOptedForPPE = "This customer has opted for collection with PPE. Ensure to have PPE with you then only accept the order";
     public static String EnsureToWearPPE = "Ensure to wear PPE before serving this patient";
+    public static String InValidBtechID = "Unable to Identify you Identity.Please re-login and try again.";
 }

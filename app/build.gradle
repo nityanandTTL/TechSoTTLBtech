@@ -9,8 +9,8 @@ android {
         applicationId "com.thyrocare.btechapp"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 81
-        versionName "2.1.1"
+        versionCode 82
+        versionName "2.1.2"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

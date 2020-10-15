@@ -231,13 +231,16 @@ public class ScheduleYourDayFragment extends AbstractFragment {
                 startActivity(mIntent);
             }else {
                 Logger.error("ZERRO");
-                Toast.makeText(activity, "Availability Already Done", Toast.LENGTH_SHORT).show();
-                Bundle bundle = new Bundle();
-                bundle.putInt(BundleConstants.WHEREFROM, 1);
-                Intent intent = new Intent(activity, HomeScreenActivity.class);
-                // intent.putExtra("camefrom","1");
-                startActivity(intent);
-                //   switchToActivity(activity, HomeScreenActivity.class, bundle);
+
+                try {
+                    Toast.makeText(activity, "Availability Already Done", Toast.LENGTH_SHORT).show();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(BundleConstants.WHEREFROM, 1);
+                    Intent intent = new Intent(activity, HomeScreenActivity.class);
+                    activity.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } else {
         }

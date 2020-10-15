@@ -424,14 +424,11 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         }
         orderDetailsResponseModels_RoutineOrders = new ArrayList<>();
 
-        if (orderDetailsResponseModels_AayushmanOrders != null) {
-            orderDetailsResponseModels_AayushmanOrders = null;
-        }
+
+        orderDetailsResponseModels_AayushmanOrders = null;
         orderDetailsResponseModels_AayushmanOrders = new ArrayList<>();
 
-
         if (orderDetailsResponseModels.size() > 0) {
-
             for (int i = 0; i < orderDetailsResponseModels.size(); i++) {
                 for (int j = 0; j < orderDetailsResponseModels.get(i).getAllOrderdetails().size(); j++) {
                     if (!orderDetailsResponseModels.get(i).getAllOrderdetails().get(j).isEuOrders()) {

@@ -429,7 +429,12 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     if (selfieUploadResponseModel != null) {
                         Calendar c = Calendar.getInstance();
                         selfieUploadResponseModel.setTimeUploaded(c.getTimeInMillis());
-                        selfieUploadResponseModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
+                        if (appPreferenceManager.getLoginResponseModel() != null && InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())){
+                            selfieUploadResponseModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
+                        }else{
+                            selfieUploadResponseModel.setBtechId("");
+                        }
+
                         selfieUploadResponseModel.setPic(imagefile.getAbsolutePath());
                         appPreferenceManager.setSelfieResponseModel(selfieUploadResponseModel);
 //                    Toast.makeText(getApplicationContext(),+selfieUploadResponseModel.getFlag()+"",Toast.LENGTH_SHORT).show();

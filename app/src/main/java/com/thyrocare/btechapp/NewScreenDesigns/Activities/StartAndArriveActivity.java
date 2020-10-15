@@ -646,7 +646,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
 //        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.60);
         dialog_ready.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        dialog_ready.show();
+        if (!mActivity.isFinishing()){
+            dialog_ready.show();
+        }
 
         ImageView img_cnc = (ImageView) dialog_ready.findViewById(R.id.img_cnc);
         img_cnc.setVisibility(View.GONE);

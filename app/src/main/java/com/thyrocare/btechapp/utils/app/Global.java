@@ -583,12 +583,12 @@ public class Global {
     public static String getUserCode(Context pContext) {
         String user = "";
         String usercode = "";
-        String userEmail = "";
+        String userName = "";
         try {
             AppPreferenceManager appPreferenceManager = new AppPreferenceManager(pContext);
             usercode = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()) ? appPreferenceManager.getLoginResponseModel().getUserID()+"/" : "" ;
-            userEmail = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getEmailId()) ? appPreferenceManager.getLoginResponseModel().getEmailId()+"/" : "" ;
-            user = usercode+userEmail;
+            userName = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getName()) ? appPreferenceManager.getLoginResponseModel().getName()+"/" : "Default/" ;
+            user = usercode+userName;
         } catch (Exception e) {
             e.printStackTrace();
         }

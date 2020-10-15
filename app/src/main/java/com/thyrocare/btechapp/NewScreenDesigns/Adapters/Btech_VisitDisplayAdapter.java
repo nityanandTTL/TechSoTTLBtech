@@ -166,7 +166,9 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     @Override
     public void onBindViewHolder(MyViewHolder holder, int pos) {
 
-        if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0
+        if (orderVisitDetailsModelsArr !=  null && orderVisitDetailsModelsArr.size() > 0
+                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null
+                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() > 0
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0) != null) {
 
@@ -271,14 +273,19 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             String appointmentDate = orderVisitDetailsModelsArr.get(pos).getAppointmentDate();
             Date ApptTime = DateUtil.dateFromString(appointmentDate + " "+ orderVisitDetailsModelsArr.get(pos).getSlot(),"dd-MM-yyyy hh:mm a");
             Date CurrentTime = new Date();
-            long difference = ApptTime.getTime() - CurrentTime.getTime();
-            int days = (int) (difference / (1000*60*60*24));
-            int hours = (int) ((difference - (1000*60*60*24*days)) / (1000*60*60));
-            if (hours < 3){
-                onStartClicked(pos,holder);
+            if (ApptTime != null){
+                long difference = ApptTime.getTime() - CurrentTime.getTime();
+                int days = (int) (difference / (1000*60*60*24));
+                int hours = (int) ((difference - (1000*60*60*24*days)) / (1000*60*60));
+                if (hours < 3){
+                    onStartClicked(pos,holder);
+                }else{
+                    globalClass.showalert_OK("You Cannot start order before 3 hours of Appointment Time.", activity);
+                }
             }else{
-                globalClass.showalert_OK("You Cannot start order before 3 hours of Appointment Time.", activity);
+                onStartClicked(pos,holder);
             }
+
 
         } else {
             Toast.makeText(activity, "Please accept the order first", Toast.LENGTH_SHORT).show();

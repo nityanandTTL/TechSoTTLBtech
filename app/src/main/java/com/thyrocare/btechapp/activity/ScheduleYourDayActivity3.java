@@ -214,24 +214,30 @@ public class ScheduleYourDayActivity3 extends AbstractActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
-                                SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
-                                setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
-                                setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-                                String slots = "";
-                                setBtechAvailabilityAPIRequestModel.setSlots(slots);
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
-                                Calendar calendar = Calendar.getInstance();
 
-                                setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
-                                setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
-                                calendar.add(Calendar.DAY_OF_MONTH, 3);
-                                setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
+                                if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())){
+                                    SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
+                                    setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
+                                    setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                    String slots = "";
+                                    setBtechAvailabilityAPIRequestModel.setSlots(slots);
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
+                                    Calendar calendar = Calendar.getInstance();
 
-                                if (isNetworkAvailable(activity)) {
-                                    callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel);
-                                } else {
-                                    Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                    setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
+                                    setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
+                                    calendar.add(Calendar.DAY_OF_MONTH, 3);
+                                    setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
+
+                                    if (isNetworkAvailable(activity)) {
+                                        callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel);
+                                    } else {
+                                        Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                    }
+                                }else{
+                                    global.showCustomToast(activity,ConstantsMessages.InValidBtechID);
                                 }
+
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
