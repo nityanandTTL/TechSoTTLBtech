@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
@@ -18,7 +17,6 @@ import android.widget.Toast;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonPOSTResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -32,22 +30,15 @@ import retrofit2.Callback;
 
 import com.thyrocare.btechapp.dao.DhbDao;
 import com.thyrocare.btechapp.models.api.request.ChangePasswordRequestModel;
-import com.thyrocare.btechapp.models.api.request.OlcStartRequestModel;
-
 
 
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
-import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
-import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PLEASE_WAIT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
@@ -162,7 +153,7 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 if (response.isSuccessful() ) {
                     androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder;
                     alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(activity);
@@ -193,7 +184,7 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 globalclass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -207,7 +198,7 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 if (response.isSuccessful()) {
                     try {
                         new LogUserActivityTagging(activity, LOGOUT);
@@ -236,7 +227,7 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 MessageLogger.LogDebug("Errror", t.getMessage());
             }
         });

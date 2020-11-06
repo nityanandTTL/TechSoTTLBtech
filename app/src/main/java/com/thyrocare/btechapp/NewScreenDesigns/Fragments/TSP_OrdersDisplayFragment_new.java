@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -51,13 +50,10 @@ import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.thyrocare.btechapp.dialog.ConfirmRequestReleaseDialog;
-import com.thyrocare.btechapp.models.api.request.CallPatchRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.btechapp.models.api.request.SetDispositionDataModel;
-import com.thyrocare.btechapp.models.api.response.BtechImageResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginResponseModel;
-import com.thyrocare.btechapp.models.api.response.VideosResponseModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.DispositionDataModel;
 import com.thyrocare.btechapp.models.data.DispositionDetailsModel;
@@ -67,9 +63,7 @@ import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 
 
 import com.thyrocare.btechapp.network.ResponseParser;
-import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
-import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
@@ -82,7 +76,6 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -194,7 +187,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
             fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
                 @Override
                 public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(activity);
                     orderDetailsResponseModels = null;
                     orderDetailsResponseModels = new ArrayList<>();
                     FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
@@ -233,12 +226,12 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
 
                 @Override
                 public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(activity);
                     global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
-            global.hideProgressDialog();
+            global.hideProgressDialog(activity);
             e.printStackTrace();
             global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
         }
@@ -394,7 +387,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 int statusCode = response.code();
                 if (statusCode == 204 || statusCode == 200) {
                     TastyToast.makeText(activity, "Order Accepted Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
@@ -411,7 +404,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
@@ -425,7 +418,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         final String MaskedPhoneNumber = response.body();
@@ -456,7 +449,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
 
             }
         });
@@ -857,7 +850,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.code() == 200 || response.code() == 204) {
                     TastyToast.makeText(activity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     fetchData();
@@ -873,7 +866,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });

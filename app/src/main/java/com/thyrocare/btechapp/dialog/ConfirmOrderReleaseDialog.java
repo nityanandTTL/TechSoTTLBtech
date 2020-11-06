@@ -18,24 +18,18 @@ import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
-import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.RemarksRequestToReleaseResponseModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
 /**
@@ -88,7 +82,7 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
         responseCall.enqueue(new Callback<ArrayList<RemarksRequestToReleaseResponseModel>>() {
             @Override
             public void onResponse(Call<ArrayList<RemarksRequestToReleaseResponseModel>> call, retrofit2.Response<ArrayList<RemarksRequestToReleaseResponseModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     remarksResponseModelsarr = new ArrayList<>();
                     remarksResponseModelsarr = response.body();
@@ -137,7 +131,7 @@ public class ConfirmOrderReleaseDialog extends Dialog implements View.OnClickLis
             }
             @Override
             public void onFailure(Call<ArrayList<RemarksRequestToReleaseResponseModel>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

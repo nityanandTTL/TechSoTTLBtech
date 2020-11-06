@@ -43,6 +43,8 @@ public class AppPreferenceManager {
     private String ChatPassword = "ChatPassword";
     private String scheduleCounter2 = "scheduleCounter2";
     private String scheduleDate2 = "scheduleDate2";
+    private String cashingTime = "cashingTime";
+    private String CacheProduct = "CacheProduct";
 
     private String scheduleCounter = "scheduleCounter";
     private String scheduleDate = "scheduleDate";
@@ -95,6 +97,22 @@ public class AppPreferenceManager {
     public void setNEWBTECHAVALIABILITYRESPONSEMODEL(NewBtechAvaliabilityResponseModel newbtechavaliabilityresponsemodel) {
         appPreference.putString(this.NEWBTECHAVALIABILITYRESPONSEMODEL, new Gson().toJson(newbtechavaliabilityresponsemodel));
     }*/
+
+    public long getCashingTime() {
+        return appPreference.getLong(cashingTime,0);
+    }
+
+    public void setCashingTime(long cashingTime) {
+        appPreference.putLong(this.cashingTime,cashingTime);
+    }
+
+    public String getCacheProduct() {
+        return appPreference.getString(CacheProduct,"");
+    }
+
+    public void setCacheProduct(String myObject) {
+        appPreference.putString(this.CacheProduct,myObject);
+    }
 
     public int getOrderAccept() {
         return OrderAccept;

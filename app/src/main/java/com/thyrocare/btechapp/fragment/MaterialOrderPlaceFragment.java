@@ -36,7 +36,6 @@ import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.activity.PaymentsActivity;
 import com.thyrocare.btechapp.adapter.DialogMaterialListAdapter;
 import com.thyrocare.btechapp.models.api.request.MaterialorderRequestModel;
-import com.thyrocare.btechapp.models.api.response.MaterialBtechStockResponseModel;
 import com.thyrocare.btechapp.models.api.response.MaterialINVResponseModel;
 import com.thyrocare.btechapp.models.data.BTMaterialsModel;
 import com.thyrocare.btechapp.models.data.FinalMaterialModel;
@@ -44,8 +43,6 @@ import com.thyrocare.btechapp.models.data.MaterialDetailsModel;
 import com.thyrocare.btechapp.models.data.MaterialOrderDataModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -62,7 +59,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 import static android.widget.Toast.LENGTH_SHORT;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
 /**
@@ -387,7 +383,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 try {
                     if (response.isSuccessful() && response.body() != null) {
                         JSONObject jsonResponse = new JSONObject(response.body());
@@ -426,7 +422,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -440,7 +436,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<ArrayList<MaterialDetailsModel>>() {
             @Override
             public void onResponse(Call<ArrayList<MaterialDetailsModel>> call, retrofit2.Response<ArrayList<MaterialDetailsModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     materialDetailsModels = new ArrayList<>();
                     materialDetailsModels = response.body();
@@ -449,7 +445,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<ArrayList<MaterialDetailsModel>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -463,7 +459,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<MaterialINVResponseModel>() {
             @Override
             public void onResponse(Call<MaterialINVResponseModel> call, retrofit2.Response<MaterialINVResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     materialINVResponseModel = response.body();
                     fetchData();
@@ -471,7 +467,7 @@ public class MaterialOrderPlaceFragment extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<MaterialINVResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

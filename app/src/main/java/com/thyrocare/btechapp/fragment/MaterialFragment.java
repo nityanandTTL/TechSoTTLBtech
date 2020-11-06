@@ -1,7 +1,6 @@
 package com.thyrocare.btechapp.fragment;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -24,14 +23,10 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.activity.CampOrderBookingActivity;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
-import com.thyrocare.btechapp.activity.PaymentsActivity;
 import com.thyrocare.btechapp.customview.CustomOKDialog;
 import com.thyrocare.btechapp.delegate.CustomOkDialogOkButtonOnClickedDelegate;
 import com.thyrocare.btechapp.models.api.request.BtechsRequestModel;
-import com.thyrocare.btechapp.models.api.request.MaterialorderRequestModel;
-import com.thyrocare.btechapp.models.api.response.CampScanQRResponseModel;
 import com.thyrocare.btechapp.models.api.response.MaterialINVResponseModel;
 import com.thyrocare.btechapp.models.data.BTMaterialsModel;
 import com.thyrocare.btechapp.models.data.BtechIdModel;
@@ -39,24 +34,16 @@ import com.thyrocare.btechapp.models.data.MaterialDetailsModel;
 import com.thyrocare.btechapp.models.data.MaterialsStocksModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
-import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
-import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
@@ -244,7 +231,7 @@ public class MaterialFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<ArrayList<MaterialDetailsModel>>() {
             @Override
             public void onResponse(Call<ArrayList<MaterialDetailsModel>> call, retrofit2.Response<ArrayList<MaterialDetailsModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     materialDetailsModels = new ArrayList<>();
                     materialDetailsModels = response.body();
@@ -256,7 +243,7 @@ public class MaterialFragment extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<ArrayList<MaterialDetailsModel>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -270,7 +257,7 @@ public class MaterialFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<MaterialINVResponseModel>() {
             @Override
             public void onResponse(Call<MaterialINVResponseModel> call, retrofit2.Response<MaterialINVResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     materialINVResponseModel = response.body();
                     initData();
@@ -278,7 +265,7 @@ public class MaterialFragment extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<MaterialINVResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -292,7 +279,7 @@ public class MaterialFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                     if (response.isSuccessful() && response.body() != null) {
                         Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
                         materialtable.removeAllViews();
@@ -303,7 +290,7 @@ public class MaterialFragment extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

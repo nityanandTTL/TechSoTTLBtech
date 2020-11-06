@@ -23,18 +23,13 @@ import com.thyrocare.btechapp.activity.OLCPickupDetailMapDisplayFragmentActivity
 import com.thyrocare.btechapp.adapter.BtechClientDetailsAdapter;
 import com.thyrocare.btechapp.delegate.BtechClientDetailsAdapterOnItemClickDelegate;
 import com.thyrocare.btechapp.models.api.response.BtechClientsResponseModel;
-import com.thyrocare.btechapp.models.api.response.OrderServedResponseModel;
 import com.thyrocare.btechapp.models.data.BtechClientsModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -144,7 +139,7 @@ public class OLCPickupListDisplayFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<BtechClientsResponseModel>() {
             @Override
             public void onResponse(Call<BtechClientsResponseModel> call, retrofit2.Response<BtechClientsResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     BtechClientsResponseModel btechClientsResponseModel = response.body();
                     if (btechClientsResponseModel != null && btechClientsResponseModel.getBtechClients().size() > 0) {
@@ -165,7 +160,7 @@ public class OLCPickupListDisplayFragment extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<BtechClientsResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

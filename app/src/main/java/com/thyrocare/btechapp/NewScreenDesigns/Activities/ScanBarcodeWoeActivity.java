@@ -723,7 +723,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<GetTestListResponseModel>() {
             @Override
             public void onResponse(Call<GetTestListResponseModel> call, retrofit2.Response<GetTestListResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     GetTestListResponseModel TestListResponseModel = response.body();
                     if (TestListResponseModel.getTestGroupList() != null && TestListResponseModel.getTestGroupList().size() > 0){
@@ -738,7 +738,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<GetTestListResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 Toast.makeText(mActivity, NO_DATA_FOUND, Toast.LENGTH_SHORT).show();
             }
         });

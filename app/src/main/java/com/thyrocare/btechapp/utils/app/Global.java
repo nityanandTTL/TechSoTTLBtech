@@ -86,6 +86,12 @@ public class Global {
         this.context = context;
     }
 
+    public static void showCustomStaticToast(Context context, String message) {
+
+        if (context != null && !InputUtils.isNull(message)) {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public String getBtsSchema() {
        /* if (BuildConfig.DEBUG) {
@@ -205,22 +211,6 @@ public class Global {
         toast.show();
     }
 
-    public void showProgressDialog() {
-
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle(null);
-        progressDialog.setMessage(context.getResources().getString(R.string.loading));
-        progressDialog.setIndeterminate(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(true);
-        try {
-            if (progressDialog != null && !progressDialog.isShowing()){
-                progressDialog.show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void showProgressDialog(Activity activity, String msg) {
 
@@ -241,9 +231,9 @@ public class Global {
         }
     }
 
-    public void showProgressDialog(Context activity, String msg) {
+    public void showProgressDialog(Context context, String msg) {
 
-        progressDialog = new ProgressDialog(activity);
+        progressDialog = new ProgressDialog(context);
         progressDialog.setTitle(null);
         progressDialog.setMessage(msg);
         progressDialog.setIndeterminate(false);
@@ -278,15 +268,23 @@ public class Global {
         }
     }
 
-    public void hideProgressDialog() {
-        if (progressDialog != null && progressDialog.isShowing())
-            progressDialog.dismiss();
+    public void hideProgressDialogg() {
+        try {
+            if (progressDialog != null && progressDialog.isShowing())
+                progressDialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void hideProgressDialog(Activity activity) {
 
-        if (activity != null && !activity.isFinishing() && progressDialog != null && progressDialog.isShowing())
-            progressDialog.dismiss();
+        try {
+            if (activity != null && !activity.isFinishing() && progressDialog != null && progressDialog.isShowing())
+                progressDialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -586,8 +584,9 @@ public class Global {
         String userName = "";
         try {
             AppPreferenceManager appPreferenceManager = new AppPreferenceManager(pContext);
-            usercode = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()) ? appPreferenceManager.getLoginResponseModel().getUserID()+"/" : "" ;
-            userName = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getName()) ? appPreferenceManager.getLoginResponseModel().getName()+"/" : "Default/" ;
+            usercode = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()) ? appPreferenceManager.getLoginResponseModel().getUserID().trim().replace(" ","")+"/" : "" ;
+//            userName = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getName()) ? appPreferenceManager.getLoginResponseModel().getName().trim().replace(" ","")+"/" : "Default/" ;
+
             user = usercode+userName;
         } catch (Exception e) {
             e.printStackTrace();

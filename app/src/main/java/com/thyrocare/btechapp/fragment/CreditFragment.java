@@ -34,28 +34,17 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.activity.CampOrderBookingActivity;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.models.api.request.CashDepositEntryRequestModel;
-import com.thyrocare.btechapp.models.api.request.NewClientModel;
 import com.thyrocare.btechapp.models.api.response.BankMasterResponseModel;
-import com.thyrocare.btechapp.models.api.response.CampScanQRResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentModeMasterResponseModel;
-import com.thyrocare.btechapp.models.api.response.ResponseClientEntryModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
-import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -543,7 +532,7 @@ public class CreditFragment extends Fragment {
         responseCall.enqueue(new Callback< ArrayList<PaymentModeMasterResponseModel>>() {
             @Override
             public void onResponse(Call< ArrayList<PaymentModeMasterResponseModel>> call, retrofit2.Response< ArrayList<PaymentModeMasterResponseModel>> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     slotsArr = response.body();
                     selectedSlotsArr = new ArrayList<>();
@@ -569,7 +558,7 @@ public class CreditFragment extends Fragment {
 
             @Override
             public void onFailure(Call< ArrayList<PaymentModeMasterResponseModel>> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 callBankmaster();
                 globalclass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
@@ -585,7 +574,7 @@ public class CreditFragment extends Fragment {
         responseCall.enqueue(new Callback< ArrayList<BankMasterResponseModel>>() {
             @Override
             public void onResponse(Call< ArrayList<BankMasterResponseModel>> call, retrofit2.Response< ArrayList<BankMasterResponseModel>> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     bankArr = response.body();
                     selectedBankArr = new ArrayList<>();
@@ -603,7 +592,7 @@ public class CreditFragment extends Fragment {
 
             @Override
             public void onFailure(Call< ArrayList<BankMasterResponseModel>> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 globalclass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -616,7 +605,7 @@ public class CreditFragment extends Fragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> res) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 if (res.isSuccessful() && res.body() != null) {
                     TastyToast.makeText(activity, "SUCCESS" , TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     activity.toolbarHome.setVisibility(View.VISIBLE);
@@ -627,7 +616,7 @@ public class CreditFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
             }
         });

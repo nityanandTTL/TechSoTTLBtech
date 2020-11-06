@@ -19,7 +19,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
@@ -32,16 +31,12 @@ import com.thyrocare.btechapp.models.data.BtechwithHub_BarcodeDataModel;
 import com.thyrocare.btechapp.models.data.HUBBTechModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -267,7 +262,7 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
         responseCall.enqueue(new Callback<BtechwithHubResponseModel>() {
             @Override
             public void onResponse(Call<BtechwithHubResponseModel> call, retrofit2.Response<BtechwithHubResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     BtechwithHubResponseModel btechwithHubResponseModel = response.body();
                     if (btechwithHubResponseModel != null  && btechwithHubResponseModel.getReceivedHub() != null && btechwithHubResponseModel.getReceivedHub().size() > 0 && btechwithHubResponseModel.getReceivedHub().get(0).getBarcode() != null ) {
@@ -283,7 +278,7 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
             }
             @Override
             public void onFailure(Call<BtechwithHubResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -297,7 +292,7 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful()){
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                     alertDialogBuilder.setMessage("Received Successfully.");
@@ -317,7 +312,7 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
             }
         });
     }

@@ -32,21 +32,14 @@ import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.delegate.refreshDelegate;
 import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
-import com.thyrocare.btechapp.models.api.request.UpdateMaterial;
-import com.thyrocare.btechapp.models.api.response.BtechClientsResponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderPassresponseModel;
-import com.thyrocare.btechapp.models.data.BtechClientsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.models.data.Orderallocation;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -54,7 +47,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
@@ -129,7 +121,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
         responseCall.enqueue(new Callback<OrderPassresponseModel>() {
             @Override
             public void onResponse(Call<OrderPassresponseModel> call, retrofit2.Response<OrderPassresponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     orderallocationsarr = new ArrayList<>();
                     orderPassresponseModel = response.body();
@@ -196,7 +188,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
             }
             @Override
             public void onFailure(Call<OrderPassresponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -346,7 +338,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null){
                     validateOtp.setVisibility(View.VISIBLE);
                     btn_yes.setText("Resend");
@@ -357,7 +349,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
             }
         });
     }
@@ -413,7 +405,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null){
                     Toast.makeText(activity, "Valid OTP", Toast.LENGTH_SHORT).show();
                     PostOrderpass();
@@ -423,7 +415,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
             }
         });
     }
@@ -435,7 +427,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful()){
                     showAlert("Order Passed successfully");
                 }else{
@@ -444,7 +436,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
             }
         });
     }

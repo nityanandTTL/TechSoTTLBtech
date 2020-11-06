@@ -94,17 +94,17 @@ public class FAQ_Fragment extends Fragment {
                 try {
                     if (response.body().getRESPONSE().equalsIgnoreCase("SUCCESS")) {
                         if (!response.body().getPromoterFaqList().isEmpty()) {
-                            globalClass.hideProgressDialog();
+                            globalClass.hideProgressDialog(activity);
                             expandable_list_faq.setVisibility(View.VISIBLE);
                             expandableListAdapter = new ExpandableListAdapter_FAQ(response.body().getPromoterFaqList(), activity);
                             expandable_list_faq.setAdapter(expandableListAdapter);
                         } else {
                             expandable_list_faq.setVisibility(View.GONE);
-                            globalClass.hideProgressDialog();
+                            globalClass.hideProgressDialog(activity);
                             Toast.makeText(getContext(), "No Data Found", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        globalClass.hideProgressDialog();
+                        globalClass.hideProgressDialog(activity);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -113,7 +113,7 @@ public class FAQ_Fragment extends Fragment {
 
             @Override
             public void onFailure(Call<FAQandANSArray> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
             }
         });
 

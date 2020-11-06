@@ -61,7 +61,7 @@ public class SendLatLongforOrderController {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 String strresponse = response.body();
                 if (onResponseListener != null) {
                     onResponseListener.onSuccess(strresponse);
@@ -69,7 +69,7 @@ public class SendLatLongforOrderController {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 if (onResponseListener != null) {
                     onResponseListener.onfailure(t.getMessage());
                 }

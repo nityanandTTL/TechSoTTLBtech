@@ -2,27 +2,16 @@ package com.thyrocare.btechapp.Controller;
 
 import android.app.Activity;
 import android.widget.Toast;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
+
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.StockAvailabilityActivity;
 import com.thyrocare.btechapp.models.api.request.StockAvailabilityRequestModel;
 import com.thyrocare.btechapp.models.api.response.MainMaterialModel;
-import com.thyrocare.btechapp.models.api.response.ResponseClientEntryModel;
-import com.thyrocare.btechapp.network.AbstractApiModel;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,7 +42,7 @@ public class GetAvailableStockController {
         responseCall.enqueue(new Callback<MainMaterialModel>() {
             @Override
             public void onResponse(Call<MainMaterialModel> call, retrofit2.Response<MainMaterialModel> res) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(mActivity);
                 if (res.isSuccessful() && res.body() != null) {
                     if (flag == 0)
                         stockAvailabilityActivity.getStockResponse(res.body());
@@ -63,7 +52,7 @@ public class GetAvailableStockController {
             }
             @Override
             public void onFailure(Call<MainMaterialModel> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(mActivity);
                 Toast.makeText(mActivity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
             }
         });

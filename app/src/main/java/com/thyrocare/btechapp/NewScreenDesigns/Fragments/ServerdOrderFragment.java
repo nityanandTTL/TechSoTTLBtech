@@ -31,6 +31,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
 
@@ -80,6 +81,14 @@ public class ServerdOrderFragment extends Fragment {
         appPreferenceManager = new AppPreferenceManager(mActivity);
         globalclass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
+
+        try {
+            HomeScreenActivity activity = (HomeScreenActivity) getActivity();
+            activity.setTitle("Orders Served");
+            activity.toolbar_image.setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -196,7 +205,7 @@ public class ServerdOrderFragment extends Fragment {
         responseCall.enqueue(new Callback<ServedOrderResponseModel>() {
             @Override
             public void onResponse(Call<ServedOrderResponseModel> call, Response<ServedOrderResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
 
                 if (response.isSuccessful() && response.body() != null){
                     ServedOrderResponseModel model = response.body();
@@ -219,7 +228,7 @@ public class ServerdOrderFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<ServedOrderResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 recycle_servedOrders.setVisibility(View.GONE);
                 tv_noDatafound.setVisibility(View.VISIBLE);
 
@@ -288,7 +297,7 @@ public class ServerdOrderFragment extends Fragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
 
                 if (response.isSuccessful() && response.body() != null){
                     String body = response.body();
@@ -304,7 +313,7 @@ public class ServerdOrderFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showCustomToast(mActivity,SomethingWentwrngMsg,Toast.LENGTH_LONG);
 
             }

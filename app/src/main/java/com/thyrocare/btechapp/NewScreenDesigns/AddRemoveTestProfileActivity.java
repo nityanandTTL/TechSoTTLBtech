@@ -5,43 +5,32 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.thyrocare.btechapp.NewScreenDesigns.Adapters.CheckoutWoeAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.DisplayAllTestApdter;
-import com.thyrocare.btechapp.NewScreenDesigns.Adapters.ExpandableTestMasterListDisplayAdapter_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
-import com.thyrocare.btechapp.delegate.EditTestExpandListAdapterCheckboxDelegate;
 import com.thyrocare.btechapp.models.data.BrandTestMasterModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 import com.thyrocare.btechapp.models.data.TestTypeWiseTestRateMasterModelsList;
-import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
@@ -297,7 +286,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             responseCall.enqueue(new Callback<BrandTestMasterModel>() {
                 @Override
                 public void onResponse(Call<BrandTestMasterModel> call, retrofit2.Response<BrandTestMasterModel> response) {
-                    globalclass.hideProgressDialog();
+                    globalclass.hideProgressDialog(mActivity);
 
                     if (response.isSuccessful() && response.body() != null) {
                         brandTestMasterModel = new BrandTestMasterModel();
@@ -314,7 +303,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<BrandTestMasterModel> call, Throwable t) {
-                    globalclass.hideProgressDialog();
+                    globalclass.hideProgressDialog(mActivity);
                     globalclass.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             });

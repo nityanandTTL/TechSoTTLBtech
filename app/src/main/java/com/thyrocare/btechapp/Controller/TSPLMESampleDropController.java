@@ -2,10 +2,8 @@ package com.thyrocare.btechapp.Controller;
 
 import android.content.Context;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
-import android.content.DialogInterface;
 import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
@@ -16,23 +14,15 @@ import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.LMEMapDisplayFragmentActivity;
-import com.thyrocare.btechapp.fragment.HomeScreenFragment;
 import com.thyrocare.btechapp.fragment.LME.LME_OrdersDisplayFragment;
 import com.thyrocare.btechapp.fragment.LME.LME_WLMISFragment;
 import com.thyrocare.btechapp.models.api.request.SendScannedbarcodeLME;
-import com.thyrocare.btechapp.models.api.request.Tsp_Send_RequestModel;
 import com.thyrocare.btechapp.models.data.DateWiseWLMISDetailsModel;
-import com.thyrocare.btechapp.models.data.DeviceLoginDetailsModel;
 import com.thyrocare.btechapp.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.btechapp.models.data.WLMISDetailsModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
-import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -101,7 +91,7 @@ public class TSPLMESampleDropController {
         responseCall.enqueue(new Callback<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>>() {
             @Override
             public void onResponse(Call<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>> call, retrofit2.Response<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialogg();
                 if (response.isSuccessful() && response.body() != null) {
                     ArrayList<SampleDropDetailsbyTSPLMEDetailsModel> materialDetailsModels = response.body();
                     try {
@@ -128,7 +118,7 @@ public class TSPLMESampleDropController {
             }
             @Override
             public void onFailure(Call<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialogg();
                 Toast.makeText(mContext, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
@@ -143,7 +133,7 @@ public class TSPLMESampleDropController {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialogg();
                 if (response.isSuccessful() && response.body() != null){
                     TastyToast.makeText(mContext, "" + response.body(), TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
                     if (flag == 1) {
@@ -157,7 +147,7 @@ public class TSPLMESampleDropController {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialogg();
             }
         });
     }
@@ -178,7 +168,7 @@ public class TSPLMESampleDropController {
         responseCall.enqueue(new Callback<ArrayList<WLMISDetailsModel>>() {
             @Override
             public void onResponse(Call<ArrayList<WLMISDetailsModel>> call, retrofit2.Response<ArrayList<WLMISDetailsModel>> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialogg();
                 if (response.isSuccessful() && response.body() != null) {
                     ArrayList<WLMISDetailsModel> materialDetailsModels = response.body();
                     try {
@@ -204,7 +194,7 @@ public class TSPLMESampleDropController {
             }
             @Override
             public void onFailure(Call<ArrayList<WLMISDetailsModel>> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialogg();
                 Toast.makeText(mContext, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
@@ -226,7 +216,7 @@ public class TSPLMESampleDropController {
         responseCall.enqueue(new Callback<ArrayList<DateWiseWLMISDetailsModel>>() {
             @Override
             public void onResponse(Call<ArrayList<DateWiseWLMISDetailsModel>> call, retrofit2.Response<ArrayList<DateWiseWLMISDetailsModel>> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialogg();
                 if (response.isSuccessful() && response.body() != null) {
                     ArrayList<DateWiseWLMISDetailsModel> materialDetailsModels = response.body();
                     try {
@@ -252,7 +242,7 @@ public class TSPLMESampleDropController {
             }
             @Override
             public void onFailure(Call<ArrayList<DateWiseWLMISDetailsModel>> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialogg();
                 Toast.makeText(mContext, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });

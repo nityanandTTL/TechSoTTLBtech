@@ -2,7 +2,6 @@ package com.thyrocare.btechapp.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,19 +22,14 @@ import com.thyrocare.btechapp.models.api.response.RemarksRequestToReleaseRespons
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
 /**
@@ -88,7 +82,7 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
         responseCall.enqueue(new Callback<ArrayList<RemarksRequestToReleaseResponseModel>>() {
             @Override
             public void onResponse(Call<ArrayList<RemarksRequestToReleaseResponseModel>> call, retrofit2.Response<ArrayList<RemarksRequestToReleaseResponseModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     remarksResponseModelsarr = new ArrayList<>();
 
@@ -141,7 +135,7 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
             }
             @Override
             public void onFailure(Call<ArrayList<RemarksRequestToReleaseResponseModel>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

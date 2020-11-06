@@ -47,7 +47,6 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.models.api.request.HubStartRequestModel;
 import com.thyrocare.btechapp.models.api.request.OlcStartRequestModel;
 import com.thyrocare.btechapp.models.data.BtechClientsModel;
 
@@ -61,7 +60,6 @@ import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.fileutils.DataParser;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -606,7 +604,7 @@ if(result!=null){
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     if (olcStartRequestModel.getType() == 3){
                         Intent intentResult = new Intent();
@@ -625,7 +623,7 @@ if(result!=null){
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

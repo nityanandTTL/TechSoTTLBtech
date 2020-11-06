@@ -23,20 +23,15 @@ import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.activity.HubDetailMapDisplayFragmentActivity;
 import com.thyrocare.btechapp.adapter.DispatchToHubDisplayDetailsAdapter;
 import com.thyrocare.btechapp.delegate.DispatchToHubAdapterOnItemClickedDelegate;
-import com.thyrocare.btechapp.models.api.response.BtechCollectionsResponseModel;
 import com.thyrocare.btechapp.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.thyrocare.btechapp.models.data.HUBBTechModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -161,7 +156,7 @@ public class HubListDisplayFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<DispatchHubDisplayDetailsResponseModel>() {
             @Override
             public void onResponse(Call<DispatchHubDisplayDetailsResponseModel> call, retrofit2.Response<DispatchHubDisplayDetailsResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     DispatchHubDisplayDetailsResponseModel dispatchHubDisplayDetailsResponseModel = response.body();
                     if (dispatchHubDisplayDetailsResponseModel != null && dispatchHubDisplayDetailsResponseModel.getHubMaster()  != null && dispatchHubDisplayDetailsResponseModel.getHubMaster().size() > 0) {
@@ -177,7 +172,7 @@ public class HubListDisplayFragment extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<DispatchHubDisplayDetailsResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

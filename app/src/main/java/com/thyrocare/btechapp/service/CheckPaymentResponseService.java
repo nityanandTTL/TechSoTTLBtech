@@ -1,9 +1,7 @@
 package com.thyrocare.btechapp.service;
 
-import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.IBinder;
 import androidx.annotation.Nullable;
@@ -15,8 +13,6 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
-
 
 
 import com.thyrocare.btechapp.utils.api.NetworkUtils;
@@ -24,9 +20,6 @@ import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -110,7 +103,7 @@ public class CheckPaymentResponseService extends Service {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialogg();
                 if (response.isSuccessful()){
                     Toast.makeText(context, !StringUtils.isNull(response.body()) ? response.body() : ConstantsMessages.SOMETHING_WENT_WRONG,Toast.LENGTH_SHORT).show();
                 }else{
@@ -119,7 +112,7 @@ public class CheckPaymentResponseService extends Service {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialogg();
             }
         });
     }

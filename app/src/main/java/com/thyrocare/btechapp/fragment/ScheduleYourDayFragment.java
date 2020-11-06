@@ -39,16 +39,12 @@ import com.thyrocare.btechapp.models.api.response.NewBtechAvaliabilityResponseMo
 import com.thyrocare.btechapp.models.data.SlotModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-
-import org.json.JSONException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -158,7 +154,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<NewBtechAvaliabilityResponseModel>() {
             @Override
             public void onResponse(Call<NewBtechAvaliabilityResponseModel> call, Response<NewBtechAvaliabilityResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 MessageLogger.PrintMsg("VersionApi Onsuccess");
                 if (response.isSuccessful() && response.body() != null) {
                     NewBtechAvaliabilityResponseModel btechAvaliabilityResponseModel = response.body();
@@ -170,7 +166,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
 
             @Override
             public void onFailure(Call<NewBtechAvaliabilityResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 MessageLogger.LogDebug("Errror", t.getMessage());
 
             }
@@ -411,7 +407,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         responseCall.enqueue(new Callback< ArrayList<SlotModel>>() {
             @Override
             public void onResponse(Call< ArrayList<SlotModel>> call, retrofit2.Response< ArrayList<SlotModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     slotsArr = response.body();
                     selectedSlotsArr = new ArrayList<>();
@@ -431,7 +427,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
 
             @Override
             public void onFailure(Call< ArrayList<SlotModel>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -488,7 +484,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful()) {
                     TastyToast.makeText(activity,   "Availability set Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     //  Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
@@ -516,7 +512,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
             }
         });

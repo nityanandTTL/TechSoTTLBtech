@@ -3,17 +3,10 @@ package com.thyrocare.btechapp.Controller;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.widget.Toast;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
+
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
@@ -53,7 +46,7 @@ public class ClientEntryController {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> res) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 if (res.isSuccessful() && res.body() != null) {
                     try {
                         JSONObject response = new JSONObject(res.body());
@@ -78,7 +71,7 @@ public class ClientEntryController {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
             }
         });

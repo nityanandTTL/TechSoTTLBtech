@@ -166,9 +166,11 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     @Override
     public void onBindViewHolder(MyViewHolder holder, int pos) {
 
-        if (orderVisitDetailsModelsArr !=  null && orderVisitDetailsModelsArr.size() > 0
+        if (orderVisitDetailsModelsArr !=  null
+                && orderVisitDetailsModelsArr.size() > 0
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0
+                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster() != null
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() > 0
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0) != null) {
 
@@ -822,7 +824,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 if (response.code() == 200) {
                     AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
 
@@ -843,7 +845,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 MessageLogger.LogDebug("Errror", t.getMessage());
             }
         });
@@ -883,7 +885,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 if (response.code() == 200) {
                     if (onClickListeners != null) {
                         onClickListeners.onRefresh();
@@ -909,7 +911,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });

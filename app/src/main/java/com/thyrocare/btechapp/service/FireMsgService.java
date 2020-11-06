@@ -87,11 +87,9 @@ public class FireMsgService extends FirebaseMessagingService {
             String autoCancel = json.get("autoCancel");
             String bigText = json.get("bigText");
             String imageUrl = json.get("image");
-//            String timestamp = json.get("timestamp");
             String timestamp = String.valueOf(System.currentTimeMillis());
             String NotificationID = json.get("Screen_Category");
             String Product_name = json.get("Product_name");
-            String Order_ID = json.get("Order_ID");
             String userId = json.get("userid");
             String App_ID = json.get("App_ID");
             screenCategory = Integer.parseInt(json.get("Screen_Category"));
@@ -104,28 +102,7 @@ public class FireMsgService extends FirebaseMessagingService {
                 resultIntent.putExtra("isFromNotification", true);
                 resultIntent.putExtra("screenCategory", screenCategory);
 
-                  /* if (Screen_category == 0) {
-                    resultIntent.putExtra("Screen_category", Screen_category);
-                } else if (Screen_category > 0 && Screen_category <= 100) {
-                    if (!TextUtils.isEmpty(Order_ID)) {
-                        resultIntent.putExtra("TechsoID", Screen_category);
-                        resultIntent.putExtra("Screen_category", Constants.SCR_1);
-                        resultIntent.putExtra("Order_ID", Order_ID);
-                    } else {
-                        resultIntent.putExtra("Screen_category", 0);
-                    }
-                } else if (Screen_category > 100) {
-                    int position = Screen_category - 100;
-                    resultIntent.putExtra("Screen_category", position);
-                    if (position == Constants.SCR_1) {
-                        resultIntent.putExtra("Order_ID", Order_ID);
-                    }
-                } else {
-                    resultIntent.putExtra("Screen_category", 0);
-                }*/
 
-                /*SharedPreferences prefs_user = getApplicationContext().getSharedPreferences("login_detail", 0);
-                String loginMobileNumber = prefs_user.getString("mobile", "");*/
                 appPreferenceManager = new AppPreferenceManager(this);
                 if (appPreferenceManager.getAPISessionKey() != null) {
                     String userid = appPreferenceManager.getBtechID();

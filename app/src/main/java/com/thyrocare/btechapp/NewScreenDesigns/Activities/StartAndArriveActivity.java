@@ -13,8 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
@@ -51,7 +49,6 @@ import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.DisplaySelectedTestsListForCancellationAdapter_new;
@@ -93,7 +90,6 @@ import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 import com.thyrocare.btechapp.service.TrackerService;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
-import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.DateUtils;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
@@ -565,7 +561,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         final String MaskedPhoneNumber = response.body();
@@ -600,7 +596,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
 
             }
         });
@@ -920,7 +916,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String res) {
             super.onPostExecute(res);
-            globalclass.hideProgressDialog();
+            globalclass.hideProgressDialog(mActivity);
             if (statusCode == 200) {
                 if (dialog_ready != null) {
                     if (dialog_ready.isShowing()) {
@@ -1087,7 +1083,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.code() == 200) {
                     AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
 
@@ -1108,7 +1104,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 MessageLogger.LogDebug("Errror", t.getMessage());
             }
         });
@@ -1122,7 +1118,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
             responseCall.enqueue(new Callback<GetTestListResponseModel>() {
                 @Override
                 public void onResponse(Call<GetTestListResponseModel> call, retrofit2.Response<GetTestListResponseModel> response) {
-                    globalclass.hideProgressDialog();
+                    globalclass.hideProgressDialog(mActivity);
                     if (response.isSuccessful() && response.body() != null) {
                         GetTestListResponseModel TestListResponseModel = response.body();
                         DisplayTestListDialog(TestListResponseModel);
@@ -1132,7 +1128,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onFailure(Call<GetTestListResponseModel> call, Throwable t) {
-                    globalclass.hideProgressDialog();
+                    globalclass.hideProgressDialog(mActivity);
                     Toast.makeText(mActivity, NO_DATA_FOUND, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -1280,7 +1276,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<OrderVisitDetailsModel>() {
             @Override
             public void onResponse(Call<OrderVisitDetailsModel> call, retrofit2.Response<OrderVisitDetailsModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     OrderVisitDetailsModel visitDetailsModel = response.body();
                     onRemoveBenAPIResponseReceived(visitDetailsModel, rembenmode);
@@ -1292,7 +1288,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<OrderVisitDetailsModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showCustomToast(mActivity, SomethingWentwrngMsg);
             }
         });
@@ -1363,7 +1359,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.code() == 200 || response.code() == 204) {
                     onOrderStatusChangedResponseReceived(strButton);
                 } else {
@@ -1378,7 +1374,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 Toast.makeText(mActivity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
@@ -1487,7 +1483,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<CommonResponseModel2>() {
             @Override
             public void onResponse(Call<CommonResponseModel2> call, Response<CommonResponseModel2> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     CommonResponseModel2 responseModel = response.body();
                     if (!TextUtils.isEmpty(responseModel.getRES_ID()) && responseModel.getRES_ID().equalsIgnoreCase("RES0000")) {
@@ -1503,7 +1499,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CommonResponseModel2> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showCustomToast(mActivity, MSG_SERVER_EXCEPTION);
             }
         });
@@ -1582,7 +1578,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     String strresponse = response.body();
                     if (!TextUtils.isEmpty(strresponse) && strresponse.toUpperCase().contains("SUCCESS")) {
@@ -1605,7 +1601,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showCustomToast(mActivity, MSG_SERVER_EXCEPTION);
             }
         });

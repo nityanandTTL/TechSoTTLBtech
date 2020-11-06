@@ -17,14 +17,11 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.activity.ForgetPasswordActivity;
 import com.thyrocare.btechapp.activity.OLCPickupActivity;
 import com.thyrocare.btechapp.models.api.request.OlcScanPickUpRequestModel;
-import com.thyrocare.btechapp.models.api.request.ResetPasswordRequestModel;
 import com.thyrocare.btechapp.models.data.BtechClientsModel;
 
 
@@ -34,9 +31,6 @@ import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
-import com.thyrocare.btechapp.utils.app.OtpListenerUtil;
-
-import org.json.JSONException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -192,7 +186,7 @@ public class OLCMasterBarcodeScanFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 if (response.isSuccessful()){
                     Toast.makeText(activity,"Master Barcode Successfully Scanned and Submitted",Toast.LENGTH_SHORT).show();
                     activity.finish();
@@ -204,7 +198,7 @@ public class OLCMasterBarcodeScanFragment extends AbstractFragment {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
             }
         });
     }

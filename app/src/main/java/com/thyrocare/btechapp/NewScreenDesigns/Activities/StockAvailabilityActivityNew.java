@@ -109,14 +109,14 @@ public class StockAvailabilityActivityNew extends AppCompatActivity {
             mainMaterialModelCall.enqueue(new Callback<MainMaterialModel>() {
                 @Override
                 public void onResponse(Call<MainMaterialModel> call, Response<MainMaterialModel> response) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(mActivity);
                     MainMaterialModel mainMaterialModel = response.body();
                     getAvailableStock(mainMaterialModel);
                 }
 
                 @Override
                 public void onFailure(Call<MainMaterialModel> call, Throwable t) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(mActivity);
                     global.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
                     MessageLogger.LogDebug(TAG, "onFailure: " + t.getMessage());
                 }

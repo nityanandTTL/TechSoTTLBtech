@@ -3,6 +3,7 @@ package com.thyrocare.btechapp.NewScreenDesigns.Controllers;
 import android.app.Activity;
 import android.widget.Toast;
 
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
@@ -42,12 +43,12 @@ public class PostEmailValidationController {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.DecodeString64(mContext.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
         Call<EmailValidationResponseModel> responseCall = apiInterface.PostEmailValidationAPI(model);
 
-        globalClass.showProgressDialog();
+        globalClass.showProgressDialog(mContext, ConstantsMessages.PLEASE_WAIT);
 
         responseCall.enqueue(new Callback<EmailValidationResponseModel>() {
             @Override
             public void onResponse(Call<EmailValidationResponseModel> call, Response<EmailValidationResponseModel> response) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(mContext);
                 if (response.isSuccessful() && response.body() != null) {
 
                     EmailValidationResponseModel emailValidationResponseModel = response.body();
@@ -66,7 +67,7 @@ public class PostEmailValidationController {
 
             @Override
             public void onFailure(Call<EmailValidationResponseModel> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(mContext);
                 if (onResponseListener != null) {
                     onResponseListener.onfailure(t.getMessage());
                 }

@@ -4,9 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.Collection;
 
 public class InputUtils {
 
@@ -18,11 +23,6 @@ public class InputUtils {
 
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-    }
-    public static boolean isNull(String val){
-        if(val==null||val.equals(null)||val.trim().equals("")||val.trim().equals("null")|| val.trim()==""||val.trim()=="null")
-            return true;
-        return false;
     }
 
     public static String toCamelCase(final String init) {
@@ -86,4 +86,154 @@ public class InputUtils {
     public boolean isAlpha(String name) {
         return name.matches("[a-zA-Z]+");
     }
+
+    public static void setTextToTextView(TextView textview, String msg) {
+        try {
+            if (isNull(msg)) {
+                msg = "";
+            }
+            if (textview != null) {
+                textview.setText(msg);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setTextToTextView(TextView textview, CharSequence msg) {
+        try {
+            if (isNull(msg)) {
+                msg = "";
+            }
+            if (textview != null) {
+                textview.setText(msg);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setHTMLTextToTextView(TextView textview, String msg) {
+        try {
+            if (isNull(msg)) {
+                msg = "";
+            }
+            if (textview != null) {
+                textview.setText(Html.fromHtml(msg));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setTextToTextView(EditText edttext, String msg) {
+        try {
+            if (isNull(msg)) {
+                msg = "";
+            }
+            if (edttext != null) {
+                edttext.setText(msg);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean isNull(String val){
+        if(val==null||val.equalsIgnoreCase(null)||val.trim().equalsIgnoreCase("")||val.trim().equalsIgnoreCase("null")|| val.trim()==""||val.trim()=="null")
+            return true;
+        return false;
+    }
+
+    public static boolean isNull(Collection obj) {
+        if (obj == null || obj.size() == 0){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isNull(Object obj) {
+        if (obj == null){
+            return true;
+        }
+        return false;
+    }
+
+    public static int parseInt(String strnumber) {
+        int finalNumber = 0 ;
+        if (!isNull(strnumber)){
+            try {
+                finalNumber = Integer.parseInt(strnumber);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        return finalNumber;
+    }
+
+    public static float parseFloat(String strnumber) {
+        float finalNumber = 0 ;
+        if (!isNull(strnumber)){
+            try {
+                finalNumber = Float.parseFloat(strnumber);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        return finalNumber;
+    }
+
+    public static double parseDouble(String strnumber) {
+        double finalNumber = 0 ;
+        if (!isNull(strnumber)){
+            try {
+                finalNumber = Double.parseDouble(strnumber);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        return finalNumber;
+    }
+
+    public static String parseString(int number) {
+        String finalString = "" ;
+        try {
+            finalString = String.valueOf(number);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return finalString;
+    }
+
+    public static String parseString(double number) {
+        String finalString = "" ;
+        try {
+            finalString = String.valueOf(number);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return finalString;
+    }
+
+    public static boolean CheckEqualIgnoreCase(String str1, String str2) {
+        if (!isNull(str1) && !isNull(str2) && str1.equalsIgnoreCase(str2)){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean CheckEqualCaseSensitive(String str1, String str2) {
+        if ( str1 != null  && str2 != null && str1.equals(str2)){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean CheckifStringContains(String mainString, String StrToCheck) {
+        if (!isNull(mainString) && !isNull(StrToCheck) && mainString.contains(StrToCheck)){
+            return true;
+        }
+        return false;
+    }
+
 }

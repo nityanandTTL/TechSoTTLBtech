@@ -8,7 +8,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -16,12 +15,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.provider.MediaStore;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 
 import android.util.SparseArray;
@@ -41,8 +37,6 @@ import com.mindorks.paracamera.Camera;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampPatientSearchDetailResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonPOSTResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -56,14 +50,10 @@ import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import application.ApplicationController;
 import com.thyrocare.btechapp.customview.TouchImageView;
 import com.thyrocare.btechapp.dao.DhbDao;
-import com.thyrocare.btechapp.fragment.HomeScreenFragment;
 import com.thyrocare.btechapp.models.api.response.BtechImageResponseModel;
 import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
-import com.thyrocare.btechapp.models.api.response.Tsp_ScanBarcodeResponseModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.service.MasterTablesSyncService;
 import com.thyrocare.btechapp.uiutils.AbstractActivity;
 import com.thyrocare.btechapp.utils.api.NetworkUtils;
@@ -74,8 +64,6 @@ import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-
-import org.json.JSONException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -837,7 +825,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         responseCall.enqueue(new Callback<BtechImageResponseModel>() {
             @Override
             public void onResponse(Call<BtechImageResponseModel> call, retrofit2.Response<BtechImageResponseModel> response) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     BtechImageResponseModel availableSlotsResponseModel = response.body();
                     if (availableSlotsResponseModel != null) {
@@ -860,7 +848,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             }
             @Override
             public void onFailure(Call<BtechImageResponseModel> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 globalClass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

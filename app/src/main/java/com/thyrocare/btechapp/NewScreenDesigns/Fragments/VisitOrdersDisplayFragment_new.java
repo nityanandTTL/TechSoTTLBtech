@@ -13,14 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ActionMode;
@@ -63,11 +61,9 @@ import com.thyrocare.btechapp.dialog.ConfirmOrderPassDialog;
 import com.thyrocare.btechapp.dialog.ConfirmOrderReleaseDialog;
 import com.thyrocare.btechapp.dialog.ConfirmRequestReleaseDialog;
 import com.thyrocare.btechapp.dialog.RescheduleOrderDialog;
-import com.thyrocare.btechapp.models.api.request.CallPatchRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.btechapp.models.api.request.SetDispositionDataModel;
 import com.thyrocare.btechapp.models.api.response.BtechEstEarningsResponseModel;
-import com.thyrocare.btechapp.models.api.response.CampListDisplayResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.DispositionDataModel;
@@ -77,14 +73,11 @@ import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 
 
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.service.TrackerService;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
-import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
-import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
@@ -98,7 +91,6 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -117,7 +109,6 @@ import retrofit2.Response;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PLEASE_WAIT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
-import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 
 /**
@@ -193,6 +184,11 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         global = new Global(activity);
         if (activity.toolbarHome != null) {
             activity.toolbarHome.setTitle("Visit orders");
+        }
+        try {
+            activity.toolbar_image.setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         activity.isOnHome = false;
         FirebaselocationUpdateIntent = new Intent(activity, TrackerService.class);
@@ -328,7 +324,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
             @Override
             public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 try {
                     orderDetailsResponseModels = null;
                     orderDetailsResponseModels = new ArrayList<>();
@@ -365,7 +361,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                     }
                     initData();
                 } catch (Exception e) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(activity);
                     e.printStackTrace();
                     global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
                 }
@@ -373,7 +369,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
 
             @Override
             public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
             }
         });
@@ -580,7 +576,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         MaskedPhoneNumber = response.body();
@@ -616,7 +612,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
 
             }
         });
@@ -898,7 +894,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.code() == 200 || response.code() == 204) {
                     onOrderStatusChangedResponseReceived(orderVisitDetailsModel);
                 } else {
@@ -913,7 +909,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
@@ -1001,7 +997,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.code() == 200 || response.code() == 204) {
                     TastyToast.makeText(activity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     fetchData();
@@ -1016,7 +1012,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 MessageLogger.LogDebug("Errror", t.getMessage());
             }
         });
@@ -1032,7 +1028,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 int statusCode = response.code();
                 if (statusCode == 204 || statusCode == 200) {
                     TastyToast.makeText(activity, "Order Accepted Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
@@ -1049,7 +1045,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });

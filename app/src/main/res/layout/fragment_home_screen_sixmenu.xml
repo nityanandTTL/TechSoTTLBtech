@@ -463,6 +463,34 @@
                         android:textColor="@color/white" />
                 </LinearLayout>
             </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/row_4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_toEndOf="@id/row_2"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btn_leadgeneration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="bold"
+                    android:text="Lead Generation"
+                    android:background="@color/white"
+                    android:textColor="@color/colorDarkPurple"/>
+
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 

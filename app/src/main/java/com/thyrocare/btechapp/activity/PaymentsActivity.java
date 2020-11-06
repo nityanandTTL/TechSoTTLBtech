@@ -40,20 +40,15 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.models.api.request.OlcScanPickUpRequestModel;
-import com.thyrocare.btechapp.models.api.response.BtechEstEarningsResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchLedgerResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentStartTransactionAPIResponseModel;
 import com.thyrocare.btechapp.models.data.DepositRegisterModel;
 import com.thyrocare.btechapp.models.data.Earning_NewRegisterModel;
-import com.thyrocare.btechapp.models.data.KitsCountModel;
 import com.thyrocare.btechapp.models.data.LedgerDetailsModeler;
 import com.thyrocare.btechapp.models.data.NarrationMasterModel;
 import com.thyrocare.btechapp.models.data.PaymentNameValueModel;
-import com.thyrocare.btechapp.models.data.SlotModel;
-
 
 
 import com.thyrocare.btechapp.network.ResponseParser;
@@ -197,7 +192,7 @@ public class PaymentsActivity extends AbstractActivity {
         responseCall.enqueue(new Callback< FetchLedgerResponseModel>() {
             @Override
             public void onResponse(Call< FetchLedgerResponseModel> call, retrofit2.Response< FetchLedgerResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     FetchLedgerResponseModel fetchLedgerDetailsResponseModel = response.body();
                     fetchLedgerResponseModel = fetchLedgerDetailsResponseModel;
@@ -210,7 +205,7 @@ public class PaymentsActivity extends AbstractActivity {
 
             @Override
             public void onFailure(Call<FetchLedgerResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -223,7 +218,7 @@ public class PaymentsActivity extends AbstractActivity {
         responseCall.enqueue(new Callback< Earning_NewRegisterModel>() {
             @Override
             public void onResponse(Call< Earning_NewRegisterModel> call, retrofit2.Response< Earning_NewRegisterModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     earning_newRegisterModelsArr = new ArrayList<>();
                     earning_newRegisterModel = response.body();
@@ -238,7 +233,7 @@ public class PaymentsActivity extends AbstractActivity {
 
             @Override
             public void onFailure(Call<Earning_NewRegisterModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -252,7 +247,7 @@ public class PaymentsActivity extends AbstractActivity {
         responseCall.enqueue(new Callback< ArrayList<DepositRegisterModel>>() {
             @Override
             public void onResponse(Call< ArrayList<DepositRegisterModel>> call, retrofit2.Response< ArrayList<DepositRegisterModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     depositRegisterModels = new ArrayList<>();
                     depositRegisterModels = response.body();
@@ -263,7 +258,7 @@ public class PaymentsActivity extends AbstractActivity {
             }
             @Override
             public void onFailure(Call<ArrayList<DepositRegisterModel>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -325,7 +320,7 @@ public class PaymentsActivity extends AbstractActivity {
         responseCall.enqueue(new Callback<ArrayList<PaymentProcessAPIResponseModel>>() {
             @Override
             public void onResponse(Call<ArrayList<PaymentProcessAPIResponseModel>> call, retrofit2.Response<ArrayList<PaymentProcessAPIResponseModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     paymentModesArr =response.body();
                     initPaymentModesData();
@@ -335,7 +330,7 @@ public class PaymentsActivity extends AbstractActivity {
             }
             @Override
             public void onFailure(Call<ArrayList<PaymentProcessAPIResponseModel>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -516,7 +511,7 @@ public class PaymentsActivity extends AbstractActivity {
         responseCall.enqueue(new Callback<PaymentProcessAPIResponseModel>() {
             @Override
             public void onResponse(Call<PaymentProcessAPIResponseModel> call, Response<PaymentProcessAPIResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful()){
                     paymentPassInputsModel = response.body();
                     initPaymentPassInputsData();
@@ -526,7 +521,7 @@ public class PaymentsActivity extends AbstractActivity {
             }
             @Override
             public void onFailure(Call<PaymentProcessAPIResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
             }
         });
     }
@@ -777,7 +772,7 @@ public class PaymentsActivity extends AbstractActivity {
         responseCall.enqueue(new Callback<PaymentStartTransactionAPIResponseModel>() {
             @Override
             public void onResponse(Call<PaymentStartTransactionAPIResponseModel> call, Response<PaymentStartTransactionAPIResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful()){
                     paymentStartTransactionAPIResponseModel = response.body();
                     if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
@@ -830,7 +825,7 @@ public class PaymentsActivity extends AbstractActivity {
             }
             @Override
             public void onFailure(Call<PaymentStartTransactionAPIResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
             }
         });
     }
@@ -1017,7 +1012,7 @@ public class PaymentsActivity extends AbstractActivity {
         responseCall.enqueue(new Callback<PaymentDoCaptureResponseAPIResponseModel>() {
             @Override
             public void onResponse(Call<PaymentDoCaptureResponseAPIResponseModel> call, Response<PaymentDoCaptureResponseAPIResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful()){
                     PaymentDoCaptureResponseAPIResponseModel tempPDCRAPRM = response.body();
                     if (tempPDCRAPRM.getStatus() != null) {
@@ -1106,7 +1101,7 @@ public class PaymentsActivity extends AbstractActivity {
             }
             @Override
             public void onFailure(Call<PaymentDoCaptureResponseAPIResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
             }
         });
     }

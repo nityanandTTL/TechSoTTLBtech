@@ -70,6 +70,7 @@ import com.thyrocare.btechapp.models.api.response.PaymentDoCaptureResponseAPIRes
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentStartTransactionAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
+import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
 import com.thyrocare.btechapp.models.api.response.VideosResponseModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 
@@ -299,5 +300,30 @@ public interface PostAPIInterface {
 
     @POST("api/OrderAllocation/AdditionalTechnicianDTL")
     Call<GetBtechCertifcateResponseModel> CallGetBtechCertificatesAPI (@Body GetBtechCertificateRequestModel btechCertificateRequestModel);
+
+    @Multipart
+    @POST("Aayushman/Booking")
+    Call<TestBookingResponseModel> SubitReferAFriendformToServer(@Part("order_by") RequestBody order_by,
+                                                                 @Part("mobile")  RequestBody mobile,
+                                                                 @Part("email") RequestBody email,
+                                                                 @Part("address") RequestBody address,
+                                                                 @Part("remarks")  RequestBody remarks,
+                                                                 @Part("bookingtype")  RequestBody bookingtype,
+                                                                 @Part("report_code")  RequestBody report_code,
+                                                                 @Part("bencount")  RequestBody bencount,
+                                                                 @Part("pincode")  RequestBody pincode,
+                                                                 @Part("product")  RequestBody product,
+                                                                 @Part("rate")  RequestBody rate,
+                                                                 @Part("reports")  RequestBody reports,
+                                                                 @Part("ref_code")  RequestBody ref_code,
+                                                                 @Part("service_type")  RequestBody service_type,
+                                                                 @Part("api_key")  RequestBody api_key,
+                                                                 @Part("bendataxml")  RequestBody bendataxml,
+                                                                 @Part("orderid")  RequestBody orderid,
+                                                                 @Part("hc")  RequestBody hc,
+                                                                 @Part("tsp")  RequestBody tsp,
+                                                                 @Part("pay_type")  RequestBody pay_type,
+                                                                 @Part MultipartBody.Part imageFileMultiBody,
+                                                                 @Part MultipartBody.Part audioFileMultiBody);
 
 }

@@ -30,14 +30,9 @@ import com.thyrocare.btechapp.models.data.MaterialDetailsModel;
 import com.thyrocare.btechapp.models.data.MaterialOrderDataModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
-import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -204,7 +199,7 @@ public class Material_consumptions extends Fragment {
         responseCall.enqueue(new Callback<ArrayList<MaterialDetailsModel>>() {
             @Override
             public void onResponse(Call<ArrayList<MaterialDetailsModel>> call, retrofit2.Response<ArrayList<MaterialDetailsModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     materialDetailsModels = new ArrayList<>();
                     materialDetailsModels = response.body();
@@ -213,7 +208,7 @@ public class Material_consumptions extends Fragment {
             }
             @Override
             public void onFailure(Call<ArrayList<MaterialDetailsModel>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -236,7 +231,7 @@ public class Material_consumptions extends Fragment {
         responseCall.enqueue(new Callback<MaterialINVResponseModel>() {
             @Override
             public void onResponse(Call<MaterialINVResponseModel> call, retrofit2.Response<MaterialINVResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     materialINVResponseModel = response.body();
                     fetchData();
@@ -244,7 +239,7 @@ public class Material_consumptions extends Fragment {
             }
             @Override
             public void onFailure(Call<MaterialINVResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

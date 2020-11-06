@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,13 +14,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +36,6 @@ import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
-import com.thyrocare.btechapp.delegate.EditTestExpandListAdapterCheckboxDelegate;
 import com.thyrocare.btechapp.delegate.RemoveSelectedTestFromListDelegate_new;
 import com.thyrocare.btechapp.models.api.request.CartAPIRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
@@ -66,7 +61,6 @@ import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.models.data.TestClinicalHistoryModel;
 import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 import com.thyrocare.btechapp.models.data.TestSampleTypeModel;
-import com.thyrocare.btechapp.models.data.TestTypeWiseTestRateMasterModelsList;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
@@ -378,7 +372,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<CommonResponseModel2>() {
             @Override
             public void onResponse(Call<CommonResponseModel2> call, Response<CommonResponseModel2> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     CommonResponseModel2 responseModel = response.body();
                     if (!TextUtils.isEmpty(responseModel.getRES_ID()) && responseModel.getRES_ID().equalsIgnoreCase("RES0000")) {
@@ -394,7 +388,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CommonResponseModel2> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showCustomToast(mActivity, MSG_SERVER_EXCEPTION);
             }
         });
@@ -473,7 +467,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     String strresponse = response.body();
                     if (!TextUtils.isEmpty(strresponse) && strresponse.toUpperCase().contains("SUCCESS")) {
@@ -498,7 +492,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showCustomToast(mActivity, MSG_SERVER_EXCEPTION);
             }
         });
@@ -936,7 +930,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             responseCall.enqueue(new Callback<BrandTestMasterModel>() {
                 @Override
                 public void onResponse(Call<BrandTestMasterModel> call, retrofit2.Response<BrandTestMasterModel> response) {
-                    globalclass.hideProgressDialog();
+                    globalclass.hideProgressDialog(mActivity);
 
                     if (response.isSuccessful() && response.body() != null) {
                         BrandTestMasterModel brandTestMasterModel = new BrandTestMasterModel();
@@ -950,7 +944,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<BrandTestMasterModel> call, Throwable t) {
-                    globalclass.hideProgressDialog();
+                    globalclass.hideProgressDialog(mActivity);
                     globalclass.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             });
@@ -1532,7 +1526,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<CartAPIResponseModel>() {
             @Override
             public void onResponse(Call<CartAPIResponseModel> call, retrofit2.Response<CartAPIResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     CartAPIResponseModel cartAPIResponseModel = response.body();
                     onTechsoCartAPIResponseReceived(cartAPIResponseModel);
@@ -1544,7 +1538,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CartAPIResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showCustomToast(mActivity, SomethingWentwrngMsg);
             }
         });
@@ -1650,7 +1644,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.code() == 200) {
                     globalclass.showCustomToast(mActivity, "SUCCESS");
                     // TODo code to redirect to Arrive Screen
@@ -1664,7 +1658,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showCustomToast(mActivity, SomethingWentwrngMsg);
             }
         });

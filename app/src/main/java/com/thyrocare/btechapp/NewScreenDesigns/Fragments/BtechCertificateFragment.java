@@ -10,7 +10,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.DisplayBtechCertificateViewPagerAdapter;
@@ -28,7 +27,6 @@ import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.tmall.ultraviewpager.UltraViewPager;
 import com.tmall.ultraviewpager.transformer.UltraDepthScaleTransformer;
-import com.tmall.ultraviewpager.transformer.UltraScaleTransformer;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -107,14 +105,14 @@ public class BtechCertificateFragment extends Fragment {
         responseCall.enqueue(new Callback<GetBtechCertifcateResponseModel>() {
             @Override
             public void onResponse(Call<GetBtechCertifcateResponseModel> call, Response<GetBtechCertifcateResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 InitViewPager(response.body());
             }
             @Override
             public void onFailure(Call<GetBtechCertifcateResponseModel> call, Throwable t) {
                 ultraViewPager.setVisibility(View.GONE);
                 tv_noDatafound.setVisibility(View.VISIBLE);
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
             }
         });
     }

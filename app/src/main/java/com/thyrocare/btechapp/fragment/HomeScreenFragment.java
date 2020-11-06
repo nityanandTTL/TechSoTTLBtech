@@ -21,6 +21,7 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -148,6 +149,7 @@ public class HomeScreenFragment extends AbstractFragment {
     ImageView send_icon, receive_icon, earning_icon, orders_icon;
     private Intent FirebaselocationUpdateIntent;
     private Global globalclass;
+    private Button btn_leadgeneration;
 
     public HomeScreenFragment() {
         // Required empty public constructor
@@ -199,7 +201,8 @@ public class HomeScreenFragment extends AbstractFragment {
         activity = (HomeScreenActivity) getActivity();
         globalclass = new Global(activity);
         try {
-            activity.toolbarHome.setTitle("Home");
+//            activity.toolbarHome.setTitle("Home");
+            activity.toolbar_image.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -459,6 +462,12 @@ public class HomeScreenFragment extends AbstractFragment {
     }
 
     private void initListeners() {
+        btn_leadgeneration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pushFragments(LeadGenerationFragment.newInstance(), false, false, LeadGenerationFragment.TAG, R.id.fl_homeScreen, TAG_FRAGMENT);
+            }
+        });
         imgOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -575,6 +584,8 @@ public class HomeScreenFragment extends AbstractFragment {
         imgMaterials = (ImageView) rootView.findViewById(R.id.materials_icon);
         imgOLCPickup = (ImageView) rootView.findViewById(R.id.olc_pickup_icon);
         txt_no_of_camps = (TextView) rootView.findViewById(R.id.txt_no_of_camps);
+        btn_leadgeneration = (Button) rootView.findViewById(R.id.btn_leadgeneration);
+
 
         //bell_icon
         bellicon = (ImageView) rootView.findViewById(R.id.bellicon);
@@ -597,7 +608,8 @@ public class HomeScreenFragment extends AbstractFragment {
             responseCall.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                    globalclass.hideProgressDialog();
+                    globalclass.hideProgressDialog(activity);
+
 
                     try {
                         if (response.isSuccessful() && response.body() != null) {
@@ -628,7 +640,7 @@ public class HomeScreenFragment extends AbstractFragment {
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
-                    globalclass.hideProgressDialog();
+                    globalclass.hideProgressDialog(activity);
                     globalclass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             });

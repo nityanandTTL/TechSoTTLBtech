@@ -22,12 +22,13 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.adapter.SpinnerAdapter;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
-import com.thyrocare.btechapp.network.AbstractApiModel;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.Validator;
@@ -385,7 +386,7 @@ public class FeedbackFragment extends Fragment {
         protected void onPreExecute() {
             // TODO Auto-generated method stub
             super.onPreExecute();
-            globalClass.showProgressDialog();
+            globalClass.showProgressDialog(mActivity,"Please wait..");
         }
 
         @Override
@@ -436,7 +437,7 @@ public class FeedbackFragment extends Fragment {
             super.onPostExecute(result);
             setFeedbackSpinner();
             mScrollView.setVisibility(View.VISIBLE);
-            globalClass.hideProgressDialog();
+            globalClass.hideProgressDialog(mActivity);
         }
     }
 
@@ -474,7 +475,7 @@ public class FeedbackFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             //globalClass=new Global(mActivity);
-            globalClass.showProgressDialog();
+            globalClass.showProgressDialog(mActivity, ConstantsMessages.PLEASE_WAIT);
         }
 
         @Override
@@ -537,7 +538,7 @@ public class FeedbackFragment extends Fragment {
         @Override
         protected void onPostExecute(JSONObject result) {
             super.onPostExecute(result);
-            globalClass.hideProgressDialog();
+            globalClass.hideProgressDialog(mActivity);
             alertDialogBuilder = new AlertDialog.Builder(mActivity);
             try{
                 String strResponse=result.getString("RESPONSE");

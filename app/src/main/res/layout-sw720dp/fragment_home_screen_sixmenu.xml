@@ -151,7 +151,7 @@
                         android:layout_gravity="center"
                         android:text="Schedule"
                         android:textAlignment="center"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:textColor="@color/white" />
                 </LinearLayout>
 
                 <View
@@ -182,7 +182,7 @@
                         android:layout_gravity="center"
                         android:text="Orders"
                         android:textAlignment="center"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:textColor="@color/white" />
                 </LinearLayout>
 
 
@@ -395,7 +395,7 @@
                         android:layout_gravity="center"
                         android:text="Camp"
                         android:textAlignment="center"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:textColor="@color/white" />
                 </LinearLayout>
 
                 <View
@@ -425,7 +425,7 @@
                         android:layout_gravity="center"
                         android:text="Orders Served"
                         android:textAlignment="center"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:textColor="@color/white" />
                 </LinearLayout>
 
                 <View
@@ -460,6 +460,38 @@
                         android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/separator"/>
+
+            <LinearLayout
+                android:id="@+id/row_4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_toEndOf="@id/row_2"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btn_leadgeneration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/_50sdp"
+                    android:paddingRight="@dimen/_50sdp"
+                    android:text="Lead Generation"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="bold"
+                    android:background="@color/white"
+                    android:textColor="@color/colorDarkPurple"/>
+
+            </LinearLayout>
+
+
         </LinearLayout>
     </LinearLayout>
 

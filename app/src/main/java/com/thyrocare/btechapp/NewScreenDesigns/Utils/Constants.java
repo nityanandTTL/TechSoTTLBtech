@@ -32,4 +32,5 @@ public class Constants {
     public static boolean Finish_barcodeScanAcitivty = false;
 
 
+    public static final String BOOKING_API_KEY = "DAuWZtKHyVb8OhjhHSuAwCB6uAyzVzASVTxXcCT8@0fkrvZ5fG9lw533tKKmxVnu";
 }

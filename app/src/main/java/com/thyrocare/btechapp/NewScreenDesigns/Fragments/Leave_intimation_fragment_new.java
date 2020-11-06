@@ -249,7 +249,7 @@ public class Leave_intimation_fragment_new extends Fragment {
         getResponse_natureLeaveModelCall.enqueue(new Callback<ArrayList<GetResponse_NatureLeaveModel>>() {
             @Override
             public void onResponse(Call<ArrayList<GetResponse_NatureLeaveModel>> call, Response<ArrayList<GetResponse_NatureLeaveModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
 
                     getResponse_natureLeaveModel = null;
@@ -271,8 +271,9 @@ public class Leave_intimation_fragment_new extends Fragment {
 
             @Override
             public void onFailure(Call<ArrayList<GetResponse_NatureLeaveModel>> call, Throwable t) {
+                global.hideProgressDialog(mActivity);
                 global.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
-                global.hideProgressDialog();
+
             }
         });
 
@@ -331,7 +332,7 @@ public class Leave_intimation_fragment_new extends Fragment {
         leave_applied_history_call.enqueue(new Callback<ArrayList<Get_Leave_Applied_history_Model>>() {
             @Override
             public void onResponse(Call<ArrayList<Get_Leave_Applied_history_Model>> call, Response<ArrayList<Get_Leave_Applied_history_Model>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     ArrayList<Get_Leave_Applied_history_Model> getLeave_applied_history_model = response.body();
                     if (getLeave_applied_history_model.size() > 0) {
@@ -349,7 +350,7 @@ public class Leave_intimation_fragment_new extends Fragment {
             @Override
             public void onFailure(Call<ArrayList<Get_Leave_Applied_history_Model>> call, Throwable t) {
                 global.showCustomToast(mActivity,SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
 
 
             }
@@ -445,7 +446,7 @@ public class Leave_intimation_fragment_new extends Fragment {
         call_leaveapi.enqueue(new Callback<CommonResponseModel>() {
             @Override
             public void onResponse(Call<CommonResponseModel> call, Response<CommonResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     CommonResponseModel responseModel = response.body();
                     if (responseModel.getRES_ID().equalsIgnoreCase("RES0000")) {
@@ -466,7 +467,7 @@ public class Leave_intimation_fragment_new extends Fragment {
 
             @Override
             public void onFailure(Call<CommonResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
                 global.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
             }
         });

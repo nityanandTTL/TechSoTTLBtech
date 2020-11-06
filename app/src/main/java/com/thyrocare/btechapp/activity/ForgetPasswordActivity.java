@@ -11,9 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.auth.api.phone.SmsRetriever;
-import com.thyrocare.btechapp.NewScreenDesigns.Activities.SplashActivity;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetSSLKeyRequestModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
@@ -26,12 +23,9 @@ import com.thyrocare.btechapp.models.api.request.ResetPasswordRequestModel;
 
 import com.thyrocare.btechapp.uiutils.AbstractActivity;
 import com.thyrocare.btechapp.utils.api.Logger;
-import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 import com.thyrocare.btechapp.utils.app.OtpListenerUtil;
-
-import org.json.JSONException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -149,7 +143,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(ForgetPasswordActivity.this);
                 if (response.isSuccessful()){
 
                     if (action.equals("send otp")) {
@@ -172,7 +166,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(ForgetPasswordActivity.this);
             }
         });
     }

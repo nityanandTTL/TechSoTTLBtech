@@ -4,10 +4,8 @@ package com.thyrocare.btechapp.adapter;
  * Created by Orion on 4/21/2017.
  */
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,26 +14,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.BtechWiseVersionTrackerRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.delegate.OrderServedDisplayDetailsAdapterClickedDelegate;
-import com.thyrocare.btechapp.fragment.HomeScreenFragment;
-import com.thyrocare.btechapp.models.api.response.Tsp_ScanBarcodeResponseModel;
 import com.thyrocare.btechapp.models.data.BtechOrderModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,7 +167,7 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     if (response.body().equalsIgnoreCase("1") || response.body().equalsIgnoreCase("1\n")) {
                         Toast.makeText(activity, "E-Reciept sent Successfully", Toast.LENGTH_SHORT).show();
@@ -189,7 +180,7 @@ public class OrderServedDisplayDetailsAdapter extends RecyclerView.Adapter<Order
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

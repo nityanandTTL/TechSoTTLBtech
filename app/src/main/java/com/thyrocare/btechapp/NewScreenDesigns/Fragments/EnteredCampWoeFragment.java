@@ -9,14 +9,10 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,16 +23,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.mindorks.paracamera.Camera;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.CampWOE_MIS_Adpter;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampWoeMISReuestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampModuleMISResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampWoeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -49,9 +41,7 @@ import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel1;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
-import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
-import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -224,7 +214,7 @@ public class EnteredCampWoeFragment extends Fragment {
         responseCall.enqueue(new Callback<CampModuleMISResponseModel>() {
             @Override
             public void onResponse(Call<CampModuleMISResponseModel> call, Response<CampModuleMISResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null){
                     onCampWOEMisAPIresponseReceived(response.body());
                 }else{
@@ -233,7 +223,7 @@ public class EnteredCampWoeFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<CampModuleMISResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
             }
         });
     }
@@ -442,7 +432,7 @@ public class EnteredCampWoeFragment extends Fragment {
         responseCall.enqueue(new Callback<CommonResponseModel1>() {
             @Override
             public void onResponse(final Call<CommonResponseModel1> call, Response<CommonResponseModel1> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
 
                 if (response.isSuccessful() && response.body() != null) {
                     androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder;
@@ -473,7 +463,7 @@ public class EnteredCampWoeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CommonResponseModel1> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.",Toast.LENGTH_LONG);
             }
         });

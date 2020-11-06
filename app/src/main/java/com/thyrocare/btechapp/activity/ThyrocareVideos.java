@@ -167,7 +167,7 @@ public class ThyrocareVideos extends AppCompatActivity {
             @Override
             public void onResponse(Call<VideoLangaugesResponseModel> call, Response<VideoLangaugesResponseModel> response) {
 
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
 
                 VideoLangArylist = new ArrayList<>();
                 if (response.isSuccessful()) {
@@ -210,7 +210,7 @@ public class ThyrocareVideos extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<VideoLangaugesResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 recView.setVisibility(View.GONE);
                 tv_noDatafound.setVisibility(View.VISIBLE);
                 globalclass.showcenterCustomToast(mActivity, "Unable to fetch data from server.",Toast.LENGTH_LONG);
@@ -277,7 +277,7 @@ public class ThyrocareVideos extends AppCompatActivity {
         responseCall.enqueue(new Callback<VideosResponseModel>() {
             @Override
             public void onResponse(Call<VideosResponseModel> call, Response<VideosResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     VideosResponseModel responseModel = response.body();
                     if (!TextUtils.isEmpty(responseModel.getResId()) && responseModel.getResId().equalsIgnoreCase("RSS0000") && responseModel.getOutput() != null && responseModel.getOutput().size() > 0) {
@@ -298,7 +298,7 @@ public class ThyrocareVideos extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<VideosResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 tv_noDatafound.setVisibility(View.VISIBLE);
 
             }

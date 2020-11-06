@@ -177,7 +177,7 @@ public class MaterialFragment_new extends AbstractFragment {
         responseCall.enqueue(new Callback<MaterialBtechStockResponseModel>() {
             @Override
             public void onResponse(Call<MaterialBtechStockResponseModel> call, retrofit2.Response<MaterialBtechStockResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     materialINVResponseModel = response.body();
                     initData();
@@ -185,7 +185,7 @@ public class MaterialFragment_new extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<MaterialBtechStockResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -371,7 +371,7 @@ public class MaterialFragment_new extends AbstractFragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful()){
                     Toast.makeText(activity, "Material stock updated successfully.", LENGTH_SHORT).show();
                     try {
@@ -385,7 +385,7 @@ public class MaterialFragment_new extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
             }
         });
     }

@@ -6,10 +6,9 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.os.Handler;
+
 import androidx.multidex.MultiDex;
 
-import com.bumptech.glide.Glide;
-import com.crashlytics.android.Crashlytics;
 import com.thyrocare.btechapp.Controller.ClientEntryController;
 import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.Controller.GetAvailableStockController;
@@ -25,8 +24,6 @@ import com.thyrocare.btechapp.service.GlideCacheClearAsyncTask;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 
 import java.util.Stack;
-
-import io.fabric.sdk.android.Fabric;
 
 public class ApplicationController extends Application {
 
@@ -67,7 +64,6 @@ public class ApplicationController extends Application {
 	public void onCreate() {
 
 		super.onCreate();
-		Fabric.with(this, new Crashlytics());
 
 		applicationController = this;
 		new GlideCacheClearAsyncTask(getApplicationContext()).execute();

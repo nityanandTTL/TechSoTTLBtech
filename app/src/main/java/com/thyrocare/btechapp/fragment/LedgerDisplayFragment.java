@@ -30,15 +30,11 @@ import com.thyrocare.btechapp.models.data.Earning_NewRegisterModel;
 import com.thyrocare.btechapp.models.data.LedgerDetailsModeler;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -312,7 +308,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
         responseCall.enqueue(new Callback< FetchLedgerResponseModel>() {
             @Override
             public void onResponse(Call< FetchLedgerResponseModel> call, retrofit2.Response< FetchLedgerResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     FetchLedgerResponseModel fetchLedgerDetailsResponseModel =  response.body();
                     fetchLedgerResponseModel = fetchLedgerDetailsResponseModel;
@@ -324,7 +320,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
             @Override
             public void onFailure(Call<FetchLedgerResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -338,7 +334,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
         responseCall.enqueue(new Callback< Earning_NewRegisterModel>() {
             @Override
             public void onResponse(Call< Earning_NewRegisterModel> call, retrofit2.Response< Earning_NewRegisterModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     earning_newRegisterModelsArr = new ArrayList<>();
                     earning_newRegisterModel = response.body();
@@ -352,7 +348,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<Earning_NewRegisterModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -365,7 +361,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
         responseCall.enqueue(new Callback< ArrayList<DepositRegisterModel>>() {
             @Override
             public void onResponse(Call< ArrayList<DepositRegisterModel>> call, retrofit2.Response< ArrayList<DepositRegisterModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     depositRegisterModels = new ArrayList<>();
                     depositRegisterModels = response.body();
@@ -378,7 +374,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<ArrayList<DepositRegisterModel>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

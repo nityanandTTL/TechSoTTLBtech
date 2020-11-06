@@ -50,8 +50,6 @@ import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -59,8 +57,6 @@ import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -541,7 +537,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         responseCall.enqueue(new Callback<CampScanQRResponseModel>() {
             @Override
             public void onResponse(Call<CampScanQRResponseModel> call, retrofit2.Response<CampScanQRResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
 
                 if (response.isSuccessful() && response.body() != null) {
 
@@ -569,7 +565,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
 
             @Override
             public void onFailure(Call<CampScanQRResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 globalclass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -691,7 +687,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         responseCall.enqueue(new Callback<OrderBookingResponseVisitModel>() {
             @Override
             public void onResponse(Call<OrderBookingResponseVisitModel> call, retrofit2.Response<OrderBookingResponseVisitModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null){
                     orderBookingResponseVisitModel = response.body();
                     for (OrderBookingResponseOrderModel obrom :
@@ -706,7 +702,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             }
             @Override
             public void onFailure(Call<OrderBookingResponseVisitModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 globalclass.showCustomToast(activity,ConstantsMessages.UNABLE_TO_CONNECT);
             }
         });
@@ -729,7 +725,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> res) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 if (res.isSuccessful() && res.body() != null) {
                     Toast.makeText(activity, "SUCCESS" , Toast.LENGTH_SHORT).show();
                     isSuceed = true;
@@ -743,7 +739,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
             }
         });

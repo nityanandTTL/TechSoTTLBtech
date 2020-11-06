@@ -21,8 +21,6 @@ import com.scottyab.rootbeer.RootBeer;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetSSLKeyRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.LogoutRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.NotificationMappingRequestModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.TrackUserActivityRequestModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonPOSTResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.NotificationMappingResponseModel;
@@ -64,8 +62,6 @@ import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -579,12 +575,12 @@ public class SplashActivity extends AppCompatActivity {
             commonResponeModelCall.enqueue(new Callback<CommonResponseModel>() {
                 @Override
                 public void onResponse(Call<CommonResponseModel> call, Response<CommonResponseModel> response) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(mActivity);
                     CommonResponseModel commonResponseModel = response.body();
                 }
                 @Override
                 public void onFailure(Call<CommonResponseModel> call, Throwable t) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(mActivity);
                 }
             });
         } catch (Exception e) {

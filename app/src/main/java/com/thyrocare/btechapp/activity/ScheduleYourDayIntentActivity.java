@@ -27,16 +27,12 @@ import com.thyrocare.btechapp.models.api.request.SetBtechAvailabilityAPIRequestM
 import com.thyrocare.btechapp.models.data.SlotModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractActivity;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-
-import org.json.JSONException;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -303,7 +299,7 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
         responseCall.enqueue(new Callback< ArrayList<SlotModel>>() {
             @Override
             public void onResponse(Call< ArrayList<SlotModel>> call, retrofit2.Response< ArrayList<SlotModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     slotsArr = response.body();
                     selectedSlotsArr = new ArrayList<>();
@@ -323,7 +319,7 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
 
             @Override
             public void onFailure(Call< ArrayList<SlotModel>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -380,7 +376,7 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful()) {
                     TastyToast.makeText(activity,  "Availability set Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     // Toast.makeText(activity, "Availability set Successfully", Toast.LENGTH_SHORT).show();
@@ -410,7 +406,7 @@ public class ScheduleYourDayIntentActivity extends AbstractActivity {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 Toast.makeText(activity, "Failed to set Availability", Toast.LENGTH_SHORT).show();
             }
         });

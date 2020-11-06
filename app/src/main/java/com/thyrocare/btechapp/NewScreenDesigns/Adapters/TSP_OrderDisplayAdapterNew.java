@@ -720,7 +720,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 if (response.code() == 200) {
                     if (onClickListeners != null) {
                         onClickListeners.onRefreshAdapter();
@@ -746,7 +746,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });
@@ -764,7 +764,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 if (response.code() == 200) {
                     AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
 
@@ -785,7 +785,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(activity);
                 MessageLogger.LogDebug("Errror", t.getMessage());
             }
         });

@@ -50,11 +50,11 @@ public class GetAcessTokenAndOTPAPIController {
         accessTokenForOTPRequestModel.setVersion(""+appLevelVersionCode);
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.RequestForOTPTokenAPI(accessTokenForOTPRequestModel);
-        globalClass.showProgressDialog();
+        globalClass.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {
             @Override
             public void onResponse(Call<CommonPOSTResponseModel> call, Response<CommonPOSTResponseModel> response) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     CommonPOSTResponseModel model1 = response.body();
                     if (model1 != null && !InputUtils.isNull(model1.getRespId()) && model1.getRespId().equalsIgnoreCase("RES0000")){
@@ -77,7 +77,7 @@ public class GetAcessTokenAndOTPAPIController {
             }
             @Override
             public void onFailure(Call<CommonPOSTResponseModel> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(mActivity);
                 globalClass.showCustomToast(mActivity, "Something went wrong. Please try after sometime.");
                 onFailureResponseReceived();
             }
@@ -89,11 +89,11 @@ public class GetAcessTokenAndOTPAPIController {
         globalClass.showCustomToast(mActivity, "Sending OTP please wait..");
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.RequestForOTPAPI(model);
-        globalClass.showProgressDialog();
+        globalClass.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {
             @Override
             public void onResponse(Call<CommonPOSTResponseModel> call, Response<CommonPOSTResponseModel> response) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     CommonPOSTResponseModel model1 = response.body();
                     if (onResponseListener != null) {
@@ -107,7 +107,7 @@ public class GetAcessTokenAndOTPAPIController {
 
             @Override
             public void onFailure(Call<CommonPOSTResponseModel> call, Throwable t) {
-                globalClass.hideProgressDialog();
+                globalClass.hideProgressDialog(mActivity);
                 globalClass.showCustomToast(mActivity, "Something went wrong. Please try after sometime.");
 
                 onFailureResponseReceived();

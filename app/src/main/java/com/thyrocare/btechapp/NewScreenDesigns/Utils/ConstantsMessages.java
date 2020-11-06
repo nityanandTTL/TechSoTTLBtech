@@ -8,6 +8,11 @@ public class ConstantsMessages {
     public static final String SomethingWentwrngMsg = "Something went wrong please try after sometime.";
     public static final String PermissionsDeniedMsg = "Permissions Denied";
 
+    public static String PermissionRequiredMsg = "We need few permission for proper Working of the App.\nPlease press on allow button in next Screen for all permissions. ";
+    public static String PermissionRejectedMsg = "If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission ";
+    public static String ProvideRequestedPermission = "Please provide the permissions requested. Application will shutdown now.";
+    public static String PermissionDenied = "Permission Denied\n";
+
     public static final String OrdercontainonlyOneBeneficaryCannotremovedMsg = "This order contains only one beneficiary.Cannot remove this beneficiary.";
     public static final String AllfleidswithstarMsg = "All fields with * are mandatory";
     public static final String AllFieldMsg = "All fields are mandatory";
@@ -126,4 +131,14 @@ public class ConstantsMessages {
     public static String CustomerOptedForPPE = "This customer has opted for collection with PPE. Ensure to have PPE with you then only accept the order";
     public static String EnsureToWearPPE = "Ensure to wear PPE before serving this patient";
     public static String InValidBtechID = "Unable to Identify you Identity.Please re-login and try again.";
+    public static String FailedToAutodetectCity = "Failed to auto Detect your city.\nPlease city enter manually";
+    public static final String FailTodetectCityMsg = "Failed to detect city \nPlease check your internet connection !";
+    public static String Recordingstarted = "Recording started";
+    public static String EmailIDShouldNotStartWithSpace = "Email ID should not start with space";
+    public static String RecordingCompleted = "Recording completed";
+    public static String TestBookingDoneSuccessfully = "Test booking done successfully !";
+    public static String WhatsAppNotinstalled = "Whatsapp not installed";
+    public static String NoImageClientInstalled = "There is no email client installed";
+    public static final String Mobilerefferedmorethan10timesMsg = "This mobile number is already referred for more than 10 times in last 90 days.Kindly enter another mobile number.";
+    public static final String FailedToSubmitRequest = "Failed to submit your request. Please try after sometime.";
 }

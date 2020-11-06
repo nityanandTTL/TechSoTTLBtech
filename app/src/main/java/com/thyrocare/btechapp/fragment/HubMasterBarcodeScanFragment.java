@@ -22,7 +22,6 @@ import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
@@ -30,24 +29,18 @@ import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.adapter.HubScanBarcodeListAdapter;
 import com.thyrocare.btechapp.dao.DhbDao;
-import com.thyrocare.btechapp.models.api.request.BtechsRequestModel;
 import com.thyrocare.btechapp.models.api.request.MasterBarcodeMappingRequestModel;
 import com.thyrocare.btechapp.models.api.response.BtechCollectionsResponseModel;
-import com.thyrocare.btechapp.models.api.response.MaterialBtechStockResponseModel;
 import com.thyrocare.btechapp.models.data.HUBBTechModel;
 import com.thyrocare.btechapp.models.data.HubBarcodeModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -229,7 +222,7 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
         responseCall.enqueue(new Callback<BtechCollectionsResponseModel>() {
             @Override
             public void onResponse(Call<BtechCollectionsResponseModel> call, retrofit2.Response<BtechCollectionsResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     BtechCollectionsResponseModel btechCollectionsResponseModel = response.body();
                     if (btechCollectionsResponseModel != null && btechCollectionsResponseModel.getBarcode() != null && btechCollectionsResponseModel.getBarcode().size() > 0) {
@@ -247,7 +240,7 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
             }
             @Override
             public void onFailure(Call<BtechCollectionsResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -400,7 +393,7 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                     alertDialogBuilder.setMessage("Dispatched Successfully.");
@@ -420,7 +413,7 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

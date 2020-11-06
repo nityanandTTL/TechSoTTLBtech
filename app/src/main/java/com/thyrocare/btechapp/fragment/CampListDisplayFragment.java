@@ -2,10 +2,9 @@ package com.thyrocare.btechapp.fragment;
 
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -34,27 +32,18 @@ import com.thyrocare.btechapp.dao.models.OrderDetailsDao;
 import com.thyrocare.btechapp.delegate.CampListDisplayRecyclerViewAdapterDelegate;
 import com.thyrocare.btechapp.dialog.ConfirmOrderReleaseDialog;
 import com.thyrocare.btechapp.models.api.request.CampStartedRequestModel;
-import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
-import com.thyrocare.btechapp.models.api.response.BtechClientsResponseModel;
 import com.thyrocare.btechapp.models.api.response.CampListDisplayResponseModel;
 import com.thyrocare.btechapp.models.api.response.CampScanQRResponseModel;
-import com.thyrocare.btechapp.models.data.BrandTestMasterModel;
-import com.thyrocare.btechapp.models.data.BtechClientsModel;
 import com.thyrocare.btechapp.models.data.CampAllOrderDetailsModel;
 import com.thyrocare.btechapp.models.data.CampBtechModel;
 import com.thyrocare.btechapp.models.data.CampDetailModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
-import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -187,7 +176,7 @@ public class CampListDisplayFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<CampListDisplayResponseModel>() {
             @Override
             public void onResponse(Call<CampListDisplayResponseModel> call, retrofit2.Response<CampListDisplayResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     campListDisplayResponseModel = new CampListDisplayResponseModel();
                     campListDisplayResponseModel = response.body();
@@ -201,7 +190,7 @@ public class CampListDisplayFragment extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<CampListDisplayResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -259,7 +248,7 @@ public class CampListDisplayFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful()) {
                     if (campStartedRequestModel.getType() == 7){
                         Toast.makeText(activity, "" + response.body(), Toast.LENGTH_SHORT).show();
@@ -281,7 +270,7 @@ public class CampListDisplayFragment extends AbstractFragment {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 MessageLogger.LogDebug("Errror", t.getMessage());
             }
         });
@@ -330,7 +319,7 @@ public class CampListDisplayFragment extends AbstractFragment {
             responseCall.enqueue(new Callback<CampScanQRResponseModel>() {
                 @Override
                 public void onResponse(Call<CampScanQRResponseModel> call, retrofit2.Response<CampScanQRResponseModel> response) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(activity);
 
                     if (response.isSuccessful() && response.body() != null) {
 
@@ -357,7 +346,7 @@ public class CampListDisplayFragment extends AbstractFragment {
 
                 @Override
                 public void onFailure(Call<CampScanQRResponseModel> call, Throwable t) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(activity);
                     global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             });

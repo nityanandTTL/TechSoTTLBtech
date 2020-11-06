@@ -248,7 +248,7 @@ public class Ledger_module_fragment_new extends Fragment {
         cash_register_details_modelCall.enqueue(new Callback<Get_cash_register_details_Model>() {
             @Override
             public void onResponse(Call<Get_cash_register_details_Model> call, Response<Get_cash_register_details_Model> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     Get_cash_register_details_Model get_cash_register_details_model = response.body();
                     if (get_cash_register_details_model.getLedgerDetails() != null && get_cash_register_details_model.getLedgerDetails().size() > 0) {
@@ -276,7 +276,7 @@ public class Ledger_module_fragment_new extends Fragment {
 
             @Override
             public void onFailure(Call<Get_cash_register_details_Model> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (connectionDetector.isConnectingToInternet()) {
                     call_deposite_register(fromdate, todate);
                 }else{
@@ -297,7 +297,7 @@ public class Ledger_module_fragment_new extends Fragment {
         getdeposit_call.enqueue(new Callback<ArrayList<Get_deposite_details_model>>() {
             @Override
             public void onResponse(Call<ArrayList<Get_deposite_details_model>> call, Response<ArrayList<Get_deposite_details_model>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     ArrayList<Get_deposite_details_model> get_deposite_details_model = response.body();
                     if ( get_deposite_details_model.size() > 0) {
@@ -323,7 +323,7 @@ public class Ledger_module_fragment_new extends Fragment {
 
             @Override
             public void onFailure(Call<ArrayList<Get_deposite_details_model>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (connectionDetector.isConnectingToInternet()) {
                     call_btechEraningapi(fromdate, todate);
                 }else{
@@ -344,7 +344,7 @@ public class Ledger_module_fragment_new extends Fragment {
         get_btechEarning_modelCall.enqueue(new Callback<Get_BtechEarning_Model>() {
             @Override
             public void onResponse(Call<Get_BtechEarning_Model> call, Response<Get_BtechEarning_Model> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     Get_BtechEarning_Model get_btechEarning_model = response.body();
                     tv_cr_amount.setText("" + get_btechEarning_model.getCreditedAmount());
@@ -365,7 +365,7 @@ public class Ledger_module_fragment_new extends Fragment {
 
             @Override
             public void onFailure(Call<Get_BtechEarning_Model> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
 
             }

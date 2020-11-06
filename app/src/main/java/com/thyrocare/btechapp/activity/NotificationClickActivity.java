@@ -28,8 +28,6 @@ import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 
 import retrofit2.Call;
@@ -174,7 +172,7 @@ public class NotificationClickActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
                 if (response.code() == 200 || response.code() == 204) {
                     BundleConstants.ORDER_Notification = true;
                     if (orderStatusChangeRequestModel.getStatus() == 8){
@@ -195,7 +193,7 @@ public class NotificationClickActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
                 Toast.makeText(mActivity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
             }
         });

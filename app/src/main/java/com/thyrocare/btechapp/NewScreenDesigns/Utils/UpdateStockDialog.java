@@ -225,14 +225,14 @@ public class UpdateStockDialog extends Dialog {
             commonResponseModelCall.enqueue(new Callback<CommonResponseModel>() {
                 @Override
                 public void onResponse(Call<CommonResponseModel> call, Response<CommonResponseModel> response) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(activity);
                     CommonResponseModel commonResponseModel = response.body();
                     getStockUpdateResponse(commonResponseModel);
                 }
 
                 @Override
                 public void onFailure(Call<CommonResponseModel> call, Throwable t) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(activity);
                     global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
                     MessageLogger.LogDebug(TAG, "onFailure: " + t.getMessage());
                 }

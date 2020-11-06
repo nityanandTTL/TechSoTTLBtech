@@ -9,7 +9,6 @@ import android.database.Cursor;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -168,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<LoginResponseModel>() {
             @Override
             public void onResponse(Call<LoginResponseModel> call, Response<LoginResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponseModel responseModel = response.body();
                     if (responseModel.getRole().equals(AppConstants.LME_ROLE_ID)) {
@@ -190,7 +189,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<LoginResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showCustomToast(mActivity,SomethingWentwrngMsg,Toast.LENGTH_LONG);
             }
         });
@@ -207,7 +206,7 @@ public class LoginActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<LoginDeviceResponseModel>() {
             @Override
             public void onResponse(Call<LoginDeviceResponseModel> call, Response<LoginDeviceResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     LoginDeviceResponseModel model = response.body();
                     if (model.getRespId() == 1) {
@@ -222,7 +221,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<LoginDeviceResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showCustomToast(mActivity,SomethingWentwrngMsg,Toast.LENGTH_LONG);
             }
         });

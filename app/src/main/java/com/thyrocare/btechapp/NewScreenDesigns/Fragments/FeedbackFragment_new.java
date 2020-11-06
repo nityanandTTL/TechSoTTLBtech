@@ -154,7 +154,7 @@ public class FeedbackFragment_new extends Fragment {
             feedbackListModelCall.enqueue(new Callback<FeedbackListModel>() {
                 @Override
                 public void onResponse(Call<FeedbackListModel> call, Response<FeedbackListModel> response) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(activity);
                     FeedbackListModel feedbackListModel = response.body();
                     if (feedbackListModel != null && feedbackListModel.getRESPONSE() != null) {
                         if (feedbackListModel.getRESPONSE().equalsIgnoreCase("SUCCESS")) {
@@ -169,7 +169,7 @@ public class FeedbackFragment_new extends Fragment {
 
                 @Override
                 public void onFailure(Call<FeedbackListModel> call, Throwable t) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(activity);
                     global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
                 }
             });
@@ -250,13 +250,13 @@ public class FeedbackFragment_new extends Fragment {
             commonResponeModelCall.enqueue(new Callback<CommonResponseModel>() {
                 @Override
                 public void onResponse(Call<CommonResponseModel> call, Response<CommonResponseModel> response) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(activity);
                     CommonResponseModel commonResponseModel = response.body();
                     fetchResponse(commonResponseModel);
                 }
                 @Override
                 public void onFailure(Call<CommonResponseModel> call, Throwable t) {
-                    global.hideProgressDialog();
+                    global.hideProgressDialog(activity);
                     global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
                 }
             });

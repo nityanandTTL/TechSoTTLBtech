@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.dhb.btech.dev.permission.MAPS_RECEIVE" />
@@ -40,6 +41,8 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         tools:replace="android:icon">
 
         <activity
@@ -248,11 +251,7 @@
                 android:resource="@xml/provider"
                 tools:replace="android:resource" />
         </provider>
-        <!--
-            <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="2a0670c74854a2ed0477442a4f32c168dc57d1ba" />
-        -->
+
         <service
             android:name=".service.FireMsgService"
             android:enabled="true"

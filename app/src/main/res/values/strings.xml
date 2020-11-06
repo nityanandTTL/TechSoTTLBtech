@@ -9,7 +9,7 @@
     <string name="gps_disabled">GPS is disabled. Please enable it to continue using the application</string>
     <string name="arrived">Arrived</string>
     <string name="start">Start</string>
-    <string name="name">Ketatn Kulkarni</string>
+    <string name="name"> </string>
 
     <string name="enable_gps_title">Enable GPS</string>
     <string name="alert_msg">GPS alert dialogue message</string>
@@ -142,7 +142,7 @@
     <string name="no_face_detected">No face detected</string>
     <string name="more_than_one_face_detected">More than one face detected</string>
     <string name="barcodevalidation">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
-    <string name="addressvalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890,./- </string>
+    <string name="addressvalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890,./-</string>
     <string name="Namevalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="emailIDandMobilenumberValidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!#$%&amp;\'*+-/=?^_`{|}~.@</string>
     <string name="vailidatingemail">Validating emails </string>
@@ -221,6 +221,7 @@
     <string name="date_hint">Date</string>
     <string name="reason">Reason</string>
     <string name="remarks">Remarks</string>
+    <string name="TestAndProfiles">Tests/Profiles</string>
     <string name="progress_message_Applying_Leave_please_wait_new">Processig your request....</string>
     <string name="nature">Nature</string>
     <string name="leave_remark">Enter remark</string>
@@ -288,5 +289,37 @@
     <string name="vailImage"><u>Vial Image</u></string>
     <string name="DataNotFound">No Data Found</string>
     <string name="NoCertificates">No Certificates Uploaded yet.</string>
+    <string name="reset">Reset</string>
+    <string name="EmailId">Email</string>
+    <string name="strcity">City</string>
+    <string name="strAddress">Address</string>
+    <string name="strPincode">Pincode</string>
+
+    <string name="space_val_remarks">Remarks should not start with space</string>
+    <string name="remarks_val">Remarks should not start with special characters</string>
+    <string name="start_record">Click on below icon to start recording</string>
+    <string name="stop_record">Click on below icon to stop recording</string>
+    <string name="discard">Discard</string>
+    <string name="save">Save</string>
+    <string name="str_enter_mobile_number">Please enter mobile number</string>
+    <string name="str_should_be_ten_digits">Mobile number should be of 10 digits</string>
+    <string name="str_valid_mobile_no">Please enter valid mobile number</string>
+    <string name="str_valid_pincode">Please enter valid pincode</string>
+    <string name="str_valid_remarks">Please enter valid remarks</string>
+    <string name="str_enter_otp">Please enter OTP</string>
+    <string name="str_otp_for_digits">OTP should be of 4 digits</string>
+    <string name="str_enter_name">Please enter name</string>
+    <string name="str_enter_email">Please enter email id</string>
+    <string name="str_select_city">Please enter city</string>
+    <string name="space_val_name">Name should not start with space</string>
+    <string name="valid_name">Enter valid name</string>
+    <string name="invalid_email">Invalid email ID</string>
+    <string name="tv_name">Name</string>
+    <string name="tv_mob_no">Mobile Number</string>
+    <string name="tv_email">Email ID</string>
+    <string name="tv_city">City</string>
+    <string name="booking_id">Lead ID</string>
+    <string name="test_subject">Test details</string>
+    <string name="scan_subject">PET scan details</string>
 
 </resources>

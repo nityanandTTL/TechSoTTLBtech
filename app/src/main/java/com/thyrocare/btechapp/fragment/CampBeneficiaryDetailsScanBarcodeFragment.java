@@ -21,16 +21,12 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.thyrocare.btechapp.NewScreenDesigns.Activities.CheckoutWoeActivity;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.CampOrderBookingActivity;
-import com.thyrocare.btechapp.activity.PaymentsActivity;
 import com.thyrocare.btechapp.dao.DhbDao;
 import com.thyrocare.btechapp.dao.models.BrandMasterDao;
 import com.thyrocare.btechapp.dao.models.LabAlertMasterDao;
@@ -40,7 +36,6 @@ import com.thyrocare.btechapp.dialog.RescheduleOrderDialog;
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.btechapp.models.api.response.CampScanQRResponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseBeneficiaryModel;
-import com.thyrocare.btechapp.models.api.response.OrderBookingResponseOrderModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseVisitModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryBarcodeDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
@@ -59,14 +54,11 @@ import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
-import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -750,7 +742,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> res) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 if (res.isSuccessful() && res.body() != null) {
 
                     Toast.makeText(activity, "SUCCESS" , Toast.LENGTH_SHORT).show();
@@ -764,7 +756,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
             }
         });
@@ -779,7 +771,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
         responseCall.enqueue(new Callback<OrderBookingResponseVisitModel>() {
             @Override
             public void onResponse(Call<OrderBookingResponseVisitModel> call, retrofit2.Response<OrderBookingResponseVisitModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 if (response.isSuccessful()){
                     callWoeApi();
                 }else{
@@ -788,7 +780,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
             }
             @Override
             public void onFailure(Call<OrderBookingResponseVisitModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(activity);
                 globalclass.showCustomToast(activity,ConstantsMessages.UNABLE_TO_CONNECT);
             }
         });

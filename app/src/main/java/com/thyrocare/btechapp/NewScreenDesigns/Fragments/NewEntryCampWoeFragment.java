@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 
@@ -18,7 +17,6 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -50,7 +48,6 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampWisePati
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampWoeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CheckbarcodeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.FinalMainCampWisePatentDetailsModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.VersionControlResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -65,18 +62,12 @@ import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel1;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
-import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -360,7 +351,7 @@ public class NewEntryCampWoeFragment extends Fragment {
         responseCall.enqueue(new Callback<CampPatientSearchDetailResponseModel>() {
             @Override
             public void onResponse(Call<CampPatientSearchDetailResponseModel> call, Response<CampPatientSearchDetailResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null){
                     onCampDetailsReceived(response.body());
                 }else{
@@ -369,7 +360,7 @@ public class NewEntryCampWoeFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<CampPatientSearchDetailResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 ShowNoCampAssignedAlertBox();
             }
         });
@@ -427,7 +418,7 @@ public class NewEntryCampWoeFragment extends Fragment {
         responseCall.enqueue(new Callback<CampWisePatientDetailResponseModel>() {
             @Override
             public void onResponse(Call<CampWisePatientDetailResponseModel> call, Response<CampWisePatientDetailResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null){
                     CampWisePatientDetailResponseModel campWisePatientDetailResponseModel = response.body();
                     if (campWisePatientDetailResponseModel.getPatient() != null ){
@@ -444,7 +435,7 @@ public class NewEntryCampWoeFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<CampWisePatientDetailResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showalert_OK("No Data found for '"+StrSearch+"'" ,mActivity);
             }
         });
@@ -702,7 +693,7 @@ public class NewEntryCampWoeFragment extends Fragment {
         responseCall.enqueue(new Callback<CheckbarcodeResponseModel>() {
             @Override
             public void onResponse(Call<CheckbarcodeResponseModel> call, retrofit2.Response<CheckbarcodeResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     if (!StringUtils.isNull(response.body().getRES_ID()) && response.body().getRES_ID().equalsIgnoreCase("RES0000")){
                         if (SelectedPatientBarcodeArrayList != null) {
@@ -739,7 +730,7 @@ public class NewEntryCampWoeFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<CheckbarcodeResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 Toast.makeText(mActivity, FailedToVaildateBarcode, Toast.LENGTH_SHORT).show();
             }
         });
@@ -888,7 +879,7 @@ public class NewEntryCampWoeFragment extends Fragment {
         responseCall.enqueue(new Callback<CampWoeResponseModel>() {
             @Override
             public void onResponse(Call<CampWoeResponseModel> call, Response<CampWoeResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null){
                     onSubmitWoeResponseReceived(response.body());
                 }else{
@@ -897,7 +888,7 @@ public class NewEntryCampWoeFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<CampWoeResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
             }
         });
 
@@ -955,7 +946,7 @@ public class NewEntryCampWoeFragment extends Fragment {
         responseCall.enqueue(new Callback<CommonResponseModel1>() {
             @Override
             public void onResponse(Call<CommonResponseModel1> call, Response<CommonResponseModel1> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
 
                 if (response.isSuccessful() && response.body() != null) {
                     androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder;
@@ -987,7 +978,7 @@ public class NewEntryCampWoeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CommonResponseModel1> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 patientID = woepatientID;
                 btn_submit.setText("Upload Vail Photo");
                 globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.",Toast.LENGTH_LONG);

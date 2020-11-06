@@ -35,7 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.CheckoutWoeAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.GetAcessTokenAndOTPAPIController;
@@ -44,7 +43,6 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonPOSTRe
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
@@ -53,10 +51,7 @@ import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.PaymentsActivity;
 import application.ApplicationController;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
-import com.thyrocare.btechapp.fragment.HomeScreenFragment;
-import com.thyrocare.btechapp.models.api.request.CashDepositEntryRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
-import com.thyrocare.btechapp.models.api.response.ErrorModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseBeneficiaryModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseOrderModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseVisitModel;
@@ -72,7 +67,6 @@ import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 
 
 import com.thyrocare.btechapp.network.MyBroadcastReceiver;
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -81,7 +75,6 @@ import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Time;
@@ -97,8 +90,6 @@ import retrofit2.Response;
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PLEASE_WAIT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
-import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 
 
 public class CheckoutWoeActivity extends AppCompatActivity {
@@ -437,7 +428,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<OrderBookingResponseVisitModel>() {
             @Override
             public void onResponse(Call<OrderBookingResponseVisitModel> call, retrofit2.Response<OrderBookingResponseVisitModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null){
                     SendinglatlongOrderAllocation(5);
 
@@ -551,7 +542,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<OrderBookingResponseVisitModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showCustomToast(mActivity, ConstantsMessages.UNABLE_TO_CONNECT,Toast.LENGTH_LONG);
                 MessageLogger.LogDebug("Errror", t.getMessage());
             }
@@ -566,7 +557,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> res) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (res.isSuccessful() && res.body() != null) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
@@ -743,7 +734,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 Toast.makeText(mActivity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
             }
         });
@@ -1240,7 +1231,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {
             @Override
             public void onResponse(Call<CommonPOSTResponseModel> call, Response<CommonPOSTResponseModel> response) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     CommonPOSTResponseModel ResponseModel = response.body();
                     if (ResponseModel != null && !InputUtils.isNull(ResponseModel.getResponse1()) && ResponseModel.getResponse1().equalsIgnoreCase("SUCCESS")){
@@ -1269,7 +1260,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<CommonPOSTResponseModel> call, Throwable t) {
-                globalclass.hideProgressDialog();
+                globalclass.hideProgressDialog(mActivity);
                 globalclass.showCustomToast(mActivity, "Something went wrong. Please try after sometime.");
             }
         });

@@ -4,14 +4,11 @@ package com.thyrocare.btechapp.fragment;
  * Created by Orion on 6/14/2017.
  */
 
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,20 +27,13 @@ import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.adapter.OrderServedDisplayDetailsAdapter;
 import com.thyrocare.btechapp.delegate.OrderServedDisplayDetailsAdapterClickedDelegate;
-import com.thyrocare.btechapp.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderServedResponseModel;
 import com.thyrocare.btechapp.models.data.BtechOrderModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
-import com.thyrocare.btechapp.utils.api.Logger;
-import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -205,7 +195,7 @@ public class OrderServedFragment extends AbstractFragment {
         responseCall.enqueue(new Callback<OrderServedResponseModel>() {
             @Override
             public void onResponse(Call<OrderServedResponseModel> call, retrofit2.Response<OrderServedResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     OrderServedResponseModel orderServedResponseModel = response.body();
                     if (orderServedResponseModel != null && orderServedResponseModel.getBtchOrd().size() > 0) {
@@ -222,7 +212,7 @@ public class OrderServedFragment extends AbstractFragment {
             }
             @Override
             public void onFailure(Call<OrderServedResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

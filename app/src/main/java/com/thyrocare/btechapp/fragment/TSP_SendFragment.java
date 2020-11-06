@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,30 +32,23 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.adapter.Tsp_HubScanBarcodeListAdapter;
-import com.thyrocare.btechapp.models.api.request.BtechwithHub_MasterBarcodeMappingRequestModel;
 import com.thyrocare.btechapp.models.api.request.Tsp_Send_RequestModel;
-import com.thyrocare.btechapp.models.api.response.BtechwithHubResponseModel;
 import com.thyrocare.btechapp.models.api.response.Tsp_ScanBarcodeResponseModel;
 import com.thyrocare.btechapp.models.data.Tsp_ScanBarcodeDataModel;
 import com.thyrocare.btechapp.models.data.Tsp_SendMode_DataModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -297,7 +289,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
                 if (response.isSuccessful()){
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mActivity);
                     alertDialogBuilder.setCancelable(false);
@@ -318,7 +310,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
             }
         });
     }
@@ -331,7 +323,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
         responseCall.enqueue(new Callback<ArrayList<Tsp_SendMode_DataModel>>() {
             @Override
             public void onResponse(Call<ArrayList<Tsp_SendMode_DataModel>> call, retrofit2.Response<ArrayList<Tsp_SendMode_DataModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     tsp_sendMode_dataModelsArr = new ArrayList<>();
                     tsp_sendMode_dataModelsArr = response.body();
@@ -375,7 +367,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
             }
             @Override
             public void onFailure(Call<ArrayList<Tsp_SendMode_DataModel>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
                 global.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
@@ -402,7 +394,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
         responseCall.enqueue(new Callback<Tsp_ScanBarcodeResponseModel>() {
             @Override
             public void onResponse(Call<Tsp_ScanBarcodeResponseModel> call, retrofit2.Response<Tsp_ScanBarcodeResponseModel> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     Tsp_ScanBarcodeResponseModel tsp_scanBarcodeResponseModel = response.body();
                     if (tsp_scanBarcodeResponseModel != null && tsp_scanBarcodeResponseModel.getTspBarcodes().size() > 0) {
@@ -431,7 +423,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
             }
             @Override
             public void onFailure(Call<Tsp_ScanBarcodeResponseModel> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(mActivity);
                 global.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });

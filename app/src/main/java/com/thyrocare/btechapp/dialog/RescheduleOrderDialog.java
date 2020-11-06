@@ -2,17 +2,13 @@ package com.thyrocare.btechapp.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,19 +21,14 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.delegate.OrderRescheduleDialogButtonClickedDelegate;
-import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.RemarksResponseModel;
 import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +36,6 @@ import java.util.Calendar;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
 /**
@@ -106,7 +96,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
         responseCall.enqueue(new Callback<ArrayList<RemarksResponseModel>>() {
             @Override
             public void onResponse(Call<ArrayList<RemarksResponseModel>> call, retrofit2.Response<ArrayList<RemarksResponseModel>> response) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     remarksResponseModelsarr = new ArrayList<>();
                     remarksResponseModelsarr = response.body();
@@ -159,7 +149,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
             }
             @Override
             public void onFailure(Call<ArrayList<RemarksResponseModel>> call, Throwable t) {
-                global.hideProgressDialog();
+                global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
