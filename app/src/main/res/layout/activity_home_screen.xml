@@ -36,7 +36,6 @@
                 android:id="@+id/img_thyrocare"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-
                 android:src="@drawable/thyro_logo"
                 />
             <TextView

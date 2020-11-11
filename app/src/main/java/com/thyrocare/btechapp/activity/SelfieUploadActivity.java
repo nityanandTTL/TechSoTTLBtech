@@ -457,7 +457,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             return false;
         }
         float temperature = StringUtils.parseFloat(edt_bodyTemp.getText().toString().trim());
-        if (temperature < 80 || temperature > 150) {
+        if (temperature < 80 || temperature > 110) {
             TastyToast.makeText(activity, ConstantsMessages.BodyTempLimit, TastyToast.LENGTH_LONG, TastyToast.WARNING);
             return false;
         }
