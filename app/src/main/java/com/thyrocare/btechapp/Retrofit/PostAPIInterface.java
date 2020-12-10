@@ -2,6 +2,8 @@ package com.thyrocare.btechapp.Retrofit;
 
 
 
+import android.widget.Toast;
+
 import com.google.gson.JsonObject;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.AvailableStockModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.BtechWiseVersionTrackerRequestModel;
@@ -12,11 +14,11 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.FeedbackMode
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetAccessTokenForOTPRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetBtechCertificateRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetSSLKeyRequestModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SubmitCampWoeRequestModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SubmitB2BWoeRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampModuleMISResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampPatientSearchDetailResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampWisePatientDetailResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampWoeResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.B2BWoeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetBtechCertifcateResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.LeaveIntimation_SubmitModel;
@@ -31,6 +33,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonPOSTRe
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.MainMaterialModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.NotificationMappingResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.models.api.request.BtechsRequestModel;
 import com.thyrocare.btechapp.models.api.request.BtechwithHub_MasterBarcodeMappingRequestModel;
 import com.thyrocare.btechapp.models.api.request.CampStartedRequestModel;
@@ -38,6 +41,7 @@ import com.thyrocare.btechapp.models.api.request.CartAPIRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.EmailVaildationPostModel;
 import com.thyrocare.btechapp.models.api.request.CashDepositEntryRequestModel;
 import com.thyrocare.btechapp.models.api.request.ChangePasswordRequestModel;
+import com.thyrocare.btechapp.models.api.request.GetPatientDetailsRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetVideoLanguageWiseRequestModel;
 import com.thyrocare.btechapp.models.api.request.HubStartRequestModel;
 import com.thyrocare.btechapp.models.api.request.MasterBarcodeMappingRequestModel;
@@ -69,6 +73,7 @@ import com.thyrocare.btechapp.models.api.response.OrderBookingResponseVisitModel
 import com.thyrocare.btechapp.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentStartTransactionAPIResponseModel;
+import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
 import com.thyrocare.btechapp.models.api.response.VideosResponseModel;
@@ -81,6 +86,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
@@ -99,6 +105,10 @@ public interface PostAPIInterface {
 
     @POST("api/AllSMS/PostVerifyOTP")
     Call<String> CallValidateOTPAPI(@Body OrderPassRequestModel orderPassRequestModel);
+
+    @Headers("Content-Type: application/json")
+    @POST("COMMON.svc/otp")
+    Call<CommonPOSTResponseModel> CallValidateOTPForQRcodeBasedWOEAPI(@Body RequestOTPModel model);
 
     @Multipart
     @POST("api/OrderAllocation/TRFUPLOAD")
@@ -288,7 +298,7 @@ public interface PostAPIInterface {
     Call<CampModuleMISResponseModel> CallGetCampWOEMISAPI (@Body CampWoeMISReuestModel campWoeMISReuestModel);
 
     @POST("B2B/WO.svc/postworkorder")
-    Call<CampWoeResponseModel> CallSubmitCampWOEAPI (@Body SubmitCampWoeRequestModel submitCampWoeRequestModel);
+    Call<B2BWoeResponseModel> CallSubmitCampWOEAPI (@Body SubmitB2BWoeRequestModel submitB2BWoeRequestModel);
 
 
     @Multipart
@@ -325,5 +335,15 @@ public interface PostAPIInterface {
                                                                  @Part("pay_type")  RequestBody pay_type,
                                                                  @Part MultipartBody.Part imageFileMultiBody,
                                                                  @Part MultipartBody.Part audioFileMultiBody);
+
+    @POST("B2B/WO.svc/Btechpostworkorder")
+    Call<B2BWoeResponseModel> CallQrCodeBasedSubmitWOEAPI(@Body SubmitB2BWoeRequestModel submitB2BWoeRequestModel);
+
+    @POST("B2B/Common.svc/CampPatientDetails")
+    Call<QrcodeBasedPatientDetailsResponseModel> CallGetQRCodeBasedPatientDetailsAPI(@Body GetPatientDetailsRequestModel model);
+
+    @Headers("Content-Type: application/json")
+    @POST("COMMON.svc/otp")
+    Call<CommonPOSTResponseModel> CallGenerateOTPAPI(@Body RequestOTPModel model);
 
 }

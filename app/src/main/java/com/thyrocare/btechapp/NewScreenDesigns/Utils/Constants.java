@@ -7,6 +7,10 @@ public class Constants {
     public static String StockAvialablity_TestingBtechID = "884544758";
     public static String StockAvailability_API_KEY = "68rbZ40eNeRephUzIDTos9SsQIm4mHlT3lCNnqI)Ivk=";
 
+    public static final String BtechAppID_FOROTP = "5";
+
+
+
     public static final String BTECH_ROLE_ID = "4";
     public static final String HUB_ROLE_ID = "6";
     public static final String TSP_ROLE_ID = "9";

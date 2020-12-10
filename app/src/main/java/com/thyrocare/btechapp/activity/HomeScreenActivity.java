@@ -56,6 +56,7 @@ import com.thyrocare.btechapp.fragment.HomeScreenFragment;
 import com.thyrocare.btechapp.fragment.HubListDisplayFragment;
 import com.thyrocare.btechapp.fragment.MaterialFragment;
 import com.thyrocare.btechapp.fragment.OrderServedFragment;
+import com.thyrocare.btechapp.fragment.QrCodeWoeFragment;
 import com.thyrocare.btechapp.fragment.ScheduleYourDayFragment;
 import com.thyrocare.btechapp.uiutils.AbstractActivity;
 import com.thyrocare.btechapp.utils.api.Logger;
@@ -377,6 +378,10 @@ public class HomeScreenActivity extends AbstractActivity
         } else if (id == R.id.nav_change_password) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(ChangePasswordFragment.newInstance(), false, false, ChangePasswordFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        }else if (id == R.id.nav_QrcodeWOE) {
+            toolbarHome.setVisibility(View.VISIBLE);
+            pushFragments(QrCodeWoeFragment.newInstance(), false, false,
+                    QrCodeWoeFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         } else if (id == R.id.nav_clientEntry) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(ClientEntryFragment.newInstance(), false, false,

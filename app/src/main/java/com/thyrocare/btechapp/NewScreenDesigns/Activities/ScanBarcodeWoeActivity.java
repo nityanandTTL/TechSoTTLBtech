@@ -372,9 +372,9 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                BarcodepositionToScan = barcodePosition;
                BenPositionForScan = BenPosition;
                if (BuildConfig.DEBUG){
-//                   OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
+                   OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
 //                   EnterBarocodeManually();
-                   OpenScanBarcodeScreen();
+//                   OpenScanBarcodeScreen();
                }else{
                    OpenScanBarcodeScreen();
                }

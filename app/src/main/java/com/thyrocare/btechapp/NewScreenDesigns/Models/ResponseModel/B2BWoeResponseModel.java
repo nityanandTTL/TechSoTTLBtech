@@ -2,7 +2,7 @@ package com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel;
 
 import java.io.Serializable;
 
-public class CampWoeResponseModel implements Serializable {
+public class B2BWoeResponseModel implements Serializable {
 
     String LeadID;
     String RES_ID;

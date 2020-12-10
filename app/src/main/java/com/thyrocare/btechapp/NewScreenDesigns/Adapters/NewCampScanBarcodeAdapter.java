@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SubmitCampWoeRequestModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SubmitB2BWoeRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -26,10 +26,10 @@ public class NewCampScanBarcodeAdapter extends RecyclerView.Adapter<NewCampScanB
     private final LayoutInflater layoutInflater;
     private final AppPreferenceManager appPreferenceManager;
     private final Global globalClass;
-    ArrayList<SubmitCampWoeRequestModel.Barcodelist> barcodelistArrayList;
+    ArrayList<SubmitB2BWoeRequestModel.Barcodelist> barcodelistArrayList;
     private OnClickListeners onClickListeners;
 
-    public NewCampScanBarcodeAdapter(Activity activity, ArrayList<SubmitCampWoeRequestModel.Barcodelist> barcodelistArrayList) {
+    public NewCampScanBarcodeAdapter(Activity activity, ArrayList<SubmitB2BWoeRequestModel.Barcodelist> barcodelistArrayList) {
         this.activity = activity;
         layoutInflater = LayoutInflater.from(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
@@ -37,7 +37,7 @@ public class NewCampScanBarcodeAdapter extends RecyclerView.Adapter<NewCampScanB
         this.barcodelistArrayList = barcodelistArrayList;
     }
 
-    public void UpdateBarcodeList(ArrayList<SubmitCampWoeRequestModel.Barcodelist> barcodelistArrayList){
+    public void UpdateBarcodeList(ArrayList<SubmitB2BWoeRequestModel.Barcodelist> barcodelistArrayList){
          this.barcodelistArrayList = barcodelistArrayList;
     }
 

@@ -144,6 +144,7 @@
     <string name="barcodevalidation">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
     <string name="addressvalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890,./-</string>
     <string name="Namevalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="FirstNamevalidation">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="emailIDandMobilenumberValidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!#$%&amp;\'*+-/=?^_`{|}~.@</string>
     <string name="vailidatingemail">Validating emails </string>
     <string name="Mobile_no_validation">1234567890</string>
@@ -321,5 +322,15 @@
     <string name="booking_id">Lead ID</string>
     <string name="test_subject">Test details</string>
     <string name="scan_subject">PET scan details</string>
+    <string name="strScanQRCode">Scan QR Code</string>
+    <string name="strName">Name *</string>
+    <string name="strProduct">Product *</string>
+    <string name="strFirstName">First name *</string>
+    <string name="strLastName">Last name *</string>
+    <string name="strMobileno">Mobile *</string>
+    <string name="strEmailId">Email *</string>
+    <string name="strAddres">Address *</string>
+    <string name="Pincode">Pincode *</string>
+    <string name="strAge">Age *</string>
 
 </resources>

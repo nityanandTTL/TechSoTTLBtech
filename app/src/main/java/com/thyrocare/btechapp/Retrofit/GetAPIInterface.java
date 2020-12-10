@@ -33,6 +33,7 @@ import com.thyrocare.btechapp.models.api.response.OrderPassresponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderServedResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentModeMasterResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
+import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.RemarksRequestToReleaseResponseModel;
 import com.thyrocare.btechapp.models.api.response.RemarksResponseModel;
 import com.thyrocare.btechapp.models.api.response.Tsp_ScanBarcodeResponseModel;
@@ -276,5 +277,6 @@ public interface GetAPIInterface {
 
     @GET("api/BenTestList/GetTestList/{benID}")
     Call<GetTestListResponseModel> CallGetTestDetailsAPI(@Path("benID") String benID);
+
 }
 

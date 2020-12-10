@@ -3,7 +3,7 @@ package com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SubmitCampWoeRequestModel implements Serializable {
+public class SubmitB2BWoeRequestModel implements Serializable {
 
     Woe woe;
     ArrayList<Barcodelist> barcodelist;
@@ -18,11 +18,11 @@ public class SubmitCampWoeRequestModel implements Serializable {
         this.woe = woe;
     }
 
-    public ArrayList<SubmitCampWoeRequestModel.Barcodelist> getBarcodelist() {
+    public ArrayList<SubmitB2BWoeRequestModel.Barcodelist> getBarcodelist() {
         return barcodelist;
     }
 
-    public void setBarcodelist(ArrayList<SubmitCampWoeRequestModel.Barcodelist> barcodelist) {
+    public void setBarcodelist(ArrayList<SubmitB2BWoeRequestModel.Barcodelist> barcodelist) {
         this.barcodelist = barcodelist;
     }
 
@@ -86,6 +86,7 @@ public class SubmitCampWoeRequestModel implements Serializable {
         String CONT_PERSON;
         String OS;
         String purpose;
+        String ADDITIONAL3;
 
         public String getORDER_NO() {
             return ORDER_NO;
@@ -421,6 +422,14 @@ public class SubmitCampWoeRequestModel implements Serializable {
 
         public void setPurpose(String purpose) {
             this.purpose = purpose;
+        }
+
+        public String getADDITIONAL3() {
+            return ADDITIONAL3;
+        }
+
+        public void setADDITIONAL3(String ADDITIONAL3) {
+            this.ADDITIONAL3 = ADDITIONAL3;
         }
     }
 

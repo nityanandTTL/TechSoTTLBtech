@@ -11,6 +11,7 @@ public class RequestOTPModel implements Serializable {
     String otpTo;
     String orderno;
     String ReqId;
+    String otpno;
 
 
     public String getApi_key() {
@@ -67,5 +68,13 @@ public class RequestOTPModel implements Serializable {
 
     public void setReqId(String reqId) {
         ReqId = reqId;
+    }
+
+    public String getOtpno() {
+        return otpno;
+    }
+
+    public void setOtpno(String otpno) {
+        this.otpno = otpno;
     }
 }

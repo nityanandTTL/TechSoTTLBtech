@@ -21,6 +21,11 @@
             android:title="Hub" />
 
         <item
+            android:id="@+id/nav_QrcodeWOE"
+            android:icon="@drawable/hub_icon"
+            android:title="Qr Code WOE" />
+
+        <item
             android:id="@+id/nav_clientEntry"
             android:icon="@drawable/client_entry_icon"
             android:title="@string/clientEntry" />

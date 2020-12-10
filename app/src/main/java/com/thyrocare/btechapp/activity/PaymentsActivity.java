@@ -425,7 +425,7 @@ public class PaymentsActivity extends AbstractActivity {
             }
 
 
-            if (fetchLedgerResponseModel != null && fetchLedgerResponseModel.getLedgerDetails().size() > 0) {
+            if (fetchLedgerResponseModel != null && fetchLedgerResponseModel.getLedgerDetails() != null && fetchLedgerResponseModel.getLedgerDetails().size() > 0) {
 
                 tlCR = new TableLayout(activity);
                 TableRow trCrH = (TableRow) LayoutInflater.from(activity).inflate(R.layout.item_title_ledger_cash_register, null);

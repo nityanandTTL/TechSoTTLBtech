@@ -2,7 +2,7 @@ package com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel;
 
 import androidx.annotation.NonNull;
 
-import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SubmitCampWoeRequestModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SubmitB2BWoeRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 
 import java.io.Serializable;
@@ -12,7 +12,7 @@ public class FinalMainCampWisePatentDetailsModel implements Serializable {
 
     CampPatientSearchDetailResponseModel.Camp camp;
     CampPatientSearchDetailResponseModel.PatientDetails patientDetails;
-    ArrayList<SubmitCampWoeRequestModel.Barcodelist> barcodelistArrayList;
+    ArrayList<SubmitB2BWoeRequestModel.Barcodelist> barcodelistArrayList;
 
     public CampPatientSearchDetailResponseModel.Camp getCamp() {
         return camp;
@@ -30,11 +30,11 @@ public class FinalMainCampWisePatentDetailsModel implements Serializable {
         this.patientDetails = patientDetails;
     }
 
-    public ArrayList<SubmitCampWoeRequestModel.Barcodelist> getBarcodelistArrayList() {
+    public ArrayList<SubmitB2BWoeRequestModel.Barcodelist> getBarcodelistArrayList() {
         return barcodelistArrayList;
     }
 
-    public void setBarcodelistArrayList(ArrayList<SubmitCampWoeRequestModel.Barcodelist> barcodelistArrayList) {
+    public void setBarcodelistArrayList(ArrayList<SubmitB2BWoeRequestModel.Barcodelist> barcodelistArrayList) {
         this.barcodelistArrayList = barcodelistArrayList;
     }
 

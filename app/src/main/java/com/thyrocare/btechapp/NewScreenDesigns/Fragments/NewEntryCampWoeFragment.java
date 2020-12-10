@@ -42,10 +42,10 @@ import com.thyrocare.btechapp.NewScreenDesigns.Adapters.NewCampScanBarcodeAdapte
 import com.thyrocare.btechapp.NewScreenDesigns.Interfaces.GoToCampMisScreen;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampPatientDetailRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampWisePatientDetailRequestModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SubmitCampWoeRequestModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SubmitB2BWoeRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampPatientSearchDetailResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampWisePatientDetailResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampWoeResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.B2BWoeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CheckbarcodeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.FinalMainCampWisePatentDetailsModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
@@ -109,7 +109,7 @@ public class NewEntryCampWoeFragment extends Fragment {
 
     private CampPatientSearchDetailResponseModel.Camp  SelectedCampDetailMainModel;
     private FinalMainCampWisePatentDetailsModel  SelectedPatientDetailMainModel;
-    ArrayList<SubmitCampWoeRequestModel.Barcodelist> SelectedPatientBarcodeArrayList = new ArrayList<>();
+    ArrayList<SubmitB2BWoeRequestModel.Barcodelist> SelectedPatientBarcodeArrayList = new ArrayList<>();
     private IntentIntegrator intentIntegrator;
     private String SampleTypeToScan = "";
     private int BarcodepositionToScan;
@@ -468,7 +468,7 @@ public class NewEntryCampWoeFragment extends Fragment {
                 CampPatientSearchDetailResponseModel.PatientDetails patientDetails = new CampPatientSearchDetailResponseModel.PatientDetails();
                 patientDetails.setName("- Search Patient -");
                 Defaultmodel.setPatientDetails(patientDetails);
-                Defaultmodel.setBarcodelistArrayList(new ArrayList<SubmitCampWoeRequestModel.Barcodelist>());
+                Defaultmodel.setBarcodelistArrayList(new ArrayList<SubmitB2BWoeRequestModel.Barcodelist>());
                 finalMainCampWisePatentDetailsAryList.add(Defaultmodel);*/
                 if (patientDetailsAryList != null &&patientDetailsAryList.size() > 0){
                     for (int j = 0; j < patientDetailsAryList.size(); j++) {
@@ -813,8 +813,8 @@ public class NewEntryCampWoeFragment extends Fragment {
             address = SelectedPatientDetailMainModel.getPatientDetails().getAddress();
         }
 
-        SubmitCampWoeRequestModel submitCampWoeRequestModel = new SubmitCampWoeRequestModel();
-        SubmitCampWoeRequestModel.Woe woe = new SubmitCampWoeRequestModel.Woe();
+        SubmitB2BWoeRequestModel submitB2BWoeRequestModel = new SubmitB2BWoeRequestModel();
+        SubmitB2BWoeRequestModel.Woe woe = new SubmitB2BWoeRequestModel.Woe();
         woe.setAADHAR_NO("");
         woe.setADDRESS(address.toUpperCase());
         woe.setAGE(Age);
@@ -863,22 +863,22 @@ public class NewEntryCampWoeFragment extends Fragment {
         woe.setWO_MODE("BTECHAPP");
         woe.setWO_STAGE(3);
 
-        submitCampWoeRequestModel.setWoe(woe);
-        submitCampWoeRequestModel.setBarcodelist(SelectedPatientBarcodeArrayList);
-        submitCampWoeRequestModel.setWoe_type("WOE");
-        submitCampWoeRequestModel.setApi_key(Apikey_WOE);//api_key
+        submitB2BWoeRequestModel.setWoe(woe);
+        submitB2BWoeRequestModel.setBarcodelist(SelectedPatientBarcodeArrayList);
+        submitB2BWoeRequestModel.setWoe_type("WOE");
+        submitB2BWoeRequestModel.setApi_key(Apikey_WOE);//api_key
 
-        CallSubmitWoeDetailsAPI(submitCampWoeRequestModel);
+        CallSubmitWoeDetailsAPI(submitB2BWoeRequestModel);
     }
 
-    private void CallSubmitWoeDetailsAPI(final SubmitCampWoeRequestModel submitCampWoeRequestModel) {
+    private void CallSubmitWoeDetailsAPI(final SubmitB2BWoeRequestModel submitB2BWoeRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
-        Call<CampWoeResponseModel> responseCall = apiInterface.CallSubmitCampWOEAPI(submitCampWoeRequestModel);
+        Call<B2BWoeResponseModel> responseCall = apiInterface.CallSubmitCampWOEAPI(submitB2BWoeRequestModel);
         globalclass.showProgressDialog(mActivity,"Please wait..");
-        responseCall.enqueue(new Callback<CampWoeResponseModel>() {
+        responseCall.enqueue(new Callback<B2BWoeResponseModel>() {
             @Override
-            public void onResponse(Call<CampWoeResponseModel> call, Response<CampWoeResponseModel> response) {
+            public void onResponse(Call<B2BWoeResponseModel> call, Response<B2BWoeResponseModel> response) {
                 globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null){
                     onSubmitWoeResponseReceived(response.body());
@@ -887,40 +887,40 @@ public class NewEntryCampWoeFragment extends Fragment {
                 }
             }
             @Override
-            public void onFailure(Call<CampWoeResponseModel> call, Throwable t) {
+            public void onFailure(Call<B2BWoeResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
             }
         });
 
     }
 
-    private void onSubmitWoeResponseReceived(CampWoeResponseModel campWoeResponseModel) {
+    private void onSubmitWoeResponseReceived(B2BWoeResponseModel b2BWoeResponseModel) {
 
-        if (campWoeResponseModel.getRES_ID() != null && campWoeResponseModel.getRES_ID().equalsIgnoreCase("RES0000")){
+        if (b2BWoeResponseModel.getRES_ID() != null && b2BWoeResponseModel.getRES_ID().equalsIgnoreCase("RES0000")){
             if (isNewEntry){
-                if (!StringUtils.isNull(campWoeResponseModel.getBarcode_patient_id())
+                if (!StringUtils.isNull(b2BWoeResponseModel.getBarcode_patient_id())
                         && !StringUtils.isNull(SelectedCampDetailMainModel.getCampID())){
-                    CallSubmitBenVailPhotoAPI("",campWoeResponseModel.getBarcode_patient_id(),SelectedCampDetailMainModel.getCampID());
+                    CallSubmitBenVailPhotoAPI("", b2BWoeResponseModel.getBarcode_patient_id(),SelectedCampDetailMainModel.getCampID());
                 }else{
-                    patientID = !StringUtils.isNull(campWoeResponseModel.getBarcode_patient_id()) ? campWoeResponseModel.getBarcode_patient_id() : "";
+                    patientID = !StringUtils.isNull(b2BWoeResponseModel.getBarcode_patient_id()) ? b2BWoeResponseModel.getBarcode_patient_id() : "";
                     btn_submit.setText("Upload Vail Photo");
                     globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.",Toast.LENGTH_LONG);
                 }
             }else{
                 if (SelectedPatientDetailMainModel.getPatientDetails() != null
                         && !StringUtils.isNull(SelectedPatientDetailMainModel.getPatientDetails().getUniqueId())
-                        && !StringUtils.isNull(campWoeResponseModel.getBarcode_patient_id())
+                        && !StringUtils.isNull(b2BWoeResponseModel.getBarcode_patient_id())
                         && !StringUtils.isNull(SelectedCampDetailMainModel.getCampID())){
 
-                    CallSubmitBenVailPhotoAPI(SelectedPatientDetailMainModel.getPatientDetails().getUniqueId(),campWoeResponseModel.getBarcode_patient_id(),SelectedCampDetailMainModel.getCampID());
+                    CallSubmitBenVailPhotoAPI(SelectedPatientDetailMainModel.getPatientDetails().getUniqueId(), b2BWoeResponseModel.getBarcode_patient_id(),SelectedCampDetailMainModel.getCampID());
                 }else{
-                    patientID = !StringUtils.isNull(campWoeResponseModel.getBarcode_patient_id()) ? campWoeResponseModel.getBarcode_patient_id() : "";
+                    patientID = !StringUtils.isNull(b2BWoeResponseModel.getBarcode_patient_id()) ? b2BWoeResponseModel.getBarcode_patient_id() : "";
                     btn_submit.setText("Upload Vail Photo");
                     globalclass.showcenterCustomToast(mActivity, "Failed to Upload Beneficiary Vial Photo. Please try again.",Toast.LENGTH_LONG);
                 }
             }
         }else{
-            globalclass.showCustomToast(mActivity,!StringUtils.isNull(campWoeResponseModel.getMessage()) ? campWoeResponseModel.getMessage() : "Failed to submit WOE. Please try Again.");
+            globalclass.showCustomToast(mActivity,!StringUtils.isNull(b2BWoeResponseModel.getMessage()) ? b2BWoeResponseModel.getMessage() : "Failed to submit WOE. Please try Again.");
         }
 
     }

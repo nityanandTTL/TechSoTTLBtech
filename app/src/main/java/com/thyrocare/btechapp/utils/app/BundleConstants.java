@@ -28,6 +28,7 @@ public class BundleConstants {
     public static final int CMD_START = 1014;
     public static final int CMD_ARRIVED = 1015;
     public static final int START_BARCODE_SCAN = 0x0000c0de;
+    public static final int START_PATIENT_QRCODE_SCAN = 0x0000f0de;
     public static final int PAYMENTS_START = 1021;
     public static final int PAYMENTS_FINISH = 1022;
 
