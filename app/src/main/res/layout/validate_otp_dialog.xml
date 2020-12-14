@@ -44,6 +44,7 @@
                 android:digits="@string/Mobile_no_validation"
                 android:layout_gravity="center"
                 android:inputType="number"
+                android:importantForAutofill="no"
                 android:maxLength="4"
                 android:textSize="@dimen/_16sdp"
                 android:padding="@dimen/_6sdp" />

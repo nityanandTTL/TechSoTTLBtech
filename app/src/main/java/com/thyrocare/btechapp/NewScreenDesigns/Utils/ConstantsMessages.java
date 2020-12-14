@@ -51,7 +51,7 @@ public class ConstantsMessages {
     public static String MOBILE_VERIFIED_FAILED = "Mobile number is already used";
     public static String OTP_GENERATION_FAILED = "Failed to generate OTP";
     public static String OTP_Verification_FAILED = "Failed to verify OTP";
-    public static String OTP_VERIFIED_SUCCESSFULLY = "OTP verified sucessfully";
+    public static String OTP_VERIFIED_SUCCESSFULLY = "OTP verified successfully";
     public static String ENTER_MOB_NO = "Enter mobile number";
     public static String ENTER_AADHAR_NO = "Enter Aadhaar number";
     public static String ENTER_PAN = "Enter Pan number";
@@ -141,7 +141,7 @@ public class ConstantsMessages {
     public static String NoImageClientInstalled = "There is no email client installed";
     public static final String Mobilerefferedmorethan10timesMsg = "This mobile number is already referred for more than 10 times in last 90 days.Kindly enter another mobile number.";
     public static final String FailedToSubmitRequest = "Failed to submit your request. Please try after sometime.";
-    public static String AreYouSureYouWantToEditPatientDetails = "Are toy sure you want to edit patient Details?";
+    public static String AreYouSureYouWantToEditPatientDetails = "Are you sure you want to edit patient Details?";
     public static String PleaseWait_RequestingOTP = "Requesting for OTP. Please wait..";
     public static String SUCCESS = "SUCCESS";
     public static String InvalidOTP = "Invalid OTP.";

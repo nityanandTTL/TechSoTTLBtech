@@ -17,7 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -231,6 +233,33 @@ public class QrCodeWoeFragment extends Fragment {
                 } else if (checkedId == R.id.rb_female) {
                     strGender = "F";
                 }
+            }
+        });
+
+        edt_Address.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                String startingchar = s.toString();
+                if (!InputUtils.isNull(startingchar)){
+                    if (startingchar.startsWith(",") ||
+                            startingchar.startsWith(".") ||
+                            startingchar.startsWith("/") ||
+                            startingchar.startsWith("-") ){
+                        edt_Address.setText("");
+                    }
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -750,7 +779,6 @@ public class QrCodeWoeFragment extends Fragment {
                     }else{
                         global.showCustomToast(mActivity, ConstantsMessages.InvalidOTP);
                     }
-                    EnableDisableAllEditFields(true);
                 } else {
                     global.showCustomToast(mActivity, ConstantsMessages.UnableToConnectMsg);
                 }
