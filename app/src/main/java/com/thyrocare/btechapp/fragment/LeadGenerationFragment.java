@@ -449,6 +449,7 @@ public class LeadGenerationFragment extends Fragment {
         InputUtils.setTextToTextView(edt_email, "");
         InputUtils.setTextToTextView(edt_remarks, "");
         InputUtils.setTextToTextView(edt_setAddress, "");
+        InputUtils.setTextToTextView(edt_pincode, "");
         edt_setAddress.setEnabled(true);
 
         img_tick.setVisibility(View.INVISIBLE);

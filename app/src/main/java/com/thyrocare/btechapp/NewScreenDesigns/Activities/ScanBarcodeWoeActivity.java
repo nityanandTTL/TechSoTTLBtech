@@ -409,6 +409,28 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             public void onViewTestDetailsClicked(String benId) {
                 ViewTestData(benId);
             }
+
+            @Override
+            public void onSRFSaved(String srfId, int BenPosition, int BenID) {
+
+                for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                    if (i == BenPosition && beneficaryWiseArylst.get(i).getBenId() == BenID){
+                        beneficaryWiseArylst.get(i).setSRFID(srfId);
+                    }
+                }
+                InitViewpager(BenPosition);
+            }
+
+            @Override
+            public void onSRFDeleted(String SRFID, int BenPosition) {
+
+                for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                    if ( i == BenPosition && InputUtils.CheckEqualIgnoreCase(beneficaryWiseArylst.get(i).getSRFID(),SRFID)  ){
+                        beneficaryWiseArylst.get(i).setSRFID("");
+                    }
+                }
+                InitViewpager(BenPosition);
+            }
         });
 
 

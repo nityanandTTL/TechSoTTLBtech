@@ -1,6 +1,7 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Adapters;
 
 import android.app.Activity;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -15,6 +16,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -22,6 +24,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.ScanBarcodeWoeActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.adapter.BarcodeInitAdapter;
@@ -58,7 +61,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
     }
 
 
-    public void updateScanData(ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst){
+    public void updateScanData(ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst) {
         this.beneficaryWiseScanbarcodeArylst = beneficaryWiseScanbarcodeArylst;
     }
 
@@ -102,32 +105,48 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         final ImageView img_uploadBenVail = (ImageView) itemView.findViewById(R.id.img_uploadBenVail);
         RecyclerView recyle_barcode = (RecyclerView) itemView.findViewById(R.id.recyle_barcode);
 
+        final EditText edt_srf = (EditText) itemView.findViewById(R.id.edt_srf);
+        ImageView img_resetSRF = (ImageView) itemView.findViewById(R.id.img_resetSRF);
+        TextView tv_saveSRF = (TextView) itemView.findViewById(R.id.tv_saveSRF);
 
-        tv_benName.setText(beneficaryWiseScanbarcodeArylst.get(position).getName() + " ("+beneficaryWiseScanbarcodeArylst.get(position).getAge() + "/"+beneficaryWiseScanbarcodeArylst.get(position).getGender()+")");
+
+        tv_benName.setText(beneficaryWiseScanbarcodeArylst.get(position).getName() + " (" + beneficaryWiseScanbarcodeArylst.get(position).getAge() + "/" + beneficaryWiseScanbarcodeArylst.get(position).getGender() + ")");
         tv_OrderNo.setText(beneficaryWiseScanbarcodeArylst.get(position).getOrderNo());
 
-        if (showProduct){
-            tv_products.setText(Html.fromHtml("<u>"+beneficaryWiseScanbarcodeArylst.get(position).getTestsCode()+ "</u>"));
+        if (showProduct) {
+            tv_products.setText(Html.fromHtml("<u>" + beneficaryWiseScanbarcodeArylst.get(position).getTestsCode() + "</u>"));
             lin_benProduct.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             lin_benProduct.setVisibility(View.GONE);
         }
 
 
-
-        if (!StringUtils.isNull(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture())){
+        if (!StringUtils.isNull(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture())) {
             txt_captureBenBarcodePic.setText("View Image");
-            txt_captureBenBarcodePic.setPaintFlags(txt_captureBenBarcodePic.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
+            txt_captureBenBarcodePic.setPaintFlags(txt_captureBenBarcodePic.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             imgDelete.setVisibility(View.VISIBLE);
             img_uploadBenVail.setVisibility(View.GONE);
         } else {
             txt_captureBenBarcodePic.setText("Upload Image");
-            txt_captureBenBarcodePic.setPaintFlags(txt_captureBenBarcodePic.getPaintFlags()| 0);
+            txt_captureBenBarcodePic.setPaintFlags(txt_captureBenBarcodePic.getPaintFlags() | 0);
             imgDelete.setVisibility(View.GONE);
             img_uploadBenVail.setVisibility(View.VISIBLE);
         }
 
-        initScanBarcodeView(position,recyle_barcode);
+        if (!StringUtils.isNull(beneficaryWiseScanbarcodeArylst.get(position).getSRFID())) {
+            edt_srf.setText(beneficaryWiseScanbarcodeArylst.get(position).getSRFID());
+            edt_srf.setEnabled(false);
+            tv_saveSRF.setVisibility(View.GONE);
+            img_resetSRF.setVisibility(View.VISIBLE);
+        } else {
+            edt_srf.setText("");
+            edt_srf.setEnabled(true);
+            tv_saveSRF.setVisibility(View.VISIBLE);
+            img_resetSRF.setVisibility(View.GONE);
+        }
+
+
+        initScanBarcodeView(position, recyle_barcode);
 
         imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,7 +170,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 if (txt_captureBenBarcodePic.getText().toString().equalsIgnoreCase("View Image")) {
-                    globalclass.OpenImageDialog(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(), mActivity,false);
+                    globalclass.OpenImageDialog(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(), mActivity, false);
                 } else if (txt_captureBenBarcodePic.getText().toString().equalsIgnoreCase("Upload Image")) {
                     if (onClickListeners != null) {
                         onClickListeners.onVenupunturePhotoClicked(beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position);
@@ -165,6 +184,30 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             public void onClick(View v) {
                 if (onClickListeners != null) {
                     onClickListeners.onViewTestDetailsClicked(beneficaryWiseScanbarcodeArylst.get(position).getLeadId());
+                }
+            }
+        });
+
+        tv_saveSRF.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String SrfID = edt_srf.getText().toString().trim();
+                if (!InputUtils.isNull(SrfID) && SrfID.length() > 4) {
+                    if (onClickListeners != null) {
+                        onClickListeners.onSRFSaved(SrfID, position, beneficaryWiseScanbarcodeArylst.get(position).getBenId());
+                    }
+                } else {
+                    Global.showCustomStaticToast(mActivity, ConstantsMessages.InvalidSRFIDMsg);
+                }
+
+            }
+        });
+
+        img_resetSRF.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onClickListeners != null) {
+                    onClickListeners.onSRFDeleted(beneficaryWiseScanbarcodeArylst.get(position).getSRFID(), position);
                 }
             }
         });
@@ -184,12 +227,12 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             }
 
             recyle_barcode.setLayoutManager(new LinearLayoutManager(mActivity));
-            barcodeinitAdapter = new BarcodeInitAdapter(mActivity, beneficaryWiseScanbarcodeArylst.get(position).getBarcodedtl(),serumCount,beneficaryWiseScanbarcodeArylst.get(position),position);
+            barcodeinitAdapter = new BarcodeInitAdapter(mActivity, beneficaryWiseScanbarcodeArylst.get(position).getBarcodedtl(), serumCount, beneficaryWiseScanbarcodeArylst.get(position), position);
             barcodeinitAdapter.setOnItemClickListener(new BarcodeInitAdapter.OnItemClickListener() {
                 @Override
                 public void onBarcodeScanClicked(String SampleType, int BenID, int barcodePosition, int BenPosition) {
-                    if (onClickListeners != null){
-                        onClickListeners.onBarcodeScanClicked(SampleType,BenID, barcodePosition, BenPosition);
+                    if (onClickListeners != null) {
+                        onClickListeners.onBarcodeScanClicked(SampleType, BenID, barcodePosition, BenPosition);
                     }
                 }
 
@@ -221,5 +264,10 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         void onVialImageDelete(int BenID, int position);
 
         void onViewTestDetailsClicked(String benId);
+
+        void onSRFSaved(String srfId, int BenPosition, int BenID);
+
+        void onSRFDeleted(String SRFID, int BenPosition);
+
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -188,6 +189,59 @@
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:background="@drawable/border_layout"
+                        android:padding="@dimen/_5sdp">
+
+                        <EditText
+                            android:id="@+id/edt_srf"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/transparent"
+                            android:digits="@string/Mobile_no_validation"
+                            android:hint="SRF ID"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="14"
+                            android:paddingStart="@dimen/_5sdp"
+                            android:paddingTop="@dimen/_5sdp"
+                            android:paddingEnd="@dimen/_20sdp"
+                            android:paddingBottom="@dimen/_5sdp" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true">
+
+                            <ImageView
+                                android:id="@+id/img_resetSRF"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Reset"
+                                android:textSize="@dimen/_14sdp"
+                                android:padding="@dimen/_3sdp"
+                                app:srcCompat="@drawable/close_icon_red"/>
+
+                            <TextView
+                                android:id="@+id/tv_saveSRF"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Save"
+                                android:textSize="@dimen/_14sdp"
+                                android:textColor="@color/white"
+                                android:padding="@dimen/_4sdp"
+                                android:background="@color/colorPrimary"/>
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
 
                 </LinearLayout>
             </ScrollView>

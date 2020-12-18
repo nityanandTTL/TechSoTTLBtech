@@ -20,7 +20,7 @@
             android:drawableLeft="@drawable/cal"
             android:drawablePadding="@dimen/dp_5"
             android:gravity=""
-            android:text="11-09-1111"
+            android:text=""
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"
             android:textStyle="bold" />

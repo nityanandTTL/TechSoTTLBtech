@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="63fe5321-84f4-4224-8bfa-e88618ebc718" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/SendOTPRequestModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../response/CommonResponseModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../res/drawable/right_arrow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../../res/layout/validate_otp_dialog.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../../BTECHdev/debug/output.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../../BTECHdev/debug/output.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../../app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../../app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../../../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../../../build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Retrofit/PostAPIInteface.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Retrofit/PostAPIInteface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../activity/AddEditBeneficiaryDetailsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../activity/AddEditBeneficiaryDetailsActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../activity/HubDetailMapDisplayFragmentActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../activity/HubDetailMapDisplayFragmentActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../adapter/DispatchToHubDisplayDetailsAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../adapter/DispatchToHubDisplayDetailsAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fragment/BtechwithHub_HubMasterBarcodeScanFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../fragment/BtechwithHub_HubMasterBarcodeScanFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fragment/HomeScreenFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../fragment/HomeScreenFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fragment/LeaveIntimationFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../fragment/LeaveIntimationFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../network/AbstractApiModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../network/AbstractApiModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../network/AsyncTaskForRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../network/AsyncTaskForRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../utils/app/AppConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../../utils/app/AppConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../res/layout-sw600dp/fragment_home_screen_sixmenu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../res/layout-sw600dp/fragment_home_screen_sixmenu.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../res/layout-sw720dp/fragment_home_screen_sixmenu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../res/layout-sw720dp/fragment_home_screen_sixmenu.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../../res/layout/fragment_home_screen_sixmenu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../../res/layout/fragment_home_screen_sixmenu.xml" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../../../../../.." />
+  </component>
+  <component name="ProjectId" id="1Z78r29QanbsRJAaWUevPtwp5BH" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="63fe5321-84f4-4224-8bfa-e88618ebc718" name="Default Changelist" comment="" />
+      <created>1584178966566</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1584178966566</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

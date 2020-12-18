@@ -87,7 +87,7 @@
                         android:id="@+id/edt_setAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:digits="@string/Namevalidation"
+                        android:digits="@string/addressvalidation"
                         android:lines="2"
                         android:maxLength="250"
                         android:textColor="@color/black"

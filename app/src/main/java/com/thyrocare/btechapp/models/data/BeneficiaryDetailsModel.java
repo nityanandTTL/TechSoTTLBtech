@@ -31,14 +31,17 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     private String ProjId;
     private String remarks;
     private String LeadId;
+    private String SRFID;
     private boolean isTestEdit;
     private boolean isAddBen;
     private boolean isTRF;
+
 
     public BeneficiaryDetailsModel() {
         super();
         Age = 1;
     }
+
 
     protected BeneficiaryDetailsModel(Parcel in) {
         super(in);
@@ -61,6 +64,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         ProjId = in.readString();
         remarks = in.readString();
         LeadId = in.readString();
+        SRFID = in.readString();
         isTestEdit = in.readByte() != 0;
         isAddBen = in.readByte() != 0;
         isTRF = in.readByte() != 0;
@@ -88,6 +92,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         dest.writeString(ProjId);
         dest.writeString(remarks);
         dest.writeString(LeadId);
+        dest.writeString(SRFID);
         dest.writeByte((byte) (isTestEdit ? 1 : 0));
         dest.writeByte((byte) (isAddBen ? 1 : 0));
         dest.writeByte((byte) (isTRF ? 1 : 0));
@@ -110,28 +115,6 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         }
     };
 
-    public String getLeadId() {
-        return LeadId;
-    }
-
-    public void setLeadId(String leadId) {
-        LeadId = leadId;
-    }
-
-    public String getBtechName() {
-        return BtechName;
-    }
-
-    public void setBtechName(String btechName) {
-        BtechName = btechName;
-    }
-    public String getProjId() {
-        return ProjId;
-    }
-
-    public void setProjId(String projId) {
-        ProjId = projId;
-    }
 
     public int getBenId() {
         return benId;
@@ -157,12 +140,28 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         Name = name;
     }
 
+    public String getBtechName() {
+        return BtechName;
+    }
+
+    public void setBtechName(String btechName) {
+        BtechName = btechName;
+    }
+
     public int getAge() {
         return Age;
     }
 
     public void setAge(int age) {
         Age = age;
+    }
+
+    public String getAadhar() {
+        return aadhar;
+    }
+
+    public void setAadhar(String aadhar) {
+        this.aadhar = aadhar;
     }
 
     public String getGender() {
@@ -181,6 +180,14 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         this.tests = tests;
     }
 
+    public String getTestsCode() {
+        return testsCode;
+    }
+
+    public void setTestsCode(String testsCode) {
+        this.testsCode = testsCode;
+    }
+
     public String getFasting() {
         return Fasting;
     }
@@ -195,6 +202,14 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
 
     public void setVenepuncture(String venepuncture) {
         Venepuncture = venepuncture;
+    }
+
+    public ArrayList<BeneficiaryTestDetailsModel> getTestSampleType() {
+        return testSampleType;
+    }
+
+    public void setTestSampleType(ArrayList<BeneficiaryTestDetailsModel> testSampleType) {
+        this.testSampleType = testSampleType;
     }
 
     public ArrayList<BeneficiaryBarcodeDetailsModel> getBarcodedtl() {
@@ -213,14 +228,6 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         this.sampleType = sampleType;
     }
 
-    public String getTestsCode() {
-        return testsCode;
-    }
-
-    public void setTestsCode(String testsCode) {
-        this.testsCode = testsCode;
-    }
-
     public ArrayList<BeneficiaryTestWiseClinicalHistoryModel> getClHistory() {
         return clHistory;
     }
@@ -237,6 +244,14 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         this.labAlert = labAlert;
     }
 
+    public String getProjId() {
+        return ProjId;
+    }
+
+    public void setProjId(String projId) {
+        ProjId = projId;
+    }
+
     public String getRemarks() {
         return remarks;
     }
@@ -245,20 +260,20 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         this.remarks = remarks;
     }
 
-    public ArrayList<BeneficiaryTestDetailsModel> getTestSampleType() {
-        return testSampleType;
+    public String getLeadId() {
+        return LeadId;
     }
 
-    public void setTestSampleType(ArrayList<BeneficiaryTestDetailsModel> testSampleType) {
-        this.testSampleType = testSampleType;
+    public void setLeadId(String leadId) {
+        LeadId = leadId;
     }
 
-    public String getAadhar() {
-        return aadhar;
+    public String getSRFID() {
+        return SRFID;
     }
 
-    public void setAadhar(String aadhar) {
-        this.aadhar = aadhar;
+    public void setSRFID(String SRFID) {
+        this.SRFID = SRFID;
     }
 
     public boolean isTestEdit() {

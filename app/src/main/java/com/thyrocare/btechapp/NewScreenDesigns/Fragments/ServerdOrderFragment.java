@@ -164,7 +164,7 @@ public class ServerdOrderFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                SelectDatePickerDialogFragment datePickerDialogFragment = new SelectDatePickerDialogFragment(mActivity,"Select Date",0,System.currentTimeMillis(),"yyyy-MM-dd");
+                SelectDatePickerDialogFragment datePickerDialogFragment = new SelectDatePickerDialogFragment(mActivity,"Select Date",0,System.currentTimeMillis(),"dd-MM-yyyy");
                 datePickerDialogFragment.setDateSelectedListener(new SelectDatePickerDialogFragment.OnDateSelectedListener() {
                     @Override
                     public void onDateSelected(String strSelectedDate, Date SelectedDate) {
@@ -184,7 +184,7 @@ public class ServerdOrderFragment extends Fragment {
 
     private void InitData() {
 
-        String CurrentDate = DateUtil.getDateFromLong(System.currentTimeMillis(),"yyyy-MM-dd");
+        String CurrentDate = DateUtil.getDateFromLong(System.currentTimeMillis(),"dd-MM-yyyy");
         tv_selectedDate.setText(CurrentDate);
 
         if (cd.isConnectingToInternet()){
