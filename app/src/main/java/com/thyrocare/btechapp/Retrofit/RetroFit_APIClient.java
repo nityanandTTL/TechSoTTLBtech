@@ -18,7 +18,6 @@ import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.CertificatePinner;
@@ -44,6 +43,7 @@ public class RetroFit_APIClient {
             apiClient = new RetroFit_APIClient();
         }
         return apiClient;
+
     }
 
     public Retrofit getClient(final Activity mActivity ,final String BASE_URL) {
@@ -68,7 +68,7 @@ public class RetroFit_APIClient {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request request;
-                if (BASE_URL.equalsIgnoreCase(EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))) && appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getAPISessionKey())){
+                if (BASE_URL.equalsIgnoreCase(EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))) && appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getAPISessionKey())){
                     request = chain.request().newBuilder().addHeader(Constants.HEADER_USER_AGENT, Global.getHeaderValue(mActivity))
                             .addHeader(AbstractApiModel.AUTHORIZATION,"Bearer "+appPreferenceManager.getAPISessionKey()).build();
                 }else {
@@ -135,7 +135,7 @@ public class RetroFit_APIClient {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request request;
-                if (BASE_URL.equalsIgnoreCase(EncryptionUtils.DecodeString64(context.getString(R.string.SERVER_BASE_API_URL_PROD))) && appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getAPISessionKey())){
+                if (BASE_URL.equalsIgnoreCase(EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))) && appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getAPISessionKey())){
                     request = chain.request().newBuilder().addHeader(Constants.HEADER_USER_AGENT, Global.getHeaderValue(context))
                             .addHeader(AbstractApiModel.AUTHORIZATION,"Bearer "+appPreferenceManager.getAPISessionKey()).build();
                 }else {

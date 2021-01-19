@@ -366,7 +366,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         SendOTPRequestModel model = new SendOTPRequestModel();
         model.setMobile(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
         model.setOrderno(orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<CommonResponseModel2> responseCall = apiInterface.CallSendOTPAPI(model);
         globalclass.showProgressDialog(mActivity, "Requesting for OTP. Please wait..");
         responseCall.enqueue(new Callback<CommonResponseModel2>() {
@@ -461,7 +461,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
     private void CallValidateOTPAPI(OrderPassRequestModel model, final String Action, final String orderNo, final int finalBenId) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallValidateOTPAPI(model);
         globalclass.showProgressDialog(mActivity, "Requesting for OTP. Please wait..");
         responseCall.enqueue(new Callback<String>() {
@@ -924,7 +924,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     private void CallGetTechsoProductsAPI() {
 
         try {
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token());
             globalclass.showProgressDialog(mActivity, "Fetching products. Please wait..");
             responseCall.enqueue(new Callback<BrandTestMasterModel>() {
@@ -1520,7 +1520,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
     private void CallTechsoCartAPI(CartAPIRequestModel cartAPIRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<CartAPIResponseModel> responseCall = apiInterface.CallTechsoCartAPI("Bearer "+ appPreferenceManager.getLoginResponseModel().getAccess_token(), cartAPIRequestModel);
         globalclass.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<CartAPIResponseModel>() {
@@ -1638,7 +1638,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
     private void CallTechsoOrderbookingAPI(OrderBookingRequestModel benModelaschc) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallTechsoOrderBookingAPI("Bearer "+ appPreferenceManager.getLoginResponseModel().getAccess_token(), benModelaschc);
         globalclass.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {

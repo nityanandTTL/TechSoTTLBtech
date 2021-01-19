@@ -150,7 +150,7 @@ public class HubListDisplayFragment extends AbstractFragment {
     }
 
     private void CallGetDispatchHubDetailsDisplayApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<DispatchHubDisplayDetailsResponseModel> responseCall = apiInterface.CallGetDispatchHubDetailsDisplayApi(appPreferenceManager.getLoginResponseModel().getUserID());
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<DispatchHubDisplayDetailsResponseModel>() {

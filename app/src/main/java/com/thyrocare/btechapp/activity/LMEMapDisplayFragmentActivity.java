@@ -60,14 +60,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 import com.thyrocare.btechapp.models.api.request.SendScannedbarcodeLME;
-import com.thyrocare.btechapp.models.data.DateWiseWLMISDetailsModel;
 import com.thyrocare.btechapp.models.data.HUBBTechModel;
 import com.thyrocare.btechapp.models.data.LocationMasterModel;
 import com.thyrocare.btechapp.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
@@ -75,7 +72,6 @@ import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.fileutils.DataParser;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -799,7 +795,7 @@ public class LMEMapDisplayFragmentActivity extends FragmentActivity implements G
     }
 
     private void CallgetLocationMasterApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<LocationMasterModel>> responseCall = apiInterface.CallgetLocationMasterApi();
         responseCall.enqueue(new Callback<ArrayList<LocationMasterModel>>() {
             @Override

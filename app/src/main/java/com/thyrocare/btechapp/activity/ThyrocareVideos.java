@@ -161,7 +161,7 @@ public class ThyrocareVideos extends AppCompatActivity {
 
     private void CallVideoLanguagesAPI() {
         globalclass.showProgressDialog(mActivity, "please wait..");
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.B2B_API_VERSION))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2B_API_VERSION))).create(GetAPIInterface.class);
         Call<VideoLangaugesResponseModel> responseCall = apiInterface.getVideoLanguages();
         responseCall.enqueue(new Callback<VideoLangaugesResponseModel>() {
             @Override
@@ -271,7 +271,7 @@ public class ThyrocareVideos extends AppCompatActivity {
         model.setApp("3"); // TODO Change this to 3 during live
         model.setLanguage(LanguageID);
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<VideosResponseModel> responseCall = apiInterface.getVideobasedOnLanguage(model);
         globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.loading));
         responseCall.enqueue(new Callback<VideosResponseModel>() {

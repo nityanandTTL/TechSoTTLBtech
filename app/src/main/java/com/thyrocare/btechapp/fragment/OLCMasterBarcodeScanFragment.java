@@ -180,7 +180,7 @@ public class OLCMasterBarcodeScanFragment extends AbstractFragment {
 
     private void CallgetScanPickupRequestApi(OlcScanPickUpRequestModel olcScanPickUpRequestModel){
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetScanPickupRequestAPI(olcScanPickUpRequestModel);
         globalClass.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<String>() {

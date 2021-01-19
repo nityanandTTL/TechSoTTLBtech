@@ -12,7 +12,6 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
-import com.thyrocare.btechapp.Retrofit.PostAPI_SingletonClass;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
@@ -50,7 +49,7 @@ public class AccessTokenAndOTPAPIController {
         }
         accessTokenForOTPRequestModel.setVersion("" + appLevelVersionCode);
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.RequestForOTPTokenAPI(accessTokenForOTPRequestModel);
         globalClass.showProgressDialog(mActivity, ConstantsMessages.PLEASE_WAIT);
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {
@@ -93,7 +92,7 @@ public class AccessTokenAndOTPAPIController {
         globalClass.showCustomToast(mActivity, "Sending OTP please wait..");
 
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.CallGenerateOTPAPI(model);
         globalClass.showProgressDialog(mActivity, ConstantsMessages.PLEASE_WAIT);
 

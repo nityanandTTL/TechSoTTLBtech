@@ -280,7 +280,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
     private void CallGetTechsoProductsAPI() {
 
         try {
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token());
             globalclass.showProgressDialog(mActivity, "Fetching products. Please wait..");
             responseCall.enqueue(new Callback<BrandTestMasterModel>() {

@@ -44,6 +44,7 @@ import com.thyrocare.btechapp.models.api.request.ChangePasswordRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetPatientDetailsRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetVideoLanguageWiseRequestModel;
 import com.thyrocare.btechapp.models.api.request.HubStartRequestModel;
+import com.thyrocare.btechapp.models.api.request.LeadGenerationRequestModel;
 import com.thyrocare.btechapp.models.api.request.MasterBarcodeMappingRequestModel;
 import com.thyrocare.btechapp.models.api.request.MaterialorderRequestModel;
 import com.thyrocare.btechapp.models.api.request.NewClientModel;
@@ -67,6 +68,8 @@ import com.thyrocare.btechapp.models.api.response.CartAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel1;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.EmailValidationResponseModel;
+import com.thyrocare.btechapp.models.api.response.LeadPurposeResponseModel;
+import com.thyrocare.btechapp.models.api.response.LeadgenerationResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginDeviceResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginResponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseVisitModel;
@@ -345,5 +348,13 @@ public interface PostAPIInterface {
     @Headers("Content-Type: application/json")
     @POST("COMMON.svc/otp")
     Call<CommonPOSTResponseModel> CallGenerateOTPAPI(@Body RequestOTPModel model);
+
+    @Headers("Content-Type: application/json")
+    @POST("CommonServices/LeadPurpose")
+    Call<LeadPurposeResponseModel> CallGetLeadPurposeAPI();
+
+    @Headers("Content-Type: application/json")
+    @POST("bookingmaster/lead")
+    Call<LeadgenerationResponseModel> CallSubmitLeadAPI(@Body LeadGenerationRequestModel requestModel);
 
 }

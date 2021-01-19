@@ -420,7 +420,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
     public void CallOrderBookingApi(OrderBookingRequestModel orderBookingRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
        String postrequest  = new Gson().toJson(orderBookingRequestModel);
         System.out.println(postrequest);
         Call<OrderBookingResponseVisitModel> responseCall = apiInterface.CallOrderBookingApi(orderBookingRequestModel);
@@ -551,7 +551,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
 
     public void CallWorkOrderEntryAPI(OrderBookingRequestModel orderBookingRequestModel){
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallWorkOrderEntryAPI(orderBookingRequestModel);
         globalclass.showProgressDialog(mActivity, PLEASE_WAIT);
         responseCall.enqueue(new Callback<String>() {
@@ -1225,7 +1225,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
     private void CallValidateOTPAPI(final WOEOtpValidationRequestModel model) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.ValidateWoeOTPAPI(model);
         globalclass.showProgressDialog(mActivity,"Validating OTP. Please wait..");
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {

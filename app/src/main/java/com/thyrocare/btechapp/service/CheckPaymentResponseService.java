@@ -97,7 +97,7 @@ public class CheckPaymentResponseService extends Service {
     }
 
     private void CallgetRecheckPaymentResponseRequestApi(String jsonRequest, String URL){
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, EncryptionUtils.DecodeString64(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetRecheckPaymentResponseRequestApi(URL,jsonRequest);
         global.showProgressDialog(context,"Please wait..");
         responseCall.enqueue(new Callback<String>() {

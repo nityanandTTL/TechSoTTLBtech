@@ -2,27 +2,15 @@ package com.thyrocare.btechapp.NewScreenDesigns.Controllers;
 
 import android.app.Activity;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.TrackUserActivityRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonPOSTResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.NotificationMappingResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.network.AbstractApiModel;
-import com.thyrocare.btechapp.utils.app.Global;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,7 +28,7 @@ public class TrackUserActivityController {
 
     public void trackUserActivity(TrackUserActivityRequestModel trackUserActivityRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.CallUserTrackingAPI(trackUserActivityRequestModel);
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {
             @Override

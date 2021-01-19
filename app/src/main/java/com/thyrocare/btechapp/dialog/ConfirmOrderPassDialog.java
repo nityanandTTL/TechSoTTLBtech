@@ -115,7 +115,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
     }
 
     private void CallGetorderallocationApi(String Pincode) {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<OrderPassresponseModel> responseCall = apiInterface.CallGetorderallocationApi(appPreferenceManager.getLoginResponseModel().getUserID(),Pincode);
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<OrderPassresponseModel>() {
@@ -332,7 +332,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
     }
 
     private void CallgetOrderPassSendOtpRequestAPI( OrderPassRequestModel orderPassRequestModel){
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetOrderPassSendOtpRequestAPI(orderPassRequestModel);
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<String>() {
@@ -399,7 +399,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
 
 
     private void CallgetOrderPassVerifyOtpRequestModelAPI( OrderPassRequestModel orderPassRequestModel){
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetOrderPassVerifyOtpRequestModelAPI(orderPassRequestModel);
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<String>() {
@@ -421,7 +421,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
     }
 
     private void CallgetOrderPassRequestModelAPI( OrderPassRequestModel orderPassRequestModel){
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetOrderPassRequestModelAPI(orderPassRequestModel);
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<String>() {

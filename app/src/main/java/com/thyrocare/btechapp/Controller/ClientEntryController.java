@@ -40,7 +40,7 @@ public class ClientEntryController {
         globalclass = new Global(activity);
     }
     public void PostRegisterapicall(NewClientModel newClientpostmodel){
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallNewClientEntryRegistrationAPI(newClientpostmodel);
         globalclass.showProgressDialog(activity, PLEASE_WAIT);
         responseCall.enqueue(new Callback<String>() {

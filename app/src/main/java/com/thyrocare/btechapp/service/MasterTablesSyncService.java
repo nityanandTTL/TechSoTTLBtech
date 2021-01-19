@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -16,7 +15,6 @@ import com.thyrocare.btechapp.dao.DhbDao;
 import com.thyrocare.btechapp.dao.models.BrandMasterDao;
 import com.thyrocare.btechapp.dao.models.LabAlertMasterDao;
 import com.thyrocare.btechapp.dao.models.TestRateMasterDao;
-import com.thyrocare.btechapp.models.api.response.BankMasterResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchLabAlertMasterAPIResponseModel;
 import com.thyrocare.btechapp.models.data.BrandMasterModel;
 import com.thyrocare.btechapp.models.data.BrandTestMasterModel;
@@ -31,14 +29,10 @@ import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
 
-import org.json.JSONException;
-
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
 public class MasterTablesSyncService extends Service {
     private DhbDao dhbDao;
@@ -143,7 +137,7 @@ public class MasterTablesSyncService extends Service {
 
     private void callMasterTableUpdateUploadAPI(final int infoType, String brandId, final int previousCount) {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, EncryptionUtils.DecodeString64(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(context, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<String> responseCall;
         if (infoType == MASTER_TABLE_BRANDS){
             responseCall = apiInterface.CallFetchBrandMasterApi();

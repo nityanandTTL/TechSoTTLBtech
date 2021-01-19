@@ -345,7 +345,7 @@ public class NewEntryCampWoeFragment extends Fragment {
         campPatientDetailRequestModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
 //        campPatientDetailRequestModel.setBtechId("F768027001");
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<CampPatientSearchDetailResponseModel> responseCall = apiInterface.CallGetCampDetailAPI(campPatientDetailRequestModel);
         globalclass.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<CampPatientSearchDetailResponseModel>() {
@@ -412,7 +412,7 @@ public class NewEntryCampWoeFragment extends Fragment {
         campWisePatientDetailRequestModel.setCampId(SelectedCampDetailMainModel.getCampID());
         campWisePatientDetailRequestModel.setFiltervalue(StrSearch);
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<CampWisePatientDetailResponseModel> responseCall = apiInterface.CallGetPatientDetailAPI(campWisePatientDetailRequestModel);
         globalclass.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<CampWisePatientDetailResponseModel>() {
@@ -687,7 +687,7 @@ public class NewEntryCampWoeFragment extends Fragment {
     }
 
     private void CallCheckbarcodeAPI(final String scanned_barcode) {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2B_API_VERSION))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(GetAPIInterface.class);
         Call<CheckbarcodeResponseModel> responseCall = apiInterface.CallCheckBarcodeAPI(Apikey_WOE,scanned_barcode);
         globalclass.showProgressDialog(mActivity,"Validating barcode. Please wait..",false);
         responseCall.enqueue(new Callback<CheckbarcodeResponseModel>() {
@@ -873,7 +873,7 @@ public class NewEntryCampWoeFragment extends Fragment {
 
     private void CallSubmitWoeDetailsAPI(final SubmitB2BWoeRequestModel submitB2BWoeRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<B2BWoeResponseModel> responseCall = apiInterface.CallSubmitCampWOEAPI(submitB2BWoeRequestModel);
         globalclass.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<B2BWoeResponseModel>() {
@@ -939,7 +939,7 @@ public class NewEntryCampWoeFragment extends Fragment {
             ImageFileMultiBody = MultipartBody.Part.createFormData("vailImage", VialPhotoFile.getName(), requestFile);
         }
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<CommonResponseModel1> responseCall = apiInterface.CalluploadCAmpWOEPatientVailPhotoAPI(ImageFileMultiBody,requestuniqueID,requestwoepatientID,requestcampID);
         globalclass.showProgressDialog(mActivity,"Please wait",false);
 

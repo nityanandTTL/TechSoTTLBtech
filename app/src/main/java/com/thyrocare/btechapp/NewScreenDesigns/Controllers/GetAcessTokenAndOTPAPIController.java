@@ -48,7 +48,7 @@ public class GetAcessTokenAndOTPAPIController {
             e.printStackTrace();
         }
         accessTokenForOTPRequestModel.setVersion(""+appLevelVersionCode);
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.RequestForOTPTokenAPI(accessTokenForOTPRequestModel);
         globalClass.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {
@@ -87,7 +87,7 @@ public class GetAcessTokenAndOTPAPIController {
 
     private void CallGetOTPAPI(RequestOTPModel model) {
         globalClass.showCustomToast(mActivity, "Sending OTP please wait..");
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.RequestForOTPAPI(model);
         globalClass.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {

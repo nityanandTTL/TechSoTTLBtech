@@ -165,7 +165,7 @@ public class NotificationClickActivity extends AppCompatActivity {
 
     private void callOrderStatusChangeApi(final OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
         global.showProgressDialog(mActivity, ConstantsMessages.PLEASE_WAIT);
 

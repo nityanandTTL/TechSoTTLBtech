@@ -85,7 +85,7 @@ public class TSPLMESampleDropController {
     }
 
     private void CallgetSampleDropDetailsbyTSPLMEApi(String Id, int batch_f) {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.DecodeString64(mContext.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.Dcrp_Hex(mContext.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>> responseCall = apiInterface.CallgetSampleDropDetailsbyTSPLMEApi(Id, batch_f);
         globalclass.showProgressDialog(mContext,"Please wait..");
         responseCall.enqueue(new Callback<ArrayList<SampleDropDetailsbyTSPLMEDetailsModel>>() {
@@ -127,7 +127,7 @@ public class TSPLMESampleDropController {
 
     private void CallPostScannedMasterBarcodebyLMEAPI(SendScannedbarcodeLME[] n){
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.DecodeString64(mContext.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.Dcrp_Hex(mContext.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallPostScannedMasterBarcodebyLMEAPI(n);
         globalclass.showProgressDialog(mContext,"Please wait..");
         responseCall.enqueue(new Callback<String>() {
@@ -162,7 +162,7 @@ public class TSPLMESampleDropController {
     }
 
     private void CallgetWLMISApi(String Id) {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.DecodeString64(mContext.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.Dcrp_Hex(mContext.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<WLMISDetailsModel>> responseCall = apiInterface.CallgetWLMISApi(Id);
         globalclass.showProgressDialog(mContext,"Please wait..");
         responseCall.enqueue(new Callback<ArrayList<WLMISDetailsModel>>() {
@@ -210,7 +210,7 @@ public class TSPLMESampleDropController {
     }
 
     private void CallgetWLMISDateWiseApi(String Id) {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.DecodeString64(mContext.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.Dcrp_Hex(mContext.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<DateWiseWLMISDetailsModel>> responseCall = apiInterface.CallgetWLMISDateWiseApi(Id);
         globalclass.showProgressDialog(mContext,"Please wait..");
         responseCall.enqueue(new Callback<ArrayList<DateWiseWLMISDetailsModel>>() {

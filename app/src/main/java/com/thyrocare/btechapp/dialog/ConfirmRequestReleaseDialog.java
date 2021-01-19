@@ -76,7 +76,7 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
     }
 
     private void GetremarksForRequestToReleaseApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<RemarksRequestToReleaseResponseModel>> responseCall = apiInterface.GetremarksForRequestToReleaseApi(27);
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<ArrayList<RemarksRequestToReleaseResponseModel>>() {

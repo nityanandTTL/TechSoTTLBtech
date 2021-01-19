@@ -40,7 +40,7 @@ public class PostEmailValidationController {
         model.setAppID("6");   // This App Id is for Leggy T
         model.setEmailID(EmailID);
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.DecodeString64(mContext.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mContext, EncryptionUtils.Dcrp_Hex(mContext.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
         Call<EmailValidationResponseModel> responseCall = apiInterface.PostEmailValidationAPI(model);
 
         globalClass.showProgressDialog(mContext, ConstantsMessages.PLEASE_WAIT);

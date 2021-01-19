@@ -256,7 +256,7 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
     }
 
     private void CallgetTspBarcodeApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<BtechwithHubResponseModel> responseCall = apiInterface.CallgetTspBarcodeApi(appPreferenceManager.getUserID());
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<BtechwithHubResponseModel>() {
@@ -286,7 +286,7 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
 
     private void CallgetTSP_MasterBarcodeMapRequestAPI(BtechwithHub_MasterBarcodeMappingRequestModel masterBarcodeMappingRequestModel){
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetTSP_MasterBarcodeMapRequestAPI(masterBarcodeMappingRequestModel);
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<String>() {

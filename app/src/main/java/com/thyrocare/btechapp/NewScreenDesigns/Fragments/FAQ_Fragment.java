@@ -84,7 +84,7 @@ public class FAQ_Fragment extends Fragment {
 
     private void getFAQData() {
         globalClass.showProgressDialog(activity, "Please wait..", false);
-        GetAPIInterface getAPIInteface = RetroFit_APIClient.getInstance().getClient(getActivity(), EncryptionUtils.DecodeString64(activity.getString(R.string.B2C_API_VERSION))).create(GetAPIInterface.class);
+        GetAPIInterface getAPIInteface = RetroFit_APIClient.getInstance().getClient(getActivity(), EncryptionUtils.Dcrp_Hex(activity.getString(R.string.B2C_API_VERSION))).create(GetAPIInterface.class);
         Call<FAQandANSArray> faQandANSArrayCall = getAPIInteface.getFAQ();
 
         faQandANSArrayCall.enqueue(new Callback<FAQandANSArray>() {

@@ -739,7 +739,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
 
     private void ViewTestData(String benId) {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<GetTestListResponseModel> responseCall = apiInterface.CallGetTestDetailsAPI(benId);
         globalclass.showProgressDialog(mActivity,"Please wait..",false);
         responseCall.enqueue(new Callback<GetTestListResponseModel>() {

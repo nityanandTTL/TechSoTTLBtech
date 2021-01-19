@@ -283,7 +283,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
 
     private void CallgetTspSendConsignmentAPI(Tsp_Send_RequestModel tsp_send_requestModel){
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetTspSendConsignmentAPI(tsp_send_requestModel);
         global.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<String>() {
@@ -317,7 +317,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
 
 
     private void CallgetTspModeDataApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<Tsp_SendMode_DataModel>> responseCall = apiInterface.CallgetTspModeDataApi();
         global.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<ArrayList<Tsp_SendMode_DataModel>>() {
@@ -388,7 +388,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
 
 
     private void CallgetTspScanBarcodeApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<Tsp_ScanBarcodeResponseModel> responseCall = apiInterface.CallgetTspScanBarcodeApi(appPreferenceManager.getBtechID());
         global.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<Tsp_ScanBarcodeResponseModel>() {

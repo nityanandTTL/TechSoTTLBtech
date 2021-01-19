@@ -7,6 +7,9 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.R;
+import com.thyrocare.btechapp.models.api.request.LeadGenerationRequestModel;
+import com.thyrocare.btechapp.models.api.response.LeadPurposeResponseModel;
+import com.thyrocare.btechapp.models.api.response.LeadgenerationResponseModel;
 import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
 import com.thyrocare.btechapp.utils.app.Global;
 
@@ -73,7 +76,7 @@ public class PostAPI_SingletonClass {
             AudioFileMultiBody = MultipartBody.Part.createFormData("file_aud", f_AudioSavePathInDevice.getName(), requestFile);
         }
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.NUCLEAR_URL))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.NUCLEAR_URL))).create(PostAPIInterface.class);
         Call<TestBookingResponseModel> responseCall = apiInterface.SubitReferAFriendformToServer(order_by, mobile, email, address, remarks, bookingtype, report_code, bencount, pincode,
                 product, rate, reports, ref_code, service_type, api_key, bendataxml, orderid, hc, tsp, pay_type, ImageFileMultiBody, AudioFileMultiBody);
         if (ShowProgressbar) {
@@ -111,10 +114,100 @@ public class PostAPI_SingletonClass {
     }
 
 
+    public void CallGetLeadPurposeAPI(final Activity mActivity, final boolean ShowProgressbar, final CallGetLeadPurposeAPIListener APIResponseListener) {
+        globalClass = new Global(mActivity);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.VELSO_URL))).create(PostAPIInterface.class);
+        Call<LeadPurposeResponseModel> responseCall = apiInterface.CallGetLeadPurposeAPI();
+        if (ShowProgressbar) {
+            globalClass.showProgressDialog(mActivity, ConstantsMessages.PLEASE_WAIT);
+        }
+        responseCall.enqueue(new Callback<LeadPurposeResponseModel>() {
+            @Override
+            public void onResponse(Call<LeadPurposeResponseModel> call, Response<LeadPurposeResponseModel> response) {
+                if (ShowProgressbar) {
+                    globalClass.hideProgressDialog(mActivity);
+                }
+
+                if (response.isSuccessful() && response.body() != null) {
+                    LeadPurposeResponseModel responseModel = response.body();
+                    if (APIResponseListener != null) {
+                        APIResponseListener.onSuccess(responseModel);
+                    }
+                } else {
+                    if (APIResponseListener != null) {
+                        APIResponseListener.onFailure();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LeadPurposeResponseModel> call, Throwable t) {
+                if (ShowProgressbar) {
+                    globalClass.hideProgressDialog(mActivity);
+                }
+                if (APIResponseListener != null) {
+                    APIResponseListener.onFailure();
+                }
+            }
+        });
+    }
+
+    public void CallSubmitLeadGenerationAPI(final Activity mActivity, final boolean ShowProgressbar, LeadGenerationRequestModel model, final CallSubmitLeadAPIListener APIResponseListener) {
+        globalClass = new Global(mActivity);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.VELSO_URL))).create(PostAPIInterface.class);
+        Call<LeadgenerationResponseModel> responseCall = apiInterface.CallSubmitLeadAPI(model);
+        if (ShowProgressbar) {
+            globalClass.showProgressDialog(mActivity, ConstantsMessages.PLEASE_WAIT);
+        }
+        responseCall.enqueue(new Callback<LeadgenerationResponseModel>() {
+            @Override
+            public void onResponse(Call<LeadgenerationResponseModel> call, Response<LeadgenerationResponseModel> response) {
+                if (ShowProgressbar) {
+                    globalClass.hideProgressDialog(mActivity);
+                }
+
+                if (response.isSuccessful() && response.body() != null) {
+                    LeadgenerationResponseModel responseModel = response.body();
+                    if (APIResponseListener != null) {
+                        APIResponseListener.onSuccess(responseModel);
+                    }
+                } else {
+                    if (APIResponseListener != null) {
+                        APIResponseListener.onFailure();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LeadgenerationResponseModel> call, Throwable t) {
+                if (ShowProgressbar) {
+                    globalClass.hideProgressDialog(mActivity);
+                }
+                if (APIResponseListener != null) {
+                    APIResponseListener.onFailure();
+                }
+            }
+        });
+    }
+
+
     // TODO INTERFACE --------------------------------------------------------------------------------------------------------------------------------------------------------
 
     public interface CallReferAFriendBookingListener {
         void onSuccess(TestBookingResponseModel testBookingResponseModel);
+
+        void onFailure();
+    }
+
+    public interface CallGetLeadPurposeAPIListener {
+        void onSuccess(LeadPurposeResponseModel model);
+
+        void onFailure();
+    }
+
+
+    public interface CallSubmitLeadAPIListener {
+        void onSuccess(LeadgenerationResponseModel model);
 
         void onFailure();
     }

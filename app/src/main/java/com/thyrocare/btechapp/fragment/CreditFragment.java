@@ -526,7 +526,7 @@ public class CreditFragment extends Fragment {
 
     private void CallGetPaymentModeMasterApi() {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<PaymentModeMasterResponseModel>> responseCall = apiInterface.CallGetPaymentModeMasterApi();
         globalclass.showProgressDialog(activity, "Fetching products. Please wait..");
         responseCall.enqueue(new Callback< ArrayList<PaymentModeMasterResponseModel>>() {
@@ -568,7 +568,7 @@ public class CreditFragment extends Fragment {
 
     private void CallGetBankMasterApi() {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<BankMasterResponseModel>> responseCall = apiInterface.CallGetBankMasterApi(appPreferenceManager.getLoginResponseModel().getUserID());
         globalclass.showProgressDialog(activity, "Fetching products. Please wait..");
         responseCall.enqueue(new Callback< ArrayList<BankMasterResponseModel>>() {
@@ -599,7 +599,7 @@ public class CreditFragment extends Fragment {
     }
 
     public void CallCashDepositEntryAPI(CashDepositEntryRequestModel cashDepositEntryRequestModel){
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallCashDepositEntryAPI(cashDepositEntryRequestModel);
         globalclass.showProgressDialog(activity, PLEASE_WAIT);
         responseCall.enqueue(new Callback<String>() {

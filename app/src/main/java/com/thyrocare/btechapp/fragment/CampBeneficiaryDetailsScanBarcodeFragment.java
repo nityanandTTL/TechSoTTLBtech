@@ -736,7 +736,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     }
 
     public void CallWorkOrderEntryAPI(OrderBookingRequestModel orderBookingRequestModel){
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallWorkOrderEntryAPI(orderBookingRequestModel);
         globalclass.showProgressDialog(activity, PLEASE_WAIT,false);
         responseCall.enqueue(new Callback<String>() {
@@ -765,7 +765,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
 
     public void CallOrderBookingApi() {
         OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel();
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<OrderBookingResponseVisitModel> responseCall = apiInterface.CallOrderBookingApi(orderBookingRequestModel);
         globalclass.showProgressDialog(activity,activity.getResources().getString(R.string.progress_message_uploading_order_details_please_wait),false);
         responseCall.enqueue(new Callback<OrderBookingResponseVisitModel>() {

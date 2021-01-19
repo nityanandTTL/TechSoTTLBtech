@@ -170,7 +170,7 @@ public class CampListDisplayFragment extends AbstractFragment {
     }
 
     private void CallGetCampListDetailsDisplayApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<CampListDisplayResponseModel> responseCall = apiInterface.CallGetCampListDetailsDisplayApi(appPreferenceManager.getLoginResponseModel().getUserID());
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<CampListDisplayResponseModel>() {
@@ -241,7 +241,7 @@ public class CampListDisplayFragment extends AbstractFragment {
 
     private void callCampStartRequestApi(final CampStartedRequestModel campStartedRequestModel, final CampDetailModel campDetailModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.callCampStartRequestApi(campStartedRequestModel);
         global.showProgressDialog(activity, ConstantsMessages.PLEASE_WAIT);
 
@@ -313,7 +313,7 @@ public class CampListDisplayFragment extends AbstractFragment {
 
     private void CallGetSendQRCodeApi(String contents) {
 
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<CampScanQRResponseModel> responseCall = apiInterface.CallgetSendQRCodeRequestAPI(contents);
             global.showProgressDialog(activity, "Fetching products. Please wait..");
             responseCall.enqueue(new Callback<CampScanQRResponseModel>() {

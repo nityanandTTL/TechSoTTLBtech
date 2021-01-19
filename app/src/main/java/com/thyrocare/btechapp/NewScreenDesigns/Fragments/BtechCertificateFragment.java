@@ -99,7 +99,7 @@ public class BtechCertificateFragment extends Fragment {
         GetBtechCertificateRequestModel model = new GetBtechCertificateRequestModel();
         model.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
         model.setDTLType("Certificates");
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<GetBtechCertifcateResponseModel> responseCall = apiInterface.CallGetBtechCertificatesAPI(model);
         globalclass.showProgressDialog(activity,ConstantsMessages.PLEASE_WAIT);
         responseCall.enqueue(new Callback<GetBtechCertifcateResponseModel>() {

@@ -302,7 +302,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
     private void CallgetFetchDepositDetailsApi() {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<FetchLedgerResponseModel> responseCall = apiInterface.CallgetFetchDepositDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(),fromdate, todate);
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback< FetchLedgerResponseModel>() {
@@ -328,7 +328,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
 
 
     private void CallFetchEarningDetailsApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<Earning_NewRegisterModel> responseCall = apiInterface.CallFetchEarningDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(),fromdate, todate);
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback< Earning_NewRegisterModel>() {
@@ -355,7 +355,7 @@ public class LedgerDisplayFragment extends AbstractFragment {
     }
 
     private void CallgetFetchDepositPaymentDetailsApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<DepositRegisterModel>> responseCall = apiInterface.CallgetFetchDepositPaymentDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(),fromdate, todate);
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback< ArrayList<DepositRegisterModel>>() {

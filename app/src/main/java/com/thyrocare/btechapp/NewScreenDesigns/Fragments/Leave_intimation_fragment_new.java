@@ -243,7 +243,7 @@ public class Leave_intimation_fragment_new extends Fragment {
 
     private void callapi_forspinner() {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<GetResponse_NatureLeaveModel>> getResponse_natureLeaveModelCall = apiInterface.Getnature_forleaveintimation();
         global.showProgressDialog(mActivity,  "Please wait..", false);
         getResponse_natureLeaveModelCall.enqueue(new Callback<ArrayList<GetResponse_NatureLeaveModel>>() {
@@ -327,7 +327,7 @@ public class Leave_intimation_fragment_new extends Fragment {
     private void callapi_forleaveapplied() {
 
         global.showProgressDialog(mActivity,  "Please wait..", false);
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<Get_Leave_Applied_history_Model>> leave_applied_history_call = apiInterface.GetBetch_leavehistory(btech_id);
         leave_applied_history_call.enqueue(new Callback<ArrayList<Get_Leave_Applied_history_Model>>() {
             @Override
@@ -441,7 +441,7 @@ public class Leave_intimation_fragment_new extends Fragment {
 
 
         global.showProgressDialog(mActivity, "Please Wait..", false);
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<CommonResponseModel> call_leaveapi = apiInterface.submitresponse(leaveIntimation_submitModel);
         call_leaveapi.enqueue(new Callback<CommonResponseModel>() {
             @Override

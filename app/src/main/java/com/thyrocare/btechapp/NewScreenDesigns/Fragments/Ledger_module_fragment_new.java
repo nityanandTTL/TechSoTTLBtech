@@ -242,7 +242,7 @@ public class Ledger_module_fragment_new extends Fragment {
     }
 
     private void call_cashregisterapi(final String fromdate, final String todate) {
-        GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(getActivity(), EncryptionUtils.DecodeString64(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(getActivity(), EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<Get_cash_register_details_Model> cash_register_details_modelCall = getAPIInterface.Get_CashRegister(btechid, fromdate, todate);
         global.showProgressDialog(activity, "Processing request......", false);
         cash_register_details_modelCall.enqueue(new Callback<Get_cash_register_details_Model>() {
@@ -291,7 +291,7 @@ public class Ledger_module_fragment_new extends Fragment {
 
     private void call_deposite_register(final String fromdate, final String todate) {
 
-        GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<Get_deposite_details_model>> getdeposit_call = getAPIInterface.Get_Deposite(btechid, fromdate, todate);
         global.showProgressDialog(activity,"Processing request......",false);
         getdeposit_call.enqueue(new Callback<ArrayList<Get_deposite_details_model>>() {
@@ -338,7 +338,7 @@ public class Ledger_module_fragment_new extends Fragment {
 
     private void call_btechEraningapi(String fromdate, String todate) {
 
-        GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<Get_BtechEarning_Model> get_btechEarning_modelCall = getAPIInterface.get_BtechEarning(btechid, fromdate, todate);
         global.showProgressDialog(activity,"Processing request......",false);
         get_btechEarning_modelCall.enqueue(new Callback<Get_BtechEarning_Model>() {

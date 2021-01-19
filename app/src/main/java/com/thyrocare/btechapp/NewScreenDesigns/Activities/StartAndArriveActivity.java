@@ -424,7 +424,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     private void CallOrderDetailAPI(final String Status) {
         try {
-            GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+            GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID());
             globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.fetchingOrders), false);
             fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
@@ -555,7 +555,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
     }
 
     private void CallPatchRequestAPI(OrderVisitDetailsModel orderVisitDetailsModels) {
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallpatchRequestAPI(appPreferenceManager.getLoginResponseModel().getUserID(), orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile(), orderVisitDetailsModels.getVisitId());
         globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.loading));
         responseCall.enqueue(new Callback<String>() {
@@ -603,7 +603,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
     }
 
     private void CallgetDispositionApi(final OrderVisitDetailsModel orderDet) {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<DispositionDataModel> responseCall = apiInterface.CallgetDispositionApi();
         responseCall.enqueue(new Callback<DispositionDataModel>() {
             @Override
@@ -859,7 +859,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
             StringBuilder builder = new StringBuilder();
             String json = "";
             try {
-                HttpPost request = new HttpPost(EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD)) + "/api/OrderAllocation/MediaUpload");
+                HttpPost request = new HttpPost(EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD)) + "/api/OrderAllocation/MediaUpload");
 
                 MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 entity.addPart("AppId", new StringBody("" + setDispositionDataModel.getAppId()));
@@ -1076,7 +1076,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
         ServiceUpdateRequestModel serviceUpdateRequestModel = new ServiceUpdateRequestModel();
         serviceUpdateRequestModel.setVisitId(orderDetailsModel.getVisitId());
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallServiceUpdateAPI(serviceUpdateRequestModel);
         globalclass.showProgressDialog(mActivity,mActivity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
@@ -1112,7 +1112,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     private void ViewTestData(String benId) {
 
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<GetTestListResponseModel> responseCall = apiInterface.CallGetTestDetailsAPI(benId);
             globalclass.showProgressDialog(mActivity,"Please wait..",false);
             responseCall.enqueue(new Callback<GetTestListResponseModel>() {
@@ -1270,7 +1270,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     private void CallRemoveBenAPI(final RemoveBeneficiaryAPIRequestModel rembenmode) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<OrderVisitDetailsModel> responseCall = apiInterface.CallRemoveBenAPI("Bearer "+appPreferenceManager.getLoginResponseModel().getAccess_token(), rembenmode);
         globalclass.showProgressDialog(mActivity, getResources().getString(R.string.progress_message_removing_beneficiary_please_wait));
         responseCall.enqueue(new Callback<OrderVisitDetailsModel>() {
@@ -1317,7 +1317,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         sendSMSAfterBenRemovedRequestModel.setOrderNo(orderNo);
         sendSMSAfterBenRemovedRequestModel.setRate1(amount);
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallSendSMSafterBeneficaryRemovedAPI("Bearer "+appPreferenceManager.getLoginResponseModel().getAccess_token(), sendSMSAfterBenRemovedRequestModel);
 //        globalclass.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<String>() {
@@ -1352,7 +1352,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
             orderStatusChangeRequestModel.setAppointmentDate(date);
         }
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
         globalclass.showProgressDialog(mActivity, getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
@@ -1477,7 +1477,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         SendOTPRequestModel model = new SendOTPRequestModel();
         model.setMobile(orderDetailsModel.getAllOrderdetails().get(0).getMobile());
         model.setOrderno(orderDetailsModel.getAllOrderdetails().get(0).getVisitId());
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<CommonResponseModel2> responseCall = apiInterface.CallSendOTPAPI(model);
         globalclass.showProgressDialog(mActivity, "Requesting for OTP. Please wait..");
         responseCall.enqueue(new Callback<CommonResponseModel2>() {
@@ -1572,7 +1572,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     private void CallValidateOTPAPI(OrderPassRequestModel model, final String Action,  final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallValidateOTPAPI(model);
         globalclass.showProgressDialog(mActivity, "Requesting for OTP. Please wait..");
         responseCall.enqueue(new Callback<String>() {

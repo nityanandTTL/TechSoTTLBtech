@@ -298,7 +298,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     public void CallLogoutRequestApi() {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallLogoutRequestApi();
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -403,7 +403,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             ImageFileMultiBody = MultipartBody.Part.createFormData("file", imagefile.getName(), requestFile);
         }
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<SelfieUploadResponseModel> responseCall = apiInterface.uploadSelfieToServer(ImageFileMultiBody,requestBtechid,requestAPPDOWNLOAD,requestTEMP);
         globalClass.showProgressDialog(activity,"Please wait",false);
 
@@ -819,7 +819,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     private void CallgetBtechFaceImageRequestApi(String BTechId) {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<BtechImageResponseModel> responseCall = apiInterface.CallgetBtechFaceImageRequestApi(BTechId);
         globalClass.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<BtechImageResponseModel>() {

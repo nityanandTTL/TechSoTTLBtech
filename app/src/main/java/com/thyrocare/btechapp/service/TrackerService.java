@@ -14,10 +14,8 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +42,8 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+
+import java.util.HashMap;
 
 public class TrackerService extends Service implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -146,8 +146,8 @@ public class TrackerService extends Service implements LocationListener, GoogleA
 
     private void loginToFirebase() {
         // Authenticate with Firebase, and request location updates
-        String email = EncryptionUtils.DecodeString64(getString(R.string.firebase_email));
-        String password = EncryptionUtils.DecodeString64(getString(R.string.firebase_password));
+        String email = EncryptionUtils.Dcrp_Hex(getString(R.string.firebase_email));
+        String password = EncryptionUtils.Dcrp_Hex(getString(R.string.firebase_password));
         FirebaseAuth.getInstance().signInWithEmailAndPassword(
                 email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -172,7 +172,7 @@ public class TrackerService extends Service implements LocationListener, GoogleA
         request.setFastestInterval(9000);
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
-     final String path = EncryptionUtils.DecodeString64(getString(R.string.firebase_path)) + "/" +appPreferenceManager.getLoginResponseModel().getUserID() + "/" + getString(R.string.BTECH_LOCATION);
+     final String path = EncryptionUtils.Dcrp_Hex(getString(R.string.firebase_path)) + "/" +appPreferenceManager.getLoginResponseModel().getUserID() + "/" + getString(R.string.BTECH_LOCATION);
         int permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PackageManager.PERMISSION_GRANTED) {
@@ -186,12 +186,29 @@ public class TrackerService extends Service implements LocationListener, GoogleA
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
                     Location location = locationResult.getLastLocation();
                     try {
-                        if (location != null) {
+                        if (location != null ) {
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("id", appPreferenceManager.getLoginResponseModel().getUserID());
+                            hashMap.put("accuracy", location.getAccuracy());
+                            hashMap.put("altitude", location.getAltitude());
+                            hashMap.put("bearing", location.getBearing());
+                            hashMap.put("latitude", location.getLatitude());
+                            hashMap.put("longitude",location.getLongitude());
+                            hashMap.put("provider",location.getProvider());
+                            hashMap.put("speed",location.getSpeed());
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                                hashMap.put("fromMockProvider", location.isFromMockProvider());
+                                hashMap.put("elapsedRealtimeNanos", location.getElapsedRealtimeNanos());
+                            }
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                hashMap.put("speedAccuracyMetersPerSecond", location.getSpeedAccuracyMetersPerSecond());
+                                hashMap.put("verticalAccuracyMeters", location.getVerticalAccuracyMeters());
+                                hashMap.put("bearingAccuracyDegrees", location.getBearingAccuracyDegrees());
+                            }
+                            hashMap.put("time", location.getTime());
 
-                            ref.setValue(location);
+                            ref.setValue(hashMap);
                             MessageLogger.LogDebug(TAG, "location update " + location);
-
-
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

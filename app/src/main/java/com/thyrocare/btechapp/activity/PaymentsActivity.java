@@ -186,7 +186,7 @@ public class PaymentsActivity extends AbstractActivity {
 
     private void CallgetFetchDepositDetailsApi() {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<FetchLedgerResponseModel> responseCall = apiInterface.CallgetFetchDepositDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(),fromdate, todate);
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback< FetchLedgerResponseModel>() {
@@ -212,7 +212,7 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
     private void CallFetchEarningDetailsApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<Earning_NewRegisterModel> responseCall = apiInterface.CallFetchEarningDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(),fromdate, todate);
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback< Earning_NewRegisterModel>() {
@@ -241,7 +241,7 @@ public class PaymentsActivity extends AbstractActivity {
 
 
     private void CallgetFetchDepositPaymentDetailsApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<DepositRegisterModel>> responseCall = apiInterface.CallgetFetchDepositPaymentDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(),fromdate, todate);
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback< ArrayList<DepositRegisterModel>>() {
@@ -314,7 +314,7 @@ public class PaymentsActivity extends AbstractActivity {
 
 
     private void CallFetchPaymentModesApi(int NarrationId) {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<PaymentProcessAPIResponseModel>> responseCall = apiInterface.CallFetchPaymentModesApi(NarrationId);
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<ArrayList<PaymentProcessAPIResponseModel>>() {
@@ -505,7 +505,7 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
     private void CallgetTransactionInputsRequestApi(JsonObject jsonRequest){
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<PaymentProcessAPIResponseModel> responseCall = apiInterface.CallgetTransactionInputsRequestApi(jsonRequest);
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<PaymentProcessAPIResponseModel>() {
@@ -766,7 +766,7 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
     private void CallFetchTransactionResponseOnStartTransactionApi(JsonObject jsonRequest){
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<PaymentStartTransactionAPIResponseModel> responseCall = apiInterface.CallFetchTransactionResponseOnStartTransactionApi(jsonRequest);
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<PaymentStartTransactionAPIResponseModel>() {
@@ -1006,7 +1006,7 @@ public class PaymentsActivity extends AbstractActivity {
 
 
     private void CallgetDoCaptureResponseRequestApi(JsonObject jsonRequest, String URL){
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<PaymentDoCaptureResponseAPIResponseModel> responseCall = apiInterface.CallgetDoCaptureResponseRequestApi(URL,jsonRequest);
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<PaymentDoCaptureResponseAPIResponseModel>() {

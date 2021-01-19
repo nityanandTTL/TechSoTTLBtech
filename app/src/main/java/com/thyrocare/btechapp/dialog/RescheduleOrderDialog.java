@@ -90,7 +90,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
     }
 
     private void CallgetremarksRequestApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<RemarksResponseModel>> responseCall = apiInterface.CallgetremarksRequestApi(11);
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<ArrayList<RemarksResponseModel>>() {

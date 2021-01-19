@@ -257,7 +257,7 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
 
 
     private void CallgetfetchBtechwithHubBarcodeApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<BtechwithHubResponseModel> responseCall = apiInterface.CallgetfetchBtechwithHubBarcodeApi(appPreferenceManager.getLoginResponseModel().getUserID());
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<BtechwithHubResponseModel>() {
@@ -325,7 +325,7 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
 
     private void CallgetbTECHWITHhUB_MasterBarcodeMapAPI(BtechwithHub_MasterBarcodeMappingRequestModel masterBarcodeMappingRequestModel){
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetbTECHWITHhUB_MasterBarcodeMapAPI(masterBarcodeMappingRequestModel);
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<String>() {

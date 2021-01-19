@@ -133,7 +133,7 @@ public class OLCPickupListDisplayFragment extends AbstractFragment {
     }
 
     private void CallGetBtechClientsListDetailsDisplayApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<BtechClientsResponseModel> responseCall = apiInterface.CallGetBtechClientsListDetailsDisplayApi(appPreferenceManager.getLoginResponseModel().getUserID());
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<BtechClientsResponseModel>() {

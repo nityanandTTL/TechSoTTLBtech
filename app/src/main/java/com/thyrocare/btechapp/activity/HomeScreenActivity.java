@@ -259,7 +259,7 @@ public class HomeScreenActivity extends AbstractActivity
         txt_version_code = (TextView) findViewById(R.id.txt_version_code);
 
         try {
-            if (EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD)).equals(EncryptionUtils.DecodeString64(getString(R.string.BASE_URL_TOCHECK)))) {
+            if (EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD)).equals(EncryptionUtils.Dcrp_Hex(getString(R.string.BASE_URL_TOCHECK)))) {
                 txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
             } else {
                 txt_version_code.setText("Stag Version: " + CommonUtils.getAppVersion(activity));
@@ -484,7 +484,7 @@ public class HomeScreenActivity extends AbstractActivity
 
     public void CallLogoutRequestApi() {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallLogoutRequestApi();
         responseCall.enqueue(new Callback<String>() {
             @Override

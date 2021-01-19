@@ -171,7 +171,7 @@ public class MaterialFragment_new extends AbstractFragment {
 
     private void CallGetBtechVirtualStoack_DETAILApi() {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<MaterialBtechStockResponseModel> responseCall = apiInterface.CallGetBtechVirtualStoack_DETAILApi(appPreferenceManager.getLoginResponseModel().getUserID());
         global.showProgressDialog(activity, "Fetching products. Please wait..");
         responseCall.enqueue(new Callback<MaterialBtechStockResponseModel>() {
@@ -365,7 +365,7 @@ public class MaterialFragment_new extends AbstractFragment {
 
     private void CallgetPostStockMaterialOrderAPI(UpdateMaterial setmaterialorderRequestModel){
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetPostStockMaterialOrderAPI(setmaterialorderRequestModel);
         global.showProgressDialog(activity,"Please wait..");
         responseCall.enqueue(new Callback<String>() {

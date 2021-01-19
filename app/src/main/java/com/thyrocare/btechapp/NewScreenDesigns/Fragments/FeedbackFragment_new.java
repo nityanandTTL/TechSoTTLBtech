@@ -148,7 +148,7 @@ public class FeedbackFragment_new extends Fragment {
 
     public void getFeedbackList() {
         try {
-            GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.B2C_API_VERSION))).create(GetAPIInterface.class);
+            GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION))).create(GetAPIInterface.class);
             Call<FeedbackListModel> feedbackListModelCall = getAPIInterface.getFeedbackList(AppConstants.API_KEY);
             global.showProgressDialog(activity,  activity.getResources().getString(R.string.loading_feedbacklist), false);
             feedbackListModelCall.enqueue(new Callback<FeedbackListModel>() {
@@ -244,7 +244,7 @@ public class FeedbackFragment_new extends Fragment {
 
     public void postFeedback(FeedbackModel feedbackModel) {
         try {
-            PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
+            PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
             Call<CommonResponseModel> commonResponeModelCall = postAPIInterface.postFeedback(feedbackModel);
             global.showProgressDialog(activity,  activity.getResources().getString(R.string.submitting_feedback), false);
             commonResponeModelCall.enqueue(new Callback<CommonResponseModel>() {

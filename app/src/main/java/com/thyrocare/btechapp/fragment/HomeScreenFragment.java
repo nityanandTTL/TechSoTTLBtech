@@ -1,12 +1,9 @@
 package com.thyrocare.btechapp.fragment;
 
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,8 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
-
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.NewCampWOEModuleActivity;
@@ -48,13 +43,9 @@ import com.thyrocare.btechapp.dao.DhbDao;
 import com.thyrocare.btechapp.delegate.CustomUpdateDialogOkButtonOnClickedDelegate;
 import com.thyrocare.btechapp.fragment.LME.LME_OrdersDisplayFragment;
 import com.thyrocare.btechapp.fragment.LME.LME_WLMISFragment;
-import com.thyrocare.btechapp.models.api.response.Tsp_ScanBarcodeResponseModel;
-import com.thyrocare.btechapp.models.data.BrandTestMasterModel;
 import com.thyrocare.btechapp.models.data.DeviceLoginDetailsModel;
 
 
-
-import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
@@ -63,7 +54,6 @@ import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-import com.wooplr.spotlight.SpotlightConfig;
 import com.wooplr.spotlight.utils.SpotlightSequence;
 
 import org.json.JSONException;
@@ -602,7 +592,7 @@ public class HomeScreenFragment extends AbstractFragment {
     private void CallGetCampDetailsCountAPI() {
 
         try {
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<String> responseCall = apiInterface.CallGetCampDetailsCountAPI(appPreferenceManager.getLoginResponseModel().getUserID());
             globalclass.showProgressDialog(activity, "Please wait..");
             responseCall.enqueue(new Callback<String>() {
@@ -674,7 +664,7 @@ public class HomeScreenFragment extends AbstractFragment {
 
 
     private void CallgetLoginDeviceDataApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<DeviceLoginDetailsModel>> responseCall = apiInterface.CallgetLoginDeviceDataApi(appPreferenceManager.getLoginResponseModel().getUserID());
         responseCall.enqueue(new Callback<ArrayList<DeviceLoginDetailsModel>>() {
             @Override

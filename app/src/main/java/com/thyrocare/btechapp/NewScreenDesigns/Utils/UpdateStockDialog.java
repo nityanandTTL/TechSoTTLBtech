@@ -218,7 +218,7 @@ public class UpdateStockDialog extends Dialog {
         updateStockModel.setDefective_stock(String.valueOf(defStock));
         updateStockModel.setClosing_stock(txtClosingStock.getText().toString().trim());
         try {
-            PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+            PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
             Call<CommonResponseModel> commonResponseModelCall = postAPIInterface.updateStock(updateStockModel);
             global = new Global(activity);
             global.showProgressDialog(activity, activity.getResources().getString(R.string.updatingStock), false);

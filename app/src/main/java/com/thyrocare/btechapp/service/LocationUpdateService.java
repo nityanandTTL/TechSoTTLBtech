@@ -7,23 +7,18 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Action;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.SplashActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -31,19 +26,12 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.activity.NotificationClickActivity;
 
 import com.thyrocare.btechapp.dao.DhbDao;
 import com.thyrocare.btechapp.dao.models.OrderDetailsDao;
-import com.thyrocare.btechapp.fragment.HomeScreenFragment;
 import com.thyrocare.btechapp.models.api.request.ChatRequestModel;
-import com.thyrocare.btechapp.models.api.request.LocusPushLocationRequestModel;
-import com.thyrocare.btechapp.models.api.request.TrackBtechLocationRequestModel;
-import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
-import com.thyrocare.btechapp.models.api.response.Tsp_ScanBarcodeResponseModel;
 import com.thyrocare.btechapp.models.data.AcceptOrderNotfiDetailsModel;
-import com.thyrocare.btechapp.models.data.LocationModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 
 
@@ -54,7 +42,6 @@ import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.CommonUtils;
-import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
@@ -62,9 +49,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -72,7 +57,6 @@ import retrofit2.Callback;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
-import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 /**
  * Created by Orion on 5/26/2017.
@@ -185,7 +169,7 @@ public class LocationUpdateService extends IntentService {
     //tejas t----------------------------------------------------------------------
 
     private void CallGetBtechBlockApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<String> responseCall = apiInterface.CallGetBtechBlockApi(appPreferenceManager.getLoginResponseModel().getUserID());
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -227,7 +211,7 @@ public class LocationUpdateService extends IntentService {
     }
 
     private void CallgetAcceptOrderNotificationApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetAcceptOrderNotificationApi(appPreferenceManager.getLoginResponseModel().getUserID());
         responseCall.enqueue(new Callback<String>() {
             @Override

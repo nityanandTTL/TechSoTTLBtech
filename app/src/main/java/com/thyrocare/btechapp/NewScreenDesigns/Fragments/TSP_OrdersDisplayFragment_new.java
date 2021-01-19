@@ -181,7 +181,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
 
     private void fetchData() {
         try {
-            GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+            GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID());
             global.showProgressDialog(activity, activity.getResources().getString(R.string.fetchingOrders), false);
             fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
@@ -380,7 +380,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
 
     private void CallOrderStatusChangeAPIAfterAcceptButtonClicked(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
         global.showProgressDialog(activity, activity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
@@ -411,7 +411,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
     }
 
     private void CallPatchRequestAPI(OrderVisitDetailsModel orderVisitDetailsModels) {
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         LoginResponseModel model = appPreferenceManager.getLoginResponseModel();
         Call<String> responseCall = apiInterface.CallpatchRequestAPI(model.getUserID(), orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile(), orderVisitDetailsModels.getVisitId());
         global.showProgressDialog(activity, activity.getResources().getString(R.string.loading));
@@ -465,7 +465,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
     }
 
     private void CallgetDispositionApi(final OrderVisitDetailsModel orderDet) {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<DispositionDataModel> responseCall = apiInterface.CallgetDispositionApi();
         responseCall.enqueue(new Callback<DispositionDataModel>() {
             @Override
@@ -720,7 +720,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
             StringBuilder builder = new StringBuilder();
             String json = "";
             try {
-                HttpPost request = new HttpPost(EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD)) + "/api/OrderAllocation/MediaUpload");
+                HttpPost request = new HttpPost(EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD)) + "/api/OrderAllocation/MediaUpload");
 
                 MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 entity.addPart("AppId", new StringBody("" + setDispositionDataModel.getAppId()));
@@ -843,7 +843,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
 
     private void callOrderStatusChangeApi(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
         global.showProgressDialog(activity, getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 

@@ -103,7 +103,7 @@ public class StockAvailabilityActivityNew extends AppCompatActivity {
 
     private void postAvailableStock(AvailableStockModel availableStockModel) {
         try {
-            PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+            PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
             Call<MainMaterialModel> mainMaterialModelCall = postAPIInterface.getAvailableStock(availableStockModel);
             global.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.loading), false);
             mainMaterialModelCall.enqueue(new Callback<MainMaterialModel>() {

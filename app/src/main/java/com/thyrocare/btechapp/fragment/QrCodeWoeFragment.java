@@ -42,13 +42,10 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.mindorks.paracamera.Camera;
 import com.thyrocare.btechapp.Controller.AccessTokenAndOTPAPIController;
-import com.thyrocare.btechapp.NewScreenDesigns.Controllers.GetAcessTokenAndOTPAPIController;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.RequestOTPModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SubmitB2BWoeRequestModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.WOEOtpValidationRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.B2BWoeResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonPOSTResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -56,15 +53,11 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Validator;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
-import com.thyrocare.btechapp.Retrofit.PostAPI_SingletonClass;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.adapter.QrCodeBasedBarcodeScanAdapter;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.models.api.request.GetPatientDetailsRequestModel;
-import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
-import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
-import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
 import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsResponseModel;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
@@ -75,7 +68,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import application.ApplicationController;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,7 +75,6 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_OK;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.NO_DATA_FOUND;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
-import static com.thyrocare.btechapp.utils.app.AppConstants.MSG_SERVER_EXCEPTION;
 import static com.thyrocare.btechapp.utils.app.BundleConstants.API_FOR_OTP;
 import static com.thyrocare.btechapp.utils.app.BundleConstants.Apikey_WOE;
 
@@ -401,7 +392,7 @@ public class QrCodeWoeFragment extends Fragment {
 
     private void CallSubmitWoeDetailsAPI(final SubmitB2BWoeRequestModel submitB2BWoeRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<B2BWoeResponseModel> responseCall = apiInterface.CallQrCodeBasedSubmitWOEAPI(submitB2BWoeRequestModel);
         global.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<B2BWoeResponseModel>() {
@@ -522,7 +513,7 @@ public class QrCodeWoeFragment extends Fragment {
         GetPatientDetailsRequestModel model = new GetPatientDetailsRequestModel();
         model.setOrderNo(OrderID);
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<QrcodeBasedPatientDetailsResponseModel> responseCall = apiInterface.CallGetQRCodeBasedPatientDetailsAPI(model);
         global.showProgressDialog(mActivity, ConstantsMessages.PLEASE_WAIT, false);
         responseCall.enqueue(new Callback<QrcodeBasedPatientDetailsResponseModel>() {
@@ -760,7 +751,7 @@ public class QrCodeWoeFragment extends Fragment {
 
     private void CallAPItoVerifyMobileNumber(RequestOTPModel model) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.CallValidateOTPForQRcodeBasedWOEAPI(model);
         global.showProgressDialog(mActivity,  ConstantsMessages.PLEASE_WAIT);
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {

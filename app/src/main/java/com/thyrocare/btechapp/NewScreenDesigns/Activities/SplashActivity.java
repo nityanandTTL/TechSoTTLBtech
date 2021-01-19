@@ -95,6 +95,7 @@ public class SplashActivity extends AppCompatActivity {
         init();
 //        CheckIfDeviceIsRooted();
         initData();
+
     }
 
     private void init() {
@@ -146,7 +147,6 @@ public class SplashActivity extends AppCompatActivity {
                         SharedPreferences pref_SSL = getSharedPreferences("SSLKeysPref", 0);
                         String SLLKeyAPICalledDate = pref_SSL.getString("DateOfSSLKeyAPICalled", "");
                         String CurrentDate = DateUtil.getDateFromLong(System.currentTimeMillis(),"dd-MM-yyyy");
-
                         if (!CurrentDate.equals(SLLKeyAPICalledDate)){
                             CallGetSSLKeyAPI();
                         }else{
@@ -170,7 +170,7 @@ public class SplashActivity extends AppCompatActivity {
 
         GetSSLKeyRequestModel model = new GetSSLKeyRequestModel();
         model.setAppId(""+ BundleConstants.APPID_TRACKACTIVITY);
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(SplashActivity.this, EncryptionUtils.DecodeString64(getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(SplashActivity.this, EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
         Call<GetSSLKeyResponseModel> responseCall = apiInterface.CallGetSSLAPI(model);
         responseCall.enqueue(new Callback<GetSSLKeyResponseModel>() {
             @Override
@@ -207,7 +207,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void fetchVersionControlDetails() {
         trackUserActivity();
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<VersionControlResponseModel> responseCall = apiInterface.VersionControlAPI();
         responseCall.enqueue(new Callback<VersionControlResponseModel>() {
             @Override
@@ -303,7 +303,7 @@ public class SplashActivity extends AppCompatActivity {
 
     public void CallLogoutRequestApi() {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallLogoutRequestApi();
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -390,7 +390,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void GetBtechAvailability() {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<NewBtechAvaliabilityResponseModel> responseCall = apiInterface.GetBtechAvailability(appPreferenceManager.getLoginResponseModel().getUserID());
         responseCall.enqueue(new Callback<NewBtechAvaliabilityResponseModel>() {
             @Override
@@ -492,7 +492,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void fetchDataForTsp() {
 
-        GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<TSPNBT_AvilModel>> responseCall = getAPIInterface.GetTSP_NBT_Avialability(appPreferenceManager.getLoginResponseModel().getUserID());
         responseCall.enqueue(new Callback<ArrayList<TSPNBT_AvilModel>>() {
             @Override
@@ -540,7 +540,7 @@ public class SplashActivity extends AppCompatActivity {
         model.setEnterBy(appPreferenceManager.getLoginResponseModel().getUserID());
         model.setToken(token);
         model.setTopic("BTech_AllDevices");
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<NotificationMappingResponseModel> responseCall = apiInterface.NotificationTokenMappingAPI(model);
         responseCall.enqueue(new Callback<NotificationMappingResponseModel>() {
             @Override
@@ -569,7 +569,7 @@ public class SplashActivity extends AppCompatActivity {
         model.setUserId(appPreferenceManager.getLoginResponseModel().getUserID());
         try {
             new LogUserActivityTagging(mActivity, LOGOUT);
-            PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+            PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
             Call<CommonResponseModel> commonResponeModelCall = postAPIInterface.CallLogoutAPI(model);
             global.showProgressDialog(mActivity, "Please wait..",false);
             commonResponeModelCall.enqueue(new Callback<CommonResponseModel>() {

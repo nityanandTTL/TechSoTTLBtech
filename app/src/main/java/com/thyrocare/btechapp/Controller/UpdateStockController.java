@@ -36,7 +36,7 @@ public class UpdateStockController {
 
     public void UpdateAvailableStock(UpdateStockModel updateStockModel) {
 
-        PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<CommonResponseModel> commonResponseModelCall = postAPIInterface.updateStock(updateStockModel);
         globalClass = new Global(mActivity);
         globalClass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.updatingStock), false);

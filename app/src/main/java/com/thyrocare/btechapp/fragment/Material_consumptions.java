@@ -193,7 +193,7 @@ public class Material_consumptions extends Fragment {
 
     private void CallGetMaterialsDetailsApi(String category) {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<MaterialDetailsModel>> responseCall = apiInterface.CallGetMaterialsDetailsApi(category);
         global.showProgressDialog(activity, "Fetching products. Please wait..");
         responseCall.enqueue(new Callback<ArrayList<MaterialDetailsModel>>() {
@@ -225,7 +225,7 @@ public class Material_consumptions extends Fragment {
 
     private void CallGetMaterialINVDetailsApi() {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<MaterialINVResponseModel> responseCall = apiInterface.CallGetMaterialINVDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID());
         global.showProgressDialog(activity, "Fetching products. Please wait..");
         responseCall.enqueue(new Callback<MaterialINVResponseModel>() {

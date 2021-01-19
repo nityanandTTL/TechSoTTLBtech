@@ -137,7 +137,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
             resetPasswordRequestModel.setOTP(edt_otp.getText().toString());
         }
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(ForgetPasswordActivity.this, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(ForgetPasswordActivity.this, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallResetPasswordAPI(resetPasswordRequestModel);
         globalClass.showProgressDialog(ForgetPasswordActivity.this,"Please wait..");
         responseCall.enqueue(new Callback<String>() {

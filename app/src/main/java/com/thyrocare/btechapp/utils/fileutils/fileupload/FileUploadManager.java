@@ -19,7 +19,7 @@ public class FileUploadManager {
 		fileUploadAsyncTask.setActivity(activity);
 		fileUploadAsyncTask.addFilePart("file", document.getAbsolutePath());
 		fileUploadAsyncTask.setDelegate(delegate);
-		fileUploadAsyncTask.setFileUploadUrl(EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD)) + AbstractApiModel.FILE_UPLOAD);
+		fileUploadAsyncTask.setFileUploadUrl(EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD)) + AbstractApiModel.FILE_UPLOAD);
 		fileUploadAsyncTask.execute(fileUploadAsyncTask);
 	}
 
@@ -28,7 +28,7 @@ public class FileUploadManager {
 		fileUploadAsyncTask.setContext(context);
 		fileUploadAsyncTask.addFilePart("file", documentFilePath);
 		fileUploadAsyncTask.setDelegate(delegate);
-		fileUploadAsyncTask.setFileUploadUrl(EncryptionUtils.DecodeString64(context.getString(R.string.SERVER_BASE_API_URL_PROD)) + AbstractApiModel.FILE_UPLOAD);
+		fileUploadAsyncTask.setFileUploadUrl(EncryptionUtils.Dcrp_Hex(context.getString(R.string.SERVER_BASE_API_URL_PROD)) + AbstractApiModel.FILE_UPLOAD);
 		fileUploadAsyncTask.execute(fileUploadAsyncTask);
 	}
 

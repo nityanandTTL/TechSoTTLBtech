@@ -378,7 +378,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
 
     private void CallGetHubStartRequestApi(final HubStartRequestModel hubStartRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallGetHubStartRequestApi(hubStartRequestModel);
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {

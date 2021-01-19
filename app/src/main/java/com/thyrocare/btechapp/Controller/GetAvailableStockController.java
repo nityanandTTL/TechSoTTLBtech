@@ -36,7 +36,7 @@ public class GetAvailableStockController {
     }
 
     public void getAvailableStock(StockAvailabilityRequestModel model) {
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<MainMaterialModel> responseCall = apiInterface.CallStackAvailabilityAPI(model);
         globalClass.showProgressDialog(mActivity, PLEASE_WAIT);
         responseCall.enqueue(new Callback<MainMaterialModel>() {

@@ -208,7 +208,7 @@ public class EnteredCampWoeFragment extends Fragment {
         campWoeMISReuestModel.setTechid(appPreferenceManager.getLoginResponseModel().getUserID());
 //        campWoeMISReuestModel.setTechid("F768027001");
         campWoeMISReuestModel.setSdate(strDate);
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<CampModuleMISResponseModel> responseCall = apiInterface.CallGetCampWOEMISAPI(campWoeMISReuestModel);
         globalclass.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<CampModuleMISResponseModel>() {
@@ -425,7 +425,7 @@ public class EnteredCampWoeFragment extends Fragment {
             ImageFileMultiBody = MultipartBody.Part.createFormData("vailImage", VialPhotoFile.getName(), requestFile);
         }
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<CommonResponseModel1> responseCall = apiInterface.CalluploadCAmpWOEPatientVailPhotoAPI(ImageFileMultiBody,requestuniqueID,requestwoepatientID,requestcampID);
         globalclass.showProgressDialog(mActivity,"Please wait",false);
 

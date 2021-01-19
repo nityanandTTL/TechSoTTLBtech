@@ -161,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void VerifyLogin() {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<LoginResponseModel> responseCall = apiInterface.CallLoginAPI(UserID+"|"+ DeviceUtils.getDeviceId(mActivity) ,password,"password");
         globalclass.showProgressDialog(mActivity, "Please wait..",false);
         responseCall.enqueue(new Callback<LoginResponseModel>() {
@@ -200,7 +200,7 @@ public class LoginActivity extends AppCompatActivity {
         Post_DeviceID post_deviceID = new Post_DeviceID();
         post_deviceID.setUserId(responseModel.getUserID());
         post_deviceID.setDeviceId( DeviceUtils.getDeviceId(mActivity));
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<LoginDeviceResponseModel> responseCall = apiInterface.PostLoginUserDeviceAPI(post_deviceID);
         globalclass.showProgressDialog(mActivity, "Please wait..",false);
         responseCall.enqueue(new Callback<LoginDeviceResponseModel>() {
@@ -214,7 +214,6 @@ public class LoginActivity extends AppCompatActivity {
                     } else {
                         TastyToast.makeText(mActivity, !InputUtils.isNull(model.getRespMessage()) ? model.getRespMessage() :SomethingWentwrngMsg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
                     }
-
                 } else {
                     globalclass.showCustomToast(mActivity,INVALID_LOG,Toast.LENGTH_LONG);
                 }
@@ -280,7 +279,7 @@ public class LoginActivity extends AppCompatActivity {
         BtechWiseVersionTrackerRequestModel model = new BtechWiseVersionTrackerRequestModel();
         model.setBtechID(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
         model.setVersion(appLevelVersionCode);
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.BtechWiseVersionTrackerAPI(model);
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -316,7 +315,7 @@ public class LoginActivity extends AppCompatActivity {
         model.setEnterBy(appPreferenceManager.getLoginResponseModel().getUserID());
         model.setToken(token);
         model.setTopic("BTech_AllDevices");
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2B_API_VERSION))).create(PostAPIInterface.class);
         Call<NotificationMappingResponseModel> responseCall = apiInterface.NotificationTokenMappingAPI(model);
         responseCall.enqueue(new Callback<NotificationMappingResponseModel>() {
             @Override

@@ -147,7 +147,7 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
     }
     private void CallGetChangePasswordRequestApi(final ChangePasswordRequestModel changePasswordRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallGetChangePasswordRequestApi(changePasswordRequestModel);
         globalclass.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
@@ -192,7 +192,7 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
 
 
     public void CallLogoutRequestApi() {
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallLogoutRequestApi();
         globalclass.showProgressDialog(activity, PLEASE_WAIT);
         responseCall.enqueue(new Callback<String>() {

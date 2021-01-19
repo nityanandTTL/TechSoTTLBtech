@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +40,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mindorks.paracamera.Camera;
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.PostEmailValidationController;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -47,6 +50,9 @@ import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPI_SingletonClass;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
+import com.thyrocare.btechapp.models.api.request.LeadGenerationRequestModel;
+import com.thyrocare.btechapp.models.api.response.LeadPurposeResponseModel;
+import com.thyrocare.btechapp.models.api.response.LeadgenerationResponseModel;
 import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
 import com.thyrocare.btechapp.models.data.BrandTestMasterModel;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -60,6 +66,7 @@ import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import application.ApplicationController;
@@ -101,6 +108,10 @@ public class LeadGenerationFragment extends Fragment {
 
     private Camera camera;
     private AppPreferenceManager appPreferenceManager;
+    private Spinner spn_purpose;
+    private LinearLayout lin_spnPurpose,lin_upload;
+    private boolean isorderSelected = true;
+    private String strSelectedPurpose = "";
 
 
     public LeadGenerationFragment() {
@@ -155,7 +166,12 @@ public class LeadGenerationFragment extends Fragment {
             }
         }
 
+        CallLeadPurposeAPI();
 
+        return v;
+    }
+
+    private void CallProductAPI() {
         if (UpdateProduct()){
             if (cd.isConnectingToInternet()) {
                 CallGetTechsoProductsAPI();
@@ -165,8 +181,6 @@ public class LeadGenerationFragment extends Fragment {
         }else{
             SetProductstoAutoCompleteTextView();
         }
-
-        return v;
     }
 
     private boolean UpdateProduct() {
@@ -176,7 +190,6 @@ public class LeadGenerationFragment extends Fragment {
         int days = (int) (differ_millis / (1000 * 60 * 60 * 24));
 
         if (days >= 30) {
-            appPreferenceManager.setCacheProduct("");
             return true;
         }
         return false;
@@ -196,6 +209,9 @@ public class LeadGenerationFragment extends Fragment {
         tv_reset = (TextView) v.findViewById(R.id.tv_reset);
         rel_upload_img = (RelativeLayout) v.findViewById(R.id.rel_upload_img);
         rel_upload_voice = (RelativeLayout) v.findViewById(R.id.rel_upload_voice);
+        lin_spnPurpose = (LinearLayout) v.findViewById(R.id.lin_spnPurpose);
+        lin_upload = (LinearLayout) v.findViewById(R.id.lin_upload);
+        spn_purpose = (Spinner) v.findViewById(R.id.spn_purpose);
     }
 
 
@@ -241,15 +257,20 @@ public class LeadGenerationFragment extends Fragment {
                         }
                     } else {
                         name = edt_name.getText().toString().toUpperCase().trim();
-                        mobile = edt_mobile.getText().toString();
+                        mobile = edt_mobile.getText().toString().trim();
                         email = edt_email.getText().toString().toLowerCase().trim();
-                        address = edt_setAddress.getText().toString();
+                        address = edt_setAddress.getText().toString().trim();
                         remarks = edt_remarks.getText().toString().trim();
                         pincode = edt_pincode.getText().toString().trim();
 
                         if (checkRemarksValidation()) {
                             if (cd.isConnectingToInternet()) {
-                                CallLeadGenerationAPI(name, mobile, email, address, pincode, remarks, type, imagefile, f_AudioSavePathInDevice);
+                                if (isorderSelected){
+                                    CallLeadGenerationAPI(name, mobile, email, address, pincode, remarks, type, imagefile, f_AudioSavePathInDevice);
+                                }else{
+                                    CallPurposeBasedLeadGenerationAPI(name, mobile, email, address, pincode, remarks,strSelectedPurpose);
+                                }
+
                             } else {
                                 globalClass.showCustomToast(mActivity, ConstantsMessages.CheckInternetConnectionMsg);
                             }
@@ -267,6 +288,62 @@ public class LeadGenerationFragment extends Fragment {
         });
 
     }
+
+    private void CallLeadPurposeAPI() {
+        PostAPI_SingletonClass.getInstance().CallGetLeadPurposeAPI(mActivity, true, new PostAPI_SingletonClass.CallGetLeadPurposeAPIListener() {
+            @Override
+            public void onSuccess(LeadPurposeResponseModel model) {
+                if (model != null && StringUtils.CheckEqualIgnoreCase(model.getRespId(), Constants.RES00001) && model.getPurposeList() != null){
+                    SetPurposeDataToSpinner(model.getPurposeList());
+                }else{
+                    lin_spnPurpose.setVisibility(View.GONE);
+                }
+                CallProductAPI();
+            }
+
+            @Override
+            public void onFailure() {
+                lin_spnPurpose.setVisibility(View.GONE);
+                CallProductAPI();
+            }
+        });
+    }
+
+    private void SetPurposeDataToSpinner(List<LeadPurposeResponseModel.PurposeListBean> purposeList) {
+        lin_spnPurpose.setVisibility(View.VISIBLE);
+        ArrayAdapter<LeadPurposeResponseModel.PurposeListBean> adapter = new ArrayAdapter<LeadPurposeResponseModel.PurposeListBean>(mActivity, android.R.layout.simple_spinner_item, purposeList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spn_purpose.setAdapter(adapter);
+        spn_purpose.setSelection(0);
+        spn_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (StringUtils.CheckEqualIgnoreCase(spn_purpose.getSelectedItem().toString(),"Order")){
+                    isorderSelected = true;
+                }else{
+                    isorderSelected = false;
+                }
+                strSelectedPurpose = spn_purpose.getSelectedItem().toString();
+                ShowandHideViews(isorderSelected);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                ShowandHideViews(isorderSelected);
+            }
+        });
+    }
+
+    private void ShowandHideViews(boolean isorderSelected) {
+        if (isorderSelected){
+            SetProductstoAutoCompleteTextView();
+            lin_upload.setVisibility(View.VISIBLE);
+        }else{
+            edt_remarks.setAdapter(null);
+            lin_upload.setVisibility(View.GONE);
+        }
+    }
+
 
     private boolean checkRemarksValidation() {
         if (edt_remarks.getText().toString().startsWith(",")) {
@@ -598,6 +675,42 @@ public class LeadGenerationFragment extends Fragment {
         }
     }
 
+    private void CallPurposeBasedLeadGenerationAPI(String name, final String mobile, String email, String address, String pincode, String remarks, String purpose) {
+
+        LeadGenerationRequestModel model = new LeadGenerationRequestModel();
+        model.setName(name);
+        model.setMobile(mobile);
+        model.setEmail(email);
+        model.setAddress(address);
+        model.setPincode(pincode);
+        model.setRemarks(remarks);
+        model.setPurpose(purpose);
+        model.setAppName("Btech App");
+        model.setEntryBy(appPreferenceManager.getLoginResponseModel().getMobile());
+
+        PostAPI_SingletonClass.getInstance().CallSubmitLeadGenerationAPI(mActivity, true, model, new PostAPI_SingletonClass.CallSubmitLeadAPIListener() {
+            @Override
+            public void onSuccess(LeadgenerationResponseModel model) {
+
+                if (model != null && StringUtils.CheckEqualIgnoreCase(model.getRespId(),Constants.RES02024)){
+                    clearAllFields();
+                    globalClass.showalert_OK(model.getResponse(),mActivity);
+                }else{
+                    if (model != null ){
+                        globalClass.showCustomToast(mActivity, !StringUtils.isNull(model.getResponse()) ? model.getResponse() : ConstantsMessages.SOMETHING_WENT_WRONG);
+                    }else{
+                        globalClass.showCustomToast(mActivity, ConstantsMessages.SOMETHING_WENT_WRONG);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure() {
+                globalClass.showCustomToast(mActivity, ConstantsMessages.SOMETHING_WENT_WRONG);
+            }
+        });
+    }
+
     private void CallLeadGenerationAPI(String name, String mobile1, String email1, String address, String pincode, String remarks1, String type, File imagefile, File f_AudioSavePathInDevice) {
         String refcode = appPreferenceManager.getLoginResponseModel().getMobile();
         if (remarks1.endsWith(",")){
@@ -816,7 +929,6 @@ public class LeadGenerationFragment extends Fragment {
         return finalUrl;
     }
 
-
     private void CallEmailValidationApi(String EmailID) {
 
         try {
@@ -851,14 +963,18 @@ public class LeadGenerationFragment extends Fragment {
                 edt_email.requestFocus();
             } else {
                 name = edt_name.getText().toString().toUpperCase().trim();
-                mobile = edt_mobile.getText().toString();
+                mobile = edt_mobile.getText().toString().trim();
                 email = edt_email.getText().toString().toLowerCase().trim();
-                address = edt_setAddress.getText().toString();
-                pincode = edt_pincode.getText().toString();
+                address = edt_setAddress.getText().toString().trim();
+                pincode = edt_pincode.getText().toString().trim();
                 remarks = edt_remarks.getText().toString().trim();
 
                 if (cd.isConnectingToInternet()) {
-                    CallLeadGenerationAPI(name, mobile, email, address, pincode, remarks, type, imagefile, f_AudioSavePathInDevice);
+                    if (isorderSelected){
+                        CallLeadGenerationAPI(name, mobile, email, address, pincode, remarks, type, imagefile, f_AudioSavePathInDevice);
+                    }else{
+                        CallPurposeBasedLeadGenerationAPI(name, mobile, email, address, pincode, remarks,strSelectedPurpose);
+                    }
                 } else {
                     globalClass.showCustomToast(mActivity, ConstantsMessages.CheckInternetConnectionMsg);
                 }
@@ -887,7 +1003,7 @@ public class LeadGenerationFragment extends Fragment {
     private void CallGetTechsoProductsAPI() {
 
         try {
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token());
             globalClass.showProgressDialog(mActivity, "Fetching products. Please wait..");
             responseCall.enqueue(new Callback<BrandTestMasterModel>() {

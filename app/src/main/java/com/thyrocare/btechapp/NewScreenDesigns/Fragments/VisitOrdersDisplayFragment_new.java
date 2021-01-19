@@ -309,16 +309,16 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     public void onResume() {
         super.onResume();
         gpsTracker = new GPSTracker(activity);
-        if (isphonecallstarted){
+        if (isphonecallstarted) {
             isphonecallstarted = false;
-        }else{
+        } else {
 //            fetchData();
         }
     }
 
     private void fetchData() {
 
-        GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID());
         global.showProgressDialog(activity, activity.getResources().getString(R.string.fetchingOrders), false);
         fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
@@ -326,40 +326,47 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
             public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
                 global.hideProgressDialog(activity);
                 try {
-                    orderDetailsResponseModels = null;
-                    orderDetailsResponseModels = new ArrayList<>();
-                    FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
-                    if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
-                        for (OrderVisitDetailsModel orderVisitDetailsModel :
-                                fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
-                            if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
-                                for (OrderDetailsModel orderDetailsModel :
-                                        orderVisitDetailsModel.getAllOrderdetails()) {
-                                    orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
-                                    orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
-                                    orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
-                                    orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
-                                    orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
-                                    orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
-                                    orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
-                                    orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
-                                    if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
-                                        for (BeneficiaryDetailsModel beneficiaryDetailsModel :
-                                                orderDetailsModel.getBenMaster()) {
-                                            beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
-                                            beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
-                                            for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
-                                                beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                    if (response.isSuccessful()) {
+
+                        orderDetailsResponseModels = null;
+                        orderDetailsResponseModels = new ArrayList<>();
+                        FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
+                        if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
+                            for (OrderVisitDetailsModel orderVisitDetailsModel :
+                                    fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
+                                if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+                                    for (OrderDetailsModel orderDetailsModel :
+                                            orderVisitDetailsModel.getAllOrderdetails()) {
+                                        orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+                                        orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
+                                        orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
+                                        orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
+                                        orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
+                                        orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
+                                        orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
+                                        orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
+                                        if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
+                                            for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                                                    orderDetailsModel.getBenMaster()) {
+                                                beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                                                beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
+                                                for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
+                                                    beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                                }
                                             }
                                         }
                                     }
+                                    orderDetailsResponseModels.add(orderVisitDetailsModel);
+                                    MessageLogger.LogError(TAG_FRAGMENT, "onResponse: " + orderDetailsResponseModels.size());
                                 }
-                                orderDetailsResponseModels.add(orderVisitDetailsModel);
-                                MessageLogger.LogError(TAG_FRAGMENT, "onResponse: " + orderDetailsResponseModels.size());
                             }
                         }
+                        initData();
+                    }else {
+                        global.hideProgressDialog(activity);
                     }
-                    initData();
+
+
                 } catch (Exception e) {
                     global.hideProgressDialog(activity);
                     e.printStackTrace();
@@ -570,7 +577,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     }
 
     private void CallPatchRequestAPI(OrderVisitDetailsModel orderVisitDetailsModels) {
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallpatchRequestAPI(appPreferenceManager.getLoginResponseModel().getUserID(), orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile(), orderVisitDetailsModels.getVisitId());
         global.showProgressDialog(activity, activity.getResources().getString(R.string.loading));
         responseCall.enqueue(new Callback<String>() {
@@ -588,13 +595,13 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                                 .setPermissionListener(new PermissionListener() {
                                     @Override
                                     public void onPermissionGranted() {
-                                        if (!StringUtils.isNull(MaskedPhoneNumber)){
+                                        if (!StringUtils.isNull(MaskedPhoneNumber)) {
                                             isphonecallstarted = true;
                                             Intent intent = new Intent(Intent.ACTION_CALL);
-                                            intent.setData(Uri.parse("tel:" + MaskedPhoneNumber.replace("\"","")));
+                                            intent.setData(Uri.parse("tel:" + MaskedPhoneNumber.replace("\"", "")));
                                             activity.startActivity(intent);
-                                        }else{
-                                            global.showCustomToast(activity,"Invalid number");
+                                        } else {
+                                            global.showCustomToast(activity, "Invalid number");
                                         }
                                     }
 
@@ -627,7 +634,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     }
 
     private void CallgetDispositionApi(final OrderVisitDetailsModel orderDet) {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<DispositionDataModel> responseCall = apiInterface.CallgetDispositionApi();
         responseCall.enqueue(new Callback<DispositionDataModel>() {
             @Override
@@ -887,7 +894,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId() + "");
         orderStatusChangeRequestModel.setStatus(status);
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
         global.showProgressDialog(activity, getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
@@ -990,7 +997,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
 
     private void callOrderStatusChangeApi(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
         global.showProgressDialog(activity, PLEASE_WAIT);
 
@@ -1010,6 +1017,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -1021,7 +1029,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
 
     private void CallOrderStatusChangeAPIAfterAcceptButtonClicked(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
         global.showProgressDialog(activity, activity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
@@ -1064,7 +1072,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     }
 
     private void CallGetBtechEstEarningsApi() {
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<BtechEstEarningsResponseModel> responseCall = apiInterface.CallGetBtechEstEarningsApi(appPreferenceManager.getLoginResponseModel().getUserID());
         responseCall.enqueue(new Callback<BtechEstEarningsResponseModel>() {
             @Override
@@ -1154,7 +1162,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
             StringBuilder builder = new StringBuilder();
             String json = "";
             try {
-                HttpPost request = new HttpPost(EncryptionUtils.DecodeString64(activity.getString(R.string.SERVER_BASE_API_URL_PROD)) + "/api/OrderAllocation/MediaUpload");
+                HttpPost request = new HttpPost(EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD)) + "/api/OrderAllocation/MediaUpload");
 
                 MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 entity.addPart("AppId", new StringBody("" + setDispositionDataModel.getAppId()));

@@ -164,11 +164,12 @@ public class ServerdOrderFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                SelectDatePickerDialogFragment datePickerDialogFragment = new SelectDatePickerDialogFragment(mActivity,"Select Date",0,System.currentTimeMillis(),"dd-MM-yyyy");
+                SelectDatePickerDialogFragment datePickerDialogFragment = new SelectDatePickerDialogFragment(mActivity,"Select Date",0,System.currentTimeMillis(),"yyyy-MM-dd");
                 datePickerDialogFragment.setDateSelectedListener(new SelectDatePickerDialogFragment.OnDateSelectedListener() {
                     @Override
                     public void onDateSelected(String strSelectedDate, Date SelectedDate) {
-                        tv_selectedDate.setText(strSelectedDate);
+                        String CurrentDateToDisplay = DateUtil.getDateFromLong(SelectedDate.getTime(),"dd-MM-yyyy");
+                        tv_selectedDate.setText(CurrentDateToDisplay);
                         if (cd.isConnectingToInternet()){
                             callServedOrderAPI(appPreferenceManager.getLoginResponseModel().getUserID(),strSelectedDate);
                         }else{
@@ -184,9 +185,10 @@ public class ServerdOrderFragment extends Fragment {
 
     private void InitData() {
 
-        String CurrentDate = DateUtil.getDateFromLong(System.currentTimeMillis(),"dd-MM-yyyy");
-        tv_selectedDate.setText(CurrentDate);
+        String CurrentDateToDisplay = DateUtil.getDateFromLong(System.currentTimeMillis(),"dd-MM-yyyy");
+        tv_selectedDate.setText(CurrentDateToDisplay);
 
+        String CurrentDate = DateUtil.getDateFromLong(System.currentTimeMillis(),"yyyy-MM-dd");
         if (cd.isConnectingToInternet()){
             callServedOrderAPI(appPreferenceManager.getLoginResponseModel().getUserID(),CurrentDate);
         }else{
@@ -197,7 +199,7 @@ public class ServerdOrderFragment extends Fragment {
 
     private void callServedOrderAPI(String BtechID,String Date) {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ServedOrderResponseModel> responseCall = apiInterface.CallServedOrderAPI(BtechID,Date);
         globalclass.showProgressDialog(mActivity,"Please wait..",false);
 
@@ -290,7 +292,7 @@ public class ServerdOrderFragment extends Fragment {
 
     private void callSendreceiptAPI(String OrderNo) {
 
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.DecodeString64(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<String> responseCall = apiInterface.CallSendreceiptAPI(OrderNo);
         globalclass.showProgressDialog(mActivity,"Please wait..",false);
 

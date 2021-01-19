@@ -22,7 +22,6 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -396,7 +395,7 @@ public class FeedbackFragment extends Fragment {
                 try {
                     HttpClient client = new DefaultHttpClient();
 //                    String getURL = pref.getString("domain", "") + "MASTER.svc/"+pref.getString("api_key","")+"/FEEDBACK/getlist";
-                    String getURL = EncryptionUtils.DecodeString64(getString(R.string.B2C_API_VERSION)) +"MASTER.svc/"+ AppConstants.API_KEY+"/FEEDBACK/getlist";
+                    String getURL = EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION)) +"MASTER.svc/"+ AppConstants.API_KEY+"/FEEDBACK/getlist";
                     MessageLogger.PrintMsg(getURL);
                     HttpGet httpGet = new HttpGet(getURL);
                     httpGet.setHeader("Content-Type", "application/json");
@@ -482,7 +481,7 @@ public class FeedbackFragment extends Fragment {
         protected JSONObject doInBackground(Void... params) {
 
 //            String strUrl=pref.getString("domain", "")+"MASTER.svc/feedback";
-            String strUrl=EncryptionUtils.DecodeString64(getString(R.string.B2C_API_VERSION)) +"MASTER.svc/feedback";
+            String strUrl=EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION)) +"MASTER.svc/feedback";
 
             JSONObject jobj = new JSONObject();
             try {
