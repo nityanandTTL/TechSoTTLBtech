@@ -432,6 +432,9 @@ public class HomeScreenFragment extends AbstractFragment {
         orders_icon = (ImageView) rootView.findViewById(R.id.orders_icon);
     }
 
+
+
+
     private void getCampDetailCount() {
         if (isNetworkAvailable(activity)) {
             CallGetCampDetailsCountAPI();
@@ -744,6 +747,7 @@ public class HomeScreenFragment extends AbstractFragment {
         super.onResume();
 
     }
+
 
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);

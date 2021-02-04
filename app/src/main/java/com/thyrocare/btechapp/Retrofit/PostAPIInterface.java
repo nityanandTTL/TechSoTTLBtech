@@ -68,6 +68,7 @@ import com.thyrocare.btechapp.models.api.response.CartAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel1;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.EmailValidationResponseModel;
+import com.thyrocare.btechapp.models.api.response.LeadChannelRespModel;
 import com.thyrocare.btechapp.models.api.response.LeadPurposeResponseModel;
 import com.thyrocare.btechapp.models.api.response.LeadgenerationResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginDeviceResponseModel;
@@ -117,6 +118,9 @@ public interface PostAPIInterface {
     @POST("api/OrderAllocation/TRFUPLOAD")
     Call<CommonResponseModel1> uploadTRFToServer(@Part MultipartBody.Part TRFImage,
                                                  @Part("BENID") RequestBody BENID);
+
+    @POST("commonservices/LeadChannel")
+    Call<LeadChannelRespModel> getLeadChannel();
 
     @POST("api/UserLoginDevice/PostUserLogOut")
     Call<CommonResponseModel> CallLogoutAPI(@Body LogoutRequestModel logoutRequestModel);

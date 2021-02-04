@@ -27,20 +27,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/borde_rect"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:weightSum="2"
                     android:padding="@dimen/_5sdp"
-                    android:background="@drawable/borde_rect">
+                    android:weightSum="2">
 
                     <Spinner
                         android:id="@+id/spn_purpose"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_16sdp" />
+                        android:textSize="@dimen/_16sdp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -127,9 +127,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:digits="@string/Mobile_no_validation"
-                        android:maxLines="1"
-                        android:maxLength="6"
                         android:inputType="number|phone"
+                        android:maxLength="6"
+                        android:maxLines="1"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp" />
 
@@ -231,12 +231,63 @@
                         android:id="@+id/edt_remarks"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:completionThreshold="1"
                         android:digits="@string/addressvalidation"
                         android:maxLength="250"
-                        android:completionThreshold="1"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_14sdp" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_channel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dp_3"
+                        android:layout_weight="1"
+                        android:background="@drawable/borde_rect"
+                        android:orientation="horizontal">
+
+                        <Spinner
+                            android:id="@+id/spr_channel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+
+                            android:layout_margin="@dimen/_5sdp" />
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+
+                        android:layout_weight="1"
+                        android:background="@drawable/borde_rect"
+                        android:orientation="horizontal">
+
+
+                        <Spinner
+                            android:id="@+id/spr_from"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/_5sdp" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
 
                 <Button

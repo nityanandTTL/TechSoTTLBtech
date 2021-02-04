@@ -581,6 +581,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         Constants.Finish_barcodeScanAcitivty = true;
+                                                        Constants.isWOEDone = true;
                                                         mActivity.finish();
                                                     }
                                                 })
@@ -607,6 +608,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         Constants.Finish_barcodeScanAcitivty = true;
+                                                        Constants.isWOEDone = true;
                                                         mActivity.finish();
                                                     }
                                                 })
@@ -629,6 +631,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         Constants.Finish_barcodeScanAcitivty = true;
+                                                        Constants.isWOEDone = true;
                                                         mActivity.finish();
                                                     }
                                                 })
@@ -651,6 +654,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         Constants.Finish_barcodeScanAcitivty = true;
+                                                        Constants.isWOEDone = true;
                                                         mActivity.finish();
                                                     }
                                                 })
@@ -673,6 +677,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         Constants.Finish_barcodeScanAcitivty = true;
+                                                        Constants.isWOEDone = true;
                                                         mActivity.finish();
                                                     }
                                                 })
@@ -687,6 +692,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                     } else {
                                         Logger.error("testcode in else " + test.toUpperCase());
                                         Constants.Finish_barcodeScanAcitivty = true;
+                                        Constants.isWOEDone = true;
                                         mActivity.finish();
                                     }
                                 }
@@ -716,6 +722,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Constants.Finish_barcodeScanAcitivty = true;
+                                    Constants.isWOEDone = true;
                                     mActivity.finish();
                                 }
                             })

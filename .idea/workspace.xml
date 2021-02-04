@@ -1270,17 +1270,17 @@
     <property name="device.picker.selection" value="Pixel_2_XL_API_27" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/res/drawable" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Diggy" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/LEGGY_3.5" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\drawable" />
-      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\layout" />
-      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\drawable-hdpi" />
-      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\drawable-mdpi" />
-      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\menu" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Android projects\Latest Btech App_NK\BtechAppNew\app\src\main\res\drawable-ldrtl-xxxhdpi" />
+      <recent name="D:\Android projects\Latest Btech App_NK\Latest Btech App\app" />
+      <recent name="D:\Android projects\Latest Btech App_NK\Latest Btech App\app\src\main\res\drawable" />
+      <recent name="D:\Android projects\Latest Btech App_NK\Latest Btech App\app\src\main\res\layout" />
+      <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel" />
@@ -1296,17 +1296,17 @@
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.thyrocare.btechapp.models.api.response" />
-      <recent name="com.thyrocare.btechapp.models.api.request" />
       <recent name="com.thyrocare.btechapp.Controller" />
+      <recent name="com.thyrocare.btechapp.models.api.request" />
       <recent name="com.thyrocare.btechapp.Retrofit" />
       <recent name="com.thyrocare.btechapp.utils.app" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Android projects\Latest Btech App_NK\BtechAppNew\app\src\main\res\drawable-ldrtl-xxxhdpi" />
-      <recent name="D:\Android projects\Latest Btech App_NK\Latest Btech App\app" />
-      <recent name="D:\Android projects\Latest Btech App_NK\Latest Btech App\app\src\main\res\drawable" />
-      <recent name="D:\Android projects\Latest Btech App_NK\Latest Btech App\app\src\main\res\layout" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\drawable" />
+      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\layout" />
+      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\drawable-hdpi" />
+      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\drawable-mdpi" />
+      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\menu" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -1514,7 +1514,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>368</line>
+          <line>372</line>
           <option name="timeStamp" value="50" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -1564,7 +1564,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>1040</line>
+          <line>1044</line>
           <option name="timeStamp" value="118" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -1579,7 +1579,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/fragment/HomeScreenFragment.java</url>
-          <line>484</line>
+          <line>487</line>
           <option name="timeStamp" value="121" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -1944,12 +1944,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>1173</line>
+          <line>1177</line>
           <option name="timeStamp" value="260" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>852</line>
+          <line>856</line>
           <option name="timeStamp" value="261" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -1974,12 +1974,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/fragment/LeadGenerationFragment.java</url>
-          <line>1013</line>
+          <line>1112</line>
           <option name="timeStamp" value="273" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/fragment/LeadGenerationFragment.java</url>
-          <line>1055</line>
+          <line>1155</line>
           <option name="timeStamp" value="274" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -2004,17 +2004,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>330</line>
+          <line>334</line>
           <option name="timeStamp" value="283" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>336</line>
+          <line>340</line>
           <option name="timeStamp" value="285" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Fragments/VisitOrdersDisplayFragment_new.java</url>
-          <line>334</line>
+          <line>338</line>
           <option name="timeStamp" value="286" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -2029,7 +2029,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Retrofit/PostAPIInterface.java</url>
-          <line>205</line>
+          <line>209</line>
           <properties class="com.thyrocare.btechapp.Retrofit.PostAPIInterface" method="CallpatchRequestAPI" />
           <option name="timeStamp" value="263" />
         </line-breakpoint>

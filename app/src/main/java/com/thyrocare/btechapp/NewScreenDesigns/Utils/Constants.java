@@ -36,7 +36,8 @@ public class Constants {
     public static String HEADER_USER_AGENT = "User-Agent";
 
     public static boolean Finish_barcodeScanAcitivty = false;
-
+    public static boolean isWOEDone = false;
 
     public static final String BOOKING_API_KEY = "DAuWZtKHyVb8OhjhHSuAwCB6uAyzVzASVTxXcCT8@0fkrvZ5fG9lw533tKKmxVnu";
+
 }

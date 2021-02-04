@@ -47,6 +47,7 @@ import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.StartAndArriveActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.Btech_VisitDisplayAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
@@ -312,7 +313,10 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         if (isphonecallstarted) {
             isphonecallstarted = false;
         } else {
-//            fetchData();
+            if (Constants.isWOEDone){
+                Constants.isWOEDone = false;
+                fetchData();
+            }
         }
     }
 

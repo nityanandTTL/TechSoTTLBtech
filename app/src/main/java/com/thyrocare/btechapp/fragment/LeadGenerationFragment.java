@@ -38,6 +38,7 @@ import androidx.fragment.app.Fragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mindorks.paracamera.Camera;
+import com.thyrocare.btechapp.Controller.LeadChannelController;
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.PostEmailValidationController;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
@@ -51,6 +52,7 @@ import com.thyrocare.btechapp.Retrofit.PostAPI_SingletonClass;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.models.api.request.LeadGenerationRequestModel;
+import com.thyrocare.btechapp.models.api.response.LeadChannelRespModel;
 import com.thyrocare.btechapp.models.api.response.LeadPurposeResponseModel;
 import com.thyrocare.btechapp.models.api.response.LeadgenerationResponseModel;
 import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
@@ -109,9 +111,12 @@ public class LeadGenerationFragment extends Fragment {
     private Camera camera;
     private AppPreferenceManager appPreferenceManager;
     private Spinner spn_purpose;
-    private LinearLayout lin_spnPurpose,lin_upload;
+    private LinearLayout lin_spnPurpose, lin_upload;
     private boolean isorderSelected = true;
     private String strSelectedPurpose = "";
+
+    LinearLayout ll_channel;
+    Spinner spr_channel, spr_from;
 
 
     public LeadGenerationFragment() {
@@ -167,18 +172,29 @@ public class LeadGenerationFragment extends Fragment {
         }
 
         CallLeadPurposeAPI();
+        GetLeadChannel();
 
         return v;
     }
 
+
+    private void GetLeadChannel() {
+        if (cd.isConnectingToInternet()) {
+            LeadChannelController leadChannelController = new LeadChannelController(LeadGenerationFragment.this);
+            leadChannelController.GetLeadChannel();
+        } else {
+            globalClass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+        }
+    }
+
     private void CallProductAPI() {
-        if (UpdateProduct()){
+        if (UpdateProduct()) {
             if (cd.isConnectingToInternet()) {
                 CallGetTechsoProductsAPI();
             } else {
                 globalClass.showCustomToast(mActivity, CheckInternetConnectionMsg);
             }
-        }else{
+        } else {
             SetProductstoAutoCompleteTextView();
         }
     }
@@ -212,6 +228,10 @@ public class LeadGenerationFragment extends Fragment {
         lin_spnPurpose = (LinearLayout) v.findViewById(R.id.lin_spnPurpose);
         lin_upload = (LinearLayout) v.findViewById(R.id.lin_upload);
         spn_purpose = (Spinner) v.findViewById(R.id.spn_purpose);
+
+        ll_channel = v.findViewById(R.id.ll_channel);
+        spr_channel = v.findViewById(R.id.spr_channel);
+        spr_from = v.findViewById(R.id.spr_from);
     }
 
 
@@ -265,10 +285,10 @@ public class LeadGenerationFragment extends Fragment {
 
                         if (checkRemarksValidation()) {
                             if (cd.isConnectingToInternet()) {
-                                if (isorderSelected){
+                                if (isorderSelected) {
                                     CallLeadGenerationAPI(name, mobile, email, address, pincode, remarks, type, imagefile, f_AudioSavePathInDevice);
-                                }else{
-                                    CallPurposeBasedLeadGenerationAPI(name, mobile, email, address, pincode, remarks,strSelectedPurpose);
+                                } else {
+                                    CallPurposeBasedLeadGenerationAPI(name, mobile, email, address, pincode, remarks, strSelectedPurpose);
                                 }
 
                             } else {
@@ -293,9 +313,9 @@ public class LeadGenerationFragment extends Fragment {
         PostAPI_SingletonClass.getInstance().CallGetLeadPurposeAPI(mActivity, true, new PostAPI_SingletonClass.CallGetLeadPurposeAPIListener() {
             @Override
             public void onSuccess(LeadPurposeResponseModel model) {
-                if (model != null && StringUtils.CheckEqualIgnoreCase(model.getRespId(), Constants.RES00001) && model.getPurposeList() != null){
+                if (model != null && StringUtils.CheckEqualIgnoreCase(model.getRespId(), Constants.RES00001) && model.getPurposeList() != null) {
                     SetPurposeDataToSpinner(model.getPurposeList());
-                }else{
+                } else {
                     lin_spnPurpose.setVisibility(View.GONE);
                 }
                 CallProductAPI();
@@ -318,9 +338,9 @@ public class LeadGenerationFragment extends Fragment {
         spn_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (StringUtils.CheckEqualIgnoreCase(spn_purpose.getSelectedItem().toString(),"Order")){
+                if (StringUtils.CheckEqualIgnoreCase(spn_purpose.getSelectedItem().toString(), "Order")) {
                     isorderSelected = true;
-                }else{
+                } else {
                     isorderSelected = false;
                 }
                 strSelectedPurpose = spn_purpose.getSelectedItem().toString();
@@ -335,11 +355,13 @@ public class LeadGenerationFragment extends Fragment {
     }
 
     private void ShowandHideViews(boolean isorderSelected) {
-        if (isorderSelected){
+        if (isorderSelected) {
             SetProductstoAutoCompleteTextView();
+            ll_channel.setVisibility(View.GONE);
             lin_upload.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             edt_remarks.setAdapter(null);
+            ll_channel.setVisibility(View.VISIBLE);
             lin_upload.setVisibility(View.GONE);
         }
     }
@@ -368,6 +390,48 @@ public class LeadGenerationFragment extends Fragment {
         }
         return true;
     }
+
+    public void getLeadChannel(LeadChannelRespModel leadChannelRespModel) {
+
+        ArrayList<String> channelList = new ArrayList<>();
+        ArrayList<String> fromList = new ArrayList<>();
+
+        channelList.add("Select Channel*");
+        fromList.add("Select From*");
+        if (leadChannelRespModel != null) {
+            ll_channel.setVisibility(View.VISIBLE);
+            if (!InputUtils.isNull(leadChannelRespModel.getRespId()) && leadChannelRespModel.getRespId().equalsIgnoreCase(Constants.RES00001)) {
+                if (!InputUtils.isNull(leadChannelRespModel.getChannelList())) {
+                    for (int i = 0; i < leadChannelRespModel.getChannelList().size(); i++) {
+                        if (!InputUtils.isNull(leadChannelRespModel.getChannelList().get(i).getData())) {
+                            channelList.add(leadChannelRespModel.getChannelList().get(i).getData());
+                        }
+                    }
+                }
+
+                if (!InputUtils.isNull(leadChannelRespModel.getFromList())) {
+                    for (int i = 0; i < leadChannelRespModel.getFromList().size(); i++) {
+                        if (!InputUtils.isNull(leadChannelRespModel.getFromList().get(i).getData())) {
+                            fromList.add(leadChannelRespModel.getFromList().get(i).getData());
+                        }
+                    }
+                }
+
+                ArrayAdapter<String> chanel = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, channelList);
+                chanel.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spr_channel.setAdapter(chanel);
+
+                ArrayAdapter<String> from = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, fromList);
+                from.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spr_from.setAdapter(from);
+            }
+        } else {
+            ll_channel.setVisibility(View.GONE);
+        }
+
+
+    }
+
 
     public class CustomDialogClass extends Dialog {
 
@@ -543,9 +607,21 @@ public class LeadGenerationFragment extends Fragment {
             }
             f_AudioSavePathInDevice = null;
         }
+        if (spr_channel != null && spr_channel.getAdapter() != null){
+            spr_channel.setSelection(0);
+        }
+
+        if (spr_from != null && spr_from.getAdapter() != null){
+            spr_from.setSelection(0);
+        }
+
+        if (spn_purpose != null && spn_purpose.getAdapter() != null){
+            spn_purpose.setSelection(0);
+        }
     }
 
     private boolean checkValidation() {
+
         if (edt_name.getText().toString().isEmpty()) {
             globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.str_enter_name));
             edt_name.requestFocus();
@@ -593,6 +669,27 @@ public class LeadGenerationFragment extends Fragment {
             spinner_city.requestFocus();
             return false;
         }*/
+        try {
+            if (!spn_purpose.getSelectedItem().toString().equalsIgnoreCase("Order")) {
+
+                if (spr_channel.getSelectedItem().toString().equalsIgnoreCase("Select Channel*")) {
+
+                    globalClass.showCustomToast(mActivity, "Select Channel");
+                    return false;
+                }
+
+                if (spr_from.getSelectedItem().toString().equalsIgnoreCase("Select From*")) {
+
+                    globalClass.showCustomToast(mActivity, "Select From");
+                    return false;
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
+
         return true;
     }
 
@@ -604,7 +701,7 @@ public class LeadGenerationFragment extends Fragment {
         }
 
         if (edt_email.getText().length() > 0 && !Patterns.EMAIL_ADDRESS.matcher(edt_email.getText().toString()).matches()) {
-            globalClass.showalert_OK("Enter valid Email Id",mActivity);
+            globalClass.showalert_OK("Enter valid Email Id", mActivity);
             edt_email.requestFocus();
             return false;
         }
@@ -687,18 +784,20 @@ public class LeadGenerationFragment extends Fragment {
         model.setPurpose(purpose);
         model.setAppName("Btech App");
         model.setEntryBy(appPreferenceManager.getLoginResponseModel().getMobile());
+        model.setChannel(spr_channel.getSelectedItem().toString());
+        model.setFrom(spr_from.getSelectedItem().toString());
 
         PostAPI_SingletonClass.getInstance().CallSubmitLeadGenerationAPI(mActivity, true, model, new PostAPI_SingletonClass.CallSubmitLeadAPIListener() {
             @Override
             public void onSuccess(LeadgenerationResponseModel model) {
 
-                if (model != null && StringUtils.CheckEqualIgnoreCase(model.getRespId(),Constants.RES02024)){
+                if (model != null && StringUtils.CheckEqualIgnoreCase(model.getRespId(), Constants.RES02024)) {
                     clearAllFields();
-                    globalClass.showalert_OK(model.getResponse(),mActivity);
-                }else{
-                    if (model != null ){
+                    globalClass.showalert_OK(model.getResponse(), mActivity);
+                } else {
+                    if (model != null) {
                         globalClass.showCustomToast(mActivity, !StringUtils.isNull(model.getResponse()) ? model.getResponse() : ConstantsMessages.SOMETHING_WENT_WRONG);
-                    }else{
+                    } else {
                         globalClass.showCustomToast(mActivity, ConstantsMessages.SOMETHING_WENT_WRONG);
                     }
                 }
@@ -713,7 +812,7 @@ public class LeadGenerationFragment extends Fragment {
 
     private void CallLeadGenerationAPI(String name, String mobile1, String email1, String address, String pincode, String remarks1, String type, File imagefile, File f_AudioSavePathInDevice) {
         String refcode = appPreferenceManager.getLoginResponseModel().getMobile();
-        if (remarks1.endsWith(",")){
+        if (remarks1.endsWith(",")) {
             remarks1 = StringUtils.removeLastCharacter(remarks1);
         }
         PostAPI_SingletonClass.getInstance().CallReferAFriendBookingAPI(mActivity, true, name, mobile1, email1, address, remarks1, type, imagefile, f_AudioSavePathInDevice,
@@ -970,10 +1069,10 @@ public class LeadGenerationFragment extends Fragment {
                 remarks = edt_remarks.getText().toString().trim();
 
                 if (cd.isConnectingToInternet()) {
-                    if (isorderSelected){
+                    if (isorderSelected) {
                         CallLeadGenerationAPI(name, mobile, email, address, pincode, remarks, type, imagefile, f_AudioSavePathInDevice);
-                    }else{
-                        CallPurposeBasedLeadGenerationAPI(name, mobile, email, address, pincode, remarks,strSelectedPurpose);
+                    } else {
+                        CallPurposeBasedLeadGenerationAPI(name, mobile, email, address, pincode, remarks, strSelectedPurpose);
                     }
                 } else {
                     globalClass.showCustomToast(mActivity, ConstantsMessages.CheckInternetConnectionMsg);
@@ -1042,7 +1141,8 @@ public class LeadGenerationFragment extends Fragment {
 
         if (!InputUtils.isNull(appPreferenceManager.getCacheProduct())) {
             Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<String>>() {}.getType();
+            Type type = new TypeToken<ArrayList<String>>() {
+            }.getType();
             ArrayList<String> productsNameArray = gson.fromJson(appPreferenceManager.getCacheProduct(), type);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_dropdown_item_1line, productsNameArray);
             edt_remarks.setAdapter(adapter);
@@ -1056,11 +1156,11 @@ public class LeadGenerationFragment extends Fragment {
         ArrayList<String> FinalProductnameAryList = new ArrayList<>();
         if (brandTestMasterModel != null && brandTestMasterModel.getTstratemaster() != null && brandTestMasterModel.getTstratemaster().size() > 0) {
             for (int i = 0; i < brandTestMasterModel.getTstratemaster().size(); i++) {
-                if (InputUtils.CheckEqualIgnoreCase(brandTestMasterModel.getTstratemaster().get(i).getTestType(),"TEST") ) {
-                    if (!InputUtils.isNull(brandTestMasterModel.getTstratemaster().get(i).getDescription())){
+                if (InputUtils.CheckEqualIgnoreCase(brandTestMasterModel.getTstratemaster().get(i).getTestType(), "TEST")) {
+                    if (!InputUtils.isNull(brandTestMasterModel.getTstratemaster().get(i).getDescription())) {
                         FinalProductnameAryList.add(brandTestMasterModel.getTstratemaster().get(i).getDescription());
                     }
-                }else if (!InputUtils.isNull(brandTestMasterModel.getTstratemaster().get(i).getTestCode())){
+                } else if (!InputUtils.isNull(brandTestMasterModel.getTstratemaster().get(i).getTestCode())) {
                     FinalProductnameAryList.add(brandTestMasterModel.getTstratemaster().get(i).getTestCode());
                 }
             }

@@ -13,6 +13,25 @@ public class LeadGenerationRequestModel implements Serializable {
     private String Purpose;
     private String EntryBy;
     private String AppName;
+    private String channel;
+    private String from;
+
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
 
     public String getName() {
         return Name;
