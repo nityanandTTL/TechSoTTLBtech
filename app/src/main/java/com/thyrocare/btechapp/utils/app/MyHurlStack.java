@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MyHurlStack  extends HurlStack {
+public class MyHurlStack extends HurlStack {
 
     private Context mContext;
 

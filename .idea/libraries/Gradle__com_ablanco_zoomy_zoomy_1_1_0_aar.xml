@@ -3,6 +3,12 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/978cc963e072c21328bf0e0dd9846a90/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/978cc963e072c21328bf0e0dd9846a90/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e958df12723be527268666738a8ec796/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e958df12723be527268666738a8ec796/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e958df12723be527268666738a8ec796/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ac7e87f2d33961eb818c06b6aeb16600/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ac7e87f2d33961eb818c06b6aeb16600/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ac7e87f2d33961eb818c06b6aeb16600/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ablanco.zoomy/zoomy/1.1.0/b84a7a3c005a066ba41471d73ef6b6d2c491e3c3/zoomy-1.1.0-javadoc.jar!/" />

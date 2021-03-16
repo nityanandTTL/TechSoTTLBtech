@@ -1,14 +1,71 @@
 package com.thyrocare.btechapp.models.api.response;
 
-import androidx.annotation.NonNull;
-
 import java.io.Serializable;
 import java.util.List;
 
 public class LeadPurposeResponseModel implements Serializable {
-
+    /**
+     * response : Success
+     * respId : RES00001
+     * purposeList : [{"data":"Order","remarks":null},{"data":"Leggy","remarks":null},{"data":"TSP","remarks":null},{"data":"HVC","remarks":null}]
+     */
 
     private String response;
+    private String respId;
+    private List<PurposeListDTO> purposeList;
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
+    }
+
+    public String getRespId() {
+        return respId;
+    }
+
+    public void setRespId(String respId) {
+        this.respId = respId;
+    }
+
+    public List<PurposeListDTO> getPurposeList() {
+        return purposeList;
+    }
+
+    public void setPurposeList(List<PurposeListDTO> purposeList) {
+        this.purposeList = purposeList;
+    }
+
+    public static class PurposeListDTO {
+        /**
+         * data : Order
+         * remarks : null
+         */
+
+        private String data;
+        private String remarks;
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
+        }
+
+        public String getRemarks() {
+            return remarks;
+        }
+
+        public void setRemarks(String remarks) {
+            this.remarks = remarks;
+        }
+    }
+
+
+    /*private String response;
     private String respId;
     private List<PurposeListBean> purposeList;
 
@@ -53,5 +110,5 @@ public class LeadPurposeResponseModel implements Serializable {
         public String toString() {
             return data;
         }
-    }
+    }*/
 }

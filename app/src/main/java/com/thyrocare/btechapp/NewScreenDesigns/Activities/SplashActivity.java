@@ -92,6 +92,11 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        System.out.println("---------velso-------------"+EncryptionUtils.Dcrp_Hex("268E43DE5EA1E4F0CC1D8569F085B536838AC6D68BCDD00D4D7ECEC2F334C2D60D7A0F1176A1A8D4EC52FF44E7C2060E"));
+        System.out.println("----------nuclearRefer------------"+EncryptionUtils.Dcrp_Hex("DCDA8B3598743AC452C9523C25245265196D3288A730A4FA78B19D7E0811C7C6A5CA7D69A8974A6B344B41F69B47841F"));
+        System.out.println("----------velsoCallGetLeadPurposeAPIListener------------"+EncryptionUtils.Dcrp_Hex("268E43DE5EA1E4F0CC1D8569F085B536838AC6D68BCDD00D4D7ECEC2F334C2D60D7A0F1176A1A8D4EC52FF44E7C2060E"));
+
         init();
 //        CheckIfDeviceIsRooted();
         initData();

@@ -3,6 +3,12 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/804329c3380c2cb89ebee99817751c4b/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/804329c3380c2cb89ebee99817751c4b/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d7938a87b30420b16ad60dd808c8f917/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d7938a87b30420b16ad60dd808c8f917/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d7938a87b30420b16ad60dd808c8f917/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/394c3960455e0862370546779e9856ed/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/394c3960455e0862370546779e9856ed/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/394c3960455e0862370546779e9856ed/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.gms/play-services-measurement/17.4.4/275c83392a4feb6e712b4d894e3a316b45b52c44/play-services-measurement-17.4.4-javadoc.jar!/" />

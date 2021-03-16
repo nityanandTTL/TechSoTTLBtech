@@ -52,6 +52,12 @@ public class RetroFit_APIClient {
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
 
+
+
+
+
+
+
         if (BuildConfig.DEBUG) {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);   // development build
         } else {

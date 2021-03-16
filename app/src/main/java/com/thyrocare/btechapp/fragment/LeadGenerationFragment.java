@@ -117,6 +117,8 @@ public class LeadGenerationFragment extends Fragment {
 
     LinearLayout ll_channel;
     Spinner spr_channel, spr_from;
+    TextView tv_selected_purpose;
+    private LeadPurposeResponseModel leadmodel;
 
 
     public LeadGenerationFragment() {
@@ -172,7 +174,7 @@ public class LeadGenerationFragment extends Fragment {
         }
 
         CallLeadPurposeAPI();
-        GetLeadChannel();
+//        GetLeadChannel();
 
         return v;
     }
@@ -231,12 +233,16 @@ public class LeadGenerationFragment extends Fragment {
 
         ll_channel = v.findViewById(R.id.ll_channel);
         spr_channel = v.findViewById(R.id.spr_channel);
+
+        tv_selected_purpose = v.findViewById(R.id.tv_selected_purpose);
+        tv_selected_purpose.setVisibility(View.GONE);
+        spr_channel.setVisibility(View.GONE);
         spr_from = v.findViewById(R.id.spr_from);
+        spr_from.setVisibility(View.GONE);
     }
 
 
     private void initListners() {
-
 
         rel_upload_img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,8 +319,15 @@ public class LeadGenerationFragment extends Fragment {
         PostAPI_SingletonClass.getInstance().CallGetLeadPurposeAPI(mActivity, true, new PostAPI_SingletonClass.CallGetLeadPurposeAPIListener() {
             @Override
             public void onSuccess(LeadPurposeResponseModel model) {
+
                 if (model != null && StringUtils.CheckEqualIgnoreCase(model.getRespId(), Constants.RES00001) && model.getPurposeList() != null) {
-                    SetPurposeDataToSpinner(model.getPurposeList());
+                    leadmodel = model;
+                    ArrayList<String> values = new ArrayList<>();
+                    values.add("Select*");
+                    for (int i = 0; i < model.getPurposeList().size(); i++) {
+                        values.add(model.getPurposeList().get(i).getData());
+                    }
+                    SetPurposeDataToSpinner(values);
                 } else {
                     lin_spnPurpose.setVisibility(View.GONE);
                 }
@@ -329,22 +342,56 @@ public class LeadGenerationFragment extends Fragment {
         });
     }
 
-    private void SetPurposeDataToSpinner(List<LeadPurposeResponseModel.PurposeListBean> purposeList) {
+    private void SetPurposeDataToSpinner(List<String> purposeList) {
         lin_spnPurpose.setVisibility(View.VISIBLE);
-        ArrayAdapter<LeadPurposeResponseModel.PurposeListBean> adapter = new ArrayAdapter<LeadPurposeResponseModel.PurposeListBean>(mActivity, android.R.layout.simple_spinner_item, purposeList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, purposeList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spn_purpose.setAdapter(adapter);
         spn_purpose.setSelection(0);
+
+
         spn_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (StringUtils.CheckEqualIgnoreCase(spn_purpose.getSelectedItem().toString(), "Order")) {
+
+                if (leadmodel != null) {
+                    if (!InputUtils.isNull(leadmodel.getPurposeList())) {
+                        if (spn_purpose.getSelectedItemPosition() == 0) {
+//                            Toast.makeText(mActivity, "Kindly select Purpose", Toast.LENGTH_SHORT).show();
+                            tv_selected_purpose.setVisibility(View.GONE);
+                        } else {
+
+                            for (int j = 0; j < leadmodel.getPurposeList().size(); j++) {
+                                if (spn_purpose.getSelectedItem().toString().equalsIgnoreCase(leadmodel.getPurposeList().get(j).getData())) {
+                                    if (!InputUtils.isNull(leadmodel.getPurposeList().get(j).getRemarks())) {
+                                        tv_selected_purpose.setVisibility(View.VISIBLE);
+                                        tv_selected_purpose.setText(leadmodel.getPurposeList().get(j).getRemarks());
+                                    } else {
+                                        tv_selected_purpose.setVisibility(View.GONE);
+                                    }
+                                }
+                            }
+
+                            if (spn_purpose.getSelectedItem().toString().equalsIgnoreCase("Order") || spn_purpose.getSelectedItem().toString().equalsIgnoreCase("Orders")) {
+                                lin_upload.setVisibility(View.VISIBLE);
+                                isorderSelected = true;
+                            } else {
+                                lin_upload.setVisibility(View.GONE);
+                                isorderSelected = false;
+                            }
+                        }
+                    }
+                }
+
+
+           /*     if (StringUtils.CheckEqualIgnoreCase(spn_purpose.getSelectedItem().toString(), "Order")) {
                     isorderSelected = true;
                 } else {
                     isorderSelected = false;
                 }
                 strSelectedPurpose = spn_purpose.getSelectedItem().toString();
-                ShowandHideViews(isorderSelected);
+                tv_selected_purpose.setVisibility(View.VISIBLE);
+                ShowandHideViews(isorderSelected);*/
             }
 
             @Override
@@ -361,7 +408,7 @@ public class LeadGenerationFragment extends Fragment {
             lin_upload.setVisibility(View.VISIBLE);
         } else {
             edt_remarks.setAdapter(null);
-            ll_channel.setVisibility(View.VISIBLE);
+            ll_channel.setVisibility(View.GONE);
             lin_upload.setVisibility(View.GONE);
         }
     }
@@ -591,6 +638,8 @@ public class LeadGenerationFragment extends Fragment {
         InputUtils.setTextToTextView(edt_remarks, "");
         InputUtils.setTextToTextView(edt_setAddress, "");
         InputUtils.setTextToTextView(edt_pincode, "");
+        InputUtils.setTextToTextView(tv_selected_purpose, "");
+        tv_selected_purpose.setVisibility(View.GONE);
         edt_setAddress.setEnabled(true);
 
         img_tick.setVisibility(View.INVISIBLE);
@@ -607,20 +656,27 @@ public class LeadGenerationFragment extends Fragment {
             }
             f_AudioSavePathInDevice = null;
         }
-        if (spr_channel != null && spr_channel.getAdapter() != null){
+        if (spr_channel != null && spr_channel.getAdapter() != null) {
             spr_channel.setSelection(0);
         }
 
-        if (spr_from != null && spr_from.getAdapter() != null){
+        if (spr_from != null && spr_from.getAdapter() != null) {
             spr_from.setSelection(0);
         }
 
-        if (spn_purpose != null && spn_purpose.getAdapter() != null){
+        if (spn_purpose != null && spn_purpose.getAdapter() != null) {
             spn_purpose.setSelection(0);
         }
+        lin_upload.setVisibility(View.GONE);
     }
 
     private boolean checkValidation() {
+
+
+        if (spn_purpose.getSelectedItemPosition() == 0) {
+            globalClass.showCustomToast(mActivity, "Kindly Select Purpose");
+            return false;
+        }
 
         if (edt_name.getText().toString().isEmpty()) {
             globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.str_enter_name));
@@ -669,7 +725,7 @@ public class LeadGenerationFragment extends Fragment {
             spinner_city.requestFocus();
             return false;
         }*/
-        try {
+       /* try {
             if (!spn_purpose.getSelectedItem().toString().equalsIgnoreCase("Order")) {
 
                 if (spr_channel.getSelectedItem().toString().equalsIgnoreCase("Select Channel*")) {
@@ -688,7 +744,7 @@ public class LeadGenerationFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
             return true;
-        }
+        }*/
 
         return true;
     }
@@ -784,8 +840,8 @@ public class LeadGenerationFragment extends Fragment {
         model.setPurpose(purpose);
         model.setAppName("Btech App");
         model.setEntryBy(appPreferenceManager.getLoginResponseModel().getMobile());
-        model.setChannel(spr_channel.getSelectedItem().toString());
-        model.setFrom(spr_from.getSelectedItem().toString());
+        /*model.setChannel(spr_channel.getSelectedItem().toString());
+        model.setFrom(spr_from.getSelectedItem().toString());*/
 
         PostAPI_SingletonClass.getInstance().CallSubmitLeadGenerationAPI(mActivity, true, model, new PostAPI_SingletonClass.CallSubmitLeadAPIListener() {
             @Override

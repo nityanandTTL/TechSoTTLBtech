@@ -3,6 +3,12 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3a0df1e3fd77aa8b46d8215ccdb0bb85/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3a0df1e3fd77aa8b46d8215ccdb0bb85/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/64e82876b8cb2fea7c53e1778bc6327a/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/64e82876b8cb2fea7c53e1778bc6327a/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/64e82876b8cb2fea7c53e1778bc6327a/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3f303780eb1459fcba9b92686a8a11d7/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3f303780eb1459fcba9b92686a8a11d7/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3f303780eb1459fcba9b92686a8a11d7/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mindorks/paracamera/0.2.2/667cbb29e3249011014d298c0850282359b1fff3/paracamera-0.2.2-javadoc.jar!/" />

@@ -44,6 +44,12 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_selected_purpose"
+                    android:layout_marginTop="@dimen/_10sdp" />
+
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -86,7 +92,8 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/EmailId">
+                    android:hint="@string/EmailId"
+                    android:visibility="gone">
 
                     <EditText
                         android:id="@+id/edt_email"
@@ -103,7 +110,8 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/strAddress">
+                    android:hint="@string/strAddress"
+                    android:visibility="gone">
 
                     <EditText
                         android:id="@+id/edt_setAddress"
@@ -120,7 +128,8 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/strPincode">
+                    android:hint="@string/strPincode"
+                    android:visibility="gone">
 
                     <EditText
                         android:id="@+id/edt_pincode"
@@ -141,7 +150,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <RelativeLayout
                         android:id="@+id/rel_upload_img"
@@ -225,7 +235,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/TestAndProfiles">
+                    android:hint="Remarks">
 
                     <MultiAutoCompleteTextView
                         android:id="@+id/edt_remarks"

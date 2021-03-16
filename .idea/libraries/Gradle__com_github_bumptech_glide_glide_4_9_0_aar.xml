@@ -3,6 +3,12 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/915dff08182591fad6bdec946990be91/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/915dff08182591fad6bdec946990be91/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/32223671d027f2ad96b3ce3b52793ca8/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/32223671d027f2ad96b3ce3b52793ca8/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/32223671d027f2ad96b3ce3b52793ca8/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fce15a6f864b55f51937dddf5622040d/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fce15a6f864b55f51937dddf5622040d/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fce15a6f864b55f51937dddf5622040d/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/4.9.0/b53be1dd9e86c008d96d319510846282f95c49f/glide-4.9.0-javadoc.jar!/" />
