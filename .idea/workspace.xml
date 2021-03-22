@@ -28,7 +28,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[Pixel_2_XL_API_30]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -320,15 +320,15 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1371" height="247" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1615642039167" />
-    <state x="648" y="99" width="1272" height="692" key="find.popup" timestamp="1615817864059">
+    <state x="648" y="99" width="1272" height="692" key="find.popup" timestamp="1615960755009">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="648" y="99" width="1272" height="692" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1615817864059" />
+    <state x="648" y="99" width="1272" height="692" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1615960755009" />
     <state x="648" y="122" width="1272" height="667" key="find.popup/0.27.1920.1003@0.27.1920.1003" timestamp="1615285786043" />
-    <state x="400" y="227" width="672" height="704" key="search.everywhere.popup" timestamp="1615895756841">
+    <state x="400" y="227" width="672" height="704" key="search.everywhere.popup" timestamp="1615958774187">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="400" y="227" width="672" height="704" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1615895756841" />
+    <state x="400" y="227" width="672" height="704" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1615958774187" />
     <state x="400" y="246" width="672" height="678" key="search.everywhere.popup/0.27.1920.1003@0.27.1920.1003" timestamp="1615350511715" />
   </component>
   <component name="XDebuggerManager">
@@ -898,6 +898,16 @@
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/fragment/LeadGenerationFragment.java</url>
           <line>364</line>
           <option name="timeStamp" value="298" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Retrofit/PostAPI_SingletonClass.java</url>
+          <line>46</line>
+          <option name="timeStamp" value="299" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/fragment/LeadGenerationFragment.java</url>
+          <line>869</line>
+          <option name="timeStamp" value="300" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Retrofit/PostAPIInterface.java</url>

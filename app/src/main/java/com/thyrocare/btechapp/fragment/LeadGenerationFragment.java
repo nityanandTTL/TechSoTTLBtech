@@ -1128,7 +1128,7 @@ public class LeadGenerationFragment extends Fragment {
                     if (isorderSelected) {
                         CallLeadGenerationAPI(name, mobile, email, address, pincode, remarks, type, imagefile, f_AudioSavePathInDevice);
                     } else {
-                        CallPurposeBasedLeadGenerationAPI(name, mobile, email, address, pincode, remarks, strSelectedPurpose);
+                        CallPurposeBasedLeadGenerationAPI(name, mobile, email, address, pincode, remarks, spn_purpose.getSelectedItem().toString());
                     }
                 } else {
                     globalClass.showCustomToast(mActivity, ConstantsMessages.CheckInternetConnectionMsg);
