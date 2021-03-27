@@ -28,7 +28,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[Pixel_2_XL_API_30]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -116,17 +116,25 @@
     <property name="device.picker.selection" value="Pixel_2_XL_API_27" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/res/drawable" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../LME/LME" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/models/data" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="android.template.1271067996">
+      <recent name="com.thyrocare.btechapp.activity" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Android projects\Latest Btech App_NK\BtechAppNew\app\src\main\res\drawable-ldrtl-xxxhdpi" />
       <recent name="D:\Android projects\Latest Btech App_NK\Latest Btech App\app" />
       <recent name="D:\Android projects\Latest Btech App_NK\Latest Btech App\app\src\main\res\drawable" />
       <recent name="D:\Android projects\Latest Btech App_NK\Latest Btech App\app\src\main\res\layout" />
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
+    </key>
+    <key name="android.template.packageName">
+      <recent name="com.thyrocare.btechapp.NewScreenDesigns" />
+      <recent name="com.thyrocare.btechapp.NewScreenDesigns.Activities" />
+      <recent name="com.thyrocare.NewScreenDesigns.Activities" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel" />
@@ -135,10 +143,12 @@
       <recent name="com.thyrocare.NewScreenDesigns.Models.ResponseModel" />
       <recent name="com.thyrocare.NewScreenDesigns.Models.RequestModels" />
     </key>
-    <key name="android.template.packageName">
-      <recent name="com.thyrocare.btechapp.NewScreenDesigns" />
-      <recent name="com.thyrocare.btechapp.NewScreenDesigns.Activities" />
-      <recent name="com.thyrocare.NewScreenDesigns.Activities" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Android projects\Mitanshu\TechSoBTechApp\app\src\main\java\com\thyrocare\btechapp\models\data" />
+      <recent name="D:\Android projects\Mitanshu\TechSoBTechApp\app\src\main\res\drawable" />
+      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\drawable" />
+      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\layout" />
+      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\drawable-hdpi" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.thyrocare.btechapp.models.api.response" />
@@ -146,13 +156,6 @@
       <recent name="com.thyrocare.btechapp.models.api.request" />
       <recent name="com.thyrocare.btechapp.Retrofit" />
       <recent name="com.thyrocare.btechapp.utils.app" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\drawable" />
-      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\layout" />
-      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\drawable-hdpi" />
-      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\drawable-mdpi" />
-      <recent name="D:\Android projects\BtechAppNew\app\src\main\res\menu" />
     </key>
   </component>
   <component name="RunManager" selected="Android App.app">
@@ -271,6 +274,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser" timestamp="1616771910456">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1616771910456" />
     <state x="758" y="266" key="AndroidProcessChooserDialog" timestamp="1615641916868">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -284,25 +291,25 @@
     </state>
     <state x="1160" y="212" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1615802137406" />
     <state x="1160" y="231" width="424" height="491" key="FileChooserDialogImpl/0.27.1920.1003@0.27.1920.1003" timestamp="1615439564226" />
-    <state width="1877" height="472" key="GridCell.Tab.0.bottom" timestamp="1615716083748">
+    <state width="1400" height="313" key="GridCell.Tab.0.bottom" timestamp="1616775855098">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="472" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1615716083748" />
+    <state width="1400" height="313" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1616775855098" />
     <state width="1429" height="453" key="GridCell.Tab.0.bottom/0.27.1920.1003@0.27.1920.1003" timestamp="1615268558294" />
-    <state width="1877" height="472" key="GridCell.Tab.0.center" timestamp="1615716083748">
+    <state width="1400" height="313" key="GridCell.Tab.0.center" timestamp="1616775855098">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="472" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1615716083748" />
+    <state width="1400" height="313" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1616775855098" />
     <state width="1429" height="453" key="GridCell.Tab.0.center/0.27.1920.1003@0.27.1920.1003" timestamp="1615268558294" />
-    <state width="1877" height="472" key="GridCell.Tab.0.left" timestamp="1615716083748">
+    <state width="1400" height="313" key="GridCell.Tab.0.left" timestamp="1616775855096">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="472" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1615716083748" />
+    <state width="1400" height="313" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1616775855096" />
     <state width="1429" height="453" key="GridCell.Tab.0.left/0.27.1920.1003@0.27.1920.1003" timestamp="1615268558293" />
-    <state width="1877" height="472" key="GridCell.Tab.0.right" timestamp="1615716083748">
+    <state width="1400" height="313" key="GridCell.Tab.0.right" timestamp="1616775855098">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="472" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1615716083748" />
+    <state width="1400" height="313" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1616775855098" />
     <state width="1429" height="453" key="GridCell.Tab.0.right/0.27.1920.1003@0.27.1920.1003" timestamp="1615268558294" />
     <state width="1371" height="247" key="GridCell.Tab.1.bottom" timestamp="1615642039167">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -320,15 +327,19 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1371" height="247" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1615642039167" />
-    <state x="648" y="99" width="1272" height="692" key="find.popup" timestamp="1615960755009">
+    <state x="776" y="298" key="chooseDestDirectoryDialog" timestamp="1616751729512">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="648" y="99" width="1272" height="692" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1615960755009" />
+    <state x="776" y="298" key="chooseDestDirectoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1616751729512" />
+    <state x="648" y="99" width="1272" height="692" key="find.popup" timestamp="1616772628391">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="648" y="99" width="1272" height="692" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1616772628391" />
     <state x="648" y="122" width="1272" height="667" key="find.popup/0.27.1920.1003@0.27.1920.1003" timestamp="1615285786043" />
-    <state x="400" y="227" width="672" height="704" key="search.everywhere.popup" timestamp="1615958774187">
+    <state x="400" y="227" width="672" height="704" key="search.everywhere.popup" timestamp="1616772333126">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="400" y="227" width="672" height="704" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1615958774187" />
+    <state x="400" y="227" width="672" height="704" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1616772333126" />
     <state x="400" y="246" width="672" height="678" key="search.everywhere.popup/0.27.1920.1003@0.27.1920.1003" timestamp="1615350511715" />
   </component>
   <component name="XDebuggerManager">
@@ -701,27 +712,27 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/SplashActivity.java</url>
-          <line>361</line>
+          <line>366</line>
           <option name="timeStamp" value="228" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/SplashActivity.java</url>
-          <line>362</line>
+          <line>367</line>
           <option name="timeStamp" value="229" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/SplashActivity.java</url>
-          <line>350</line>
+          <line>355</line>
           <option name="timeStamp" value="230" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/SplashActivity.java</url>
-          <line>341</line>
+          <line>346</line>
           <option name="timeStamp" value="231" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/SplashActivity.java</url>
-          <line>505</line>
+          <line>510</line>
           <option name="timeStamp" value="232" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -911,7 +922,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Retrofit/PostAPIInterface.java</url>
-          <line>209</line>
+          <line>211</line>
           <properties class="com.thyrocare.btechapp.Retrofit.PostAPIInterface" method="CallpatchRequestAPI" />
           <option name="timeStamp" value="263" />
         </line-breakpoint>

@@ -22,7 +22,9 @@
     <uses-permission android:name="com.dhb.btech.dev.permission.MAPS_RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
@@ -36,32 +38,33 @@
     <application
         android:name="application.ApplicationController"
         android:allowBackup="true"
+        android:exported="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
-        android:exported="false"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true"
         tools:replace="android:icon">
-
+        <activity android:name=".activity.HCW_Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
             tools:replace="screenOrientation" />
-
-
-        <activity android:name=".NewScreenDesigns.AddRemoveTestProfileActivity"
+        <activity
+            android:name=".NewScreenDesigns.AddRemoveTestProfileActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTop"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NewScreenDesigns.Activities.AddEditBenificaryActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTop"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NewScreenDesigns.Activities.NewCampWOEModuleActivity"
             android:screenOrientation="portrait"
@@ -72,9 +75,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NewScreenDesigns.Activities.ScanBarcodeWoeActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            tools:replace="screenOrientation"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:replace="screenOrientation" />
         <activity
             android:name=".NewScreenDesigns.Activities.StartAndArriveActivity"
             android:screenOrientation="portrait"
@@ -85,8 +88,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NewScreenDesigns.Activities.LoginActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".NewScreenDesigns.Activities.SplashActivity"
             android:label="@string/app_name"
@@ -113,8 +116,8 @@
         <activity
             android:name=".activity.SelfieUploadActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.HubDetailMapDisplayFragmentActivity"

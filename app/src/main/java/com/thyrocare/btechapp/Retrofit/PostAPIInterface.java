@@ -81,6 +81,8 @@ import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsRespo
 import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
 import com.thyrocare.btechapp.models.api.response.VideosResponseModel;
+import com.thyrocare.btechapp.models.data.HCWRequestModel;
+import com.thyrocare.btechapp.models.data.HCWResponseModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 
 
@@ -360,5 +362,8 @@ public interface PostAPIInterface {
     @Headers("Content-Type: application/json")
     @POST("bookingmaster/lead")
     Call<LeadgenerationResponseModel> CallSubmitLeadAPI(@Body LeadGenerationRequestModel requestModel);
+
+    @POST("Complaint_module/Letter")
+    Call<HCWResponseModel> postHCW(@Body HCWRequestModel hcwRequestModel);
 
 }

@@ -378,7 +378,7 @@ public class HomeScreenActivity extends AbstractActivity
         } else if (id == R.id.nav_change_password) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(ChangePasswordFragment.newInstance(), false, false, ChangePasswordFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-        }else if (id == R.id.nav_QrcodeWOE) {
+        } else if (id == R.id.nav_QrcodeWOE) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(QrCodeWoeFragment.newInstance(), false, false,
                     QrCodeWoeFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
@@ -442,6 +442,10 @@ public class HomeScreenActivity extends AbstractActivity
         } else if (id == R.id.nav_certificates) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(BtechCertificateFragment.newInstance(), false, false, BtechCertificateFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+        } else if (id == R.id.nav_hcw) {
+            Intent intent = new Intent(HomeScreenActivity.this,HCW_Activity.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_Hub) {
             //btech_hub
             //for btech with hub login...role will be 6 for this

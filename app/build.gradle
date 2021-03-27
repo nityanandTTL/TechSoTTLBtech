@@ -9,8 +9,8 @@ android {
         applicationId "com.thyrocare.btechapp"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 89
-        versionName "2.1.9"
+        versionCode 90
+        versionName "2.2.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -75,6 +75,7 @@ android {
         resValue "string", "B2B_API_VERSION", SERVER_BASE_API_URL_PROD.equals(BASE_URL_TOCHECK) ? B2B_API_VERSION_LIVE : B2B_API_VERSION_STNG
         resValue "string", "NUCLEAR_URL", SERVER_BASE_API_URL_PROD.equals(BASE_URL_TOCHECK) ? LIVE_NUCLEAR_URL : STNG_NUCLEAR_URL
         resValue "string", "VELSO_URL", SERVER_BASE_API_URL_PROD.equals(BASE_URL_TOCHECK) ? VELSO_URL_LIVE : VELSO_URL_STNG
+        resValue "string", "Thyrocare", SERVER_BASE_API_URL_PROD.equals(BASE_URL_TOCHECK) ? Thyrocare_LIVE : Thyrocare_STNG
 
         resValue "string", "firebase_path", firebase_path
         resValue "string", "firebase_email", firebase_email
