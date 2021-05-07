@@ -63,8 +63,10 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+
 import application.ApplicationController;
 
+import com.thyrocare.btechapp.activity.PaymentsActivity;
 import com.thyrocare.btechapp.customview.CircleImageView;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
@@ -88,6 +90,7 @@ import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 import com.thyrocare.btechapp.service.TrackerService;
+import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.DateUtils;
@@ -185,6 +188,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
     private CharSequence[] items;
     private String cancelVisit = "n";
 
+    private int totalAmountPayable = 0;
+    private String[] paymentItems;
+    private int PaymentMode;
+
 
     @Override
     public void onBackPressed() {
@@ -225,17 +232,32 @@ public class StartAndArriveActivity extends AppCompatActivity {
         orderDetailsModel = bundle.getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
         strOrderNo = orderDetailsModel.getVisitId();
 
+        BundleConstants.addPaymentFlag = 0;
+
         initView();
         initToolBar();
         initListerners();
 
-        btn_arrive.setVisibility(View.VISIBLE);
-        btn_start.setVisibility(View.GONE);
-        if (cd.isConnectingToInternet()) {
-            CallOrderDetailAPI("Start");
+        if (BundleConstants.setRefreshStartArriveActivity == 1) {
+            BundleConstants.setRefreshStartArriveActivity = 0;
+            btn_arrive.setVisibility(View.GONE);
+            btn_start.setVisibility(View.GONE);
+            btn_Proceed.setVisibility(View.VISIBLE);
+            if (cd.isConnectingToInternet()) {
+                CallOrderDetailAPI("Arrive");
+            } else {
+                globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
+            }
         } else {
-            globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
+            btn_arrive.setVisibility(View.VISIBLE);
+            btn_start.setVisibility(View.GONE);
+            if (cd.isConnectingToInternet()) {
+                CallOrderDetailAPI("Start");
+            } else {
+                globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
+            }
         }
+
 
     }
 
@@ -337,8 +359,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
         btn_Proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                totalAmountPayable = 0;
+                setpayMentActivity();
 
-                AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
+                /*AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
                 alertDialog.setMessage("You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?");
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
                         new DialogInterface.OnClickListener() {
@@ -356,7 +380,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                 dialog.dismiss();
                             }
                         });
-                alertDialog.show();
+                alertDialog.show();*/
             }
         });
 
@@ -422,6 +446,158 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     }
 
+    private void setpayMentActivity() {
+
+        final String OrderMode = !StringUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getOrderMode()) ? orderDetailsModel.getAllOrderdetails().get(0).getOrderMode() : "";
+
+        for (OrderDetailsModel orderDetailsModel : orderDetailsModel.getAllOrderdetails()) {
+            totalAmountPayable = totalAmountPayable + orderDetailsModel.getAmountPayable();
+        }
+
+        if (totalAmountPayable == 0) {
+            AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
+            alertDialog.setMessage("You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+                            intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+                            startActivity(intentOrderBooking);
+                            finish();
+                        }
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        } else {
+
+            AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
+            alertDialog.setMessage("You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                            builder.setMessage("Amount payable ₹ " + totalAmountPayable + "/-")
+                                    .setPositiveButton("Collect", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            if (orderDetailsModel.getAllOrderdetails().get(0).isDigital()) {
+                                                PaymentMode = 2;
+                                                Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
+                                                Logger.error("tejastotalAmountPayableatsending " + totalAmountPayable);
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 2);
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO, orderDetailsModel.getVisitId());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE, Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME, orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS, orderDetailsModel.getAllOrderdetails().get(0).getAddress());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN, orderDetailsModel.getAllOrderdetails().get(0).getPincode());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL, orderDetailsModel.getAllOrderdetails().get(0).getEmail());
+                                                startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                                            } else {
+                                                if (OrderMode.equalsIgnoreCase("LTD-BLD") || OrderMode.equalsIgnoreCase("LTD-NBLD")) {
+                                                    paymentItems = new String[]{"Cash"};
+                                                } else {
+                                                    paymentItems = new String[]{"Cash", "Digital"};
+                                                }
+
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                                                builder.setTitle("Choose payment mode")
+                                                        .setItems(paymentItems, new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                if (paymentItems[which].equals("Cash")) {
+
+                                                                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
+                                                                    builder1.setMessage("Confirm amount received ₹ " + totalAmountPayable + "")
+                                                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    /*PaymentMode = 1;
+                                                                    // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+                                                                    OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
+                                                                    if (cd.isConnectingToInternet()) {
+                                                                        CallWorkOrderEntryAPI(orderBookingRequestModel);
+                                                                    } else {
+                                                                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                                                    }*/
+
+                                                                                    BundleConstants.addPaymentFlag = 1;
+
+                                                                                    Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+                                                                                    intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+                                                                                    startActivity(intentOrderBooking);
+                                                                                    finish();
+                                                                                }
+                                                                            })
+                                                                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                                    dialog.dismiss();
+                                                                                }
+                                                                            })
+                                                                            .show();
+                                                                } else {
+                                                                    BundleConstants.addPaymentFlag = 0;
+                                                                    PaymentMode = 2;
+                                                                    Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
+                                                                    Logger.error("tejastotalAmountPayableatsending " + totalAmountPayable);
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 2);
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO, orderDetailsModel.getVisitId());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE, Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME, orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS, orderDetailsModel.getAllOrderdetails().get(0).getAddress());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN, orderDetailsModel.getAllOrderdetails().get(0).getPincode());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL, orderDetailsModel.getAllOrderdetails().get(0).getEmail());
+                                                                    startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                                                                }
+                                                                dialog.dismiss();
+                                                            }
+                                                        })
+                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                dialog.dismiss();
+                                                            }
+                                                        }).show();
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).show();
+
+
+                        }
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+
+
+        }
+
+    }
+
     private void CallOrderDetailAPI(final String Status) {
         try {
             GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
@@ -468,7 +644,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
                         }
                     }
                     initData(Status);
-
                 }
 
                 @Override
@@ -482,6 +657,13 @@ public class StartAndArriveActivity extends AppCompatActivity {
             e.printStackTrace();
             globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
         }
+    }
+
+    private void setRefreshActivity() {
+        Intent intentNavigate = new Intent(mActivity, StartAndArriveActivity.class);
+        intentNavigate.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+        mActivity.startActivity(intentNavigate);
+        mActivity.finish();
     }
 
     private void initData(String status) {
@@ -503,7 +685,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(mActivity, AddEditBenificaryActivity.class);
                     intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
-                    intent.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL,SelectedbeneficiaryDetailsModel);
+                    intent.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, SelectedbeneficiaryDetailsModel);
                     intent.putExtra("IsAddBen", FlagADDEditBen);
                     intent.putExtra("SelectedBenPosition", PSelected_position);
                     startActivityForResult(intent, BundleConstants.ADDEDITBENREQUESTCODE);
@@ -573,12 +755,12 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                 .setPermissionListener(new PermissionListener() {
                                     @Override
                                     public void onPermissionGranted() {
-                                        if (!StringUtils.isNull(MaskedPhoneNumber)){
+                                        if (!StringUtils.isNull(MaskedPhoneNumber)) {
                                             Intent intent = new Intent(Intent.ACTION_CALL);
-                                            intent.setData(Uri.parse("tel:" + MaskedPhoneNumber.replace("\"","")));
+                                            intent.setData(Uri.parse("tel:" + MaskedPhoneNumber.replace("\"", "")));
                                             mActivity.startActivity(intent);
-                                        }else{
-                                            globalclass.showCustomToast(mActivity,"Invalid number");
+                                        } else {
+                                            globalclass.showCustomToast(mActivity, "Invalid number");
                                         }
                                     }
 
@@ -642,7 +824,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 //        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.60);
         dialog_ready.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        if (!mActivity.isFinishing()){
+        if (!mActivity.isFinishing()) {
             dialog_ready.show();
         }
 
@@ -849,7 +1031,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-           globalclass.showProgressDialog(mActivity,ConstantsMessages.PLEASE_WAIT);
+            globalclass.showProgressDialog(mActivity, ConstantsMessages.PLEASE_WAIT);
         }
 
         @Override
@@ -936,11 +1118,11 @@ public class StartAndArriveActivity extends AppCompatActivity {
         if (!InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getAppointmentDate())) {
             Date DeviceDate = new Date();
             SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-            Date AppointDate  = DateUtils.dateFromString(orderDetailsModel.getAllOrderdetails().get(0).getAppointmentDate(),format);
+            Date AppointDate = DateUtils.dateFromString(orderDetailsModel.getAllOrderdetails().get(0).getAppointmentDate(), format);
             int daycount = DateTimeComparator.getDateOnlyInstance().compare(AppointDate, DeviceDate);
-            if (daycount == 0){
+            if (daycount == 0) {
                 toShowResheduleOption = true;
-            }else {
+            } else {
                 toShowResheduleOption = false;
             }
         }
@@ -957,10 +1139,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 items = new String[]{"Do you want to cancel the visit?"};
                 cancelVisit = "y";
             } else {
-                if (toShowResheduleOption){
+                if (toShowResheduleOption) {
                     items = new String[]{"Order Reschedule",
                             "Request Release"};
-                }else{
+                } else {
                     items = new String[]{"Request Release"};
                 }
             }
@@ -1044,7 +1226,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark, String date) {
 
             if (cd.isConnectingToInternet()) {
-                callOrderStatusChangeApi(11,"Reschedule",remark,date);
+                callOrderStatusChangeApi(11, "Reschedule", remark, date);
             } else {
                 Toast.makeText(mActivity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }
@@ -1060,7 +1242,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         @Override
         public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
             if (cd.isConnectingToInternet()) {
-                callOrderStatusChangeApi(27,"Manipulation",remarks, "");
+                callOrderStatusChangeApi(27, "Manipulation", remarks, "");
             } else {
                 TastyToast.makeText(mActivity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
             }
@@ -1078,7 +1260,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         serviceUpdateRequestModel.setVisitId(orderDetailsModel.getVisitId());
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallServiceUpdateAPI(serviceUpdateRequestModel);
-        globalclass.showProgressDialog(mActivity,mActivity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
+        globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -1092,16 +1274,17 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                   finish();
+                                    finish();
                                 }
                             });
 
                     alertDialog.show();
 
                 } else {
-                    globalclass.showCustomToast(mActivity,SomethingWentwrngMsg);
+                    globalclass.showCustomToast(mActivity, SomethingWentwrngMsg);
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
@@ -1112,31 +1295,32 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     private void ViewTestData(String benId) {
 
-            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-            Call<GetTestListResponseModel> responseCall = apiInterface.CallGetTestDetailsAPI(benId);
-            globalclass.showProgressDialog(mActivity,"Please wait..",false);
-            responseCall.enqueue(new Callback<GetTestListResponseModel>() {
-                @Override
-                public void onResponse(Call<GetTestListResponseModel> call, retrofit2.Response<GetTestListResponseModel> response) {
-                    globalclass.hideProgressDialog(mActivity);
-                    if (response.isSuccessful() && response.body() != null) {
-                        GetTestListResponseModel TestListResponseModel = response.body();
-                        DisplayTestListDialog(TestListResponseModel);
-                    }else{
-                        Toast.makeText(mActivity, NO_DATA_FOUND, Toast.LENGTH_SHORT).show();
-                    }
-                }
-                @Override
-                public void onFailure(Call<GetTestListResponseModel> call, Throwable t) {
-                    globalclass.hideProgressDialog(mActivity);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        Call<GetTestListResponseModel> responseCall = apiInterface.CallGetTestDetailsAPI(benId);
+        globalclass.showProgressDialog(mActivity, "Please wait..", false);
+        responseCall.enqueue(new Callback<GetTestListResponseModel>() {
+            @Override
+            public void onResponse(Call<GetTestListResponseModel> call, retrofit2.Response<GetTestListResponseModel> response) {
+                globalclass.hideProgressDialog(mActivity);
+                if (response.isSuccessful() && response.body() != null) {
+                    GetTestListResponseModel TestListResponseModel = response.body();
+                    DisplayTestListDialog(TestListResponseModel);
+                } else {
                     Toast.makeText(mActivity, NO_DATA_FOUND, Toast.LENGTH_SHORT).show();
                 }
-            });
+            }
+
+            @Override
+            public void onFailure(Call<GetTestListResponseModel> call, Throwable t) {
+                globalclass.hideProgressDialog(mActivity);
+                Toast.makeText(mActivity, NO_DATA_FOUND, Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
     private void DisplayTestListDialog(GetTestListResponseModel testListResponseModel) {
-        CustomDialogClass cdd = new CustomDialogClass(mActivity,testListResponseModel);
+        CustomDialogClass cdd = new CustomDialogClass(mActivity, testListResponseModel);
         cdd.show();
     }
 
@@ -1161,7 +1345,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.item_test_list_display);
             ll_tests = (LinearLayout) findViewById(R.id.ll_tests);
-            iflateTestGroupName(ll_tests,testListResponseModel);
+            iflateTestGroupName(ll_tests, testListResponseModel);
             ImageView img_close = (ImageView) findViewById(R.id.img_close);
             img_close.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1252,7 +1436,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             removebenModel.setIsAdded(orderVisitDetailsModel.getAllOrderdetails().get(0).isAddBen() ? "1" : "0");
                             dialog.dismiss();
                             if (cd.isConnectingToInternet()) {
-                                CallsendOTPAPIforOrderEdit("Delete",orderVisitDetailsModel, orderVisitDetailsModel.getVisitId() ,selectedbeneficiaryDetailsModel.getBenId());
+                                CallsendOTPAPIforOrderEdit("Delete", orderVisitDetailsModel, orderVisitDetailsModel.getVisitId(), selectedbeneficiaryDetailsModel.getBenId());
                             } else {
                                 globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
                             }
@@ -1271,7 +1455,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
     private void CallRemoveBenAPI(final RemoveBeneficiaryAPIRequestModel rembenmode) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<OrderVisitDetailsModel> responseCall = apiInterface.CallRemoveBenAPI("Bearer "+appPreferenceManager.getLoginResponseModel().getAccess_token(), rembenmode);
+        Call<OrderVisitDetailsModel> responseCall = apiInterface.CallRemoveBenAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(), rembenmode);
         globalclass.showProgressDialog(mActivity, getResources().getString(R.string.progress_message_removing_beneficiary_please_wait));
         responseCall.enqueue(new Callback<OrderVisitDetailsModel>() {
             @Override
@@ -1318,7 +1502,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         sendSMSAfterBenRemovedRequestModel.setRate1(amount);
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallSendSMSafterBeneficaryRemovedAPI("Bearer "+appPreferenceManager.getLoginResponseModel().getAccess_token(), sendSMSAfterBenRemovedRequestModel);
+        Call<String> responseCall = apiInterface.CallSendSMSafterBeneficaryRemovedAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(), sendSMSAfterBenRemovedRequestModel);
 //        globalclass.showProgressDialog(mActivity,"Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -1345,10 +1529,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
         OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
         orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
         orderStatusChangeRequestModel.setStatus(status);
-        if (!InputUtils.isNull(remarks)){
+        if (!InputUtils.isNull(remarks)) {
             orderStatusChangeRequestModel.setRemarks(remarks);
         }
-        if (!InputUtils.isNull(date)){
+        if (!InputUtils.isNull(date)) {
             orderStatusChangeRequestModel.setAppointmentDate(date);
         }
 
@@ -1424,10 +1608,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
             StopService();
             SendinglatlongOrderAllocation(3);
 
-        } else if (strButton.equalsIgnoreCase("Manipulation")){
+        } else if (strButton.equalsIgnoreCase("Manipulation")) {
             TastyToast.makeText(mActivity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
             finish();
-        }else if (strButton.equalsIgnoreCase("Reschedule")){
+        } else if (strButton.equalsIgnoreCase("Reschedule")) {
             Toast.makeText(mActivity, "Order Rescheduled successfully", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -1472,7 +1656,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     // TODO ADD and Edit Ben Functionality-------
 
-    private void CallsendOTPAPIforOrderEdit(final String Action,  final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
+    private void CallsendOTPAPIforOrderEdit(final String Action, final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
 
         SendOTPRequestModel model = new SendOTPRequestModel();
         model.setMobile(orderDetailsModel.getAllOrderdetails().get(0).getMobile());
@@ -1488,7 +1672,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     CommonResponseModel2 responseModel = response.body();
                     if (!TextUtils.isEmpty(responseModel.getRES_ID()) && responseModel.getRES_ID().equalsIgnoreCase("RES0000")) {
                         globalclass.showCustomToast(mActivity, "OTP send successfully to mobile number mapped to this order.");
-                        ShowDialogToVerifyOTP(Action,orderVisitDetailsModel, orderNo ,finalBenId);
+                        ShowDialogToVerifyOTP(Action, orderVisitDetailsModel, orderNo, finalBenId);
                     } else {
                         globalclass.showCustomToast(mActivity, "OTP Generation Failed.");
                     }
@@ -1505,7 +1689,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         });
     }
 
-    private void ShowDialogToVerifyOTP(final String Action,  final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
+    private void ShowDialogToVerifyOTP(final String Action, final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
         CustomDialogforOTPValidation = new Dialog(mActivity);
         CustomDialogforOTPValidation.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         CustomDialogforOTPValidation.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1521,7 +1705,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-        int height = 0,width = 0;
+        int height = 0, width = 0;
         if (displayMetrics != null) {
             try {
                 height = displayMetrics.heightPixels;
@@ -1550,7 +1734,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
                 String strOTP = edt_OTP.getText().toString().trim();
                 if (!InputUtils.isNull(strOTP) && strOTP.length() != 4) {
-                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4",mActivity);
+                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4", mActivity);
                     edt_OTP.requestFocus();
                 } else {
                     OrderPassRequestModel model = new OrderPassRequestModel();
@@ -1559,7 +1743,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     model.setOTP(strOTP);
                     model.setVisitId(orderDetailsModel.getAllOrderdetails().get(0).getVisitId());
                     if (cd.isConnectingToInternet()) {
-                        CallValidateOTPAPI(model,Action,orderVisitDetailsModel, orderNo ,finalBenId);
+                        CallValidateOTPAPI(model, Action, orderVisitDetailsModel, orderNo, finalBenId);
                     } else {
                         globalclass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.plz_chk_internet));
                     }
@@ -1570,7 +1754,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     }
 
-    private void CallValidateOTPAPI(OrderPassRequestModel model, final String Action,  final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
+    private void CallValidateOTPAPI(OrderPassRequestModel model, final String Action, final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallValidateOTPAPI(model);
@@ -1583,10 +1767,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     String strresponse = response.body();
                     if (!TextUtils.isEmpty(strresponse) && strresponse.toUpperCase().contains("SUCCESS")) {
                         globalclass.showCustomToast(mActivity, "OTP Validated Successfully.");
-                        if (!mActivity.isFinishing() && CustomDialogforOTPValidation != null && CustomDialogforOTPValidation.isShowing()){
+                        if (!mActivity.isFinishing() && CustomDialogforOTPValidation != null && CustomDialogforOTPValidation.isShowing()) {
                             CustomDialogforOTPValidation.dismiss();
                         }
-                         if(Action.equalsIgnoreCase("Delete")) {
+                        if (Action.equalsIgnoreCase("Delete")) {
                             CallRemoveBenAPI(removebenModel);
                         }
                     } else {
@@ -1622,10 +1806,23 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     }
                 }
                 break;
+
+            case BundleConstants.PAYMENTS_START:
+                if (resultCode == BundleConstants.PAYMENTS_FINISH) {
+                    boolean isPaymentSuccess = data.getBooleanExtra(BundleConstants.PAYMENT_STATUS, false);
+                    if (isPaymentSuccess) {
+                        // TODO code to reduce the size of Json by temporary storing Venupunture in global array
+                        BundleConstants.setRefreshStartArriveActivity = 1;
+                        setRefreshActivity();
+
+                    } else {
+                        Toast.makeText(mActivity, "Payment failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
             default:
                 break;
         }
-
     }
-}
 
+}

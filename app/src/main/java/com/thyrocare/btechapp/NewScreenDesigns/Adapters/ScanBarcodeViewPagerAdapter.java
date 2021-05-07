@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ import com.thyrocare.btechapp.models.data.BeneficiaryBarcodeDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
@@ -96,6 +98,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         TextView tv_benName = (TextView) itemView.findViewById(R.id.tv_benName);
         TextView tv_OrderNo = (TextView) itemView.findViewById(R.id.tv_OrderNo);
         TextView tv_products = (TextView) itemView.findViewById(R.id.tv_products);
+        RelativeLayout ll_srfID = (RelativeLayout) itemView.findViewById(R.id.ll_srfID);
         LinearLayout lin_benProduct = (LinearLayout) itemView.findViewById(R.id.lin_benProduct);
 //        Button btn_captureBenBarcodePic = (Button) itemView.findViewById(R.id.btn_captureBenBarcodePic);
         final TextView txt_captureBenBarcodePic = (TextView) itemView.findViewById(R.id.txt_captureBenBarcodePic);
@@ -108,6 +111,18 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         final EditText edt_srf = (EditText) itemView.findViewById(R.id.edt_srf);
         ImageView img_resetSRF = (ImageView) itemView.findViewById(R.id.img_resetSRF);
         TextView tv_saveSRF = (TextView) itemView.findViewById(R.id.tv_saveSRF);
+
+        try {
+            if (CommonUtils.ValidateCovidorders(beneficaryWiseScanbarcodeArylst.get(position).getTestsCode())) {
+                edt_srf.setHint("SRF ID*");
+                ll_srfID.setVisibility(View.VISIBLE);
+            } else {
+                edt_srf.setHint("SRF ID");
+                ll_srfID.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         tv_benName.setText(beneficaryWiseScanbarcodeArylst.get(position).getName() + " (" + beneficaryWiseScanbarcodeArylst.get(position).getAge() + "/" + beneficaryWiseScanbarcodeArylst.get(position).getGender() + ")");

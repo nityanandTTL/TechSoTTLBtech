@@ -51,6 +51,7 @@ import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
+import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
@@ -344,12 +345,49 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
                 return false;
+            }else if (ValidateSRFID(beneficaryWiseArylst)) {  //NK added
+                androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder;
+                alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(mActivity);
+                alertDialogBuilder
+                        .setMessage("Please enter and save SRF ID for Covid tests to proceed.")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                return false;  //NK added
             }else{
                 return true;
             }
         }else{
             return false;
         }
+    }
+
+    private boolean ValidateSRFID(ArrayList<BeneficiaryDetailsModel> beneficaryWiseArylst) {
+        if (beneficaryWiseArylst != null) {
+            if (beneficaryWiseArylst.size() != 0) {
+                for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                    if (beneficaryWiseArylst.get(i).getTestsCode() != null) {
+                        if (CommonUtils.ValidateCovidorders(beneficaryWiseArylst.get(i).getTestsCode())) {
+                            if (beneficaryWiseArylst.get(i).getSRFID() != null) {
+                                if (beneficaryWiseArylst.get(i).getSRFID().toString().trim().length() > 4) {
+
+                                } else {
+                                    return true;
+                                }
+                            } else {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private void InitViewpager(int Currentposition) {

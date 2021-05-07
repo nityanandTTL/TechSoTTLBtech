@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
@@ -85,28 +86,32 @@ public class RetroFit_APIClient {
             }
         });
 
-        SharedPreferences pref_SSL = mActivity.getSharedPreferences("SSLKeysPref", 0);
-        Gson gson = new Gson();
-        boolean ApplySSLPining = pref_SSL.getBoolean("ApplySSLPining", false);
-        String json = pref_SSL.getString("SSLKeyResponseModel", null);
-        GetSSLKeyResponseModel getSSLKeyResponseModel = gson.fromJson(json, GetSSLKeyResponseModel.class);
-        if (ApplySSLPining && getSSLKeyResponseModel != null && getSSLKeyResponseModel.getLstKeys() != null && getSSLKeyResponseModel.getLstKeys().size() > 0){
-            CertificatePinner.Builder certificatePinng23er = new CertificatePinner.Builder();
-            for (int i = 0; i < getSSLKeyResponseModel.getLstKeys().size(); i++) {
-                if (getSSLKeyResponseModel.getLstKeys().get(i).isForcefullyAllow()
-                        && !StringUtils.isNull(getSSLKeyResponseModel.getLstKeys().get(i).getDomain())
-                        && !StringUtils.isNull(getSSLKeyResponseModel.getLstKeys().get(i).getSSL_Key())){
-                    try {
-                        certificatePinng23er.add(getSSLKeyResponseModel.getLstKeys().get(i).getDomain(),EncryptionUtils.decryptSSL(getSSLKeyResponseModel.getLstKeys().get(i).getSSL_Key().trim()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        /*try {
+            SharedPreferences pref_SSL = mActivity.getSharedPreferences("SSLKeysPref", 0);
+            Gson gson = new Gson();
+            boolean ApplySSLPining = pref_SSL.getBoolean("ApplySSLPining", false);
+            String json = pref_SSL.getString("SSLKeyResponseModel", null);
+            GetSSLKeyResponseModel getSSLKeyResponseModel = gson.fromJson(json, GetSSLKeyResponseModel.class);
+            if (ApplySSLPining && getSSLKeyResponseModel != null && getSSLKeyResponseModel.getLstKeys() != null && getSSLKeyResponseModel.getLstKeys().size() > 0){
+                CertificatePinner.Builder certificatePinng23er = new CertificatePinner.Builder();
+                for (int i = 0; i < getSSLKeyResponseModel.getLstKeys().size(); i++) {
+                    if (getSSLKeyResponseModel.getLstKeys().get(i).isForcefullyAllow()
+                            && !StringUtils.isNull(getSSLKeyResponseModel.getLstKeys().get(i).getDomain())
+                            && !StringUtils.isNull(getSSLKeyResponseModel.getLstKeys().get(i).getSSL_Key())){
+                        try {
+                            certificatePinng23er.add(getSSLKeyResponseModel.getLstKeys().get(i).getDomain(),EncryptionUtils.decryptSSL(getSSLKeyResponseModel.getLstKeys().get(i).getSSL_Key().trim()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                CertificatePinner certificatePinner = certificatePinng23er.build();
+                client.certificatePinner(certificatePinner)
+                        .build();
             }
-            CertificatePinner certificatePinner = certificatePinng23er.build();
-            client.certificatePinner(certificatePinner)
-                    .build();
-        }
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }*/
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -152,7 +157,7 @@ public class RetroFit_APIClient {
             }
         });
 
-        SharedPreferences pref_SSL = context.getSharedPreferences("SSLKeysPref", 0);
+      /*  SharedPreferences pref_SSL = context.getSharedPreferences("SSLKeysPref", 0);
         Gson gson = new Gson();
         boolean ApplySSLPining = pref_SSL.getBoolean("ApplySSLPining", false);
         String json = pref_SSL.getString("SSLKeyResponseModel", null);
@@ -173,7 +178,7 @@ public class RetroFit_APIClient {
             CertificatePinner certificatePinner = certificatePinng23er.build();
             client.certificatePinner(certificatePinner)
                     .build();
-        }
+        }*/
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)

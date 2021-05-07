@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.NewCampWOEModuleActivity;
@@ -193,6 +194,7 @@ public class HomeScreenFragment extends AbstractFragment {
         try {
 //            activity.toolbarHome.setTitle("Home");
             activity.toolbar_image.setVisibility(View.VISIBLE);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -201,9 +203,7 @@ public class HomeScreenFragment extends AbstractFragment {
         activity.isOnHome = true;
 
 //        CommonUtils.exportDB(activity);
-        if (getArguments() != null) {
 
-        }
 
     }
 
@@ -214,8 +214,8 @@ public class HomeScreenFragment extends AbstractFragment {
 
         //tsp
 
-        Logger.error("hhhhhhrole " + appPreferenceManager.getLoginRole());
-        Logger.error("hhhhid " + appPreferenceManager.getLoginResponseModel().getUserID());
+        Logger.error("role " + appPreferenceManager.getLoginRole());
+        Logger.error("id " + appPreferenceManager.getLoginResponseModel().getUserID());
         if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)) {//loginRole.equalsIgnoreCase("9")
             rootView = inflater.inflate(R.layout.tsp_home_fragment_new, container, false);
             initUI_TSP();
@@ -433,8 +433,6 @@ public class HomeScreenFragment extends AbstractFragment {
     }
 
 
-
-
     private void getCampDetailCount() {
         if (isNetworkAvailable(activity)) {
             CallGetCampDetailsCountAPI();
@@ -448,7 +446,7 @@ public class HomeScreenFragment extends AbstractFragment {
         txtUserName.setText(appPreferenceManager.getLoginResponseModel().getUserName());
         if (appPreferenceManager.getSelfieResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())) {
 
-            globalclass.DisplayDeviceImages(activity,appPreferenceManager.getSelfieResponseModel().getPic(),rvSelfie);
+            globalclass.DisplayDeviceImages(activity, appPreferenceManager.getSelfieResponseModel().getPic(), rvSelfie);
 //            rvSelfie.setImageBitmap(CommonUtils.decodeImage(appPreferenceManager.getSelfieResponseModel().getPic()));
 
         }
@@ -683,7 +681,11 @@ public class HomeScreenFragment extends AbstractFragment {
                                 if (!device_id.toString().trim().equalsIgnoreCase("")) {
                                     if (!device_id.toString().trim().equalsIgnoreCase(materialDetailsModels.get(0).getDeviceId())) {
                                         CallDeviceNotMatchedDialog();
+                                    } else {
+                                        CheckSTechLoginandShowPopUp(materialDetailsModels.get(0));
                                     }
+                                } else {
+                                    CheckSTechLoginandShowPopUp(materialDetailsModels.get(0));
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -694,11 +696,62 @@ public class HomeScreenFragment extends AbstractFragment {
                     globalclass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<DeviceLoginDetailsModel>> call, Throwable t) {
                 globalclass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
+    }
+
+
+    private void CheckSTechLoginandShowPopUp(DeviceLoginDetailsModel deviceLoginDetailsModel) {
+        if (BundleConstants.setStechDialogFlag == 0) {
+            if (deviceLoginDetailsModel != null) {
+                if (deviceLoginDetailsModel.getIsStech() == 1) {
+                    ShowPopUpDialog(deviceLoginDetailsModel.getUrl());
+                }
+            }
+        }
+    }
+
+    private void ShowPopUpDialog(String imageUrl) {
+        if (imageUrl != null) {
+            if (!imageUrl.toString().trim().equalsIgnoreCase("")) {
+                BundleConstants.setStechDialogFlag = 1;
+                ShowImageDialogFromUrl(imageUrl.toString().trim());
+            }
+        }
+    }
+
+    private void ShowImageDialogFromUrl(String imageurl) {
+        try {
+
+            final Dialog openDialog = new Dialog(activity);
+            openDialog.setContentView(R.layout.imagepopup_dialog);
+            openDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+            int width = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.99);
+            int height = (int) (activity.getResources().getDisplayMetrics().heightPixels * 0.99);
+            openDialog.getWindow().setLayout(width, height);
+            openDialog.setTitle("");
+
+            ImageView img_cancel = (ImageView) openDialog.findViewById(R.id.img_cancel);
+            img_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openDialog.dismiss();
+                }
+            });
+
+            ImageView image_view = (ImageView) openDialog.findViewById(R.id.image_view);
+            Glide.with(activity)
+                    .load(imageurl)
+                    .into(image_view);
+
+            openDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void CallDeviceNotMatchedDialog() {
@@ -711,7 +764,7 @@ public class HomeScreenFragment extends AbstractFragment {
             @Override
             public void onOkClicked() {
                 try {
-                     new LogUserActivityTagging(activity, LOGOUT);
+                    new LogUserActivityTagging(activity, LOGOUT);
                     appPreferenceManager.clearAllPreferences();
                     DhbDao dhbDao = new DhbDao(activity);
                     dhbDao.deleteTablesonLogout();
@@ -733,7 +786,7 @@ public class HomeScreenFragment extends AbstractFragment {
                 }
             }
         });
-        if (!activity.isFinishing()){
+        if (!activity.isFinishing()) {
             cudd.setCancelable(false);
             cudd.show();
         }

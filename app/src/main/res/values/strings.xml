@@ -166,7 +166,7 @@
     <string name="inchargeName">Incharge Name*</string>
     <string name="uploadImage">Upload Image*</string>
     <string name="btnUpload">Upload</string>
-    <string name="imageNote">*Name Board or Visiting Card</string>
+    <string name="imageNote">Name Board or Visiting Card</string>
     <string name="txtNote">Note</string>
     <string name="clientNote">Rs. 50 per new Lab/Hospital/Doctor activated in system</string>
     <string name="stock_digits">1234567890</string>

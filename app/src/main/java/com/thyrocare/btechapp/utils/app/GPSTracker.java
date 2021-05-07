@@ -24,12 +24,6 @@ import com.thyrocare.btechapp.utils.api.Logger;
 
 import java.net.InetAddress;
 
-/**
- * Create this Class from tutorial :
- * http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial
- * <p>
- * For Geocoder read this : http://stackoverflow.com/questions/472313/android-reverse-geocoding-getfromlocation
- */
 
 public class GPSTracker extends Service implements LocationListener {
     private final Context mContext;

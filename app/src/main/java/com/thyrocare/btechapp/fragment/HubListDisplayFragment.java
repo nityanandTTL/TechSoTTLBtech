@@ -40,12 +40,6 @@ import retrofit2.Callback;
 
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
-/**
- *　APi Used BtechHubs/userid
- * Created by Orion on 7/4/2017.
- * API: http://techso.thyrocare.cloud/techsoapi/BtechHubs
- * Usage :
- */
 
 
 public class HubListDisplayFragment extends AbstractFragment {

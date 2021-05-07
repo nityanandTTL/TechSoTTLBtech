@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/_1sdp"
         android:layout_marginRight="@dimen/_1sdp"
-        android:layout_weight="1"
+        android:layout_weight="1.20"
         android:background="@color/white">
 
         <TextView
@@ -20,8 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/light"
-            android:gravity="center"
+            android:text=""
             android:padding="@dimen/_5sdp"
+            android:gravity="center"
             android:textColor="@color/black"/>
     </LinearLayout>
 
@@ -50,7 +51,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/_1sdp"
         android:layout_marginRight="@dimen/_1sdp"
-        android:layout_weight="1"
+        android:layout_weight="0.90"
         android:background="@color/white">
 
         <TextView
@@ -69,7 +70,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/_1sdp"
         android:layout_marginRight="@dimen/_1sdp"
-        android:layout_weight="1"
+        android:layout_weight="0.90"
         android:background="@color/white">
 
         <TextView

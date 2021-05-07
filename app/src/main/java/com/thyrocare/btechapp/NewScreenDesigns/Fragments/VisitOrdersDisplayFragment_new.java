@@ -1132,9 +1132,9 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                         txtEstKits.setText(kitsReq);
                     }
 
-                } else {
+                }/* else {
                     Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
 
             @Override

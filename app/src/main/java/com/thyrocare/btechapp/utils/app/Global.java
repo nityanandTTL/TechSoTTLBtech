@@ -65,12 +65,6 @@ public class Global {
 
     public String tableCart = "Cart";
     //Live ---------------------------
-    public static String BASE_URL = "https://www.thyrocare.com/APIs/";
-    public static String SERVER_BASE_API_URL_PROD = "https://www.dxscloud.com/techsoapi";
-
-//Staging--------------------------------
-//    public static String BASE_URL = "https://www.thyrocare.com/API_BETA/";
-//    public static String SERVER_BASE_API_URL_PROD = "http://bts.dxscloud.com/techsoapi";
 
 
     ProgressDialog progressDialog;
@@ -84,21 +78,6 @@ public class Global {
         if (context != null && !InputUtils.isNull(message)) {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public String getBtsSchema() {
-       /* if (BuildConfig.DEBUG) {
-			return "http://bts.dxscloud.com";
-		} else {
-			// for release
-			return "https://www.dxscloud.com";
-		}*/
-
-        //Staging--------------------------------
-        //return "http://bts.dxscloud.com";
-
-        //Live ---------------------------
-        return "https://www.dxscloud.com";
     }
 
     public String convertNumberToPrice(String s) {
@@ -431,7 +410,7 @@ public class Global {
     public void DisplayImagewithoutDefaultImage(Activity activity, String Url, ImageView imageView) {
 
         try {
-            if (!InputUtils.isNull(Url)){
+            if (!InputUtils.isNull(Url)) {
                 GlideUrl glideUrl = new GlideUrl(Url, new LazyHeaders.Builder()
                         .addHeader(Constants.HEADER_USER_AGENT, getHeaderValue(activity))
                         .build());
@@ -439,8 +418,8 @@ public class Global {
                 Glide.with(activity)
                         .asBitmap()
                         .load(glideUrl)
-    //                .diskCacheStrategy(DiskCacheStrategy.NONE)
-    //                .skipMemoryCache(true)
+                        //                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        //                .skipMemoryCache(true)
                         .into(imageView);
             }
         } catch (Exception e) {
@@ -452,7 +431,7 @@ public class Global {
 
         try {
             Glide.with(activity)
-                    .load(Url.replace("\\","/"))
+                    .load(Url.replace("\\", "/"))
                     .placeholder(R.drawable.app_logo)
                     .error(R.drawable.app_logo)
                     .into(imageView);
@@ -465,7 +444,7 @@ public class Global {
     public void DisplayImagewithDefaultImage(Activity activity, String Url, ImageView imageView) {
 
         try {
-            if (!InputUtils.isNull(Url)){
+            if (!InputUtils.isNull(Url)) {
                 GlideUrl glideUrl = new GlideUrl(Url, new LazyHeaders.Builder()
                         .addHeader(Constants.HEADER_USER_AGENT, getHeaderValue(activity))
                         .build());
@@ -475,17 +454,17 @@ public class Global {
                         .load(glideUrl)
                         .placeholder(R.drawable.app_logo).dontAnimate()
                         .error(R.drawable.app_logo)
-    //                .diskCacheStrategy(DiskCacheStrategy.NONE)
-    //                .skipMemoryCache(true)
+                        //                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        //                .skipMemoryCache(true)
                         .into(imageView);
-            }else{
+            } else {
                 Glide.with(activity)
                         .asBitmap()
                         .load("")
                         .placeholder(R.drawable.app_logo).dontAnimate()
                         .error(R.drawable.app_logo)
-    //                .diskCacheStrategy(DiskCacheStrategy.NONE)
-    //                .skipMemoryCache(true)
+                        //                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        //                .skipMemoryCache(true)
                         .into(imageView);
             }
         } catch (Exception e) {
@@ -495,7 +474,7 @@ public class Global {
 
     }
 
-    public  void OpenImageDialog(String imgUrl, Activity mActivity,boolean isFromURL) {
+    public void OpenImageDialog(String imgUrl, Activity mActivity, boolean isFromURL) {
 
         try {
             final Dialog openDialog = new Dialog(mActivity);
@@ -514,11 +493,11 @@ public class Global {
             });
 
             ImageView imageview = (ImageView) openDialog.findViewById(R.id.imageview);
-            if (isFromURL){
-                DisplayImagewithDefaultImage(mActivity,imgUrl.replace("\\","/"),imageview);
-            }else{
+            if (isFromURL) {
+                DisplayImagewithDefaultImage(mActivity, imgUrl.replace("\\", "/"), imageview);
+            } else {
 
-                DisplayDeviceImages(mActivity,imgUrl.replace("\\","/"),imageview);
+                DisplayDeviceImages(mActivity, imgUrl.replace("\\", "/"), imageview);
             }
 
 
@@ -528,7 +507,7 @@ public class Global {
         }
     }
 
-    public  void OpenBase64ImageDialog(String base64Image, Activity mActivity) {
+    public void OpenBase64ImageDialog(String base64Image, Activity mActivity) {
 
         try {
             final Dialog openDialog = new Dialog(mActivity);
@@ -563,10 +542,9 @@ public class Global {
     }
 
 
-
     public static String getHeaderValue(Context pContext) {
         String header;
-        header = "BtechApp/"  +getUserCode(pContext)+ getCurrentAppVersionName(pContext) + "(" + getCurrentVersionCode(pContext) + ")/" + getSerialnum(pContext);
+        header = "BtechApp/" + getUserCode(pContext) + getCurrentAppVersionName(pContext) + "(" + getCurrentVersionCode(pContext) + ")/" + getSerialnum(pContext);
         return header;
     }
 
@@ -577,10 +555,10 @@ public class Global {
         String userName = "";
         try {
             AppPreferenceManager appPreferenceManager = new AppPreferenceManager(pContext);
-            usercode = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()) ? appPreferenceManager.getLoginResponseModel().getUserID().trim().replace(" ","")+"/" : "" ;
+            usercode = appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()) ? appPreferenceManager.getLoginResponseModel().getUserID().trim().replace(" ", "") + "/" : "";
 //            userName = !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getName()) ? appPreferenceManager.getLoginResponseModel().getName().trim().replace(" ","")+"/" : "Default/" ;
 
-            user = usercode+userName;
+            user = usercode + userName;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -620,7 +598,7 @@ public class Global {
     }
 
 
-    public  void EnterBarcodeManually(Activity mActivity, final OnBarcodeDialogSubmitClickListener onBarcodeDialogSubmitClickListener) {
+    public void EnterBarcodeManually(Activity mActivity, final OnBarcodeDialogSubmitClickListener onBarcodeDialogSubmitClickListener) {
         try {
             final Dialog openDialog = new Dialog(mActivity);
             openDialog.setContentView(R.layout.manual_barcode_entry);
@@ -642,7 +620,7 @@ public class Global {
                 @Override
                 public void onClick(View v) {
                     openDialog.dismiss();
-                    if (onBarcodeDialogSubmitClickListener != null){
+                    if (onBarcodeDialogSubmitClickListener != null) {
                         onBarcodeDialogSubmitClickListener.onSubmitButtonClicked(edt_enterBarcode.getText().toString());
                     }
                 }
@@ -654,7 +632,7 @@ public class Global {
         }
     }
 
-    public interface OnBarcodeDialogSubmitClickListener{
+    public interface OnBarcodeDialogSubmitClickListener {
         public void onSubmitButtonClicked(String barcode);
     }
 }

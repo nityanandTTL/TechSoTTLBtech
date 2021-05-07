@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -49,7 +50,9 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.PaymentsActivity;
+
 import application.ApplicationController;
+
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseBeneficiaryModel;
@@ -63,7 +66,6 @@ import com.thyrocare.btechapp.models.data.BeneficiaryTestWiseClinicalHistoryMode
 import com.thyrocare.btechapp.models.data.OrderBookingDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
-
 
 
 import com.thyrocare.btechapp.network.MyBroadcastReceiver;
@@ -116,12 +118,13 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     private String[] paymentItems;
     private String OrderMode = "";
     private boolean isOnlyWOE = false;
+    private boolean isOnlyDigital = false;
     private Dialog CustomDialogfor_WOE_OTPValidation;
-    private Button btn_MobileGetOTP,btn_MobileVerifyOTP,btn_MobileVerified,btn_EmailGetOTP,btn_EmailVerifyOTP,btn_EmailVerified;
-    private boolean isMobilenoOTPVerfied = false,isEmailIDOTPVerfied = false;
-    private EditText edt_mobileOTP,edt_EmailOTP;
-    private TextView tv_reSendMobileOTP,tv_reSendEmailOTP;
-    private CountDownTimer MobileResendOTPcdTimer,EmailResendOTPcdTimer;
+    private Button btn_MobileGetOTP, btn_MobileVerifyOTP, btn_MobileVerified, btn_EmailGetOTP, btn_EmailVerifyOTP, btn_EmailVerified;
+    private boolean isMobilenoOTPVerfied = false, isEmailIDOTPVerfied = false;
+    private EditText edt_mobileOTP, edt_EmailOTP;
+    private TextView tv_reSendMobileOTP, tv_reSendEmailOTP;
+    private CountDownTimer MobileResendOTPcdTimer, EmailResendOTPcdTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,16 +148,16 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     }
 
     private void TrimTheNameOfCustomers() {
-        if (orderVisitDetailsModel != null &&  orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0 && orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster() != null){
+        if (orderVisitDetailsModel != null && orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0 && orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster() != null) {
             for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
-                String strname =  !InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getName()) ? orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getName().trim() : "" ;
+                String strname = !InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getName()) ? orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getName().trim() : "";
                 orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).setName(strname);
             }
         }
 
-        if (beneficaryWiseArylst != null && beneficaryWiseArylst.size() > 0){
+        if (beneficaryWiseArylst != null && beneficaryWiseArylst.size() > 0) {
             for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
-                String strname =  !InputUtils.isNull(beneficaryWiseArylst.get(i).getName()) ? beneficaryWiseArylst.get(i).getName().trim() : "" ;
+                String strname = !InputUtils.isNull(beneficaryWiseArylst.get(i).getName()) ? beneficaryWiseArylst.get(i).getName().trim() : "";
                 beneficaryWiseArylst.get(i).setName(strname);
             }
         }
@@ -207,14 +210,21 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     private void initData() {
 
         OrderMode = !StringUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderMode()) ? orderVisitDetailsModel.getAllOrderdetails().get(0).getOrderMode() : "";
+        isOnlyDigital = orderVisitDetailsModel.getAllOrderdetails().get(0).isDigital();
         for (OrderDetailsModel orderDetailsModel : orderVisitDetailsModel.getAllOrderdetails()) {
             totalAmountPayable = totalAmountPayable + orderDetailsModel.getAmountPayable();
         }
-        if (totalAmountPayable == 0) {
+
+        if (BundleConstants.addPaymentFlag == 1) {
             btn_Pay.setText("Submit Work Order");
         } else {
-            btn_Pay.setText("PAY");
+            if (totalAmountPayable == 0) {
+                btn_Pay.setText("Submit Work Order");
+            } else {
+                btn_Pay.setText("PAY");
+            }
         }
+
 
         if (orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster() != null && orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size() > 0) {
             if (orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode() != null) {
@@ -231,7 +241,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
 
         if (beneficaryWiseArylst != null && beneficaryWiseArylst.size() > 0) {
-            checkoutWoeAdapter = new CheckoutWoeAdapter(mActivity, beneficaryWiseArylst,orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct());
+            checkoutWoeAdapter = new CheckoutWoeAdapter(mActivity, beneficaryWiseArylst, orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct());
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivity);
             recyle_OrderDetailWithBarcode.setLayoutManager(mLayoutManager);
             recyle_OrderDetailWithBarcode.setAdapter(checkoutWoeAdapter);
@@ -253,14 +263,14 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SharedPreferences prefVersionControlFags = getSharedPreferences("VersionControlFlags", 0);
-                if (prefVersionControlFags.getInt("OTPEnabled",0) == 1){
+                if (prefVersionControlFags.getInt("OTPEnabled", 0) == 1) {
                     OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
                     if (!CommonUtils.isValidForEditing((orderBookingRequestModel.getBendtl().get(0).getTests()))) {
                         ShowDialogToVerifyOTP();
-                    }else{
+                    } else {
                         ProceedWOEonSubmit();
                     }
-                }else{
+                } else {
                     ProceedWOEonSubmit();
                 }
             }
@@ -421,117 +431,148 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     public void CallOrderBookingApi(OrderBookingRequestModel orderBookingRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-       String postrequest  = new Gson().toJson(orderBookingRequestModel);
+        String postrequest = new Gson().toJson(orderBookingRequestModel);
         System.out.println(postrequest);
         Call<OrderBookingResponseVisitModel> responseCall = apiInterface.CallOrderBookingApi(orderBookingRequestModel);
-        globalclass.showProgressDialog(mActivity,mActivity.getResources().getString(R.string.progress_message_uploading_order_details_please_wait),false);
+        globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.progress_message_uploading_order_details_please_wait), false);
         responseCall.enqueue(new Callback<OrderBookingResponseVisitModel>() {
             @Override
             public void onResponse(Call<OrderBookingResponseVisitModel> call, retrofit2.Response<OrderBookingResponseVisitModel> response) {
                 globalclass.hideProgressDialog(mActivity);
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     SendinglatlongOrderAllocation(5);
 
                     orderBookingResponseVisitModel = response.body();
-                    if ( orderBookingResponseVisitModel.getOrderids() != null){
+                    if (orderBookingResponseVisitModel.getOrderids() != null) {
                         for (OrderBookingResponseOrderModel obrom :
                                 orderBookingResponseVisitModel.getOrderids()) {
                             orderBookingResponseBeneficiaryModelArr.addAll(obrom.getBenfids());
                         }
                     }
+                    if (!btn_Pay.getText().equals("Submit Work Order")) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                        builder.setMessage("Amount payable ₹ " + totalAmountPayable + "/-")
+                                .setPositiveButton("Collect", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (btn_Pay.getText().equals("PAY")) {
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                    builder.setMessage("Amount payable ₹ " + totalAmountPayable + "/-")
-                            .setPositiveButton("Collect", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (btn_Pay.getText().equals("PAY")) {
+                                            if (isOnlyDigital) {
+                                                PaymentMode = 2;
+                                                Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
+                                                Logger.error("tejastotalAmountPayableatsending " + totalAmountPayable);
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 2);
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO, orderVisitDetailsModel.getVisitId());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE, Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME, orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS, orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL, orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail());
+                                                startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                                            } else {
+                                                if (OrderMode.equalsIgnoreCase("LTD-BLD") || OrderMode.equalsIgnoreCase("LTD-NBLD")) {
+                                                    paymentItems = new String[]{"Cash"};
+                                                } else {
+                                                    paymentItems = new String[]{"Cash", "Digital"};
+                                                }
 
-                                        if (OrderMode.equalsIgnoreCase("LTD-BLD") || OrderMode.equalsIgnoreCase("LTD-NBLD")) {
-                                            paymentItems = new String[]{"Cash"};
-                                        } else {
-                                            paymentItems = new String[]{"Cash", "Digital"};
-                                        }
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                                                builder.setTitle("Choose payment mode")
+                                                        .setItems(paymentItems, new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                if (paymentItems[which].equals("Cash")) {
 
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                                        builder.setTitle("Choose payment mode")
-                                                .setItems(paymentItems, new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        if (paymentItems[which].equals("Cash")) {
-
-                                                            AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
-                                                            builder1.setMessage("Confirm amount received ₹ " + totalAmountPayable + "")
-                                                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                                                        @Override
-                                                                        public void onClick(DialogInterface dialog, int which) {
-                                                                            PaymentMode = 1;
-                                                                            // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
-                                                                            OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
-                                                                            if (cd.isConnectingToInternet()) {
-                                                                                CallWorkOrderEntryAPI(orderBookingRequestModel);
-                                                                            } else {
-                                                                                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
-                                                                            }
+                                                                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
+                                                                    builder1.setMessage("Confirm amount received ₹ " + totalAmountPayable + "")
+                                                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                                    PaymentMode = 1;
+                                                                                    // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+                                                                                    OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
+                                                                                    if (cd.isConnectingToInternet()) {
+                                                                                        CallWorkOrderEntryAPI(orderBookingRequestModel);
+                                                                                    } else {
+                                                                                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                                                                    }
 
 
-                                                                        }
-                                                                    })
-                                                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                                                        @Override
-                                                                        public void onClick(DialogInterface dialog, int which) {
-                                                                            dialog.dismiss();
-                                                                        }
-                                                                    })
-                                                                    .show();
-                                                        } else {
-                                                            PaymentMode = 2;
-                                                            Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
-                                                            Logger.error("tejastotalAmountPayableatsending " + totalAmountPayable);
-                                                            intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
-                                                            intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 2);
-                                                            intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO, orderVisitDetailsModel.getVisitId());
-                                                            intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE, Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-                                                            intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME, orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
-                                                            intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS, orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
-                                                            intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
-                                                            intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
-                                                            intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL, orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail());
-                                                            startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
-                                                        }
-                                                        dialog.dismiss();
-                                                    }
-                                                })
-                                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        dialog.dismiss();
-                                                    }
-                                                }).show();
-                                    } else if (btn_Pay.getText().equals("Submit Work Order")) {
-                                        // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
-                                        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_prepaid");
-                                        if (cd.isConnectingToInternet()) {
-                                            CallWorkOrderEntryAPI(orderBookingRequestModel);
-                                        } else {
-                                            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                                                                }
+                                                                            })
+                                                                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                                    dialog.dismiss();
+                                                                                }
+                                                                            })
+                                                                            .show();
+                                                                } else {
+                                                                    PaymentMode = 2;
+                                                                    Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
+                                                                    Logger.error("tejastotalAmountPayableatsending " + totalAmountPayable);
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 2);
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO, orderVisitDetailsModel.getVisitId());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE, Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME, orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS, orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL, orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail());
+                                                                    startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                                                                }
+                                                                dialog.dismiss();
+                                                            }
+                                                        })
+                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                dialog.dismiss();
+                                                            }
+                                                        }).show();
+                                            }
+                                        } else if (btn_Pay.getText().equals("Submit Work Order")) {
+                                            // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+
+                                            if (BundleConstants.addPaymentFlag == 1) {
+                                                PaymentMode = 1;
+                                            }
+                                            OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_prepaid");
+                                            if (cd.isConnectingToInternet()) {
+                                                CallWorkOrderEntryAPI(orderBookingRequestModel);
+                                            } else {
+                                                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     }
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).show();
+                    } else {
+                        if (BundleConstants.addPaymentFlag == 1) {
+                            PaymentMode = 1;
+                        }
+                        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_prepaid");
+                        if (cd.isConnectingToInternet()) {
+                            CallWorkOrderEntryAPI(orderBookingRequestModel);
+                        } else {
+                            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-                }else{
+                } else {
                     try {
-                        if (response.errorBody() != null){
+                        if (response.errorBody() != null) {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
-                            globalclass.showCustomToast( mActivity, jObjError.optString("Message",SOMETHING_WENT_WRONG));
-                        }else{
+                            globalclass.showCustomToast(mActivity, jObjError.optString("Message", SOMETHING_WENT_WRONG));
+                        } else {
                             globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG);
                         }
                     } catch (Exception e) {
@@ -540,17 +581,18 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                 }
 
             }
+
             @Override
             public void onFailure(Call<OrderBookingResponseVisitModel> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
-                globalclass.showCustomToast(mActivity, ConstantsMessages.UNABLE_TO_CONNECT,Toast.LENGTH_LONG);
+                globalclass.showCustomToast(mActivity, ConstantsMessages.UNABLE_TO_CONNECT, Toast.LENGTH_LONG);
                 MessageLogger.LogDebug("Errror", t.getMessage());
             }
         });
     }
 
 
-    public void CallWorkOrderEntryAPI(OrderBookingRequestModel orderBookingRequestModel){
+    public void CallWorkOrderEntryAPI(OrderBookingRequestModel orderBookingRequestModel) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallWorkOrderEntryAPI(orderBookingRequestModel);
         globalclass.showProgressDialog(mActivity, PLEASE_WAIT);
@@ -559,7 +601,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, retrofit2.Response<String> res) {
                 globalclass.hideProgressDialog(mActivity);
                 if (res.isSuccessful() && res.body() != null) {
-
                     AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                     builder.setTitle("Order Status")
                             .setCancelable(false)
@@ -699,16 +740,16 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                             })
                             .create();
 
-                    if (!mActivity.isFinishing()){
+                    if (!mActivity.isFinishing()) {
                         builder.show();
                     }
 
-                }else{
+                } else {
                     try {
-                        if (res.errorBody() != null){
+                        if (res.errorBody() != null) {
                             JSONObject jObjError = new JSONObject(res.errorBody().string());
-                            globalclass.showCustomToast( mActivity, jObjError.optString("Message",SOMETHING_WENT_WRONG));
-                        }else{
+                            globalclass.showCustomToast(mActivity, jObjError.optString("Message", SOMETHING_WENT_WRONG));
+                        } else {
                             globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG);
                         }
                     } catch (Exception e) {
@@ -734,15 +775,16 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                             })
                             .create();
 
-                    if (!mActivity.isFinishing()){
+                    if (!mActivity.isFinishing()) {
                         builder.show();
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
-                Toast.makeText(mActivity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                Toast.makeText(mActivity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
             }
         });
     }
@@ -767,6 +809,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     private OrderBookingRequestModel fixForAddBeneficiary(OrderBookingRequestModel orderBookingRequestModel) {
         //Update Visit ID in OrdBooking Model
         if (orderBookingRequestModel.getOrdbooking().getVisitId().equals(orderBookingResponseVisitModel.getOldVisitId())) {
@@ -950,11 +993,10 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         Button btn_proceed_afterOTP = (Button) CustomDialogfor_WOE_OTPValidation.findViewById(R.id.btn_proceed_afterOTP);
 
 
-
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-        int height = 0,width = 0;
+        int height = 0, width = 0;
         if (displayMetrics != null) {
             try {
                 height = displayMetrics.heightPixels;
@@ -1021,7 +1063,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (cd.isConnectingToInternet()) {
-                    CallGenerateOTPApi(mobileNo,"SENDOTPALL","Mobile",OrderNo);
+                    CallGenerateOTPApi(mobileNo, "SENDOTPALL", "Mobile", OrderNo);
                 } else {
                     globalclass.showCustomToast(mActivity, getResources().getString(R.string.plz_chk_internet));
                 }
@@ -1032,7 +1074,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (cd.isConnectingToInternet()) {
-                    CallGenerateOTPApi(mobileNo,"SENDOTPALL","Mobile",OrderNo);
+                    CallGenerateOTPApi(mobileNo, "SENDOTPALL", "Mobile", OrderNo);
                 } else {
                     globalclass.showCustomToast(mActivity, getResources().getString(R.string.plz_chk_internet));
                 }
@@ -1045,11 +1087,11 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String strOTP = edt_mobileOTP.getText().toString().trim();
-                if (InputUtils.isNull(strOTP) ) {
-                    globalclass.showalert_OK("Please enter OTP",mActivity);
+                if (InputUtils.isNull(strOTP)) {
+                    globalclass.showalert_OK("Please enter OTP", mActivity);
                     edt_mobileOTP.requestFocus();
-                }else if (strOTP.length() != 4) {
-                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4",mActivity);
+                } else if (strOTP.length() != 4) {
+                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4", mActivity);
                     edt_mobileOTP.requestFocus();
                 } else {
                     WOEOtpValidationRequestModel model = new WOEOtpValidationRequestModel();
@@ -1070,7 +1112,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (cd.isConnectingToInternet()) {
-                    CallGenerateOTPApi(mobileNo,"SENDOTPALL","Email",OrderNo);
+                    CallGenerateOTPApi(mobileNo, "SENDOTPALL", "Email", OrderNo);
                 } else {
                     globalclass.showCustomToast(mActivity, getResources().getString(R.string.plz_chk_internet));
                 }
@@ -1081,7 +1123,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (cd.isConnectingToInternet()) {
-                    CallGenerateOTPApi(mobileNo,"SENDOTPALL","Email",OrderNo);
+                    CallGenerateOTPApi(mobileNo, "SENDOTPALL", "Email", OrderNo);
                 } else {
                     globalclass.showCustomToast(mActivity, getResources().getString(R.string.plz_chk_internet));
                 }
@@ -1094,11 +1136,11 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String strOTP = edt_EmailOTP.getText().toString().trim();
-                if (InputUtils.isNull(strOTP) ) {
-                    globalclass.showalert_OK("Please enter OTP",mActivity);
+                if (InputUtils.isNull(strOTP)) {
+                    globalclass.showalert_OK("Please enter OTP", mActivity);
                     edt_EmailOTP.requestFocus();
-                }else if ( strOTP.length() != 4) {
-                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4",mActivity);
+                } else if (strOTP.length() != 4) {
+                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4", mActivity);
                     edt_EmailOTP.requestFocus();
                 } else {
                     WOEOtpValidationRequestModel model = new WOEOtpValidationRequestModel();
@@ -1118,10 +1160,10 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         btn_proceed_afterOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isMobilenoOTPVerfied){
-                    globalclass.showalert_OK("Please verify OTP for Mobile number.",mActivity);
+                if (!isMobilenoOTPVerfied) {
+                    globalclass.showalert_OK("Please verify OTP for Mobile number.", mActivity);
                     edt_mobileOTP.requestFocus();
-                }else if (!isEmailIDOTPVerfied) {
+                } else if (!isEmailIDOTPVerfied) {
                     androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder;
                     alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(mActivity);
                     alertDialogBuilder
@@ -1130,7 +1172,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     ProceedWOEonSubmit();
-                                    if (CustomDialogfor_WOE_OTPValidation!= null && CustomDialogfor_WOE_OTPValidation.isShowing()){
+                                    if (CustomDialogfor_WOE_OTPValidation != null && CustomDialogfor_WOE_OTPValidation.isShowing()) {
                                         CustomDialogfor_WOE_OTPValidation.dismiss();
                                     }
                                     dialog.dismiss();
@@ -1144,9 +1186,9 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                             });
                     androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else{
+                } else {
 
-                    if (CustomDialogfor_WOE_OTPValidation!= null && CustomDialogfor_WOE_OTPValidation.isShowing()){
+                    if (CustomDialogfor_WOE_OTPValidation != null && CustomDialogfor_WOE_OTPValidation.isShowing()) {
                         CustomDialogfor_WOE_OTPValidation.dismiss();
                     }
                     ProceedWOEonSubmit();
@@ -1163,56 +1205,56 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         }
 
         ApplicationController.getAcessTokenAndOTPAPIController = new GetAcessTokenAndOTPAPIController(mActivity);
-        ApplicationController.getAcessTokenAndOTPAPIController.CallGetTokenAPIForOTP(mobileNumber, Purpose,OTPVia,orderno);
+        ApplicationController.getAcessTokenAndOTPAPIController.CallGetTokenAPIForOTP(mobileNumber, Purpose, OTPVia, orderno);
         ApplicationController.getAcessTokenAndOTPAPIController.setOnResponseListener(new GetAcessTokenAndOTPAPIController.OnResponseListener() {
             @Override
             public void onSuccess(CommonPOSTResponseModel commonPOSTResponseModel) {
-                onGetOTPResponseReceived(commonPOSTResponseModel,OTPVia);
+                onGetOTPResponseReceived(commonPOSTResponseModel, OTPVia);
             }
 
             @Override
             public void onfailure(CommonPOSTResponseModel commonPOSTResponseModel) {
-                onGetOTPResponseReceived(commonPOSTResponseModel,OTPVia);
+                onGetOTPResponseReceived(commonPOSTResponseModel, OTPVia);
             }
         });
     }
 
-    private void onGetOTPResponseReceived(CommonPOSTResponseModel model1,String OtpVia) {
+    private void onGetOTPResponseReceived(CommonPOSTResponseModel model1, String OtpVia) {
 
         if (!InputUtils.isNull(model1.getResponse1()) && model1.getResponse1().equalsIgnoreCase("SUCCESS")) {
-            if (OtpVia.equalsIgnoreCase("Mobile")){
+            if (OtpVia.equalsIgnoreCase("Mobile")) {
                 btn_MobileGetOTP.setVisibility(View.GONE);
                 btn_MobileVerified.setVisibility(View.GONE);
                 btn_MobileVerifyOTP.setVisibility(View.VISIBLE);
                 edt_mobileOTP.setVisibility(View.VISIBLE);
-            }else if (OtpVia.equalsIgnoreCase("Email")){
+            } else if (OtpVia.equalsIgnoreCase("Email")) {
                 btn_EmailGetOTP.setVisibility(View.GONE);
                 btn_EmailVerified.setVisibility(View.GONE);
                 btn_EmailVerifyOTP.setVisibility(View.VISIBLE);
                 edt_EmailOTP.setVisibility(View.VISIBLE);
             }
-        } else if (!InputUtils.isNull(model1.getResponse1()) && ( model1.getResponse1().contains("Mailbox unavailable") || model1.getResponse1().contains("Failure sending mail"))) {
-            if (OtpVia.equalsIgnoreCase("Mobile")){
+        } else if (!InputUtils.isNull(model1.getResponse1()) && (model1.getResponse1().contains("Mailbox unavailable") || model1.getResponse1().contains("Failure sending mail"))) {
+            if (OtpVia.equalsIgnoreCase("Mobile")) {
                 btn_MobileGetOTP.setVisibility(View.GONE);
                 btn_MobileVerified.setVisibility(View.GONE);
                 btn_MobileVerifyOTP.setVisibility(View.VISIBLE);
                 edt_mobileOTP.setVisibility(View.VISIBLE);
 
-            }else if (OtpVia.equalsIgnoreCase("Email")){
+            } else if (OtpVia.equalsIgnoreCase("Email")) {
                 btn_EmailGetOTP.setVisibility(View.GONE);
                 btn_EmailVerified.setVisibility(View.GONE);
                 btn_EmailVerifyOTP.setVisibility(View.VISIBLE);
                 edt_EmailOTP.setVisibility(View.VISIBLE);
             }
         } else {
-            globalclass.showalert_OK(!InputUtils.isNull(model1.getResponse1()) ? model1.getResponse1() : "Sorry we are facing issue while sending OTP. Please try again later.",mActivity);
-            if (OtpVia.equalsIgnoreCase("Mobile")){
+            globalclass.showalert_OK(!InputUtils.isNull(model1.getResponse1()) ? model1.getResponse1() : "Sorry we are facing issue while sending OTP. Please try again later.", mActivity);
+            if (OtpVia.equalsIgnoreCase("Mobile")) {
                 btn_MobileGetOTP.setVisibility(View.GONE);
                 btn_MobileVerified.setVisibility(View.GONE);
                 btn_MobileVerifyOTP.setVisibility(View.VISIBLE);
                 edt_mobileOTP.setVisibility(View.VISIBLE);
 
-            }else if (OtpVia.equalsIgnoreCase("Email")){
+            } else if (OtpVia.equalsIgnoreCase("Email")) {
                 btn_EmailGetOTP.setVisibility(View.GONE);
                 btn_EmailVerified.setVisibility(View.GONE);
                 btn_EmailVerifyOTP.setVisibility(View.VISIBLE);
@@ -1220,10 +1262,10 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             }
         }
 
-        if (OtpVia.equalsIgnoreCase("Mobile")){
+        if (OtpVia.equalsIgnoreCase("Mobile")) {
             MobileResendOTPcdTimer.start();
             tv_reSendMobileOTP.setVisibility(View.VISIBLE);
-        }else if (OtpVia.equalsIgnoreCase("Email")){
+        } else if (OtpVia.equalsIgnoreCase("Email")) {
             EmailResendOTPcdTimer.start();
             tv_reSendMobileOTP.setVisibility(View.VISIBLE);
         }
@@ -1234,22 +1276,22 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.ValidateWoeOTPAPI(model);
-        globalclass.showProgressDialog(mActivity,"Validating OTP. Please wait..");
+        globalclass.showProgressDialog(mActivity, "Validating OTP. Please wait..");
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {
             @Override
             public void onResponse(Call<CommonPOSTResponseModel> call, Response<CommonPOSTResponseModel> response) {
                 globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     CommonPOSTResponseModel ResponseModel = response.body();
-                    if (ResponseModel != null && !InputUtils.isNull(ResponseModel.getResponse1()) && ResponseModel.getResponse1().equalsIgnoreCase("SUCCESS")){
+                    if (ResponseModel != null && !InputUtils.isNull(ResponseModel.getResponse1()) && ResponseModel.getResponse1().equalsIgnoreCase("SUCCESS")) {
 
-                        if (model.getOtpTo().equalsIgnoreCase("Mobile")){
+                        if (model.getOtpTo().equalsIgnoreCase("Mobile")) {
                             btn_MobileVerified.setVisibility(View.VISIBLE);
                             btn_MobileVerifyOTP.setVisibility(View.GONE);
                             btn_MobileGetOTP.setVisibility(View.GONE);
                             edt_mobileOTP.setEnabled(false);
                             isMobilenoOTPVerfied = true;
-                        }else  if (model.getOtpTo().equalsIgnoreCase("Email")){
+                        } else if (model.getOtpTo().equalsIgnoreCase("Email")) {
                             btn_EmailVerified.setVisibility(View.VISIBLE);
                             btn_EmailVerifyOTP.setVisibility(View.GONE);
                             btn_EmailGetOTP.setVisibility(View.GONE);
@@ -1257,7 +1299,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                             isEmailIDOTPVerfied = true;
                         }
 
-                    }else{
+                    } else {
                         globalclass.showCustomToast(mActivity, "OTP Validation Failed. Please enter Valid OTP.");
                     }
                 } else {
@@ -1265,6 +1307,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
                 }
             }
+
             @Override
             public void onFailure(Call<CommonPOSTResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);

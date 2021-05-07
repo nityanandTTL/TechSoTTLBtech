@@ -70,6 +70,18 @@ public class CommonUtils {
         return instance;
     }
 
+
+    public static boolean ValidateCovidorders(String testsCode) {
+        if (testsCode != null) {
+            return testsCode.toString().trim().equalsIgnoreCase("COVID-19") || testsCode.toString().trim().equalsIgnoreCase("COVID 19") || testsCode.toString().trim().equalsIgnoreCase("COVID19");
+        }
+        return false;
+    }
+
+
+
+
+
     public static String encodeImage(Bitmap bm) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

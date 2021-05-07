@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.view.Gravity;
@@ -62,6 +64,7 @@ import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
 
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -117,6 +120,8 @@ public class PaymentsActivity extends AbstractActivity {
     private int Flagcnt = 0;
     EditText edtPaymentUserInputs;
     private Global global;
+//    private String mobile;
+//    private int mobileflag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,18 +192,18 @@ public class PaymentsActivity extends AbstractActivity {
     private void CallgetFetchDepositDetailsApi() {
 
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-        Call<FetchLedgerResponseModel> responseCall = apiInterface.CallgetFetchDepositDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(),fromdate, todate);
+        Call<FetchLedgerResponseModel> responseCall = apiInterface.CallgetFetchDepositDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(), fromdate, todate);
         global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback< FetchLedgerResponseModel>() {
+        responseCall.enqueue(new Callback<FetchLedgerResponseModel>() {
             @Override
-            public void onResponse(Call< FetchLedgerResponseModel> call, retrofit2.Response< FetchLedgerResponseModel> response) {
+            public void onResponse(Call<FetchLedgerResponseModel> call, retrofit2.Response<FetchLedgerResponseModel> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     FetchLedgerResponseModel fetchLedgerDetailsResponseModel = response.body();
                     fetchLedgerResponseModel = fetchLedgerDetailsResponseModel;
 
                     fetchEarningRegister();
-                }else {
+                } else {
                     Toast.makeText(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -213,11 +218,11 @@ public class PaymentsActivity extends AbstractActivity {
 
     private void CallFetchEarningDetailsApi() {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-        Call<Earning_NewRegisterModel> responseCall = apiInterface.CallFetchEarningDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(),fromdate, todate);
+        Call<Earning_NewRegisterModel> responseCall = apiInterface.CallFetchEarningDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(), fromdate, todate);
         global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback< Earning_NewRegisterModel>() {
+        responseCall.enqueue(new Callback<Earning_NewRegisterModel>() {
             @Override
-            public void onResponse(Call< Earning_NewRegisterModel> call, retrofit2.Response< Earning_NewRegisterModel> response) {
+            public void onResponse(Call<Earning_NewRegisterModel> call, retrofit2.Response<Earning_NewRegisterModel> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     earning_newRegisterModelsArr = new ArrayList<>();
@@ -226,7 +231,7 @@ public class PaymentsActivity extends AbstractActivity {
 
                     }
                     fetchDepositLedger();
-                }else {
+                } else {
                     Toast.makeText(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -242,11 +247,11 @@ public class PaymentsActivity extends AbstractActivity {
 
     private void CallgetFetchDepositPaymentDetailsApi() {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-        Call<ArrayList<DepositRegisterModel>> responseCall = apiInterface.CallgetFetchDepositPaymentDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(),fromdate, todate);
+        Call<ArrayList<DepositRegisterModel>> responseCall = apiInterface.CallgetFetchDepositPaymentDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID(), fromdate, todate);
         global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback< ArrayList<DepositRegisterModel>>() {
+        responseCall.enqueue(new Callback<ArrayList<DepositRegisterModel>>() {
             @Override
-            public void onResponse(Call< ArrayList<DepositRegisterModel>> call, retrofit2.Response< ArrayList<DepositRegisterModel>> response) {
+            public void onResponse(Call<ArrayList<DepositRegisterModel>> call, retrofit2.Response<ArrayList<DepositRegisterModel>> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     depositRegisterModels = new ArrayList<>();
@@ -256,6 +261,7 @@ public class PaymentsActivity extends AbstractActivity {
                 }
                 fetchPaymentModes();
             }
+
             @Override
             public void onFailure(Call<ArrayList<DepositRegisterModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -316,18 +322,19 @@ public class PaymentsActivity extends AbstractActivity {
     private void CallFetchPaymentModesApi(int NarrationId) {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<PaymentProcessAPIResponseModel>> responseCall = apiInterface.CallFetchPaymentModesApi(NarrationId);
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<ArrayList<PaymentProcessAPIResponseModel>>() {
             @Override
             public void onResponse(Call<ArrayList<PaymentProcessAPIResponseModel>> call, retrofit2.Response<ArrayList<PaymentProcessAPIResponseModel>> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
-                    paymentModesArr =response.body();
+                    paymentModesArr = response.body();
                     initPaymentModesData();
                 } else {
                     Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<PaymentProcessAPIResponseModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -387,7 +394,6 @@ public class PaymentsActivity extends AbstractActivity {
                     }
                 }
                 llPaymentModes.addView(llPaymentModeDetails);
-//jai
                 llBankModeDetails.setLayoutParams(new LinearLayout.LayoutParams
                         (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 llBankModeDetails.setOrientation(LinearLayout.VERTICAL);
@@ -401,7 +407,6 @@ public class PaymentsActivity extends AbstractActivity {
                 btnBankMode.setGravity(Gravity.CENTER);
                 btnBankMode.setPadding(5, 5, 5, 5);
                 btnBankMode.setMinEms(10);
-                //jai2
                 btnBankMode.setTextColor(getResources().getColor(android.R.color.white));
                 btnBankMode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rounded_background_filled_oranged));
                 btnBankMode.setText("BANK");
@@ -504,21 +509,22 @@ public class PaymentsActivity extends AbstractActivity {
         }
     }
 
-    private void CallgetTransactionInputsRequestApi(JsonObject jsonRequest){
+    private void CallgetTransactionInputsRequestApi(JsonObject jsonRequest) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<PaymentProcessAPIResponseModel> responseCall = apiInterface.CallgetTransactionInputsRequestApi(jsonRequest);
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<PaymentProcessAPIResponseModel>() {
             @Override
             public void onResponse(Call<PaymentProcessAPIResponseModel> call, Response<PaymentProcessAPIResponseModel> response) {
                 global.hideProgressDialog(activity);
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     paymentPassInputsModel = response.body();
                     initPaymentPassInputsData();
-                }else{
+                } else {
                     Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<PaymentProcessAPIResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -546,22 +552,34 @@ public class PaymentsActivity extends AbstractActivity {
                         View v1 = activity.getLayoutInflater().inflate(R.layout.payment_edit_text, null);
                         final EditText edtPaymentUserInputs = (EditText) v1.findViewById(R.id.edit_payment);
                         TextView txtPaymentUserInputss = (TextView) v1.findViewById(R.id.payment_text);
-
-                        //changes_5june2017
-                      /*  if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equals("Mobile")) {
-                            String strMobile = String.format("%-9s", paymentPassInputsModel.getNameValueCollection().get(i).getHint());
-                            txtPaymentUserInputss.setText(strMobile);
-                        } else {
-                            txtPaymentUserInputss.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
-                        }*/
-
                         txtPaymentUserInputss.setText(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
-                        //changes_5june2017
-                        //jai
                         Logger.error("name " + paymentPassInputsModel.getNameValueCollection().get(i).getHint());
 
-                        //jai
-                        edtPaymentUserInputs.setHint("Please Enter " + paymentPassInputsModel.getNameValueCollection().get(i).getHint());
+                        if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equalsIgnoreCase("Mobile")) {
+//                            mobileflag = 1;
+                            edtPaymentUserInputs.setHint("Please Enter " + paymentPassInputsModel.getNameValueCollection().get(i).getHint() + "*");
+                        } else {
+                            editAmount.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
+
+                        }
+
+/*
+                     edtPaymentUserInputs.setOnClickListener(new View.OnClickListener() {
+                         @Override
+                         public void onClick(View v) {
+                             if (edtPaymentUserInputs.getHint().toString().equalsIgnoreCase("Please Enter Mobile*")){
+                                 edtPaymentUserInputs.setInputType(InputType.TYPE_CLASS_NUMBER);
+                                 edtPaymentUserInputs.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
+                                 edtPaymentUserInputs.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
+                             }else {
+                                 edtPaymentUserInputs.setInputType(InputType.TYPE_CLASS_TEXT);
+                                 edtPaymentUserInputs.setFilters(new InputFilter[]{new InputFilter.LengthFilter(100)});
+                                 edtPaymentUserInputs.setKeyListener(DigitsKeyListener.getInstance(getResources().getString(R.string.addressvalidation)));
+                             }
+
+                         }
+                     });*/
+
                         edtPaymentUserInputs.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -579,32 +597,30 @@ public class PaymentsActivity extends AbstractActivity {
 
                                 String remarks = s.toString();
 
-                                //for REMARKS
                                 if (edtPaymentUserInputs.getHint().equals("Please Enter Remarks")) {
                                     if (remarks.contains("\'")) {
                                         edtPaymentUserInputs.setError("Apostroph symbol ( ' ) is not allowed.");
                                         edtPaymentUserInputs.setText("");
                                     } else
                                         paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
-                                    //paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
                                 }
 
-                                //Mobile
-                                if (edtPaymentUserInputs.getHint().equals("Please Enter Mobile")) {
-                                    Logger.error("Alloy barka");
-                                    if (remarks.contains(" ")) {
-                                        Logger.error("Adaklay");
 
+                                if (edtPaymentUserInputs.getHint().toString().equalsIgnoreCase("Please Enter Mobile*")) {
+
+                                    if (remarks.contains(" ")) {
                                         edtPaymentUserInputs.setError("Mobile No Cannot Be Empty");
                                         edtPaymentUserInputs.setText("");
 
-                                    } else
-                                        Logger.error("JHalay barka");
-                                    paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
-                                    //paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+                                    }/* else if (remarks.length() != 10) {
+                                        edtPaymentUserInputs.setError("Mobile Should be 10 digits");
+                                        edtPaymentUserInputs.setText("");
+
+                                    }*/ else {
+                                        paymentPassInputsModel.getNameValueCollection().get(currentPosition).setValue(s.toString());
+                                    }
+
                                 }
-
-
                                 //for VPA
                                 if (edtPaymentUserInputs.getHint().equals("Please Enter VPA")) {
                                     if (remarks.contains(" ")) {
@@ -688,8 +704,11 @@ public class PaymentsActivity extends AbstractActivity {
                     if (paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("Amount")) {
                         textAmount.setText(paymentPassInputsModel.getNameValueCollection().get(i).getValue());
                         textAmount.setVisibility(View.VISIBLE);
-                        editAmount.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
-
+                        if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equalsIgnoreCase("Mobile")) {
+                            edtPaymentUserInputs.setHint("Please Enter " + paymentPassInputsModel.getNameValueCollection().get(i).getHint() + "*");
+                        } else {
+                            editAmount.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
+                        }
 
                         editAmount.setVisibility(View.GONE);
                     } else {
@@ -697,9 +716,6 @@ public class PaymentsActivity extends AbstractActivity {
                         TextView txtPaymentSystemInputsLabel = (TextView) v2.findViewById(R.id.payment_text1);
                         TextView txtPaymentSystemInputs = (TextView) v2.findViewById(R.id.payment_text2);
 
-                        //changes_5june2017
-
-                        //changes_5june2017
 
                         txtPaymentSystemInputsLabel.setText((paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":"));
                         Logger.error("HInt" + paymentPassInputsModel.getNameValueCollection().get(i).getHint());
@@ -725,11 +741,39 @@ public class PaymentsActivity extends AbstractActivity {
                 @Override
                 public void onClick(View v) {
                     fetchTransactionResponseOnStartTransaction();
+                   /* if (mobileflag == 1) {
+                        if (getMobileValidate(mobile)) {
+                            fetchTransactionResponseOnStartTransaction();
+                        }
+                    } else {
+                        fetchTransactionResponseOnStartTransaction();
+                    }*/
+
                 }
             });
             llPaymentPassInputs.addView(btnPaymentInputsSubmit);
             flPayments.addView(v);
         }
+    }
+
+    private boolean getMobileValidate(String mobile) {
+
+
+        if (TextUtils.isEmpty(mobile)) {
+            Toast.makeText(activity, "Enter Mobile Number", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (mobile.length() != 10) {
+            Toast.makeText(activity, "Enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (mobile.startsWith("0") || mobile.startsWith("1") || mobile.startsWith("2") || mobile.startsWith("3") || mobile.startsWith("4") || mobile.startsWith("5")) {
+            Toast.makeText(activity, "Mobile Number Cannot start with 0,1,2,3,4,5", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private void fetchTransactionResponseOnStartTransaction() {
@@ -765,18 +809,20 @@ public class PaymentsActivity extends AbstractActivity {
         }
     }
 
-    private void CallFetchTransactionResponseOnStartTransactionApi(JsonObject jsonRequest){
+    private void CallFetchTransactionResponseOnStartTransactionApi(JsonObject jsonRequest) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<PaymentStartTransactionAPIResponseModel> responseCall = apiInterface.CallFetchTransactionResponseOnStartTransactionApi(jsonRequest);
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<PaymentStartTransactionAPIResponseModel>() {
             @Override
             public void onResponse(Call<PaymentStartTransactionAPIResponseModel> call, Response<PaymentStartTransactionAPIResponseModel> response) {
                 global.hideProgressDialog(activity);
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     paymentStartTransactionAPIResponseModel = response.body();
                     if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
+                       // mobileflag = 0;
                         if (NarrationId == 1 || NarrationId == 3) {
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                             builder.setTitle("UPI Payment")
                                     .setMessage("Your Payment request has been initiated. Please access your UPI banking app to complete the process.")
@@ -816,13 +862,19 @@ public class PaymentsActivity extends AbstractActivity {
                         if (paymentStartTransactionAPIResponseModel.getTokenData() != null) {
                             Toast.makeText(activity, paymentStartTransactionAPIResponseModel.getTokenData(), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(activity, paymentStartTransactionAPIResponseModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            if (paymentStartTransactionAPIResponseModel.getResponseMessage().equalsIgnoreCase("MOBILE_NUMBER_NOT_REGISTERED")) {
+                                Toast.makeText(activity, "Mobile Number is not Registered", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(activity, paymentStartTransactionAPIResponseModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
                         }
                     }
-                }else{
+                } else {
                     Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<PaymentStartTransactionAPIResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -995,7 +1047,8 @@ public class PaymentsActivity extends AbstractActivity {
             }
 
             if (isNetworkAvailable(activity)) {
-                CallgetDoCaptureResponseRequestApi(jsonRequest, paymentDoCaptureResponseAPIResponseModel.getReqParameters().getAPIUrl());;
+                CallgetDoCaptureResponseRequestApi(jsonRequest, paymentDoCaptureResponseAPIResponseModel.getReqParameters().getAPIUrl());
+                ;
             } else {
                 Toast.makeText(activity, getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
             }
@@ -1005,15 +1058,15 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
 
-    private void CallgetDoCaptureResponseRequestApi(JsonObject jsonRequest, String URL){
+    private void CallgetDoCaptureResponseRequestApi(JsonObject jsonRequest, String URL) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<PaymentDoCaptureResponseAPIResponseModel> responseCall = apiInterface.CallgetDoCaptureResponseRequestApi(URL,jsonRequest);
-        global.showProgressDialog(activity,"Please wait..");
+        Call<PaymentDoCaptureResponseAPIResponseModel> responseCall = apiInterface.CallgetDoCaptureResponseRequestApi(URL, jsonRequest);
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<PaymentDoCaptureResponseAPIResponseModel>() {
             @Override
             public void onResponse(Call<PaymentDoCaptureResponseAPIResponseModel> call, Response<PaymentDoCaptureResponseAPIResponseModel> response) {
                 global.hideProgressDialog(activity);
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     PaymentDoCaptureResponseAPIResponseModel tempPDCRAPRM = response.body();
                     if (tempPDCRAPRM.getStatus() != null) {
                         paymentDoCaptureResponseAPIResponseModel = tempPDCRAPRM;
@@ -1095,17 +1148,17 @@ public class PaymentsActivity extends AbstractActivity {
                                     }
                                 }).show();
                     }
-                }else{
+                } else {
                     Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<PaymentDoCaptureResponseAPIResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
             }
         });
     }
-
 
 
     /******************************AUTO RECHECK RESPONSE UNTIL RESULT RECEIVE FUNCTIONALITY START************************************/

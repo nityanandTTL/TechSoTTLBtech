@@ -58,6 +58,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
     private OrderUpdateDetailsModel ordUpdateDetails;
     private ArrayList<KitsCountModel> kits;
     private String OrderMode;
+    private boolean isDigital;
     private int CHC;
     private boolean displayProduct;
     private boolean IsPPE;
@@ -109,6 +110,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         SecondVisitTest = in.readString();
         YNC = in.readString();
         VipOrder = in.readByte() != 0;
+        isDigital = in.readByte() != 0;
         ordUpdateDetails = in.readParcelable(OrderUpdateDetailsModel.class.getClassLoader());
         kits = in.createTypedArrayList(KitsCountModel.CREATOR);
         OrderMode = in.readString();
@@ -164,6 +166,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         dest.writeString(SecondVisitTest);
         dest.writeString(YNC);
         dest.writeByte((byte) (VipOrder ? 1 : 0));
+        dest.writeByte((byte) (isDigital ? 1 : 0));
         dest.writeParcelable(ordUpdateDetails, flags);
         dest.writeTypedList(kits);
         dest.writeString(OrderMode);
@@ -546,6 +549,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
 
     public void setVipOrder(boolean vipOrder) {
         VipOrder = vipOrder;
+    }
+
+    public boolean isDigital() {
+        return isDigital;
+    }
+
+    public void setDigital(boolean digital) {
+        isDigital = digital;
     }
 
     public OrderUpdateDetailsModel getOrdUpdateDetails() {

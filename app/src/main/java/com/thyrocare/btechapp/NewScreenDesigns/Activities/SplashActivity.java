@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.Toast;
@@ -53,7 +54,6 @@ import com.thyrocare.btechapp.models.api.response.NewBtechAvaliabilityResponseMo
 import com.thyrocare.btechapp.models.data.TSPNBT_AvilModel;
 
 
-
 import com.thyrocare.btechapp.service.LocationUpdateService;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
@@ -93,22 +93,24 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-       /* System.out.println("---------velso-------------"+EncryptionUtils.Dcrp_Hex("268E43DE5EA1E4F0CC1D8569F085B536838AC6D68BCDD00D4D7ECEC2F334C2D60D7A0F1176A1A8D4EC52FF44E7C2060E"));
-        System.out.println("----------nuclearRefer------------"+EncryptionUtils.Dcrp_Hex("DCDA8B3598743AC452C9523C25245265196D3288A730A4FA78B19D7E0811C7C6A5CA7D69A8974A6B344B41F69B47841F"));
-        System.out.println("----------velsoCallGetLeadPurposeAPIListener------------"+EncryptionUtils.Dcrp_Hex("12603D205F7EF081A20253B64CE39A8282EC9F520704224FBEC0FB51C7053C16"));
-        System.out.println("----------B2C_API_VERSION_LIVE------------"+EncryptionUtils.Dcrp_Hex("268E43DE5EA1E4F0CC1D8569F085B536838AC6D68BCDD00D4D7ECEC2F334C2D60D7A0F1176A1A8D4EC52FF44E7C2060E"));
-        System.out.println("----------B2B_API_VERSION_LIVE------------"+EncryptionUtils.Dcrp_Hex("12603D205F7EF081A20253B64CE39A8264E0D8413DFA61A50EA514D0C62B142B"));
 
-        System.out.println("charbi"+ EncryptionUtils.Ecrp_Hex("http://api.charbi.com/ThyrostaffWeb/"));
-        System.out.println("charbi_stng"+ EncryptionUtils.Ecrp_Hex("http://stagingapi.charbi.com/ThyrostaffWeb/"));*/
+
+        System.out.println("3"+EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION)));
+        System.out.println("4"+EncryptionUtils.Dcrp_Hex(getString(R.string.B2B_API_VERSION)));
+
+        System.out.println("3"+EncryptionUtils.Ecrp_Hex("https://b2capi.thyrocare.com/APIs/"));
+        System.out.println("4"+EncryptionUtils.Ecrp_Hex("https://b2capi.thyrocare.com/API/"));
+
+
+
 
         init();
-//        CheckIfDeviceIsRooted();
         initData();
 
     }
 
     private void init() {
+        BundleConstants.setStechDialogFlag = 0;
         mActivity = SplashActivity.this;
         appPreferenceManager = new AppPreferenceManager(mActivity);
         global = new Global(mActivity);
@@ -136,9 +138,9 @@ public class SplashActivity extends AppCompatActivity {
                     });
             androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
-            MessageLogger.verbose(SplashActivity.this,"This Device is rooted");
+            MessageLogger.verbose(SplashActivity.this, "This Device is rooted");
         } else {
-            MessageLogger.verbose(SplashActivity.this,"This Device is not rooted");
+            MessageLogger.verbose(SplashActivity.this, "This Device is not rooted");
             initData();
         }
     }
@@ -156,10 +158,10 @@ public class SplashActivity extends AppCompatActivity {
                     public void onPermissionGranted() {
                         SharedPreferences pref_SSL = getSharedPreferences("SSLKeysPref", 0);
                         String SLLKeyAPICalledDate = pref_SSL.getString("DateOfSSLKeyAPICalled", "");
-                        String CurrentDate = DateUtil.getDateFromLong(System.currentTimeMillis(),"dd-MM-yyyy");
-                        if (!CurrentDate.equals(SLLKeyAPICalledDate)){
+                        String CurrentDate = DateUtil.getDateFromLong(System.currentTimeMillis(), "dd-MM-yyyy");
+                        if (!CurrentDate.equals(SLLKeyAPICalledDate)) {
                             CallGetSSLKeyAPI();
-                        }else{
+                        } else {
                             fetchVersionControlDetails();
                         }
                     }
@@ -172,21 +174,21 @@ public class SplashActivity extends AppCompatActivity {
                 .check();
     }
 
-    private void CallGetSSLKeyAPI(){
+    private void CallGetSSLKeyAPI() {
 
         SharedPreferences.Editor prefsEditor = getSharedPreferences("SSLKeysPref", 0).edit();
         prefsEditor.putBoolean("ApplySSLPining", false);
         prefsEditor.commit();
 
         GetSSLKeyRequestModel model = new GetSSLKeyRequestModel();
-        model.setAppId(""+ BundleConstants.APPID_TRACKACTIVITY);
+        model.setAppId("" + BundleConstants.APPID_TRACKACTIVITY);
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(SplashActivity.this, EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
         Call<GetSSLKeyResponseModel> responseCall = apiInterface.CallGetSSLAPI(model);
         responseCall.enqueue(new Callback<GetSSLKeyResponseModel>() {
             @Override
             public void onResponse(Call<GetSSLKeyResponseModel> call, Response<GetSSLKeyResponseModel> response) {
                 GetSSLKeyResponseModel responseModel = null;
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     responseModel = response.body();
                 }
                 onSSLKeyApiResponseReceived(responseModel);
@@ -201,14 +203,14 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void onSSLKeyApiResponseReceived(GetSSLKeyResponseModel responseModel) {
-        if (responseModel != null &&!StringUtils.isNull(responseModel.getRespId())&&responseModel.getRespId().equalsIgnoreCase("RES0000")  && !StringUtils.isNull(responseModel.getAppId())&&responseModel.getAppId().equalsIgnoreCase(""+BundleConstants.APPID_TRACKACTIVITY) ){
+        if (responseModel != null && !StringUtils.isNull(responseModel.getRespId()) && responseModel.getRespId().equalsIgnoreCase("RES0000") && !StringUtils.isNull(responseModel.getAppId()) && responseModel.getAppId().equalsIgnoreCase("" + BundleConstants.APPID_TRACKACTIVITY)) {
 
             SharedPreferences.Editor prefsEditor = getSharedPreferences("SSLKeysPref", 0).edit();
             Gson gson = new Gson();
             String json = gson.toJson(responseModel);
             prefsEditor.putBoolean("ApplySSLPining", true);
             prefsEditor.putString("SSLKeyResponseModel", json);
-            prefsEditor.putString("DateOfSSLKeyAPICalled",  DateUtil.getDateFromLong(System.currentTimeMillis(),"dd-MM-yyyy"));
+            prefsEditor.putString("DateOfSSLKeyAPICalled", DateUtil.getDateFromLong(System.currentTimeMillis(), "dd-MM-yyyy"));
             prefsEditor.commit();
         }
 
@@ -224,7 +226,7 @@ public class SplashActivity extends AppCompatActivity {
             public void onResponse(Call<VersionControlResponseModel> call, Response<VersionControlResponseModel> response) {
                 MessageLogger.PrintMsg("VersionApi Onsuccess");
                 if (response.isSuccessful() && response.body() != null) {
-                     versionAPIResponseModel = response.body();
+                    versionAPIResponseModel = response.body();
                     try {
                         SharedPreferences.Editor editor = getSharedPreferences("VersionControlFlags", MODE_PRIVATE).edit();
                         editor.putInt("OTPEnabled", versionAPIResponseModel != null ? versionAPIResponseModel.getOTPEnabled() : 0);
@@ -262,51 +264,50 @@ public class SplashActivity extends AppCompatActivity {
 
         int APISide_App_Version = versionAPIResponseModel.getAPICurrentVerson() == 0 ? appLevelVersionCode : versionAPIResponseModel.getAPICurrentVerson();
 
-        if (appLevelVersionCode  < APISide_App_Version) {
+        if (appLevelVersionCode < APISide_App_Version) {
             final int finalAppLevelVersionCode = appLevelVersionCode;
             CustomUpdateDailog cudd = new CustomUpdateDailog(mActivity, new CustomUpdateDialogOkButtonOnClickedDelegate() {
-                    @Override
-                    public void onUpdateClicked() {
+                @Override
+                public void onUpdateClicked() {
 
-                        if (!InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
-                            if (cd.isConnectingToInternet()) {
-                                CallLogoutRequestApi();
-                                if (!appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
-                                    CallLogoutAPI(versionAPIResponseModel);
-                                }
-                            } else {
-                                Toast.makeText(mActivity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
-                                finishAffinity();
+                    if (!InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
+                        if (cd.isConnectingToInternet()) {
+                            CallLogoutRequestApi();
+                            if (!appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+                                CallLogoutAPI(versionAPIResponseModel);
                             }
                         } else {
-                             new LogUserActivityTagging(mActivity, LOGOUT);
-                    appPreferenceManager.clearAllPreferences();
-                            new DhbDao(mActivity).deleteTablesonLogout();
-                            //jai
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionAPIResponseModel.getAppUrl()));
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void onOkClicked() {
-                        if (finalAppLevelVersionCode < versionAPIResponseModel.getAPICurrentVerson()) {
-//                                System.exit(0);
+                            Toast.makeText(mActivity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
                             finishAffinity();
-                        } else {
-                            GoAhead();
                         }
+                    } else {
+                        new LogUserActivityTagging(mActivity, LOGOUT);
+                        appPreferenceManager.clearAllPreferences();
+                        new DhbDao(mActivity).deleteTablesonLogout();
+                        //jai
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionAPIResponseModel.getAppUrl()));
+                        startActivity(intent);
+                        finish();
                     }
-                });
+                }
+
+                @Override
+                public void onOkClicked() {
+                    if (finalAppLevelVersionCode < versionAPIResponseModel.getAPICurrentVerson()) {
+//                                System.exit(0);
+                        finishAffinity();
+                    } else {
+                        GoAhead();
+                    }
+                }
+            });
             cudd.setCancelable(false);
-            if (!mActivity.isFinishing()){
+            if (!mActivity.isFinishing()) {
                 cudd.show();
             }
 
 
-
-        }else{
+        } else {
             GoAhead();
         }
     }
@@ -318,21 +319,22 @@ public class SplashActivity extends AppCompatActivity {
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                    if (response.code() == 200) {
-                        new LogUserActivityTagging(mActivity, LOGOUT);
-                        appPreferenceManager.clearAllPreferences();
-                        new DhbDao(mActivity).deleteTablesonLogout();
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionAPIResponseModel.getAppUrl()));
-                        startActivity(intent);
+                if (response.code() == 200) {
+                    new LogUserActivityTagging(mActivity, LOGOUT);
+                    appPreferenceManager.clearAllPreferences();
+                    new DhbDao(mActivity).deleteTablesonLogout();
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionAPIResponseModel.getAppUrl()));
+                    startActivity(intent);
 
-                        finish();
-                    } else if (response.code() == 401) {
-                        CallLogOutFromDevice();
-                    } else {
-                        Toast.makeText(mActivity, "Failed to Logout", Toast.LENGTH_SHORT).show();
-                        finishAffinity();
-                    }
+                    finish();
+                } else if (response.code() == 401) {
+                    CallLogOutFromDevice();
+                } else {
+                    Toast.makeText(mActivity, "Failed to Logout", Toast.LENGTH_SHORT).show();
+                    finishAffinity();
+                }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 MessageLogger.LogDebug("Errror", t.getMessage());
@@ -355,7 +357,7 @@ public class SplashActivity extends AppCompatActivity {
 
             if (DeviceUtils.isMyServiceRunning(LocationUpdateService.class, mActivity)) {
             } else {
-                if (!DeviceUtils.isAppIsInBackground(mActivity)){
+                if (!DeviceUtils.isAppIsInBackground(mActivity)) {
                     startService(locationUpdateIntent);
                 }
             }
@@ -381,8 +383,8 @@ public class SplashActivity extends AppCompatActivity {
 
                         Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
-                        i.putExtra("isFromNotification",isFromNotification);
-                        i.putExtra("screenCategory",screenCategory);
+                        i.putExtra("isFromNotification", isFromNotification);
+                        i.putExtra("screenCategory", screenCategory);
                         startActivity(i);
                         finish();
                     } else {
@@ -410,7 +412,7 @@ public class SplashActivity extends AppCompatActivity {
                     NewBtechAvaliabilityResponseModel btechAvaliabilityResponseModel = response.body();
                     onBtechAvailabilityResponseReceived(btechAvaliabilityResponseModel);
                 } else {
-                    global.showCustomToast(mActivity,SomethingWentwrngMsg,Toast.LENGTH_LONG);
+                    global.showCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
 
@@ -424,7 +426,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void onBtechAvailabilityResponseReceived(NewBtechAvaliabilityResponseModel btechAvaliabilityResponseModel) {
 
-        if (btechAvaliabilityResponseModel != null && btechAvaliabilityResponseModel.getNumberOfDays() != null){
+        if (btechAvaliabilityResponseModel != null && btechAvaliabilityResponseModel.getNumberOfDays() != null) {
             appPreferenceManager.setNEWBTECHAVALIABILITYRESPONSEMODEL(btechAvaliabilityResponseModel);
 
             if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL() != null) {
@@ -435,32 +437,32 @@ public class SplashActivity extends AppCompatActivity {
                 } else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
 
                     Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                    i.putExtra("isFromNotification",isFromNotification);
-                    i.putExtra("screenCategory",screenCategory);
+                    i.putExtra("isFromNotification", isFromNotification);
+                    i.putExtra("screenCategory", screenCategory);
                     i.putExtra("LEAVEINTIMATION", "0");
                     startActivity(i);
-                } else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay1()==1){
+                } else if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay1() == 1) {
                     Logger.error("ONEEEE");
                     Intent mIntent = new Intent(mActivity, ScheduleYourDayActivity.class);
                     mIntent.putExtra("WHEREFROM", "0");
                     startActivity(mIntent);
 
-                } else if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay2()==1) {
+                } else if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay2() == 1) {
                     Logger.error("THREEE");
                     Intent mIntent = new Intent(mActivity, ScheduleYourDayActivity2.class);
                     mIntent.putExtra("WHEREFROM", "0");
                     startActivity(mIntent);
-                } else if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay3()==1){
+                } else if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay3() == 1) {
                     Logger.error("FOUR");
                     Intent mIntent = new Intent(mActivity, ScheduleYourDayActivity3.class);
                     mIntent.putExtra("WHEREFROM", "0");
                     startActivity(mIntent);
-                }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay4()==1){
+                } else if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay4() == 1) {
                     Logger.error("FOUR");
                     Intent mIntent = new Intent(mActivity, ScheduleYourDayActivity4.class);
                     mIntent.putExtra("WHEREFROM", "0");
                     startActivity(mIntent);
-                }else {
+                } else {
                     Logger.error("ZERRO");
                     Bundle bundle = new Bundle();
 
@@ -472,8 +474,8 @@ public class SplashActivity extends AppCompatActivity {
                     if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)) {
                         Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");
-                        i.putExtra("isFromNotification",isFromNotification);
-                        i.putExtra("screenCategory",screenCategory);
+                        i.putExtra("isFromNotification", isFromNotification);
+                        i.putExtra("screenCategory", screenCategory);
                         startActivity(i);
                         finish();
                     } else {
@@ -481,8 +483,8 @@ public class SplashActivity extends AppCompatActivity {
                             // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
                             Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                             i.putExtra("LEAVEINTIMATION", "0");
-                            i.putExtra("isFromNotification",isFromNotification);
-                            i.putExtra("screenCategory",screenCategory);
+                            i.putExtra("isFromNotification", isFromNotification);
+                            i.putExtra("screenCategory", screenCategory);
                             startActivity(i);
                             finish();
                         } else {
@@ -519,14 +521,14 @@ public class SplashActivity extends AppCompatActivity {
                         Call_TspScreen();
                     }
                 } else {
-                    global.showCustomToast(mActivity,SomethingWentwrngMsg,Toast.LENGTH_LONG);
+                    global.showCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<TSPNBT_AvilModel>> call, Throwable t) {
                 MessageLogger.LogDebug("Errror", t.getMessage());
-                global.showCustomToast(mActivity,SomethingWentwrngMsg,Toast.LENGTH_LONG);
+                global.showCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
 
@@ -581,13 +583,14 @@ public class SplashActivity extends AppCompatActivity {
             new LogUserActivityTagging(mActivity, LOGOUT);
             PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
             Call<CommonResponseModel> commonResponeModelCall = postAPIInterface.CallLogoutAPI(model);
-            global.showProgressDialog(mActivity, "Please wait..",false);
+            global.showProgressDialog(mActivity, "Please wait..", false);
             commonResponeModelCall.enqueue(new Callback<CommonResponseModel>() {
                 @Override
                 public void onResponse(Call<CommonResponseModel> call, Response<CommonResponseModel> response) {
                     global.hideProgressDialog(mActivity);
                     CommonResponseModel commonResponseModel = response.body();
                 }
+
                 @Override
                 public void onFailure(Call<CommonResponseModel> call, Throwable t) {
                     global.hideProgressDialog(mActivity);
@@ -611,7 +614,7 @@ public class SplashActivity extends AppCompatActivity {
                     }
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
-        if (!mActivity.isFinishing()){
+        if (!mActivity.isFinishing()) {
             alertDialog.show();
         }
     }
@@ -620,8 +623,8 @@ public class SplashActivity extends AppCompatActivity {
     public void CallLogOutFromDevice() {
         try {
             global.showCustomToast(mActivity, "Authorization failed, need to Login again...", Toast.LENGTH_SHORT);
-             new LogUserActivityTagging(mActivity, LOGOUT);
-                    appPreferenceManager.clearAllPreferences();
+            new LogUserActivityTagging(mActivity, LOGOUT);
+            appPreferenceManager.clearAllPreferences();
             try {
                 new DhbDao(mActivity).deleteTablesonLogout();
             } catch (Exception e) {

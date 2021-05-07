@@ -30,7 +30,7 @@
                     android:maxLines="1"
                     android:padding="@dimen/_5sdp"
                     android:singleLine="true"
-                    android:text="Tejas Vilas Telawane"
+                    android:text="Tejas VilLa Telawane"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp" />
 

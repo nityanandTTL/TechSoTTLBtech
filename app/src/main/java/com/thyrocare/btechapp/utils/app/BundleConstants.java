@@ -96,9 +96,9 @@ public class BundleConstants {
     public static int Flag_facedetection = 0;
     public static boolean b_facedetection = true;
     public static SampleDropDetailsbyTSPLMEDetailsModel setsampleDropDetailsModel;
-    public static String locationText="Select Location";
-    public static ArrayList <Venupunture_Temporary_ImageModel> TempVenuImageArylist = new ArrayList<>();
-    public static  boolean isBarcodeConfirmPopupShown = false;
+    public static String locationText = "Select Location";
+    public static ArrayList<Venupunture_Temporary_ImageModel> TempVenuImageArylist = new ArrayList<>();
+    public static boolean isBarcodeConfirmPopupShown = false;
 
     public static final int HARDCOPY_CHARGES = 75;
 
@@ -108,4 +108,7 @@ public class BundleConstants {
 
     public static final String API_FOR_OTP = "sNhdlQjqvoD7zCbzf56sxppBJX3MmdWSAomi@RBhXRrVcGyko7hIzQ==";
     public static final String Apikey_WOE = "68rbZ40eNeRephUzIDTos9SsQIm4mHlT3lCNnqI)Ivk=";
+    public static int addPaymentFlag = 0;
+    public static int setRefreshStartArriveActivity = 0;
+    public static int setStechDialogFlag=0;
 }

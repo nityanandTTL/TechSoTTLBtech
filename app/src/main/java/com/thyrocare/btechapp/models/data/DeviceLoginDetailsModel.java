@@ -10,11 +10,15 @@ import android.os.Parcelable;
 
 public class DeviceLoginDetailsModel implements Parcelable {
     private String DeviceId;
+    private String Url;
     private int UserId;
+    private int IsStech;
 
     protected DeviceLoginDetailsModel(Parcel in) {
         DeviceId = in.readString();
+        Url = in.readString();
         UserId = in.readInt();
+        IsStech = in.readInt();
     }
 
     public static final Creator<DeviceLoginDetailsModel> CREATOR = new Creator<DeviceLoginDetailsModel>() {
@@ -28,6 +32,22 @@ public class DeviceLoginDetailsModel implements Parcelable {
             return new DeviceLoginDetailsModel[size];
         }
     };
+
+    public String getUrl() {
+        return Url;
+    }
+
+    public void setUrl(String url) {
+        Url = url;
+    }
+
+    public int getIsStech() {
+        return IsStech;
+    }
+
+    public void setIsStech(int isStech) {
+        IsStech = isStech;
+    }
 
     public String getDeviceId() {
         return DeviceId;
@@ -54,5 +74,7 @@ public class DeviceLoginDetailsModel implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(DeviceId);
         dest.writeInt(UserId);
+        dest.writeInt(IsStech);
+        dest.writeString(Url);
     }
 }

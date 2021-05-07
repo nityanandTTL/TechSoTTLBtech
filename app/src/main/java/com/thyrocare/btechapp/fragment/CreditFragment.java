@@ -10,10 +10,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
+
 import android.text.Html;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -76,7 +78,7 @@ public class CreditFragment extends Fragment {
     ArrayList<String> bankName = new ArrayList<>();
     private Button btn_submit;
     private EditText edt_branch_name;
-    private TextView edt_instrument, tv_no_file_chosen, tv_choose_file,tv_branch_name, tv_select_instrument;
+    private TextView edt_instrument, tv_no_file_chosen, tv_choose_file, tv_branch_name, tv_select_instrument;
     private EditText edt_re_enter_cheque_number, edt_deposit, edt_tsp, edt_transaction_number, edt_re_enter_transcation_number, edt_cheque_number, edt_amount, edt_re_enter_amount, edt_remark;
     private int mYear, mMonth, mDay;
     private int PICK_IMAGE_REQUEST = 1;
@@ -89,7 +91,7 @@ public class CreditFragment extends Fragment {
     private ArrayList<BankMasterResponseModel> selectedBankArr;
     private String picturePath;
     private TextView tv_file_selected;
-    private TextInputLayout tv_date_of_deposit,tv_transaction_number ,re_renter_transcation_number,tv_cheque_no,tv_re_enter_cheque_no,tv_enter_amount,tv_re_enter_amount,tv_re_enter_remark;
+    private TextInputLayout tv_date_of_deposit, tv_transaction_number, re_renter_transcation_number, tv_cheque_no, tv_re_enter_cheque_no, tv_enter_amount, tv_re_enter_amount, tv_re_enter_remark;
     private Global globalclass;
 
     public CreditFragment() {
@@ -196,7 +198,6 @@ public class CreditFragment extends Fragment {
             Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
     private void setListeners() {
@@ -400,6 +401,11 @@ public class CreditFragment extends Fragment {
             // edt_amount.setError("Enter Amount Number");
             edt_amount.requestFocus();
             return false;
+        } else if (edt_amount.getText().toString().startsWith("0")) {
+            TastyToast.makeText(activity, "Amount cannot start with zero", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+            // edt_amount.setError("Enter Amount Number");
+            edt_amount.requestFocus();
+            return false;
         } else if (InputUtils.isNull(edt_re_enter_amount.getText().toString())) {
             TastyToast.makeText(activity, "Re-Enter Amount", TastyToast.LENGTH_LONG, TastyToast.WARNING);
             // edt_re_enter_amount.setError("Re-Enter Amount");
@@ -429,12 +435,12 @@ public class CreditFragment extends Fragment {
     }
 
     private void setMandetory(TextView mandetory) {
-        String text = mandetory.getText().toString() +  " <font color=#cc0029>*</font>" ;
+        String text = mandetory.getText().toString() + " <font color=#cc0029>*</font>";
         mandetory.setText(Html.fromHtml(text));
     }
 
     private void setMandetory(TextInputLayout mandetory) {
-        String text =mandetory.getHint().toString() + " <font color=#cc0029>*</font>" ;
+        String text = mandetory.getHint().toString() + " <font color=#cc0029>*</font>";
         mandetory.setHint(Html.fromHtml(text));
     }
 
@@ -465,7 +471,7 @@ public class CreditFragment extends Fragment {
                 long lengthbmp = imageInByte.length;
                 Logger.error("lengthbmp: " + lengthbmp);
                 if (lengthbmp >= 2000000) {
-              /*  bm = getResizedBitmap(bm, 500);*/
+                    /*  bm = getResizedBitmap(bm, 500);*/
                     AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
 
                     alertDialog.setMessage("Image size should be less than 2 MB");
@@ -529,9 +535,9 @@ public class CreditFragment extends Fragment {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<PaymentModeMasterResponseModel>> responseCall = apiInterface.CallGetPaymentModeMasterApi();
         globalclass.showProgressDialog(activity, "Fetching products. Please wait..");
-        responseCall.enqueue(new Callback< ArrayList<PaymentModeMasterResponseModel>>() {
+        responseCall.enqueue(new Callback<ArrayList<PaymentModeMasterResponseModel>>() {
             @Override
-            public void onResponse(Call< ArrayList<PaymentModeMasterResponseModel>> call, retrofit2.Response< ArrayList<PaymentModeMasterResponseModel>> response) {
+            public void onResponse(Call<ArrayList<PaymentModeMasterResponseModel>> call, retrofit2.Response<ArrayList<PaymentModeMasterResponseModel>> response) {
                 globalclass.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     slotsArr = response.body();
@@ -557,7 +563,7 @@ public class CreditFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call< ArrayList<PaymentModeMasterResponseModel>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<PaymentModeMasterResponseModel>> call, Throwable t) {
                 globalclass.hideProgressDialog(activity);
                 callBankmaster();
                 globalclass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
@@ -571,9 +577,9 @@ public class CreditFragment extends Fragment {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<BankMasterResponseModel>> responseCall = apiInterface.CallGetBankMasterApi(appPreferenceManager.getLoginResponseModel().getUserID());
         globalclass.showProgressDialog(activity, "Fetching products. Please wait..");
-        responseCall.enqueue(new Callback< ArrayList<BankMasterResponseModel>>() {
+        responseCall.enqueue(new Callback<ArrayList<BankMasterResponseModel>>() {
             @Override
-            public void onResponse(Call< ArrayList<BankMasterResponseModel>> call, retrofit2.Response< ArrayList<BankMasterResponseModel>> response) {
+            public void onResponse(Call<ArrayList<BankMasterResponseModel>> call, retrofit2.Response<ArrayList<BankMasterResponseModel>> response) {
                 globalclass.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     bankArr = response.body();
@@ -591,14 +597,14 @@ public class CreditFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call< ArrayList<BankMasterResponseModel>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<BankMasterResponseModel>> call, Throwable t) {
                 globalclass.hideProgressDialog(activity);
                 globalclass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
     }
 
-    public void CallCashDepositEntryAPI(CashDepositEntryRequestModel cashDepositEntryRequestModel){
+    public void CallCashDepositEntryAPI(CashDepositEntryRequestModel cashDepositEntryRequestModel) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallCashDepositEntryAPI(cashDepositEntryRequestModel);
         globalclass.showProgressDialog(activity, PLEASE_WAIT);
@@ -607,17 +613,18 @@ public class CreditFragment extends Fragment {
             public void onResponse(Call<String> call, retrofit2.Response<String> res) {
                 globalclass.hideProgressDialog(activity);
                 if (res.isSuccessful() && res.body() != null) {
-                    TastyToast.makeText(activity, "SUCCESS" , TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                    TastyToast.makeText(activity, "SUCCESS", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     activity.toolbarHome.setVisibility(View.VISIBLE);
                     activity.pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
-                }else{
-                    Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalclass.hideProgressDialog(activity);
-                Toast.makeText(activity,SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
+                Toast.makeText(activity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
             }
         });
     }

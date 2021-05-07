@@ -328,7 +328,7 @@
                     android:gravity="center"
                     android:minEms="5"
                     android:padding="@dimen/dp_5"
-                    android:text="Choose File"
+                    android:text="Choose File*"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
 
