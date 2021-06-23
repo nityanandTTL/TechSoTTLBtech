@@ -53,7 +53,7 @@ public class BundleConstants {
     public static final String PAYMENTS_AMOUNT = "paymentsAmount";
     public static final String PAYMENTS_SOURCE_CODE = "paymentsSourceCode";
     public static final String PAYMENT_STATUS = "PaymentStatus";
-
+    public static final String PAYMENTS_OPTION_FLAG = "paymentsOptionFlag";
     public static final String PAYMENTS_BILLING_NAME = "paymentsBillingStatus";
     public static final String PAYMENTS_BILLING_ADDRESS = "paymentsBillingAddress";
     public static final String PAYMENTS_BILLING_PIN = "paymentsBillingPin";
@@ -110,5 +110,6 @@ public class BundleConstants {
     public static final String Apikey_WOE = "68rbZ40eNeRephUzIDTos9SsQIm4mHlT3lCNnqI)Ivk=";
     public static int addPaymentFlag = 0;
     public static int setRefreshStartArriveActivity = 0;
-    public static int setStechDialogFlag=0;
+    public static int setStechDialogFlag = 0;
+    public static boolean isKIOSKOrder = false;
 }

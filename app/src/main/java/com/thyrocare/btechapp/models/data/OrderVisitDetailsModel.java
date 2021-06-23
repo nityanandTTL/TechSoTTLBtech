@@ -24,6 +24,7 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
     private String AppointmentDate;
     private String BtechName;
 
+
     public OrderVisitDetailsModel() {
         super();
     }
@@ -38,6 +39,7 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
         EstIncome = in.readFloat();
         AppointmentDate = in.readString();
         BtechName = in.readString();
+
     }
 
     public static final Creator<OrderVisitDetailsModel> CREATOR = new Creator<OrderVisitDetailsModel>() {
@@ -51,6 +53,8 @@ public class OrderVisitDetailsModel extends BaseModel implements Parcelable {
             return new OrderVisitDetailsModel[size];
         }
     };
+
+
 
     public String getBtechName() {
         return BtechName;

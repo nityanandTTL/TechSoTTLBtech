@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.ServedOrderResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.utils.app.Global;
@@ -65,6 +66,18 @@ public class ServedOrdersListAdapter extends RecyclerView.Adapter<ServedOrdersLi
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+
+        if(ServedOrderArylist.get(position).getLocation()!= null){
+            if(ServedOrderArylist.get(position).getLocation().equalsIgnoreCase(ConstantsMessages.RPL)){
+                holder.tv_Name.setTextColor(mActivity.getResources().getColor(R.color.blue_shade));
+            }else if(ServedOrderArylist.get(position).getLocation().equalsIgnoreCase(ConstantsMessages.CPL)){
+                holder.tv_Name.setTextColor(mActivity.getResources().getColor(R.color.highlight_color));
+            }else if(ServedOrderArylist.get(position).getLocation().equalsIgnoreCase(ConstantsMessages.ZPL)){
+                holder.tv_Name.setTextColor(mActivity.getResources().getColor(R.color.quantum_yellow800));
+            }
+        }else{
+            holder.tv_Name.setTextColor(mActivity.getResources().getColor(R.color.black));
+        }
 
         holder.tv_Name.setText(ServedOrderArylist.get(position).getOrderBy());
         holder.tv_OrderID.setText(ServedOrderArylist.get(position).getOrderNo());
@@ -123,8 +136,6 @@ public class ServedOrdersListAdapter extends RecyclerView.Adapter<ServedOrdersLi
 
             }
         });
-
-
     }
 
     @Override
@@ -140,6 +151,5 @@ public class ServedOrdersListAdapter extends RecyclerView.Adapter<ServedOrdersLi
 
         void onCallbuttonClicked(String mobilenumber);
         void onReceiptDownloadClicked(String Orderno);
-
     }
 }

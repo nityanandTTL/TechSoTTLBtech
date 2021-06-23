@@ -153,31 +153,32 @@ public class QrCodeWoeFragment extends Fragment {
 
     private void initView(View v) {
 
-        cdView_ScanQRCode = (CardView) v.findViewById(R.id.cdView_ScanQRCode);
-        cdView_Form = (CardView) v.findViewById(R.id.cdView_Form);
-        cdView_UploadImageAndBarcode = (CardView) v.findViewById(R.id.cdView_UploadImageAndBarcode);
+        try {
 
-        rel_buttons = (RelativeLayout) v.findViewById(R.id.rel_buttons);
-
-        edt_Product = (EditText) v.findViewById(R.id.edt_Product);
-        edt_Name = (EditText) v.findViewById(R.id.edt_Name);
-        rb_male = (RadioButton) v.findViewById(R.id.rb_male);
-        rb_female = (RadioButton) v.findViewById(R.id.rb_female);
-        rb_group = (RadioGroup) v.findViewById(R.id.rb_group);
-        edt_Age = (EditText) v.findViewById(R.id.edt_Age);
-        edt_mobileNumber = (EditText) v.findViewById(R.id.edt_mobileNumber);
-        edt_EmailId = (EditText) v.findViewById(R.id.edt_EmailId);
-        edt_Address = (EditText) v.findViewById(R.id.edt_Address);
-        edt_Pincode = (EditText) v.findViewById(R.id.edt_Pincode);
-
-        recyle_barcode = (RecyclerView) v.findViewById(R.id.recyle_barcode);
-        img_uploadBenVail = (ImageView) v.findViewById(R.id.img_uploadBenVail);
-        imgDelete = (ImageView) v.findViewById(R.id.imgDelete);
-        txt_captureBenBarcodePic = (TextView) v.findViewById(R.id.txt_captureBenBarcodePic);
-
-
-        btn_Edit = (Button) v.findViewById(R.id.btn_Edit);
-        btn_Finish = (Button) v.findViewById(R.id.btn_Finish);
+            cdView_ScanQRCode = (CardView) v.findViewById(R.id.cdView_ScanQRCode);
+            cdView_Form = (CardView) v.findViewById(R.id.cdView_Form);
+            cdView_UploadImageAndBarcode = (CardView) v.findViewById(R.id.cdView_UploadImageAndBarcode);
+            rel_buttons = (RelativeLayout) v.findViewById(R.id.rel_buttons);
+            edt_Product = (EditText) v.findViewById(R.id.edt_Product);
+            edt_Name = (EditText) v.findViewById(R.id.edt_Name);
+            rb_male = (RadioButton) v.findViewById(R.id.rb_male);
+            rb_female = (RadioButton) v.findViewById(R.id.rb_female);
+            rb_group = (RadioGroup) v.findViewById(R.id.rb_group);
+            edt_Age = (EditText) v.findViewById(R.id.edt_Age);
+            edt_mobileNumber = (EditText) v.findViewById(R.id.edt_mobileNumber);
+            edt_EmailId = (EditText) v.findViewById(R.id.edt_EmailId);
+            edt_Address = (EditText) v.findViewById(R.id.edt_Address);
+            edt_Pincode = (EditText) v.findViewById(R.id.edt_Pincode);
+            recyle_barcode = (RecyclerView) v.findViewById(R.id.recyle_barcode);
+            img_uploadBenVail = (ImageView) v.findViewById(R.id.img_uploadBenVail);
+            imgDelete = (ImageView) v.findViewById(R.id.imgDelete);
+            txt_captureBenBarcodePic = (TextView) v.findViewById(R.id.txt_captureBenBarcodePic);
+            btn_Edit = (Button) v.findViewById(R.id.btn_Edit);
+            btn_Finish = (Button) v.findViewById(R.id.btn_Finish);
+            getActivity().setTitle("Camp QRCode WOE");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

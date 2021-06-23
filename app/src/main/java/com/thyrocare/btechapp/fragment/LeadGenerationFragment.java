@@ -296,7 +296,6 @@ public class LeadGenerationFragment extends Fragment {
                                 } else {
                                     CallPurposeBasedLeadGenerationAPI(name, mobile, email, address, pincode, remarks, strSelectedPurpose);
                                 }
-
                             } else {
                                 globalClass.showCustomToast(mActivity, ConstantsMessages.CheckInternetConnectionMsg);
                             }
@@ -701,6 +700,23 @@ public class LeadGenerationFragment extends Fragment {
         if (edt_mobile.getText().toString().length() < 10) {
             globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.str_should_be_ten_digits));
             edt_mobile.requestFocus();
+            return false;
+        }
+
+        if (InputUtils.isNull(edt_pincode.getText().toString())) {
+            globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.str_valid_pincode));
+            edt_pincode.requestFocus();
+            return false;
+        }
+        if (edt_pincode.getText().toString().startsWith("0")) {
+            edt_pincode.setError("Cannot start with 0");
+            edt_pincode.requestFocus();
+            return false;
+        }
+
+        if (edt_pincode.getText().toString().startsWith("9")) {
+            edt_pincode.setError("Cannot start with 9");
+            edt_pincode.requestFocus();
             return false;
         }
 

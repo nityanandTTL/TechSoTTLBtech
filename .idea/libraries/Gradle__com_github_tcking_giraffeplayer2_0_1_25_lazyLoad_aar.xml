@@ -15,6 +15,9 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fa43dd47af034dd0de052f79a8008795/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fa43dd47af034dd0de052f79a8008795/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fa43dd47af034dd0de052f79a8008795/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d8b0fb90b0a9e964b09c1231a65cb759/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d8b0fb90b0a9e964b09c1231a65cb759/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d8b0fb90b0a9e964b09c1231a65cb759/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.tcking/giraffeplayer2/0.1.25-lazyLoad/846a914e43fff3387acb53be1285043aeeca33bc/giraffeplayer2-0.1.25-lazyLoad-javadoc.jar!/" />

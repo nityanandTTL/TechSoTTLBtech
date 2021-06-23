@@ -345,7 +345,7 @@
                 <LinearLayout
                     android:id="@+id/ll_camp_icon"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="121dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:orientation="vertical"
@@ -373,7 +373,7 @@
                             android:gravity="center"
                             android:textColor="@android:color/white"
                             android:textSize="10sp"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
                         <!-- <TextView
                              android:layout_marginStart="@dimen/dp_5"
                              android:layout_marginBottom="@dimen/dp_5"
@@ -393,7 +393,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Camp"
+                        android:text="@string/kioskscanner"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>

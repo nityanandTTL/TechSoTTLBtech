@@ -252,12 +252,20 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
                 }
 
                 @Override
-                public void onBarcodeDelete(String barcode, int BenPosition) {
+                public void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition) {
                     if (onClickListeners != null) {
-                        onClickListeners.onBarcodeDelete(barcode, BenPosition);
+                        onClickListeners.onBarcodeScanClickedConfirm(SampleType, BenID, barcodePosition, BenPosition);
+                    }
+                }
+
+                @Override
+                public void onBarcodeDelete(String barcode, int BenPosition, String flag) {
+                    if (onClickListeners != null) {
+                        onClickListeners.onBarcodeDelete(barcode, BenPosition, flag);
                     }
                 }
             });
+
             recyle_barcode.setAdapter(barcodeinitAdapter);
         }
     }
@@ -269,12 +277,13 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
     public interface OnClickListeners {
         void onBarcodeScanClicked(String SampleType, int BenID, int barcodePosition, int BenPosition);
+        void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition);
 
         void onVenupunturePhotoClicked(int BenID, int position);
 
         void onRefresh();
 
-        void onBarcodeDelete(String barcode, int BenPosition);
+        void onBarcodeDelete(String barcode, int BenPosition, String flag);
 
         void onVialImageDelete(int BenID, int position);
 

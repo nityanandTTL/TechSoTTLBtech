@@ -149,7 +149,7 @@
                                 android:layout_weight="4"
                                 android:gravity="center"
                                 android:textColor="@color/black"
-                                android:text="VIAL IMAGE"
+                                android:text="VIAL IMAGE*"
                                 android:textSize="@dimen/_14sdp"
                                 android:textStyle="bold"
                                 android:padding="@dimen/_5sdp"

@@ -294,7 +294,7 @@
     <string name="EmailId">Email</string>
     <string name="strcity">City</string>
     <string name="strAddress">Address</string>
-    <string name="strPincode">Pincode</string>
+    <string name="strPincode">Pincode*</string>
 
     <string name="space_val_remarks">Remarks should not start with space</string>
     <string name="remarks_val">Remarks should not start with special characters</string>
@@ -332,5 +332,13 @@
     <string name="strAddres">Address *</string>
     <string name="Pincode">Pincode *</string>
     <string name="strAge">Age *</string>
+    <string name="kioskscanner">GQC WOE</string>
+    <string name="ViewImage"><u>ViewImage</u></string>
+
+
+
+    <string name="PaymentGateway"><b><u>PAYMENT GATEWAYS</u></b></string>
+    <string name="PayWithCash"><b><u>PAY WITH CASH</u></b></string>
+
 
 </resources>

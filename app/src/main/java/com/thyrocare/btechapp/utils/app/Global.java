@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -79,6 +80,47 @@ public class Global {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }
     }
+
+    public static boolean getDays(Activity activity) {
+        SharedPreferences preferences = null;
+        preferences = activity.getSharedPreferences(AppConstants.RateCalDate, 0);
+        if (InputUtils.isNull(preferences.getString("date", ""))) {
+            return true;
+        }
+        Date storedDate = returnDate(preferences.getString("date", ""));
+        Date currentDate = returnDate(getCurrentDate());
+        return storedDate != null && storedDate.before(currentDate);
+    }
+
+    public static Date returnDate(String putDate) {
+        Date date = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+            date = sdf.parse(putDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    public static String getCurrentDate() {
+        return new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+    }
+
+
+    public static void Storecurrenttime(Activity activity) {
+        try {
+            SharedPreferences.Editor editor = null;
+            editor = activity.getSharedPreferences(AppConstants.RateCalDate, 0).edit();
+            editor.putString("date", getCurrentDate());
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     public String convertNumberToPrice(String s) {
         Double price = Double.parseDouble(s);

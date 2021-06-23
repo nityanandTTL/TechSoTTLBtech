@@ -30,8 +30,9 @@
                     android:maxLines="1"
                     android:padding="@dimen/_5sdp"
                     android:singleLine="true"
-                    android:text="Tejas VilLa Telawane"
+                    android:text=""
                     android:textColor="@color/black"
+                    android:textStyle="bold"
                     android:textSize="@dimen/_12sdp" />
 
                 <Button

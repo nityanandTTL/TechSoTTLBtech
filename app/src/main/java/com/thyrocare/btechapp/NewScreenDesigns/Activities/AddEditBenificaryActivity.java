@@ -93,7 +93,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
     private boolean FlagADDEditBen = true;
     LinearLayout ll_amt;
-    TextView txtAmountPayable, btnclose, txtTestsList,txt_header_title,txtActPrice,txtHardCopyCharge;
+    TextView txtAmountPayable, btnclose, txtTestsList, txt_header_title, txtActPrice, txtHardCopyCharge;
     Button btnOrderSubmit;
     private EditText edtBenAge, edtBenName;
     private ImageView imgBenGenderF, imgBenGenderM, imgReportHC, imgBenAddTests;
@@ -137,14 +137,14 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         appPreferenceManager = new AppPreferenceManager(mActivity);
         orderVisitDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
         selectedbeneficiaryDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
-        FlagADDEditBen = getIntent().getBooleanExtra("IsAddBen",true);
-        PSelected_position = getIntent().getIntExtra("SelectedBenPosition",0);
-        if (!FlagADDEditBen){
-            if (orderVisitDetailsModel == null || selectedbeneficiaryDetailsModel == null ){
+        FlagADDEditBen = getIntent().getBooleanExtra("IsAddBen", true);
+        PSelected_position = getIntent().getIntExtra("SelectedBenPosition", 0);
+        if (!FlagADDEditBen) {
+            if (orderVisitDetailsModel == null || selectedbeneficiaryDetailsModel == null) {
                 finish();
             }
-        }else{
-            if (orderVisitDetailsModel == null ){
+        } else {
+            if (orderVisitDetailsModel == null) {
                 finish();
             }
         }
@@ -202,12 +202,12 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 relHardCopyCharge.setVisibility(View.GONE);
                 isRHC = false;
                 imgReportHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
-                txtActPrice.setText("Rs. " + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() +"/-");
+                txtActPrice.setText("Rs. " + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
             } else {
                 relHardCopyCharge.setVisibility(View.VISIBLE);
-                int PriceWithoutHardCopy  = orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() - HARDCOPY_CHARGES;
-                txtHardCopyCharge.setText("Rs. " + HARDCOPY_CHARGES  +"/-");
-                txtActPrice.setText("Rs. " + PriceWithoutHardCopy  +"/-");
+                int PriceWithoutHardCopy = orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() - HARDCOPY_CHARGES;
+                txtHardCopyCharge.setText("Rs. " + HARDCOPY_CHARGES + "/-");
+                txtActPrice.setText("Rs. " + PriceWithoutHardCopy + "/-");
                 isRHC = true;
                 imgReportHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
             }
@@ -215,7 +215,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
             ll_amt.setVisibility(View.VISIBLE);
             txtAmountPayable.setVisibility(View.VISIBLE);
-            txtAmountPayable.setText("Rs. " + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() +"/-");
+            txtAmountPayable.setText("Rs. " + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
 
 
             SelectedTestCode = selectedbeneficiaryDetailsModel.getTestsCode();
@@ -247,7 +247,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         btnclose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               finish();
+                finish();
             }
         });
 
@@ -317,7 +317,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
                     CallCartAPIFlag = 1;
 
-                    CallSubmitAPIforEditBen(  orderNo);
+                    CallSubmitAPIforEditBen(orderNo);
 
                 }
             }
@@ -332,10 +332,10 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 if (FlagADDEditBen) {
                     if (Bencount < 10) {
                         if (validateforAddben()) {
-                            if (cd.isConnectingToInternet()){
-                                CallsendOTPAPIforOrderEdit("Add",orderVisitDetailsModel, orderNo ,finalBenId);
-                            }else{
-                                globalclass.showCustomToast(mActivity,CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
+                            if (cd.isConnectingToInternet()) {
+                                CallsendOTPAPIforOrderEdit("Add", orderVisitDetailsModel, orderNo, finalBenId);
+                            } else {
+                                globalclass.showCustomToast(mActivity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
                             }
                         }
                     } else {
@@ -345,13 +345,13 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
                     if (validateforEditben()) {
 
-                        if (CallCartAPIFlag == 1){
+                        if (CallCartAPIFlag == 1) {
                             CallSubmitAPIforEditBen(orderNo);
-                        }else{
-                            if (cd.isConnectingToInternet()){
-                                CallsendOTPAPIforOrderEdit("Edit",  orderVisitDetailsModel, orderNo, finalBenId);
-                            }else{
-                                globalclass.showCustomToast(mActivity,CHECK_INTERNET_CONN,Toast.LENGTH_LONG);
+                        } else {
+                            if (cd.isConnectingToInternet()) {
+                                CallsendOTPAPIforOrderEdit("Edit", orderVisitDetailsModel, orderNo, finalBenId);
+                            } else {
+                                globalclass.showCustomToast(mActivity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
                             }
                         }
 
@@ -361,7 +361,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         });
     }
 
-    private void CallsendOTPAPIforOrderEdit(final String Action,  final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
+    private void CallsendOTPAPIforOrderEdit(final String Action, final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
 
         SendOTPRequestModel model = new SendOTPRequestModel();
         model.setMobile(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
@@ -377,7 +377,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                     CommonResponseModel2 responseModel = response.body();
                     if (!TextUtils.isEmpty(responseModel.getRES_ID()) && responseModel.getRES_ID().equalsIgnoreCase("RES0000")) {
                         globalclass.showCustomToast(mActivity, "OTP send successfully to mobile number mapped to this order.");
-                        ShowDialogToVerifyOTP(Action,orderVisitDetailsModel, orderNo ,finalBenId);
+                        ShowDialogToVerifyOTP(Action, orderVisitDetailsModel, orderNo, finalBenId);
                     } else {
                         globalclass.showCustomToast(mActivity, "OTP Generation Failed.");
                     }
@@ -410,7 +410,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-        int height = 0,width = 0;
+        int height = 0, width = 0;
         if (displayMetrics != null) {
             try {
                 height = displayMetrics.heightPixels;
@@ -423,7 +423,10 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width - 150, FrameLayout.LayoutParams.WRAP_CONTENT);
         rel_main.setLayoutParams(lp);
 
-        CustomDialogforOTPValidation.show();
+        if (!mActivity.isFinishing()) {
+            CustomDialogforOTPValidation.show();
+        }
+
 
         img_close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -439,7 +442,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
                 String strOTP = edt_OTP.getText().toString().trim();
                 if (!InputUtils.isNull(strOTP) && strOTP.length() != 4) {
-                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4",mActivity);
+                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4", mActivity);
                     edt_OTP.requestFocus();
                 } else {
                     OrderPassRequestModel model = new OrderPassRequestModel();
@@ -448,7 +451,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                     model.setOTP(strOTP);
                     model.setVisitId(orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
                     if (cd.isConnectingToInternet()) {
-                        CallValidateOTPAPI(model,Action, orderNo ,finalBenId);
+                        CallValidateOTPAPI(model, Action, orderNo, finalBenId);
                     } else {
                         globalclass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.plz_chk_internet));
                     }
@@ -472,13 +475,13 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                     String strresponse = response.body();
                     if (!TextUtils.isEmpty(strresponse) && strresponse.toUpperCase().contains("SUCCESS")) {
                         globalclass.showCustomToast(mActivity, "OTP Validated Successfully.");
-                        if (!mActivity.isFinishing() && CustomDialogforOTPValidation != null && CustomDialogforOTPValidation.isShowing()){
+                        if (!mActivity.isFinishing() && CustomDialogforOTPValidation != null && CustomDialogforOTPValidation.isShowing()) {
                             CustomDialogforOTPValidation.dismiss();
                         }
-                        if (Action.equalsIgnoreCase("Add")){
-                            CallSubmitAPIforAddBen( orderNo, finalBenId);
-                        }else if(Action.equalsIgnoreCase("Edit")) {
-                            CallSubmitAPIforEditBen(  orderNo);
+                        if (Action.equalsIgnoreCase("Add")) {
+                            CallSubmitAPIforAddBen(orderNo, finalBenId);
+                        } else if (Action.equalsIgnoreCase("Edit")) {
+                            CallSubmitAPIforEditBen(orderNo);
                         }
                     } else {
                         globalclass.showCustomToast(mActivity, "Invalid OTP.");
@@ -707,7 +710,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         } else if (StringUtils.isNull(edtBenName.getText().toString().trim())) {
             edtBenName.setError("Name is Required");
             return false;
-        }else if (!StringUtils.isNull(edtBenName.getText().toString().trim()) && edtBenName.getText().toString().trim().length() < 2) {
+        } else if (!StringUtils.isNull(edtBenName.getText().toString().trim()) && edtBenName.getText().toString().trim().length() < 2) {
             edtBenName.setError("Name should have minimum 2 characters");
             return false;
         } else if (StringUtils.isNull(txtTestsList.getText().toString().trim())) {
@@ -737,10 +740,10 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         if (StringUtils.isNull(edtBenName.getText().toString().trim())) {
             edtBenName.setError("Name is Required");
             return false;
-        }else if (!StringUtils.isNull(edtBenName.getText().toString().trim()) && edtBenName.getText().toString().trim().length() < 2) {
+        } else if (!StringUtils.isNull(edtBenName.getText().toString().trim()) && edtBenName.getText().toString().trim().length() < 2) {
             edtBenName.setError("Name should have minimum 2 characters");
             return false;
-        }else if (StringUtils.isNull(edtBenAge.getText().toString().trim())) {
+        } else if (StringUtils.isNull(edtBenAge.getText().toString().trim())) {
             edtBenAge.setError("Age is Required");
             return false;
         } else if (Integer.parseInt(edtBenAge.getText().toString().trim()) < 1 || Integer.parseInt(edtBenAge.getText().toString().trim()) > 120) {
@@ -1521,7 +1524,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     private void CallTechsoCartAPI(CartAPIRequestModel cartAPIRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<CartAPIResponseModel> responseCall = apiInterface.CallTechsoCartAPI("Bearer "+ appPreferenceManager.getLoginResponseModel().getAccess_token(), cartAPIRequestModel);
+        Call<CartAPIResponseModel> responseCall = apiInterface.CallTechsoCartAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(), cartAPIRequestModel);
         globalclass.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<CartAPIResponseModel>() {
             @Override
@@ -1580,15 +1583,15 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             }
             ll_amt.setVisibility(View.VISIBLE);
             txtAmountPayable.setVisibility(View.VISIBLE);
-            txtAmountPayable.setText("Rs. " + orderAmountDue  +"/-");
-            if (cartAPIResponseModel.getOrders() != null && cartAPIResponseModel.getOrders().size() > 0 && cartAPIResponseModel.getOrders().get(0).isHC()){
+            txtAmountPayable.setText("Rs. " + orderAmountDue + "/-");
+            if (cartAPIResponseModel.getOrders() != null && cartAPIResponseModel.getOrders().size() > 0 && cartAPIResponseModel.getOrders().get(0).isHC()) {
                 relHardCopyCharge.setVisibility(View.VISIBLE);
-                int PriceWithoutHardCopy  = orderAmountDue - HARDCOPY_CHARGES;
-                txtHardCopyCharge.setText("Rs. " + HARDCOPY_CHARGES  +"/-");
-                txtActPrice.setText("Rs. " + PriceWithoutHardCopy  +"/-");
-            }else{
+                int PriceWithoutHardCopy = orderAmountDue - HARDCOPY_CHARGES;
+                txtHardCopyCharge.setText("Rs. " + HARDCOPY_CHARGES + "/-");
+                txtActPrice.setText("Rs. " + PriceWithoutHardCopy + "/-");
+            } else {
                 relHardCopyCharge.setVisibility(View.GONE);
-                txtActPrice.setText("Rs. " + orderAmountDue  +"/-");
+                txtActPrice.setText("Rs. " + orderAmountDue + "/-");
             }
 
 
@@ -1639,7 +1642,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     private void CallTechsoOrderbookingAPI(OrderBookingRequestModel benModelaschc) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallTechsoOrderBookingAPI("Bearer "+ appPreferenceManager.getLoginResponseModel().getAccess_token(), benModelaschc);
+        Call<String> responseCall = apiInterface.CallTechsoOrderBookingAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(), benModelaschc);
         globalclass.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override

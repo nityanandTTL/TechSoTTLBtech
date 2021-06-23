@@ -1,5 +1,6 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
@@ -8,8 +9,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -20,23 +23,33 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.os.CountDownTimer;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+import com.mindorks.paracamera.Camera;
+import com.thyrocare.btechapp.Controller.GetCollectionCenterController;
+import com.thyrocare.btechapp.Controller.GetTestController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
+import com.thyrocare.btechapp.Controller.UploadSelfieWOEController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.CheckoutWoeAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.GetAcessTokenAndOTPAPIController;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.WOEOtpValidationRequestModel;
@@ -47,6 +60,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
+import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.PaymentsActivity;
@@ -54,7 +68,12 @@ import com.thyrocare.btechapp.activity.PaymentsActivity;
 import application.ApplicationController;
 
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
+import com.thyrocare.btechapp.models.api.request.BTechSelfieRequestModel;
+import com.thyrocare.btechapp.models.api.request.GetTestCodeRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
+import com.thyrocare.btechapp.models.api.response.GetCollectionReqModel;
+import com.thyrocare.btechapp.models.api.response.GetCollectionRespModel;
+import com.thyrocare.btechapp.models.api.response.GetTestResponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseBeneficiaryModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseOrderModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseVisitModel;
@@ -63,6 +82,7 @@ import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryLabAlertsModel;
 import com.thyrocare.btechapp.models.data.BeneficiarySampleTypeDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryTestWiseClinicalHistoryModel;
+import com.thyrocare.btechapp.models.data.BrandTestMasterModel;
 import com.thyrocare.btechapp.models.data.OrderBookingDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
@@ -79,11 +99,14 @@ import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,11 +115,12 @@ import retrofit2.Response;
 import static android.widget.Toast.LENGTH_SHORT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PLEASE_WAIT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
 
 public class CheckoutWoeActivity extends AppCompatActivity {
 
-    private static String TAG = CheckoutWoeActivity.class.getSimpleName();
+
     Activity mActivity;
     Global globalclass;
     ConnectionDetector cd;
@@ -125,6 +149,19 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     private EditText edt_mobileOTP, edt_EmailOTP;
     private TextView tv_reSendMobileOTP, tv_reSendEmailOTP;
     private CountDownTimer MobileResendOTPcdTimer, EmailResendOTPcdTimer;
+    Spinner spn_collection;
+    private ArrayList<GetCollectionRespModel.CenterListDTO> getcollearray;
+    private String address;
+    private Boolean canSubmit = false;
+    private Camera camera;
+    private File selfie_photo;
+    private Button btn_capture_photo;
+    private TextView tv_view_photo;
+    private Uri uri;
+    ArrayList<String> testList;
+    TextView tv_note;
+    LinearLayout ll_Note;
+    String processLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +182,41 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         initData();
         initListener();
         initToolBar();
+        CallTestColorAPI();
     }
+
+    private void CallTestColorAPI() {
+        try {
+            if (cd.isConnectingToInternet()) {
+
+                testList = new ArrayList<>();
+                HashSet<String> removediplicate = new HashSet<>();
+                if (!InputUtils.isNull(beneficaryWiseArylst)) {
+                    for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                        if (!InputUtils.isNull(beneficaryWiseArylst.get(i).getTestsCode())) {
+                            testList.add(beneficaryWiseArylst.get(i).getTestsCode());
+                        }
+                    }
+                }
+                removediplicate.addAll(testList);
+                testList.clear();
+                testList.addAll(removediplicate);
+
+                String Tests = TextUtils.join(",", testList);
+
+                GetTestCodeRequestModel requestModel = new GetTestCodeRequestModel();
+                requestModel.setTest(Tests);
+                requestModel.setTSP("" + appPreferenceManager.getLoginResponseModel().getUserID());
+                GetTestController getTestController = new GetTestController(this);
+                getTestController.getTest(requestModel);
+            } else {
+                Global.showCustomStaticToast(mActivity, SOMETHING_WENT_WRONG);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void TrimTheNameOfCustomers() {
         if (orderVisitDetailsModel != null && orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0 && orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster() != null) {
@@ -202,9 +273,34 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         txt_amount = (TextView) findViewById(R.id.txt_amount);
         txtNoRecord = (TextView) findViewById(R.id.txtNoRecord);
         btn_Pay = (Button) findViewById(R.id.btn_Pay);
+        spn_collection = (Spinner) findViewById(R.id.spn_collection);
+        btn_capture_photo = (Button) findViewById(R.id.btn_capture_photo);
+        tv_view_photo = (TextView) findViewById(R.id.tv_view_photo);
+        tv_note = (TextView) findViewById(R.id.tv_note);
+        ll_Note = (LinearLayout) findViewById(R.id.ll_Note);
+
         recyle_OrderDetailWithBarcode = (RecyclerView) findViewById(R.id.recyle_OrderDetailWithBarcode);
 
 
+        if (BundleConstants.isKIOSKOrder) {
+            spn_collection.setVisibility(View.VISIBLE);
+            CallCollectionAPI();
+        } else {
+            spn_collection.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void CallCollectionAPI() {
+        if (cd.isConnectingToInternet()) {
+            GetCollectionReqModel getCollectionReqModel = new GetCollectionReqModel();
+            getCollectionReqModel.setApiKey("cWPte2TY@MX)UB21JvANihDcVJ8vZjhC.XeJMNKD9Lo4=");
+            getCollectionReqModel.setPincode("" + orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
+            GetCollectionCenterController getCollectionCenterController = new GetCollectionCenterController(this);
+            getCollectionCenterController.CallAPI(getCollectionReqModel);
+        } else {
+            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initData() {
@@ -246,6 +342,11 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             recyle_OrderDetailWithBarcode.setLayoutManager(mLayoutManager);
             recyle_OrderDetailWithBarcode.setAdapter(checkoutWoeAdapter);
 
+
+          /*  for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+            }*/
+
+
             btn_Pay.setEnabled(true);
             txtNoRecord.setVisibility(View.GONE);
             recyle_OrderDetailWithBarcode.setVisibility(View.VISIBLE);
@@ -258,20 +359,58 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     }
 
     private void initListener() {
+        btn_capture_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+            }
+        });
+        tv_view_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (selfie_photo.exists()) {
+                    ShowSelfieDialog();
+                }
+            }
+        });
+
+        spn_collection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (!spn_collection.getSelectedItem().toString().equalsIgnoreCase("Select Collection Center")) {
+                    address = "" + getcollearray.get(position).getAddress();
+
+                }
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         btn_Pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences prefVersionControlFags = getSharedPreferences("VersionControlFlags", 0);
-                if (prefVersionControlFags.getInt("OTPEnabled", 0) == 1) {
-                    OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
-                    if (!CommonUtils.isValidForEditing((orderBookingRequestModel.getBendtl().get(0).getTests()))) {
-                        ShowDialogToVerifyOTP();
+
+                if (canSubmit) {
+                    SharedPreferences prefVersionControlFags = getSharedPreferences("VersionControlFlags", 0);
+                    if (prefVersionControlFags.getInt("OTPEnabled", 0) == 1) {
+                        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
+                        if (!CommonUtils.isValidForEditing((orderBookingRequestModel.getBendtl().get(0).getTests()))) {
+                            ShowDialogToVerifyOTP();
+                        } else {
+                            ProceedWOEonSubmit();
+                        }
                     } else {
                         ProceedWOEonSubmit();
                     }
                 } else {
-                    ProceedWOEonSubmit();
+                    Toast.makeText(mActivity, "Please upload selfie first", LENGTH_SHORT).show();
                 }
             }
         });
@@ -280,6 +419,26 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
     private void ProceedWOEonSubmit() {
 
+        try {
+            if (BundleConstants.isKIOSKOrder) {
+                if (spn_collection != null && !InputUtils.isNull(spn_collection.getSelectedItem().toString())) {
+                    if (spn_collection.getSelectedItem().toString().equalsIgnoreCase("Select Collection Center")) {
+                        globalclass.showCustomToast(mActivity, "Select Collection Center");
+                    } else {
+                        WOE();
+                    }
+                }
+
+            } else {
+                WOE();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void WOE() {
         OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
         Logger.error("Selcted testssssssss" + orderBookingRequestModel.getBendtl().get(0).getTestsCode());
         boolean isEditMobile_email = orderVisitDetailsModel.getAllOrderdetails().get(0).isEditME();
@@ -343,8 +502,10 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         orderBookingDetailsModel.setPaymentMode(PaymentMode);
         orderBookingDetailsModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
         orderBookingDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+        orderBookingDetailsModel.setProcessLocation(getProcessLocationFromString());
         ArrayList<OrderDetailsModel> ordtl = new ArrayList<>();
         ordtl = orderVisitDetailsModel.getAllOrderdetails();
+
         String Slot = orderVisitDetailsModel.getSlot();
         Logger.error("Slot" + Slot);
         dateCheck();
@@ -357,6 +518,9 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         for (int i = 0; i < ordtl.size(); i++) {
             ordtl.get(i).setAmountDue(totalAmountPayable);
             ordtl.get(i).setAmountPayable(totalAmountPayable);
+            if (BundleConstants.isKIOSKOrder) {
+                ordtl.get(i).setAddress("" + address);
+            }
         }
         orderBookingDetailsModel.setOrddtl(ordtl);
         orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
@@ -426,6 +590,13 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         //SET BENEFICIARY Lab Alerts Models Array - END
 
         return orderBookingRequestModel;
+    }
+
+    private String getProcessLocationFromString() {
+        if(processLocation != null){
+            return processLocation;
+        }
+        return "";
     }
 
     public void CallOrderBookingApi(OrderBookingRequestModel orderBookingRequestModel) {
@@ -805,9 +976,40 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(mActivity, "Payment failed", Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == Camera.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            try {
+
+                String imageurl = camera.getCameraBitmapPath();
+                selfie_photo = new File(imageurl);
+                uri = Uri.fromFile(selfie_photo);
+                if (uri != null) {
+                    tv_view_photo.setVisibility(View.VISIBLE);
+                    UploadSelfieAPI();
+                } else {
+                    Toast.makeText(mActivity, "Failed to upload selfie", LENGTH_SHORT).show();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void UploadSelfieAPI() {
+        String BtechID = appPreferenceManager.getLoginResponseModel().getUserID();
+        final String OrderNo = orderVisitDetailsModel.getVisitId();
+
+        BTechSelfieRequestModel bTechSelfieRequestModel = new BTechSelfieRequestModel();
+        bTechSelfieRequestModel.setBtechid(BtechID);
+        bTechSelfieRequestModel.setORDERNO(OrderNo);
+
+        if (selfie_photo.exists()) {
+            bTechSelfieRequestModel.setFile(selfie_photo);
+            UploadSelfieWOEController uploadSelfieWOEController = new UploadSelfieWOEController(CheckoutWoeActivity.this, mActivity);
+            uploadSelfieWOEController.CallAPI(appPreferenceManager.getLoginResponseModel().getAccess_token(), bTechSelfieRequestModel);
+        }
     }
 
     private OrderBookingRequestModel fixForAddBeneficiary(OrderBookingRequestModel orderBookingRequestModel) {
@@ -1272,6 +1474,67 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
     }
 
+    private void openCamera() {
+        buildCamera();
+        try {
+            camera.takePicture();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void buildCamera() {
+        camera = new Camera.Builder()
+                .resetToCorrectOrientation(true)// it will rotate the camera bitmap to the correct orientation from meta data
+                .setTakePhotoRequestCode(1)
+                .setDirectory("pics")
+                .setName("img" + System.currentTimeMillis())
+                .setImageFormat(Camera.IMAGE_PNG)
+                .setCompression(AppConstants.setcompression)
+                .setImageHeight(AppConstants.setheight)// it will try to achieve this height as close as possible maintaining the aspect ratio;
+                .build(this);
+    }
+
+    private void selectImage() {
+        try {
+            final CharSequence[] items = {"Take Photo", "Cancel"};
+            final String[] userChoosenTask = {""};
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mActivity);
+            builder.setTitle("Add Photo!");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+
+                    if (items[item].equals("Take Photo")) {
+                        userChoosenTask[0] = "Take Photo";
+                        TedPermission.with(mActivity)
+                                .setPermissions(Manifest.permission.CAMERA)
+                                .setRationaleMessage("We need permission to capture photo from your camera to Upload Vail Photo.")
+                                .setRationaleConfirmText("OK")
+                                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission > Camera")
+                                .setPermissionListener(new PermissionListener() {
+                                    @Override
+                                    public void onPermissionGranted() {
+                                        openCamera();
+                                    }
+
+                                    @Override
+                                    public void onPermissionDenied(List<String> deniedPermissions) {
+                                        Toast.makeText(mActivity, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }).check();
+
+                    } else if (items[item].equals("Cancel")) {
+                        dialog.dismiss();
+                    }
+                }
+            });
+            builder.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void CallValidateOTPAPI(final WOEOtpValidationRequestModel model) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
@@ -1317,4 +1580,85 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
     }
 
+    public void getCollectioncenters(GetCollectionRespModel body) {
+        if (!InputUtils.isNull(body.getRespId()) && body.getRespId().equalsIgnoreCase("RES00001")) {
+            GetCollectionRespModel.CenterListDTO centerListDTO = new GetCollectionRespModel.CenterListDTO();
+            centerListDTO.setCenterName("Select Collection Center");
+            body.getCenterList().add(0, centerListDTO);
+
+            getcollearray = body.getCenterList();
+            if (!InputUtils.isNull(body.getCenterList())) {
+                ArrayAdapter<GetCollectionRespModel.CenterListDTO> spinnerArrayAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, body.getCenterList());
+                spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spn_collection.setAdapter(spinnerArrayAdapter);
+            }
+
+
+        } else {
+            globalclass.showCustomToast(mActivity, body.getResponse());
+        }
+    }
+
+    private void ShowSelfieDialog() {
+        try {
+            final Dialog maindialog = new Dialog(mActivity);
+            maindialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            maindialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            maindialog.setContentView(R.layout.preview_dialog);
+            maindialog.getWindow().setLayout(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+            ImageView imageView = maindialog.findViewById(R.id.viewPager);
+            imageView.setImageURI(uri);
+            ImageView ic_close = (ImageView) maindialog.findViewById(R.id.img_close);
+            ic_close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    maindialog.dismiss();
+                }
+            });
+
+
+            maindialog.setCancelable(true);
+            maindialog.show();
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getSelfieResponse() {
+        canSubmit = true;
+    }
+
+    public void getSubmitDataResponse(GetTestResponseModel responseModel) {
+        if (responseModel != null && responseModel.getResponse() != null) {
+            if (responseModel.getProcessAt() != null) {
+                ll_Note.setVisibility(View.VISIBLE);
+                displayNote(responseModel);
+            } else {
+                ll_Note.setVisibility(View.GONE);
+                tv_note.setText("");
+            }
+        } else {
+            globalclass.showCustomToast(this, SOMETHING_WENT_WRONG);
+        }
+    }
+
+    private void displayNote(GetTestResponseModel responseModel) {
+        if (InputUtils.CheckEqualIgnoreCase(responseModel.getProcessAt(), ConstantsMessages.RPL)) {
+            tv_note.setText("Your order will be processed at " + "" + responseModel.getProcessAt());
+            tv_note.setTextColor(getResources().getColor(R.color.blue_shade));
+            processLocation = "" + responseModel.getProcessAt().toString().trim();
+        }else if(InputUtils.CheckEqualIgnoreCase(responseModel.getProcessAt(), ConstantsMessages.CPL)){
+            tv_note.setText("Your order will be processed at " + "" + responseModel.getProcessAt());
+            tv_note.setTextColor(getResources().getColor(R.color.highlight_color));
+            processLocation = "" + responseModel.getProcessAt().toString().trim();
+        }else if(InputUtils.CheckEqualIgnoreCase(responseModel.getProcessAt(), ConstantsMessages.ZPL)){
+            tv_note.setText("Your order will be processed at " + "" + responseModel.getProcessAt());
+            tv_note.setTextColor(getResources().getColor(R.color.quantum_yellow800));
+            processLocation = "" + responseModel.getProcessAt().toString().trim();
+        }else{
+            ll_Note.setVisibility(View.GONE);
+            tv_note.setText("");
+            processLocation = "";
+        }
+    }
 }

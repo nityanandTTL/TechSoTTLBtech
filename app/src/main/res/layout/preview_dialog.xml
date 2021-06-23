@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    xmlns:attrs="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:padding="@dimen/_4sdp"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/ll_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="1dp"
+        android:layout_below="@+id/title"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_weight="0.92"
+            android:layout_height="0dp">
+
+        </ImageView>
+
+
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_below="@+id/imageview"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="0dp"
+            android:layout_weight="0.08"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/_3sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/rounded_background_filled_oranged"
+            android:text="Delete"
+            android:visibility="gone"
+
+            android:textColor="@color/white"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:textSize="@dimen/_12sdp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:gravity="right"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/img_close"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/canceldialog_icon"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
+

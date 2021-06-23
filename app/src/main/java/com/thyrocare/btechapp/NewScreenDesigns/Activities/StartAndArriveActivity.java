@@ -201,6 +201,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        BundleConstants.isKIOSKOrder = false;
                         dialog.dismiss();
                         finish();
 
@@ -216,11 +217,12 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_and_arrive);
-        setTitle("Arrive");
+        SetTitleHead("Arrive");
         mActivity = StartAndArriveActivity.this;
         globalclass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
@@ -249,16 +251,48 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
             }
         } else {
-            btn_arrive.setVisibility(View.VISIBLE);
-            btn_start.setVisibility(View.GONE);
-            if (cd.isConnectingToInternet()) {
-                CallOrderDetailAPI("Start");
+            if (BundleConstants.isKIOSKOrder) {
+                SetTitleHead("Order Details");
+                btn_arrive.setVisibility(View.GONE);
+                btn_start.setVisibility(View.GONE);
+                btn_Proceed.setVisibility(View.VISIBLE);
+       /* if (cd.isConnectingToInternet()) {
+            CallOrderDetailAPI("Arrive");
+        } else {
+            globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
+        }*/
+                initData("Arrive");
             } else {
-                globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
+                if (orderDetailsModel.getAllOrderdetails().get(0).isKCF()) {
+                    btn_arrive.setVisibility(View.GONE);
+                    btn_start.setVisibility(View.GONE);
+                    btn_Proceed.setVisibility(View.VISIBLE);
+                    if (cd.isConnectingToInternet()) {
+                        CallOrderDetailAPI("Arrive");
+                    } else {
+                        globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
+                    }
+                } else {
+                    btn_arrive.setVisibility(View.VISIBLE);
+                    btn_start.setVisibility(View.GONE);
+                    if (cd.isConnectingToInternet()) {
+                        CallOrderDetailAPI("Start");
+                    } else {
+                        globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
+                    }
+                }
             }
         }
 
 
+    }
+
+    private void SetTitleHead(String head_titl) {
+        try {
+            setTitle(head_titl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initToolBar() {
@@ -271,6 +305,13 @@ public class StartAndArriveActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.start_arrive_menu_screen, menu);
+        MenuItem menu_release = menu.findItem(R.id.menu_release);
+        if (BundleConstants.isKIOSKOrder) {
+            menu_release.setVisible(false);
+        } else {
+            menu_release.setVisible(true);
+        }
+
         return true;
     }
 
@@ -281,7 +322,12 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.menu_release) {
-            onReleaseButtonClicked();
+            if (BundleConstants.isKIOSKOrder) {
+
+            } else {
+                onReleaseButtonClicked();
+            }
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -484,14 +530,15 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             dialog.dismiss();
 
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                   /*         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                             builder.setMessage("Amount payable ₹ " + totalAmountPayable + "/-")
                                     .setPositiveButton("Collect", new DialogInterface.OnClickListener() {
                                         @Override
-                                        public void onClick(DialogInterface dialog, int which) {
+                                        public void onClick(DialogInterface dialog, int which) {*/
 
-                                            if (orderDetailsModel.getAllOrderdetails().get(0).isDigital()) {
-                                                PaymentMode = 2;
+                            if (orderDetailsModel.getAllOrderdetails().get(0).isDigital()) {
+                                GoingToPaymentActivity(0);
+                                               /* PaymentMode = 2;
                                                 Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
                                                 Logger.error("tejastotalAmountPayableatsending " + totalAmountPayable);
                                                 intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
@@ -504,14 +551,17 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                                 intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
                                                 intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL, orderDetailsModel.getAllOrderdetails().get(0).getEmail());
                                                 startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
-                                            } else {
-                                                if (OrderMode.equalsIgnoreCase("LTD-BLD") || OrderMode.equalsIgnoreCase("LTD-NBLD")) {
-                                                    paymentItems = new String[]{"Cash"};
-                                                } else {
-                                                    paymentItems = new String[]{"Cash", "Digital"};
-                                                }
+                                          */
+                            } else {
+                                if (OrderMode.equalsIgnoreCase("LTD-BLD") || OrderMode.equalsIgnoreCase("LTD-NBLD")) {
+//                                                    paymentItems = new String[]{"Cash"};
+                                    GoingToPaymentActivity(1);
+                                } else {
+//                                                    paymentItems = new String[]{"Cash", "Digital"};
+                                    GoingToPaymentActivity(2);
+                                }
 
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                                             /*   AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                                 builder.setTitle("Choose payment mode")
                                                         .setItems(paymentItems, new DialogInterface.OnClickListener() {
                                                             @Override
@@ -523,14 +573,14 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                                                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                                                                 @Override
                                                                                 public void onClick(DialogInterface dialog, int which) {
-                                                                    /*PaymentMode = 1;
+                                                                    *//*PaymentMode = 1;
                                                                     // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
                                                                     OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
                                                                     if (cd.isConnectingToInternet()) {
                                                                         CallWorkOrderEntryAPI(orderBookingRequestModel);
                                                                     } else {
                                                                         Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
-                                                                    }*/
+                                                                    }*//*
 
                                                                                     BundleConstants.addPaymentFlag = 1;
 
@@ -571,8 +621,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                                             public void onClick(DialogInterface dialog, int which) {
                                                                 dialog.dismiss();
                                                             }
-                                                        }).show();
-                                            }
+                                                        }).show();*/
+                                /*            }
                                         }
                                     })
                                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -580,8 +630,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
                                         }
-                                    }).show();
+                                    }).show();*/
 
+                            }
 
                         }
                     });
@@ -598,64 +649,142 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     }
 
-    private void CallOrderDetailAPI(final String Status) {
-        try {
-            GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-            Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID());
-            globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.fetchingOrders), false);
-            fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
-                @Override
-                public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
-                    globalclass.hideProgressDialog(mActivity);
+    private void GoingToPaymentActivity(int flag) {
+        Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
 
-                    FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
-                    if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails() != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
-                        for (OrderVisitDetailsModel orderVisitDetailsModel :
-                                fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
-                            if (orderVisitDetailsModel.getVisitId().equalsIgnoreCase(strOrderNo)) {
-                                if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
-                                    for (OrderDetailsModel orderDetailsModel :
-                                            orderVisitDetailsModel.getAllOrderdetails()) {
-                                        orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
-                                        orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
-                                        orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
-                                        orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
-                                        orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
-                                        orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
-                                        orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
-                                        orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
-                                        orderDetailsModel.setAddBen(orderDetailsModel.isEditOrder());
-                                        if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
-                                            for (BeneficiaryDetailsModel beneficiaryDetailsModel :
-                                                    orderDetailsModel.getBenMaster()) {
-                                                beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
-                                                beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
-                                                for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
-                                                    beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+        intentPayments.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+        intentPayments.putExtra(BundleConstants.PAYMENTS_OPTION_FLAG, flag);
+        intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
+        intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 2);
+        intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO, orderDetailsModel.getVisitId());
+        intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE, Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME, orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS, orderDetailsModel.getAllOrderdetails().get(0).getAddress());
+        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN, orderDetailsModel.getAllOrderdetails().get(0).getPincode());
+        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+        intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL, orderDetailsModel.getAllOrderdetails().get(0).getEmail());
+        startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+    }
+
+    private void CallOrderDetailAPI(final String Status) {
+        if (BundleConstants.isKIOSKOrder) {
+            try {
+                GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+                Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getOrderAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID(), strOrderNo);
+                globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.fetchingOrders), false);
+                fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
+                    @Override
+                    public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
+                        globalclass.hideProgressDialog(mActivity);
+
+                        FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
+                        if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails() != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
+                            for (OrderVisitDetailsModel orderVisitDetailsModel :
+                                    fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
+                                if (orderVisitDetailsModel.getVisitId().equalsIgnoreCase(strOrderNo)) {
+                                    if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+                                        for (OrderDetailsModel orderDetailsModel :
+                                                orderVisitDetailsModel.getAllOrderdetails()) {
+                                            orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+                                            orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
+                                            orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
+                                            orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
+                                            orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
+                                            orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
+                                            orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
+                                            orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
+                                            orderDetailsModel.setAddBen(orderDetailsModel.isEditOrder());
+                                            if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
+                                                for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                                                        orderDetailsModel.getBenMaster()) {
+                                                    beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                                                    beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
+                                                    for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
+                                                        beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                                    }
                                                 }
                                             }
                                         }
+                                        orderDetailsModel = null;
+                                        orderDetailsModel = orderVisitDetailsModel;
+                                        break;
                                     }
-                                    orderDetailsModel = null;
-                                    orderDetailsModel = orderVisitDetailsModel;
-                                    break;
                                 }
                             }
                         }
+                        initData(Status);
                     }
-                    initData(Status);
-                }
 
-                @Override
-                public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
-                    globalclass.hideProgressDialog(mActivity);
-                    globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
-                }
-            });
-        } catch (Exception e) {
-            globalclass.hideProgressDialog(mActivity);
-            e.printStackTrace();
-            globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
+                    @Override
+                    public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
+                        globalclass.hideProgressDialog(mActivity);
+                        globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
+                    }
+                });
+            } catch (Exception e) {
+                globalclass.hideProgressDialog(mActivity);
+                e.printStackTrace();
+                globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
+            }
+        } else {
+            try {
+                GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+                Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID());
+                globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.fetchingOrders), false);
+                fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
+                    @Override
+                    public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
+                        globalclass.hideProgressDialog(mActivity);
+
+                        FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
+                        if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails() != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
+                            for (OrderVisitDetailsModel orderVisitDetailsModel :
+                                    fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
+                                if (orderVisitDetailsModel.getVisitId().equalsIgnoreCase(strOrderNo)) {
+                                    if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+                                        for (OrderDetailsModel orderDetailsModel :
+                                                orderVisitDetailsModel.getAllOrderdetails()) {
+                                            orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+                                            orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
+                                            orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
+                                            orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
+                                            orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
+                                            orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
+                                            orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
+                                            orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
+                                            orderDetailsModel.setAddBen(orderDetailsModel.isEditOrder());
+                                            if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
+                                                for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                                                        orderDetailsModel.getBenMaster()) {
+                                                    beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                                                    beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
+                                                    for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
+                                                        beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        orderDetailsModel = null;
+                                        orderDetailsModel = orderVisitDetailsModel;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        initData(Status);
+                    }
+
+                    @Override
+                    public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
+                        globalclass.hideProgressDialog(mActivity);
+                        globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
+                    }
+                });
+            } catch (Exception e) {
+                globalclass.hideProgressDialog(mActivity);
+                e.printStackTrace();
+                globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
+            }
         }
     }
 
@@ -1098,16 +1227,20 @@ public class StartAndArriveActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String res) {
             super.onPostExecute(res);
-            globalclass.hideProgressDialog(mActivity);
-            if (statusCode == 200) {
-                if (dialog_ready != null) {
-                    if (dialog_ready.isShowing()) {
-                        dialog_ready.dismiss();
+            try {
+                globalclass.hideProgressDialog(mActivity);
+                if (statusCode == 200) {
+                    if (dialog_ready != null) {
+                        if (dialog_ready.isShowing()) {
+                            dialog_ready.dismiss();
+                        }
                     }
+                    TastyToast.makeText(mActivity, "" + res, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                } else {
+                    TastyToast.makeText(mActivity, "" + res, TastyToast.LENGTH_LONG, TastyToast.ERROR);
                 }
-                TastyToast.makeText(mActivity, "" + res, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-            } else {
-                TastyToast.makeText(mActivity, "" + res, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

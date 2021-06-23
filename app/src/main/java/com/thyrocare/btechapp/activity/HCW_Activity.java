@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowManager;
@@ -91,7 +92,7 @@ public class HCW_Activity extends AppCompatActivity {
     private void initUI() {
         toolbarHCW = findViewById(R.id.toolbarHCW);
         toolbarHCW.setTitle("HCW Letter");
-        toolbarHCW.setTitleTextColor(getColor(R.color.white));
+        toolbarHCW.setTitleTextColor(Color.WHITE);
         appPreferenceManager = new AppPreferenceManager(this);
 
         globalClass = new Global(this);

@@ -33,6 +33,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.NewCampWOEModuleActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.StockAvailabilityActivityNew;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.BtechCertificateFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.FAQ_Fragment;
@@ -395,12 +396,22 @@ public class HomeScreenActivity extends AbstractActivity
                         CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             }
             //   Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_camp) {
+          /*  toolbarHome.setVisibility(View.VISIBLE);
+            pushFragments(FeedbackFragment_new.newInstance(), false, false,
+                    FeedbackFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);*/
+
+            Intent intentPaymentsActivity = new Intent(HomeScreenActivity.this, NewCampWOEModuleActivity.class);
+            startActivity(intentPaymentsActivity);
         } else if (id == R.id.nav_feedback) {
 
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(FeedbackFragment_new.newInstance(), false, false,
                     FeedbackFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-            //   Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
+
+        }else if (id == R.id.nav_pickup) {
+            Intent intent = new Intent(HomeScreenActivity.this, OrderPickUpActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_faq) {
 
             toolbarHome.setVisibility(View.VISIBLE);

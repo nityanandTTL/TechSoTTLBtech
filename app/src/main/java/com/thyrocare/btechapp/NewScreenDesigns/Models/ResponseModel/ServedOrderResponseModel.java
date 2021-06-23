@@ -32,6 +32,7 @@ public class ServedOrderResponseModel {
         String OrderBy;
         String Status;
         String Mobile;
+        String Location;
 
         int benCount;
         int AmountCollected;
@@ -69,6 +70,14 @@ public class ServedOrderResponseModel {
 
         public void setMobile(String mobile) {
             Mobile = mobile;
+        }
+
+        public String getLocation() {
+            return Location;
+        }
+
+        public void setLocation(String location) {
+            Location = location;
         }
 
         public int getBenCount() {

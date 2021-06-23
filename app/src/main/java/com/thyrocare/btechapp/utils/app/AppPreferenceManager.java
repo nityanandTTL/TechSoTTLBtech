@@ -9,6 +9,7 @@ import com.thyrocare.btechapp.models.api.request.SetBtechAvailabilityAPIRequestM
 import com.thyrocare.btechapp.models.api.response.LoginResponseModel;
 import com.thyrocare.btechapp.models.api.response.NewBtechAvaliabilityResponseModel;
 import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
+import com.thyrocare.btechapp.models.data.BrandTestMasterModel;
 import com.thyrocare.btechapp.models.data.SlotModel;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class AppPreferenceManager {
     private String isLoadSpotlightOnOrderdHistory = "isLoadSpotlightOnOrderdHistory";
     private String isLoadSpotlightOnPager = "isLoadSpotlightOnPager";
     private String isLoadSpotlightOnHome = "isLoadSpotlightOnHome";
-
+    public String ratecal = "ratecal";
 
     //Neha G---------------------------------
     private String ShowTimeInNotificatn="";
@@ -84,6 +85,17 @@ public class AppPreferenceManager {
 
     public void setNEWBTECHAVALIABILITYRESPONSEMODEL(NewBtechAvaliabilityResponseModel newbtechavaliabilityresponsemodel) {
        appPreference.putString(this.NEWBTECHAVALIABILITYRESPONSEMODEL,new Gson().toJson(newbtechavaliabilityresponsemodel));
+    }
+
+
+    public BrandTestMasterModel getTestsProfilePOPProfile() {
+        String value = appPreference.getString(this.ratecal, "");
+        return new Gson().fromJson(value, BrandTestMasterModel.class);
+    }
+
+
+    public void setTestsProfilePOPProfile(BrandTestMasterModel allTestsProfilePOPProfile) {
+        appPreference.putString(this.ratecal, new Gson().toJson(allTestsProfilePOPProfile));
     }
 
 

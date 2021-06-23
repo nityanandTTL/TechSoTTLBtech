@@ -145,6 +145,7 @@ public class FeedbackFragment_new extends Fragment {
 
         MessageLogger.PrintMsg("Nitya >> "+deviceInfo);
     }
+//    https://b2capi.thyrocare.com/APIs/MASTER.svc//dNBJfkhL5z8ng3lsNOuAEL2D73G@FDOC0z3fvmKQjiw=//FEEDBACK/getlist
 
     public void getFeedbackList() {
         try {

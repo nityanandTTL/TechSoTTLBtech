@@ -42,6 +42,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.EmailVaildat
 import com.thyrocare.btechapp.models.api.request.CashDepositEntryRequestModel;
 import com.thyrocare.btechapp.models.api.request.ChangePasswordRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetPatientDetailsRequestModel;
+import com.thyrocare.btechapp.models.api.request.GetTestCodeRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetVideoLanguageWiseRequestModel;
 import com.thyrocare.btechapp.models.api.request.HubStartRequestModel;
 import com.thyrocare.btechapp.models.api.request.LeadGenerationRequestModel;
@@ -54,6 +55,8 @@ import com.thyrocare.btechapp.models.api.request.OrderAllocationTrackLocationReq
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
+import com.thyrocare.btechapp.models.api.request.PickupOrderRequestModel;
+import com.thyrocare.btechapp.models.api.request.PostPickupOrderRequestClass;
 import com.thyrocare.btechapp.models.api.request.Post_DeviceID;
 import com.thyrocare.btechapp.models.api.request.RemoveBeneficiaryAPIRequestModel;
 import com.thyrocare.btechapp.models.api.request.ResetPasswordRequestModel;
@@ -68,6 +71,9 @@ import com.thyrocare.btechapp.models.api.response.CartAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel1;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.EmailValidationResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetCollectionReqModel;
+import com.thyrocare.btechapp.models.api.response.GetCollectionRespModel;
+import com.thyrocare.btechapp.models.api.response.GetTestResponseModel;
 import com.thyrocare.btechapp.models.api.response.LeadChannelRespModel;
 import com.thyrocare.btechapp.models.api.response.LeadPurposeResponseModel;
 import com.thyrocare.btechapp.models.api.response.LeadgenerationResponseModel;
@@ -77,6 +83,8 @@ import com.thyrocare.btechapp.models.api.response.OrderBookingResponseVisitModel
 import com.thyrocare.btechapp.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentStartTransactionAPIResponseModel;
+import com.thyrocare.btechapp.models.api.response.PickupOrderResponseModel;
+import com.thyrocare.btechapp.models.api.response.PostPickupOrderResponseModel;
 import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
@@ -366,4 +374,23 @@ public interface PostAPIInterface {
     @POST("Complaint_module/Letter")
     Call<HCWResponseModel> postHCW(@Body HCWRequestModel hcwRequestModel);
 
+    @POST("CommonServices/PincodewiseCollectionPoint")
+    Call<GetCollectionRespModel> GetCollectionCenter(@Body GetCollectionReqModel getCollectionReqModel);
+
+    @Multipart
+    @POST("api/OrderAllocation/SelfiafterWOE")
+    Call<String> CallUploadSelfieAPI(@Header("Authorization") String Token,
+                                     @Part("Btechid") RequestBody BtechID,
+                                     @Part("ORDERNO") RequestBody OrderNo,
+                                     @Part MultipartBody.Part selfieFileMultiBody);
+
+
+    @POST("api/OrderAllocation/Pickuporders")
+    Call<PickupOrderResponseModel> getPickupOrder(@Body PickupOrderRequestModel pickupOrderRequestModel);
+
+    @POST("api/OrderAllocation/PostPickuporders")
+    Call<PostPickupOrderResponseModel> postPickupOrder(@Body PostPickupOrderRequestClass getCollectionReqModel);
+
+    @POST("GetTestCode")
+    Call<GetTestResponseModel> postTest(@Body GetTestCodeRequestModel getTestCodeRequestModel);
 }

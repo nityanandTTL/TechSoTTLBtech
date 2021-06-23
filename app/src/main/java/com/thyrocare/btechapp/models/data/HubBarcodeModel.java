@@ -9,6 +9,7 @@ public class HubBarcodeModel {
     private String SampleType;
     private String SCT;
     private String Latitude;
+    private String Location;
 
     public String getLatitude() {
         return Latitude;
@@ -63,5 +64,13 @@ public class HubBarcodeModel {
 
     public void setScanned(boolean scanned) {
         IsScanned = scanned;
+    }
+
+    public String getLocation() {
+        return Location;
+    }
+
+    public void setLocation(String location) {
+        Location = location;
     }
 }

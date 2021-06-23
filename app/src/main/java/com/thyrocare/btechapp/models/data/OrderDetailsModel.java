@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Created by Orion on 4/19/2017.
  */
 
-public class OrderDetailsModel extends BaseModel implements Parcelable{
+public class OrderDetailsModel extends BaseModel implements Parcelable {
     private int BrandId;//
     private String OrderNo;//
     private String Address;
@@ -63,6 +63,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
     private boolean displayProduct;
     private boolean IsPPE;
     private String PPE_AlertMsg;
+    private boolean isKCF;
 
 
     protected OrderDetailsModel(Parcel in) {
@@ -117,6 +118,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         CHC = in.readInt();
         displayProduct = in.readByte() != 0;
         IsPPE = in.readByte() != 0;
+        isKCF = in.readByte() != 0;
         PPE_AlertMsg = in.readString();
     }
 
@@ -173,6 +175,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
         dest.writeInt(CHC);
         dest.writeByte((byte) (displayProduct ? 1 : 0));
         dest.writeByte((byte) (IsPPE ? 1 : 0));
+        dest.writeByte((byte) (isKCF ? 1 : 0));
         dest.writeString(PPE_AlertMsg);
     }
 
@@ -192,6 +195,15 @@ public class OrderDetailsModel extends BaseModel implements Parcelable{
             return new OrderDetailsModel[size];
         }
     };
+
+
+    public boolean isKCF() {
+        return isKCF;
+    }
+
+    public void setKCF(boolean KCF) {
+        isKCF = KCF;
+    }
 
     public boolean isDirectVisit() {
         return DirectVisit;
