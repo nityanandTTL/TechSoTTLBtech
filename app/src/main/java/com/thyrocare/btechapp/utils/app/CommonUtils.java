@@ -25,16 +25,23 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.dao.DhbDao;
+import com.thyrocare.btechapp.models.api.request.LatLongDataModel;
 import com.thyrocare.btechapp.models.api.response.MessageModel;
 import com.thyrocare.btechapp.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.btechapp.utils.api.Logger;
+
+import org.apache.http.conn.util.InetAddressUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.nio.channels.FileChannel;
+import java.util.Collections;
+import java.util.List;
 
 import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 
@@ -78,10 +85,6 @@ public class CommonUtils {
         return false;
     }
 
-
-
-
-
     public static String encodeImage(Bitmap bm) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -92,7 +95,6 @@ public class CommonUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return "";
     }
 
@@ -265,7 +267,7 @@ public class CommonUtils {
     public static void CallLogOutFromDevice(Context mContext, Activity mActivity, AppPreferenceManager appPreferenceManager, DhbDao dhbDao) {
         try {
             TastyToast.makeText(mContext, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
-             new LogUserActivityTagging(mActivity, LOGOUT);
+             new LogUserActivityTagging(mActivity, LOGOUT,"");
                     appPreferenceManager.clearAllPreferences();
             dhbDao.deleteTablesonLogout();
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);
@@ -337,5 +339,113 @@ public class CommonUtils {
 
 
         return false;
+    }
+
+    public static LatLongDataModel getCurrentLatLong(Activity mActivity) {
+        LatLongDataModel latLong = new LatLongDataModel();
+        String lat = "0.0", longi = "0.0";
+        try {
+            GPSTracker gpsTracker = new GPSTracker(mActivity);
+            if (gpsTracker.canGetLocation()) {
+//                lat = new DecimalFormat("####.##########").format(gpsTracker.getLatitude());
+                lat = String.valueOf(gpsTracker.getLatitude());
+//                longi = new DecimalFormat("####.##########").format(gpsTracker.getLongitude());
+                longi = String.valueOf(gpsTracker.getLongitude());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        latLong.setmLatitude(lat);
+        latLong.setmLongitude(longi);
+        return latLong;
+    }
+
+
+
+    /*public static String getIPAddress(Activity activity) {
+        WifiManager wm = (WifiManager) activity.getApplicationContext().getSystemService(WIFI_SERVICE);
+        return wm != null && wm.getConnectionInfo() != null ? Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress()) : "";
+    }*/
+
+    /*public static String getMACAddress() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                    return "";
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(String.format("%02X:",b));
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
+            }
+        } catch (Exception ex) {
+            //handle exception
+        }
+        return "";
+    }*/
+
+    public static String getMACAddress() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                    return "";
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(String.format("%02X:", b));
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
+            }
+        } catch (Exception ex) {
+            //handle exception
+        }
+        return "";
+    }
+
+    public static String getIPAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> networkInterfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface networkInterface : networkInterfaces) {
+                List<InetAddress> inetAddresses = Collections.list(networkInterface.getInetAddresses());
+                for (InetAddress inetAddress : inetAddresses) {
+                    if (!inetAddress.isLoopbackAddress()) {
+                        String sAddr = inetAddress.getHostAddress().toUpperCase();
+                        boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                // drop ip6 port suffix
+                                int delim = sAddr.indexOf('%');
+                                return delim < 0 ? sAddr : sAddr.substring(0, delim);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "";
     }
 }

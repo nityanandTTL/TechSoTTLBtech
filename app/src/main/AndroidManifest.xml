@@ -74,6 +74,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activity.KIOSK_Scanner_Activity"
+            android:label="@string/kioskscanner"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.OrderPickUpActivity"
+            android:label="Pickup Order"
+            android:parentActivityName=".activity.HomeScreenActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".NewScreenDesigns.Activities.ScanBarcodeWoeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -260,7 +270,8 @@
         <service
             android:name=".service.FireMsgService"
             android:enabled="true"
-            android:exported="true">
+            android:stopWithTask="false"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

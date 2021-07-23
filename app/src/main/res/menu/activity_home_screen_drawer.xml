@@ -4,75 +4,92 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/home"
+            android:icon="@drawable/home_nav"
             android:title="Home" />
+
+        <item
+            android:id="@+id/nav_punch"
+            android:icon="@drawable/sign_nav"
+            android:title="Sign IN/OUT" />
         <item
             android:id="@+id/nav_leave"
-            android:icon="@drawable/leave_intimation_"
+            android:icon="@drawable/leave_inti_nav"
             android:title="Leaves" />
 
         <item
             android:id="@+id/nav_hcw"
-            android:icon="@drawable/ic_btech_hcw"
+            android:icon="@drawable/hwcletter_nav"
             android:title="HCW Letter" />
         <item
             android:id="@+id/nav_change_password"
-            android:icon="@drawable/change_password"
+            android:icon="@drawable/change_password_icon"
             android:title="Change password" />
 
         <item
             android:id="@+id/nav_Hub"
-            android:icon="@drawable/hub_icon"
+            android:icon="@drawable/hub_nav_icon"
             android:title="Hub" />
 
         <item
             android:id="@+id/nav_QrcodeWOE"
-            android:icon="@drawable/hub_icon"
-            android:title="Qr Code WOE" />
+            android:icon="@drawable/camp_qr_nav"
+            android:title="Camp Qr Code WOE" />
 
         <item
             android:id="@+id/nav_clientEntry"
-            android:icon="@drawable/client_entry_icon"
+            android:icon="@drawable/client_entry_nav"
             android:title="@string/clientEntry" />
 
 
         <item
             android:id="@+id/nav_credit"
-            android:icon="@drawable/icon_nav_credit"
+            android:icon="@drawable/credit_nav"
             android:title="Credit" />
 
         <item
+            android:id="@+id/nav_camp"
+            android:icon="@drawable/camp_nav"
+            android:title="Camp" />
+
+        <item
             android:id="@+id/nav_stock"
-            android:icon="@drawable/ic_stock"
+            android:icon="@drawable/stock_nav"
             android:title="Stock Availability" />
 
         <item
+            android:id="@+id/nav_pickup"
+            android:icon="@drawable/orderpickup_nav"
+            android:title="Pickup Order" />
+
+
+        <item
             android:id="@+id/nav_certificates"
-            android:icon="@drawable/certificate_icon"
+            android:icon="@drawable/my_certificate_nav"
             android:title="My Certificates" />
+
 
         <item
             android:id="@+id/nav_communication"
-            android:icon="@drawable/communication"
+            android:icon="@drawable/communication_nav"
             android:title="Communicate" />
 
         <item
             android:id="@+id/nav_Video"
-            android:icon="@drawable/play_icon"
+            android:icon="@drawable/videos_nav"
             android:title="Videos" />
 
         <item
             android:id="@+id/nav_faq"
-            android:icon="@drawable/faqbtech_icon"
+            android:icon="@drawable/faq_nav"
             android:title="FAQ" />
 
         <item
             android:id="@+id/nav_feedback"
-            android:icon="@drawable/feedback"
+            android:icon="@drawable/feedback_nav"
             android:title="Feedback" />
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/logout"
+            android:icon="@drawable/logout_nav"
             android:title="Logout" />
 
         <item

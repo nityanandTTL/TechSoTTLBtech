@@ -93,17 +93,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-
-
-        System.out.println("3"+EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION)));
-        System.out.println("4"+EncryptionUtils.Dcrp_Hex(getString(R.string.B2B_API_VERSION)));
-
-        System.out.println("3"+EncryptionUtils.Ecrp_Hex("https://b2capi.thyrocare.com/APIs/"));
-        System.out.println("4"+EncryptionUtils.Ecrp_Hex("https://b2capi.thyrocare.com/API/"));
-
-
-
-
         init();
         initData();
 
@@ -250,7 +239,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void trackUserActivity() {
-        new LogUserActivityTagging(mActivity, "");
+        new LogUserActivityTagging(mActivity, "","");
     }
 
     private void onVersionControlResponseReceived(final VersionControlResponseModel versionAPIResponseModel) {
@@ -281,7 +270,7 @@ public class SplashActivity extends AppCompatActivity {
                             finishAffinity();
                         }
                     } else {
-                        new LogUserActivityTagging(mActivity, LOGOUT);
+                        new LogUserActivityTagging(mActivity, LOGOUT,"");
                         appPreferenceManager.clearAllPreferences();
                         new DhbDao(mActivity).deleteTablesonLogout();
                         //jai
@@ -320,7 +309,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 if (response.code() == 200) {
-                    new LogUserActivityTagging(mActivity, LOGOUT);
+                    new LogUserActivityTagging(mActivity, LOGOUT,"");
                     appPreferenceManager.clearAllPreferences();
                     new DhbDao(mActivity).deleteTablesonLogout();
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionAPIResponseModel.getAppUrl()));
@@ -580,7 +569,7 @@ public class SplashActivity extends AppCompatActivity {
         model.setDeviceId(DeviceUtils.getDeviceId(mActivity));
         model.setUserId(appPreferenceManager.getLoginResponseModel().getUserID());
         try {
-            new LogUserActivityTagging(mActivity, LOGOUT);
+            new LogUserActivityTagging(mActivity, LOGOUT,"");
             PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
             Call<CommonResponseModel> commonResponeModelCall = postAPIInterface.CallLogoutAPI(model);
             global.showProgressDialog(mActivity, "Please wait..", false);
@@ -623,7 +612,7 @@ public class SplashActivity extends AppCompatActivity {
     public void CallLogOutFromDevice() {
         try {
             global.showCustomToast(mActivity, "Authorization failed, need to Login again...", Toast.LENGTH_SHORT);
-            new LogUserActivityTagging(mActivity, LOGOUT);
+            new LogUserActivityTagging(mActivity, LOGOUT,"");
             appPreferenceManager.clearAllPreferences();
             try {
                 new DhbDao(mActivity).deleteTablesonLogout();

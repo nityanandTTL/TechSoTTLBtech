@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorOrange">
+    android:background="@color/colorOrange"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -14,8 +14,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/_5sdp"
             android:paddingLeft="@dimen/_5sdp"
+            android:paddingTop="@dimen/_5sdp"
             android:paddingRight="@dimen/_5sdp"
             android:paddingBottom="@dimen/_50sdp">
 
@@ -24,7 +24,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/lin_buttonsNextPrevious"
-                android:layout_marginBottom="@dimen/_5sdp">
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:background="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -37,6 +38,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:padding="@dimen/_5sdp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -49,7 +51,7 @@
                             android:id="@+id/tv_benName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tejas (25/M)"
+                            android:text="TEST (25/M)"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_15sdp" />
 
@@ -61,6 +63,7 @@
                         android:orientation="horizontal"
                         android:padding="@dimen/_5sdp"
                         android:weightSum="10">
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -76,7 +79,7 @@
                             android:gravity="center"
                             android:text=" : "
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"/>
+                            android:textSize="@dimen/_12sdp" />
 
                         <TextView
                             android:id="@+id/tv_OrderNo"
@@ -96,10 +99,11 @@
                         android:orientation="horizontal"
                         android:padding="@dimen/_5sdp"
                         android:weightSum="10">
+
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="2"
                             android:layout_height="wrap_content"
+                            android:layout_weight="2"
                             android:text="Product "
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp" />
@@ -111,7 +115,7 @@
                             android:gravity="center"
                             android:text=" : "
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"/>
+                            android:textSize="@dimen/_12sdp" />
 
                         <TextView
                             android:id="@+id/tv_products"
@@ -124,43 +128,142 @@
 
                     </LinearLayout>
 
+
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyle_barcode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_25sdp"/>
+                        android:layout_marginTop="@dimen/_10sdp" />
+
+                    <Button
+                        android:id="@+id/btn_remove"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/dp_2"
+                        android:background="@color/colorSecondary"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:padding="@dimen/_5sdp"
+                        android:text="Remove Urine Sample"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_12sdp"
+                        android:textStyle="bold" />
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_otpvalidate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp_1"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <TextView
+                                android:id="@+id/tv_number"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1.4"
+                                android:paddingLeft="@dimen/_2sdp"
+                                android:text="OTP will be Send to 9999999999"
+                                android:textSize="@dimen/_12sdp" />
+
+
+                            <Button
+                                android:id="@+id/btn_sendopt"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/_30sdp"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.6"
+                                android:background="@color/colorSecondary"
+                                android:gravity="center"
+                                android:padding="@dimen/_3sdp"
+                                android:text="Send OTP"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp" />
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp_1"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+
+                            <EditText
+                                android:id="@+id/edt_verify"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1.4"
+                                android:hint="Verify OTP"
+                                android:inputType="number"
+                                android:maxLength="6"
+                                android:textSize="@dimen/_12sdp" />
+
+
+                            <Button
+                                android:id="@+id/btn_verify_otp"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/_30sdp"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.6"
+                                android:background="@color/colorSecondary"
+                                android:gravity="center"
+                                android:padding="@dimen/_3sdp"
+                                android:text="Verify OTP"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
 
                     <LinearLayout
                         android:id="@+id/lin_BenbarcodePic"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginTop="@dimen/_10sdp">
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="4"
                                 android:gravity="center"
-                                android:textColor="@color/black"
-                                android:text="VIAL IMAGE"
-                                android:textSize="@dimen/_14sdp"
-                                android:textStyle="bold"
                                 android:padding="@dimen/_5sdp"
-                                />
+                                android:text="VIAL IMAGE*"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_14sdp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/txt_captureBenBarcodePic"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="4"
                                 android:layout_gravity="center"
+                                android:layout_weight="4"
                                 android:background="@drawable/editbox_bg"
                                 android:gravity="center"
                                 android:padding="@dimen/_5sdp"
@@ -178,7 +281,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="@dimen/_30sdp"
                                     android:src="@drawable/red_cross_icon"
-                                    android:visibility="gone"/>
+                                    android:visibility="gone" />
 
                                 <ImageView
                                     android:id="@+id/img_uploadBenVail"
@@ -195,8 +298,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_marginRight="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_30sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
                         android:background="@drawable/border_layout"
                         android:padding="@dimen/_5sdp">
 
@@ -225,20 +328,20 @@
                                 android:id="@+id/img_resetSRF"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:padding="@dimen/_3sdp"
                                 android:text="Reset"
                                 android:textSize="@dimen/_14sdp"
-                                android:padding="@dimen/_3sdp"
-                                app:srcCompat="@drawable/close_icon_red"/>
+                                app:srcCompat="@drawable/close_icon_red" />
 
                             <TextView
                                 android:id="@+id/tv_saveSRF"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Save"
-                                android:textSize="@dimen/_14sdp"
-                                android:textColor="@color/white"
+                                android:background="@color/colorPrimary"
                                 android:padding="@dimen/_4sdp"
-                                android:background="@color/colorPrimary"/>
+                                android:text="Save"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_14sdp" />
 
                         </RelativeLayout>
 

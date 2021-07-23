@@ -38,6 +38,7 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
+import com.thyrocare.btechapp.activity.KIOSK_Scanner_Activity;
 import com.thyrocare.btechapp.activity.PaymentsActivity;
 import com.thyrocare.btechapp.customview.CustomDeviceResetDailog;
 import com.thyrocare.btechapp.dao.DhbDao;
@@ -540,7 +541,7 @@ public class HomeScreenFragment extends AbstractFragment {
         imgCamp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentPaymentsActivity = new Intent(activity, NewCampWOEModuleActivity.class);
+                Intent intentPaymentsActivity = new Intent(activity, KIOSK_Scanner_Activity.class);
                 startActivity(intentPaymentsActivity);
             }
         });
@@ -764,7 +765,7 @@ public class HomeScreenFragment extends AbstractFragment {
             @Override
             public void onOkClicked() {
                 try {
-                    new LogUserActivityTagging(activity, LOGOUT);
+                    new LogUserActivityTagging(activity, LOGOUT,"");
                     appPreferenceManager.clearAllPreferences();
                     DhbDao dhbDao = new DhbDao(activity);
                     dhbDao.deleteTablesonLogout();

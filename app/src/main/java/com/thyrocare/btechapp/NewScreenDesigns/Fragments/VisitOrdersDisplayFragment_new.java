@@ -194,6 +194,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         activity.isOnHome = false;
         FirebaselocationUpdateIntent = new Intent(activity, TrackerService.class);
         appPreferenceManager = new AppPreferenceManager(activity);
+        BundleConstants.isKIOSKOrder = false;
     }
 
     @Override
@@ -557,10 +558,14 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                 public void onStart(OrderVisitDetailsModel orderVisitDetailsModel) {
                     gpsTracker = new GPSTracker(activity);
                     if (gpsTracker.canGetLocation()) {
-                        if (isNetworkAvailable(activity)) {
-                            callOrderStatusChangeStartApi(orderVisitDetailsModel, 7);
+                        if (orderVisitDetailsModel.getAllOrderdetails().get(0).isKCF()) {
+                            ProceedToArriveScreen(orderVisitDetailsModel, false);
                         } else {
-                            Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                            if (isNetworkAvailable(activity)) {
+                                callOrderStatusChangeStartApi(orderVisitDetailsModel, 7);
+                            } else {
+                                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } else {
                         gpsTracker.showSettingsAlert();
@@ -666,7 +671,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     }
 
     private void CallDespositionDialog(final OrderVisitDetailsModel orderVisitDetailsModel, ArrayList<DispositionDetailsModel> allDisp) {
-        dialog_ready = new Dialog(activity);
+        dialog_ready = new Dialog(getActivity());
         dialog_ready.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog_ready.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog_ready.setContentView(R.layout.dialog_desposition);
@@ -906,16 +911,26 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 global.hideProgressDialog(activity);
-                if (response.code() == 200 || response.code() == 204) {
-                    onOrderStatusChangedResponseReceived(orderVisitDetailsModel);
-                } else {
-                    try {
-                        Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                try {
+                    if (response.isSuccessful() && response.body()!=null){
+                        if (response.code() == 200 || response.code() == 204) {
+                            onOrderStatusChangedResponseReceived(orderVisitDetailsModel);
+                        } else {
+                            try {
+                                Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }else {
                         Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override
@@ -927,24 +942,28 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     }
 
     private void onOrderStatusChangedResponseReceived(final OrderVisitDetailsModel orderVisitDetailsModel) {
-        androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder;
-        alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(activity);
-        alertDialogBuilder
-                .setMessage("Do you want to Open Map for Direction ?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        ProceedToArriveScreen(orderVisitDetailsModel, true);
-                        dialog.dismiss();
-                    }
-                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ProceedToArriveScreen(orderVisitDetailsModel, false);
-            }
-        });
-        androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        try {
+            AlertDialog.Builder alertDialogBuilder;
+            alertDialogBuilder = new AlertDialog.Builder(activity);
+            alertDialogBuilder
+                    .setMessage("Do you want to Open Map for Direction ?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            ProceedToArriveScreen(orderVisitDetailsModel, true);
+                            dialog.dismiss();
+                        }
+                    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ProceedToArriveScreen(orderVisitDetailsModel, false);
+                }
+            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void ProceedToArriveScreen(OrderVisitDetailsModel orderVisitDetailsModel, boolean OpenMap) {

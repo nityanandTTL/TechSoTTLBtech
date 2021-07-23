@@ -3,7 +3,9 @@ package com.thyrocare.btechapp.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -128,7 +130,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
 
     @Override
     public void onBackPressed() {
-        if (getIntent().hasExtra("canBackpress") && getIntent().getBooleanExtra("canBackpress",false)) {
+        if (getIntent().hasExtra("canBackpress") && getIntent().getBooleanExtra("canBackpress", false)) {
             super.onBackPressed();
         }
 //        super.onBackPressed();
@@ -140,7 +142,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
 
     /*  activity2.toolbarHome.setTitle("Schedule your Day");
 
-      */
+     */
 
 
     //changes_5june2017
@@ -187,13 +189,13 @@ public class ScheduleYourDayActivity extends AbstractActivity {
             @Override
             public void onClick(View v) {
                 //changes_5june2017
- /*               if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
-                    txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
-                    txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    llSlotsDisplay.setVisibility(View.VISIBLE);
-                    isAvailable = true;
-                    btnProceed.setVisibility(View.VISIBLE);
-                    fetchData();
+                /*               if (null == appPreferenceManager.getScheduleCounter() || appPreferenceManager.getScheduleCounter().isEmpty() || appPreferenceManager.getScheduleCounter().equals("n")) {*/
+                txtYes.setTextColor(getResources().getColor(R.color.colorSecondaryDark));
+                txtNo.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                llSlotsDisplay.setVisibility(View.VISIBLE);
+                isAvailable = true;
+                btnProceed.setVisibility(View.VISIBLE);
+                fetchData();
                /* } else if (null != appPreferenceManager.getScheduleCounter() && appPreferenceManager.getScheduleCounter().equals("y")) {
                     Toast.makeText(activity, "User can schedule only once per day...Please try again later.", Toast.LENGTH_SHORT).show();
                 }*/
@@ -239,7 +241,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
                                 dialog.dismiss();
                             }
                         });
-                if (!activity.isFinishing()){
+                if (!activity.isFinishing()) {
                     builder.create().show();
                 }
             }
@@ -249,7 +251,10 @@ public class ScheduleYourDayActivity extends AbstractActivity {
             public void onClick(View v) {
                 SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
                 setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
-                setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
+                    setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                }
+
                 String slots = "";
                 if (selectedSlotsArr != null && selectedSlotsArr.size() > 0) {
                     for (SlotModel selecSlotModel :
@@ -314,9 +319,9 @@ public class ScheduleYourDayActivity extends AbstractActivity {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<SlotModel>> responseCall = apiInterface.CallFetchSlotDetailsApi(appPreferenceManager.getLoginResponseModel().getUserID());
         global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback< ArrayList<SlotModel>>() {
+        responseCall.enqueue(new Callback<ArrayList<SlotModel>>() {
             @Override
-            public void onResponse(Call< ArrayList<SlotModel>> call, retrofit2.Response< ArrayList<SlotModel>> response) {
+            public void onResponse(Call<ArrayList<SlotModel>> call, retrofit2.Response<ArrayList<SlotModel>> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     slotsArr = response.body();
@@ -328,7 +333,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
                         }
                     }
                     initData();
-                }else if (response.code() == 401) {
+                } else if (response.code() == 401) {
                     CallLogOutFromDevice();
                 } else {
                     Toast.makeText(activity, "Failed to Fetch Slots", Toast.LENGTH_SHORT).show();
@@ -336,7 +341,7 @@ public class ScheduleYourDayActivity extends AbstractActivity {
             }
 
             @Override
-            public void onFailure(Call< ArrayList<SlotModel>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<SlotModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);
                 global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
@@ -346,8 +351,8 @@ public class ScheduleYourDayActivity extends AbstractActivity {
     public void CallLogOutFromDevice() {
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
-             new LogUserActivityTagging(activity, LOGOUT);
-                    appPreferenceManager.clearAllPreferences();
+            new LogUserActivityTagging(activity, LOGOUT,"");
+            appPreferenceManager.clearAllPreferences();
             try {
                 new DhbDao(activity).deleteTablesonLogout();
             } catch (Exception e) {
@@ -409,24 +414,24 @@ public class ScheduleYourDayActivity extends AbstractActivity {
                     c.set(Calendar.MINUTE, 0);
                     c.set(Calendar.HOUR_OF_DAY, 0);
 
-                    if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay2()==1){
+                    if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay2() == 1) {
                         Logger.error("THREEE");
                         Intent mIntent = new Intent(activity, ScheduleYourDayActivity2.class);
                         mIntent.putExtra("WHEREFROM", "0");
                         startActivity(mIntent);
 
-                    }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay3()==1){
+                    } else if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay3() == 1) {
                         Logger.error("FOUR");
                         Intent mIntent = new Intent(activity, ScheduleYourDayActivity3.class);
                         mIntent.putExtra("WHEREFROM", "0");
                         startActivity(mIntent);
 
-                    }else if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay4()==1){
+                    } else if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay4() == 1) {
                         Logger.error("FOUR");
                         Intent mIntent = new Intent(activity, ScheduleYourDayActivity4.class);
                         mIntent.putExtra("WHEREFROM", "0");
                         startActivity(mIntent);
-                    }else {
+                    } else {
                         if (value.equals("0")) {
                             if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
                                 Logger.error("Aaata Gela");
@@ -462,7 +467,6 @@ public class ScheduleYourDayActivity extends AbstractActivity {
             }
         });
     }
-
 
 
 }

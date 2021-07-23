@@ -305,7 +305,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 if (response.code() == 200) {
                     try {
-                        new LogUserActivityTagging(activity, LOGOUT);
+                        new LogUserActivityTagging(activity, LOGOUT,"");
                         appPreferenceManager.clearAllPreferences();
                         dhbDao.deleteTablesonLogout();
 
@@ -652,7 +652,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             //Toast.makeText(activity, getString(R.string.logout_message_offline), Toast.LENGTH_LONG).show();
 
             if (appPreferenceManager != null) {
-                 new LogUserActivityTagging(activity, LOGOUT);
+                 new LogUserActivityTagging(activity, LOGOUT,"");
                     appPreferenceManager.clearAllPreferences();
             }
 
@@ -725,7 +725,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                             // Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
 
                             if (appPreferenceManager != null) {
-                                 new LogUserActivityTagging(activity, LOGOUT);
+                                 new LogUserActivityTagging(activity, LOGOUT,"");
                     appPreferenceManager.clearAllPreferences();
                             }
 

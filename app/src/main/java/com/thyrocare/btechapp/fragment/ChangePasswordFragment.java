@@ -201,7 +201,7 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
                 globalclass.hideProgressDialog(activity);
                 if (response.isSuccessful()) {
                     try {
-                        new LogUserActivityTagging(activity, LOGOUT);
+                        new LogUserActivityTagging(activity, LOGOUT,"");
                         appPreferenceManager.clearAllPreferences();
                         dhbDao.deleteTablesonLogout();
                         Intent homeIntent = new Intent(Intent.ACTION_MAIN);

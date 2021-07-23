@@ -22,6 +22,8 @@ import com.thyrocare.btechapp.utils.api.NetworkUtils;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.CommonUtils;
+import com.thyrocare.btechapp.utils.app.Global;
+import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,9 +32,12 @@ import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.TELEPHONY_SERVICE;
 
 public class LogUserActivityTagging {
+
+    String str_modType;
+
     public static final String TAG = LogUserActivityTagging.class.getSimpleName();
 
-    public LogUserActivityTagging(Activity activity, String screen) {
+    public LogUserActivityTagging(Activity activity, String screen,String remark) {
         try {
             String appversion = CommonUtils.getAppVersion(activity);
             String os = "ANDROID " + Build.VERSION.RELEASE;
@@ -69,6 +74,10 @@ public class LogUserActivityTagging {
             }else if (!TextUtils.isEmpty(screen) && screen.equalsIgnoreCase(BundleConstants.LOGOUT)){
                 editorUserActivity.putString("ModType", "LOGOUT");
                 editorUserActivity.putString("IsLogin", "N");
+            }else if(!TextUtils.isEmpty(screen) && screen.equalsIgnoreCase(BundleConstants.WOE)){
+                str_modType = BundleConstants.WOE;
+            }else if(!TextUtils.isEmpty(screen) && screen.equalsIgnoreCase(Constants.LEAD)){
+                str_modType = Constants.LEAD;
             }
             editorUserActivity.apply();
 
@@ -101,11 +110,24 @@ public class LogUserActivityTagging {
             trackUserActivityRequestModel.setAppId(BundleConstants.APPID_TRACKACTIVITY);
             trackUserActivityRequestModel.setIMIENo(imeiNo);
             trackUserActivityRequestModel.setIslogin(sharedPreferencesUserActivity.getString("IsLogin", ""));
-            trackUserActivityRequestModel.setModType(sharedPreferencesUserActivity.getString("ModType", ""));
+            if(!InputUtils.isNull(str_modType)){
+                trackUserActivityRequestModel.setModType(str_modType);
+            }else{
+                trackUserActivityRequestModel.setModType(sharedPreferencesUserActivity.getString("ModType", ""));
+            }
             trackUserActivityRequestModel.setOS(sharedPreferencesUserActivity.getString("OS", ""));
             trackUserActivityRequestModel.setVersion(sharedPreferencesUserActivity.getString("VERSION", ""));
             trackUserActivityRequestModel.setUserID(sharedPreferencesUserActivity.getString("UserID", ""));
             trackUserActivityRequestModel.setToken("");
+            trackUserActivityRequestModel.setLat(CommonUtils.getCurrentLatLong(activity).getmLatitude());
+            trackUserActivityRequestModel.setLongi(CommonUtils.getCurrentLatLong(activity).getmLongitude());
+            trackUserActivityRequestModel.setIpadd(CommonUtils.getIPAddress(true));
+            trackUserActivityRequestModel.setMacadd(CommonUtils.getMACAddress());
+            if(!InputUtils.isNull(str_modType) && !InputUtils.isNull(remark)){
+                trackUserActivityRequestModel.setRemark(remark);
+            }else{
+                trackUserActivityRequestModel.setRemark("");
+            }
 
             try {
                 if (ApplicationController.trackUserActivityController != null) {

@@ -22,6 +22,8 @@ AppConstants {
     public static final int PUT_METHOD = 2;
 
     public static final int BTECH_APP_ID = 1;
+    public static final int setcompression = 50;
+    public static final int setheight = 400;
 
     //===================================================
     public static final String BTECH_ROLE_ID = "4";
@@ -34,6 +36,7 @@ AppConstants {
 
     public static final String HUB_ROLE_ID = "6";
     public static final String LME_ROLE_ID = "14";
+
     //=================================================
 
     public static final int DELETE_METHOD = 3;
@@ -70,7 +73,7 @@ AppConstants {
     public static final String NOMEDIA_FILE = ".nomedia";
 
     public static final String EXTERNAL_DIR = "/DHB";
-
+    public static final String RateCalDate = "Ratecaldate";
      String OFFLINE_STATUS_ACTION_DONE = "com.app.thyrocare.offlineStatusDone";
     public static final String OFFLINE_STATUS_ACTION_NO_DATA = "com.app.thyrocare.offlineStatusNoData";
     public static final String OFFLINE_STATUS_ACTION_ISSUE = "com.app.thyrocare.offlineStatusIssue";
@@ -102,6 +105,7 @@ AppConstants {
     public static final int ORDERSERVED = 14;
     public static final int LEDGER = 15;
     public static final int FAQ = 16;
+    public static final int PickupOrder = 118;
 
     public static final String MASTER_TABLE_UPDATE_TOTAL_COUNT = "master_table_update_total_count";
     public static final String MASTER_TABLE_UPDATE_COMPLETED_COUNT = "master_table_update_completed_count";

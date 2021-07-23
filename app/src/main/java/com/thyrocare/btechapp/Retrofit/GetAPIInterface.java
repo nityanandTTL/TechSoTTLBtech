@@ -66,7 +66,6 @@ import retrofit2.http.Path;
 public interface GetAPIInterface {
 
 
-
     @GET("B2B/COMMON.svc/Showlang")
     Call<VideoLangaugesResponseModel> getVideoLanguages();
 
@@ -108,6 +107,9 @@ public interface GetAPIInterface {
 
     @GET("api/OrderVisitDetailsOptimize/{btechId}")
     Call<FetchOrderDetailsResponseModel> getAllVisitDetails(@Path("btechId")String btechId);
+
+    @GET("api/OrderVisitDetailsOptimize/ByOrderNo/{btechId}/{orderId}")
+    Call<FetchOrderDetailsResponseModel> getOrderAllVisitDetails(@Path("btechId")String btechId, @Path("orderId")String orderId);
 
     @GET("api/OrderDetailsByVisit/{orderno}")
     Call<FetchOrderDetailsResponseModel> getOrderDetail(@Path("orderno")String orderno);

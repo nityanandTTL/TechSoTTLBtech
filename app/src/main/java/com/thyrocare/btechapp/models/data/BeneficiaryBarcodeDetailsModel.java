@@ -15,6 +15,7 @@ public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcela
     private String Barcode;
     private String SamplType;
     private String SCT;
+    private String RescanBarcode;
     private int LabAlert;
     private String ClinicalHistory;
     private int ProcessAt;
@@ -33,6 +34,7 @@ public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcela
         Barcode = in.readString();
         SamplType = in.readString();
         SCT = in.readString();
+        RescanBarcode = in.readString();
         LabAlert = in.readInt();
         ClinicalHistory = in.readString();
         ProcessAt = in.readInt();
@@ -48,6 +50,7 @@ public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcela
         dest.writeString(Barcode);
         dest.writeString(SamplType);
         dest.writeString(SCT);
+        dest.writeString(RescanBarcode);
         dest.writeInt(LabAlert);
         dest.writeString(ClinicalHistory);
         dest.writeInt(ProcessAt);
@@ -70,6 +73,14 @@ public class BeneficiaryBarcodeDetailsModel extends BaseModel implements Parcela
             return new BeneficiaryBarcodeDetailsModel[size];
         }
     };
+
+    public String getRescanBarcode() {
+        return RescanBarcode;
+    }
+
+    public void setRescanBarcode(String rescanBarcode) {
+        RescanBarcode = rescanBarcode;
+    }
 
     @Override
     public String toString() {

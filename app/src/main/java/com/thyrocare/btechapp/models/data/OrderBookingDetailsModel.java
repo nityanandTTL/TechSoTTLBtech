@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class OrderBookingDetailsModel implements Parcelable{
     private int BtechId;
     private String VisitId;
+    private String ProcessLocation;
     private int PaymentMode;
     private ArrayList<OrderDetailsModel> orddtl;
 
@@ -20,6 +21,7 @@ public class OrderBookingDetailsModel implements Parcelable{
     protected OrderBookingDetailsModel(Parcel in) {
         BtechId = in.readInt();
         VisitId = in.readString();
+        ProcessLocation = in.readString();
         PaymentMode = in.readInt();
         orddtl = in.createTypedArrayList(OrderDetailsModel.CREATOR);
     }
@@ -28,6 +30,7 @@ public class OrderBookingDetailsModel implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(BtechId);
         dest.writeString(VisitId);
+        dest.writeString(ProcessLocation);
         dest.writeInt(PaymentMode);
         dest.writeTypedList(orddtl);
     }
@@ -63,6 +66,14 @@ public class OrderBookingDetailsModel implements Parcelable{
 
     public void setVisitId(String visitId) {
         VisitId = visitId;
+    }
+
+    public String getProcessLocation() {
+        return ProcessLocation;
+    }
+
+    public void setProcessLocation(String processLocation) {
+        ProcessLocation = processLocation;
     }
 
     public ArrayList<OrderDetailsModel> getOrddtl() {

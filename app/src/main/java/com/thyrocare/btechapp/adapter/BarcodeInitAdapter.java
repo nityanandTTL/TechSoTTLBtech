@@ -1,6 +1,7 @@
 package com.thyrocare.btechapp.adapter;
 
 import android.app.Activity;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.models.data.BeneficiaryBarcodeDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.utils.api.Logger;
+import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import java.util.ArrayList;
@@ -36,16 +38,12 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
         this.beneficaryWiseScanbarcodeModel = beneficaryWiseScanbarcodeModel;
         this.Serumcount = Serumcount;
         this.benposition = benposition;
-
     }
 
-
-
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_serumtype, txtSampleType,txtSampleTypeRBS,edtBarcode;
+        TextView tv_serumtype, txtSampleType, txtSampleTypeRBS, edtBarcode, edt_barcode_confirm;
         LinearLayout lin_sampleType;
-        ImageView imgScan,imgDelete;
+        ImageView imgScan, imgDelete, imgScanConfirm, imgDeleteconfirm;
 
         public MyViewHolder(View view) {
             super(view);
@@ -56,6 +54,10 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
             edtBarcode = (TextView) view.findViewById(R.id.edt_barcode);
             imgScan = (ImageView) view.findViewById(R.id.scan_barcode_button);
             imgDelete = (ImageView) view.findViewById(R.id.imgDelete);
+            imgDeleteconfirm = (ImageView) view.findViewById(R.id.imgDeleteconfirm);
+
+            edt_barcode_confirm = view.findViewById(R.id.edt_barcode_confirm);
+            imgScanConfirm = view.findViewById(R.id.scan_barcode_button_confirm);
 
             txtSampleType.setSelected(true);
             txtSampleTypeRBS.setSelected(true);
@@ -67,7 +69,6 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_barcode_scan, parent, false);
-
         return new MyViewHolder(itemView);
     }
 
@@ -94,13 +95,11 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
         // TODO code to show Primary and secondary serum
 
         holder.txtSampleType.setText(barcodedetailArylist.get(position).getSamplType());
-
         if (beneficaryWiseScanbarcodeModel.getTestsCode().equalsIgnoreCase("RBS,PPBS") || beneficaryWiseScanbarcodeModel.getTestsCode().equalsIgnoreCase("PPBS,RBS")) {
-            if (barcodedetailArylist.get(position).getSamplType().equalsIgnoreCase("FLUORIDE-R")){
+            if (barcodedetailArylist.get(position).getSamplType().equalsIgnoreCase("FLUORIDE-R")) {
                 holder.txtSampleType.setText("FLUORIDE RBS");
             }
         }
-
         if (barcodedetailArylist.get(position).getSamplType().equals("SERUM")) {
             holder.lin_sampleType.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_serum));
         } else if (barcodedetailArylist.get(position).getSamplType().equals("EDTA")) {
@@ -118,30 +117,50 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
         } else if (barcodedetailArylist.get(position).getSamplType().equals("FLUORIDE-PP")) {
             holder.lin_sampleType.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
         }
+
         Logger.error("beneficiaryBarcodeDetailsModel.getBarcode() " + barcodedetailArylist.get(position).getBarcode());
         Logger.error("barcode value: " + barcodedetailArylist.get(position).getBarcode());
 
 
         if (!TextUtils.isEmpty(barcodedetailArylist.get(position).getBarcode())) {
-            holder.edtBarcode.setText("  "+barcodedetailArylist.get(position).getBarcode()+"  ");
+            holder.edtBarcode.setText("  " + barcodedetailArylist.get(position).getBarcode() + "  ");
             holder.imgScan.setVisibility(View.GONE);
             holder.imgDelete.setVisibility(View.VISIBLE);
         } else {
             holder.imgScan.setVisibility(View.VISIBLE);
             holder.imgDelete.setVisibility(View.GONE);
         }
-        holder.edtBarcode.setText(!InputUtils.isNull(barcodedetailArylist.get(position).getBarcode()) ? "  "+barcodedetailArylist.get(position).getBarcode()+"  " : "");
+        if (!TextUtils.isEmpty(barcodedetailArylist.get(position).getRescanBarcode())) {
+            holder.edt_barcode_confirm.setText("  " + barcodedetailArylist.get(position).getRescanBarcode() + "  ");
+            holder.imgScanConfirm.setVisibility(View.GONE);
+            holder.imgDeleteconfirm.setVisibility(View.VISIBLE);
+        } else {
+            holder.imgScanConfirm.setVisibility(View.VISIBLE);
+            holder.imgDeleteconfirm.setVisibility(View.GONE);
+        }
+        holder.edtBarcode.setText(!InputUtils.isNull(barcodedetailArylist.get(position).getBarcode()) ? "  " + barcodedetailArylist.get(position).getBarcode() + "  " : "");
+        holder.edt_barcode_confirm.setText(!InputUtils.isNull(barcodedetailArylist.get(position).getRescanBarcode()) ? "  " + barcodedetailArylist.get(position).getRescanBarcode() + "  " : "");
 
         final int finalI = position;
         initListeners(holder, position, finalI);
+
     }
 
     private void initListeners(@NonNull MyViewHolder holder, final int position, final int finalI) {
         holder.imgScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onClickListeners != null){
-                    onClickListeners.onBarcodeScanClicked(barcodedetailArylist.get(position).getSamplType(),beneficaryWiseScanbarcodeModel.getBenId(), finalI, benposition);
+                if (onClickListeners != null) {
+                    onClickListeners.onBarcodeScanClicked(barcodedetailArylist.get(position).getSamplType(), beneficaryWiseScanbarcodeModel.getBenId(), finalI, benposition);
+                }
+            }
+        });
+
+        holder.imgScanConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onClickListeners != null) {
+                    onClickListeners.onBarcodeScanClickedConfirm(barcodedetailArylist.get(position).getSamplType(), beneficaryWiseScanbarcodeModel.getBenId(), finalI, benposition);
                 }
             }
         });
@@ -149,8 +168,17 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
         holder.edtBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onClickListeners != null){
-                    onClickListeners.onBarcodeScanClicked(barcodedetailArylist.get(position).getSamplType(),beneficaryWiseScanbarcodeModel.getBenId(), finalI, benposition);
+                if (onClickListeners != null) {
+                    onClickListeners.onBarcodeScanClicked(barcodedetailArylist.get(position).getSamplType(), beneficaryWiseScanbarcodeModel.getBenId(), finalI, benposition);
+                }
+            }
+        });
+
+        holder.edt_barcode_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onClickListeners != null) {
+                    onClickListeners.onBarcodeScanClickedConfirm(barcodedetailArylist.get(position).getSamplType(), beneficaryWiseScanbarcodeModel.getBenId(), finalI, benposition);
                 }
             }
         });
@@ -159,7 +187,15 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
             @Override
             public void onClick(View v) {
                 if (onClickListeners != null) {
-                    onClickListeners.onBarcodeDelete(barcodedetailArylist.get(position).getBarcode(), benposition);
+                    onClickListeners.onBarcodeDelete(barcodedetailArylist.get(position).getBarcode(), benposition, "yes");
+                }
+            }
+        });
+        holder.imgDeleteconfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onClickListeners != null) {
+                    onClickListeners.onBarcodeDelete(barcodedetailArylist.get(position).getRescanBarcode(), benposition, "no");
                 }
             }
         });
@@ -176,7 +212,10 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
 
     public interface OnItemClickListener {
         void onBarcodeScanClicked(String SampleType, int BenID, int barcodePosition, int BenPosition);
-        void onBarcodeDelete(String barcode, int BenPosition);
+
+        void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition);
+
+        void onBarcodeDelete(String barcode, int BenPosition, String isflag);
 
     }
 

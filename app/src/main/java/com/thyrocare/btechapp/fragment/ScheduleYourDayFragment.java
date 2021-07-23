@@ -436,7 +436,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
     public void CallLogOutFromDevice() {
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
-             new LogUserActivityTagging(activity, LOGOUT);
+             new LogUserActivityTagging(activity, LOGOUT,"");
                     appPreferenceManager.clearAllPreferences();
             try {
                 new DhbDao(activity).deleteTablesonLogout();

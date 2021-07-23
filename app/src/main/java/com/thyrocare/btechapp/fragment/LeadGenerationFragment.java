@@ -44,6 +44,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
@@ -296,7 +297,6 @@ public class LeadGenerationFragment extends Fragment {
                                 } else {
                                     CallPurposeBasedLeadGenerationAPI(name, mobile, email, address, pincode, remarks, strSelectedPurpose);
                                 }
-
                             } else {
                                 globalClass.showCustomToast(mActivity, ConstantsMessages.CheckInternetConnectionMsg);
                             }
@@ -704,6 +704,23 @@ public class LeadGenerationFragment extends Fragment {
             return false;
         }
 
+        if (InputUtils.isNull(edt_pincode.getText().toString())) {
+            globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.str_valid_pincode));
+            edt_pincode.requestFocus();
+            return false;
+        }
+        if (edt_pincode.getText().toString().startsWith("0")) {
+            edt_pincode.setError("Cannot start with 0");
+            edt_pincode.requestFocus();
+            return false;
+        }
+
+        if (edt_pincode.getText().toString().startsWith("9")) {
+            edt_pincode.setError("Cannot start with 9");
+            edt_pincode.requestFocus();
+            return false;
+        }
+
 
         if (!InputUtils.isNull(edt_pincode.getText().toString().trim()) && edt_pincode.getText().toString().length() < 6) {
             globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.str_valid_pincode));
@@ -848,6 +865,8 @@ public class LeadGenerationFragment extends Fragment {
             public void onSuccess(LeadgenerationResponseModel model) {
 
                 if (model != null && StringUtils.CheckEqualIgnoreCase(model.getRespId(), Constants.RES02024)) {
+                    new LogUserActivityTagging(mActivity,Constants.LEAD,mobile);
+
                     clearAllFields();
                     globalClass.showalert_OK(model.getResponse(), mActivity);
                 } else {
@@ -896,6 +915,7 @@ public class LeadGenerationFragment extends Fragment {
     private void OnLeadGenerationAPIresponseReceived() {
         if (InputUtils.CheckEqualCaseSensitive(testBookingResponseModel.getRES_ID(), "RES0000")) {
             globalClass.showCustomToast(mActivity, ConstantsMessages.TestBookingDoneSuccessfully);
+            new LogUserActivityTagging(mActivity,Constants.LEAD,testBookingResponseModel.getORDER_NO());
 
             clearAllFields();
 

@@ -28,7 +28,7 @@ public class TrackUserActivityController {
 
     public void trackUserActivity(TrackUserActivityRequestModel trackUserActivityRequestModel) {
 
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.VELSO_URL))).create(PostAPIInterface.class);
         Call<CommonPOSTResponseModel> responseCall = apiInterface.CallUserTrackingAPI(trackUserActivityRequestModel);
         responseCall.enqueue(new Callback<CommonPOSTResponseModel>() {
             @Override

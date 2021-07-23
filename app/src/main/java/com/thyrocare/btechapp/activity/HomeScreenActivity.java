@@ -32,7 +32,10 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.thyrocare.btechapp.Controller.DeviceLogOutController;
+import com.thyrocare.btechapp.Controller.SignINOUTController;
+import com.thyrocare.btechapp.Controller.SignSummaryController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.NewCampWOEModuleActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.StockAvailabilityActivityNew;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.BtechCertificateFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.FAQ_Fragment;
@@ -41,6 +44,9 @@ import com.thyrocare.btechapp.NewScreenDesigns.Fragments.Leave_intimation_fragme
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.Ledger_module_fragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.TSP_OrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -58,6 +64,10 @@ import com.thyrocare.btechapp.fragment.MaterialFragment;
 import com.thyrocare.btechapp.fragment.OrderServedFragment;
 import com.thyrocare.btechapp.fragment.QrCodeWoeFragment;
 import com.thyrocare.btechapp.fragment.ScheduleYourDayFragment;
+import com.thyrocare.btechapp.models.api.request.SignINSummaryRequestModel;
+import com.thyrocare.btechapp.models.api.request.SignInRequestModel;
+import com.thyrocare.btechapp.models.api.response.SignInResponseModel;
+import com.thyrocare.btechapp.models.api.response.SignSummaryResponseModel;
 import com.thyrocare.btechapp.uiutils.AbstractActivity;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
@@ -102,9 +112,11 @@ public class HomeScreenActivity extends AbstractActivity
     public static String mCurrentFragmentName = "";//jai
     CharSequence[] items;
     Global globalclass;
-
+    String s;
     Boolean isFromNotification = false;
     int screenCategory;
+    ConnectionDetector cd;
+    int flag_sign = 0;
     public ImageView toolbar_image;
 
 
@@ -116,7 +128,7 @@ public class HomeScreenActivity extends AbstractActivity
         dhbDao = new DhbDao(activity);
         globalclass = new Global(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
-
+        cd = new ConnectionDetector(activity);
         //For Cache Clear
         CommonUtils.deleteCache(activity);
 
@@ -165,6 +177,8 @@ public class HomeScreenActivity extends AbstractActivity
             initData();
             // pushFragments(HomeScreenFragment.newInstance(),false,false,HomeScreenFragment.TAG_FRAGMENT,R.id.fl_homeScreen,TAG_ACTIVITY);
         }
+        CallBTechSignINOUTSummaryAPI();
+
        /* TImeCheckerIntent = new Intent(this, Timecheckservice.class);
         startService(TImeCheckerIntent);*/
 
@@ -178,6 +192,20 @@ public class HomeScreenActivity extends AbstractActivity
             screenCategory = getIntent().getIntExtra("screenCategory", 0);
             getNotification(navigationView);
         }
+    }
+
+    private void CallBTechSignINOUTSummaryAPI() {
+        if (cd.isConnectingToInternet()) {
+            SignINSummaryRequestModel requestModel = new SignINSummaryRequestModel();
+            requestModel.setType(Constants.GETIGNINOUT);
+            requestModel.setBtechid(appPreferenceManager.getLoginResponseModel().getUserID());
+            SignSummaryController inoutController = new SignSummaryController(this);
+            inoutController.signINOUTSummary(requestModel);
+
+        } else {
+            Global.showCustomStaticToast(activity, ConstantsMessages.CHECK_INTERNET_CONN);
+        }
+
     }
 
     public void setTitle(String title) {
@@ -276,6 +304,7 @@ public class HomeScreenActivity extends AbstractActivity
     @Override
     protected void onResume() {
         super.onResume();
+        CallBTechSignINOUTSummaryAPI();
         //stopService(TImeCheckerIntent);
 
     }
@@ -375,6 +404,8 @@ public class HomeScreenActivity extends AbstractActivity
                 toolbarHome.setVisibility(View.VISIBLE);
                 pushFragments(Leave_intimation_fragment_new.newInstance(), false, false, Leave_intimation_fragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             }
+        } else if (id == R.id.nav_punch) {
+            signINOUTdialog(flag_sign);
         } else if (id == R.id.nav_change_password) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(ChangePasswordFragment.newInstance(), false, false, ChangePasswordFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
@@ -395,12 +426,22 @@ public class HomeScreenActivity extends AbstractActivity
                         CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             }
             //   Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_camp) {
+          /*  toolbarHome.setVisibility(View.VISIBLE);
+            pushFragments(FeedbackFragment_new.newInstance(), false, false,
+                    FeedbackFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);*/
+
+            Intent intentPaymentsActivity = new Intent(HomeScreenActivity.this, NewCampWOEModuleActivity.class);
+            startActivity(intentPaymentsActivity);
         } else if (id == R.id.nav_feedback) {
 
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(FeedbackFragment_new.newInstance(), false, false,
                     FeedbackFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-            //   Toast.makeText(activity, "Feature coming soon...", Toast.LENGTH_SHORT).show();
+
+        } else if (id == R.id.nav_pickup) {
+            Intent intent = new Intent(HomeScreenActivity.this, OrderPickUpActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_faq) {
 
             toolbarHome.setVisibility(View.VISIBLE);
@@ -443,7 +484,7 @@ public class HomeScreenActivity extends AbstractActivity
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(BtechCertificateFragment.newInstance(), false, false, BtechCertificateFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         } else if (id == R.id.nav_hcw) {
-            Intent intent = new Intent(HomeScreenActivity.this,HCW_Activity.class);
+            Intent intent = new Intent(HomeScreenActivity.this, HCW_Activity.class);
             startActivity(intent);
 
         } else if (id == R.id.nav_Hub) {
@@ -486,6 +527,55 @@ public class HomeScreenActivity extends AbstractActivity
         return true;
     }
 
+    private void signINOUTdialog(int flag_sign) {
+        if (flag_sign == 0) {
+            android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(this);
+            alertDialog.setTitle("Sign IN/OUT")
+                    .setMessage("Do you want to Sign IN ?")
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            callSignINOUTAPI();
+                        }
+                    })
+                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .show();
+        } else if (flag_sign == 1) {
+            android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(this);
+            alertDialog.setTitle("Sign IN/OUT")
+                    .setMessage("Do you want to Sign OUT ?")
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            callSignINOUTAPI();
+                        }
+                    })
+                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .show();
+        } else if (flag_sign == 2) {
+            android.app.AlertDialog.Builder alertDialog = new android.app.AlertDialog.Builder(this);
+            alertDialog.setTitle("Sign IN/OUT")
+                    .setMessage("You have Sign-OUT for the day!")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            CallBTechSignINOUTSummaryAPI();
+                            dialogInterface.dismiss();
+                        }
+                    }).show();
+        }
+    }
+
     public void CallLogoutRequestApi() {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
@@ -495,7 +585,7 @@ public class HomeScreenActivity extends AbstractActivity
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 if (response.code() == 200) {
                     try {
-                        new LogUserActivityTagging(activity, LOGOUT);
+                        new LogUserActivityTagging(activity, LOGOUT,"");
                         appPreferenceManager.clearAllPreferences();
                         dhbDao.deleteTablesonLogout();
                         Intent homeIntent = new Intent(Intent.ACTION_MAIN);
@@ -628,7 +718,79 @@ public class HomeScreenActivity extends AbstractActivity
             pushFragments(Ledger_module_fragment_new.newInstance(), false, false, Ledger_module_fragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         } else if (screenCategory == FAQ) {
             navigationView.getMenu().performIdentifierAction(R.id.nav_faq, 0);
+        } else if (screenCategory == PickupOrder) {
+            Intent n = new Intent(this, OrderPickUpActivity.class);
+            n.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(n);
         }
     }
 
+    public void getSubmitDataResponse(SignSummaryResponseModel responseModel) {
+        if (responseModel != null) {
+            if (!InputUtils.isNull(responseModel.getSigninTime()) && InputUtils.isNull(responseModel.getSignoutTime()) && InputUtils.CheckEqualIgnoreCase(responseModel.getResponseId(), ConstantsMessages.RES0000)) {
+                flag_sign = 1;
+//                globalclass.showCustomToast(activity, "" + responseModel.getResponse(), Toast.LENGTH_SHORT);
+            } else if (InputUtils.isNull(responseModel.getSigninTime()) && (InputUtils.isNull(responseModel.getSignoutTime()))) {
+//                tv_punch.setText("Sign IN/OUT");
+                flag_sign = 0;
+            } else if (!InputUtils.isNull(responseModel.getSigninTime()) && (!InputUtils.isNull(responseModel.getSignoutTime()))) {
+//                tv_punch.setVisibility(View.GONE);
+                flag_sign = 2;
+            }
+        }
+    }
+
+    private void callSignINOUTAPI() {
+        if (flag_sign == 0) {
+            s = Constants.SIGNIN;
+            callAPI(s);
+        }
+        if (flag_sign == 1) {
+            s = Constants.SIGNOUT;
+            callAPI(s);
+        }
+    }
+
+    private void callAPI(String s) {
+        if (cd.isConnectingToInternet()) {
+            SignInRequestModel requestModel = new SignInRequestModel();
+            if (InputUtils.CheckEqualIgnoreCase(s, Constants.SIGNIN)) {
+                requestModel.setType(s);
+                requestModel.setBtechid(appPreferenceManager.getLoginResponseModel().getUserID());
+                requestModel.setLatitude(CommonUtils.getCurrentLatLong(activity).getmLatitude());
+                requestModel.setLongitude(CommonUtils.getCurrentLatLong(activity).getmLongitude());
+                requestModel.setSignInRemarks("");
+                requestModel.setSignOutRemarks("");
+                requestModel.setApikey("");
+                requestModel.setOutlongitude("");
+                requestModel.setOutLatitude("");
+            } else if (InputUtils.CheckEqualIgnoreCase(s, Constants.SIGNOUT)) {
+                requestModel.setType(s);
+                requestModel.setLatitude("");
+                requestModel.setLongitude("");
+                requestModel.setBtechid(appPreferenceManager.getLoginResponseModel().getUserID());
+                requestModel.setOutLatitude(CommonUtils.getCurrentLatLong(activity).getmLatitude());
+                requestModel.setOutlongitude(CommonUtils.getCurrentLatLong(activity).getmLongitude());
+                requestModel.setSignInRemarks("");
+                requestModel.setSignOutRemarks("");
+                requestModel.setApikey("");
+            }
+            SignINOUTController signINOUTController = new SignINOUTController(this);
+            signINOUTController.signINOUT(requestModel);
+        } else {
+            Global.showCustomStaticToast(activity, ConstantsMessages.CHECK_INTERNET_CONN);
+        }
+    }
+
+    public void getSignINdata(SignInResponseModel responseModel) {
+        if (responseModel != null && InputUtils.CheckEqualIgnoreCase(responseModel.getResponseId(), ConstantsMessages.RES0000)) {
+            globalclass.showCustomToast(activity, "" + responseModel.getResponse(), Toast.LENGTH_SHORT);
+            CallBTechSignINOUTSummaryAPI();
+        } else if (responseModel != null && InputUtils.CheckEqualIgnoreCase(responseModel.getResponseId(), Constants.RES0001)) {
+            globalclass.showCustomToast(activity, "" + responseModel.getResponse(), Toast.LENGTH_SHORT);
+            CallBTechSignINOUTSummaryAPI();
+        } else {
+            globalclass.showCustomToast(activity, ConstantsMessages.SOMETHING_WENT_WRONG);
+        }
+    }
 }

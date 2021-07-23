@@ -82,9 +82,9 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private final LinearLayout linBenDetails,lin_BeforeArrive,lin_benProduct, lin_firstBenDetails, lin_benName, lin_Edit_delete_Ben, lin_fastingDetails, lin_MobileNo, lin_EmailID;
+        private final LinearLayout linBenDetails, lin_BeforeArrive, lin_benProduct, lin_firstBenDetails, lin_benName, lin_Edit_delete_Ben, lin_fastingDetails, lin_MobileNo, lin_EmailID;
         private final TextView tv_FirstBenName, tv_OrderNo, tv_Address, tv_MobileNo, tv_EmailID, tv_AppointmentDateTime, tv_benName, tv_benProduct, tv_benPrice;
-        private final ImageView img_editBenDetails, img_DeleteBen,imgCall;
+        private final ImageView img_editBenDetails, img_DeleteBen, imgCall;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -131,7 +131,7 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
             holder.lin_benName.setVisibility(View.GONE);
             if (Status.equalsIgnoreCase("Arrive")) {
                 holder.lin_BeforeArrive.setVisibility(View.GONE);
-            }else{
+            } else {
                 holder.lin_BeforeArrive.setVisibility(View.VISIBLE);
             }
         } else {
@@ -149,11 +149,14 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
             holder.lin_EmailID.setVisibility(View.VISIBLE);
         }
 
-        if (BenMasterArray.get(position).getFasting().equalsIgnoreCase("Fasting")) {
-            holder.lin_fastingDetails.setVisibility(View.VISIBLE);
-        } else {
-            holder.lin_fastingDetails.setVisibility(View.GONE);
+        if (!InputUtils.isNull(BenMasterArray.get(position).getFasting())) {
+            if (BenMasterArray.get(position).getFasting().equalsIgnoreCase("Fasting")) {
+                holder.lin_fastingDetails.setVisibility(View.VISIBLE);
+            } else {
+                holder.lin_fastingDetails.setVisibility(View.GONE);
+            }
         }
+
 
         if (Status.equalsIgnoreCase("Arrive")) {
             if (isValidForEditing(BenMasterArray.get(position).getTestsCode())) {
@@ -181,12 +184,12 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
         holder.tv_Address.setText(!StringUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress()) ? orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress() : "");
         holder.tv_MobileNo.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
         holder.tv_EmailID.setText(!StringUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail()) ? orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail() : "");
-        holder.tv_AppointmentDateTime.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAppointmentDate() + ", " + DateUtil.Req_Date_Req(orderVisitDetailsModel.getAllOrderdetails().get(0).getSlot(),"hh:mm a","HH:mm"));
+        holder.tv_AppointmentDateTime.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAppointmentDate() + ", " + DateUtil.Req_Date_Req(orderVisitDetailsModel.getAllOrderdetails().get(0).getSlot(), "hh:mm a", "HH:mm"));
         holder.tv_benName.setText(BenMasterArray.get(position).getName() + "(" + BenMasterArray.get(position).getGender() + " / " + BenMasterArray.get(position).getAge() + ")");
-        if (orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct()){
-            holder.tv_benProduct.setText(Html.fromHtml( !StringUtils.isNull(BenMasterArray.get(position).getTestsCode()) ? "<u>"+BenMasterArray.get(position).getTestsCode()+"</u>" : ""));
+        if (orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct()) {
+            holder.tv_benProduct.setText(Html.fromHtml(!StringUtils.isNull(BenMasterArray.get(position).getTestsCode()) ? "<u>" + BenMasterArray.get(position).getTestsCode() + "</u>" : ""));
             holder.lin_benProduct.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.lin_benProduct.setVisibility(View.GONE);
         }
 
@@ -265,6 +268,7 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
         });
 
     }
+
     @Override
     public int getItemCount() {
         return BenMasterArray.size();

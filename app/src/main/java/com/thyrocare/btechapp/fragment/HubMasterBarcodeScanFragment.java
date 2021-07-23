@@ -251,7 +251,7 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
             try {
-                 new LogUserActivityTagging(activity, LOGOUT);
+                 new LogUserActivityTagging(activity, LOGOUT,"");
                     appPreferenceManager.clearAllPreferences();
             } catch (Exception e) {
                 e.printStackTrace();

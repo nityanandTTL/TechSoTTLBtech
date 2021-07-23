@@ -1,90 +1,100 @@
 package com.thyrocare.btechapp.Retrofit;
 
-
-
-import android.widget.Toast;
-
 import com.google.gson.JsonObject;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.AvailableStockModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.BtechWiseVersionTrackerRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampPatientDetailRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampWisePatientDetailRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampWoeMISReuestModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.EmailVaildationPostModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.FeedbackModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetAccessTokenForOTPRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetBtechCertificateRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetSSLKeyRequestModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SubmitB2BWoeRequestModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampModuleMISResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampPatientSearchDetailResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampWisePatientDetailResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.B2BWoeResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetBtechCertifcateResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.LeaveIntimation_SubmitModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.LogoutRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.NotificationMappingRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.RequestOTPModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SendSMSAfterBenRemovedRequestModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SubmitB2BWoeRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.TrackUserActivityRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.UpdateStockModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.WOEOtpValidationRequestModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.B2BWoeResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampModuleMISResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampPatientSearchDetailResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CampWisePatientDetailResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonPOSTResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.EmailValidationResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetBtechCertifcateResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.MainMaterialModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.NotificationMappingResponseModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.models.api.request.BtechsRequestModel;
 import com.thyrocare.btechapp.models.api.request.BtechwithHub_MasterBarcodeMappingRequestModel;
 import com.thyrocare.btechapp.models.api.request.CampStartedRequestModel;
 import com.thyrocare.btechapp.models.api.request.CartAPIRequestModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.EmailVaildationPostModel;
 import com.thyrocare.btechapp.models.api.request.CashDepositEntryRequestModel;
 import com.thyrocare.btechapp.models.api.request.ChangePasswordRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetPatientDetailsRequestModel;
+import com.thyrocare.btechapp.models.api.request.GetTestCodeRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetVideoLanguageWiseRequestModel;
 import com.thyrocare.btechapp.models.api.request.HubStartRequestModel;
 import com.thyrocare.btechapp.models.api.request.LeadGenerationRequestModel;
 import com.thyrocare.btechapp.models.api.request.MasterBarcodeMappingRequestModel;
 import com.thyrocare.btechapp.models.api.request.MaterialorderRequestModel;
 import com.thyrocare.btechapp.models.api.request.NewClientModel;
+import com.thyrocare.btechapp.models.api.request.NotificationTokenRequestModel;
 import com.thyrocare.btechapp.models.api.request.OlcScanPickUpRequestModel;
 import com.thyrocare.btechapp.models.api.request.OlcStartRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderAllocationTrackLocationRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
+import com.thyrocare.btechapp.models.api.request.PickupOrderRequestModel;
+import com.thyrocare.btechapp.models.api.request.PostPickupOrderRequestClass;
 import com.thyrocare.btechapp.models.api.request.Post_DeviceID;
 import com.thyrocare.btechapp.models.api.request.RemoveBeneficiaryAPIRequestModel;
+import com.thyrocare.btechapp.models.api.request.RemoveUrineReqModel;
 import com.thyrocare.btechapp.models.api.request.ResetPasswordRequestModel;
 import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
 import com.thyrocare.btechapp.models.api.request.SendScannedbarcodeLME;
 import com.thyrocare.btechapp.models.api.request.ServiceUpdateRequestModel;
 import com.thyrocare.btechapp.models.api.request.SetBtechAvailabilityAPIRequestModel;
+import com.thyrocare.btechapp.models.api.request.SignINSummaryRequestModel;
+import com.thyrocare.btechapp.models.api.request.SignInRequestModel;
 import com.thyrocare.btechapp.models.api.request.StockAvailabilityRequestModel;
 import com.thyrocare.btechapp.models.api.request.Tsp_Send_RequestModel;
 import com.thyrocare.btechapp.models.api.request.UpdateMaterial;
 import com.thyrocare.btechapp.models.api.response.CartAPIResponseModel;
-import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel1;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.EmailValidationResponseModel;
+import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
+import com.thyrocare.btechapp.models.api.response.GetCollectionReqModel;
+import com.thyrocare.btechapp.models.api.response.GetCollectionRespModel;
+import com.thyrocare.btechapp.models.api.response.GetTestResponseModel;
 import com.thyrocare.btechapp.models.api.response.LeadChannelRespModel;
 import com.thyrocare.btechapp.models.api.response.LeadPurposeResponseModel;
 import com.thyrocare.btechapp.models.api.response.LeadgenerationResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginDeviceResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginResponseModel;
+import com.thyrocare.btechapp.models.api.response.NewCommonResponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseVisitModel;
 import com.thyrocare.btechapp.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentStartTransactionAPIResponseModel;
+import com.thyrocare.btechapp.models.api.response.PickupOrderResponseModel;
+import com.thyrocare.btechapp.models.api.response.PostPickupOrderResponseModel;
 import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsResponseModel;
+import com.thyrocare.btechapp.models.api.response.RemoveUrineSampleRespModel;
 import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
+import com.thyrocare.btechapp.models.api.response.SignInResponseModel;
+import com.thyrocare.btechapp.models.api.response.SignSummaryResponseModel;
 import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
 import com.thyrocare.btechapp.models.api.response.VideosResponseModel;
 import com.thyrocare.btechapp.models.data.HCWRequestModel;
 import com.thyrocare.btechapp.models.data.HCWResponseModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
-
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -92,7 +102,6 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
@@ -155,16 +164,16 @@ public interface PostAPIInterface {
     @Multipart
     @POST("api/OrderAllocation/SelfiUploadd")
     Call<SelfieUploadResponseModel> uploadSelfieToServer(@Part MultipartBody.Part image,
-                                                         @Part("Btechid") RequestBody Btechid,@Part("APPDOWNLOAD") RequestBody requestAPPDOWNLOAD,@Part("TEMP") RequestBody requestTEMP);
+                                                         @Part("Btechid") RequestBody Btechid, @Part("APPDOWNLOAD") RequestBody requestAPPDOWNLOAD, @Part("TEMP") RequestBody requestTEMP);
 
     @POST("api/OrderAllocation/TrackLocation")
     Call<String> SendBtechLatlongToServer(@Body OrderAllocationTrackLocationRequestModel model);
 
     @POST("api/OrderAllocation/ServiceUpdate")
-    Call<String> CallServiceUpdateAPI (@Body ServiceUpdateRequestModel model);
+    Call<String> CallServiceUpdateAPI(@Body ServiceUpdateRequestModel model);
 
     @POST("api/OrderStatusChange/{ID}")
-    Call<String> CallOrderStatusChangeAPI(@Body OrderStatusChangeRequestModel model,@Path("ID") String ID);
+    Call<String> CallOrderStatusChangeAPI(@Body OrderStatusChangeRequestModel model, @Path("ID") String ID);
 
     @Headers("Content-Type: application/json")
     @POST("api/RemoveBeneficiary")
@@ -172,7 +181,7 @@ public interface PostAPIInterface {
 
     @Headers("Content-Type: application/json")
     @POST("api/AllSMS/PostRemoveBenSMS")
-    Call<String> CallSendSMSafterBeneficaryRemovedAPI(@Header("Authorization") String token,@Body SendSMSAfterBenRemovedRequestModel model);
+    Call<String> CallSendSMSafterBeneficaryRemovedAPI(@Header("Authorization") String token, @Body SendSMSAfterBenRemovedRequestModel model);
 
     @Headers("Content-Type: application/json")
     @POST("api/Cart")
@@ -180,7 +189,7 @@ public interface PostAPIInterface {
 
     @Headers("Content-Type: application/json")
     @POST("api/OrderBooking")
-    Call<String> CallTechsoOrderBookingAPI(@Header("Authorization") String token,@Body OrderBookingRequestModel model);
+    Call<String> CallTechsoOrderBookingAPI(@Header("Authorization") String token, @Body OrderBookingRequestModel model);
 
     @Headers("Content-Type: application/json")
     @POST("MASTER.svc/EmailValidate")
@@ -204,7 +213,7 @@ public interface PostAPIInterface {
     @POST("B2B/COMMON.svc/StockAvailability")
     Call<com.thyrocare.btechapp.models.api.response.MainMaterialModel> CallStackAvailabilityAPI(@Body StockAvailabilityRequestModel stockAvailabilityRequestModel);
 
-    @POST("order.svc/Appuser")
+    @POST("CommonServices/Appuser")
     Call<CommonPOSTResponseModel> CallUserTrackingAPI(@Body TrackUserActivityRequestModel trackUserActivityRequestModel);
 
     @FormUrlEncoded
@@ -304,44 +313,44 @@ public interface PostAPIInterface {
     Call<CampWisePatientDetailResponseModel> CallGetPatientDetailAPI(@Body CampWisePatientDetailRequestModel campWisePatientDetailRequestModel);
 
     @POST("pickso/api/Campintimation/PatientMisDetails")
-    Call<CampModuleMISResponseModel> CallGetCampWOEMISAPI (@Body CampWoeMISReuestModel campWoeMISReuestModel);
+    Call<CampModuleMISResponseModel> CallGetCampWOEMISAPI(@Body CampWoeMISReuestModel campWoeMISReuestModel);
 
     @POST("B2B/WO.svc/postworkorder")
-    Call<B2BWoeResponseModel> CallSubmitCampWOEAPI (@Body SubmitB2BWoeRequestModel submitB2BWoeRequestModel);
+    Call<B2BWoeResponseModel> CallSubmitCampWOEAPI(@Body SubmitB2BWoeRequestModel submitB2BWoeRequestModel);
 
 
     @Multipart
     @POST("pickso/api/Campintimation/PatientDetails")
     Call<CommonResponseModel1> CalluploadCAmpWOEPatientVailPhotoAPI(@Part MultipartBody.Part VailPhoto,
-                                                 @Part("uniqueID") RequestBody uniqueID,
-                                                 @Part("woepatientID") RequestBody woepatientID,
-                                                 @Part("campID") RequestBody campID);
+                                                                    @Part("uniqueID") RequestBody uniqueID,
+                                                                    @Part("woepatientID") RequestBody woepatientID,
+                                                                    @Part("campID") RequestBody campID);
 
     @POST("api/OrderAllocation/AdditionalTechnicianDTL")
-    Call<GetBtechCertifcateResponseModel> CallGetBtechCertificatesAPI (@Body GetBtechCertificateRequestModel btechCertificateRequestModel);
+    Call<GetBtechCertifcateResponseModel> CallGetBtechCertificatesAPI(@Body GetBtechCertificateRequestModel btechCertificateRequestModel);
 
     @Multipart
     @POST("Aayushman/Booking")
     Call<TestBookingResponseModel> SubitReferAFriendformToServer(@Part("order_by") RequestBody order_by,
-                                                                 @Part("mobile")  RequestBody mobile,
+                                                                 @Part("mobile") RequestBody mobile,
                                                                  @Part("email") RequestBody email,
                                                                  @Part("address") RequestBody address,
-                                                                 @Part("remarks")  RequestBody remarks,
-                                                                 @Part("bookingtype")  RequestBody bookingtype,
-                                                                 @Part("report_code")  RequestBody report_code,
-                                                                 @Part("bencount")  RequestBody bencount,
-                                                                 @Part("pincode")  RequestBody pincode,
-                                                                 @Part("product")  RequestBody product,
-                                                                 @Part("rate")  RequestBody rate,
-                                                                 @Part("reports")  RequestBody reports,
-                                                                 @Part("ref_code")  RequestBody ref_code,
-                                                                 @Part("service_type")  RequestBody service_type,
-                                                                 @Part("api_key")  RequestBody api_key,
-                                                                 @Part("bendataxml")  RequestBody bendataxml,
-                                                                 @Part("orderid")  RequestBody orderid,
-                                                                 @Part("hc")  RequestBody hc,
-                                                                 @Part("tsp")  RequestBody tsp,
-                                                                 @Part("pay_type")  RequestBody pay_type,
+                                                                 @Part("remarks") RequestBody remarks,
+                                                                 @Part("bookingtype") RequestBody bookingtype,
+                                                                 @Part("report_code") RequestBody report_code,
+                                                                 @Part("bencount") RequestBody bencount,
+                                                                 @Part("pincode") RequestBody pincode,
+                                                                 @Part("product") RequestBody product,
+                                                                 @Part("rate") RequestBody rate,
+                                                                 @Part("reports") RequestBody reports,
+                                                                 @Part("ref_code") RequestBody ref_code,
+                                                                 @Part("service_type") RequestBody service_type,
+                                                                 @Part("api_key") RequestBody api_key,
+                                                                 @Part("bendataxml") RequestBody bendataxml,
+                                                                 @Part("orderid") RequestBody orderid,
+                                                                 @Part("hc") RequestBody hc,
+                                                                 @Part("tsp") RequestBody tsp,
+                                                                 @Part("pay_type") RequestBody pay_type,
                                                                  @Part MultipartBody.Part imageFileMultiBody,
                                                                  @Part MultipartBody.Part audioFileMultiBody);
 
@@ -366,4 +375,35 @@ public interface PostAPIInterface {
     @POST("Complaint_module/Letter")
     Call<HCWResponseModel> postHCW(@Body HCWRequestModel hcwRequestModel);
 
+    @POST("CommonServices/PincodewiseCollectionPoint")
+    Call<GetCollectionRespModel> GetCollectionCenter(@Body GetCollectionReqModel getCollectionReqModel);
+
+    @POST("CommonServices/Notification")
+    Call<NewCommonResponseModel> PostToken(@Body NotificationTokenRequestModel tokenRequestModel);
+
+    @Multipart
+    @POST("api/OrderAllocation/SelfiafterWOE")
+    Call<String> CallUploadSelfieAPI(@Header("Authorization") String Token,
+                                     @Part("Btechid") RequestBody BtechID,
+                                     @Part("ORDERNO") RequestBody OrderNo,
+                                     @Part MultipartBody.Part selfieFileMultiBody);
+
+
+    @POST("api/OrderAllocation/Pickuporders")
+    Call<PickupOrderResponseModel> getPickupOrder(@Body PickupOrderRequestModel pickupOrderRequestModel);
+
+    @POST("api/OrderAllocation/PostPickuporders")
+    Call<PostPickupOrderResponseModel> postPickupOrder(@Body PostPickupOrderRequestClass getCollectionReqModel);
+
+    @POST("GetTestCode")
+    Call<GetTestResponseModel> postTest(@Body GetTestCodeRequestModel getTestCodeRequestModel);
+
+    @POST("api/PendingVisitsOptimize/RemoveSample")
+    Call<RemoveUrineSampleRespModel> removeUrineSample(@Body RemoveUrineReqModel removeUrineReqModel);
+
+    @POST("api/Account/BtechSignInout")
+    Call<SignInResponseModel> signINOUT(@Body SignInRequestModel signInRequestModel);
+
+    @POST("api/Account/BtechSignInsummary")
+    Call<SignSummaryResponseModel> signInSummary(@Body SignINSummaryRequestModel summaryRequestModel);
 }

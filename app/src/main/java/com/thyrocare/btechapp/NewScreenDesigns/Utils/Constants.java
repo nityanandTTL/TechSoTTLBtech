@@ -5,13 +5,14 @@ public class Constants {
     public static final String RES00001 = "RES00001";
     public static final String RES02024 = "RES02024";
     public static final String RESP0000 = "RESP0000";
+    public static final String RES0001 = "RES0001";
     public static int ServerTime = 0;
     public static String TestingBtechID = "884544334";
     public static String StockAvialablity_TestingBtechID = "884544758";
     public static String StockAvailability_API_KEY = "68rbZ40eNeRephUzIDTos9SsQIm4mHlT3lCNnqI)Ivk=";
 
     public static final String BtechAppID_FOROTP = "5";
-
+    public static final String APP_ID_FOR_TOKEN = "3";
 
 
     public static final String BTECH_ROLE_ID = "4";
@@ -41,4 +42,10 @@ public class Constants {
 
     public static final String BOOKING_API_KEY = "DAuWZtKHyVb8OhjhHSuAwCB6uAyzVzASVTxXcCT8@0fkrvZ5fG9lw533tKKmxVnu";
 
+    public static final String SIGNOUT = "SIGNOUT";
+    public static final String SIGNIN = "SIGNIN";
+    public static final String GETIGNINOUT = "GETIGNINOUT";
+
+    public static String StrAppID = "3";
+    public static String LEAD = "LEAD";
 }

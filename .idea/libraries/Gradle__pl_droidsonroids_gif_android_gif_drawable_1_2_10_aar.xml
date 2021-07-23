@@ -15,6 +15,12 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/62b5b6c19bbb3c2b0f28d184a6f96183/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/62b5b6c19bbb3c2b0f28d184a6f96183/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/62b5b6c19bbb3c2b0f28d184a6f96183/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4a3eda127cd302eb68ce2bbbd7bdd4c7/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4a3eda127cd302eb68ce2bbbd7bdd4c7/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4a3eda127cd302eb68ce2bbbd7bdd4c7/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/70deb08b7628955fe93f015228afb52a/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/70deb08b7628955fe93f015228afb52a/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/70deb08b7628955fe93f015228afb52a/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/pl.droidsonroids.gif/android-gif-drawable/1.2.10/2eca937d4cfa13c92d55a1551e32414bc629b518/android-gif-drawable-1.2.10-javadoc.jar!/" />
