@@ -1567,6 +1567,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             removebenModel = new RemoveBeneficiaryAPIRequestModel();
                             removebenModel.setBenId(selectedbeneficiaryDetailsModel.getBenId());
                             removebenModel.setOrderNo(selectedbeneficiaryDetailsModel.getOrderNo());
+                            removebenModel.setUserId(""+appPreferenceManager.getLoginResponseModel().getUserID());
                             removebenModel.setIsAdded(orderVisitDetailsModel.getAllOrderdetails().get(0).isAddBen() ? "1" : "0");
                             dialog.dismiss();
                             if (cd.isConnectingToInternet()) {

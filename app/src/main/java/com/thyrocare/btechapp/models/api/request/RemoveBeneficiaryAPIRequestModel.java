@@ -8,9 +8,18 @@ public class RemoveBeneficiaryAPIRequestModel {
     String OrderNo;
     int BenId;
     String isAdded;
+    String UserId;
 
     public RemoveBeneficiaryAPIRequestModel() {
         setIsAdded("0");
+    }
+
+    public String getUserId() {
+        return UserId;
+    }
+
+    public void setUserId(String userId) {
+        UserId = userId;
     }
 
     public String getOrderNo() {

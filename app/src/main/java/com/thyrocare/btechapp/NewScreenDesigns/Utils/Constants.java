@@ -6,6 +6,7 @@ public class Constants {
     public static final String RES02024 = "RES02024";
     public static final String RESP0000 = "RESP0000";
     public static final String RES0001 = "RES0001";
+    public static final String RES200 = "200";
     public static int ServerTime = 0;
     public static String TestingBtechID = "884544334";
     public static String StockAvialablity_TestingBtechID = "884544758";

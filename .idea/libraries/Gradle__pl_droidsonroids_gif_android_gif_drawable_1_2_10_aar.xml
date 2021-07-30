@@ -21,6 +21,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/70deb08b7628955fe93f015228afb52a/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/70deb08b7628955fe93f015228afb52a/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/70deb08b7628955fe93f015228afb52a/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/758e229cacccfad76437611eb7a7bb39/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/758e229cacccfad76437611eb7a7bb39/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/758e229cacccfad76437611eb7a7bb39/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/pl.droidsonroids.gif/android-gif-drawable/1.2.10/2eca937d4cfa13c92d55a1551e32414bc629b518/android-gif-drawable-1.2.10-javadoc.jar!/" />

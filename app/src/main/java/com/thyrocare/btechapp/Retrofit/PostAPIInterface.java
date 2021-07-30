@@ -52,6 +52,8 @@ import com.thyrocare.btechapp.models.api.request.OrderAllocationTrackLocationReq
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
+import com.thyrocare.btechapp.models.api.request.PayTMRequestModel;
+import com.thyrocare.btechapp.models.api.request.PayTMVerifyRequestModel;
 import com.thyrocare.btechapp.models.api.request.PickupOrderRequestModel;
 import com.thyrocare.btechapp.models.api.request.PostPickupOrderRequestClass;
 import com.thyrocare.btechapp.models.api.request.Post_DeviceID;
@@ -80,6 +82,8 @@ import com.thyrocare.btechapp.models.api.response.LoginDeviceResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginResponseModel;
 import com.thyrocare.btechapp.models.api.response.NewCommonResponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseVisitModel;
+import com.thyrocare.btechapp.models.api.response.PayTMResponseModel;
+import com.thyrocare.btechapp.models.api.response.PayTMVerifyResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentStartTransactionAPIResponseModel;
@@ -406,4 +410,11 @@ public interface PostAPIInterface {
 
     @POST("api/Account/BtechSignInsummary")
     Call<SignSummaryResponseModel> signInSummary(@Body SignINSummaryRequestModel summaryRequestModel);
+
+
+    @POST("api/PayThyrocare/PaytmSendPaymentLink")
+    Call<PayTMResponseModel> payTM(@Body PayTMRequestModel payTMRequestModel);
+
+    @POST("api/PayThyrocare/CheckPaymentLinkResponse")
+    Call<PayTMVerifyResponseModel> payTMVerify(@Body PayTMVerifyRequestModel payTMVerifyRequestModel);
 }
