@@ -536,7 +536,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {*/
 
-//                            if (orderDetailsModel.getAllOrderdetails().get(0).isDigital()) {
+//                            if (!orderDetailsModel.getAllOrderdetails().get(0).isDigital()) {
                             if (orderDetailsModel.getAllOrderdetails().get(0).isDigital()) {
                                 GoingToPaymentActivity(0);
                                                /* PaymentMode = 2;
@@ -1493,7 +1493,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
     }
 
     private void iflateTestGroupName(LinearLayout ll_tests, GetTestListResponseModel testListResponseModel) {
-        if (testListResponseModel.getTestGroupList().size() > 0) {
+        if (testListResponseModel != null && testListResponseModel.getTestGroupList() != null && testListResponseModel.getTestGroupList().size() > 0) {
             // Logger.error("if ");
             ll_tests.removeAllViews();
             for (int i = 0; i < testListResponseModel.getTestGroupList().size(); i++) {
@@ -1535,8 +1535,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 ll_tests.addView(v);
                 ll_tests.invalidate();
             }
-
-
+        }
+        else{
+            Global.showCustomStaticToast(mActivity, ""+testListResponseModel.getStatus());
         }
     }
 

@@ -31,8 +31,7 @@ public class PayTMVerifyController {
         globalClass = new Global(activity);
     }
 
-    public void payTMVerify(PayTMVerifyRequestModel payTMVerifyRequestModel) {
-
+    public void payTMVerify(final PayTMVerifyRequestModel payTMVerifyRequestModel) {
         try {
             globalClass.showProgressDialog(activity, ConstantsMessages.PLEASE_WAIT);
             PostAPIInterface postAPIInteface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
@@ -45,13 +44,12 @@ public class PayTMVerifyController {
                         if (response.isSuccessful() && response.body() != null) {
                             PayTMVerifyResponseModel payTMVerifyResponseModel = response.body();
                             if (!InputUtils.isNull(payTMVerifyResponseModel.getStatus()) && InputUtils.CheckEqualIgnoreCase(payTMVerifyResponseModel.getStatus(), ConstantsMessages.RES0000)) {
-                               Global.showCustomStaticToast(activity,payTMVerifyResponseModel.getResponseMessage());
-                                paymentsActivity.getSubmitVerifyResponse();
+                                Global.showCustomStaticToast(activity, payTMVerifyResponseModel.getResponseMessage());
+                                paymentsActivity.getSubmitVerifyResponse(payTMVerifyResponseModel, payTMVerifyRequestModel.getOrderNo());
                             } else {
                                 globalClass.showCustomToast(activity, "" + payTMVerifyResponseModel.getResponseMessage());
                             }
-                        }
-                        else {
+                        } else {
                             globalClass.showCustomToast(activity, "Something went wrong. Try after sometime");
                         }
                     } catch (Exception e) {

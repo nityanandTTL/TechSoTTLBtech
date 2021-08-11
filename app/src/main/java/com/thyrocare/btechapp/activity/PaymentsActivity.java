@@ -89,6 +89,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.RES0000;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
@@ -395,7 +396,7 @@ public class PaymentsActivity extends AbstractActivity {
             tv_payment_gateway_title.setLayoutParams(params);
             tv_payment_gateway_title.setText(R.string.PaymentGateway);
             tv_payment_gateway_title.setTextColor(getResources().getColor(R.color.colorFAB3));
-            tv_payment_gateway_title.setTextSize(18);
+            tv_payment_gateway_title.setTextSize(20);
             tv_payment_gateway_title.setLayoutParams(params);
             tv_payment_gateway_title.setLayoutParams(params);
             llPaymentGateway.addView(tv_payment_gateway_title);
@@ -416,7 +417,7 @@ public class PaymentsActivity extends AbstractActivity {
             llBankMode.setOrientation(LinearLayout.HORIZONTAL);
 
             ImageView btnPaymentMode = new ImageView(activity);
-            int width = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.12);
+            int width = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.25);
             LinearLayout.LayoutParams txtParams = new LinearLayout.LayoutParams(width, width);
             txtParams.setMargins(10, 10, 10, 10);
             btnPaymentMode.setLayoutParams(txtParams);
@@ -428,7 +429,7 @@ public class PaymentsActivity extends AbstractActivity {
             params1.setMargins(30, 20, 10, 20);
             TextView PaymentNames = new TextView(activity);
             PaymentNames.setText("Bank");
-            PaymentNames.setTextSize(12);
+            PaymentNames.setTextSize(16);
             PaymentNames.setGravity(Gravity.CENTER_VERTICAL);
             PaymentNames.setTextColor(getResources().getColor(R.color.black));
             PaymentNames.setLayoutParams(params1);
@@ -445,7 +446,7 @@ public class PaymentsActivity extends AbstractActivity {
             LinearLayout llArrowIcons = new LinearLayout(activity);
             llArrowIcons.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
             llArrowIcons.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-            int size = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.04);
+            int size = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.08);
             LinearLayout.LayoutParams arrowParams = new LinearLayout.LayoutParams(size, size);
             arrowParams.setMarginEnd(20);
             ImageView ArrowButtons = new ImageView(activity);
@@ -556,7 +557,7 @@ public class PaymentsActivity extends AbstractActivity {
             llPayWithCash.setOrientation(LinearLayout.HORIZONTAL);
 
             ImageView IVPayWithCash = new ImageView(activity);
-            int ic_width = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.12);
+            int ic_width = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.25);
             LinearLayout.LayoutParams iv_params = new LinearLayout.LayoutParams(ic_width, ic_width);
             iv_params.setMargins(10, 10, 10, 10);
             IVPayWithCash.setLayoutParams(iv_params);
@@ -576,7 +577,7 @@ public class PaymentsActivity extends AbstractActivity {
             TextView TvCashDesc = new TextView(activity);
             TvCashDesc.setText("Cash");
             TvCashDesc.setTypeface(TvCashDesc.getTypeface(), Typeface.BOLD);
-            TvCashDesc.setTextSize(12);
+            TvCashDesc.setTextSize(16);
             TvCashDesc.setGravity(Gravity.CENTER_VERTICAL);
             TvCashDesc.setTextColor(getResources().getColor(R.color.colorFAB3));
             TvCashDesc.setLayoutParams(llCashDesc);
@@ -587,7 +588,7 @@ public class PaymentsActivity extends AbstractActivity {
 
             TextView TVDescCash = new TextView(activity);
             TVDescCash.setText("Online payment recommended to reduce contact between you and technician");
-            TVDescCash.setTextSize(12);
+            TVDescCash.setTextSize(14);
             TVDescCash.setGravity(Gravity.CENTER_VERTICAL);
             TVDescCash.setTextColor(getResources().getColor(R.color.black));
             TVDescCash.setLayoutParams(lpSubDesc);
@@ -646,7 +647,7 @@ public class PaymentsActivity extends AbstractActivity {
 
 
                     ImageView btnPaymentMode = new ImageView(activity);
-                    int width = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.12);
+                    int width = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.25);
                     LinearLayout.LayoutParams txtParams = new LinearLayout.LayoutParams(width, width);
                     txtParams.setMargins(10, 10, 10, 10);
                     txtParams.gravity = Gravity.CENTER;
@@ -751,32 +752,57 @@ public class PaymentsActivity extends AbstractActivity {
                         editText.setVisibility(View.GONE);
                     }*/
 
+
+                    //TODO Adding arrows at right
+
+                    LinearLayout llArrowIcons = new LinearLayout(activity);
+                    llArrowIcons.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    llArrowIcons.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
+                    int size = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.08);
+                    LinearLayout.LayoutParams arrowParams = new LinearLayout.LayoutParams(size, size);
+                    arrowParams.setMarginEnd(20);
+                    ImageView ArrowButtons = new ImageView(activity);
+                    ArrowButtons.setImageDrawable(getResources().getDrawable(R.drawable.right_arrow_orange));
+                    ArrowButtons.setLayoutParams(arrowParams);
+                    llArrowIcons.addView(ArrowButtons);
+
+
                     LinearLayout LLPayTM = new LinearLayout(activity);
-                    LLPayTM.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f));
-                    LLPayTM.setOrientation(LinearLayout.HORIZONTAL);
-                    LLPayTM.setWeightSum(2);
-                    LLPayTM.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                    LLPayTM.setLayoutParams(params1);
+                    LLPayTM.setOrientation(LinearLayout.VERTICAL);
+                    LLPayTM.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
+                    LLPayTM.setWeightSum(2.0f);
+//                    LLPayTM.setPadding(50, 10, 50, 10);
+                    LinearLayout.LayoutParams btn = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    btn.weight = 1.0f;
+                    btn.bottomMargin = 2;
+                    btn.topMargin = 2;
+                    btn.leftMargin = 2;
+                    btn.rightMargin = 2;
+//                    btn.weight = 1.0f;
+//                    LLPayTM.setPadding(50, 10, 50, 10);
                     Button btnQR = new Button(activity);
-                    TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1);
-                    btnQR.setLayoutParams(params);
                     btnQR.setText("Scan QR");
-                    btnQR.setGravity(Gravity.CENTER_HORIZONTAL);
+                    btnQR.setLayoutParams(btn);
+                    btnQR.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//                    btnQR.setGravity(Gravity.CENTER);
                     btnQR.setBackground(getResources().getDrawable(R.drawable.editextborder));
-                    btnQR.setTextColor(getResources().getColor(R.color.colorOrange));
-//                    btnQR.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                    btnQR.setTextColor(getResources().getColor(R.color.white));
+                    btnQR.setBackgroundColor(getResources().getColor(R.color.colorOrange));
                     btnQR.setVisibility(View.GONE);
-                    btnQR.setTextSize(10);
+                    btnQR.setTextSize(14);
                     btnQR.setTag(pparm);
+
                     Button btnLink = new Button(activity);
-                    TableRow.LayoutParams paramsl = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,1);
-                    btnLink.setLayoutParams(paramsl);
+//                    params.setMarginStart(5);
+                    btnLink.setLayoutParams(btn);
                     btnLink.setText("Send Link");
-                    btnLink.setGravity(Gravity.CENTER_HORIZONTAL);
+                    btnLink.setGravity(Gravity.CENTER);
                     btnLink.setBackground(getResources().getDrawable(R.drawable.editextborder));
-                    btnLink.setTextColor(getResources().getColor(R.color.colorOrange));
-//                    btnLink.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                    btnLink.setTextColor(getResources().getColor(R.color.white));
+                    btnLink.setBackgroundColor(getResources().getColor(R.color.colorOrange));
                     btnLink.setVisibility(View.GONE);
-                    btnLink.setTextSize(10);
+                    btnLink.setTextSize(14);
                     if (pnvm.getValue().equalsIgnoreCase("Paytm")) {
                         LLPayTM.setVisibility(View.VISIBLE);
                         btnQR.setVisibility(View.VISIBLE);
@@ -802,19 +828,6 @@ public class PaymentsActivity extends AbstractActivity {
                     });
 
 
-                    //TODO Adding arrows at right
-
-                    LinearLayout llArrowIcons = new LinearLayout(activity);
-                    llArrowIcons.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                    llArrowIcons.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-                    int size = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.04);
-                    LinearLayout.LayoutParams arrowParams = new LinearLayout.LayoutParams(size, size);
-                    arrowParams.setMarginEnd(20);
-                    ImageView ArrowButtons = new ImageView(activity);
-                    ArrowButtons.setImageDrawable(getResources().getDrawable(R.drawable.right_arrow_orange));
-                    ArrowButtons.setLayoutParams(arrowParams);
-                    llArrowIcons.addView(ArrowButtons);
-
                     //TODO Handling onclicks
            /*         llNameAndEdt.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -834,6 +847,7 @@ public class PaymentsActivity extends AbstractActivity {
                     });*/
                     if (pnvm.getValue().equalsIgnoreCase("PayTm")) {
                         ArrowButtons.setVisibility(View.GONE);
+                        LLPayTM.setVisibility(View.VISIBLE);
                     }
                     ArrowButtons.setTag(pparm);
                     ArrowButtons.setOnClickListener(new View.OnClickListener() {
@@ -850,12 +864,17 @@ public class PaymentsActivity extends AbstractActivity {
                         }
                     });
 
+                    if (pnvm.getValue().equalsIgnoreCase("PayTm")) {
+
+                    }
+
+
                     //TODO Adding All views
                     linearLayout.addView(editText);
                     LLPayTM.addView(btnQR);
                     LLPayTM.addView(btnLink);
                     linearLayout.addView(imgTick);
-                    linearLayout.addView(LLPayTM);
+                    llArrowIcons.addView(LLPayTM);
                     llPaymentModesasd.addView(btnPaymentMode);
                     llNameAndEdt.addView(PaymentNames);
                     llNameAndEdt.addView(linearLayout);
@@ -869,15 +888,18 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
     private void callPaytmLinkAPI() {
-        if (cd.isConnectingToInternet()) {
-            PayTMRequestModel payTMRequestModel = new PayTMRequestModel();
-            payTMRequestModel.setEntryBy(appPreferenceManager.getLoginResponseModel().getUserID());
-            payTMRequestModel.setOrderno(OrderNo);
-
-            PayTMController payTMController = new PayTMController(this);
-            payTMController.payTM(payTMRequestModel);
-        } else {
-            Global.showCustomStaticToast(activity, SOMETHING_WENT_WRONG);
+        try {
+            if (cd.isConnectingToInternet()) {
+                PayTMRequestModel payTMRequestModel = new PayTMRequestModel();
+                payTMRequestModel.setEntryBy(appPreferenceManager.getLoginResponseModel().getUserID());
+                payTMRequestModel.setOrderno(OrderNo);
+                PayTMController payTMController = new PayTMController(this);
+                payTMController.payTM(payTMRequestModel);
+            } else {
+                Global.showCustomStaticToast(activity, SOMETHING_WENT_WRONG);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1598,45 +1620,75 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
     public void getSubmitDataResponse(PayTMResponseModel payTMResponseModel, final String orderNo) {
-        if (payTMResponseModel != null && InputUtils.CheckEqualIgnoreCase(payTMResponseModel.getStatusCode(), Constants.RES200)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle("Verify Payment")
-                    .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
-                    .setCancelable(false)
-                    .setPositiveButton("Verify Payment", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            callVerifyAPI(orderNo);
-
-                        }
-                    }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent();
-                    intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                    setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                    finish();
-                }
-            }).show();
+        try {
+            if (payTMResponseModel != null && InputUtils.CheckEqualIgnoreCase(payTMResponseModel.getStatusCode(), Constants.RES200)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle("Verify Payment")
+                        .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
+                        .setCancelable(false)
+                        .setPositiveButton("Verify Payment", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                callVerifyAPI(orderNo);
+                            }
+                        }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        /*Intent intent = new Intent();
+                        intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                        finish();*/
+                    }
+                }).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void callVerifyAPI(String orderNo) {
-        if(cd.isConnectingToInternet()){
-            PayTMVerifyRequestModel payTMVerifyRequestModel = new PayTMVerifyRequestModel();
-            payTMVerifyRequestModel.setOrderNo(orderNo);
-
-            PayTMVerifyController ptC = new PayTMVerifyController(this);
-            ptC.payTMVerify(payTMVerifyRequestModel);
-
-        }else {
-            Global.showCustomStaticToast(this, SOMETHING_WENT_WRONG);
+        try {
+            if (cd.isConnectingToInternet()) {
+                PayTMVerifyRequestModel payTMVerifyRequestModel = new PayTMVerifyRequestModel();
+                payTMVerifyRequestModel.setOrderNo(orderNo);
+                PayTMVerifyController ptC = new PayTMVerifyController(this);
+                ptC.payTMVerify(payTMVerifyRequestModel);
+            } else {
+                Global.showCustomStaticToast(this, SOMETHING_WENT_WRONG);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void getSubmitVerifyResponse() {
-
-
+    public void getSubmitVerifyResponse(PayTMVerifyResponseModel payTMVerifyResponseModel, final String orderNo) {
+        try {
+            if (payTMVerifyResponseModel != null && !InputUtils.isNull(payTMVerifyResponseModel.getStatus()) && InputUtils.CheckEqualIgnoreCase(payTMVerifyResponseModel.getStatus(), RES0000)) {
+                Intent intent = new Intent();
+                intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
+                setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                finish();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle("Verify Payment")
+                        .setMessage("Verify Payment Status failed! Please click Retry to check payment status again.")
+                        .setCancelable(false)
+                        .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                callVerifyAPI(orderNo);
+                            }
+                        }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public class CheckPaymentStatusResponseReceiver extends BroadcastReceiver {

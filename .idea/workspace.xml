@@ -31,7 +31,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[Pixel_2_XL_API_30]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[b5472133]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -74,8 +74,8 @@
         <option value="layoutResourceFile_vertical" />
         <option value="Interface" />
         <option value="resourceFile" />
-        <option value="layoutResourceFile" />
         <option value="Class" />
+        <option value="layoutResourceFile" />
       </list>
     </option>
   </component>
@@ -99,11 +99,11 @@
   <component name="PropertiesComponent">
     <property name="AnalyzeApkAction.lastApkPath" value="$PROJECT_DIR$/app/build/outputs/apk/debug/BtechLiveDebug.apk" />
     <property name="ApkExportedModule" value="TechSoBTechApp.app" />
-    <property name="DEBUGGABLE_DEVICE" value="emulator-5554" />
+    <property name="DEBUGGABLE_DEVICE" value="oneplus-eb2101-b5472133" />
     <property name="DEBUGGABLE_PROCESS" value="com.thyrocare.btechapp" />
     <property name="DEBUGGER_ID" value="Auto" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="SerialNumber@ba0c8310" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2021-07-17T05:01:49.917942Z" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="b5472133" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2021-08-05T07:34:21.885Z" />
     <property name="ExportApk.ApkPath" value="D:\Android projects\AndroidProjects\TechSoBTechApp\app" />
     <property name="ExportApk.BuildVariants" value="release" />
     <property name="ExportApk.SignV1" value="true" />
@@ -119,7 +119,7 @@
     <property name="device.picker.selection" value="Pixel_2_XL_API_27" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/res/drawable" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/res/drawable" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -150,11 +150,11 @@
       <recent name="com.thyrocare.NewScreenDesigns.Models.RequestModels" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Android projects\AndroidProjects\TechSoBTechApp\app\src\main\res\drawable" />
       <recent name="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/models/api/request" />
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
       <recent name="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller" />
       <recent name="$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/models/api/response" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/layout" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.thyrocare.btechapp.utils.app" />
@@ -291,92 +291,94 @@
     <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1627620004826" />
     <state x="765" y="245" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/0.27.1920.1001@0.27.1920.1001" timestamp="1626853478429" />
     <state x="765" y="245" width="374" height="633" key="#com.intellij.ide.util.MemberChooser/0.27.1920.1003@0.27.1920.1003" timestamp="1620882376485" />
-    <state x="99" y="209" width="1451" height="551" key="AVDManager" timestamp="1626498196799">
-      <screen x="0" y="27" width="1920" height="1001" />
+    <state x="99" y="189" width="1451" height="573" key="AVDManager" timestamp="1628491460747">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="99" y="189" width="1451" height="573" key="AVDManager/0.0.1920.1040@0.0.1920.1040" timestamp="1628491460747" />
     <state x="99" y="209" width="1451" height="551" key="AVDManager/0.27.1920.1001@0.27.1920.1001" timestamp="1626498196799" />
     <state x="99" y="209" width="1451" height="552" key="AVDManager/0.27.1920.1003@0.27.1920.1003" timestamp="1622521780473" />
+    <state x="540" y="275" key="AndroidCreateResourceFileDialog" timestamp="1627976127821">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="540" y="275" key="AndroidCreateResourceFileDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627976127821" />
     <state x="777" y="338" width="356" height="388" key="AndroidCreateXmlResourceDialog" timestamp="1622447700936">
       <screen x="0" y="27" width="1920" height="1003" />
     </state>
     <state x="777" y="338" width="356" height="388" key="AndroidCreateXmlResourceDialog/0.27.1920.1003@0.27.1920.1003" timestamp="1622447700936" />
-    <state x="758" y="266" width="505" height="512" key="AndroidProcessChooserDialog" timestamp="1627642998628">
+    <state x="758" y="266" width="505" height="512" key="AndroidProcessChooserDialog" timestamp="1628318735182">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="758" y="266" key="AndroidProcessChooserDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1627642998628" />
+    <state x="758" y="266" key="AndroidProcessChooserDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1628318735182" />
     <state x="758" y="283" width="505" height="512" key="AndroidProcessChooserDialog/0.27.1920.1001@0.27.1920.1001" timestamp="1626499696327" />
     <state x="758" y="284" width="505" height="512" key="AndroidProcessChooserDialog/0.27.1920.1003@0.27.1920.1003" timestamp="1622467162611" />
-    <state width="669" height="468" key="DebuggerActiveHint" timestamp="1627621086973">
+    <state width="669" height="468" key="DebuggerActiveHint" timestamp="1628258234667">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="669" height="468" key="DebuggerActiveHint/0.0.1920.1040@0.0.1920.1040" timestamp="1627621086973" />
+    <state width="669" height="468" key="DebuggerActiveHint/0.0.1920.1040@0.0.1920.1040" timestamp="1628258234667" />
     <state width="669" height="450" key="DebuggerActiveHint/0.27.1920.1001@0.27.1920.1001" timestamp="1626499712726" />
     <state width="580" height="450" key="DebuggerActiveHint/0.27.1920.1003@0.27.1920.1003" timestamp="1622467318064" />
-    <state x="945" y="142" width="424" height="520" key="FileChooserDialogImpl" timestamp="1627634331286">
+    <state x="945" y="142" width="424" height="520" key="FileChooserDialogImpl" timestamp="1627898978916">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="945" y="142" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1627634331286" />
+    <state x="945" y="142" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1627898978916" />
     <state x="945" y="164" width="424" height="520" key="FileChooserDialogImpl/0.27.1920.1001@0.27.1920.1001" timestamp="1626507186895" />
     <state x="1160" y="231" width="424" height="491" key="FileChooserDialogImpl/0.27.1920.1003@0.27.1920.1003" timestamp="1622544112528" />
-    <state width="1876" height="787" key="GridCell.Tab.0.bottom" timestamp="1627645546322">
+    <state width="1525" height="615" key="GridCell.Tab.0.bottom" timestamp="1628509367030">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="787" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1627645546322" />
+    <state width="1525" height="615" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1628509367030" />
     <state width="1132" height="372" key="GridCell.Tab.0.bottom/0.27.1920.1001@0.27.1920.1001" timestamp="1626853444320" />
     <state width="1429" height="612" key="GridCell.Tab.0.bottom/0.27.1920.1003@0.27.1920.1003" timestamp="1622521791679" />
-    <state width="1876" height="787" key="GridCell.Tab.0.center" timestamp="1627645546321">
+    <state width="1525" height="615" key="GridCell.Tab.0.center" timestamp="1628509367030">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="787" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1627645546321" />
+    <state width="1525" height="615" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1628509367030" />
     <state width="1132" height="372" key="GridCell.Tab.0.center/0.27.1920.1001@0.27.1920.1001" timestamp="1626853444318" />
     <state width="1429" height="612" key="GridCell.Tab.0.center/0.27.1920.1003@0.27.1920.1003" timestamp="1622521791678" />
-    <state width="1876" height="787" key="GridCell.Tab.0.left" timestamp="1627645546321">
+    <state width="1525" height="615" key="GridCell.Tab.0.left" timestamp="1628509367030">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="787" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1627645546321" />
+    <state width="1525" height="615" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1628509367029" />
     <state width="1132" height="372" key="GridCell.Tab.0.left/0.27.1920.1001@0.27.1920.1001" timestamp="1626853444317" />
     <state width="1429" height="612" key="GridCell.Tab.0.left/0.27.1920.1003@0.27.1920.1003" timestamp="1622521791677" />
-    <state width="1876" height="787" key="GridCell.Tab.0.right" timestamp="1627645546322">
+    <state width="1525" height="615" key="GridCell.Tab.0.right" timestamp="1628509367030">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="787" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1627645546321" />
+    <state width="1525" height="615" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1628509367030" />
     <state width="1132" height="372" key="GridCell.Tab.0.right/0.27.1920.1001@0.27.1920.1001" timestamp="1626853444319" />
     <state width="1429" height="612" key="GridCell.Tab.0.right/0.27.1920.1003@0.27.1920.1003" timestamp="1622521791679" />
-    <state width="1876" height="490" key="GridCell.Tab.1.bottom" timestamp="1627643440725">
+    <state width="1876" height="551" key="GridCell.Tab.1.bottom" timestamp="1628321379262">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="490" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1627643440725" />
+    <state width="1876" height="551" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1628321379262" />
     <state width="1874" height="377" key="GridCell.Tab.1.bottom/0.27.1920.1001@0.27.1920.1001" timestamp="1626507187964" />
     <state width="1874" height="322" key="GridCell.Tab.1.bottom/0.27.1920.1003@0.27.1920.1003" timestamp="1622468355434" />
-    <state width="1876" height="490" key="GridCell.Tab.1.center" timestamp="1627643440725">
+    <state width="1876" height="551" key="GridCell.Tab.1.center" timestamp="1628321379262">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="490" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1627643440725" />
+    <state width="1876" height="551" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1628321379262" />
     <state width="1874" height="377" key="GridCell.Tab.1.center/0.27.1920.1001@0.27.1920.1001" timestamp="1626507187964" />
     <state width="1874" height="322" key="GridCell.Tab.1.center/0.27.1920.1003@0.27.1920.1003" timestamp="1622468355433" />
-    <state width="1876" height="490" key="GridCell.Tab.1.left" timestamp="1627643440725">
+    <state width="1876" height="551" key="GridCell.Tab.1.left" timestamp="1628321379262">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="490" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1627643440725" />
+    <state width="1876" height="551" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1628321379262" />
     <state width="1874" height="377" key="GridCell.Tab.1.left/0.27.1920.1001@0.27.1920.1001" timestamp="1626507187964" />
     <state width="1874" height="322" key="GridCell.Tab.1.left/0.27.1920.1003@0.27.1920.1003" timestamp="1622468355432" />
-    <state width="1876" height="490" key="GridCell.Tab.1.right" timestamp="1627643440725">
+    <state width="1876" height="551" key="GridCell.Tab.1.right" timestamp="1628321379262">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="490" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1627643440725" />
+    <state width="1876" height="551" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1628321379262" />
     <state width="1874" height="377" key="GridCell.Tab.1.right/0.27.1920.1001@0.27.1920.1001" timestamp="1626507187964" />
     <state width="1874" height="322" key="GridCell.Tab.1.right/0.27.1920.1003@0.27.1920.1003" timestamp="1622468355434" />
     <state x="543" y="273" width="824" height="515" key="IDE.errors.dialog" timestamp="1625743176191">
       <screen x="0" y="27" width="1920" height="1001" />
     </state>
     <state x="543" y="273" width="824" height="515" key="IDE.errors.dialog/0.27.1920.1001@0.27.1920.1001" timestamp="1625743176191" />
-    <state x="171" y="27" width="1138" height="1003" key="ScreenshotViewer.Dimensions" timestamp="1618986096424">
-      <screen x="0" y="27" width="1920" height="1003" />
+    <state x="776" y="297" width="446" height="447" key="chooseDestDirectoryDialog" timestamp="1628052487140">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="171" y="27" width="1138" height="1003" key="ScreenshotViewer.Dimensions/0.27.1920.1003@0.27.1920.1003" timestamp="1618986096424" />
-    <state x="776" y="313" width="446" height="447" key="chooseDestDirectoryDialog" timestamp="1625726818123">
-      <screen x="0" y="27" width="1920" height="1001" />
-    </state>
+    <state x="776" y="297" key="chooseDestDirectoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1628052487140" />
     <state x="776" y="313" width="446" height="447" key="chooseDestDirectoryDialog/0.27.1920.1001@0.27.1920.1001" timestamp="1625726818123" />
     <state x="776" y="314" width="446" height="447" key="chooseDestDirectoryDialog/0.27.1920.1003@0.27.1920.1003" timestamp="1622447965975" />
     <state x="115" y="83" width="1680" height="829" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1626854186858">
@@ -398,16 +400,16 @@
     </state>
     <state x="693" y="313" width="524" height="448" key="extract.method.dialog/0.27.1920.1001@0.27.1920.1001" timestamp="1625732345613" />
     <state x="693" y="314" width="524" height="435" key="extract.method.dialog/0.27.1920.1003@0.27.1920.1003" timestamp="1622441126871" />
-    <state x="138" y="123" width="1272" height="692" key="find.popup" timestamp="1627652095215">
+    <state x="138" y="123" width="1272" height="692" key="find.popup" timestamp="1628258192570">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="138" y="123" width="1272" height="692" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1627652095215" />
+    <state x="138" y="123" width="1272" height="692" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1628258192570" />
     <state x="138" y="145" width="1272" height="666" key="find.popup/0.27.1920.1001@0.27.1920.1001" timestamp="1626950520947" />
     <state x="138" y="145" width="1272" height="667" key="find.popup/0.27.1920.1003@0.27.1920.1003" timestamp="1622454646919" />
-    <state x="400" y="228" width="672" height="704" key="search.everywhere.popup" timestamp="1627651466475">
+    <state x="400" y="228" width="672" height="704" key="search.everywhere.popup" timestamp="1628486786303">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="400" y="228" width="672" height="704" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1627651466475" />
+    <state x="400" y="228" width="672" height="704" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1628486786303" />
     <state x="400" y="246" width="672" height="677" key="search.everywhere.popup/0.27.1920.1001@0.27.1920.1001" timestamp="1626950511284" />
     <state x="400" y="246" width="672" height="678" key="search.everywhere.popup/0.27.1920.1003@0.27.1920.1003" timestamp="1622609034112" />
   </component>
@@ -876,12 +878,12 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>1196</line>
+          <line>1218</line>
           <option name="timeStamp" value="303" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>1199</line>
+          <line>1221</line>
           <option name="timeStamp" value="305" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="java-line">
@@ -931,18 +933,13 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>1218</line>
+          <line>1240</line>
           <option name="timeStamp" value="331" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>1297</line>
+          <line>1319</line>
           <option name="timeStamp" value="338" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/CheckoutWoeActivity.java</url>
-          <line>1636</line>
-          <option name="timeStamp" value="342" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/adapter/HubScanBarcodeListAdapter.java</url>
@@ -996,7 +993,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/HomeScreenActivity.java</url>
-          <line>722</line>
+          <line>730</line>
           <option name="timeStamp" value="387" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
@@ -1051,63 +1048,248 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/HomeScreenActivity.java</url>
-          <line>728</line>
+          <line>736</line>
           <option name="timeStamp" value="403" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>637</line>
+          <line>638</line>
           <option name="timeStamp" value="405" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>643</line>
-          <option name="timeStamp" value="406" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>647</line>
-          <option name="timeStamp" value="407" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>655</line>
-          <option name="timeStamp" value="408" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>667</line>
-          <option name="timeStamp" value="409" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>678</line>
-          <option name="timeStamp" value="413" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>799</line>
-          <option name="timeStamp" value="414" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>1600</line>
-          <option name="timeStamp" value="416" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>872</line>
-          <option name="timeStamp" value="417" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
-          <line>877</line>
-          <option name="timeStamp" value="418" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller/PayTMController.java</url>
-          <line>48</line>
+          <line>47</line>
           <option name="timeStamp" value="419" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller/PayTMVerifyController.java</url>
+          <line>47</line>
+          <option name="timeStamp" value="425" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller/PayTMVerifyController.java</url>
+          <line>43</line>
+          <option name="timeStamp" value="426" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller/PayTMVerifyController.java</url>
+          <line>45</line>
+          <option name="timeStamp" value="427" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>1495</line>
+          <option name="timeStamp" value="428" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>1481</line>
+          <option name="timeStamp" value="429" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/StartArriveOrderDetailsAdapter.java</url>
+          <line>188</line>
+          <option name="timeStamp" value="430" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Adapters/StartArriveOrderDetailsAdapter.java</url>
+          <line>264</line>
+          <option name="timeStamp" value="431" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>836</line>
+          <option name="timeStamp" value="433" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>1431</line>
+          <option name="timeStamp" value="434" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>1439</line>
+          <option name="timeStamp" value="435" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>1440</line>
+          <option name="timeStamp" value="436" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>1456</line>
+          <option name="timeStamp" value="437" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>1559</line>
+          <option name="timeStamp" value="438" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>351</line>
+          <option name="timeStamp" value="439" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>335</line>
+          <option name="timeStamp" value="440" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>331</line>
+          <option name="timeStamp" value="441" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>345</line>
+          <option name="timeStamp" value="442" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>379</line>
+          <option name="timeStamp" value="443" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>1574</line>
+          <option name="timeStamp" value="444" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>1810</line>
+          <option name="timeStamp" value="445" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>1881</line>
+          <option name="timeStamp" value="447" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>1909</line>
+          <option name="timeStamp" value="448" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>540</line>
+          <option name="timeStamp" value="449" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>539</line>
+          <option name="timeStamp" value="450" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>653</line>
+          <option name="timeStamp" value="451" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>558</line>
+          <option name="timeStamp" value="452" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/StartAndArriveActivity.java</url>
+          <line>561</line>
+          <option name="timeStamp" value="453" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
+          <line>156</line>
+          <option name="timeStamp" value="454" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/PaymentsActivity.java</url>
+          <line>632</line>
+          <option name="timeStamp" value="455" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/CheckoutWoeActivity.java</url>
+          <line>288</line>
+          <option name="timeStamp" value="456" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/CheckoutWoeActivity.java</url>
+          <line>424</line>
+          <option name="timeStamp" value="458" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/CheckoutWoeActivity.java</url>
+          <line>717</line>
+          <option name="timeStamp" value="459" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/CheckoutWoeActivity.java</url>
+          <line>725</line>
+          <option name="timeStamp" value="460" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/CheckoutWoeActivity.java</url>
+          <line>290</line>
+          <option name="timeStamp" value="461" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller/GetCollectionCenterController.java</url>
+          <line>45</line>
+          <option name="timeStamp" value="462" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Controller/GetCollectionCenterController.java</url>
+          <line>43</line>
+          <option name="timeStamp" value="463" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/CheckoutWoeActivity.java</url>
+          <line>1636</line>
+          <option name="timeStamp" value="464" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/CheckoutWoeActivity.java</url>
+          <line>429</line>
+          <option name="timeStamp" value="465" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>689</line>
+          <option name="timeStamp" value="467" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>481</line>
+          <option name="timeStamp" value="468" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>365</line>
+          <option name="timeStamp" value="469" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>397</line>
+          <option name="timeStamp" value="470" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>601</line>
+          <option name="timeStamp" value="471" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>617</line>
+          <option name="timeStamp" value="472" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>678</line>
+          <option name="timeStamp" value="473" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/NewScreenDesigns/Activities/AddEditBenificaryActivity.java</url>
+          <line>1607</line>
+          <option name="timeStamp" value="474" />
         </line-breakpoint>
         <line-breakpoint type="java-method">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/Retrofit/PostAPIInterface.java</url>

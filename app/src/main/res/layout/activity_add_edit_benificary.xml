@@ -336,15 +336,17 @@
         </LinearLayout>
 
     </LinearLayout>
+
     <Button
         android:id="@+id/btn_order_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="11dp"
         android:background="@color/colorOrange"
+        android:text="Submit"
         android:textColor="@color/white"
-        android:textStyle="bold"
-        android:text="Submit" />
+        android:textStyle="bold" />
 
 </RelativeLayout>

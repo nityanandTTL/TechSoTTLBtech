@@ -1646,7 +1646,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                 spn_collection.setAdapter(spinnerArrayAdapter);
             }
 
-
         } else {
             globalclass.showCustomToast(mActivity, body.getResponse());
         }

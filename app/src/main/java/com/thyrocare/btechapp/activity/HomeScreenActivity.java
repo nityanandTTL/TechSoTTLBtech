@@ -274,6 +274,11 @@ public class HomeScreenActivity extends AbstractActivity
             }
         }
 
+        if(appPreferenceManager.getLoginResponseModel().getRole().equalsIgnoreCase(AppConstants.NBT_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)){
+            Menu nav_menu = navigationView.getMenu();
+            nav_menu.findItem(R.id.nav_gqc).setVisible(true);
+        }
+
 
         /**/
 
@@ -406,6 +411,9 @@ public class HomeScreenActivity extends AbstractActivity
             }
         } else if (id == R.id.nav_punch) {
             signINOUTdialog(flag_sign);
+        }else if(id == R.id.nav_gqc){
+          Intent intent = new Intent(this,KIOSK_Scanner_Activity.class);
+          startActivity(intent);
         } else if (id == R.id.nav_change_password) {
             toolbarHome.setVisibility(View.VISIBLE);
             pushFragments(ChangePasswordFragment.newInstance(), false, false, ChangePasswordFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);

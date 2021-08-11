@@ -452,7 +452,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             TastyToast.makeText(activity, getString(R.string.add_selfie_error), TastyToast.LENGTH_LONG, TastyToast.WARNING);
             return false;
         }
-        if (StringUtils.isNull(edt_bodyTemp.getText().toString().trim())) {
+        /*if (StringUtils.isNull(edt_bodyTemp.getText().toString().trim())) {
             TastyToast.makeText(activity, ConstantsMessages.ENterBodyTemperature, TastyToast.LENGTH_LONG, TastyToast.WARNING);
             return false;
         }
@@ -464,7 +464,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         if (StringUtils.isNull(strAarogyaSetuApp)) {
             TastyToast.makeText(activity, ConstantsMessages.SelecAarogyaSetuAppIsInstalled, TastyToast.LENGTH_LONG, TastyToast.WARNING);
             return false;
-        }
+        }*/
 
         return true;
     }
