@@ -974,4 +974,10 @@ public class DateUtils {
 		return str;
 	}
 
+	public static String getCurrentdateWithFormat(String format) {
+		SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
+		String currentDate = sdf.format(new Date());
+
+		return currentDate;
+	}
 }

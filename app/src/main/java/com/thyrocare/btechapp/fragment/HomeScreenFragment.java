@@ -56,7 +56,6 @@ import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
-import com.wooplr.spotlight.utils.SpotlightSequence;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -164,26 +163,8 @@ public class HomeScreenFragment extends AbstractFragment {
                     } else {
                         view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                     }
-
-
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            SpotlightSequence.getInstance(activity, null)
-                                    .addSpotlight(view.findViewById(R.id.schedule_icon), "Schedule", "Schedule your availability ", "Schedule")
-                                    .addSpotlight(view.findViewById(R.id.orders_booked), "Orders", "Orders assigned to you are here ", "orderassigng")
-                                    // .addSpotlight(view.findViewById(R.id.materials_icon), "Materials", "Your can order materials here", "materails")
-                                    .addSpotlight(view.findViewById(R.id.camp_icon), "Camp", "This shows all camps assigned to you", "scamp")
-                                    .addSpotlight(view.findViewById(R.id.ordersserved), "Served Orders", "Order history is here", "sorders")
-                                    // .addSpotlight(view.findViewById(R.id.Ledger_icon), "Ledger", "You can check you ledger here", "ledger")
-                                    .startSequence();
-                        }
-                    }, 400);
                 }
             });
-
-
         }
     }
 
@@ -221,7 +202,7 @@ public class HomeScreenFragment extends AbstractFragment {
             rootView = inflater.inflate(R.layout.tsp_home_fragment_new, container, false);
             initUI_TSP();
             initData_Tsp();
-            getCampDetailCount();
+//            getCampDetailCount();
             initListeners_TSP();
         } else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {//loginRole.equalsIgnoreCase("9")
             rootView = inflater.inflate(R.layout.lme_fragment_home_screen, container, false);
@@ -237,7 +218,7 @@ public class HomeScreenFragment extends AbstractFragment {
             rootView = inflater.inflate(R.layout.fragment_home_screen_sixmenu, container, false);
             initUI();
             initData();
-            getCampDetailCount();
+//            getCampDetailCount();
             initListeners();
 
             if (!appPreferenceManager.isLoadSpotlightOnHome()) {
@@ -765,7 +746,7 @@ public class HomeScreenFragment extends AbstractFragment {
             @Override
             public void onOkClicked() {
                 try {
-                    new LogUserActivityTagging(activity, LOGOUT,"");
+                    new LogUserActivityTagging(activity, LOGOUT, "");
                     appPreferenceManager.clearAllPreferences();
                     DhbDao dhbDao = new DhbDao(activity);
                     dhbDao.deleteTablesonLogout();

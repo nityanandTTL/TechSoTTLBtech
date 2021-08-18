@@ -13,26 +13,19 @@
 
     <color name="colorOrange">#FA7821</color>
     <color name="colorDarkPurple">#52269F</color>
-    <color name="colorOrange_littleLighter">#F17D2F</color>
     <color name="lightOrange">#F4A36E</color>
     <!--<color name="colorOrange">#FF7A22</color>-->
     <!--<color name="colorOrange">#FF5722</color>-->
     <color name="transparent">#00000000</color>
-    <color name="transblack">#92000000</color>
-    <color name="transblack1">#40000000</color>
     <color name="transColorPrimary">#4FFA7821</color>
     <color name="light_gray">#D3D3D3</color>
     <color name="grey1">#f7f7f7</color>
     <color name="colorBackground">#e6e6e6</color>
     <color name="btn_layout_btech_camp">#61bee0</color>
     <color name="test2">#FF916F</color>
-    <color name="directVisit">#9aef0202</color>
     <color name="test1">#82D185</color>
     <color name="blue_shade">#2196F3</color>
-    <color name="status_level_10">#FF2A00</color>
-    <color name="status_level_1">#00FF00</color>
     <color name="bgBackSideColor">#f4f0ff</color>
-    <color name="bgTitleLeft">#594691</color>
     <color name="bgTitleRight">#ffffff</color>
     <color name="bgContentTop">#594691</color>
     <color name="bg_content">#f3eeee</color>
@@ -41,8 +34,6 @@
     <color name="celltext">#4d4646</color>
     <color name="gray">#FF8B8888</color>
     <color name="lightgray">#BDBDBD</color>
-    <color name="titleBadgeTitle">#adafb1</color>
-    <color name="titleBadgeText">#adafb1</color>
     <color name="calender_text">#444444</color>
     <color name="mainTextColor">#343d43</color>
     <color name="btnRequest">#ffbf12</color>
@@ -53,11 +44,9 @@
     <color name="sample_type_urine">#FFFFFF</color>
     <color name="black_overlay">#66000000</color>
     <color name="black">#000000</color>
-    <color name="selfie_background">#59e1e7</color>
     <color name="dialog_btn">#51cdd2</color>
     <color name="separator">#efeded</color>
     <color name="loginbg">#FFFFFF</color>
-    <color name="button_text_color">#FFFFFF</color>
 
     <!--gradients-->
 
@@ -78,13 +67,9 @@
     <color name="btn_green_start_grd">#088F0E</color>
     <color name="btn_green_end_grd">#5BC35F</color>
 
-    <color name="colorFAB1">#2196F3</color>
-    <color name="colorFAB2">#E040FB</color>
     <color name="colorFAB3">#2A506E</color>
-    <color name="green">#00FF00</color>
 
     <color name="navyblue">#a5edf7</color>
-    <color name="violet">#EE82EE</color>
     <color name="red">#FF0000</color>
     <color name="light">#f5f5f5</color>
 

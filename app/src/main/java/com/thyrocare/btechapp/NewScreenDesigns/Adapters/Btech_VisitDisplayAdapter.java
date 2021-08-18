@@ -1060,14 +1060,14 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 alertDialog.show();
             } else {
                 //Toast.makeText(activity, "is before", Toast.LENGTH_SHORT).show();
-                AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+               /* AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
 
                 alertDialog.setMessage("Do you want to Start ?");
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                assigned(pos);
+
                             }
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
@@ -1077,7 +1077,9 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
 
                             }
                         });
-                alertDialog.show();
+                alertDialog.show();*/
+
+                assigned(pos);
             }
         } else {
             gpsTracker.showSettingsAlert();

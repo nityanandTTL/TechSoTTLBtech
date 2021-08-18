@@ -39,27 +39,32 @@
         <item
             android:id="@+id/nav_QrcodeWOE"
             android:icon="@drawable/camp_qr_nav"
+            android:visible="false"
             android:title="Camp Qr Code WOE" />
 
         <item
             android:id="@+id/nav_clientEntry"
             android:icon="@drawable/client_entry_nav"
+            android:visible="false"
             android:title="@string/clientEntry" />
 
 
         <item
             android:id="@+id/nav_credit"
             android:icon="@drawable/credit_nav"
+            android:visible="false"
             android:title="Credit" />
 
         <item
             android:id="@+id/nav_camp"
             android:icon="@drawable/camp_nav"
+            android:visible="false"
             android:title="Camp" />
 
         <item
             android:id="@+id/nav_stock"
             android:icon="@drawable/stock_nav"
+            android:visible="false"
             android:title="Stock Availability" />
 
         <item
@@ -77,6 +82,7 @@
         <item
             android:id="@+id/nav_communication"
             android:icon="@drawable/communication_nav"
+            android:visible="false"
             android:title="Communicate" />
 
         <item
@@ -87,6 +93,7 @@
         <item
             android:id="@+id/nav_faq"
             android:icon="@drawable/faq_nav"
+            android:visible="false"
             android:title="FAQ" />
 
         <item

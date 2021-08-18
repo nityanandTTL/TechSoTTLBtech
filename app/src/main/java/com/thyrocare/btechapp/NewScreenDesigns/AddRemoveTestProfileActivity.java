@@ -1,9 +1,5 @@
 package com.thyrocare.btechapp.NewScreenDesigns;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -33,12 +29,16 @@ import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 import com.thyrocare.btechapp.models.data.TestTypeWiseTestRateMasterModelsList;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
+import com.thyrocare.btechapp.utils.app.DateUtils;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -270,15 +270,30 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 DisplaySelectedProducts(edit_selectedTestsList);
             }
         }
-        if (cd.isConnectingToInternet()) {
-            CallGetTechsoProductsAPI();
+
+        if (!UpdateProduct()) {
+            if (cd.isConnectingToInternet()) {
+                CallGetTechsoProductsAPI();
+            } else {
+                globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+            }
+        }else {
+            BrandTestMasterModel brandTestmdel = new Gson().fromJson(appPreferenceManager.getCacheProduct(), BrandTestMasterModel.class);
+            brandTestMasterModel = getBrandTestMaster(brandTestmdel);
+            CallAfterBranDAPIRes();
+        }
+    }
+
+    private boolean UpdateProduct() {
+        String getPreviouseMillis = appPreferenceManager.getCashingTime();
+        if (getPreviouseMillis.equalsIgnoreCase(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"))) {
+            return true;
         } else {
-            globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+            return false;
         }
     }
 
     private void CallGetTechsoProductsAPI() {
-
         try {
             GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token());
@@ -287,15 +302,15 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<BrandTestMasterModel> call, retrofit2.Response<BrandTestMasterModel> response) {
                     globalclass.hideProgressDialog(mActivity);
-
                     if (response.isSuccessful() && response.body() != null) {
-                        brandTestMasterModel = new BrandTestMasterModel();
+
+                        Gson gson22 = new Gson();
+                        String json22 = gson22.toJson(response.body());
+                        appPreferenceManager.setCacheProduct(json22);
+                        appPreferenceManager.setCashingTime(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"));
+
                         brandTestMasterModel = getBrandTestMaster(response.body());
-                        InitTestListView(brandTestMasterModel,"Test");
-                        SetSelectedCategory(tv_Test);
-                        SetUnSelectedCategory(tv_offers);
-                        SetUnSelectedCategory(tv_POP);
-                        SetUnSelectedCategory(tv_Profile);
+                        CallAfterBranDAPIRes();
                     } else {
                         globalclass.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                     }
@@ -313,9 +328,15 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         }
     }
 
-    public BrandTestMasterModel getBrandTestMaster(BrandTestMasterModel brandTestMasterModel) {
-        Gson gson = new Gson();
+    private void CallAfterBranDAPIRes() {
+        InitTestListView(brandTestMasterModel,"Test");
+        SetSelectedCategory(tv_Test);
+        SetUnSelectedCategory(tv_offers);
+        SetUnSelectedCategory(tv_POP);
+        SetUnSelectedCategory(tv_Profile);
+    }
 
+    public BrandTestMasterModel getBrandTestMaster(BrandTestMasterModel brandTestMasterModel) {
         BrandTestMasterModel brandTestMasterModelFinal = new BrandTestMasterModel();
         ArrayList<TestRateMasterModel> tstratemaster = new ArrayList<>();
 

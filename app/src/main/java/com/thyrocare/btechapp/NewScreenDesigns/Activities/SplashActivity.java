@@ -37,6 +37,7 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+import com.thyrocare.btechapp.activity.DynamicScheduleYourDayActivity;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.activity.ScheduleYourDayActivity;
 import com.thyrocare.btechapp.activity.ScheduleYourDayActivity2;
@@ -50,6 +51,7 @@ import com.thyrocare.btechapp.dao.DbHelper;
 import com.thyrocare.btechapp.dao.DhbDao;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.delegate.CustomUpdateDialogOkButtonOnClickedDelegate;
+import com.thyrocare.btechapp.models.api.response.DynamicBtechAvaliabilityResponseModel;
 import com.thyrocare.btechapp.models.api.response.NewBtechAvaliabilityResponseModel;
 import com.thyrocare.btechapp.models.data.TSPNBT_AvilModel;
 
@@ -239,7 +241,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void trackUserActivity() {
-        new LogUserActivityTagging(mActivity, "","");
+        new LogUserActivityTagging(mActivity, "", "");
     }
 
     private void onVersionControlResponseReceived(final VersionControlResponseModel versionAPIResponseModel) {
@@ -270,7 +272,7 @@ public class SplashActivity extends AppCompatActivity {
                             finishAffinity();
                         }
                     } else {
-                        new LogUserActivityTagging(mActivity, LOGOUT,"");
+                        new LogUserActivityTagging(mActivity, LOGOUT, "");
                         appPreferenceManager.clearAllPreferences();
                         new DhbDao(mActivity).deleteTablesonLogout();
                         //jai
@@ -309,7 +311,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 if (response.code() == 200) {
-                    new LogUserActivityTagging(mActivity, LOGOUT,"");
+                    new LogUserActivityTagging(mActivity, LOGOUT, "");
                     appPreferenceManager.clearAllPreferences();
                     new DhbDao(mActivity).deleteTablesonLogout();
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionAPIResponseModel.getAppUrl()));
@@ -382,7 +384,9 @@ public class SplashActivity extends AppCompatActivity {
                         startActivity(i);
                     }
                 } else {
-                    GetBtechAvailability();
+//                    GetBtechAvailability();
+                    //Added to make it dynamic availability
+                    GetDynBtechAvailability();
                 }
 
             }
@@ -411,6 +415,125 @@ public class SplashActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void GetDynBtechAvailability() {
+
+        Constants.setAvailabiltity = null;
+
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        Call<DynamicBtechAvaliabilityResponseModel> responseCall = apiInterface.GetDynamicBtechAvailability(appPreferenceManager.getLoginResponseModel().getUserID());
+        responseCall.enqueue(new Callback<DynamicBtechAvaliabilityResponseModel>() {
+            @Override
+            public void onResponse(Call<DynamicBtechAvaliabilityResponseModel> call, Response<DynamicBtechAvaliabilityResponseModel> response) {
+                MessageLogger.PrintMsg("VersionApi Onsuccess");
+                if (response.isSuccessful() && response.body() != null) {
+                    DynamicBtechAvaliabilityResponseModel btechAvaliabilityResponseModel = response.body();
+                    onDynBtechAvailabilityResponseReceived(btechAvaliabilityResponseModel);
+                } else {
+                    global.showCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DynamicBtechAvaliabilityResponseModel> call, Throwable t) {
+                MessageLogger.LogDebug("Errror", t.getMessage());
+
+            }
+        });
+    }
+
+    private void onDynBtechAvailabilityResponseReceived(DynamicBtechAvaliabilityResponseModel btechAvaliabilityResponseModel) {
+
+        if (btechAvaliabilityResponseModel != null && btechAvaliabilityResponseModel.getAllDays() != null) {
+
+            if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
+                Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
+                i.putExtra("LEAVEINTIMATION", "0");
+                startActivity(i);
+            } else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+
+                Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                i.putExtra("isFromNotification", isFromNotification);
+                i.putExtra("screenCategory", screenCategory);
+                i.putExtra("LEAVEINTIMATION", "0");
+                startActivity(i);
+            } else if (validateDays(btechAvaliabilityResponseModel)) {
+                Logger.error("ONEEEE");
+                Constants.setAvailabiltity = btechAvaliabilityResponseModel;
+                Intent mIntent = new Intent(mActivity, DynamicScheduleYourDayActivity.class);
+                mIntent.putExtra("WHEREFROM", "0");
+                startActivity(mIntent);
+            } /*else if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay1() == 1) {
+                Logger.error("ONEEEE");
+                Intent mIntent = new Intent(mActivity, ScheduleYourDayActivity.class);
+                mIntent.putExtra("WHEREFROM", "0");
+                startActivity(mIntent);
+
+            } else if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay2() == 1) {
+                Logger.error("THREEE");
+                Intent mIntent = new Intent(mActivity, ScheduleYourDayActivity2.class);
+                mIntent.putExtra("WHEREFROM", "0");
+                startActivity(mIntent);
+            } else if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay3() == 1) {
+                Logger.error("FOUR");
+                Intent mIntent = new Intent(mActivity, ScheduleYourDayActivity3.class);
+                mIntent.putExtra("WHEREFROM", "0");
+                startActivity(mIntent);
+            } else if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay4() == 1) {
+                Logger.error("FOUR");
+                Intent mIntent = new Intent(mActivity, ScheduleYourDayActivity4.class);
+                mIntent.putExtra("WHEREFROM", "0");
+                startActivity(mIntent);
+            }*/ else {
+                Logger.error("ZERRO");
+                Bundle bundle = new Bundle();
+
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.MILLISECOND, 0);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.HOUR_OF_DAY, 0);
+                if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)) {
+                    Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                    i.putExtra("LEAVEINTIMATION", "0");
+                    i.putExtra("isFromNotification", isFromNotification);
+                    i.putExtra("screenCategory", screenCategory);
+                    startActivity(i);
+                    finish();
+                } else {
+                    if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+                        // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
+                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        i.putExtra("isFromNotification", isFromNotification);
+                        i.putExtra("screenCategory", screenCategory);
+                        startActivity(i);
+                        finish();
+                    } else {
+
+                        Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
+                        startActivity(i);
+                        finish();
+                    }
+                }
+            }
+
+
+        }
+    }
+
+    private boolean validateDays(DynamicBtechAvaliabilityResponseModel btechAvaliabilityResponseModel) {
+        if(btechAvaliabilityResponseModel != null){
+            if(btechAvaliabilityResponseModel.getAllDays() != null){
+                for (int i = 0; i < btechAvaliabilityResponseModel.getAllDays().size(); i++) {
+                    if(btechAvaliabilityResponseModel.getAllDays().get(i).getDay() == 1){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private void onBtechAvailabilityResponseReceived(NewBtechAvaliabilityResponseModel btechAvaliabilityResponseModel) {
@@ -569,7 +692,7 @@ public class SplashActivity extends AppCompatActivity {
         model.setDeviceId(DeviceUtils.getDeviceId(mActivity));
         model.setUserId(appPreferenceManager.getLoginResponseModel().getUserID());
         try {
-            new LogUserActivityTagging(mActivity, LOGOUT,"");
+            new LogUserActivityTagging(mActivity, LOGOUT, "");
             PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
             Call<CommonResponseModel> commonResponeModelCall = postAPIInterface.CallLogoutAPI(model);
             global.showProgressDialog(mActivity, "Please wait..", false);
@@ -612,7 +735,7 @@ public class SplashActivity extends AppCompatActivity {
     public void CallLogOutFromDevice() {
         try {
             global.showCustomToast(mActivity, "Authorization failed, need to Login again...", Toast.LENGTH_SHORT);
-            new LogUserActivityTagging(mActivity, LOGOUT,"");
+            new LogUserActivityTagging(mActivity, LOGOUT, "");
             appPreferenceManager.clearAllPreferences();
             try {
                 new DhbDao(mActivity).deleteTablesonLogout();

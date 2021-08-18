@@ -177,31 +177,7 @@ public class ScheduleYourDayFragment extends AbstractFragment {
 
         appPreferenceManager.setNEWBTECHAVALIABILITYRESPONSEMODEL(newBtechAvaliabilityResponseModel);
         if (appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL() != null) {
-                    /*if (btechAvaliabilityResponseModel.getNumberofDays()== 0) {
-                        Logger.error("ZERRO");
-                        Toast.makeText(activity, "Avability Already Done", Toast.LENGTH_SHORT).show();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(BundleConstants.WHEREFROM, 1);
-                        Intent intent = new Intent(activity, HomeScreenActivity.class);
-                        // intent.putExtra("camefrom","1");
-                        startActivity(intent);
-                        //   switchToActivity(activity, HomeScreenActivity.class, bundle);
-                    } else if (btechAvaliabilityResponseModel.getNumberofDays()== 1) {
-                        Logger.error("ONEEEE");
-                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity.class);
-                        mIntent.putExtra("WHEREFROM", "1");
-                        startActivity(mIntent);
-                    } else if (btechAvaliabilityResponseModel.getNumberofDays() == 3) {
-                        Logger.error("THREEE");
-                        Intent mIntent = new Intent(activity, ScheduleYourDayActivity2.class);
-                        mIntent.putExtra("WHEREFROM", "1");
-                        startActivity(mIntent);
-                    } else if (btechAvaliabilityResponseModel.getNumberofDays() == 2) {
-                        Logger.error("FOURRRRR");
-                        Intent mIntent = new Intent(activity, ScheduleYourDayIntentActivity.class);
-                        mIntent.putExtra("WHEREFROM", "1");
-                        startActivity(mIntent);
-                    }*/
+
             if(appPreferenceManager.getNEWBTECHAVALIABILITYRESPONSEMODEL().getNumberOfDays().getDay1()==1){
                 Logger.error("ONEEEE");
                 Intent mIntent = new Intent(activity, ScheduleYourDayActivity.class);

@@ -4,98 +4,43 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
     <string name="goto_settings">Go to Settings</string>
     <string name="gps_disabled">GPS is disabled. Please enable it to continue using the application</string>
-    <string name="arrived">Arrived</string>
     <string name="start">Start</string>
-    <string name="name"> </string>
 
-    <string name="enable_gps_title">Enable GPS</string>
-    <string name="alert_msg">GPS alert dialogue message</string>
-    <string name="alert_settings">Settings</string>
-    <string name="cancel">Cancel</string>
     <string name="arrive">Arrived</string>
     <string name="plz_chk_internet">Please check your internet connection</string>
     <string name="loading">Please wait...</string>
-    <string name="view"><u>View</u></string>
     <string name="rupee_symbol">\u20B9</string>
 
 
     <!--API call Progress Dialog Messages-->
-    <string name="progress_message_Downloading_please_wait">Downloading,\n please wait ....</string>
-    <string name="progress_message_authenticating_please_wait">Authenticating,\n please wait ....</string>
-    <string name="progress_message_uploading_selfie_please_wait">Uploading selfie to server,\n please wait ....</string>
     <string name="progress_message_uploading_order_details_please_wait">Uploading order details to server,\n please wait ....</string>
-    <string name="progress_message_performing_work_order_please_wait">Performing work order,\n please wait ....</string>
     <string name="progress_message_changing_order_status_please_wait">Updating order status,\n please wait ....</string>
-    <string name="progress_message_cancelling_visit_please_wait">Cancelling visit,\n please wait ....</string>
-    <string name="progress_message_fetching_order_details_please_wait">Fetching order details,\n please wait ....</string>
     <string name="progress_message_camp_count_details_please_wait">Loading,\n Please wait ....</string>
-    <string name="progress_message_sending_master_barcode_please_wait">Sending Master barcode  details,\n please wait ....</string>
-    <string name="progress_message_fetcihng_btechwithhub_barcode_please_wait">Fetching barcode details,\n please wait ....</string>
 
-    <string name="progress_message_fetcihngtsp_modes_please_wait">Fetching mode details,\n please wait ....</string>
-
-    <string name="progress_message_getting_master_payment_mode_please_wait">Getting master payment mode,\n please wait ....</string>
-    <string name="progress_message_fetching_slot_details_please_wait">Fetching slot details,\n please wait ....</string>
-    <string name="progress_message_fetching_brand_master_please_wait">Fetching brand master,\n please wait ....</string>
     <string name="progress_message_fetching_test_master_please_wait">Please wait\n while we update your tests list</string>
-    <string name="progress_message_fetching_Ledger_details_please_wait">Fetching ledger details,\n please wait ....</string>
-    <string name="progress_message_fetching_Earning_details_please_wait">Fetching earnings details,\n please wait ....</string>
-    <string name="progress_message_fetching_Deposit_details_please_wait">Fetching deposits details,\n please wait ....</string>
-    <string name="progress_message_hub_start_please_wait">Starting for Hub,\n please wait ....</string>
-    <string name="progress_message_olc_start_please_wait">Starting for OLC,\n please wait ....</string>
-    <string name="progress_message_mapping_master_barcode_please_wait">Mapping master barcode,\n please wait ....</string>
 
-    <string name="progress_message_tsp_send_consignment_please_wait">Sending consignment,\n please wait ....</string>
-
-    <string name="progress_message_fetching_dispatch_to_hub_details_please_wait">Fetching Hub details,\n please wait ....</string>
-    <string name="progress_message_fetching_order_serverd_details_please_wait">Fetching order served details,\n please wait ....</string>
-    <string name="progress_message_fetching_leave_applied">Fetching Leave Applied,\n Please wait ....</string>
-    <string name="progress_message_fetchingolc_picup_details_details_please_wait">Fetching OLC pickup details details,\n please wait ....</string>
-    <string name="progress_message_fetching_camp_details_please_wait">Fetching camp details,\n please wait ....</string>
-    <string name="progress_btech_est_earning_please_wait">Fetching btech EST earnings ,\n please wait ....</string>
-    <string name="progress_message_scan_barcode_check_for_duplicate_please_wait">Scanning Barcode,\n please wait ....</string>
-    <string name="progress_message_fetching_btech_collections_please_wait">Fetching btech collections,\n please wait ....</string>
-    <string name="progress_message_change_password_please_wait">Changing password, please wait ....</string>
-    <string name="progress_message_reset_password_please_wait">Reseting password, please wait ....</string>
-    <string name="progress_message_fetching_Materials_details_please_wait">Fetching materials  details, please wait ....</string>
-    <string name="progress_message_fetching_MaterialsINV_details_please_wait">Fetching materialsINV  Details, please wait ....</string>
-    <string name="progress_message_changing_MaterailsINV_please_wait">Changing material inventory, please wait ....</string>
-    <string name="progress_message_changing_MaterailsOrder_please_wait">Placing material order, please wait ....</string>
     <!--<string name="do_you_really_want_to_Change order">Fetching MaterialsINV  Details, Please wait ....</string>-->
 
     <string name="forget_pass">Forgot password?</string>
     <string name="login">Login </string>
     <string name="join_our_network">Join our Network</string>
-    <string name="logout">Logout</string>
 
     <string name="upload">Proceed</string>
     <string name="take_photo">Capture photo</string>
     <string name="internet_connetion_error">Check internet connection</string>
-    <string name="network_error">Network error</string>
     <string name="add_selfie_error">Add profile photo</string>
-    <string name="my_orders">My orders</string>
-    <string name="schedule_your_day">Schedule your Day</string>
     <string name="dispatch">Dispatch</string>
     <string name="start_pick_up"> Start pick up </string>
     <string name="reset_password">SUBMIT</string>
     <string name="password_changed_successfully">Password changed successfully.\nPlease re- login.</string>
-    <string name="viewing_tests">Getting tests</string>
     <string name="enter_mobile_number">Enter user name</string>
-    <string name="old_password">Old password *</string>
-    <string name="new_password">New password *</string>
-    <string name="confirm_password">Confirm password *</string>
-    <string name="virtual">Virtual\nStock</string>
     <string name="closing">Closing\nBalance</string>
     <string name="opening">Opening\nBalance</string>
     <string name="datetimemsg">Date \nTime</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="start_navigation">Start navigation</string>
-    <string name="estimated_distance">Estimated distance</string>
-    <string name="dummy_address">106, Riverton Drive, Malibu, California, US</string>
     <string name="no_allotted_orders_found">No allotted orders found.</string>
     <string name="selfie">Selfie</string>
     <string name="close">Close</string>
@@ -110,46 +55,27 @@
     <string name="tsp_empty_criteria">The field can not be empty</string>
 
     <string name="password_do_not_match">New Password and confirm password do not match</string>
-    <string name="progress_message_Applying_Leave_please_wait">Applying leave, please wait ....</string>
-    <string name="progress_message_fetching_Leave_details_please_wait">Fetching leave  details, please wait ....</string>
     <string name="add_sample_barcode">Enter serum barcode</string>
     <string name="barcode_value">Enter barcode:</string>
     <string name="barcode_value_confirm">Confirm barcode:</string>
     <string name="alert_invalid_barcode_value">Please enter a valid barcode value</string>
     <string name="alert_unmatched_barcode_values">Barcode and confirm barcode does not match(barcode is case sensative)</string>
-    <string name="progress_message_fetching_Version_details_please_wait">Fetching version  details, Please wait ....</string>
     <string name="progress_message_removing_beneficiary_please_wait">Removing beneficiary, please wait …</string>
-    <string name="progress_message_updating_scanned_barcode_please_wait">Updating scanned barcode to system, please wait …</string>
-    <string name="progress_message_fetching_narration_master_please_wait">Fetching narration master, please wait …</string>
-    <string name="progress_message_fetching_payment_modes_please_wait">Fetching payment modes, please wait …</string>
-    <string name="progress_message_fetching_Order_Allocation_please_wait">Fetching order allocation, please wait …</string>
-    <string name="progress_message_start_transaction_please_wait">Sending transaction details to payment gateway, please wait …</string>
-    <string name="progress_message_payments_otp_verification_please_wait">Verifying payment details, please wait …</string>
-    <string name="progress_message_fetching_payment_status_please_wait">Obtaining payment status, please wait …</string>
-    <string name="progress_message_fetching_payment_details_please_wait">Obtaining updated payment details, please wait …</string>
     <string name="submit">Submit</string>
-    <string name="click_to_select_clinical_history">Select clinical history</string>
     <string name="re_enter_barcode">Re-enter valid barcode</string>
     <string name="note">*Please select vashi branch for cash by ATM</string>
     <string name="receiveButton">Receive</string>
-    <string name="accept_debit">Accept debit</string>
-    <string name="pls_use_valid_btech_credential_to_log_in">Please use valid BTECH credentials to log in</string>
-    <string name="enter_user_name">Enter user name</string>
-    <string name="enter_password">Enter password</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="old_pwd_and_new_pwd_should_not_be_same">Old password and new password should not be same</string>
     <string name="no_face_detected">No face detected</string>
-    <string name="more_than_one_face_detected">More than one face detected</string>
     <string name="barcodevalidation">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
     <string name="addressvalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890,./-</string>
     <string name="Namevalidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="FirstNamevalidation">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="emailIDandMobilenumberValidation">abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!#$%&amp;\'*+-/=?^_`{|}~.@</string>
-    <string name="vailidatingemail">Validating emails </string>
     <string name="Mobile_no_validation">1234567890</string>
     <string name="temperature_validation">1234567890.</string>
-    <string name="Sending_Ereciept">Sending ereciept</string>
     <string name="app_notificationorders">Order</string>
 
     <string name="notification_text">Tracking, tap to cancel</string>
@@ -165,18 +91,10 @@
     <string name="pincode">Pin-code*</string>
     <string name="inchargeName">Incharge Name*</string>
     <string name="uploadImage">Upload Image*</string>
-    <string name="btnUpload">Upload</string>
     <string name="imageNote">Name Board or Visiting Card</string>
     <string name="txtNote">Note</string>
     <string name="clientNote">Rs. 50 per new Lab/Hospital/Doctor activated in system</string>
     <string name="stock_digits">1234567890</string>
-
-    <string-array name="payment_mode">
-        <item>Cash By ATM</item>
-        <item>Cash</item>
-        <item>Cheque</item>
-        <item>NEFT</item>
-    </string-array>
 
     <string-array name="material">
         <item>--Select Item--</item>
@@ -189,16 +107,9 @@
 
     <string name="expectedStock">Expected Stock</string>
     <string name="actualStock">Actual Stock</string>
-    <string name="Reason">Reason</string>
     <string name="wastedStock">Wasted Stock</string>
     <string name="defectiveStock">Defective Stock</string>
     <string name="closingStock">Closing Stock</string>
-    <string name="enterFeedback">Enter Feedback</string>
-    <string name="selectFeedbackType">Select Feedback Type</string>
-    <string name="feedbackSubmitted">Thank you, for your valuable Feedback</string>
-    <string name="fetchingStocks">Fetching Stocks...</string>
-    <string name="fetchingFeedbacklist">Fetching Feedback list...</string>
-    <string name="submittingFeedback">Submitting Feedback...</string>
     <string name="enterProperValues">Enter proper values</string>
     <string name="stockUpdated">Stock updated successfully</string>
     <string name="stockAPIKey">68rbZ40eNeRephUzIDTos9SsQIm4mHlT3lCNnqI)Ivk=</string>
@@ -209,7 +120,6 @@
     <string name="enter_feedback">Enter Feedback</string>
     <string name="select_feedback_type">Select Feedback Type</string>
     <string name="feedback_submitted">Thank you, for your valuable Feedback</string>
-    <string name="loading_stocks">Loading Stocks...</string>
     <string name="loading_feedbacklist">Loading Feedback list...</string>
     <string name="submitting_feedback">Submitting Feedback...</string>
 
@@ -222,12 +132,9 @@
     <string name="date_hint">Date</string>
     <string name="reason">Reason</string>
     <string name="remarks">Remarks</string>
-    <string name="TestAndProfiles">Tests/Profiles</string>
-    <string name="progress_message_Applying_Leave_please_wait_new">Processig your request....</string>
     <string name="nature">Nature</string>
     <string name="leave_remark">Enter remark</string>
     <string name="error_nature">Please select nature</string>
-    <string name="error_date">Invalid date</string>
     <string name="Select_date">Please select date</string>
     <string name="Select_both_date">Please select both from and to date to proceed</string>
     <string name="error_reason">Please select reason</string>
@@ -262,37 +169,18 @@
     <string name="Non_Fasting_orders">Non-Fasting orders :</string>
     <string name="Estimate_earning">Estimate earning :</string>
     <string name="validdate">Select valid date</string>
-    <string name="View"><u>View</u></string>
 
     <string name="BtechName">Btech Name :</string>
-    <string name="orderNo">Order No :</string>
-    <string name="beneficiary">Beneficiary :</string>
     <string name="samples">No of Sample :</string>
-    <string name="kits">Kits : </string>
-    <string name="accept">Accept</string>
-    <string name="release">Release</string>
     <string name="noAllottedOrdersFound">No allotted orders found</string>
     <string name="fetchingOrders">Fetching order details\nPlease wait...</string>
-    <string name="btechName">BTech Name :</string>
-    <string name="pincode1">Pincode :</string>
-    <string name="updatingOrderDetails">Updating Order Details\nPlease wait...</string>
-    <string name="fetchingRemarkslist">Fetching Remarks list...</string>
-    <string name="selectRemarks">Select Remarks</string>
-    <string name="fetchingBtechEarnings">Fetching BTech Earnings\nPlease wait...</string>
-    <string name="selectDateOfAppointment">Please select Date for Next Appointment</string>
-    <string name="rescheduleOrderConfirm">Do you really want to Reschedule this Order ?</string>
-    <string name="enterReason">Please Enter Reason to Reschedule</string>
-    <string name="date">Date</string>
     <string name="fasting_requried_Msg">10–12 hrs fasting is essential for this beneficiary.</string>
     <string name="hardcopycharges">Softcopy report are freely available for all orders, but for hardcopy report Rs 75/- is charged as courier charges</string>
     <string name="fasting">Fasting : </string>
     <string name="address1"><u>View Address</u></string>
-    <string name="vailImage"><u>Vial Image</u></string>
-    <string name="DataNotFound">No Data Found</string>
     <string name="NoCertificates">No Certificates Uploaded yet.</string>
     <string name="reset">Reset</string>
     <string name="EmailId">Email</string>
-    <string name="strcity">City</string>
     <string name="strAddress">Address</string>
     <string name="strPincode">Pincode*</string>
 
@@ -306,27 +194,19 @@
     <string name="str_should_be_ten_digits">Mobile number should be of 10 digits</string>
     <string name="str_valid_mobile_no">Please enter valid mobile number</string>
     <string name="str_valid_pincode">Please enter valid pincode</string>
-    <string name="str_valid_remarks">Please enter valid remarks</string>
-    <string name="str_enter_otp">Please enter OTP</string>
-    <string name="str_otp_for_digits">OTP should be of 4 digits</string>
     <string name="str_enter_name">Please enter name</string>
-    <string name="str_enter_email">Please enter email id</string>
-    <string name="str_select_city">Please enter city</string>
     <string name="space_val_name">Name should not start with space</string>
     <string name="valid_name">Enter valid name</string>
     <string name="invalid_email">Invalid email ID</string>
     <string name="tv_name">Name</string>
     <string name="tv_mob_no">Mobile Number</string>
     <string name="tv_email">Email ID</string>
-    <string name="tv_city">City</string>
     <string name="booking_id">Lead ID</string>
     <string name="test_subject">Test details</string>
     <string name="scan_subject">PET scan details</string>
     <string name="strScanQRCode">Scan QR Code</string>
-    <string name="strName">Name *</string>
     <string name="strProduct">Product *</string>
     <string name="strFirstName">First name *</string>
-    <string name="strLastName">Last name *</string>
     <string name="strMobileno">Mobile *</string>
     <string name="strEmailId">Email *</string>
     <string name="strAddres">Address *</string>
@@ -337,8 +217,8 @@
 
 
 
-    <string name="PaymentGateway"><b><u>PAYMENT GATEWAYS</u></b></string>
-    <string name="PayWithCash"><b><u>PAY WITH CASH</u></b></string>
+    <string name="PaymentGateway"><u>Payment gateways</u></string>
+    <string name="PayWithCash"><u>Pay with cash</u></string>
 
 
 </resources>

@@ -1,8 +1,5 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Activities;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -64,6 +61,7 @@ import com.thyrocare.btechapp.models.data.TestSampleTypeModel;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
+import com.thyrocare.btechapp.utils.app.DateUtils;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
@@ -71,6 +69,8 @@ import com.thyrocare.btechapp.utils.app.InputUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -102,7 +102,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     ArrayList<TestRateMasterModel> selectedTestsList = new ArrayList<>();
     private String SelectedTestCode = "";
     private int CallCartAPIFlag = 0;
-    private boolean testListFlag;
     ArrayList<TestRateMasterModel> edit_selectedTestsList = new ArrayList<>();
     private int PSelected_position;
     private OrderBookingRequestModel FinalSubmitDataModel;
@@ -917,16 +916,28 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     }
 
     private void CallAPIFORTESTLIST(boolean b_flag) {
-        testListFlag = b_flag;
-        if (cd.isConnectingToInternet()) {
-            CallGetTechsoProductsAPI();
+        if (!UpdateProduct()) {
+            if (cd.isConnectingToInternet()) {
+                CallGetTechsoProductsAPI();
+            } else {
+                globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+            }
+        }else {
+            BrandTestMasterModel brandTestMasterModel = new Gson().fromJson(appPreferenceManager.getCacheProduct(), BrandTestMasterModel.class);
+            CallTestData(getBrandTestMaster(brandTestMasterModel));
+        }
+    }
+
+    private boolean UpdateProduct() {
+        String getPreviouseMillis = appPreferenceManager.getCashingTime();
+        if (getPreviouseMillis.equalsIgnoreCase(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"))) {
+            return true;
         } else {
-            globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+            return false;
         }
     }
 
     private void CallGetTechsoProductsAPI() {
-
         try {
             GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token());
@@ -935,12 +946,12 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<BrandTestMasterModel> call, retrofit2.Response<BrandTestMasterModel> response) {
                     globalclass.hideProgressDialog(mActivity);
-
                     if (response.isSuccessful() && response.body() != null) {
-                        BrandTestMasterModel brandTestMasterModel = new BrandTestMasterModel();
-                        brandTestMasterModel = getBrandTestMaster(response.body());
-                        CallTestData(brandTestMasterModel);
-
+                        Gson gson22 = new Gson();
+                        String json22 = gson22.toJson(response.body());
+                        appPreferenceManager.setCacheProduct(json22);
+                        appPreferenceManager.setCashingTime(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"));
+                        CallTestData(getBrandTestMaster(response.body()));
                     } else {
                         globalclass.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                     }
@@ -959,8 +970,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     }
 
     public BrandTestMasterModel getBrandTestMaster(BrandTestMasterModel brandTestMasterModel) {
-        Gson gson = new Gson();
-
         BrandTestMasterModel brandTestMasterModelFinal = new BrandTestMasterModel();
         ArrayList<TestRateMasterModel> tstratemaster = new ArrayList<>();
 

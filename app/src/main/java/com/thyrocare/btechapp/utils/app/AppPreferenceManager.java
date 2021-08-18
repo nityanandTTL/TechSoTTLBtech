@@ -110,12 +110,12 @@ public class AppPreferenceManager {
         appPreference.putString(this.NEWBTECHAVALIABILITYRESPONSEMODEL, new Gson().toJson(newbtechavaliabilityresponsemodel));
     }*/
 
-    public long getCashingTime() {
-        return appPreference.getLong(cashingTime,0);
+    public String getCashingTime() {
+        return appPreference.getString(cashingTime,"");
     }
 
-    public void setCashingTime(long cashingTime) {
-        appPreference.putLong(this.cashingTime,cashingTime);
+    public void setCashingTime(String cashingTime) {
+        appPreference.putString(this.cashingTime,cashingTime);
     }
 
     public String getCacheProduct() {
@@ -125,6 +125,7 @@ public class AppPreferenceManager {
     public void setCacheProduct(String myObject) {
         appPreference.putString(this.CacheProduct,myObject);
     }
+
 
     public int getOrderAccept() {
         return OrderAccept;

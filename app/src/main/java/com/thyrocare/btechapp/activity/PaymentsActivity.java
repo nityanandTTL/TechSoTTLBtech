@@ -51,6 +51,7 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+import com.thyrocare.btechapp.adapter.PaymentDetailsAdapter;
 import com.thyrocare.btechapp.models.api.request.PayTMRequestModel;
 import com.thyrocare.btechapp.models.api.request.PayTMVerifyRequestModel;
 import com.thyrocare.btechapp.models.api.response.FetchLedgerResponseModel;
@@ -85,6 +86,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -140,8 +143,7 @@ public class PaymentsActivity extends AbstractActivity {
     private Global global;
     ConnectionDetector cd;
 
-//    private String mobile;
-//    private int mobileflag = 0;
+    private RecyclerView recy_paymentmode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -331,6 +333,12 @@ public class PaymentsActivity extends AbstractActivity {
     public void initUI() {
         super.initUI();
         flPayments = (FrameLayout) findViewById(R.id.fl_payments);
+
+        recy_paymentmode = (RecyclerView) findViewById(R.id.recy_paymentmode);
+
+        LinearLayoutManager lm1 = new LinearLayoutManager(activity);
+        recy_paymentmode.setLayoutManager(lm1);
+        recy_paymentmode.setHasFixedSize(true);
     }
 
 
@@ -382,8 +390,8 @@ public class PaymentsActivity extends AbstractActivity {
             params.setMargins(20, 25, 10, 25);
             TextView PayableAmount = new TextView(activity);
             PayableAmount.setText("Payable Amount : " + Amount);
-            PayableAmount.setTextSize(16);
-            PayableAmount.setTextColor(getResources().getColor(R.color.black));
+            PayableAmount.setTextSize(18);
+            PayableAmount.setTextColor(getResources().getColor(R.color.colorFAB3));
             PayableAmount.setLayoutParams(params);
             llPaymentModesFinal.addView(PayableAmount);
 
@@ -395,9 +403,8 @@ public class PaymentsActivity extends AbstractActivity {
             TextView tv_payment_gateway_title = new TextView(activity);
             tv_payment_gateway_title.setLayoutParams(params);
             tv_payment_gateway_title.setText(R.string.PaymentGateway);
-            tv_payment_gateway_title.setTextColor(getResources().getColor(R.color.colorFAB3));
-            tv_payment_gateway_title.setTextSize(20);
-            tv_payment_gateway_title.setLayoutParams(params);
+            tv_payment_gateway_title.setTextColor(getResources().getColor(R.color.black));
+            tv_payment_gateway_title.setTextSize(18);
             tv_payment_gateway_title.setLayoutParams(params);
             llPaymentGateway.addView(tv_payment_gateway_title);
             llPaymentModesFinal.addView(llPaymentGateway);
@@ -407,70 +414,10 @@ public class PaymentsActivity extends AbstractActivity {
             llPaymentModes.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             llPaymentModes.setOrientation(LinearLayout.VERTICAL);
 
-
             //TODO Payment Gateways view
             AddingPaymentGateways();
 
-            //TODO Adding Bank Icon
-            LinearLayout llBankMode = new LinearLayout(activity);
-            llBankMode.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            llBankMode.setOrientation(LinearLayout.HORIZONTAL);
-
-            ImageView btnPaymentMode = new ImageView(activity);
-            int width = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.25);
-            LinearLayout.LayoutParams txtParams = new LinearLayout.LayoutParams(width, width);
-            txtParams.setMargins(10, 10, 10, 10);
-            btnPaymentMode.setLayoutParams(txtParams);
-            btnPaymentMode.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            btnPaymentMode.setBackground(getResources().getDrawable(R.drawable.ic_bank));
-
-            //TODO Names of Payment Gateway
-            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            params1.setMargins(30, 20, 10, 20);
-            TextView PaymentNames = new TextView(activity);
-            PaymentNames.setText("Bank");
-            PaymentNames.setTextSize(16);
-            PaymentNames.setGravity(Gravity.CENTER_VERTICAL);
-            PaymentNames.setTextColor(getResources().getColor(R.color.black));
-            PaymentNames.setLayoutParams(params1);
-
-/*            //TODO Bottom Line
-            final LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
-            params2.setMargins(20, 0, 20, 15);
-            View view = new View(activity);
-            view.setLayoutParams(params2);
-            view.setBackgroundColor(getResources().getColor(R.color.black));*/
-
-
-            //TODO Adding arrows at right
-            LinearLayout llArrowIcons = new LinearLayout(activity);
-            llArrowIcons.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-            llArrowIcons.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-            int size = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.08);
-            LinearLayout.LayoutParams arrowParams = new LinearLayout.LayoutParams(size, size);
-            arrowParams.setMarginEnd(20);
-            ImageView ArrowButtons = new ImageView(activity);
-            ArrowButtons.setImageDrawable(getResources().getDrawable(R.drawable.right_arrow_orange));
-            ArrowButtons.setLayoutParams(arrowParams);
-            llArrowIcons.addView(ArrowButtons);
-
-            llBankMode.addView(btnPaymentMode);
-            llBankMode.addView(PaymentNames);
-            llBankMode.addView(llArrowIcons);
-//            llPaymentModes.addView(view);
-            llPaymentModes.addView(llBankMode);
-
             llPaymentModesFinal.addView(llPaymentModes);
-
-
-            llBankMode.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    HomeScreenActivity.isFromPayment = true;
-                    startActivity(new Intent(activity, HomeScreenActivity.class));
-                }
-            });
-
 
             //TODO Ledger History
             LinearLayout.LayoutParams txtParams234 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
@@ -527,12 +474,7 @@ public class PaymentsActivity extends AbstractActivity {
                 txtDebit.setText("-");
                 txtclosingbal.setText("-");
 
-//                tlCR.addView(trCr);
-
-//                Toast.makeText(activity, "payment history not available", Toast.LENGTH_SHORT).show();
             }
-
-//            llPaymentModesFinal.addView(tlCR);
 
             llPayWithCashTitle = new LinearLayout(activity);
             llPayWithCashTitle.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -631,6 +573,16 @@ public class PaymentsActivity extends AbstractActivity {
             });
 
             ShowingViewsAsPerFlag();
+//            SetpaymentGateways(paymentModesArr);
+        }
+    }
+
+    private void SetpaymentGateways(ArrayList<PaymentProcessAPIResponseModel> paymentModesArr) {
+        try {
+            PaymentDetailsAdapter adpter_inc = new PaymentDetailsAdapter(PaymentsActivity.this, paymentModesArr);
+            recy_paymentmode.setAdapter(adpter_inc);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -649,7 +601,7 @@ public class PaymentsActivity extends AbstractActivity {
                     ImageView btnPaymentMode = new ImageView(activity);
                     int width = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.25);
                     LinearLayout.LayoutParams txtParams = new LinearLayout.LayoutParams(width, width);
-                    txtParams.setMargins(10, 10, 10, 10);
+                    txtParams.setMargins(20, 20, 20, 20);
                     txtParams.gravity = Gravity.CENTER;
                     btnPaymentMode.setLayoutParams(txtParams);
                     btnPaymentMode.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -678,25 +630,25 @@ public class PaymentsActivity extends AbstractActivity {
                     //TODO Names of Payment Gateway
 
                     final LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params1.setMargins(30, 5, 10, 5);
+                    params1.setMargins(30, 15, 10, 5);
 
                     TextView PaymentNames = new TextView(activity);
                     PaymentNames.setText(pnvm.getValue());
-                    PaymentNames.setTextSize(16);
+                    PaymentNames.setTextSize(18);
                     PaymentNames.setGravity(Gravity.CENTER_VERTICAL);
                     PaymentNames.setTextColor(getResources().getColor(R.color.black));
                     PaymentNames.setLayoutParams(params1);
 
 
                     //TODO Bottom Line
-                    final LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
-                    params2.setMargins(20, 15, 20, 15);
+                    final LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 3);
+                    params2.setMargins(30, 20, 30, 20);
                     View view = new View(activity);
                     view.setLayoutParams(params2);
-                    view.setBackgroundColor(getResources().getColor(R.color.gray));
+                    view.setBackgroundColor(getResources().getColor(R.color.lightgray));
 
                     //TODO Adding Tick image
-                    int imgsize = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.05);
+                    int imgsize = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.06);
                     LinearLayout.LayoutParams tickParams = new LinearLayout.LayoutParams(imgsize, imgsize);
                     tickParams.setMarginEnd(20);
                     tickParams.gravity = Gravity.CENTER;
@@ -715,7 +667,7 @@ public class PaymentsActivity extends AbstractActivity {
                     editText.setLayoutParams(params1);
                     editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
                     editText.setBackgroundResource(R.drawable.editextborder);
-                    editText.setPadding(50, 10, 50, 10);
+                    editText.setPadding(50, 20, 80, 20);
                     editText.setVisibility(View.GONE);
 
 
@@ -746,23 +698,16 @@ public class PaymentsActivity extends AbstractActivity {
                         }
                     });
 
-                   /* if (pnvm.isClicked()) {
-                        editText.setVisibility(View.VISIBLE);
-                    } else {
-                        editText.setVisibility(View.GONE);
-                    }*/
-
-
                     //TODO Adding arrows at right
 
                     LinearLayout llArrowIcons = new LinearLayout(activity);
                     llArrowIcons.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                     llArrowIcons.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-                    int size = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.08);
+                    int size = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.1);
                     LinearLayout.LayoutParams arrowParams = new LinearLayout.LayoutParams(size, size);
                     arrowParams.setMarginEnd(20);
                     ImageView ArrowButtons = new ImageView(activity);
-                    ArrowButtons.setImageDrawable(getResources().getDrawable(R.drawable.right_arrow_orange));
+                    ArrowButtons.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_navigate_next_24));
                     ArrowButtons.setLayoutParams(arrowParams);
                     llArrowIcons.addView(ArrowButtons);
 
@@ -774,11 +719,11 @@ public class PaymentsActivity extends AbstractActivity {
                     LLPayTM.setWeightSum(2.0f);
 //                    LLPayTM.setPadding(50, 10, 50, 10);
                     LinearLayout.LayoutParams btn = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    btn.weight = 1.0f;
-                    btn.bottomMargin = 2;
-                    btn.topMargin = 2;
+                    btn.weight = 0.7f;
+                    btn.bottomMargin = 8;
+                    btn.topMargin = 8;
                     btn.leftMargin = 2;
-                    btn.rightMargin = 2;
+                    btn.rightMargin = 20;
 //                    btn.weight = 1.0f;
 //                    LLPayTM.setPadding(50, 10, 50, 10);
                     Button btnQR = new Button(activity);
@@ -787,20 +732,18 @@ public class PaymentsActivity extends AbstractActivity {
                     btnQR.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 //                    btnQR.setGravity(Gravity.CENTER);
                     btnQR.setBackground(getResources().getDrawable(R.drawable.editextborder));
-                    btnQR.setTextColor(getResources().getColor(R.color.white));
-                    btnQR.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                    btnQR.setTextColor(getResources().getColor(R.color.colorOrange));
+//                    btnQR.setBackgroundColor(getResources().getColor(R.color.colorOrange));
                     btnQR.setVisibility(View.GONE);
                     btnQR.setTextSize(14);
                     btnQR.setTag(pparm);
 
                     Button btnLink = new Button(activity);
-//                    params.setMarginStart(5);
                     btnLink.setLayoutParams(btn);
                     btnLink.setText("Send Link");
                     btnLink.setGravity(Gravity.CENTER);
                     btnLink.setBackground(getResources().getDrawable(R.drawable.editextborder));
-                    btnLink.setTextColor(getResources().getColor(R.color.white));
-                    btnLink.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                    btnLink.setTextColor(getResources().getColor(R.color.colorOrange));
                     btnLink.setVisibility(View.GONE);
                     btnLink.setTextSize(14);
                     if (pnvm.getValue().equalsIgnoreCase("Paytm")) {
@@ -934,6 +877,10 @@ public class PaymentsActivity extends AbstractActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void fetchPaymentClickDetails(PaymentProcessAPIResponseModel pparm) {
+        fetchPaymentPassInputs(pparm);
     }
 
     private void CallgetTransactionInputsRequestApi(JsonObject jsonRequest) {
@@ -1114,65 +1061,12 @@ public class PaymentsActivity extends AbstractActivity {
                         paymentPassInputsModel.getNameValueCollection().get(i).setValue(BillingEmail + "");
 
                     }
-
-    /*                if (paymentPassInputsModel.getNameValueCollection().get(i).getKey().equals("Amount")) {
-                        textAmount.setText(paymentPassInputsModel.getNameValueCollection().get(i).getValue());
-                        textAmount.setVisibility(View.VISIBLE);
-                        if (paymentPassInputsModel.getNameValueCollection().get(i).getHint().equalsIgnoreCase("Mobile")) {
-                            edtPaymentUserInputs.setHint("Please Enter " + paymentPassInputsModel.getNameValueCollection().get(i).getHint() + "*");
-                        } else {
-                            editAmount.setHint(paymentPassInputsModel.getNameValueCollection().get(i).getHint());
-                        }
-
-                        editAmount.setVisibility(View.GONE);
-                    } else {
-                        View v2 = activity.getLayoutInflater().inflate(R.layout.payment_textview, null);
-                        TextView txtPaymentSystemInputsLabel = (TextView) v2.findViewById(R.id.payment_text1);
-                        TextView txtPaymentSystemInputs = (TextView) v2.findViewById(R.id.payment_text2);
-
-
-                        txtPaymentSystemInputsLabel.setText((paymentPassInputsModel.getNameValueCollection().get(i).getHint() + ":"));
-                        Logger.error("HInt" + paymentPassInputsModel.getNameValueCollection().get(i).getHint());
-                        txtPaymentSystemInputs.setText(paymentPassInputsModel.getNameValueCollection().get(i).getValue());
-
-                        Logger.error("HInt" + paymentPassInputsModel.getNameValueCollection().get(i).getValue());
-//                        llPaymentPassInputs.addView(v2);
-                    }*/
                 }
             }
 
 
             fetchTransactionResponseOnStartTransaction();
 
-/*            LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            //btnParams.setMargins(10, 5, 5, 10);
-            //changes_7june2017
-            btnParams.setMargins(200, 20, 200, 5);
-            //change_7june2017...
-            btnPaymentInputsSubmit.setLayoutParams(btnParams);
-            btnPaymentInputsSubmit.setGravity(Gravity.CENTER);
-            btnPaymentInputsSubmit.setMinEms(10);
-            btnPaymentInputsSubmit.setBackgroundDrawable(getResources().getDrawable(R.drawable.purple_btn_bg));
-            btnPaymentInputsSubmit.setText(getResources().getString(R.string.submit));
-            btnPaymentInputsSubmit.setTextColor(getResources().getColor(android.R.color.white));
-            btnPaymentInputsSubmit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    fetchTransactionResponseOnStartTransaction();
-                   */
-            /* if (mobileflag == 1) {
-                        if (getMobileValidate(mobile)) {
-                            fetchTransactionResponseOnStartTransaction();
-                        }
-                    } else {
-                        fetchTransactionResponseOnStartTransaction();
-                    }*/
-            /*
-
-                }
-            });
-//            llPaymentPassInputs.addView(btnPaymentInputsSubmit);
-//            flPayments.addView(v);*/
         }
     }
 
@@ -1200,7 +1094,6 @@ public class PaymentsActivity extends AbstractActivity {
         JsonObject jsonRequest = new JsonObject();
         try {
             // TODO only for testing
-//           /* paymentPassInputsModel.getNameValueCollection().get(2).setValue("1");*/
 
             jsonRequest.addProperty("URLId", paymentPassInputsModel.getURLId());
             for (PaymentNameValueModel pnvm : paymentPassInputsModel.getNameValueCollection()) {
@@ -1209,11 +1102,6 @@ public class PaymentsActivity extends AbstractActivity {
                 } else {
                     Logger.error("Key" + pnvm.getKey() + "Value" + pnvm.getValue());
                     jsonRequest.addProperty(pnvm.getKey(), pnvm.getValue());
-
-                   /* if (pnvm.getRequired().equals("User") && InputUtils.isNull(pnvm.getValue())) {
-                        Toast.makeText(activity, "All input fields are necessary"+pnvm.getKey().toString(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }*//*----Changes done Due to blocking */
                 }
             }
             jsonRequest.addProperty("UserId", appPreferenceManager.getLoginResponseModel().getUserID());
@@ -1305,7 +1193,13 @@ public class PaymentsActivity extends AbstractActivity {
                 && paymentStartTransactionAPIResponseModel.getReqParameters() != null
                 && paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection() != null
                 && paymentStartTransactionAPIResponseModel.getReqParameters().getNameValueCollection().size() > 0) {
+
+          /*  flPayments.setVisibility(View.VISIBLE);
+            recy_paymentmode.setVisibility(View.GONE);*/
             flPayments.removeAllViews();
+
+
+
             View vpp = getLayoutInflater().inflate(R.layout.pay_ccna, null);
             LinearLayout llPaymentStartTransaction = (LinearLayout) vpp.findViewById(R.id.lineapay);
             String btnSubmitText = "Submit";

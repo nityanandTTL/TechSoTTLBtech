@@ -37,6 +37,7 @@
                     android:layout_marginTop="5dp"
                     android:gravity="center"
                     android:text="Mr. Ajay Kulkarni"
+                    android:textAllCaps="true"
                     android:textColor="#6052B3"
                     android:textSize="28sp"
                     android:textStyle="bold"/>

@@ -32,9 +32,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mindorks.paracamera.Camera;
@@ -59,6 +56,7 @@ import com.thyrocare.btechapp.models.api.response.LeadgenerationResponseModel;
 import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
 import com.thyrocare.btechapp.models.data.BrandTestMasterModel;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+import com.thyrocare.btechapp.utils.app.DateUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 import com.thyrocare.btechapp.utils.app.PermissionUtils;
@@ -72,6 +70,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import application.ApplicationController;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -191,7 +191,7 @@ public class LeadGenerationFragment extends Fragment {
     }
 
     private void CallProductAPI() {
-        if (UpdateProduct()) {
+        if (!UpdateProduct()) {
             if (cd.isConnectingToInternet()) {
                 CallGetTechsoProductsAPI();
             } else {
@@ -203,15 +203,12 @@ public class LeadGenerationFragment extends Fragment {
     }
 
     private boolean UpdateProduct() {
-        long getCurrentMillis = System.currentTimeMillis();
-        long getPreviouseMillis = appPreferenceManager.getCashingTime();
-        long differ_millis = getCurrentMillis - getPreviouseMillis;
-        int days = (int) (differ_millis / (1000 * 60 * 60 * 24));
-
-        if (days >= 30) {
+        String getPreviouseMillis = appPreferenceManager.getCashingTime();
+        if (getPreviouseMillis.equalsIgnoreCase(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"))) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     private void initUI(View v) {
@@ -1188,11 +1185,10 @@ public class LeadGenerationFragment extends Fragment {
 
                     if (response.isSuccessful() && response.body() != null) {
                         BrandTestMasterModel brandTestMasterModel = response.body();
-                        ArrayList<String> productsNameArray = getProductsNameArray(brandTestMasterModel);
                         Gson gson22 = new Gson();
-                        String json22 = gson22.toJson(productsNameArray);
+                        String json22 = gson22.toJson(brandTestMasterModel);
                         appPreferenceManager.setCacheProduct(json22);
-                        appPreferenceManager.setCashingTime(System.currentTimeMillis());
+                        appPreferenceManager.setCashingTime(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"));
 
                         SetProductstoAutoCompleteTextView();
 
@@ -1219,7 +1215,9 @@ public class LeadGenerationFragment extends Fragment {
             Gson gson = new Gson();
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
-            ArrayList<String> productsNameArray = gson.fromJson(appPreferenceManager.getCacheProduct(), type);
+
+            BrandTestMasterModel brandTestMasterModel = gson.fromJson(appPreferenceManager.getCacheProduct(), BrandTestMasterModel.class);
+            ArrayList<String> productsNameArray = getProductsNameArray(brandTestMasterModel);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_dropdown_item_1line, productsNameArray);
             edt_remarks.setAdapter(adapter);
             edt_remarks.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());

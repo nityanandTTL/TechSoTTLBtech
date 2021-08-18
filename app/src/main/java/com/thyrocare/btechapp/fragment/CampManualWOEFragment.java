@@ -80,7 +80,7 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
     private TextView edt_brand_name;
     private int clearText = 0;
     private boolean isSuceed = false;
-    private TextView tv_age, tv_gender, edt_test, edt_test_alerts, edt_age, edt_address;
+    private TextView edt_test_alerts, edt_age;
     private ImageView scan_barcode_button, img_female, img_male;
     private LinearLayout ll_age_gender, ll_test_scan;
     private Button btn_enter_manually, btn_scan_qr, btn_next;
@@ -278,9 +278,6 @@ public class CampManualWOEFragment extends AbstractFragment implements View.OnCl
         ll_test_scan = (LinearLayout) view.findViewById(R.id.ll_test_scan);
         edt_name = (EditText) view.findViewById(R.id.edt_name);
         edt_mobile = (EditText) view.findViewById(R.id.edt_mobile);
-        tv_age = (TextView) view.findViewById(R.id.tv_age);
-        tv_gender = (TextView) view.findViewById(R.id.tv_gender);
-        edt_test = (TextView) view.findViewById(R.id.edt_test);
         scan_barcode_button = (ImageView) view.findViewById(R.id.scan_barcode_button);
         btn_enter_manually = (Button) view.findViewById(R.id.btn_enter_manually);
         btn_scan_qr = (Button) view.findViewById(R.id.btn_scan_qr);

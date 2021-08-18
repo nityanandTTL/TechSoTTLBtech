@@ -311,7 +311,7 @@ public class LocationUpdateService extends IntentService {
 //                    Logger.error("uname1 " + appPreferenceManager.getUserDetailUserName());
 
                     if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBT_ROLE_ID)|| appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.TSP_ROLE_ID)) {
-                        CallgetAcceptOrderNotificationApi();
+//                        CallgetAcceptOrderNotificationApi();
                     }
                 } else {
                     Logger.error("Not login, please login ");

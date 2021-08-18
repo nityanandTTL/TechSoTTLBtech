@@ -96,7 +96,7 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
     private static RefreshCampBeneficiariesSliderDelegate refreshBeneficiariesSliderDelegateResult;
     private EditText edt_name, edt_mobile, edt_email, edt_age, edt_amount, edt_address, edt_pincode;
     private Button btn_scan_qr, btn_enter_manually, btn_next;
-    private TextView tv_age, tv_gender, edt_test_alerts, edt_brand_name;
+    private TextView edt_test_alerts, edt_brand_name;
     private LinearLayout ll_tests;
     private ArrayList<String> tests_iems = new ArrayList<>();
     private Spinner sp_test;
@@ -373,8 +373,6 @@ public class CampBeneficiaryDetailsScanBarcodeFragment extends AbstractFragment 
             img_female.setImageDrawable(getResources().getDrawable(R.drawable.f_selected));
         }
         btn_enter_manually.setVisibility(View.VISIBLE);
-        tv_age = (TextView) rootview.findViewById(R.id.tv_age);
-        tv_gender = (TextView) rootview.findViewById(R.id.tv_gender);
         edt_age = (EditText) rootview.findViewById(R.id.edt_age);
         edt_age.setText("" + beneficiaryDetailsArr.getAge());
         for (int i = 0; i < beneficiaryDetailsArr.getSampleType().size(); i++) {
