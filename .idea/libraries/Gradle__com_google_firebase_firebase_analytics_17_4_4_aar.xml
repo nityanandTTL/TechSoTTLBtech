@@ -1,12 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.firebase:firebase-analytics:17.4.4@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ed50fb56fcf011dbe16fe08ab5d1f300/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ed50fb56fcf011dbe16fe08ab5d1f300/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cb73ee8306d3caa1a066adf3a468381e/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cb73ee8306d3caa1a066adf3a468381e/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/cb73ee8306d3caa1a066adf3a468381e/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1c151fa6ebe541017e2428a3bfb4edb1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b86ec804bdfa253ff1184997b7c1c903/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1c151fa6ebe541017e2428a3bfb4edb1/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1c151fa6ebe541017e2428a3bfb4edb1/jars/classes.jar!/" />
     </CLASSES>

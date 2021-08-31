@@ -7,7 +7,7 @@
         android:bottomRightRadius="@dimen/_3sdp"
         android:bottomLeftRadius="@dimen/_3sdp"/>
     <stroke
-        android:color="@color/colorOrange"
+        android:color="@color/bg_new_color"
         android:width="@dimen/_1sdp"/>
 
 </shape>

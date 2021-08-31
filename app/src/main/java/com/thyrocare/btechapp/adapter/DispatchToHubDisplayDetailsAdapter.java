@@ -5,6 +5,9 @@ package com.thyrocare.btechapp.adapter;
  */
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +16,18 @@ import android.widget.TextView;
 
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
+import com.thyrocare.btechapp.activity.HubDetailMapDisplayFragmentActivity;
 import com.thyrocare.btechapp.delegate.DispatchToHubAdapterOnItemClickedDelegate;
 import com.thyrocare.btechapp.models.data.HUBBTechModel;
 import com.thyrocare.btechapp.utils.api.Logger;
+import com.thyrocare.btechapp.utils.app.BundleConstants;
 
 import java.util.List;
 
 public class DispatchToHubDisplayDetailsAdapter extends RecyclerView.Adapter<DispatchToHubDisplayDetailsAdapter.MyViewHolder> {
 
     private List<HUBBTechModel> hubbTechModels;
-    HomeScreenActivity activity;
+    Activity activity;
     DispatchToHubAdapterOnItemClickedDelegate mcallback;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -58,7 +63,7 @@ public class DispatchToHubDisplayDetailsAdapter extends RecyclerView.Adapter<Dis
     }
 
 
-    public DispatchToHubDisplayDetailsAdapter(List<HUBBTechModel> hubbTechModels, HomeScreenActivity activity, DispatchToHubAdapterOnItemClickedDelegate mCallback) {
+    public DispatchToHubDisplayDetailsAdapter(List<HUBBTechModel> hubbTechModels, Activity activity, DispatchToHubAdapterOnItemClickedDelegate mCallback) {
         this.mcallback = mCallback;
         this.hubbTechModels = hubbTechModels;
         this.activity = activity;
@@ -80,7 +85,7 @@ public class DispatchToHubDisplayDetailsAdapter extends RecyclerView.Adapter<Dis
         if (hubbTechModel != null) {
 
             holder.tv_name.setText("" + hubbTechModel.getIncharge());
-            holder.tv_age.setText(hubbTechModel.getCutOffTime());
+            holder.tv_age.setText("CutOff Time -" + hubbTechModel.getCutOffTime());
             holder.tv_aadhar_no.setText(hubbTechModel.getAddress());
             holder.title_aadhar_icon.setVisibility(View.GONE);
             holder.txtorder_no.setVisibility(View.GONE);
@@ -92,6 +97,10 @@ public class DispatchToHubDisplayDetailsAdapter extends RecyclerView.Adapter<Dis
                 @Override
                 public void onClick(View v) {
                     mcallback.onItemClicked(hubbTechModel);
+//                    activity.startActivity(new Intent(activity, HubDetailMapDisplayFragmentActivity.class));
+                    Intent intent = new Intent(activity,HubDetailMapDisplayFragmentActivity.class);
+                    intent.putExtra(BundleConstants.HUB_BTECH_MODEL,hubbTechModels.get(pos));
+                    activity.startActivity(intent);
                     //activity.pushFragments(HubDetailMapDisplayFragmentActivity.newInstance(hubbTechModels.get(pos)), false, false, HubDetailMapDisplayFragmentActivity.TAG_FRAGMENT, R.id.fl_homeScreen, HubListDisplayFragment.TAG_FRAGMENT);
                 }
             });

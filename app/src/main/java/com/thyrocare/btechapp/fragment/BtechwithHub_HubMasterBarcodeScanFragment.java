@@ -1,19 +1,27 @@
 package com.thyrocare.btechapp.fragment;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -47,19 +55,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.view.View.VISIBLE;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 
 /**
- *　APi Used 　　　i)/SpecimenTrack/ReceiveScannedBarcode/Btechid<br/>
- 　*　ii)/SpecimenTrack/ReceiveBarcodes
+ * 　APi Used 　　　i)/SpecimenTrack/ReceiveScannedBarcode/Btechid<br/>
+ * 　*　ii)/SpecimenTrack/ReceiveBarcodes
  * Created by Orion on 7/4/2017.
  */
-public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment implements View.OnClickListener {
+public class BtechwithHub_HubMasterBarcodeScanFragment extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG_FRAGMENT = BtechwithHub_HubMasterBarcodeScanFragment.class.getSimpleName();
     private LinearLayout ll_hub_display_footer, ll_scan_master_barcode, ll_scan_vial_barcode;
-    private HomeScreenActivity activity;
+    private Activity activity;
+    private TextView tv_collection_sample;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -72,6 +83,9 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
     private Button btn_receive;
     private boolean isCentrifuged = false;
     private Global global;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
+    AppPreferenceManager appPreferenceManager;
 
     public BtechwithHub_HubMasterBarcodeScanFragment() {
     }
@@ -81,16 +95,17 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
         return new BtechwithHub_HubMasterBarcodeScanFragment();
     }
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.btechwithhub_fragment_btech_collections_list, container, false);
-        activity = (HomeScreenActivity) getActivity();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.btechwithhub_fragment_btech_collections_list);
+        activity = this;
         global = new Global(activity);
-        activity.toolbarHome.setTitle("Hub Scan");
+
         appPreferenceManager = new AppPreferenceManager(activity);
 
-        initUI(view);
+        initUI();
         setListeners();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -100,7 +115,6 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
             }
         });
         fetchData();
-        return view;
     }
 
     private void setListeners() {
@@ -117,14 +131,20 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
         }
     }
 
-    private void initUI(View view) {
-        ll_hub_display_footer = (LinearLayout) view.findViewById(R.id.ll_hub_display_footer);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        ll_scan_master_barcode = (LinearLayout) view.findViewById(R.id.ll_scan_master_barcode);
-        ll_scan_vial_barcode = (LinearLayout) view.findViewById(R.id.ll_scan_vial_barcode);
-        ll_hub_display_footer.setVisibility(View.VISIBLE);
-        btn_receive = (Button) view.findViewById(R.id.btn_receive);
+    private void initUI() {
+        ll_hub_display_footer = (LinearLayout) findViewById(R.id.ll_hub_display_footer);
+        tv_collection_sample = findViewById(R.id.tv_collection_sample);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        ll_scan_master_barcode = (LinearLayout) findViewById(R.id.ll_scan_master_barcode);
+        ll_scan_vial_barcode = (LinearLayout) findViewById(R.id.ll_scan_vial_barcode);
+        ll_hub_display_footer.setVisibility(VISIBLE);
+        tv_collection_sample.setVisibility(VISIBLE);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+
+        tv_toolbar.setText("Hub Scan");
     }
 
     @Override
@@ -139,6 +159,10 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
             if (validate()) {
                 callMasterBarcodeMapApi();
             }
+        } else if (v.getId() == R.id.iv_back) {
+            finish();
+        } else if (v.getId() == R.id.iv_home) {
+            startActivity(new Intent(activity, HomeScreenActivity.class));
         }
     }
 
@@ -177,6 +201,7 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null && scanningResult.getContents() != null) {
             if (!isMasterBarcode) {
@@ -225,7 +250,7 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
     private void prepareRecyclerView() {
         Logger.debug("onsode prepareRecyclerView" + "true");
 
-        hubScanBarcodeListAdapter = new BtechwithHub_HubScanBarcodeListAdapter(barcodeModels, activity);
+        hubScanBarcodeListAdapter = new BtechwithHub_HubScanBarcodeListAdapter(barcodeModels, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -259,26 +284,27 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
     private void CallgetfetchBtechwithHubBarcodeApi() {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<BtechwithHubResponseModel> responseCall = apiInterface.CallgetfetchBtechwithHubBarcodeApi(appPreferenceManager.getLoginResponseModel().getUserID());
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<BtechwithHubResponseModel>() {
             @Override
             public void onResponse(Call<BtechwithHubResponseModel> call, retrofit2.Response<BtechwithHubResponseModel> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     BtechwithHubResponseModel btechwithHubResponseModel = response.body();
-                    if (btechwithHubResponseModel != null && btechwithHubResponseModel.getReceivedHub()!= null  && btechwithHubResponseModel.getReceivedHub().size() > 0 && btechwithHubResponseModel.getReceivedHub().get(0).getBarcode() != null) {
+                    if (btechwithHubResponseModel != null && btechwithHubResponseModel.getReceivedHub() != null && btechwithHubResponseModel.getReceivedHub().size() > 0 && btechwithHubResponseModel.getReceivedHub().get(0).getBarcode() != null) {
                         barcodeModels = btechwithHubResponseModel.getReceivedHub();
                         isCentrifuged = false;
                         prepareRecyclerView();
                     } else {
                         Toast.makeText(activity, "No records found", Toast.LENGTH_SHORT).show();
                     }
-                }else if (response.code() == 401) {
+                } else if (response.code() == 401) {
                     CallLogOutFromComDevice();
                 } else {
                     global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
+
             @Override
             public void onFailure(Call<BtechwithHubResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -292,8 +318,8 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
             try {
-                 new LogUserActivityTagging(activity, LOGOUT,"");
-                    appPreferenceManager.clearAllPreferences();
+                new LogUserActivityTagging(activity, LOGOUT, "");
+                appPreferenceManager.clearAllPreferences();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -307,7 +333,7 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);
             homeIntent.addCategory(Intent.CATEGORY_HOME);
             homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            getActivity().startActivity(homeIntent);
+            startActivity(homeIntent);
             // stopService(TImeCheckerIntent);
                /* finish();
                 finishAffinity();*/
@@ -315,40 +341,41 @@ public class BtechwithHub_HubMasterBarcodeScanFragment extends AbstractFragment 
             Intent n = new Intent(activity, LoginActivity.class);
             n.setAction(Intent.ACTION_MAIN);
             n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            getActivity().startActivity(n);
-            getActivity().finish();
+            startActivity(n);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    private void CallgetbTECHWITHhUB_MasterBarcodeMapAPI(BtechwithHub_MasterBarcodeMappingRequestModel masterBarcodeMappingRequestModel){
+    private void CallgetbTECHWITHhUB_MasterBarcodeMapAPI(BtechwithHub_MasterBarcodeMappingRequestModel masterBarcodeMappingRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetbTECHWITHhUB_MasterBarcodeMapAPI(masterBarcodeMappingRequestModel);
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 global.hideProgressDialog(activity);
-                if (response.isSuccessful()){
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                if (response.isSuccessful()) {
+                    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+                    final AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
                     alertDialogBuilder.setMessage("Received Successfully.");
                     alertDialogBuilder.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface arg0, int arg1) {
-                                    pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                                    alertDialog.dismiss();
                                 }
                             });
 
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-                }else{
+
+                } else {
                     Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);

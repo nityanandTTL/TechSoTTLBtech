@@ -1,8 +1,14 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +16,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.FeedbackModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.FeedbackListModel;
@@ -23,6 +33,8 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+import com.thyrocare.btechapp.activity.HomeScreenActivity;
+import com.thyrocare.btechapp.uiutils.AbstractActivity;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
@@ -37,11 +49,10 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CH
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
 
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FeedbackFragment_new extends Fragment {
+public class FeedbackFragment_new extends AppCompatActivity {
 
     public static final String TAG_FRAGMENT = FeedbackFragment_new.class.getSimpleName();
     Global global;
@@ -55,8 +66,11 @@ public class FeedbackFragment_new extends Fragment {
     String feedbackType, query;
     private AppPreferenceManager appPreferenceManager;
     private String deviceInfo = "";
+    TextView tv_toolbar;
+    Toolbar toolbar;
+    ImageView iv_back,iv_home;
 
-    public FeedbackFragment_new() {
+   /* public FeedbackFragment_new() {
         // Required empty public constructor
     }
 
@@ -65,21 +79,23 @@ public class FeedbackFragment_new extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_feedback_new, container, false);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_feedback_new);
 
-        activity = getActivity();
+        activity = this;
+
         global = new Global(activity);
-        activity.setTitle("Feedback");
+
+//        Global.appBar(activity);
+
         connectionDetector = new ConnectionDetector(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
-        initUI(view);
+        initUI();
         initListeners();
         setDeviceInfo();
 
@@ -89,14 +105,17 @@ public class FeedbackFragment_new extends Fragment {
             global.showCustomToast(activity, CHECK_INTERNET_CONN, Toast.LENGTH_SHORT);
         }
 
-
-        return view;
     }
 
-    public void initUI(View view) {
-        spnType = view.findViewById(R.id.spinType);
-        edtQuery = view.findViewById(R.id.edtQuery);
-        btnSubmit = view.findViewById(R.id.btnSubmit);
+    public void initUI() {
+        spnType =findViewById(R.id.spinType);
+        edtQuery = findViewById(R.id.edtQuery);
+        btnSubmit = findViewById(R.id.btnSubmit);
+        toolbar = findViewById(R.id.toolbar);
+        iv_back =   findViewById(R.id.iv_back);
+        iv_home =   findViewById(R.id.iv_home);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        tv_toolbar.setText("Feedback");
     }
 
     public void initListeners() {
@@ -104,6 +123,21 @@ public class FeedbackFragment_new extends Fragment {
             @Override
             public void onClick(View v) {
                 submitFeedback();
+            }
+        });
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity,HomeScreenActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity,HomeScreenActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -141,9 +175,9 @@ public class FeedbackFragment_new extends Fragment {
             myDeviceVersion = "";
         }
 
-        deviceInfo = myDeviceModel+" "+ myDevice + " "+myDevicePRODUCT+" "+myDeviceVersion;
+        deviceInfo = myDeviceModel + " " + myDevice + " " + myDevicePRODUCT + " " + myDeviceVersion;
 
-        MessageLogger.PrintMsg("Nitya >> "+deviceInfo);
+        MessageLogger.PrintMsg("Nitya >> " + deviceInfo);
     }
 //    https://b2capi.thyrocare.com/APIs/MASTER.svc//dNBJfkhL5z8ng3lsNOuAEL2D73G@FDOC0z3fvmKQjiw=//FEEDBACK/getlist
 
@@ -151,7 +185,7 @@ public class FeedbackFragment_new extends Fragment {
         try {
             GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION))).create(GetAPIInterface.class);
             Call<FeedbackListModel> feedbackListModelCall = getAPIInterface.getFeedbackList(AppConstants.API_KEY);
-            global.showProgressDialog(activity,  activity.getResources().getString(R.string.loading_feedbacklist), false);
+            global.showProgressDialog(activity, activity.getResources().getString(R.string.loading_feedbacklist), false);
             feedbackListModelCall.enqueue(new Callback<FeedbackListModel>() {
                 @Override
                 public void onResponse(Call<FeedbackListModel> call, Response<FeedbackListModel> response) {
@@ -181,7 +215,7 @@ public class FeedbackFragment_new extends Fragment {
 
     private void fetchFeedbackList(FeedbackListModel feedbackListModel) {
         arrFeedbackList = new ArrayList<>();
-        arrFeedbackList.add(activity.getResources().getString(R.string.select_feedback_type));
+        arrFeedbackList.add("Select Feedback Type*");
         if (feedbackListModel.getMASTER() != null && feedbackListModel.getMASTER().size() > 0) {
             for (int i = 0; i < feedbackListModel.getMASTER().size(); i++) {
                 arrFeedbackList.add(feedbackListModel.getMASTER().get(i).getVALUE());
@@ -208,7 +242,6 @@ public class FeedbackFragment_new extends Fragment {
         });
     }
 
-
     public boolean validateFeedback() {
         if (spnType.getSelectedItemPosition() == 0) {
             spnType.requestFocus();
@@ -232,7 +265,7 @@ public class FeedbackFragment_new extends Fragment {
             feedbackModel.setName(appPreferenceManager.getLoginResponseModel().getUserName());
             feedbackModel.setEmail(appPreferenceManager.getLoginResponseModel().getEmailId());
             feedbackModel.setMobile(appPreferenceManager.getLoginResponseModel().getMobile());
-            feedbackModel.setFeedback(query + " - Btech app "+ deviceInfo);
+            feedbackModel.setFeedback(query + " - Btech app " + deviceInfo);
             feedbackModel.setEmotion_text(":-|");
             feedbackModel.setRating("NEUTRAL");
             if (connectionDetector.isConnectingToInternet()) {
@@ -247,7 +280,7 @@ public class FeedbackFragment_new extends Fragment {
         try {
             PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.B2C_API_VERSION))).create(PostAPIInterface.class);
             Call<CommonResponseModel> commonResponeModelCall = postAPIInterface.postFeedback(feedbackModel);
-            global.showProgressDialog(activity,  activity.getResources().getString(R.string.submitting_feedback), false);
+            global.showProgressDialog(activity, activity.getResources().getString(R.string.submitting_feedback), false);
             commonResponeModelCall.enqueue(new Callback<CommonResponseModel>() {
                 @Override
                 public void onResponse(Call<CommonResponseModel> call, Response<CommonResponseModel> response) {
@@ -255,6 +288,7 @@ public class FeedbackFragment_new extends Fragment {
                     CommonResponseModel commonResponseModel = response.body();
                     fetchResponse(commonResponseModel);
                 }
+
                 @Override
                 public void onFailure(Call<CommonResponseModel> call, Throwable t) {
                     global.hideProgressDialog(activity);
@@ -269,7 +303,10 @@ public class FeedbackFragment_new extends Fragment {
     private void fetchResponse(CommonResponseModel commonResponseModel) {
         if (commonResponseModel != null && commonResponseModel.getRESPONSE1() != null) {
             if (commonResponseModel.getRESPONSE1().equalsIgnoreCase("SUCCESS")) {
-                global.showCustomToast(activity, activity.getResources().getString(R.string.feedback_submitted), Toast.LENGTH_SHORT);
+//                global.showCustomToast(activity, activity.getResources().getString(R.string.feedback_submitted), Toast.LENGTH_SHORT);
+
+                BottomSheetController bottomSheetController = new BottomSheetController(activity);
+                bottomSheetController.SetOKBottomSheet(activity.getString(R.string.feedback_submitted));
                 edtQuery.setText("");
                 spnType.setSelection(0);
 
@@ -280,4 +317,5 @@ public class FeedbackFragment_new extends Fragment {
             global.showCustomToast(activity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
         }
     }
+
 }

@@ -1,20 +1,51 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".btechapp.NewScreenDesigns.Fragments.ServerdOrderFragment">
 
-    <RelativeLayout
+    <include layout="@layout/default_toolbar"
+        android:id="@+id/appbarLayout"/>
+
+    <LinearLayout
+        android:layout_below="@+id/appbarLayout"
         android:id="@+id/rel_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            app:cardCornerRadius="@dimen/_5sdp"
+            app:cardElevation="@dimen/_5sdp">
+
+            <EditText
+                android:id="@+id/edt_Search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:background="@null"
+                android:drawableRight="@drawable/ic_search"
+                android:gravity="center_vertical"
+                android:hint="Search..."
+                android:padding="@dimen/_5sdp"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/_12sdp" />
+        </androidx.cardview.widget.CardView>
+
 
         <RelativeLayout
             android:id="@+id/rel_dateSelector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_10sdp">
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp">
 
             <ImageView
                 android:id="@+id/img_calenderIcon"
@@ -22,7 +53,7 @@
                 android:layout_height="@dimen/_30sdp"
                 android:layout_centerVertical="true"
                 android:padding="@dimen/_5sdp"
-                android:src="@drawable/calender_icon_orange" />
+                android:src="@drawable/ic_baseline_calendar_today_24" />
 
             <TextView
                 android:id="@+id/tv_selectedDate"
@@ -32,130 +63,124 @@
                 android:layout_toRightOf="@+id/img_calenderIcon"
                 android:padding="@dimen/_5sdp"
                 android:text=""
-                android:textSize="@dimen/_15sdp"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/_10sdp"
                 android:textStyle="bold" />
-
 
 
         </RelativeLayout>
 
-        <EditText
-            android:id="@+id/edt_Search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rel_dateSelector"
-            android:layout_margin="@dimen/_5sdp"
-            android:background="@drawable/border_layout"
-            android:drawableLeft="@drawable/search_icon_orange"
-            android:gravity="center_vertical"
-            android:hint="Search by OrderNo or Name"
-            android:padding="@dimen/_5sdp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycle_servedOrders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/edt_Search"
             android:layout_above="@+id/ll_location"
-            android:layout_margin="@dimen/_5sdp" />
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_5sdp" />
 
         <LinearLayout
             android:id="@+id/ll_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:layout_marginRight="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_5sdp"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:visibility="visible"
             android:background="@drawable/rounded_background_empty_orange"
-            android:padding="@dimen/_5sdp">
+            android:gravity="center"
+            android:padding="@dimen/_5sdp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginRight="@dimen/_2sdp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="@dimen/_15sdp"
                     android:layout_height="@dimen/_15sdp"
-                    android:src="@drawable/zpl"
-                    android:scaleType="fitXY"
-                    android:layout_gravity="center" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" - CPL"/>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="@dimen/_2sdp"
-                android:layout_marginRight="@dimen/_2sdp"
-                android:gravity="center"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:layout_width="@dimen/_15sdp"
-                    android:layout_height="@dimen/_15sdp"
-                    android:src="@drawable/rpl"
-                    android:scaleType="fitXY"
-                    android:layout_gravity="center"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" - RPL"
-                    />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="@dimen/_2sdp"
-                android:layout_marginRight="@dimen/_2sdp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:layout_width="@dimen/_15sdp"
-                    android:layout_height="@dimen/_15sdp"
-                    android:src="@drawable/cpl"
-                    android:scaleType="fitXY"
                     android:layout_gravity="center"
+                    android:scaleType="fitXY"/>
+                    <!--android:src="@drawable/zpl" -->/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" - CPL" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/_2sdp"
+                android:layout_marginRight="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/rpl" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" - RPL" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/_2sdp"
+                android:layout_marginRight="@dimen/_2sdp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cpl"
                     app:tint="@color/sample_type_serum" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" - ZPL"/>
+                    android:text=" - ZPL" />
 
             </LinearLayout>
 
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_noDatafound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="No data found"
-            android:visibility="gone" />
+    </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_noDatafound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:text="No data found"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/_15sdp"
+        android:visibility="gone" />
 
-    </RelativeLayout>
-
-</FrameLayout>
+</RelativeLayout>

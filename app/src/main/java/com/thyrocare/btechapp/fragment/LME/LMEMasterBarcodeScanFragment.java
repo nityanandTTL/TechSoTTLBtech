@@ -37,6 +37,7 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
 
     public static final String TAG_FRAGMENT = LMEMasterBarcodeScanFragment.class.getSimpleName();
     private LinearLayout ll_hub_display_footer, ll_scan_master_barcode;
+    TextView tv_collection_sample;
     private HomeScreenActivity activity;
     private ArrayList<HubBarcodeModel> barcodeModels = new ArrayList<>();
     private String master_scanned_barcode = "";
@@ -86,6 +87,8 @@ public class LMEMasterBarcodeScanFragment extends AbstractFragment implements Vi
     private void initUI(View view) {
 
         ll_hub_display_footer = (LinearLayout) view.findViewById(R.id.ll_hub_display_footer);
+        tv_collection_sample = view.findViewById(R.id.tv_collection_sample);
+        tv_collection_sample.setVisibility(View.VISIBLE);
         ll_scan_master_barcode = (LinearLayout) view.findViewById(R.id.ll_scan_master_barcode);
         ll_hub_display_footer.setVisibility(View.VISIBLE);
         btnDispatch = (Button) view.findViewById(R.id.btn_dispatch);

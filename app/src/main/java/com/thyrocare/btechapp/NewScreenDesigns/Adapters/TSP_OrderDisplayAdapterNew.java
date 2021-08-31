@@ -4,14 +4,19 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.TSP_OrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
@@ -33,6 +38,7 @@ import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.DateUtils;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
@@ -76,16 +82,17 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
     private Date apitimeinHHMMFormat;
     private Date strDate;
     CharSequence[] items;
+    TSP_OrdersDisplayFragment_new tsp_ordersDisplayFragment_new;
     private String userChoosenReleaseTask;
     private boolean isCancelRequesGenereted = false;
 
-    public TSP_OrderDisplayAdapterNew(HomeScreenActivity homeScreenActivity, Activity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels) {
+    public TSP_OrderDisplayAdapterNew(TSP_OrdersDisplayFragment_new mactivity, Activity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels) {
         this.activity = activity;
+        this.tsp_ordersDisplayFragment_new = mactivity;
         this.orderVisitDetailsModelsArr = orderDetailsResponseModels;
         current_date = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(new Date());
         appPreferenceManager = new AppPreferenceManager(activity);
         gpsTracker = new GPSTracker(activity);
-        this.homeScreenActivity = homeScreenActivity;
         globalClass = new Global(activity);
         layoutInflater = LayoutInflater.from(activity);
     }
@@ -98,8 +105,9 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView  txtBtechName, txtOrderNo, txtDate, txtSlot, txtBeneficiary, txtSamples, txtAddress,txtPPBSStatus,txtFastingStatus,txtRBSStatus,direct_visit,txtKits,txt_visit_day;
         ImageView imgRelease, imgCall,img_accept,imgProceed;
-        LinearLayout layoutAccept_Release_Ord, layoutMain,lin_bencount,lin_kits,lin_btechName;
+        LinearLayout layoutAccept_Release_Ord, layoutMain,lin_bencount,lin_kits,lin_btechName,LL_swipe,ll_accept;
         View view_seperater;
+        RelativeLayout rel_imgRelease;
 
         public MyViewHolder(View view) {
             super(view);
@@ -127,6 +135,9 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
             imgRelease = (ImageView) view.findViewById(R.id.imgRelease);
             imgCall = (ImageView) view.findViewById(R.id.imgCall);
             view_seperater = (View) view.findViewById(R.id.view_seperater);
+            LL_swipe = view.findViewById(R.id.LL_swipe);
+            rel_imgRelease = view.findViewById(R.id.rel_imgRelease);
+            ll_accept = view.findViewById(R.id.ll_accept);
         }
     }
 
@@ -143,6 +154,14 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() > 0
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0) != null) {
 
+            if (orderVisitDetailsModelsArr.get(pos).getAppointmentDate().equals(current_date)) {
+                holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_green);
+                holder.LL_swipe.setBackgroundResource(R.drawable.rounded_background_green_2);
+            } else {
+                holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_yellow);
+                holder.LL_swipe.setBackgroundResource(R.drawable.rounded_background_yellow_2);
+            }
+
 
             holder.txtDate.setText(orderVisitDetailsModelsArr.get(pos).getAppointmentDate());
             holder.txtSlot.setText(", "+DateUtil.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getSlot(),"hh:mm a","HH:mm"));
@@ -152,7 +171,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
 
             // Display Btech Name
             holder.lin_btechName.setVisibility(View.VISIBLE);
-            holder.txtBtechName.setText(orderVisitDetailsModelsArr.get(pos).getBtechName());
+            holder.txtBtechName.setText(Global.toCamelCase(orderVisitDetailsModelsArr.get(pos).getBtechName()));
 
             DisplayBencount(pos,holder);
             // TODO logic needs to be set for sample count
@@ -176,17 +195,17 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
 
     private void initLIsteners(final int pos, final MyViewHolder holder) {
 
-        holder.img_accept.setOnClickListener(new View.OnClickListener() {
+        holder.ll_accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onAcceptButtonClicked(holder,pos);
             }
         });
 
-        holder.imgRelease.setOnClickListener(new View.OnClickListener() {
+        holder.rel_imgRelease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onReleaseButtonClicked(pos,holder);
+                onReleaseButtonClicked(pos,holder,holder.txtBtechName.getText().toString(),holder.txtOrderNo.getText().toString());
             }
         });
 
@@ -298,31 +317,38 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
             if (appPreferenceManager.getLoginResponseModel() != null) {
                 if (appPreferenceManager.getLoginResponseModel().getRole() != null) {
                     if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
-                        holder.imgRelease.setVisibility(View.GONE);
+//                        holder.imgRelease.setVisibility(View.GONE);
+                        holder.rel_imgRelease.setVisibility(View.GONE);
                     }
                 }
             }
 
             if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase())) {
-                holder.imgRelease.setVisibility(View.GONE);
+//                holder.imgRelease.setVisibility(View.GONE);
+                holder.rel_imgRelease.setVisibility(View.GONE);
             }
 
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.PPBS)
                     && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS)) {
 
                 if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
-                    holder.imgRelease.setVisibility(View.GONE);
+//                    holder.imgRelease.setVisibility(View.GONE);
+                    holder.rel_imgRelease.setVisibility(View.GONE);
                 } else {
-                    holder.imgRelease.setVisibility(View.VISIBLE);
+//                    holder.imgRelease.setVisibility(View.VISIBLE);
+                    holder.rel_imgRelease.setVisibility(View.VISIBLE);
+
                 }
             }
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.RBS)
                     && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS)) {
 
                 if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
-                    holder.imgRelease.setVisibility(View.GONE);
+//                    holder.imgRelease.setVisibility(View.GONE);
+                    holder.rel_imgRelease.setVisibility(View.GONE);
                 } else {
-                    holder.imgRelease.setVisibility(View.VISIBLE);
+//                    holder.imgRelease.setVisibility(View.VISIBLE);
+                    holder.rel_imgRelease.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -363,11 +389,11 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
         holder.imgProceed.setVisibility(View.GONE); // Proceed Option should be hide for TSP
         if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment") || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
             fastingFlagInt = 0;
-            holder.img_accept.setVisibility(View.VISIBLE);
+            holder.ll_accept.setVisibility(View.VISIBLE);
             holder.txtFastingStatus.setVisibility(View.GONE);
         } else {
             fastingFlagInt = 1;
-            holder.img_accept.setVisibility(View.GONE);
+            holder.ll_accept.setVisibility(View.GONE);
             holder.txtFastingStatus.setVisibility(View.VISIBLE);
         }
     }
@@ -544,7 +570,45 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
     }
 
     private void onAcceptButtonClicked(final MyViewHolder holder, final int pos) {
-        final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+        View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+        String s = "Do you want to accept order?";
+        TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+        tv_text.setText(s);
+        Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+        btn_yes.setText("Accept");
+        btn_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fastingFlagInt = 1;
+                holder.txtFastingStatus.setVisibility(View.VISIBLE);
+                holder.imgRelease.setVisibility(View.VISIBLE);//remove 11 validation
+
+                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isDirectVisit()) {
+                    holder.imgCall.setVisibility(View.GONE);
+                }else {
+                    holder.imgCall.setVisibility(View.VISIBLE);
+                }
+                if (onClickListeners != null) {
+                    onClickListeners.onAcceptClicked(orderVisitDetailsModelsArr.get(pos));
+                }
+                SendinglatlongOrderAllocation(pos);
+                bottomSheetDialog.dismiss();
+            }
+        });
+        Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+        btn_no.setText("Cancel");
+        btn_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(false);
+        bottomSheetDialog.show();
+
+        /*final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
         builder1.setMessage("Do you want to accept order?").setPositiveButton("Accept", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -570,13 +634,42 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                 dialog.dismiss();
             }
         });
-        builder1.show();
+        builder1.show();*/
 
     }
 
-    private void onReleaseButtonClicked(final int pos, MyViewHolder holder) {
+    private void onReleaseButtonClicked(final int pos, MyViewHolder holder,String s_name,String s_order) {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+
+        final View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.layout_bottomsheet_release, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+        TextView tv_name = bottomSheet.findViewById(R.id.tv_name);
+        TextView tv_order_no = bottomSheet.findViewById(R.id.tv_order_no);
+        TextView tv_ord_resch = bottomSheet.findViewById(R.id.tv_ord_resch);
+        TextView tv_ord_rel = bottomSheet.findViewById(R.id.tv_ord_rel);
+        TextView tv_ord_pass = bottomSheet.findViewById(R.id.tv_ord_pass);
+        TextView tv_cancel_vst = bottomSheet.findViewById(R.id.tv_cancel_vst);
+        Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+        Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+        LinearLayout ll_cancl = bottomSheet.findViewById(R.id.ll_cancl);
+
+        tv_name.setText(s_name);
+        tv_order_no.setText(s_order);
 
         boolean toShowResheduleOption = false;
+        if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAppointmentDate())) {
+            Date DeviceDate = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+            Date AppointDate = DateUtils.dateFromString(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), format);
+            int daycount = DateTimeComparator.getDateOnlyInstance().compare(AppointDate, DeviceDate);
+            if (daycount == 0) {
+                toShowResheduleOption = true;
+            } else {
+                toShowResheduleOption = false;
+            }
+        }
+       /* boolean toShowResheduleOption = false;
         if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAppointmentDate())) {
             Date DeviceDate = new Date();
             SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
@@ -587,31 +680,107 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
             }else {
                 toShowResheduleOption = false;
             }
-        }
+        }*/
         if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")
                 || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
             if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
-                items = new String[]{"Do you want to cancel the visit?"};
+//                items = new String[]{"Do you want to cancel the visit?"};
+                tv_ord_pass.setVisibility(View.GONE);
+                tv_ord_rel.setVisibility(View.GONE);
+                tv_ord_resch.setVisibility(View.GONE);
+                ll_cancl.setVisibility(View.VISIBLE);
+                tv_cancel_vst.setText("Do you want to cancel the visit?");
                 cancelVisit = "y";
             } else {
-                items = new String[]{"Order Release"};
+                ll_cancl.setVisibility(View.GONE);
+                tv_ord_pass.setVisibility(View.GONE);
+                tv_ord_rel.setVisibility(View.VISIBLE);
+                tv_ord_resch.setVisibility(View.GONE);
+//                items = new String[]{"Order Release"};
 
             }
         } else {
             if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
-                items = new String[]{"Do you want to cancel the visit?"};
+                tv_ord_pass.setVisibility(View.GONE);
+                tv_ord_rel.setVisibility(View.GONE);
+                tv_ord_resch.setVisibility(View.GONE);
+                ll_cancl.setVisibility(View.VISIBLE);
+                tv_cancel_vst.setText("Do you want to cancel the visit?");
+//                cancelVisit = "y";
                 cancelVisit = "y";
             } else {
                 if (toShowResheduleOption){
+                    tv_ord_pass.setVisibility(View.GONE);
+                    tv_ord_rel.setVisibility(View.VISIBLE);
+                    tv_ord_resch.setVisibility(View.VISIBLE);
+                    ll_cancl.setVisibility(View.GONE);
+               /*
                     items = new String[]{"Order Reschedule",
-                            "Request Release"};
+                            "Request Release"};*/
                 }else{
-                    items = new String[]{"Request Release"};
+                    tv_ord_pass.setVisibility(View.GONE);
+                    tv_ord_rel.setVisibility(View.VISIBLE);
+                    tv_ord_resch.setVisibility(View.GONE);
+                    ll_cancl.setVisibility(View.GONE);
+//                    items = new String[]{"Request Release"};
                 }
             }
         }
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        tv_ord_resch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userChoosenReleaseTask = "Order Reschedule";
+                RescheduleOrderDialog cdd = new RescheduleOrderDialog(activity, new TSP_OrderDisplayAdapterNew.OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0));
+                cdd.show();
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        tv_ord_rel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+                View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+                TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+                TextView tv_text1 = bottomSheet.findViewById(R.id.tv_text1);
+                tv_text.setText("Warning");
+                tv_text1.setText("Rs 200 debit will be levied for releasing this Order");
+                Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+                btn_yes.setText("Accept Debit");
+                btn_yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onClickListeners != null) {
+                            onClickListeners.onItemRelease(orderVisitDetailsModelsArr.get(pos));
+                        }
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+                Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+                btn_no.setText("Cancel Request");
+                btn_no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheet);
+                bottomSheetDialog.setCancelable(false);
+                bottomSheetDialog.show();
+            }
+        });
+
+        tv_ord_pass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onClickListeners != null) {
+                    onClickListeners.onItemRelease(orderVisitDetailsModelsArr.get(pos));
+                }
+                bottomSheetDialog.dismiss();
+            }
+        });
+       /* final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Select Action");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
@@ -658,9 +827,38 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
 
                 }
             }
-        });
+        });*/
 
-        if (cancelVisit.equals("y")) {
+        if (ll_cancl.getVisibility() == View.VISIBLE) {
+            if (cancelVisit.equals("y")) {
+                btn_yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (cancelVisit.equals("y")) {
+                            if (isNetworkAvailable(activity)) {
+                                CallServiceUpdateAPI(pos);
+                            } else {
+                                Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            bottomSheetDialog.dismiss();
+                        }
+                    }
+                });
+
+                btn_no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+            }
+        }
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(true);
+        bottomSheetDialog.show();
+
+  /*      if (cancelVisit.equals("y")) {
             builder.setNegativeButton("YES", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -684,7 +882,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                 }
             });
         }
-        builder.show();
+        builder.show();*/
     }
 
     private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
@@ -772,7 +970,9 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    homeScreenActivity.pushFragments(TSP_OrdersDisplayFragment_new.newInstance(), false, false, TSP_OrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TSP_OrdersDisplayFragment_new.TAG_FRAGMENT);
+                                    Intent intent = new Intent(activity,TSP_OrdersDisplayFragment_new.class);
+                                    activity.startActivity(intent);
+//                                    homeScreenActivity.pushFragments(TSP_OrdersDisplayFragment_new.newInstance(), false, false, TSP_OrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TSP_OrdersDisplayFragment_new.TAG_FRAGMENT);
                                     dialog.dismiss();
 
                                 }

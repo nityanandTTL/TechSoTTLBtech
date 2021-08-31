@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/relItem"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        android:paddingBottom="@dimen/dp_10"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_20"
-        android:paddingTop="@dimen/dp_10" >
+        app:cardElevation="@dimen/_5sdp"
+        app:cardCornerRadius="@dimen/_5sdp"
+        android:layout_margin="@dimen/_5sdp">
 
-        <TextView
-            android:id="@+id/txtToast"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/relItem"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Press back once again to close app"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/_12sdp" />
+            android:background="@color/text_color_grey"
+            android:paddingBottom="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingRight="@dimen/_10sdp"
+            android:paddingTop="@dimen/_10sdp" >
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/txtToast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Press back once again to close app"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/label" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
 
 </LinearLayout>

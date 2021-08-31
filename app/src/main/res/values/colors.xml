@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#EA6610</color>
-    <color name="colorSecondary">#F68C47</color>
-    <color name="colorPrimaryDark">#AF4602</color>
-    <color name="colorSecondaryDark">#DC5F0C</color>
-    <color name="colorAccent">#EA6610</color>
+    <color name="colorPrimary">#2B569A</color>
+    <color name="colorSecondary">#2B569A</color>
+    <color name="colorPrimaryDark">#2B569A</color>
+    <color name="colorSecondaryDark">#2B569A</color>
+    <color name="colorAccent">#2B569A</color>
    <!-- <color name="colorPrimary">#594691</color>
     <color name="colorSecondary">#5BE4DE</color>
     <color name="colorPrimaryDark">#3e2d70</color>
@@ -97,4 +97,21 @@
     <color name="zebragrey">#F5F5F5</color>
     <color name="zebrablue">#EBF9FF</color>
     <color name="lightorange">#F4C3A2</color>
+
+
+    //TODO New color code for New Screen designs
+
+
+    <color name="grey">#7e7b7b</color>
+    <color name="grey_1">#E5E5E5</color>
+    <color name="grey_2">#C9C9C9</color>
+    <color name="bg_new_color">#2B569A</color>
+    <color name="blue_shadow">#CC2B569A</color>
+
+    <color name="text_color_grey">#666666</color>
+    <color name="green_1">#97CA9F</color>
+    <color name="yellow_1">#F9E67B</color>
+    <color name="red_1">#E46163</color>
+
+
 </resources>

@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +48,9 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+
 import application.ApplicationController;
+
 import com.thyrocare.btechapp.customview.TouchImageView;
 import com.thyrocare.btechapp.dao.DhbDao;
 import com.thyrocare.btechapp.models.api.response.BtechImageResponseModel;
@@ -122,12 +125,14 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     ProgressDialog progressDialog;
     private String sub_key = "";
     private String end_key = "";
-    private File imagefile ;
+    private File imagefile;
     private Global globalClass;
     private Camera camera;
     private EditText edt_bodyTemp;
     private Spinner spn_aarogyaApp;
     private String strAarogyaSetuApp = "";
+    ImageView iv_refresh, iv_capture;
+
 
     @Override
     protected void onStart() {
@@ -222,8 +227,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     private void initData() {
-        if (appPreferenceManager.getLoginResponseModel() != null){
-            tv_username.setText(!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserName()) ? appPreferenceManager.getLoginResponseModel().getUserName() : "");
+        if (appPreferenceManager.getLoginResponseModel() != null) {
+            tv_username.setText("Welcome ," + Global.toCamelCase(!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserName()) ? appPreferenceManager.getLoginResponseModel().getUserName() : ""));
         }
 
 
@@ -237,9 +242,9 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         spn_aarogyaApp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0){
+                if (position == 0) {
                     strAarogyaSetuApp = "";
-                }else{
+                } else {
                     strAarogyaSetuApp = AarogyaSetuAppList.get(position);
                 }
             }
@@ -305,7 +310,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 if (response.code() == 200) {
                     try {
-                        new LogUserActivityTagging(activity, LOGOUT,"");
+                        new LogUserActivityTagging(activity, LOGOUT, "");
                         appPreferenceManager.clearAllPreferences();
                         dhbDao.deleteTablesonLogout();
 
@@ -324,6 +329,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     // Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 MessageLogger.LogDebug("Errror", t.getMessage());
@@ -345,6 +351,9 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         edt_bodyTemp = (EditText) findViewById(R.id.edt_bodyTemp);
         spn_aarogyaApp = (Spinner) findViewById(R.id.spn_aarogyaApp);
 
+        iv_refresh = findViewById(R.id.iv_refresh);
+        iv_capture = findViewById(R.id.iv_capture);
+
     }
 
     @Override
@@ -364,14 +373,14 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                         new VerificationTask(mFaceId0, mFaceId1).execute();
                     }
                 } else {
-                    if (imagefile != null && imagefile.isAbsolute()){
-                        if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())){
+                    if (imagefile != null && imagefile.isAbsolute()) {
+                        if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
                             CallSelfieUploadAPI(appPreferenceManager.getLoginResponseModel().getUserID(), imagefile);
-                        }else{
+                        } else {
                             Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_SHORT).show();
                         }
 
-                    }else{
+                    } else {
                         Toast.makeText(getApplicationContext(), "Please take photo", Toast.LENGTH_SHORT).show();
                     }
 
@@ -392,20 +401,20 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
         // add another part within the multipart request
         RequestBody requestBtechid = RequestBody.create(MediaType.parse("multipart/form-data"), Btechid);
-        RequestBody requestAPPDOWNLOAD = RequestBody.create(MediaType.parse("multipart/form-data"), StringUtils.CheckEqualIgnoreCase(strAarogyaSetuApp,"YES") ? "1" : "0");
+        RequestBody requestAPPDOWNLOAD = RequestBody.create(MediaType.parse("multipart/form-data"), StringUtils.CheckEqualIgnoreCase(strAarogyaSetuApp, "YES") ? "1" : "0");
         RequestBody requestTEMP = RequestBody.create(MediaType.parse("multipart/form-data"), edt_bodyTemp.getText().toString().trim());
 
         MultipartBody.Part ImageFileMultiBody = null;
-        if(imagefile != null &&imagefile.exists()){
+        if (imagefile != null && imagefile.exists()) {
 
-            MessageLogger.info(activity,"FileName "+ imagefile.getName());
+            MessageLogger.info(activity, "FileName " + imagefile.getName());
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imagefile);
             ImageFileMultiBody = MultipartBody.Part.createFormData("file", imagefile.getName(), requestFile);
         }
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<SelfieUploadResponseModel> responseCall = apiInterface.uploadSelfieToServer(ImageFileMultiBody,requestBtechid,requestAPPDOWNLOAD,requestTEMP);
-        globalClass.showProgressDialog(activity,"Please wait",false);
+        Call<SelfieUploadResponseModel> responseCall = apiInterface.uploadSelfieToServer(ImageFileMultiBody, requestBtechid, requestAPPDOWNLOAD, requestTEMP);
+        globalClass.showProgressDialog(activity, "Please wait", false);
 
         responseCall.enqueue(new Callback<SelfieUploadResponseModel>() {
             @Override
@@ -417,9 +426,9 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     if (selfieUploadResponseModel != null) {
                         Calendar c = Calendar.getInstance();
                         selfieUploadResponseModel.setTimeUploaded(c.getTimeInMillis());
-                        if (appPreferenceManager.getLoginResponseModel() != null && InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())){
+                        if (appPreferenceManager.getLoginResponseModel() != null && InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
                             selfieUploadResponseModel.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
-                        }else{
+                        } else {
                             selfieUploadResponseModel.setBtechId("");
                         }
 
@@ -435,14 +444,14 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 } else if (response.code() == 401) {
                     CommonUtils.CallLogOutFromDevice(activity, activity, appPreferenceManager, dhbDao);
                 } else {
-                        globalClass.showcenterCustomToast(activity, SomethingWentwrngMsg,Toast.LENGTH_LONG);
+                    globalClass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
 
             @Override
             public void onFailure(Call<SelfieUploadResponseModel> call, Throwable t) {
                 globalClass.hideProgressDialog(activity);
-                globalClass.showcenterCustomToast(activity, SomethingWentwrngMsg,Toast.LENGTH_LONG);
+                globalClass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
     }
@@ -517,7 +526,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     public static boolean checkCameraFront(Context context) {
-        if(context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             return true;
         } else {
             return false;
@@ -529,7 +538,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CAMERA) {
-                 onCaptureImageResult(data);
+                onCaptureImageResult(data);
             }
 
             if (requestCode == Camera.REQUEST_TAKE_PHOTO) {
@@ -560,14 +569,18 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         if (imagefile != null && imagefile.exists()) {
             if (BundleConstants.Flag_facedetection == 1) {
             } else {
+                iv_refresh.setVisibility(View.VISIBLE);
+                iv_capture.setVisibility(View.VISIBLE);
                 btn_uploadPhoto.setVisibility(View.VISIBLE);
-                btn_takePhoto.setVisibility(View.INVISIBLE);
+                btn_takePhoto.setVisibility(View.GONE);
             }
         } else {
-            btn_uploadPhoto.setVisibility(View.INVISIBLE);
+            iv_refresh.setVisibility(View.GONE);
+            iv_capture.setVisibility(View.GONE);
+            btn_uploadPhoto.setVisibility(View.GONE);
             btn_takePhoto.setVisibility(View.VISIBLE);
         }
-        globalClass.DisplayDeviceImages(activity,camera.getCameraBitmapPath(),img_user_picture);
+        globalClass.DisplayDeviceImages(activity, camera.getCameraBitmapPath(), img_user_picture);
     }
 
     private void onCaptureImageResult(Intent data) {
@@ -587,11 +600,15 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         if (!InputUtils.isNull(encodedProImg)) {
             if (BundleConstants.Flag_facedetection == 1) {
             } else {
+                iv_refresh.setVisibility(View.VISIBLE);
+                iv_capture.setVisibility(View.VISIBLE);
                 btn_uploadPhoto.setVisibility(View.VISIBLE);
-                btn_takePhoto.setVisibility(View.INVISIBLE);
+                btn_takePhoto.setVisibility(View.GONE);
             }
         } else {
-            btn_uploadPhoto.setVisibility(View.INVISIBLE);
+            iv_refresh.setVisibility(View.GONE);
+            iv_capture.setVisibility(View.GONE);
+            btn_uploadPhoto.setVisibility(View.GONE);
             btn_takePhoto.setVisibility(View.VISIBLE);
         }
         img_user_picture.setImageBitmap(thumbnail);
@@ -652,8 +669,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             //Toast.makeText(activity, getString(R.string.logout_message_offline), Toast.LENGTH_LONG).show();
 
             if (appPreferenceManager != null) {
-                 new LogUserActivityTagging(activity, LOGOUT,"");
-                    appPreferenceManager.clearAllPreferences();
+                new LogUserActivityTagging(activity, LOGOUT, "");
+                appPreferenceManager.clearAllPreferences();
             }
 
             if (dhbDao == null) {
@@ -725,8 +742,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                             // Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
 
                             if (appPreferenceManager != null) {
-                                 new LogUserActivityTagging(activity, LOGOUT,"");
-                    appPreferenceManager.clearAllPreferences();
+                                new LogUserActivityTagging(activity, LOGOUT, "");
+                                appPreferenceManager.clearAllPreferences();
                             }
 
                             //appPreferenceManager.setIsAfterLogin(false);
@@ -738,7 +755,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                             //  Toast.makeText(activity, getResources().getString(R.string.sync_master_error), Toast.LENGTH_SHORT).show();
 
                         } else {
-                            TastyToast.makeText(activity, getString(R.string.sync_done_master_table), TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+//                            TastyToast.makeText(activity, getString(R.string.sync_done_master_table), TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                             //Toast.makeText(activity, getResources().getString(R.string.sync_done_master_table), Toast.LENGTH_SHORT).show();
 
                             appPreferenceManager.setIsAfterLogin(true);
@@ -821,7 +838,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private void CallgetBtechFaceImageRequestApi(String BTechId) {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<BtechImageResponseModel> responseCall = apiInterface.CallgetBtechFaceImageRequestApi(BTechId);
-        globalClass.showProgressDialog(activity,"Please wait..");
+        globalClass.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<BtechImageResponseModel>() {
             @Override
             public void onResponse(Call<BtechImageResponseModel> call, retrofit2.Response<BtechImageResponseModel> response) {
@@ -830,8 +847,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     BtechImageResponseModel availableSlotsResponseModel = response.body();
                     if (availableSlotsResponseModel != null) {
                         BundleConstants.Flag_facedetection = availableSlotsResponseModel.getFlag();
-                        sub_key = ""+availableSlotsResponseModel.getSubscriptionKey();
-                        end_key = ""+availableSlotsResponseModel.getEndpointKey();
+                        sub_key = "" + availableSlotsResponseModel.getSubscriptionKey();
+                        end_key = "" + availableSlotsResponseModel.getEndpointKey();
                         GetResponseBtechImage(availableSlotsResponseModel);
                     } else {
                         BundleConstants.Flag_facedetection = 0;
@@ -846,6 +863,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     globalClass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
+
             @Override
             public void onFailure(Call<BtechImageResponseModel> call, Throwable t) {
                 globalClass.hideProgressDialog(activity);
@@ -866,15 +884,15 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                                     //Your code goes here
                                     Bitmap image = getBitmapFromURL("" + availableSlotsResponseModel.getImgUrl());
 
-                                    if(image != null){
+                                    if (image != null) {
 
-                                    }else {
+                                    } else {
                                         String string = "" + availableSlotsResponseModel.getImgUrl();
                                         String newurl = string.replace("https", "http");
                                         image = getBitmapFromURL("" + newurl);
                                     }
 
-                                    if(image == null){
+                                    if (image == null) {
                                         BundleConstants.Flag_facedetection = 0;
                                         sub_key = "";
                                         end_key = "";
@@ -907,7 +925,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
     }
 
-    public  Bitmap getBitmapFromURL(String src) {
+    public Bitmap getBitmapFromURL(String src) {
         try {
             URL url = new URL(src);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -926,15 +944,15 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     // Start detecting in image specified by index.
     private void detect(Bitmap bitmap, int index) {
         // Put the image into an input stream for detection.
-        try{
-            if (bitmap!=null){
+        try {
+            if (bitmap != null) {
                 ByteArrayOutputStream output = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
                 ByteArrayInputStream inputStream = new ByteArrayInputStream(output.toByteArray());
                 // Start a background task to detect faces in the image.
                 new DetectionTask(index).execute(inputStream);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1037,7 +1055,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                             faceDetected = faces.size();
                             mFaceId1 = faces.get(0).faceId;
                             btn_uploadPhoto.setVisibility(View.VISIBLE);
-                            btn_takePhoto.setVisibility(View.INVISIBLE);
+                            btn_takePhoto.setVisibility(View.GONE);
                         } else {
                             mFaceId0 = faces.get(0).faceId;
                         }
@@ -1155,9 +1173,9 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private void setInfo(String verificationResult, int isIdentical) {
         if (isIdentical == 1) {
             TastyToast.makeText(activity, "" + verificationResult, TastyToast.LENGTH_LONG, TastyToast.INFO);
-            if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())){
+            if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
                 CallSelfieUploadAPI(appPreferenceManager.getLoginResponseModel().getUserID(), imagefile);
-            }else{
+            } else {
                 Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_SHORT).show();
             }
         } else if (isIdentical == 2) {

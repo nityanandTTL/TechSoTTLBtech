@@ -5,16 +5,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.PersistableBundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,81 +56,64 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ServerdOrderFragment extends Fragment {
+public class ServerdOrderFragment extends AppCompatActivity {
 
     public static final String TAG_FRAGMENT = "SERVED_ORDER_FRAGMENT";
     Activity mActivity;
     ConnectionDetector cd;
     Global globalclass;
-    private RelativeLayout rel_main,rel_dateSelector;
-    private TextView tv_selectedDate,tv_noDatafound;
+    private RelativeLayout rel_dateSelector;
+    private TextView tv_selectedDate, tv_noDatafound;
+    LinearLayout rel_main;
     private EditText edt_Search;
     private RecyclerView recycle_servedOrders;
     ArrayList<ServedOrderResponseModel.btchOrd> ServedOrderArylist;
     private AppPreferenceManager appPreferenceManager;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
 
-
-    public ServerdOrderFragment() {
-        // Required empty public constructor
-    }
-
-    public static ServerdOrderFragment newInstance() {
-        ServerdOrderFragment fragment = new ServerdOrderFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = getActivity();
+        setContentView(R.layout.fragment_serverd_order);
+        mActivity = this;
         appPreferenceManager = new AppPreferenceManager(mActivity);
         globalclass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
-
-        try {
-            HomeScreenActivity activity = (HomeScreenActivity) getActivity();
-            activity.setTitle("Orders Served");
-            activity.toolbar_image.setVisibility(View.GONE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_serverd_order, container, false);
-
-        InitUI(v);
+        InitUI();
         InitListeners();
         InitData();
-
-        return v;
     }
 
-    private void InitUI(View v) {
-
-        rel_main = (RelativeLayout) v.findViewById(R.id.rel_main);
-        rel_dateSelector = (RelativeLayout) v.findViewById(R.id.rel_dateSelector);
-
-        tv_selectedDate = (TextView) v.findViewById(R.id.tv_selectedDate);
-        tv_noDatafound = (TextView) v.findViewById(R.id.tv_noDatafound);
-        edt_Search = (EditText) v.findViewById(R.id.edt_Search);
-
-        recycle_servedOrders = (RecyclerView) v.findViewById(R.id.recycle_servedOrders);
-
-
+    private void InitUI() {
+        rel_main = (LinearLayout) findViewById(R.id.rel_main);
+        rel_dateSelector = (RelativeLayout) findViewById(R.id.rel_dateSelector);
+        tv_selectedDate = (TextView) findViewById(R.id.tv_selectedDate);
+        tv_noDatafound = (TextView) findViewById(R.id.tv_noDatafound);
+        edt_Search = (EditText) findViewById(R.id.edt_Search);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        recycle_servedOrders = (RecyclerView) findViewById(R.id.recycle_servedOrders);
+        tv_toolbar.setText("Served Orders");
     }
 
     private void InitListeners() {
-
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         edt_Search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -138,9 +127,9 @@ public class ServerdOrderFragment extends Fragment {
                                 filterarraylist.add(ServedOrderArylist.get(i));
                             }
                         }
-                        if (filterarraylist.size() > 0){
+                        if (filterarraylist.size() > 0) {
                             DisplayServedOrderList(filterarraylist);
-                        }else{
+                        } else {
                             recycle_servedOrders.setVisibility(View.GONE);
                             tv_noDatafound.setVisibility(View.VISIBLE);
                         }
@@ -151,103 +140,86 @@ public class ServerdOrderFragment extends Fragment {
                     recycle_servedOrders.setVisibility(View.GONE);
                     tv_noDatafound.setVisibility(View.VISIBLE);
                 }
-
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
 
         rel_dateSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                SelectDatePickerDialogFragment datePickerDialogFragment = new SelectDatePickerDialogFragment(mActivity,"Select Date",0,System.currentTimeMillis(),"yyyy-MM-dd");
+                SelectDatePickerDialogFragment datePickerDialogFragment = new SelectDatePickerDialogFragment(mActivity, "Select Date", 0, System.currentTimeMillis(), "yyyy-MM-dd");
                 datePickerDialogFragment.setDateSelectedListener(new SelectDatePickerDialogFragment.OnDateSelectedListener() {
                     @Override
                     public void onDateSelected(String strSelectedDate, Date SelectedDate) {
-                        String CurrentDateToDisplay = DateUtil.getDateFromLong(SelectedDate.getTime(),"dd-MM-yyyy");
+                        String CurrentDateToDisplay = DateUtil.getDateFromLong(SelectedDate.getTime(), "dd-MM-yyyy");
                         tv_selectedDate.setText(CurrentDateToDisplay);
-                        if (cd.isConnectingToInternet()){
-                            callServedOrderAPI(appPreferenceManager.getLoginResponseModel().getUserID(),strSelectedDate);
-                        }else{
+                        if (cd.isConnectingToInternet()) {
+                            callServedOrderAPI(appPreferenceManager.getLoginResponseModel().getUserID(), strSelectedDate);
+                        } else {
                             globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
                         }
-
                     }
                 });
-                datePickerDialogFragment.show(getFragmentManager(), "DatePicker");
+                datePickerDialogFragment.show(getSupportFragmentManager(), "DatePicker");
             }
         });
     }
 
     private void InitData() {
-
-        String CurrentDateToDisplay = DateUtil.getDateFromLong(System.currentTimeMillis(),"dd-MM-yyyy");
+        String CurrentDateToDisplay = DateUtil.getDateFromLong(System.currentTimeMillis(), "dd-MM-yyyy");
         tv_selectedDate.setText(CurrentDateToDisplay);
-
-        String CurrentDate = DateUtil.getDateFromLong(System.currentTimeMillis(),"yyyy-MM-dd");
-        if (cd.isConnectingToInternet()){
-            callServedOrderAPI(appPreferenceManager.getLoginResponseModel().getUserID(),CurrentDate);
-        }else{
-            globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg,Toast.LENGTH_LONG);
+        String CurrentDate = DateUtil.getDateFromLong(System.currentTimeMillis(), "yyyy-MM-dd");
+        if (cd.isConnectingToInternet()) {
+            callServedOrderAPI(appPreferenceManager.getLoginResponseModel().getUserID(), CurrentDate);
+        } else {
+            globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
         }
-
     }
 
-    private void callServedOrderAPI(String BtechID,String Date) {
-
+    private void callServedOrderAPI(String BtechID, String Date) {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-        Call<ServedOrderResponseModel> responseCall = apiInterface.CallServedOrderAPI(BtechID,Date);
-        globalclass.showProgressDialog(mActivity,"Please wait..",false);
-
-
+        Call<ServedOrderResponseModel> responseCall = apiInterface.CallServedOrderAPI(BtechID, Date);
+        globalclass.showProgressDialog(mActivity, "Please wait..", false);
         responseCall.enqueue(new Callback<ServedOrderResponseModel>() {
             @Override
             public void onResponse(Call<ServedOrderResponseModel> call, Response<ServedOrderResponseModel> response) {
                 globalclass.hideProgressDialog(mActivity);
-
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     ServedOrderResponseModel model = response.body();
-                    if (!StringUtils.isNull(model.getResponse()) && model.getResponse().equalsIgnoreCase("SUCCESS") && model.getBtchOrd() != null && model.getBtchOrd().size() > 0){
+                    if (!StringUtils.isNull(model.getResponse()) && model.getResponse().equalsIgnoreCase("SUCCESS") && model.getBtchOrd() != null && model.getBtchOrd().size() > 0) {
                         ServedOrderArylist = null;
                         ServedOrderArylist = new ArrayList<>();
                         ServedOrderArylist = model.getBtchOrd();
                         DisplayServedOrderList(ServedOrderArylist);
-                    }else{
-
+                    } else {
                         recycle_servedOrders.setVisibility(View.GONE);
                         tv_noDatafound.setVisibility(View.VISIBLE);
                     }
-
-                }else{
+                } else {
                     recycle_servedOrders.setVisibility(View.GONE);
                     tv_noDatafound.setVisibility(View.VISIBLE);
                 }
-
             }
+
             @Override
             public void onFailure(Call<ServedOrderResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
                 recycle_servedOrders.setVisibility(View.GONE);
                 tv_noDatafound.setVisibility(View.VISIBLE);
-
             }
         });
-
     }
 
     private void DisplayServedOrderList(ArrayList<ServedOrderResponseModel.btchOrd> ServedOrderList) {
-
         recycle_servedOrders.setVisibility(View.VISIBLE);
         tv_noDatafound.setVisibility(View.GONE);
-        ServedOrdersListAdapter servedOrdersListAdapter = new ServedOrdersListAdapter(mActivity,ServedOrderList);
+        ServedOrdersListAdapter servedOrdersListAdapter = new ServedOrdersListAdapter(mActivity, ServedOrderList);
         servedOrdersListAdapter.setOnItemClickListener(new ServedOrdersListAdapter.OnItemClickListener() {
             @Override
             public void onCallbuttonClicked(final String mobilenumber) {
-
                 TedPermission.with(mActivity)
                         .setPermissions(Manifest.permission.CALL_PHONE)
                         .setRationaleMessage("We need permission to make call from your device.")
@@ -271,13 +243,11 @@ public class ServerdOrderFragment extends Fragment {
 
             @Override
             public void onReceiptDownloadClicked(String Orderno) {
-
-                if (cd.isConnectingToInternet()){
+                if (cd.isConnectingToInternet()) {
                     callSendreceiptAPI(Orderno);
-                }else{
-                    globalclass.showCustomToast(mActivity,CheckInternetConnectionMsg,Toast.LENGTH_LONG);
+                } else {
+                    globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_LONG);
                 }
-
             }
         });
 
@@ -287,41 +257,34 @@ public class ServerdOrderFragment extends Fragment {
 //                    recycle_servedOrders.addItemDecoration(new DividerItemDecoration(MyAddressActivity.this, android.support.v7.widget.LinearLayoutManager.VERTICAL));
         recycle_servedOrders.setHasFixedSize(true);
         recycle_servedOrders.setAdapter(servedOrdersListAdapter);
-
     }
 
     private void callSendreceiptAPI(String OrderNo) {
-
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<String> responseCall = apiInterface.CallSendreceiptAPI(OrderNo);
-        globalclass.showProgressDialog(mActivity,"Please wait..",false);
-
+        globalclass.showProgressDialog(mActivity, "Please wait..", false);
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 globalclass.hideProgressDialog(mActivity);
-
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     String body = response.body();
                     if (!StringUtils.isNull(body) && (body.equalsIgnoreCase("1") || body.equalsIgnoreCase("1\n"))) {
-                        globalclass.showCustomToast(mActivity,"E-Receipt sent Successfully",Toast.LENGTH_LONG);
+                        Toast.makeText(mActivity, "E-Receipt sent Successfully", Toast.LENGTH_SHORT).show();
                     } else {
-                        globalclass.showCustomToast(mActivity,"Failed to send E-Receipt. Please try after sometime.",Toast.LENGTH_LONG);
+                        Toast.makeText(mActivity, "Failed to send E-Receipt. Please try after sometime.", Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    globalclass.showCustomToast(mActivity,SomethingWentwrngMsg,Toast.LENGTH_LONG);
+                } else {
+                    globalclass.showCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
-
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
-                globalclass.showCustomToast(mActivity,SomethingWentwrngMsg,Toast.LENGTH_LONG);
-
+                globalclass.showCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
-
     }
-
 }
 

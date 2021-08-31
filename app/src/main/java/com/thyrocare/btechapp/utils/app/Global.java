@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Base64;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.google.android.material.appbar.AppBarLayout;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.R;
 
@@ -66,7 +68,6 @@ public class Global {
 
     public String tableCart = "Cart";
     //Live ---------------------------
-
 
     ProgressDialog progressDialog;
 
@@ -516,6 +517,12 @@ public class Global {
 
     }
 
+    public static void iconImage(Bitmap bitmap){
+
+    }
+
+
+
     public void OpenImageDialog(String imgUrl, Activity mActivity, boolean isFromURL) {
 
         try {
@@ -676,5 +683,11 @@ public class Global {
 
     public interface OnBarcodeDialogSubmitClickListener {
         public void onSubmitButtonClicked(String barcode);
+    }
+
+
+    public static void appBar(Activity activity){
+        AppBarLayout appBarLayout = activity.findViewById(R.id.appbarLayout);
+        appBarLayout.setVisibility(View.GONE);
     }
 }

@@ -5,13 +5,17 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
@@ -24,6 +28,7 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
+
 import application.ApplicationController;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,60 +48,52 @@ import com.thyrocare.btechapp.utils.app.InputUtils;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PLEASE_WAIT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 
-public class ChangePasswordFragment extends AbstractFragment implements View.OnClickListener {
+public class ChangePasswordFragment extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG_FRAGMENT = ChangePasswordFragment.class.getSimpleName();
     private EditText edt_old_password, edt_new_password, edt_confirm_password;
     private Button btn_reset_password;
     String regexp = ".{6,12}";
-    HomeScreenActivity activity;
+    Activity activity;
     Global globalclass;
     private DhbDao dhbDao;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
     AppPreferenceManager appPreferenceManager;
 
-    public ChangePasswordFragment() {
-    }
-
-    public static ChangePasswordFragment newInstance() {
-        ChangePasswordFragment fragment = new ChangePasswordFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_reset_password_modified);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_reset_password_modified, container, false);
-        activity = (HomeScreenActivity) getActivity();
+        activity = this;
         globalclass = new Global(activity);
-        if (activity.toolbarHome != null) {
-            activity.toolbarHome.setTitle("Change password");
-        }
+
         appPreferenceManager = new AppPreferenceManager(activity);
-        activity.isOnHome = false;
+//        activity.isOnHome = false;
         dhbDao = new DhbDao(activity);
-        initUI(view);
+        initUI();
         setListeners();
-        return view;
     }
 
     private void setListeners() {
         btn_reset_password.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
+        iv_home.setOnClickListener(this);
     }
 
 
-    private void initUI(View view) {
-        edt_old_password = (EditText) view.findViewById(R.id.edt_old_password);
-        edt_new_password = (EditText) view.findViewById(R.id.edt_new_password);
-        edt_confirm_password = (EditText) view.findViewById(R.id.edt_confirm_password);
-        btn_reset_password = (Button) view.findViewById(R.id.btn_reset_password);
+    private void initUI() {
+        edt_old_password = findViewById(R.id.edt_old_password);
+        edt_new_password = findViewById(R.id.edt_new_password);
+        edt_confirm_password = findViewById(R.id.edt_confirm_password);
+        btn_reset_password = findViewById(R.id.btn_reset_password);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        tv_toolbar.setText("Change Password");
     }
 
 
@@ -117,7 +114,7 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
             edt_confirm_password.setError(getString(R.string.password_do_not_match));
             edt_confirm_password.requestFocus();
             return false;
-        }else if (edt_old_password.getText().toString().equals(edt_new_password.getText().toString())) {
+        } else if (edt_old_password.getText().toString().equals(edt_new_password.getText().toString())) {
             edt_new_password.setError(getString(R.string.old_pwd_and_new_pwd_should_not_be_same));
             edt_new_password.requestFocus();
             return false;
@@ -143,8 +140,14 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
             if (validate()) {
                 changePasswordApi();
             }
+        } else if (v.getId() == R.id.iv_back) {
+            finish();
+
+        } else if (v.getId() == R.id.iv_home) {
+            finish();
         }
     }
+
     private void CallGetChangePasswordRequestApi(final ChangePasswordRequestModel changePasswordRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
@@ -154,7 +157,7 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 globalclass.hideProgressDialog(activity);
-                if (response.isSuccessful() ) {
+                if (response.isSuccessful()) {
                     androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder;
                     alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(activity);
                     alertDialogBuilder
@@ -176,12 +179,13 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
                     androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
 
-                } else if (response.code() == 400){
+                } else if (response.code() == 400) {
                     TastyToast.makeText(activity, "Incorrect old password.", TastyToast.LENGTH_LONG, TastyToast.ERROR);
-                }else{
+                } else {
                     TastyToast.makeText(activity, SOMETHING_WENT_WRONG, TastyToast.LENGTH_LONG, TastyToast.ERROR);
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalclass.hideProgressDialog(activity);
@@ -201,7 +205,7 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
                 globalclass.hideProgressDialog(activity);
                 if (response.isSuccessful()) {
                     try {
-                        new LogUserActivityTagging(activity, LOGOUT,"");
+                        new LogUserActivityTagging(activity, LOGOUT, "");
                         appPreferenceManager.clearAllPreferences();
                         dhbDao.deleteTablesonLogout();
                         Intent homeIntent = new Intent(Intent.ACTION_MAIN);
@@ -225,6 +229,7 @@ public class ChangePasswordFragment extends AbstractFragment implements View.OnC
                     Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalclass.hideProgressDialog(activity);

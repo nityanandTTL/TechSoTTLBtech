@@ -6,8 +6,10 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +73,7 @@ public class ScheduleYourDayActivity4 extends AbstractActivity {
     private SetBtechAvailabilityAPIRequestModel savedModel;
     private TextView date;
     private String value;
+    Switch btn_switch;
 
     private String lasScheduleDate;
     /**
@@ -303,6 +306,62 @@ public class ScheduleYourDayActivity4 extends AbstractActivity {
         } else {
             txtNo.setVisibility(View.VISIBLE);
         }
+
+
+        btn_switch = findViewById(R.id.btn_switch);
+
+        btn_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    llSlotsDisplay.setVisibility(View.VISIBLE);
+                    isAvailable = true;
+                    btnProceed.setVisibility(View.VISIBLE);
+                    fetchData();
+                }else{
+                    llSlotsDisplay.setVisibility(View.GONE);
+                    btnProceed.setVisibility(View.INVISIBLE);
+                    isAvailable = false;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setMessage("Are you sure you are not available tomorrow ?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel = new SetBtechAvailabilityAPIRequestModel();
+                                    setBtechAvailabilityAPIRequestModel.setAvailable(isAvailable);
+                                    setBtechAvailabilityAPIRequestModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                    String slots = "";
+                                    setBtechAvailabilityAPIRequestModel.setSlots(slots);
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
+                                    Calendar calendar = Calendar.getInstance();
+
+                                    setBtechAvailabilityAPIRequestModel.setEntryDate(sdf.format(calendar.getTime()));
+                                    setBtechAvailabilityAPIRequestModel.setLastUpdated(sdf.format(calendar.getTime()));
+                                    calendar.add(Calendar.DAY_OF_MONTH, 1);
+                                    setBtechAvailabilityAPIRequestModel.setAvailableDate(sdf.format(calendar.getTime()));
+
+                                    if (isNetworkAvailable(activity)) {
+                                        callBtechAvailabilityRequestApi(setBtechAvailabilityAPIRequestModel);
+                                    } else {
+                                        Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    if (!activity.isFinishing()) {
+                        builder.create().show();
+                    }
+                }
+            }
+        });
+
+
+
     }
 
     private void CallFetchSlotDetailsApi() {

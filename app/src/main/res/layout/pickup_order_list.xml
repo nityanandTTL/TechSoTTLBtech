@@ -5,18 +5,17 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/_5sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_9sdp"
-        android:layout_marginBottom="@dimen/_5sdp"
-        android:layout_height="wrap_content"
->
+        android:layout_marginBottom="@dimen/_5sdp">
 
         <LinearLayout
             android:id="@+id/layoutMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/borde_rect"
+            android:background="@drawable/rounded_background_green"
             android:orientation="horizontal"
             android:paddingStart="@dimen/_5sdp"
             android:paddingTop="@dimen/_5sdp"
@@ -42,9 +41,18 @@
                         android:id="@+id/txtCustomerName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAllCaps="true"
-                        android:textSize="@dimen/_14sdp"
+                        android:layout_gravity="center"
+                        android:hint="User name"
+                        android:textColor="@color/bg_new_color"
+                        android:textSize="@dimen/label"
                         android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:padding="@dimen/_3sdp"
+                        android:src="@drawable/ic_call" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -63,7 +71,8 @@
                         android:id="@+id/txtOrderNo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/_13sdp"
+                        android:textColor="@color/bg_new_color"
+                        android:textSize="@dimen/value"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -79,9 +88,9 @@
                     android:layout_height="wrap_content"
                     android:maxLines="3"
                     android:text="@string/address1"
+                    android:textColor="@color/grey"
                     android:textSize="@dimen/_12sdp"
                     android:textStyle="bold" />
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -134,11 +143,10 @@
 
                 </LinearLayout>
 
-
             </LinearLayout>
 
-            <RelativeLayout
 
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.8"
@@ -151,7 +159,7 @@
                     android:layout_alignParentEnd="true"
                     android:padding="@dimen/_3sdp"
                     android:text=""
-                    android:textColor="@color/white"
+                    android:textColor="@color/bg_new_color"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -162,13 +170,56 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:text="Direct Visit"
-                    android:textColor="@color/colorOrange"
+                    android:textColor="@color/bg_new_color"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:visibility="invisible" />
 
             </RelativeLayout>
+
+
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rel_imgRelease"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutMain"
+            android:layout_marginTop="-10dp"
+            android:gravity="center">
+
+
+
+            <LinearLayout
+                android:id="@+id/LL_swipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_background_green_2"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Pick up Order"
+                    android:textAllCaps="false"
+                    android:textColor="@color/bg_new_color"
+                    android:textSize="@dimen/label"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <com.thyrocare.btechapp.customview.CircleImageView
+                android:id="@+id/imgRelease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="-15dp"
+                android:layout_marginTop="-20dp"
+                android:src="@drawable/ic_swipe_green"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -178,7 +229,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/_30sdp"
         android:layout_marginRight="-15dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/layoutAccept_Release_Ord"
@@ -187,7 +239,6 @@
             android:layout_marginTop="@dimen/dp_10"
             android:orientation="vertical">
 
-
             <ImageView
                 android:id="@+id/img_pickup"
                 android:layout_width="130dp"
@@ -195,7 +246,6 @@
                 android:src="@drawable/pickup_icon" />
 
         </LinearLayout>
-
 
     </RelativeLayout>
 </RelativeLayout>

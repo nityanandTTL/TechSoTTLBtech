@@ -1,9 +1,11 @@
 package com.thyrocare.btechapp.fragment;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,18 +26,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.NewCampWOEModuleActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.FeedbackFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.Ledger_module_fragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.ServerdOrderFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.TSP_OrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
+import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.activity.KIOSK_Scanner_Activity;
@@ -53,6 +62,7 @@ import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
+import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
@@ -63,6 +73,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import application.ApplicationController;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -143,6 +154,14 @@ public class HomeScreenFragment extends AbstractFragment {
     private Global globalclass;
     private Button btn_leadgeneration;
 
+
+    private DhbDao dhbDao;
+    //New Screen designs
+
+    ImageView iv_gqc;
+    LinearLayout ll_schedule, ll_orders, ll_served, ll_hub, ll_lead, ll_pick_orders, ll_hcw, ll_password, ll_feedback, ll_video, ll_certificate, ll_logout;
+
+
     public HomeScreenFragment() {
         // Required empty public constructor
     }
@@ -192,9 +211,11 @@ public class HomeScreenFragment extends AbstractFragment {
         super.onCreate(savedInstanceState);
         activity = (HomeScreenActivity) getActivity();
         globalclass = new Global(activity);
+
+        dhbDao = new DhbDao(activity);
         try {
 //            activity.toolbarHome.setTitle("Home");
-            activity.toolbar_image.setVisibility(View.VISIBLE);
+//            activity.toolbar_image.setVisibility(View.VISIBLE);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -221,8 +242,8 @@ public class HomeScreenFragment extends AbstractFragment {
             rootView = inflater.inflate(R.layout.tsp_home_fragment_new, container, false);
             initUI_TSP();
             initData_Tsp();
-            getCampDetailCount();
-            initListeners_TSP();
+//            getCampDetailCount();
+//            initListeners_TSP();
         } else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {//loginRole.equalsIgnoreCase("9")
             rootView = inflater.inflate(R.layout.lme_fragment_home_screen, container, false);
             initUI_LME();
@@ -232,12 +253,12 @@ public class HomeScreenFragment extends AbstractFragment {
             rootView = inflater.inflate(R.layout.fragment_home_screen_nbt, container, false);
             initUI_NBT();
             initData();
-            initListeners_NBT();
+//            initListeners_NBT();
         } else {//for btech & hub login
             rootView = inflater.inflate(R.layout.fragment_home_screen_sixmenu, container, false);
             initUI();
             initData();
-            getCampDetailCount();
+//            getCampDetailCount();
             initListeners();
 
             if (!appPreferenceManager.isLoadSpotlightOnHome()) {
@@ -369,13 +390,13 @@ public class HomeScreenFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(activity, "Feature coming soon.", Toast.LENGTH_SHORT).show();
-                pushFragments(ServerdOrderFragment.newInstance(), false, false, ServerdOrderFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+//                pushFragments(ServerdOrderFragment.newInstance(), false, false, ServerdOrderFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         imgOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+//                pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         imgHub.setOnClickListener(new View.OnClickListener() {
@@ -383,7 +404,7 @@ public class HomeScreenFragment extends AbstractFragment {
             public void onClick(View v) {
 
                 Logger.error("Role" + appPreferenceManager.getLoginRole());
-                pushFragments(HubListDisplayFragment.newInstance(), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+//                pushFragments(HubListDisplayFragment.newInstance(), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
 
             }
         });
@@ -393,14 +414,15 @@ public class HomeScreenFragment extends AbstractFragment {
         send_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(TSP_SendFragment.newInstance(), false, false, TSP_SendFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+//                pushFragments(TSP_SendFragment.newInstance(), false, false, TSP_SendFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
 
         receive_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(TSP_HubMasterBarcodeScanFragment.newInstance(), false, false, TSP_HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+
+//                pushFragments(TSP_HubMasterBarcodeScanFragment.newInstance(), false, false, TSP_HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
 
@@ -408,7 +430,7 @@ public class HomeScreenFragment extends AbstractFragment {
             @Override
             public void onClick(View v) {
 //                pushFragments(TSP_HubMasterBarcodeScanFragment.newInstance(), false, false, TSP_HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
-                pushFragments(TSP_OrdersDisplayFragment_new.newInstance(), false, false, TSP_OrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+//                pushFragments(TSP_OrdersDisplayFragment_new.newInstance(), false, false, TSP_OrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
 
@@ -454,19 +476,29 @@ public class HomeScreenFragment extends AbstractFragment {
     }
 
     private void initListeners() {
-        btn_leadgeneration.setOnClickListener(new View.OnClickListener() {
+
+        iv_gqc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(LeadGenerationFragment.newInstance(), false, false, LeadGenerationFragment.TAG, R.id.fl_homeScreen, TAG_FRAGMENT);
+                Intent gqc = new Intent(getActivity(), KIOSK_Scanner_Activity.class);
+                startActivity(gqc);
             }
         });
-        imgOrders.setOnClickListener(new View.OnClickListener() {
+
+
+        ll_lead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+//                pushFragments(LeadGenerationFragment.newInstance(), false, false, LeadGenerationFragment.TAG, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
-        imgHub.setOnClickListener(new View.OnClickListener() {
+        ll_orders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+            }
+        });
+        ll_hub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //btech_hub
@@ -484,14 +516,14 @@ public class HomeScreenFragment extends AbstractFragment {
                         @Override
                         public void onClick(View v) {
                             MainDailog.dismiss();
-                            pushFragments(HubListDisplayFragment.newInstance(1), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+//                            pushFragments(HubListDisplayFragment.newInstance(1), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                         }
                     });
 
                     receive.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            pushFragments(BtechwithHub_HubMasterBarcodeScanFragment.newInstance(), false, false, BtechwithHub_HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                            startActivity(new Intent(activity,BtechwithHub_HubMasterBarcodeScanFragment.class));
                             MainDailog.dismiss();
                         }
                     });
@@ -499,11 +531,79 @@ public class HomeScreenFragment extends AbstractFragment {
                     MainDailog.show();
                 } else {//for normal btech login...
                     Logger.error("Role" + appPreferenceManager.getLoginRole());
-                    pushFragments(HubListDisplayFragment.newInstance(), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+//                    pushFragments(HubListDisplayFragment.newInstance(), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                 }
 
             }
         });
+
+        ll_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(activity,
+                            new String[]{Manifest.permission.READ_PHONE_STATE}, AppConstants.APP_PERMISSIONS);
+                } else {
+                    final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+
+                    View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+                    Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+                    btn_yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (isNetworkAvailable(activity)) {
+                                CallLogoutRequestApi();
+                                if (!appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+                                    CallLogOutDevice();
+                                }
+                            } else {
+                                Toast.makeText(activity, "Logout functionality is only available in Online Mode", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                    Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+                    btn_no.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            bottomSheetDialog.dismiss();
+
+                        }
+                    });
+
+                    bottomSheetDialog.setContentView(bottomSheet);
+                    bottomSheetDialog.setCancelable(false);
+                    bottomSheetDialog.show();
+
+                }
+            }
+        });
+
+        ll_schedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(activity,ScheduleYourDayFragment.class));
+            }
+        });
+
+        ll_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),ChangePasswordFragment.class);
+                startActivity(intent);
+            }
+        });
+
+
+        ll_feedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FeedbackFragment_new.class);
+                startActivity(intent);
+            }
+        });
+
 
         imgPayment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -516,12 +616,7 @@ public class HomeScreenFragment extends AbstractFragment {
                 startActivity(intentPaymentsActivity);
             }
         });
-        imgSchedule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pushFragments(ScheduleYourDayFragment.newInstance(), false, false, ScheduleYourDayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
-            }
-        });
+
         imgMaterials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -545,11 +640,11 @@ public class HomeScreenFragment extends AbstractFragment {
                 startActivity(intentPaymentsActivity);
             }
         });
-        ordersserved.setOnClickListener(new View.OnClickListener() {
+        ll_served.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(activity, "Feature coming soon.", Toast.LENGTH_SHORT).show();
-                pushFragments(ServerdOrderFragment.newInstance(), false, false, ServerdOrderFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+//                pushFragments(ServerdOrderFragment.newInstance(), false, false, ServerdOrderFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
             }
         });
         imgLedger.setOnClickListener(new View.OnClickListener() {
@@ -563,6 +658,23 @@ public class HomeScreenFragment extends AbstractFragment {
     @Override
     public void initUI() {
         super.initUI();
+
+
+        iv_gqc = rootView.findViewById(R.id.iv_gqc);
+        ll_schedule = rootView.findViewById(R.id.ll_schedule);
+        ll_orders = rootView.findViewById(R.id.ll_orders);
+        ll_served = rootView.findViewById(R.id.ll_served);
+        ll_hub = rootView.findViewById(R.id.ll_hub);
+        ll_lead = rootView.findViewById(R.id.ll_lead);
+        ll_pick_orders = rootView.findViewById(R.id.ll_pick_orders);
+        ll_hcw = rootView.findViewById(R.id.ll_hcw);
+        ll_password = rootView.findViewById(R.id.ll_password);
+        ll_feedback = rootView.findViewById(R.id.ll_feedback);
+        ll_video = rootView.findViewById(R.id.ll_video);
+        ll_certificate = rootView.findViewById(R.id.ll_certificate);
+        ll_logout = rootView.findViewById(R.id.ll_logout);
+
+
         txtUserName = (TextView) rootView.findViewById(R.id.txt_username);
         rvSelfie = (CircularImageView) rootView.findViewById(R.id.img_user_picture);
         imgPayment = (ImageView) rootView.findViewById(R.id.payment_icon);
@@ -592,7 +704,6 @@ public class HomeScreenFragment extends AbstractFragment {
     }
 
     private void CallGetCampDetailsCountAPI() {
-
         try {
             GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<String> responseCall = apiInterface.CallGetCampDetailsCountAPI(appPreferenceManager.getLoginResponseModel().getUserID());
@@ -765,7 +876,7 @@ public class HomeScreenFragment extends AbstractFragment {
             @Override
             public void onOkClicked() {
                 try {
-                    new LogUserActivityTagging(activity, LOGOUT,"");
+                    new LogUserActivityTagging(activity, LOGOUT, "");
                     appPreferenceManager.clearAllPreferences();
                     DhbDao dhbDao = new DhbDao(activity);
                     dhbDao.deleteTablesonLogout();
@@ -812,5 +923,71 @@ public class HomeScreenFragment extends AbstractFragment {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+
+    public void CallLogoutRequestApi() {
+
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        Call<String> responseCall = apiInterface.CallLogoutRequestApi();
+        responseCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                if (response.code() == 200) {
+                    try {
+                        new LogUserActivityTagging(activity, LOGOUT, "");
+                        appPreferenceManager.clearAllPreferences();
+                        dhbDao.deleteTablesonLogout();
+                        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                        homeIntent.addCategory(Intent.CATEGORY_HOME);
+                        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(homeIntent);
+                        // stopService(TImeCheckerIntent);
+               /* finish();
+                finishAffinity();*/
+
+//                        Toast.makeText(activity, "Logout successfully", Toast.LENGTH_SHORT).show();
+//                        globalclass.showCustomToast(activity, "Logout successfully");
+                        Intent n = new Intent(activity, LoginActivity.class);
+                        n.setAction(Intent.ACTION_MAIN);
+                        n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(n);
+                        getActivity().finish();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } else if (response.code() == 401) {
+                    CommonUtils.CallLogOutFromDevice(activity, (Activity) activity, appPreferenceManager, dhbDao);
+                } else {
+                    Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                MessageLogger.LogDebug("Errror", t.getMessage());
+
+            }
+        });
+    }
+
+    private void CallLogOutDevice() {
+        try {
+            if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
+                String device_id = "";
+
+                device_id = DeviceUtils.getDeviceId(activity);
+
+                if (ApplicationController.mDeviceLogOutController != null) {
+                    ApplicationController.mDeviceLogOutController = null;
+                }
+
+                ApplicationController.mDeviceLogOutController = new DeviceLogOutController(activity);
+                ApplicationController.mDeviceLogOutController.CallLogOutDevice(appPreferenceManager.getLoginResponseModel().getUserID(), device_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

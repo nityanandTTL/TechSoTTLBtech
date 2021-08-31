@@ -141,4 +141,7 @@
     <dimen name="homescreen_icons_size_600dp">80dp</dimen>
     <dimen name="homescreen_icons_size_720dp">100dp</dimen>
 
+    <dimen name="label">16sp</dimen>
+    <dimen name="value">14sp</dimen>
+
 </resources>

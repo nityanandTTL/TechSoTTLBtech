@@ -1,6 +1,7 @@
 package com.thyrocare.btechapp.dialog;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.core.app.ActivityCompat;
 
 import android.view.View;
@@ -56,7 +58,6 @@ import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListener {
     private static final String TAG = ConfirmOrderPassDialog.class.getSimpleName();
-    private HomeScreenActivity activity;
     private Dialog d;
     private Button btn_yes, btn_no, btn_call, btn_send;
     private TextView tv_title, tv_cancel;
@@ -72,12 +73,14 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
     private AppPreferenceManager appPreferenceManager;
     private String Pincode;
     private EditText edt_otp;
+    VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new;
     private LinearLayout validateOtp;
     private Global global;
+    Activity activity;
 
-    public ConfirmOrderPassDialog(HomeScreenActivity activity, refreshDelegate RefreshDelegate, String pincode, OrderVisitDetailsModel orderVisitDetailsModel) {
-        super(activity);
-        this.activity = activity;
+    public ConfirmOrderPassDialog(VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new, refreshDelegate RefreshDelegate, String pincode, OrderVisitDetailsModel orderVisitDetailsModel) {
+        super(visitOrdersDisplayFragment_new);
+        this.activity= visitOrdersDisplayFragment_new;
         global = new Global(activity);
         this.RefreshDelegate = RefreshDelegate;
         this.orderVisitDetailsModel = orderVisitDetailsModel;
@@ -95,9 +98,9 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
         initUI();
         Logger.error("Pincode " + Pincode);
         Logger.error("VisitId: " + orderVisitDetailsModel.getVisitId());
-        if (isNetworkAvailable(activity)){
+        if (isNetworkAvailable(activity)) {
             CallGetorderallocationApi(Pincode);
-        }else{
+        } else {
             global.showCustomToast(activity, ConstantsMessages.SOMETHING_WENT_WRONG);
         }
 
@@ -116,7 +119,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
 
     private void CallGetorderallocationApi(String Pincode) {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-        Call<OrderPassresponseModel> responseCall = apiInterface.CallGetorderallocationApi(appPreferenceManager.getLoginResponseModel().getUserID(),Pincode);
+        Call<OrderPassresponseModel> responseCall = apiInterface.CallGetorderallocationApi(appPreferenceManager.getLoginResponseModel().getUserID(), Pincode);
         global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<OrderPassresponseModel>() {
             @Override
@@ -186,6 +189,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
                     Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<OrderPassresponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -214,9 +218,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
         if (v.getId() == R.id.btn_yes) {
             if (validate()) {
                 PostSendOTPOrderpass();
-
             }
-
             // RefreshDelegate.onRefreshClicked();
             // dismiss();
 
@@ -299,6 +301,7 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
 
         return true;
     }
+
     private void PostSendOTPOrderpass() {
         OrderPassRequestModel orderPassRequestModel = new OrderPassRequestModel();
         if (orderallocationmodel != null) {
@@ -331,22 +334,23 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
 
     }
 
-    private void CallgetOrderPassSendOtpRequestAPI( OrderPassRequestModel orderPassRequestModel){
+    private void CallgetOrderPassSendOtpRequestAPI(OrderPassRequestModel orderPassRequestModel) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetOrderPassSendOtpRequestAPI(orderPassRequestModel);
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 global.hideProgressDialog(activity);
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     validateOtp.setVisibility(View.VISIBLE);
                     btn_yes.setText("Resend");
                     showAlert1("" + response.body());
-                }else{
+                } else {
                     Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -363,56 +367,50 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         MessageLogger.LogError(TAG, "onClick: dismiss ");
-
-                        activity.pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
-
+                        activity.startActivity(new Intent(activity,VisitOrdersDisplayFragment_new.class));
+//                        activity.pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
                         dismissD();
                     }
                 });
-
         alertDialog.show();
-
     }
 
     private void showAlert1(String message) {
         final AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
-
         alertDialog.setMessage("" + message);
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         MessageLogger.LogError(TAG, "onClick: dismiss ");
-
-                        activity.pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
+//                        activity.startActivity(new Intent(activity,VisitOrdersDisplayFragment_new.class));
+//                        activity.pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
 
                         dialog.dismiss();
                     }
                 });
-
         alertDialog.show();
-
     }
 
     private void dismissD() {
         dismiss();
     }
 
-
-    private void CallgetOrderPassVerifyOtpRequestModelAPI( OrderPassRequestModel orderPassRequestModel){
+    private void CallgetOrderPassVerifyOtpRequestModelAPI(OrderPassRequestModel orderPassRequestModel) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetOrderPassVerifyOtpRequestModelAPI(orderPassRequestModel);
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 global.hideProgressDialog(activity);
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(activity, "Valid OTP", Toast.LENGTH_SHORT).show();
                     PostOrderpass();
-                }else{
+                } else {
                     Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -420,20 +418,21 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
         });
     }
 
-    private void CallgetOrderPassRequestModelAPI( OrderPassRequestModel orderPassRequestModel){
+    private void CallgetOrderPassRequestModelAPI(OrderPassRequestModel orderPassRequestModel) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetOrderPassRequestModelAPI(orderPassRequestModel);
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 global.hideProgressDialog(activity);
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     showAlert("Order Passed successfully");
-                }else{
+                } else {
                     Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);

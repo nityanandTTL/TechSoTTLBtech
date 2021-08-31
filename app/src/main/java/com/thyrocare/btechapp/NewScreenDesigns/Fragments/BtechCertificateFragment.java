@@ -1,15 +1,21 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Fragments;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.os.PersistableBundle;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.DisplayBtechCertificateViewPagerAdapter;
@@ -35,61 +41,65 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BtechCertificateFragment extends Fragment {
+public class BtechCertificateFragment extends AppCompatActivity {
 
     public static final String TAG_FRAGMENT = "Btech Certificatess Fragment";
-    private HomeScreenActivity activity;
+    private Activity activity;
     private Global globalclass;
     private ConnectionDetector cd;
     private AppPreferenceManager appPreferenceManager;
     private UltraViewPager ultraViewPager;
-    private TextView tv_noDatafound;
-
-    public BtechCertificateFragment() {
-        // Required empty public constructor
-    }
-
-    public static BtechCertificateFragment newInstance() {
-        BtechCertificateFragment fragment = new BtechCertificateFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private TextView tv_noDatafound, tv_toolbar;
+    ImageView iv_back, iv_home;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View V = inflater.inflate(R.layout.fragment_btech_certificate, container, false);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_btech_certificate);
         initContext();
-        initViews(V);
+        initViews();
         initData();
-        return V ;
+        listener();
+    }
+
+    private void listener() {
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void initContext() {
-        activity = (HomeScreenActivity) getActivity();
+        activity = this;
         globalclass = new Global(activity);
         cd = new ConnectionDetector(activity);
-        try {
-            activity.toolbarHome.setTitle("My Certificates");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         appPreferenceManager = new AppPreferenceManager(activity);
     }
 
-    private void initViews(View v) {
-        tv_noDatafound = (TextView)v.findViewById(R.id.tv_noDatafound);
-        ultraViewPager = (UltraViewPager)v.findViewById(R.id.ultra_viewpager);
+    private void initViews() {
+        tv_noDatafound = (TextView) findViewById(R.id.tv_noDatafound);
+        tv_toolbar = (TextView) findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        ultraViewPager = (UltraViewPager) findViewById(R.id.ultra_viewpager);
         ultraViewPager.setScrollMode(UltraViewPager.ScrollMode.HORIZONTAL);
+        tv_toolbar.setText("Certificates");
     }
 
 
     private void initData() {
-        if (cd.isConnectingToInternet()){
+        if (cd.isConnectingToInternet()) {
             CallCampWOEMisAPI();
-        }else{
+        } else {
             globalclass.showCustomToast(activity, ConstantsMessages.CHECK_INTERNET_CONN);
         }
     }
@@ -101,13 +111,14 @@ public class BtechCertificateFragment extends Fragment {
         model.setDTLType("Certificates");
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<GetBtechCertifcateResponseModel> responseCall = apiInterface.CallGetBtechCertificatesAPI(model);
-        globalclass.showProgressDialog(activity,ConstantsMessages.PLEASE_WAIT);
+        globalclass.showProgressDialog(activity, ConstantsMessages.PLEASE_WAIT);
         responseCall.enqueue(new Callback<GetBtechCertifcateResponseModel>() {
             @Override
             public void onResponse(Call<GetBtechCertifcateResponseModel> call, Response<GetBtechCertifcateResponseModel> response) {
                 globalclass.hideProgressDialog(activity);
                 InitViewPager(response.body());
             }
+
             @Override
             public void onFailure(Call<GetBtechCertifcateResponseModel> call, Throwable t) {
                 ultraViewPager.setVisibility(View.GONE);
@@ -117,14 +128,14 @@ public class BtechCertificateFragment extends Fragment {
         });
     }
 
-    private void InitViewPager(GetBtechCertifcateResponseModel model){
+    private void InitViewPager(GetBtechCertifcateResponseModel model) {
 
-        if (model != null && StringUtils.CheckEqualIgnoreCase(model.getRespId(),"RES0000") && model.getCertificates() != null && model.getCertificates().size() > 0){
+        if (model != null && StringUtils.CheckEqualIgnoreCase(model.getRespId(), "RES0000") && model.getCertificates() != null && model.getCertificates().size() > 0) {
             ultraViewPager.setVisibility(View.VISIBLE);
             tv_noDatafound.setVisibility(View.GONE);
 
 
-            DisplayBtechCertificateViewPagerAdapter certificateViewPagerAdapter = new DisplayBtechCertificateViewPagerAdapter(activity,model.getCertificates());
+            DisplayBtechCertificateViewPagerAdapter certificateViewPagerAdapter = new DisplayBtechCertificateViewPagerAdapter(activity, model.getCertificates());
             ultraViewPager.setAdapter(certificateViewPagerAdapter);
 
             ultraViewPager.initIndicator(); //initialize built-in indicator
@@ -132,14 +143,14 @@ public class BtechCertificateFragment extends Fragment {
             ultraViewPager.getIndicator().setOrientation(UltraViewPager.Orientation.HORIZONTAL)
                     .setFocusColor(getResources().getColor(R.color.colorOrange))
                     .setNormalColor(Color.WHITE)
-                    .setMargin(0,0,0,40)
+                    .setMargin(0, 0, 0, 40)
                     .setRadius((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics()));
 
             //set the alignment
             ultraViewPager.getIndicator().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
             //construct built-in indicator, and add it to  UltraViewPager
             ultraViewPager.getIndicator().build();
-            ultraViewPager.setItemMargin(10,10,10, 10);
+            ultraViewPager.setItemMargin(10, 10, 10, 10);
             ultraViewPager.setPageTransformer(false, new UltraDepthScaleTransformer());
 
             //set an infinite loop
@@ -147,7 +158,7 @@ public class BtechCertificateFragment extends Fragment {
             //enable auto-scroll mode
 //            ultraViewPager.setAutoScroll(2000);
 
-        }else{
+        } else {
             ultraViewPager.setVisibility(View.GONE);
             tv_noDatafound.setVisibility(View.VISIBLE);
         }

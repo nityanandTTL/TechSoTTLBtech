@@ -15,6 +15,7 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,10 +48,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
+import com.thyrocare.btechapp.NewScreenDesigns.Adapters.Btech_VisitDisplayAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.DisplaySelectedTestsListForCancellationAdapter_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.ExpandableTestMasterListDisplayAdapter_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.StartArriveOrderDetailsAdapter;
@@ -66,6 +70,7 @@ import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 
 import application.ApplicationController;
 
+import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.activity.PaymentsActivity;
 import com.thyrocare.btechapp.customview.CircleImageView;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
@@ -91,6 +96,7 @@ import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 import com.thyrocare.btechapp.service.TrackerService;
 import com.thyrocare.btechapp.utils.api.Logger;
+import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.DateUtils;
@@ -143,17 +149,15 @@ public class StartAndArriveActivity extends AppCompatActivity {
     private OrderVisitDetailsModel orderDetailsModel;
     TextView txt_amount;
     Button btn_start, btn_arrive, btn_Proceed;
-    LinearLayout lin_bottom;
+    CardView lin_bottom;
     RecyclerView recyle_OrderDetail;
     TextView txtNoRecord;
     private Intent FirebaselocationUpdateIntent;
     private GPSTracker gpsTracker;
     private StartArriveOrderDetailsAdapter startArriveOrderDetailsAdapter;
     private NestedScrollView nestedScroll_StartArrive;
-    private CircleImageView btn_floating_add_ben;
+    private TextView btn_floating_add_ben;
     private String strOrderNo;
-
-
     // add edit ben dialog
     private Dialog bendialog;
     private boolean FlagADDEditBen = false;
@@ -187,33 +191,44 @@ public class StartAndArriveActivity extends AppCompatActivity {
     private ConfirmRequestReleaseDialog crr;
     private CharSequence[] items;
     private String cancelVisit = "n";
-
     private int totalAmountPayable = 0;
     private String[] paymentItems;
     private int PaymentMode;
+    RelativeLayout customSwipeButton2;
+
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
 
 
     @Override
     public void onBackPressed() {
 
-        AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
-        alertDialog.setMessage("Are you sure, you want to go back ?");
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        BundleConstants.isKIOSKOrder = false;
-                        dialog.dismiss();
-                        finish();
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this, R.style.BottomSheetTheme);
 
-                    }
-                });
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
+        View bottomSheet = LayoutInflater.from(this).inflate(R.layout.logout_bottomsheet, (ViewGroup) this.findViewById(R.id.bottom_sheet_dialog_parent));
+        TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+        tv_text.setText("Are you sure, you want to go back ?");
+        Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+        btn_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BundleConstants.isKIOSKOrder = false;
+                bottomSheetDialog.dismiss();
+                finish();
+            }
+        });
+
+        Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+        btn_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+
+            }
+        });
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(false);
+        bottomSheetDialog.show();
 
     }
 
@@ -222,7 +237,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_and_arrive);
-        SetTitleHead("Arrive");
         mActivity = StartAndArriveActivity.this;
         globalclass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
@@ -237,7 +251,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         BundleConstants.addPaymentFlag = 0;
 
         initView();
-        initToolBar();
+//        initToolBar();
         initListerners();
 
         if (BundleConstants.setRefreshStartArriveActivity == 1) {
@@ -256,6 +270,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 btn_arrive.setVisibility(View.GONE);
                 btn_start.setVisibility(View.GONE);
                 btn_Proceed.setVisibility(View.VISIBLE);
+                customSwipeButton2.setVisibility(View.GONE);
        /* if (cd.isConnectingToInternet()) {
             CallOrderDetailAPI("Arrive");
         } else {
@@ -296,9 +311,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
     }
 
     private void initToolBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarStockAvailablity);
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarStockAvailablity);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
     }
 
     @Override
@@ -341,17 +356,53 @@ public class StartAndArriveActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        lin_bottom = (LinearLayout) findViewById(R.id.lin_bottom);
+        lin_bottom = findViewById(R.id.lin_bottom);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
         txt_amount = (TextView) findViewById(R.id.txt_amount);
         txtNoRecord = (TextView) findViewById(R.id.txtNoRecord);
         btn_start = (Button) findViewById(R.id.btn_start);
         btn_arrive = (Button) findViewById(R.id.btn_arrive);
         btn_Proceed = (Button) findViewById(R.id.btn_Proceed);
         recyle_OrderDetail = (RecyclerView) findViewById(R.id.recyle_OrderDetail);
-        btn_floating_add_ben = (CircleImageView) findViewById(R.id.btn_floating_add_ben);
+        btn_floating_add_ben = (TextView) findViewById(R.id.btn_floating_add_ben);
+        tv_toolbar.setText("Arrive");
+        customSwipeButton2 = findViewById(R.id.customSwipeButton2);
+        tv_toolbar.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        iv_home.setVisibility(View.GONE);
+
+        if (BundleConstants.isKIOSKOrder) {
+            customSwipeButton2.setVisibility(View.GONE);
+        } else {
+            customSwipeButton2.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initListerners() {
+
+        customSwipeButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onReleaseButtonClicked();
+            }
+        });
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mActivity, HomeScreenActivity.class);
+                startActivity(i);
+            }
+        });
+
 
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -372,7 +423,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         btn_arrive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
+               /* AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
                 alertDialog.setMessage("Do you want to confirm?");
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
                         new DialogInterface.OnClickListener() {
@@ -398,7 +449,19 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
                             }
                         });
-                alertDialog.show();
+                alertDialog.show();*/
+
+                try {
+                    if (isNetworkAvailable(mActivity)) {
+                        VenuPuntureUtils.ClearVenupumtureTempGlobalArry();
+//                                        stopService(new Intent(getApplicationContext(), TrackerService.class));
+                        callOrderStatusChangeApi(3, "Arrive", "", "");
+                    } else {
+                        Toast.makeText(mActivity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -501,7 +564,42 @@ public class StartAndArriveActivity extends AppCompatActivity {
         }
 
         if (totalAmountPayable == 0) {
-            AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
+            String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
+
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+
+            View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+            TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+            tv_text.setText(string);
+
+            Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+            btn_yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetDialog.dismiss();
+                    Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+                    intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+                    startActivity(intentOrderBooking);
+                    finish();
+                }
+            });
+
+            Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+            btn_no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetDialog.dismiss();
+
+                }
+            });
+
+            bottomSheetDialog.setContentView(bottomSheet);
+            bottomSheetDialog.setCancelable(false);
+            bottomSheetDialog.show();
+
+
+           /* AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
             alertDialog.setMessage("You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?");
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
                     new DialogInterface.OnClickListener() {
@@ -519,26 +617,25 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             dialog.dismiss();
                         }
                     });
-            alertDialog.show();
+            alertDialog.show();*/
         } else {
 
-            AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
-            alertDialog.setMessage("You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?");
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+            String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
 
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
 
-                   /*         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                            builder.setMessage("Amount payable ₹ " + totalAmountPayable + "/-")
-                                    .setPositiveButton("Collect", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {*/
+            View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
 
-//                            if (!orderDetailsModel.getAllOrderdetails().get(0).isDigital()) {
-                            if (orderDetailsModel.getAllOrderdetails().get(0).isDigital()) {
-                                GoingToPaymentActivity(0);
+            TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+            tv_text.setText(string);
+
+            Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+            btn_yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetDialog.dismiss();
+                    if (orderDetailsModel.getAllOrderdetails().get(0).isDigital()) {
+                        GoingToPaymentActivity(0);
                                                /* PaymentMode = 2;
                                                 Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
                                                 Logger.error("tejastotalAmountPayableatsending " + totalAmountPayable);
@@ -553,14 +650,14 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                                 intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL, orderDetailsModel.getAllOrderdetails().get(0).getEmail());
                                                 startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
                                           */
-                            } else {
-                                if (OrderMode.equalsIgnoreCase("LTD-BLD") || OrderMode.equalsIgnoreCase("LTD-NBLD")) {
+                    } else {
+                        if (OrderMode.equalsIgnoreCase("LTD-BLD") || OrderMode.equalsIgnoreCase("LTD-NBLD")) {
 //                                                    paymentItems = new String[]{"Cash"};
-                                    GoingToPaymentActivity(1);
-                                } else {
+                            GoingToPaymentActivity(1);
+                        } else {
 //                                                    paymentItems = new String[]{"Cash", "Digital"};
-                                    GoingToPaymentActivity(2);
-                                }
+                            GoingToPaymentActivity(2);
+                        }
 
                                              /*   AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                                 builder.setTitle("Choose payment mode")
@@ -633,6 +730,137 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                         }
                                     }).show();*/
 
+                    }
+
+                }
+
+            });
+            Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+            btn_no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetDialog.dismiss();
+
+                }
+            });
+
+            bottomSheetDialog.setContentView(bottomSheet);
+            bottomSheetDialog.setCancelable(false);
+            bottomSheetDialog.show();
+
+
+/*
+            AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
+            alertDialog.setMessage("You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+
+                   *//*         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                            builder.setMessage("Amount payable ₹ " + totalAmountPayable + "/-")
+                                    .setPositiveButton("Collect", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {*//*
+
+//                            if (!orderDetailsModel.getAllOrderdetails().get(0).isDigital()) {
+                            if (orderDetailsModel.getAllOrderdetails().get(0).isDigital()) {
+                                GoingToPaymentActivity(0);
+                                               *//* PaymentMode = 2;
+                                                Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
+                                                Logger.error("tejastotalAmountPayableatsending " + totalAmountPayable);
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 2);
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO, orderDetailsModel.getVisitId());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE, Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME, orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS, orderDetailsModel.getAllOrderdetails().get(0).getAddress());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN, orderDetailsModel.getAllOrderdetails().get(0).getPincode());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+                                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL, orderDetailsModel.getAllOrderdetails().get(0).getEmail());
+                                                startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                                          *//*
+                            } else {
+                                if (OrderMode.equalsIgnoreCase("LTD-BLD") || OrderMode.equalsIgnoreCase("LTD-NBLD")) {
+//                                                    paymentItems = new String[]{"Cash"};
+                                    GoingToPaymentActivity(1);
+                                } else {
+//                                                    paymentItems = new String[]{"Cash", "Digital"};
+                                    GoingToPaymentActivity(2);
+                                }
+
+                                             *//*   AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                                                builder.setTitle("Choose payment mode")
+                                                        .setItems(paymentItems, new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                if (paymentItems[which].equals("Cash")) {
+
+                                                                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
+                                                                    builder1.setMessage("Confirm amount received ₹ " + totalAmountPayable + "")
+                                                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                    *//**//*PaymentMode = 1;
+                                                                    // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+                                                                    OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
+                                                                    if (cd.isConnectingToInternet()) {
+                                                                        CallWorkOrderEntryAPI(orderBookingRequestModel);
+                                                                    } else {
+                                                                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                                                    }*//**//*
+
+                                                                                    BundleConstants.addPaymentFlag = 1;
+
+                                                                                    Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+                                                                                    intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+                                                                                    startActivity(intentOrderBooking);
+                                                                                    finish();
+                                                                                }
+                                                                            })
+                                                                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                                                @Override
+                                                                                public void onClick(DialogInterface dialog, int which) {
+                                                                                    dialog.dismiss();
+                                                                                }
+                                                                            })
+                                                                            .show();
+                                                                } else {
+                                                                    BundleConstants.addPaymentFlag = 0;
+                                                                    PaymentMode = 2;
+                                                                    Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
+                                                                    Logger.error("tejastotalAmountPayableatsending " + totalAmountPayable);
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 2);
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO, orderDetailsModel.getVisitId());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE, Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME, orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS, orderDetailsModel.getAllOrderdetails().get(0).getAddress());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN, orderDetailsModel.getAllOrderdetails().get(0).getPincode());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+                                                                    intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL, orderDetailsModel.getAllOrderdetails().get(0).getEmail());
+                                                                    startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                                                                }
+                                                                dialog.dismiss();
+                                                            }
+                                                        })
+                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                dialog.dismiss();
+                                                            }
+                                                        }).show();*//*
+             *//*            }
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).show();*//*
+
                             }
 
                         }
@@ -643,8 +871,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             dialog.dismiss();
                         }
                     });
-            alertDialog.show();
-
+            alertDialog.show();*/
 
         }
 
@@ -803,7 +1030,18 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 && orderDetailsModel.getAllOrderdetails().get(0).getBenMaster() != null
                 && orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().size() > 0) {
             btn_start.setEnabled(true);
-            txt_amount.setText(mActivity.getResources().getString(R.string.rupee_symbol) + " " + orderDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
+            if (orderDetailsModel.getAllOrderdetails().get(0).getAmountDue() == 0) {
+                customSwipeButton2.setVisibility(View.GONE);
+                txt_amount.setText("Paid");
+            } else {
+                if(BundleConstants.isKIOSKOrder){
+                    customSwipeButton2.setVisibility(View.GONE);
+                }
+                else {
+                    customSwipeButton2.setVisibility(View.VISIBLE);
+                }
+                txt_amount.setText(mActivity.getResources().getString(R.string.rupee_symbol) + " " + orderDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
+            }
             txtNoRecord.setVisibility(View.GONE);
             recyle_OrderDetail.setVisibility(View.VISIBLE);
             startArriveOrderDetailsAdapter = new StartArriveOrderDetailsAdapter(mActivity, orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getBenMaster(), status);
@@ -1248,6 +1486,19 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     private void onReleaseButtonClicked() {
 
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+
+        final View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.layout_bottomsheet_release, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+        TextView tv_ord_resch = bottomSheet.findViewById(R.id.tv_ord_resch);
+        TextView tv_ord_rel = bottomSheet.findViewById(R.id.tv_ord_rel);
+        TextView tv_ord_pass = bottomSheet.findViewById(R.id.tv_ord_pass);
+        TextView tv_cancel_vst = bottomSheet.findViewById(R.id.tv_cancel_vst);
+        Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+        Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+        LinearLayout ll_cancl = bottomSheet.findViewById(R.id.ll_cancl);
+        tv_ord_pass.setText("Order Release");
+
         boolean toShowResheduleOption = false;
         if (!InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getAppointmentDate())) {
             Date DeviceDate = new Date();
@@ -1263,14 +1514,47 @@ public class StartAndArriveActivity extends AppCompatActivity {
         if (orderDetailsModel.getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")
                 || orderDetailsModel.getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
             if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
-                items = new String[]{"Do you want to cancel the visit?"};
+            /*    items = new String[]{"Do you want to cancel the visit?"};
                 cancelVisit = "y";
             } else {
                 items = new String[]{"Order Release"};
+            }*/
+                tv_ord_pass.setVisibility(View.GONE);
+                tv_ord_rel.setVisibility(View.GONE);
+                tv_ord_resch.setVisibility(View.GONE);
+                ll_cancl.setVisibility(View.VISIBLE);
+                tv_cancel_vst.setText("Do you want to cancel the visit?");
+                cancelVisit = "y";
+            } else {
+                ll_cancl.setVisibility(View.GONE);
+                tv_ord_pass.setVisibility(View.VISIBLE);
+                tv_ord_rel.setVisibility(View.GONE);
+                tv_ord_resch.setVisibility(View.GONE);
             }
         } else {
             if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
-                items = new String[]{"Do you want to cancel the visit?"};
+
+                tv_ord_pass.setVisibility(View.GONE);
+                tv_ord_rel.setVisibility(View.GONE);
+                tv_ord_resch.setVisibility(View.GONE);
+                ll_cancl.setVisibility(View.VISIBLE);
+                tv_cancel_vst.setText("Do you want to cancel the visit?");
+                cancelVisit = "y";
+            } else {
+                if (toShowResheduleOption) {
+                    tv_ord_pass.setVisibility(View.GONE);
+                    tv_ord_rel.setVisibility(View.VISIBLE);
+                    tv_ord_resch.setVisibility(View.VISIBLE);
+                    ll_cancl.setVisibility(View.GONE);
+
+                } else {
+                    tv_ord_pass.setVisibility(View.GONE);
+                    tv_ord_rel.setVisibility(View.VISIBLE);
+                    tv_ord_resch.setVisibility(View.GONE);
+                    ll_cancl.setVisibility(View.GONE);
+                }
+            }
+               /* items = new String[]{"Do you want to cancel the visit?"};
                 cancelVisit = "y";
             } else {
                 if (toShowResheduleOption) {
@@ -1279,10 +1563,112 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 } else {
                     items = new String[]{"Request Release"};
                 }
-            }
+            }*/
         }
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+        tv_ord_resch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RescheduleOrderDialog cdd = new RescheduleOrderDialog(mActivity, new OrderRescheduleDialogButtonClickedDelegateResult(), orderDetailsModel.getAllOrderdetails().get(0));
+                cdd.show();
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        tv_ord_rel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+                View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+                TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+                TextView tv_text1 = bottomSheet.findViewById(R.id.tv_text1);
+                tv_text.setText("Warning");
+                tv_text1.setText("Rs 200 debit will be levied for releasing this Order");
+                Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+                btn_yes.setText("Accept Debit");
+                btn_yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        crr = new ConfirmRequestReleaseDialog(mActivity, new CConfirmOrderReleaseDialogButtonClickedDelegateResult(), orderDetailsModel);
+                        crr.show();
+                    }
+                });
+                Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+                btn_no.setText("Cancel Request");
+                btn_no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheet);
+                bottomSheetDialog.setCancelable(false);
+                bottomSheetDialog.show();
+            }
+        });
+
+        tv_ord_pass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+                View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+                TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+                TextView tv_text1 = bottomSheet.findViewById(R.id.tv_text1);
+                tv_text.setText("Warning");
+                tv_text1.setText("Rs 200 debit will be levied for releasing this Order");
+                Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+                btn_yes.setText("Accept Debit");
+                btn_yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        crr = new ConfirmRequestReleaseDialog(mActivity, new CConfirmOrderReleaseDialogButtonClickedDelegateResult(), orderDetailsModel);
+                        crr.show();
+                    }
+                });
+                Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+                btn_no.setText("Cancel Request");
+                btn_no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheet);
+                bottomSheetDialog.setCancelable(false);
+                bottomSheetDialog.show();
+            }
+        });
+
+        if (ll_cancl.getVisibility() == View.VISIBLE) {
+            if (cancelVisit.equals("y")) {
+                btn_yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (cancelVisit.equals("y")) {
+                            if (isNetworkAvailable(mActivity)) {
+                                CallServiceUpdateAPI();
+                            } else {
+                                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            bottomSheetDialog.dismiss();
+                        }
+                    }
+                });
+
+                btn_no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+            }
+        }
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(true);
+        bottomSheetDialog.show();
+
+    /*    final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         builder.setTitle("Select Action");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
@@ -1350,7 +1736,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 }
             });
         }
-        builder.show();
+        builder.show();*/
 
     }
 
@@ -1535,9 +1921,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 ll_tests.addView(v);
                 ll_tests.invalidate();
             }
-        }
-        else{
-            Global.showCustomStaticToast(mActivity, ""+testListResponseModel.getStatus());
+        } else {
+            Global.showCustomStaticToast(mActivity, "" + testListResponseModel.getStatus());
         }
     }
 
@@ -1547,17 +1932,71 @@ public class StartAndArriveActivity extends AppCompatActivity {
         MessageLogger.PrintMsg("Count : " + Bencount);
         String Benname = selectedbeneficiaryDetailsModel.getName();
         if (Bencount <= 1) {
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
+
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+            View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+            TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+            tv_text.setText(Html.fromHtml(OrdercontainonlyOneBeneficaryCannotremovedMsg));
+            Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+            Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+            btn_no.setVisibility(View.GONE);
+            btn_yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetDialog.dismiss();
+                }
+            });
+            bottomSheetDialog.setContentView(bottomSheet);
+            bottomSheetDialog.setCancelable(false);
+            bottomSheetDialog.show();
+            /*AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
             builder1.setMessage(Html.fromHtml(OrdercontainonlyOneBeneficaryCannotremovedMsg))
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(final DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
-                    }).show();
+                    }).show();*/
         } else {
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+            View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.paymentbottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+            TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+            TextView tv_label = bottomSheet.findViewById(R.id.tv_label);
+            tv_text.setText(Html.fromHtml("Do you really want to remove Beneficiary (" + "<b>" + Benname + "</b>" + ") ?"));
+            tv_label.setText("Confirm Action");
 
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
+            Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+            btn_yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removebenModel = null;
+                    removebenModel = new RemoveBeneficiaryAPIRequestModel();
+                    removebenModel.setBenId(selectedbeneficiaryDetailsModel.getBenId());
+                    removebenModel.setOrderNo(selectedbeneficiaryDetailsModel.getOrderNo());
+                    removebenModel.setUserId("" + appPreferenceManager.getLoginResponseModel().getUserID());
+                    removebenModel.setIsAdded(orderVisitDetailsModel.getAllOrderdetails().get(0).isAddBen() ? "1" : "0");
+                    bottomSheetDialog.dismiss();
+                    if (cd.isConnectingToInternet()) {
+                        CallsendOTPAPIforOrderEdit("Delete", orderVisitDetailsModel, orderVisitDetailsModel.getVisitId(), selectedbeneficiaryDetailsModel.getBenId());
+                    } else {
+                        globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+                    }
+                }
+            });
+            Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+            btn_no.setText("Cancel");
+            btn_no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetDialog.dismiss();
+
+                }
+            });
+            bottomSheetDialog.setContentView(bottomSheet);
+            bottomSheetDialog.setCancelable(false);
+            bottomSheetDialog.show();
+
+            /*AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
             builder1.setTitle("Confirm Action")
                     .setMessage(Html.fromHtml("Do you really want to remove Beneficiary (" + "<b>" + Benname + "</b>" + ") ?"))
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -1568,7 +2007,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             removebenModel = new RemoveBeneficiaryAPIRequestModel();
                             removebenModel.setBenId(selectedbeneficiaryDetailsModel.getBenId());
                             removebenModel.setOrderNo(selectedbeneficiaryDetailsModel.getOrderNo());
-                            removebenModel.setUserId(""+appPreferenceManager.getLoginResponseModel().getUserID());
+                            removebenModel.setUserId("" + appPreferenceManager.getLoginResponseModel().getUserID());
                             removebenModel.setIsAdded(orderVisitDetailsModel.getAllOrderdetails().get(0).isAddBen() ? "1" : "0");
                             dialog.dismiss();
                             if (cd.isConnectingToInternet()) {
@@ -1584,7 +2023,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
             }).show();
-
+*/
         }
     }
 
@@ -1616,7 +2055,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     private void onRemoveBenAPIResponseReceived(OrderVisitDetailsModel orderVisitDetailsModel, RemoveBeneficiaryAPIRequestModel rembenmode) {
 
-        globalclass.showCustomToast(mActivity, "Beneficiary Removed Successfully");
+//        globalclass.showCustomToast(mActivity, "Beneficiary Removed Successfully");
+        Toast.makeText(mActivity, "Beneficiary Removed Successfully", Toast.LENGTH_SHORT).show();
         try {
             CallSendSMSForBeneficicaryRemoveAPI(String.valueOf(orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue()), orderVisitDetailsModel.getVisitId(), rembenmode.getBenId());
         } catch (Exception e) {
@@ -1711,7 +2151,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 }
             }, 1000);
 
-            Toast.makeText(mActivity, "Started Successfully", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mActivity, "Started Successfully", Toast.LENGTH_SHORT).show();
             startTrackerService();
             Intent intent = new Intent(Intent.ACTION_VIEW,
                     Uri.parse("google.navigation:q=" + orderDetailsModel.getAllOrderdetails().get(0).getLatitude() + "," + orderDetailsModel.getAllOrderdetails().get(0).getLongitude()));
@@ -1737,7 +2177,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 startArriveOrderDetailsAdapter.updateStatus("Arrive");
                 startArriveOrderDetailsAdapter.notifyDataSetChanged();
             }
-            Toast.makeText(mActivity, "Arrived Successfully", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mActivity, "Arrived Successfully", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent();
             intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
             setResult(BundleConstants.VOMD_ARRIVED, intent);
@@ -1745,6 +2185,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
             SendinglatlongOrderAllocation(3);
 
         } else if (strButton.equalsIgnoreCase("Manipulation")) {
+//            globalclass.showCustomToast(mActivity,"Order Released Successfully");
             TastyToast.makeText(mActivity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
             finish();
         } else if (strButton.equalsIgnoreCase("Reschedule")) {
@@ -1826,6 +2267,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
     }
 
     private void ShowDialogToVerifyOTP(final String Action, final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
+
+
+
+
         CustomDialogforOTPValidation = new Dialog(mActivity);
         CustomDialogforOTPValidation.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         CustomDialogforOTPValidation.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1902,7 +2347,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     String strresponse = response.body();
                     if (!TextUtils.isEmpty(strresponse) && strresponse.toUpperCase().contains("SUCCESS")) {
-                        globalclass.showCustomToast(mActivity, "OTP Validated Successfully.");
+                        Toast.makeText(mActivity, "OTP Validated Successfully.", Toast.LENGTH_SHORT).show();
+//                        globalclass.showCustomToast(mActivity, "OTP Validated Successfully.");
                         if (!mActivity.isFinishing() && CustomDialogforOTPValidation != null && CustomDialogforOTPValidation.isShowing()) {
                             CustomDialogforOTPValidation.dismiss();
                         }

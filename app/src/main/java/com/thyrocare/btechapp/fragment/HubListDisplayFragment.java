@@ -1,9 +1,11 @@
 package com.thyrocare.btechapp.fragment;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -12,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -39,57 +43,33 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 
-
-public class HubListDisplayFragment extends AbstractFragment {
+public class HubListDisplayFragment extends AppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recycler_view;
     LinearLayout ll_hub_display_footer;
-    HomeScreenActivity activity;
+    TextView tv_collection_sample,tv_toolbar;
+    ImageView iv_back,iv_home;
+    Activity activity;
     ArrayList<HUBBTechModel> hubbTechModels = new ArrayList<>();
     DispatchToHubDisplayDetailsAdapter dispatchToHubDisplayDetailsAdapter;
     AppPreferenceManager appPreferenceManager;
     public static final String TAG_FRAGMENT = HubListDisplayFragment.class.getSimpleName();
-
     public static int flowDecider = 0;//for btech_hub flow
     private Global global;
 
-    public HubListDisplayFragment() {
-    }
-
-    public static HubListDisplayFragment newInstance() {
-        return new HubListDisplayFragment();
-    }
-
-    public static Fragment newInstance(int i) {//for btech_hub flow
-        flowDecider = i;
-        return new HubListDisplayFragment();
-    }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //you can set the title for your toolbar here for different fragments different titles
-        getActivity().setTitle("Hub List");
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_btech_collections_list, container, false);
-        initUI(rootview);
-        activity = (HomeScreenActivity) getActivity();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_btech_collections_list);
+        activity = this;
         appPreferenceManager = new AppPreferenceManager(activity);
         global = new Global(activity);
-        try {
-            if(activity.toolbarHome != null) {
-                activity.toolbarHome.setTitle("Hub List");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        activity.isOnHome = false;
+        initUI();
+        listeners();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -98,7 +78,21 @@ public class HubListDisplayFragment extends AbstractFragment {
             }
         });
         fetchData();
-        return rootview;
+    }
+
+    private void listeners() {
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void fetchData() {
@@ -132,15 +126,25 @@ public class HubListDisplayFragment extends AbstractFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == BundleConstants.HMD_START && resultCode == BundleConstants.HMD_ARRIVED) {
             HUBBTechModel hubbTechModel = data.getExtras().getParcelable(BundleConstants.HUB_BTECH_MODEL);
-            pushFragments(HubMasterBarcodeScanFragment.newInstance(hubbTechModel), false, false, HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+            Intent intent = new Intent(activity,HubListDisplayFragment.class);
+            intent.putExtra("hubtech",hubbTechModel);
+            startActivity(intent);
+//            pushFragments(HubMasterBarcodeScanFragment.newInstance(hubbTechModel), false, false, HubMasterBarcodeScanFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
         }
     }
 
-    private void initUI(View rootview) {
-        swipeRefreshLayout = (SwipeRefreshLayout) rootview.findViewById(R.id.swipeRefreshLayout);
-        recycler_view = (RecyclerView) rootview.findViewById(R.id.recycler_view);
-        ll_hub_display_footer = (LinearLayout) rootview.findViewById(R.id.ll_hub_display_footer);
+    private void initUI() {
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        tv_toolbar.setText("Hub List");
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        recycler_view = (RecyclerView) findViewById(R.id.recycler_view);
+        ll_hub_display_footer = (LinearLayout) findViewById(R.id.ll_hub_display_footer);
+        tv_collection_sample = findViewById(R.id.tv_collection_sample);
+        tv_collection_sample.setVisibility(View.GONE);
         ll_hub_display_footer.setVisibility(View.GONE);
+
     }
 
     private void CallGetDispatchHubDetailsDisplayApi() {

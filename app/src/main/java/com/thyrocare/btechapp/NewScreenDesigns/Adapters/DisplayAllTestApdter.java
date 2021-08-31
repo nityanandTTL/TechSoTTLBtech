@@ -153,7 +153,7 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
                                 holder.imgCheck.setVisibility(View.VISIBLE);
                             }
                         }
-                        break;
+//                        break;
                     } else {
                         holder.img_unCheckDisabled.setVisibility(View.GONE);
                         holder.imgChecked.setVisibility(View.GONE);

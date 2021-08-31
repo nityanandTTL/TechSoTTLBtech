@@ -1,254 +1,467 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/white_rect_blue_stroke_bg"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/_1sdp"
     android:orientation="vertical"
-    android:padding="@dimen/_10sdp">
+    tools:context=".NewScreenDesigns.Activities.AddEditBenificaryActivity">
 
     <RelativeLayout
+        android:id="@+id/rel_Header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1"
-        android:background="@color/colorOrange"
-        android:padding="@dimen/_8sdp">
+        android:background="@color/bg_new_color"
+        android:padding="@dimen/_8sdp"
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/txt_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:text="Beneficiary Details"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/btnclose"
-            android:layout_weight="0.15"
-            android:background="@drawable/close_icon_while"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:layout_width="@dimen/_25sdp"
             android:layout_height="@dimen/_25sdp"
-            />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_weight="0.15"
+            android:background="@drawable/new_cancel_icon" />
     </RelativeLayout>
 
-    <ScrollView
+    <LinearLayout
+        android:layout_above="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rel_Header"
+        android:layout_margin="@dimen/_5sdp"
+        android:orientation="vertical">
+
+        <!--<com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Name"
+            android:textColorHint="@color/black">
+
+            <EditText
+                android:id="@+id/edt_beneficiary_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                android:enabled="true"
+                android:maxLength="50" />
+
+        </com.google.android.material.textfield.TextInputLayout>-->
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            app:cardCornerRadius="@dimen/_5sdp"
+            app:cardElevation="@dimen/_5sdp">
+
+            <EditText
+                android:id="@+id/edt_beneficiary_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="User Name"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/value" />
+
+        </androidx.cardview.widget.CardView>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Enter Name"
-                    android:textColorHint="@color/black"
-                    android:layout_marginTop="@dimen/_9sdp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-                    <EditText
-                        android:id="@+id/edt_beneficiary_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2.5"
-                        android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                        android:enabled="true"
-                        android:maxLength="50"
-                        android:padding="@dimen/_5sdp"
-                        android:textSize="16sp" />
+            android:orientation="horizontal">
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Enter Age"
-                    android:textColorHint="@color/black"
-                    android:layout_marginTop="@dimen/_9sdp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <EditText
-                        android:id="@+id/edt_beneficiary_age"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2.5"
-                        android:digits="0987654321"
-                        android:enabled="true"
-                        android:inputType="number"
-                        android:maxLength="3"
-                        android:maxLines="1"
-                        android:padding="@dimen/_5sdp"
-                        android:textSize="16sp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:enabled="true"
-                    android:maxLines="1"
-                    android:background="@drawable/editextborder"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/_10sdp"
-                    android:paddingRight="@dimen/_4sdp"
-                    android:paddingBottom="@dimen/_2sdp"
-                    android:paddingTop="@dimen/_6sdp"
-                    android:layout_marginTop="@dimen/_9sdp"
-                    android:textSize="14sp"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:id="@+id/img_gender_male"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/male" />
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="25dp"
-                        android:layout_margin="@dimen/dp_2"
-                        android:background="@color/contentDividerLine" />
-
-                    <ImageView
-                        android:id="@+id/img_gender_female"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/female_icon_orange" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/editextborder"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:id="@+id/txt_beneficiary_tests"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_4sdp"
-                        android:layout_weight="2.5"
-                        android:gravity="center_vertical"
-                        android:enabled="true"
-                        android:textColorHint="@color/black"
-                        android:hint="Click to view or add tests from list"
-                        android:paddingLeft="@dimen/_10sdp"
-                        android:paddingTop="@dimen/_4sdp"
-                        android:paddingBottom="@dimen/_4sdp"
-                        android:paddingRight="@dimen/_4sdp"
-                        android:textSize="14sp"
-                        android:textColor="@color/black"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:id="@+id/img_beneficiary_action_edit_tests"
-                            android:layout_width="30dp"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/add_ben_icon" />
-                    </LinearLayout>
-                </LinearLayout>
-
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2.5"
-                    android:enabled="true"
-                    android:hint=""
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:orientation="horizontal"
-                    android:background="@drawable/editextborder"
-                    android:paddingLeft="@dimen/_10sdp"
-                    android:paddingTop="@dimen/_4sdp"
-                    android:paddingBottom="@dimen/_4sdp"
-                    android:paddingRight="@dimen/_4sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:textSize="14sp">
-
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="@dimen/_4sdp"
-                        android:text="Report Hard Copy"
-                        android:textColor="@android:color/black"
-                        android:textSize="14sp" />
-
-                    <ImageView
-                        android:id="@+id/img_report_hc_tick"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:src="@drawable/tick_icon" />
-                </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/ll_amt"
-                android:layout_width="match_parent"
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:gravity="center_vertical">
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_10sdp"
+                android:layout_weight="1"
+                app:cardCornerRadius="@dimen/_5sdp"
+                app:cardElevation="@dimen/_5sdp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/edt_beneficiary_age"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/_4sdp"
-                    android:text="Amount Payable  :"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp" />
+                    android:background="@null"
+                    android:hint="AGE"
+                    android:padding="@dimen/_10sdp"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/value" />
 
-                <TextView
-                    android:id="@+id/txt_amount_payable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_4sdp"
-                    android:layout_weight="2.5"
-                    android:enabled="true"
-                    android:maxLines="1"
-                    android:textColor="@android:color/black"
-                    android:padding="@dimen/_4sdp"
-                    android:textSize="14sp" />
+            </androidx.cardview.widget.CardView>
 
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/lin_spnPurpose"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_5sdp"
+                android:layout_weight="1"
+                app:cardCornerRadius="@dimen/_5sdp"
+                app:cardElevation="@dimen/_10sdp">
 
-                <Button
-                    android:id="@+id/btn_order_submit"
-                    android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/spn_purpose"
+                    android:layout_width="match_parent"
+                    android:entries="@array/gender"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_10sdp"
-                    android:background="@color/colorOrange"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:text="Submit" />
-            </LinearLayout>
+                    android:background="@drawable/drawable_spinner_bg"
+                    android:padding="@dimen/_8sdp" />
+            </androidx.cardview.widget.CardView>
+
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@drawable/editextborder"
+            android:enabled="true"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingTop="@dimen/_6sdp"
+            android:paddingRight="@dimen/_4sdp"
+            android:visibility="gone"
+            android:paddingBottom="@dimen/_2sdp"
+            android:textSize="14sp">
+
+            <ImageView
+                android:id="@+id/img_gender_male"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/male" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="25dp"
+                android:layout_margin="@dimen/dp_2"
+                android:background="@color/contentDividerLine" />
+
+            <ImageView
+                android:id="@+id/img_gender_female"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/female_icon_orange" />
+        </LinearLayout>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            app:cardCornerRadius="@dimen/_5sdp"
+            app:cardElevation="@dimen/_5sdp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10sdp">
+
+                <TextView
+                    android:id="@+id/txt_beneficiary_tests"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_weight="2"
+                    android:gravity="center|left"
+                    android:text="Click to view or add tests from list"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/value" />
+
+                <ImageView
+                    android:id="@+id/img_beneficiary_action_edit_tests"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/ic_add_ben_new" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <!--<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:background="@drawable/editextborder"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/txt_beneficiary_tests"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_4sdp"
+                android:layout_weight="2.5"
+                android:enabled="true"
+                android:gravity="center_vertical"
+                android:hint="Click to view or add tests from list"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingTop="@dimen/_4sdp"
+                android:paddingRight="@dimen/_4sdp"
+                android:paddingBottom="@dimen/_4sdp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="@dimen/_14sdp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/img_beneficiary_action_edit_tests"
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/add_ben_icon" />
+            </LinearLayout>
+        </LinearLayout>-->
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            app:cardCornerRadius="@dimen/_5sdp"
+            app:cardElevation="@dimen/_5sdp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10sdp">
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_weight="2"
+                    android:gravity="center|left"
+                    android:text="Report Hard Copy"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/value" />
+
+                <ImageView
+                    android:id="@+id/img_report_hc_tick"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/ic_add_unsel" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <!--  <LinearLayout
+          android:visibility="gone"
+          android:id="@+id/ll_amt"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_above="@+id/btn_order_submit"
+          android:layout_marginLeft="@dimen/_10sdp"
+          android:layout_marginRight="@dimen/_10sdp"
+          android:background="@drawable/editextborder"
+          android:orientation="vertical"
+          android:padding="@dimen/_5sdp">
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="PRICE DETAILS"
+              android:textColor="@color/black"
+              android:textSize="@dimen/_14sdp"
+              android:textStyle="bold" />
+
+          <LinearLayout
+              android:id="@+id/linPriceDetails"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+              <RelativeLayout
+                  android:id="@+id/rel_productTotal"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:visibility="visible">
+
+                  <TextView
+                      android:id="@+id/tv_totalAmt"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="Sub-Total"
+                      android:textColor="@color/black"
+                      android:textSize="@dimen/_10sdp" />
+
+                  <TextView
+                      android:id="@+id/txtActPrice"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_alignParentLeft="false"
+                      android:layout_alignParentTop="false"
+                      android:layout_alignParentRight="true"
+                      android:layout_centerVertical="true"
+                      android:text="Rs. 0/-"
+                      android:textColor="@color/black"
+                      android:textSize="@dimen/_10sdp" />
+              </RelativeLayout>
+
+
+              <RelativeLayout
+                  android:id="@+id/relHardCopyCharge"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:layout_marginTop="@dimen/_2sdp"
+                  android:visibility="gone">
+
+                  <TextView
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:text="Hardcopy charges"
+                      android:textColor="@color/black"
+                      android:textSize="@dimen/_10sdp" />
+
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_centerInParent="true"
+                      android:layout_marginRight="@dimen/_2sdp"
+                      android:layout_toLeftOf="@+id/txtHardCopyCharge"
+                      android:text=" + " />
+
+                  <TextView
+                      android:id="@+id/txtHardCopyCharge"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_alignParentLeft="false"
+                      android:layout_alignParentTop="false"
+                      android:layout_alignParentRight="true"
+                      android:layout_centerVertical="true"
+                      android:text="Rs. 0/-"
+                      android:textColor="@color/black"
+                      android:textSize="@dimen/_10sdp" />
+              </RelativeLayout>
+
+
+              <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="1dp"
+                  android:layout_marginTop="@dimen/_2sdp"
+                  android:layout_marginBottom="@dimen/_2sdp"
+                  android:background="@color/div_color"
+                  android:orientation="horizontal" />
+
+              <RelativeLayout
+                  android:id="@+id/relTotalAmount"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent">
+
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="TOTAL"
+                      android:textColor="@color/black"
+                      android:textSize="@dimen/_12sdp"
+                      android:textStyle="bold" />
+
+
+                  <TextView
+                      android:id="@+id/txt_amount_payable"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_alignParentLeft="false"
+                      android:layout_alignParentTop="false"
+                      android:layout_alignParentRight="true"
+                      android:layout_centerVertical="true"
+                      android:text="Rs. 0/-"
+                      android:textColor="@color/black"
+                      android:textSize="@dimen/_12sdp"
+                      android:textStyle="bold" />
+              </RelativeLayout>
+
+              <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="1dp"
+                  android:layout_margin="@dimen/_1sdp"
+                  android:background="@color/div_color"
+                  android:orientation="horizontal" />
+
+          </LinearLayout>
+
+      </LinearLayout>-->
+
+    <!--<Button
+        android:visibility="gone"
+        android:id="@+id/btn_order_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="11dp"
+        android:background="@color/colorOrange"
+        android:text="Submit"
+        android:textColor="@color/white"
+        android:textStyle="bold" />-->
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        app:cardCornerRadius="@dimen/_5sdp"
+        app:cardElevation="@dimen/_5sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10sdp">
+
+            <TextView
+                android:id="@+id/txt_amount_payable"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Amount : 2000"
+                android:textColor="@color/bg_new_color"
+                android:textSize="@dimen/value" />
+
+
+            <TextView
+                android:id="@+id/btn_order_submit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableRight="@drawable/ic_arrow_right"
+                android:text="Submit"
+                android:textAlignment="center"
+                android:textColor="@color/bg_new_color"
+                android:textSize="@dimen/label"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</RelativeLayout>

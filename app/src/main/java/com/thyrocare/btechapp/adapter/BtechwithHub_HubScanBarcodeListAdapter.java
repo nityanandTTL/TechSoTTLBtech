@@ -5,6 +5,8 @@ package com.thyrocare.btechapp.adapter;
  */
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
+import com.thyrocare.btechapp.fragment.BtechwithHub_HubMasterBarcodeScanFragment;
 import com.thyrocare.btechapp.models.data.BtechwithHub_BarcodeDataModel;
 import com.thyrocare.btechapp.utils.api.Logger;
 
@@ -22,7 +25,7 @@ import java.util.ArrayList;
 public class BtechwithHub_HubScanBarcodeListAdapter extends RecyclerView.Adapter<BtechwithHub_HubScanBarcodeListAdapter.MyViewHolder> {
 
     private ArrayList<BtechwithHub_BarcodeDataModel> barcodeModels;
-    private HomeScreenActivity activity;
+    private Activity activity;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView btech_name;
@@ -50,7 +53,7 @@ public class BtechwithHub_HubScanBarcodeListAdapter extends RecyclerView.Adapter
     }
 
 
-    public BtechwithHub_HubScanBarcodeListAdapter(ArrayList<BtechwithHub_BarcodeDataModel> barcodeModels, HomeScreenActivity activity) {
+    public BtechwithHub_HubScanBarcodeListAdapter(ArrayList<BtechwithHub_BarcodeDataModel> barcodeModels, Activity activity) {
         this.barcodeModels = barcodeModels;
         this.activity = activity;
     }

@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -15,118 +16,139 @@
             tools:context=".btechapp.activity.VisitOrderDetailMapDisplayFragmentActivity" />
     </RelativeLayout>
 
-    <include
-        android:id="@+id/il_cell_title" layout="@layout/cell_title_layout" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical"
-        android:weightSum="2">
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/default_toolbar"
+                android:id="@+id/appbarLayout"/>
+            <include
+                android:id="@+id/il_cell_title"
+                layout="@layout/cell_title_layout" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:gravity="bottom"
-            android:orientation="horizontal"
-            android:weightSum="4">
-
-            <LinearLayout
-                android:id="@+id/ll_call"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="2dp"
-                android:layout_weight="3"
-                android:background="@color/colorOrange"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/dp_20"
-                    android:layout_height="@dimen/dp_20"
-                    android:layout_gravity="center"
-                    android:src="@drawable/call_icon_orange" />
-
-                <TextView
-                    android:id="@+id/title_est_call"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:text="Call"
-                    android:paddingLeft="@dimen/_5sdp"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:weightSum="2">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
+                android:layout_gravity="bottom"
                 android:layout_weight="1"
-                android:background="@color/colorOrange">
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                android:weightSum="4">
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="@dimen/dp_20"
-                    android:layout_height="@dimen/dp_20"
-                    android:layout_gravity="center"
-                    android:src="@drawable/home_icon_white"
-                    android:padding="@dimen/_7sdp"/>
+                <LinearLayout
+                    android:id="@+id/ll_call"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="3"
+                    android:background="@color/bg_new_color"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/title_est_address"
-                    android:layout_width="wrap_content"
+                    <ImageView
+                        android:layout_width="@dimen/dp_20"
+                        android:layout_height="@dimen/dp_20"
+                        android:layout_gravity="center"
+                        android:padding="@dimen/_5sdp"
+                        android:src="@drawable/ic_call"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:id="@+id/title_est_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:paddingLeft="@dimen/_5sdp"
+                        android:text="Call"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="1"
+                    android:background="@color/bg_new_color">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="@dimen/dp_20"
+                        android:layout_height="@dimen/dp_20"
+                        android:layout_gravity="center"
+                        android:padding="@dimen/_7sdp"
+                        android:src="@drawable/home_icon_white" />
+
+                    <TextView
+                        android:id="@+id/title_est_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="marquee"
+                        android:fadingEdge="horizontal"
+                        android:text="11, Sushila App, Panchavati, Nashik-422003"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/dp_10">
+
+                <Button
+                    android:id="@+id/btn_arrived"
+                    android:layout_width="@dimen/dp_75"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:text="11, Sushila App, Panchavati, Nashik-422003"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/purple_btn_bg"
+                    android:gravity="center"
+                    android:text="@string/arrive"
+                    android:textColor="@android:color/white"
+                    android:visibility="gone" />
 
+                <Button
+                    android:id="@+id/btn_startNav"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/purple_btn_bg"
+                    android:gravity="center"
+                    android:text="@string/start"
+                    android:textColor="@android:color/white"
+                    android:visibility="visible" />
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="@dimen/dp_10">
+    </RelativeLayout>
 
-            <Button
-                android:id="@+id/btn_arrived"
-                android:layout_width="@dimen/dp_75"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/purple_btn_bg"
-                android:text="@string/arrive"
-                android:textColor="@android:color/white"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:visibility="gone"/>
 
-            <Button
-                android:id="@+id/btn_startNav"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/purple_btn_bg"
-                android:gravity="center"
-                android:text="@string/start"
-                android:textColor="@android:color/white"
-                android:visibility="visible" />
-        </LinearLayout>
-    </LinearLayout>
 
 </FrameLayout>
 

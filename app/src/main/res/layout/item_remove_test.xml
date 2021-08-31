@@ -2,23 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
     android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
     android:layout_marginTop="10dp"
+    android:layout_marginRight="5dp"
     android:layout_marginBottom="10dp"
+    android:background="@drawable/rounded_background_grey"
+    android:orientation="horizontal"
     android:weightSum="4">
+
     <TextView
-        android:layout_gravity="center"
-        android:padding="@dimen/dp_5"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:textSize="16sp"
         android:id="@+id/txt_test_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_weight="3.8"
         android:gravity="center"
-        android:text="item"/>
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="@dimen/dp_5"
+        android:textColor="@color/bg_new_color"
+        android:text="item"
+        android:textSize="@dimen/value" />
 
     <ImageView
         android:id="@+id/img_remove"
@@ -26,5 +29,5 @@
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_weight="0.2"
-        android:src="@drawable/red_cross_icon"/>
+        android:src="@drawable/new_cancel_icon" />
 </LinearLayout>

@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorOrange"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
@@ -16,15 +15,12 @@
             android:layout_height="match_parent"
             android:paddingLeft="@dimen/_5sdp"
             android:paddingTop="@dimen/_5sdp"
-            android:paddingRight="@dimen/_5sdp"
-            android:paddingBottom="@dimen/_50sdp">
+            android:paddingRight="@dimen/_5sdp">
 
             <ScrollView
                 android:id="@+id/scroll_benDetails_Scanbarcode"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/lin_buttonsNextPrevious"
-                android:layout_marginBottom="@dimen/_5sdp"
                 android:background="@color/white">
 
                 <LinearLayout
@@ -37,7 +33,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="@dimen/_5sdp">
+                        android:padding="@dimen/dp_1">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -52,8 +48,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="TEST (25/M)"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_15sdp" />
+                            android:textColor="@color/colorAccent"
+                            android:textSize="@dimen/_12sdp" />
 
                     </LinearLayout>
 
@@ -61,7 +57,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="@dimen/_5sdp"
+                        android:padding="@dimen/dp_1"
                         android:weightSum="10">
 
                         <TextView
@@ -70,7 +66,8 @@
                             android:layout_weight="2"
                             android:text="Order no"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12sdp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -79,7 +76,8 @@
                             android:gravity="center"
                             android:text=" : "
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12sdp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/tv_OrderNo"
@@ -88,7 +86,7 @@
                             android:layout_weight="7"
                             android:text="123456"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_10sdp" />
 
                     </LinearLayout>
 
@@ -97,7 +95,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="@dimen/_5sdp"
+                        android:padding="@dimen/dp_1"
                         android:weightSum="10">
 
                         <TextView
@@ -106,7 +104,8 @@
                             android:layout_weight="2"
                             android:text="Product "
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12sdp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -115,20 +114,26 @@
                             android:gravity="center"
                             android:text=" : "
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12sdp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/tv_products"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="7"
-                            android:text="1. Test"
+                            android:text="Test"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_10sdp" />
 
                     </LinearLayout>
 
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0.8dp"
+                        android:layout_marginTop="@dimen/dp_3"
+                        android:background="@color/grey" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyle_barcode"
@@ -136,29 +141,132 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp" />
 
-                    <Button
-                        android:id="@+id/btn_remove"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_30sdp"
-                        android:layout_gravity="center"
-                        android:layout_margin="@dimen/dp_2"
-                        android:background="@color/colorSecondary"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        android:padding="@dimen/_5sdp"
-                        android:text="Remove Urine Sample"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0.8dp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@color/grey" />
 
+
+                    <!--                    <Button-->
+                    <!--                        android:id="@+id/btn_remove"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="@dimen/_30sdp"-->
+                    <!--                        android:layout_gravity="center"-->
+                    <!--                        android:layout_margin="@dimen/dp_2"-->
+                    <!--                        android:background="@color/colorSecondary"-->
+                    <!--                        android:gravity="center"-->
+                    <!--                        android:visibility="gone"-->
+                    <!--                        android:padding="@dimen/_5sdp"-->
+                    <!--                        android:text="Remove Urine Sample"-->
+                    <!--                        android:textColor="@color/white"-->
+                    <!--                        android:textSize="@dimen/_12sdp"-->
+                    <!--                        android:textStyle="bold" />-->
+
+
+                    <LinearLayout
+                        android:id="@+id/lin_BenbarcodePic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/_5sdp"
+                                android:text="Upload Vial Image*"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_10sdp" />
+
+                            <ImageView
+                                android:id="@+id/img_uploadBenVail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:src="@drawable/upload_icon" />
+
+                            <TextView
+                                android:id="@+id/txt_captureBenBarcodePic"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="@dimen/_10sdp"
+                                android:gravity="center"
+                                android:text="@string/ViewImage"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="@dimen/_8sdp"
+                                android:visibility="gone" />
+
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+                                <ImageView
+                                    android:id="@+id/imgDelete"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="@dimen/_30sdp"
+                                    android:src="@drawable/red_cross_icon"
+                                    android:visibility="visible" />
+
+                                <ImageView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="@dimen/_30sdp"
+                                    android:src="@drawable/camera_icon" />
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0.8dp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@color/grey" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_urine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_5sdp"
+                            android:text="Remove Urine Sample"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_10sdp" />
+
+                        <ImageView
+                            android:id="@+id/btn_remove"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/_5sdp"
+                            android:src="@drawable/delete_icon" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/ll_otpvalidate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         android:layout_marginTop="@dimen/_2sdp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -175,21 +283,30 @@
                                 android:layout_weight="1.4"
                                 android:paddingLeft="@dimen/_2sdp"
                                 android:text="OTP will be Send to 9999999999"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_10sdp" />
 
-
-                            <Button
-                                android:id="@+id/btn_sendopt"
+                            <androidx.cardview.widget.CardView
                                 android:layout_width="0dp"
-                                android:layout_height="@dimen/_30sdp"
-                                android:layout_gravity="center"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_10sdp"
                                 android:layout_weight="0.6"
-                                android:background="@color/colorSecondary"
-                                android:gravity="center"
-                                android:padding="@dimen/_3sdp"
-                                android:text="Send OTP"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/_12sdp" />
+                                app:cardCornerRadius="@dimen/_5sdp"
+                                app:cardElevation="@dimen/_10sdp">
+
+                                <TextView
+                                    android:id="@+id/btn_sendopt"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/_25sdp"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:padding="@dimen/_3sdp"
+                                    android:text="Send OTP"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorAccent"
+                                    android:textSize="@dimen/_10sdp" />
+
+                            </androidx.cardview.widget.CardView>
 
 
                         </LinearLayout>
@@ -212,86 +329,44 @@
                                 android:hint="Verify OTP"
                                 android:inputType="number"
                                 android:maxLength="6"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_10sdp" />
 
-
-                            <Button
-                                android:id="@+id/btn_verify_otp"
+                            <androidx.cardview.widget.CardView
                                 android:layout_width="0dp"
-                                android:layout_height="@dimen/_30sdp"
-                                android:layout_gravity="center"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_10sdp"
                                 android:layout_weight="0.6"
-                                android:background="@color/colorSecondary"
-                                android:gravity="center"
-                                android:padding="@dimen/_3sdp"
-                                android:text="Verify OTP"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/_12sdp" />
+                                app:cardCornerRadius="@dimen/_5sdp"
+                                app:cardElevation="@dimen/_10sdp">
+
+                                <TextView
+                                    android:id="@+id/btn_verify_otp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/_25sdp"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:padding="@dimen/_3sdp"
+                                    android:text="Verify OTP"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/colorAccent"
+                                    android:textSize="@dimen/_10sdp" />
+                            </androidx.cardview.widget.CardView>
 
                         </LinearLayout>
 
 
                     </LinearLayout>
-
 
                     <LinearLayout
-                        android:id="@+id/lin_BenbarcodePic"
+                        android:id="@+id/ll_grey"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0.8dp"
                         android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="vertical">
+                        android:background="@color/grey"
+                        android:orientation="horizontal"
+                        android:visibility="gone" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="4"
-                                android:gravity="center"
-                                android:padding="@dimen/_5sdp"
-                                android:text="VIAL IMAGE*"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/_14sdp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/txt_captureBenBarcodePic"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="4"
-                                android:background="@drawable/editbox_bg"
-                                android:gravity="center"
-                                android:padding="@dimen/_5sdp"
-                                android:textSize="@dimen/_13sdp" />
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:gravity="center"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:id="@+id/imgDelete"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/_30sdp"
-                                    android:src="@drawable/red_cross_icon"
-                                    android:visibility="gone" />
-
-                                <ImageView
-                                    android:id="@+id/img_uploadBenVail"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="@dimen/_30sdp"
-                                    android:src="@drawable/camera_icon" />
-
-                            </LinearLayout>
-                        </LinearLayout>
-                    </LinearLayout>
 
                     <RelativeLayout
                         android:id="@+id/ll_srfID"
@@ -301,7 +376,8 @@
                         android:layout_marginTop="@dimen/_30sdp"
                         android:layout_marginRight="@dimen/_10sdp"
                         android:background="@drawable/border_layout"
-                        android:padding="@dimen/_5sdp">
+                        android:padding="@dimen/_5sdp"
+                        android:visibility="gone">
 
                         <EditText
                             android:id="@+id/edt_srf"

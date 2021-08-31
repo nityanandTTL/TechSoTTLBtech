@@ -1,9 +1,10 @@
 package com.thyrocare.btechapp.models.api.response;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class LeadPurposeResponseModel implements Serializable {
+public class LeadPurposeResponseModel{
     /**
      * response : Success
      * respId : RES00001
@@ -12,7 +13,7 @@ public class LeadPurposeResponseModel implements Serializable {
 
     private String response;
     private String respId;
-    private List<PurposeListDTO> purposeList;
+    private ArrayList<PurposeListDTO> purposeList;
 
     public String getResponse() {
         return response;
@@ -30,11 +31,11 @@ public class LeadPurposeResponseModel implements Serializable {
         this.respId = respId;
     }
 
-    public List<PurposeListDTO> getPurposeList() {
+    public ArrayList<PurposeListDTO> getPurposeList() {
         return purposeList;
     }
 
-    public void setPurposeList(List<PurposeListDTO> purposeList) {
+    public void setPurposeList(ArrayList<PurposeListDTO> purposeList) {
         this.purposeList = purposeList;
     }
 

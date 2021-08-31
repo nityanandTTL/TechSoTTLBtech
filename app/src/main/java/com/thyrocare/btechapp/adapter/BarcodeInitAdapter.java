@@ -42,7 +42,7 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tv_serumtype, txtSampleType, txtSampleTypeRBS, edtBarcode, edt_barcode_confirm;
-        LinearLayout lin_sampleType;
+        LinearLayout lin_sampleType,ll_sample_type;
         ImageView imgScan, imgDelete, imgScanConfirm, imgDeleteconfirm;
 
         public MyViewHolder(View view) {
@@ -50,6 +50,7 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
             tv_serumtype = (TextView) view.findViewById(R.id.tv_serumtype);
             txtSampleType = (TextView) view.findViewById(R.id.txt_sample_type);
             lin_sampleType = (LinearLayout) view.findViewById(R.id.lin_sampleType);
+            ll_sample_type = (LinearLayout) view.findViewById(R.id.ll_sample_type);
             txtSampleTypeRBS = (TextView) view.findViewById(R.id.txt_sample_type_rb);
             edtBarcode = (TextView) view.findViewById(R.id.edt_barcode);
             imgScan = (ImageView) view.findViewById(R.id.scan_barcode_button);
@@ -94,28 +95,28 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
         }
         // TODO code to show Primary and secondary serum
 
-        holder.txtSampleType.setText(barcodedetailArylist.get(position).getSamplType());
+        holder.txtSampleType.setText(Global.toCamelCase(barcodedetailArylist.get(position).getSamplType()));
         if (beneficaryWiseScanbarcodeModel.getTestsCode().equalsIgnoreCase("RBS,PPBS") || beneficaryWiseScanbarcodeModel.getTestsCode().equalsIgnoreCase("PPBS,RBS")) {
             if (barcodedetailArylist.get(position).getSamplType().equalsIgnoreCase("FLUORIDE-R")) {
-                holder.txtSampleType.setText("FLUORIDE RBS");
+                holder.txtSampleType.setText(Global.toCamelCase("FLUORIDE RBS"));
             }
         }
         if (barcodedetailArylist.get(position).getSamplType().equals("SERUM")) {
-            holder.lin_sampleType.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_serum));
+            holder.ll_sample_type.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_serum));
         } else if (barcodedetailArylist.get(position).getSamplType().equals("EDTA")) {
-            holder.lin_sampleType.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_edta));
+            holder.ll_sample_type.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_edta));
         } else if (barcodedetailArylist.get(position).getSamplType().equals("FLUORIDE")) {
-            holder.lin_sampleType.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+            holder.ll_sample_type.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
         } else if (barcodedetailArylist.get(position).getSamplType().equals("HEPARIN")) {
-            holder.lin_sampleType.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_heparin));
+            holder.ll_sample_type.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_heparin));
         } else if (barcodedetailArylist.get(position).getSamplType().equals("URINE")) {
-            holder.lin_sampleType.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_urine));
+            holder.ll_sample_type.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_urine));
         } else if (barcodedetailArylist.get(position).getSamplType().equals("FLUORIDE-F")) {
-            holder.lin_sampleType.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+            holder.ll_sample_type.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
         } else if (barcodedetailArylist.get(position).getSamplType().equals("FLUORIDE-R")) {
-            holder.lin_sampleType.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+            holder.ll_sample_type.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
         } else if (barcodedetailArylist.get(position).getSamplType().equals("FLUORIDE-PP")) {
-            holder.lin_sampleType.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
+            holder.ll_sample_type.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_fluoride));
         }
 
         Logger.error("beneficiaryBarcodeDetailsModel.getBarcode() " + barcodedetailArylist.get(position).getBarcode());

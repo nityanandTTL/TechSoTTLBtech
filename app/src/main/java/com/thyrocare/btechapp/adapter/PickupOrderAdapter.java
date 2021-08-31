@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,9 +50,9 @@ public class PickupOrderAdapter extends RecyclerView.Adapter<PickupOrderAdapter.
     public void onBindViewHolder(@NonNull PickupList holder, final int position) {
 
 
-        InputUtils.setTextToTextView(holder.txtCustomerName , pickupordersDTOS.get(position).getName());
-        InputUtils.setTextToTextView(holder.txtOrderNo , pickupordersDTOS.get(position).getOrderNo());
-        InputUtils.setTextToTextView(holder.txtDate , pickupordersDTOS.get(position).getAppointment());
+        InputUtils.setTextToTextView(holder.txtCustomerName, pickupordersDTOS.get(position).getName());
+        InputUtils.setTextToTextView(holder.txtOrderNo, pickupordersDTOS.get(position).getOrderNo());
+        InputUtils.setTextToTextView(holder.txtDate, pickupordersDTOS.get(position).getAppointment());
         DisplayDayWiselayoutColor(position, holder);
 
         holder.txtAddress.setOnClickListener(new View.OnClickListener() {
@@ -79,18 +81,30 @@ public class PickupOrderAdapter extends RecyclerView.Adapter<PickupOrderAdapter.
                 }
             }
         });
+
+
+        holder.rel_imgRelease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onClientNameClicked(pickupordersDTOS.get(position));
+                }
+            }
+        });
     }
 
     private void DisplayDayWiselayoutColor(int position, PickupList holder) {
         if (pickupordersDTOS.get(position).getApptDay() == 0) {
-            holder.txt_visit_day.setBackgroundColor(activity.getResources().getColor(R.color.red));
-            holder.txt_visit_day.setText("Today");
+            holder.LL_swipe.setBackground(activity.getResources().getDrawable(R.drawable.rounded_background_green_2));
+            holder.layoutMain.setBackground(activity.getResources().getDrawable(R.drawable.rounded_background_green));
+//            holder.txt_visit_day.setText("Today");
         } else if (pickupordersDTOS.get(position).getApptDay() == 1) {
-            holder.txt_visit_day.setBackgroundColor(activity.getResources().getColor(R.color.btnRequest));
-            holder.txt_visit_day.setText("Tomorrow");
+            holder.LL_swipe.setBackground(activity.getResources().getDrawable(R.drawable.rounded_background_yellow_2));
+            holder.layoutMain.setBackground(activity.getResources().getDrawable(R.drawable.rounded_background_yellow));
+
         } else {
-            holder.txt_visit_day.setBackgroundColor(activity.getResources().getColor(R.color.btn_green_start_grd));
-            holder.txt_visit_day.setText("Day After Tomorrow");
+            holder.LL_swipe.setBackground(activity.getResources().getDrawable(R.drawable.rounded_background_red_2));
+            holder.layoutMain.setBackground(activity.getResources().getDrawable(R.drawable.rounded_background_red));
         }
     }
 
@@ -106,6 +120,10 @@ public class PickupOrderAdapter extends RecyclerView.Adapter<PickupOrderAdapter.
     public class PickupList extends RecyclerView.ViewHolder {
         TextView txtCustomerName, txtOrderNo, txtDate, txtAddress, txt_visit_day;
         ImageView img_pickup;
+        LinearLayout LL_swipe;
+        LinearLayout layoutMain;
+        RelativeLayout rel_imgRelease;
+
 
         public PickupList(@NonNull View itemView) {
             super(itemView);
@@ -116,6 +134,9 @@ public class PickupOrderAdapter extends RecyclerView.Adapter<PickupOrderAdapter.
             txtAddress = itemView.findViewById(R.id.txtAddress);
             txt_visit_day = itemView.findViewById(R.id.txt_visit_day);
             img_pickup = itemView.findViewById(R.id.img_pickup);
+            LL_swipe = itemView.findViewById(R.id.LL_swipe);
+            layoutMain = itemView.findViewById(R.id.layoutMain);
+            rel_imgRelease = itemView.findViewById(R.id.rel_imgRelease);
         }
     }
 }

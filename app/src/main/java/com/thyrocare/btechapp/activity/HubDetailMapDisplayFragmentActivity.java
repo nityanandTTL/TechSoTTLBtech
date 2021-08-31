@@ -11,13 +11,17 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.content.ContextCompat;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,15 +42,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+import com.thyrocare.btechapp.fragment.HubListDisplayFragment;
+import com.thyrocare.btechapp.fragment.HubMasterBarcodeScanFragment;
 import com.thyrocare.btechapp.models.api.request.HubStartRequestModel;
 import com.thyrocare.btechapp.models.data.HUBBTechModel;
-
 
 
 import com.thyrocare.btechapp.utils.api.Logger;
@@ -75,7 +81,7 @@ import retrofit2.Callback;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
 
-public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
+public class HubDetailMapDisplayFragmentActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
     private static final String TAG = HubDetailMapDisplayFragmentActivity.class.getSimpleName();
     public static final String TAG_FRAGMENT = HubDetailMapDisplayFragmentActivity.class.getSimpleName();
@@ -88,7 +94,6 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private LocationRequest mLocationRequest;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private Button btn_startNav, btn_arrived;
-
     private FragmentActivity activity;
     private HUBBTechModel hubBTechModel;
 
@@ -104,6 +109,8 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private boolean isStarted = false;
     private LinearLayout llCall;
     private Global global;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,6 +136,7 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     private void setListeners() {
         btn_arrived.setOnClickListener(this);
         btn_startNav.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
         double totaldist = distFrom(currentlat, currentlong, destlat, destlong);
 
         Integertotaldiff = (int) totaldist;
@@ -138,8 +146,12 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
     }
 
     private void initUI() {
-
-
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        iv_home.setVisibility(View.GONE);
+        tv_toolbar.setText("HUB Scan");
+        tv_toolbar.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         txtorder_no = (TextView) findViewById(R.id.tv_orderno);
         txt_title = (TextView) findViewById(R.id.oderno_title);
 
@@ -343,12 +355,48 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
             callOrderStatusChangeApi(3);
         } else if (v.getId() == R.id.btn_startNav) {
             callOrderStatusChangeApi(7);
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+            View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+            String s = "Do you want to Open Map for Direction ?";
+            TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+            tv_text.setText(s);
+            Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+            btn_yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
+                            Uri.parse("google.navigation:q=" + destlat + "," + destlong));
+                    try {
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    bottomSheetDialog.dismiss();
+                }
+            });
+
+            Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+            btn_no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    btn_startNav.setVisibility(View.GONE);
+                    btn_arrived.setVisibility(View.VISIBLE);
+                    bottomSheetDialog.dismiss();
+
+                }
+            });
+
+            bottomSheetDialog.setContentView(bottomSheet);
+            bottomSheetDialog.setCancelable(false);
+            bottomSheetDialog.show();
+        } else if (v.getId() == R.id.iv_back) {
+            finish();
         }
     }
-
-
-
-
 
     private void callOrderStatusChangeApi(int status) {
         HubStartRequestModel hubStartRequestModel = new HubStartRequestModel();
@@ -386,31 +434,23 @@ public class HubDetailMapDisplayFragmentActivity extends FragmentActivity implem
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
-                    if (hubStartRequestModel.getType() == 3){
-                        Toast.makeText(activity, "Arrived Successfully", Toast.LENGTH_SHORT).show();
-                        Intent intentResult = new Intent();
+                    if (hubStartRequestModel.getType() == 3) {
+//                        Toast.makeText(activity, "Arrived Successfully", Toast.LENGTH_SHORT).show();
+                        Intent intentResult = new Intent(activity, HubMasterBarcodeScanFragment.class);
                         intentResult.putExtra(BundleConstants.HUB_BTECH_MODEL, hubBTechModel);
-                        setResult(BundleConstants.HMD_ARRIVED, intentResult);
-                        finish();
-                    }else{
-                        Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
+                        startActivity(intentResult);
+//                        finish();
+                    } else if (hubStartRequestModel.getType() == 7){
+
+//                        Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
                         btn_arrived.setVisibility(View.VISIBLE);
                         btn_startNav.setVisibility(View.GONE);
-                        Intent intent = new Intent(Intent.ACTION_VIEW,
-                                //   Uri.parse("google.navigation:q=an+panchavati+nashik"));
-                                Uri.parse("google.navigation:q=" + destlat + "," + destlong));
-                        try {
-                            if (intent.resolveActivity(getPackageManager()) != null) {
-                                startActivity(intent);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                     }
-                }else{
+                } else {
                     global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);

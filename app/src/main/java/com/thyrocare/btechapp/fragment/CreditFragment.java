@@ -615,7 +615,8 @@ public class CreditFragment extends Fragment {
                 if (res.isSuccessful() && res.body() != null) {
                     TastyToast.makeText(activity, "SUCCESS", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     activity.toolbarHome.setVisibility(View.VISIBLE);
-                    activity.pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                    //Mitanshu---
+//                    activity.pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                 } else {
                     Toast.makeText(activity, SOMETHING_WENT_WRONG, LENGTH_SHORT).show();
                 }

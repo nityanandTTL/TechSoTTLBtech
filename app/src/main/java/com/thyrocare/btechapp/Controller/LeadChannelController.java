@@ -1,5 +1,6 @@
 package com.thyrocare.btechapp.Controller;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 
@@ -22,13 +23,14 @@ public class LeadChannelController {
 
     LeadGenerationFragment leadGenerationFragment;
 
+    Activity activity;
     private Context context;
     private Global globalClass;
 
-    public LeadChannelController( LeadGenerationFragment leadGenerationFragment) {
+    public LeadChannelController(LeadGenerationFragment leadGenerationFragment) {
 
         this.leadGenerationFragment = leadGenerationFragment;
-        this.context = leadGenerationFragment.getContext();
+        this.activity = leadGenerationFragment;
         globalClass = new Global(context);
 
 
@@ -43,7 +45,7 @@ public class LeadChannelController {
             responseCall.enqueue(new Callback<LeadChannelRespModel>() {
                 @Override
                 public void onResponse(Call<LeadChannelRespModel> call, Response<LeadChannelRespModel> response) {
-                    globalClass.hideProgressDialog(leadGenerationFragment.getActivity());
+                    globalClass.hideProgressDialog(activity);
 
                     if (response.isSuccessful() && response.body() != null) {
                         LeadChannelRespModel leadChannelRespModel = response.body();
@@ -56,7 +58,7 @@ public class LeadChannelController {
 
                 @Override
                 public void onFailure(Call<LeadChannelRespModel> call, Throwable t) {
-                    globalClass.hideProgressDialog(leadGenerationFragment.getActivity());
+                    globalClass.hideProgressDialog(activity);
                     leadGenerationFragment.getLeadChannel(null);
                 }
             });

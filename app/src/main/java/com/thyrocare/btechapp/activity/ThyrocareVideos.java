@@ -4,20 +4,31 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
+
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,8 +63,6 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
 
 
-
-
 public class ThyrocareVideos extends AppCompatActivity {
 
     Activity mActivity;
@@ -64,13 +73,16 @@ public class ThyrocareVideos extends AppCompatActivity {
     private RecyclerView recView;
     ArrayList<VideosResponseModel.Outputlang> VideosArylist;
     private DisplayVideoListAdapter videoListAdapter;
-    private TextView tv_languageSelected;
+    //    private TextView tv_languageSelected;
     private SharedPreferences prefs_Language;
     private TextView tv_noDatafound;
     ConnectionDetector cd;
     View parentLayout;
     private Snackbar internetErrorSnackbar;
     private int b = 0;
+    private Spinner spn_purpose;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
 
 
     @Override
@@ -84,56 +96,80 @@ public class ThyrocareVideos extends AppCompatActivity {
                 .setAction("Retry", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (videoView.getVideoInfo().getUri() != null){
+                        if (videoView.getVideoInfo().getUri() != null) {
                             videoView.getPlayer().start();
                         }
                     }
                 })
-                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ));
+                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light));
 
+        spn_purpose = findViewById(R.id.spn_purpose1);
         prefs_Language = mActivity.getSharedPreferences("Video_lang_pref", 0);
         globalclass = new Global(mActivity);
         videoView = (VideoView) findViewById(R.id.video_view1);
         recView = (RecyclerView) findViewById(R.id.recView);
         tv_noDatafound = (TextView) findViewById(R.id.tv_noDatafound);
-        initToolbar();
-        if (TextUtils.isEmpty(prefs_Language.getString("LanguageSelected", ""))) {
-            if (cd.isConnectingToInternet()){
-                CallVideoLanguagesAPI();
-            }else{
-                globalclass.showCustomToast(mActivity,"Please check internet connection.");
-            }
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        tv_toolbar.setText("Videos");
+//        initToolbar();
+        listners();
+
+        if (cd.isConnectingToInternet()) {
+            CallVideoLanguagesAPI();
+        } else {
+            globalclass.showCustomToast(mActivity, "Please check internet connection.");
+        }
+       /* if (TextUtils.isEmpty(prefs_Language.getString("LanguageSelected", ""))) {
+
         } else {
             tv_languageSelected.setText(prefs_Language.getString("LanguageSelected", ""));
-            if (cd.isConnectingToInternet()){
+            if (cd.isConnectingToInternet()) {
                 GetVideosBasedonLanguage(prefs_Language.getString("LanguageID", ""));
-            }else{
-                globalclass.showCustomToast(mActivity,"Please check internet connection.");
+            } else {
+                globalclass.showCustomToast(mActivity, "Please check internet connection.");
             }
             tv_noDatafound.setVisibility(View.VISIBLE);
             if (videoView.getVideoInfo().getUri() != null && videoView.getPlayer().isPlaying()) {
                 videoView.getPlayer().stop();
                 videoView.getPlayer().release();
             }
-        }
+        }*/
+    }
+
+    private void listners() {
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarVideo);
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarVideo);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        tv_languageSelected = (TextView) findViewById(R.id.tv_languageSelected);
-        tv_languageSelected.setPaintFlags(tv_languageSelected.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+//        tv_languageSelected = (TextView) findViewById(R.id.tv_languageSelected);
+//        tv_languageSelected.setPaintFlags(tv_languageSelected.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
 
         tv_languageSelected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (cd.isConnectingToInternet()){
-                    CallVideoLanguagesAPI();
-                }else{
-                    globalclass.showCustomToast(mActivity,"Please check internet connection.");
+                if (cd.isConnectingToInternet()) {
+//                    CallVideoLanguagesAPI();
+                } else {
+                    globalclass.showCustomToast(mActivity, "Please check internet connection.");
                 }
             }
         });
@@ -142,7 +178,7 @@ public class ThyrocareVideos extends AppCompatActivity {
             public void onClick(View v) {
                 MessageLogger.LogError("Toolbar", "Clicked");
             }
-        });
+        });*/
 
     }
 
@@ -152,12 +188,6 @@ public class ThyrocareVideos extends AppCompatActivity {
         return true;
     }
 
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_chat, menu);
-        return true;
-    }*/
 
     private void CallVideoLanguagesAPI() {
         globalclass.showProgressDialog(mActivity, "please wait..");
@@ -174,6 +204,7 @@ public class ThyrocareVideos extends AppCompatActivity {
                     VideoLangaugesResponseModel model = response.body();
                     if (model != null && model.getResId() != null && model.getResId().equalsIgnoreCase("RSS0000") && model.getOutput() != null && model.getOutput().size() > 0) {
                         VideoLangArylist = model.getOutput();
+                        setSpnLanguage(VideoLangArylist);
                     }
                 }
 
@@ -185,25 +216,28 @@ public class ThyrocareVideos extends AppCompatActivity {
                     editor.putString("LanguageArryList", json);
                     editor.apply();
 
-                    if (TextUtils.isEmpty(prefs_Language.getString("LanguageSelected", ""))) {
+                    //Sushil
+                    /*if (TextUtils.isEmpty(prefs_Language.getString("LanguageSelected", ""))) {
                         showLanguageDialogList("Select Language", VideoLangArylist, tv_languageSelected, false);
                         tv_noDatafound.setVisibility(View.GONE);
                     } else {
                         showLanguageDialogList("Select Language", VideoLangArylist, tv_languageSelected, true);
-                    }
+                    }*/
                 } else {
                     Gson gson = new Gson();
                     String json = prefs_Language.getString("LanguageArryList", "");
-                    VideoLangArylist = gson.fromJson(json, new TypeToken<List<VideoLangaugesResponseModel.Outputlang>>() {}.getType());
+                    VideoLangArylist = gson.fromJson(json, new TypeToken<List<VideoLangaugesResponseModel.Outputlang>>() {
+                    }.getType());
                     if (VideoLangArylist != null && VideoLangArylist.size() > 0) {
-                        if (TextUtils.isEmpty(prefs_Language.getString("LanguageSelected", ""))) {
-                            showLanguageDialogList("Select Language", VideoLangArylist, tv_languageSelected, false);
+                        //Sushil
+                        /*if (TextUtils.isEmpty(prefs_Language.getString("LanguageSelected", ""))) {
+//                            showLanguageDialogList("Select Language", VideoLangArylist, tv_languageSelected, false);
                             tv_noDatafound.setVisibility(View.VISIBLE);
                         } else {
-                            showLanguageDialogList("Select Language", VideoLangArylist, tv_languageSelected, true);
-                        }
+//                            showLanguageDialogList("Select Language", VideoLangArylist, tv_languageSelected, true);
+                        }*/
                     } else {
-                        globalclass.showcenterCustomToast(mActivity, "Unable to fetch languages from server. Please try after sometime.",Toast.LENGTH_LONG);
+                        globalclass.showcenterCustomToast(mActivity, "Unable to fetch languages from server. Please try after sometime.", Toast.LENGTH_LONG);
                     }
                 }
             }
@@ -213,12 +247,53 @@ public class ThyrocareVideos extends AppCompatActivity {
                 globalclass.hideProgressDialog(mActivity);
                 recView.setVisibility(View.GONE);
                 tv_noDatafound.setVisibility(View.VISIBLE);
-                globalclass.showcenterCustomToast(mActivity, "Unable to fetch data from server.",Toast.LENGTH_LONG);
+                globalclass.showcenterCustomToast(mActivity, "Unable to fetch data from server.", Toast.LENGTH_LONG);
             }
         });
     }
 
-    private void showLanguageDialogList(String title, ArrayList<VideoLangaugesResponseModel.Outputlang> list, final TextView textView, boolean ShowCancelOption) {
+    private void setSpnLanguage(final ArrayList<VideoLangaugesResponseModel.Outputlang> videoLangArylist) {
+        videoView.setVisibility(View.GONE);
+        VideoLangaugesResponseModel.Outputlang selectValue = new VideoLangaugesResponseModel.Outputlang();
+        selectValue.setIID_NEW("");
+        selectValue.setLANGUAGE("Select language");
+        videoLangArylist.add(0, selectValue);
+        ArrayAdapter<VideoLangaugesResponseModel.Outputlang> arrayAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_list_item_1, videoLangArylist);
+        spn_purpose.setAdapter(arrayAdapter);
+        spn_purpose.setSelection(0);
+        spn_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(spn_purpose.getSelectedItemPosition() == 0){
+                    recView.setVisibility(View.GONE);
+                    Toast.makeText(mActivity, "Kindly select language", Toast.LENGTH_SHORT).show();
+                    tv_noDatafound.setVisibility(View.GONE);
+
+                }else{
+                    for (int i = 0; i < videoLangArylist.size(); i++) {
+                        if (spn_purpose.getSelectedItem().toString().equalsIgnoreCase(videoLangArylist.get(i).getLANGUAGE())) {
+                            GetVideosBasedonLanguage(videoLangArylist.get(i).getIID_NEW());
+                            if (videoView.getVideoInfo().getUri() != null) {
+                                videoView.getPlayer().stop();
+                                videoView.getPlayer().release();
+                            }
+                            break;
+                        }
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
+    /*private void showLanguageDialogList(String title, ArrayList<VideoLangaugesResponseModel.Outputlang> list, final TextView textView, boolean ShowCancelOption) {
         if (list != null && !list.isEmpty()) {
             final AlertDialog.Builder builderSingle = new AlertDialog.Builder(mActivity);
             builderSingle.setTitle(title);
@@ -241,14 +316,14 @@ public class ThyrocareVideos extends AppCompatActivity {
                     if (which < arrayAdapter.getCount()) {
                         String strName = arrayAdapter.getItem(which).getLANGUAGE();
                         textView.setText(strName);
-                        if (cd.isConnectingToInternet()){
+                        if (cd.isConnectingToInternet()) {
                             GetVideosBasedonLanguage(arrayAdapter.getItem(which).getIID_NEW());
                             if (videoView.getVideoInfo().getUri() != null) {
                                 videoView.getPlayer().stop();
                                 videoView.getPlayer().release();
                             }
-                        }else{
-                            globalclass.showCustomToast(mActivity,"Please check internet connection.");
+                        } else {
+                            globalclass.showCustomToast(mActivity, "Please check internet connection.");
                         }
                         SharedPreferences pref = mActivity.getSharedPreferences("Video_lang_pref", 0);
                         SharedPreferences.Editor editor = pref.edit();
@@ -264,7 +339,7 @@ public class ThyrocareVideos extends AppCompatActivity {
             globalclass.showCustomToast(mActivity, "List is not available");
         }
     }
-
+*/
     private void GetVideosBasedonLanguage(String LanguageID) {
 
         GetVideoLanguageWiseRequestModel model = new GetVideoLanguageWiseRequestModel();
@@ -300,7 +375,6 @@ public class ThyrocareVideos extends AppCompatActivity {
             public void onFailure(Call<VideosResponseModel> call, Throwable t) {
                 globalclass.hideProgressDialog(mActivity);
                 tv_noDatafound.setVisibility(View.VISIBLE);
-
             }
         });
 
@@ -309,11 +383,7 @@ public class ThyrocareVideos extends AppCompatActivity {
     private void DisplayVideosInList() {
 
         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(mActivity);
-        recView.setLayoutManager(mLayoutManager);
-        recView.setItemAnimator(new DefaultItemAnimator());
-        recView.addItemDecoration(new DividerItemDecoration(mActivity, LinearLayoutManager.VERTICAL));
-        recView.setHasFixedSize(true);
-        recView.setLayoutManager(mLayoutManager);
+
         recView.setVisibility(View.VISIBLE);
 
         videoListAdapter = new DisplayVideoListAdapter(mActivity, VideosArylist);
@@ -322,23 +392,23 @@ public class ThyrocareVideos extends AppCompatActivity {
             public void OnVideoItemSelected(ArrayList<VideosResponseModel.Outputlang> VideoArrylist1, VideosResponseModel.Outputlang SelectedVideo) {
 
 
-                if (videoView.getVideoInfo().getUri() != null && videoView.getVideoInfo().getUri().toString().equalsIgnoreCase(SelectedVideo.getPath()) ){
+                if (videoView.getVideoInfo().getUri() != null && videoView.getVideoInfo().getUri().toString().equalsIgnoreCase(SelectedVideo.getPath())) {
 
-                    if (videoView.getPlayer().isPlaying()){
+                    if (videoView.getPlayer().isPlaying()) {
 //                        globalclass.showcenterCustomToast(mActivity,"Already Playing");
-                    }else{
+                    } else {
 
-                        if (videoView.getPlayer().getCurrentState() == GiraffePlayer.STATE_PLAYBACK_COMPLETED){
+                        if (videoView.getPlayer().getCurrentState() == GiraffePlayer.STATE_PLAYBACK_COMPLETED) {
                             initializePlayer(SelectedVideo);
                             VideosArylist = VideoArrylist1;
                             videoListAdapter.notifyDataSetChanged();
-                        }else{
+                        } else {
                             videoView.getPlayer().start();
                         }
 
                     }
 
-                }else{
+                } else {
                     initializePlayer(SelectedVideo);
                     VideosArylist = VideoArrylist1;
                     videoListAdapter.notifyDataSetChanged();
@@ -396,7 +466,7 @@ public class ThyrocareVideos extends AppCompatActivity {
             @Override
             public boolean onError(GiraffePlayer giraffePlayer, int what, int extra) {
                 MessageLogger.PrintMsg("tejas >>> onError");
-                if (a == 0){
+                if (a == 0) {
                     a = giraffePlayer.getCurrentPosition();
 
                 }
@@ -406,18 +476,18 @@ public class ThyrocareVideos extends AppCompatActivity {
                 long seconds = (milliseconds / 1000) % 60;
 
 
-                long milliseconds1 =  giraffePlayer.getDuration();
+                long milliseconds1 = giraffePlayer.getDuration();
                 long minutes1 = (milliseconds1 / 1000) / 60;
                 long seconds1 = (milliseconds1 / 1000) % 60;
 
-                if (minutes != minutes1 && seconds != seconds1){
+                if (minutes != minutes1 && seconds != seconds1) {
 //                    globalclass.showcenterCustomToast(mActivity,"Error! Unable to play this video. Please Check your internet connection or try after sometime.",Toast.LENGTH_SHORT);
                     internetErrorSnackbar.show();
                 }
 
-                MessageLogger.PrintMsg("tejas >>> CurrentPosition  "+a +" duration : "+giraffePlayer.getDuration() );
-                MessageLogger.PrintMsg("tejas >>> CurrentPositionMin  "+minutes +" CurrentPositionSec : "+seconds);
-                MessageLogger.PrintMsg("tejas >>> durationMin  "+minutes1 +" durationSec : "+seconds1);
+                MessageLogger.PrintMsg("tejas >>> CurrentPosition  " + a + " duration : " + giraffePlayer.getDuration());
+                MessageLogger.PrintMsg("tejas >>> CurrentPositionMin  " + minutes + " CurrentPositionSec : " + seconds);
+                MessageLogger.PrintMsg("tejas >>> durationMin  " + minutes1 + " durationSec : " + seconds1);
 
 
                 return false;
@@ -447,7 +517,7 @@ public class ThyrocareVideos extends AppCompatActivity {
             @Override
             public void onStart(GiraffePlayer giraffePlayer) {
 
-                if (internetErrorSnackbar != null && internetErrorSnackbar.isShown()){
+                if (internetErrorSnackbar != null && internetErrorSnackbar.isShown()) {
                     internetErrorSnackbar.dismiss();
                 }
                 if (VideosArylist != null && VideosArylist.size() > 0) {
@@ -489,11 +559,11 @@ public class ThyrocareVideos extends AppCompatActivity {
                     long seconds = (milliseconds / 1000) % 60;
 
 
-                    long milliseconds1 =  videoView.getPlayer().getDuration();
+                    long milliseconds1 = videoView.getPlayer().getDuration();
                     long minutes1 = (milliseconds1 / 1000) / 60;
                     long seconds1 = (milliseconds1 / 1000) % 60;
 
-                    if (minutes == minutes1 && seconds == seconds1){
+                    if (minutes == minutes1 && seconds == seconds1) {
 
                         if (VideosArylist != null && VideosArylist.size() > 0) {
                             for (int i = 0; i < VideosArylist.size(); i++) {
@@ -504,7 +574,7 @@ public class ThyrocareVideos extends AppCompatActivity {
                         }
                         a = 0;
                         videoView.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         if (VideosArylist != null && VideosArylist.size() > 0) {
                             for (int i = 0; i < VideosArylist.size(); i++) {
 
@@ -521,7 +591,7 @@ public class ThyrocareVideos extends AppCompatActivity {
                     }
 
 
-                }else if ((oldState == GiraffePlayer.STATE_PLAYING && newState == GiraffePlayer.STATE_PLAYBACK_COMPLETED )|| (oldState == GiraffePlayer.DISPLAY_NORMAL && newState == GiraffePlayer.STATE_RELEASE)) {
+                } else if ((oldState == GiraffePlayer.STATE_PLAYING && newState == GiraffePlayer.STATE_PLAYBACK_COMPLETED) || (oldState == GiraffePlayer.DISPLAY_NORMAL && newState == GiraffePlayer.STATE_RELEASE)) {
                     videoView.setVisibility(View.GONE);
                     if (VideosArylist != null && VideosArylist.size() > 0) {
                         for (int i = 0; i < VideosArylist.size(); i++) {
@@ -541,13 +611,13 @@ public class ThyrocareVideos extends AppCompatActivity {
                                 VideosArylist.get(i).setVideoPlaying(false);
                             }
                         }
-                        if (b>0){
+                        if (b > 0) {
                             videoView.getPlayer().seekTo(459495495);
                             b = 0;
                         }
                         videoListAdapter.notifyDataSetChanged();
                     }
-                }else if (oldState == GiraffePlayer.STATE_IDLE && (newState == GiraffePlayer.STATE_LAZYLOADING || newState == GiraffePlayer.STATE_PREPARING)) {
+                } else if (oldState == GiraffePlayer.STATE_IDLE && (newState == GiraffePlayer.STATE_LAZYLOADING || newState == GiraffePlayer.STATE_PREPARING)) {
                     if (VideosArylist != null && VideosArylist.size() > 0) {
                         for (int i = 0; i < VideosArylist.size(); i++) {
 
@@ -561,7 +631,7 @@ public class ThyrocareVideos extends AppCompatActivity {
                         videoListAdapter.notifyDataSetChanged();
                     }
                     videoView.setVisibility(View.VISIBLE);
-                }else if (oldState == GiraffePlayer.STATE_PLAYBACK_COMPLETED &&  newState == GiraffePlayer.STATE_PLAYING) {
+                } else if (oldState == GiraffePlayer.STATE_PLAYBACK_COMPLETED && newState == GiraffePlayer.STATE_PLAYING) {
                     if (VideosArylist != null && VideosArylist.size() > 0) {
                         for (int i = 0; i < VideosArylist.size(); i++) {
 
@@ -572,13 +642,13 @@ public class ThyrocareVideos extends AppCompatActivity {
                                 VideosArylist.get(i).setVideoPlaying(false);
                             }
                         }
-                        if (a > 0){
+                        if (a > 0) {
                             videoView.getPlayer().seekTo(a);
                         }
                         videoListAdapter.notifyDataSetChanged();
                     }
                     videoView.setVisibility(View.VISIBLE);
-                } else{
+                } else {
                     videoView.setVisibility(View.VISIBLE);
                 }
                 MessageLogger.PrintMsg("tejas >>> onCurrentStateChange " + oldState + "new State : " + newState);
@@ -634,8 +704,8 @@ public class ThyrocareVideos extends AppCompatActivity {
     @Override
     protected void onPause() {
 
-        if (videoView.getVideoInfo().getUri() != null){
-            MessageLogger.PrintMsg("tejas >>> currentposition : "+videoView.getPlayer().getCurrentPosition());
+        if (videoView.getVideoInfo().getUri() != null) {
+            MessageLogger.PrintMsg("tejas >>> currentposition : " + videoView.getPlayer().getCurrentPosition());
             b = videoView.getPlayer().getCurrentPosition();
         }
         super.onPause();
@@ -645,8 +715,8 @@ public class ThyrocareVideos extends AppCompatActivity {
     @Override
     protected void onResume() {
 
-        if (videoView.getVideoInfo().getUri() != null && b > 0){
-            MessageLogger.PrintMsg("tejas >>> seek to : "+b);
+        if (videoView.getVideoInfo().getUri() != null && b > 0) {
+            MessageLogger.PrintMsg("tejas >>> seek to : " + b);
         }
         super.onResume();
     }
@@ -665,6 +735,6 @@ public class ThyrocareVideos extends AppCompatActivity {
                 videoView.getPlayer().setDisplayModel(GiraffePlayer.DISPLAY_NORMAL);
             }
         }
-
     }
+
 }

@@ -1,9 +1,6 @@
 <component name="libraryTable">
   <library name="Gradle: com.mindorks:paracamera:0.2.2@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/72f082ecfe5f382c2d97dfc44b98641d/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/72f082ecfe5f382c2d97dfc44b98641d/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/72f082ecfe5f382c2d97dfc44b98641d/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/00204d3af7b8f6cd6bb3ce39f8c0e796/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/00204d3af7b8f6cd6bb3ce39f8c0e796/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/00204d3af7b8f6cd6bb3ce39f8c0e796/AndroidManifest.xml" />

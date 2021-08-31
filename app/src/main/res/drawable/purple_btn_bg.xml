@@ -14,7 +14,7 @@
 
     <gradient
         android:angle="-90"
-        android:endColor="@color/btn_orange_start_grd"
-        android:startColor="@color/btn_orange_end_grd" />
+        android:endColor="@color/bg_new_color"
+        android:startColor="@color/bg_new_color" />
 
 </shape>

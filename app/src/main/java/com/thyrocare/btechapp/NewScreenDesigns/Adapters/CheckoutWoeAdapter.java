@@ -14,6 +14,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class CheckoutWoeAdapter extends RecyclerView.Adapter<CheckoutWoeAdapter.
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
-        holder.tv_benName.setText(BenMasterArray.get(position).getName() + "(" + BenMasterArray.get(position).getGender() + " / " + BenMasterArray.get(position).getAge() + ")");
+        holder.tv_benName.setText(Global.toCamelCase(BenMasterArray.get(position).getName()) + " (" + BenMasterArray.get(position).getGender() + " | " + BenMasterArray.get(position).getAge() + " years)");
         if (showProduct){
             holder.tv_benProduct.setText(!StringUtils.isNull(BenMasterArray.get(position).getTestsCode()) ? BenMasterArray.get(position).getTestsCode() : "");
             holder.lin_benProduct.setVisibility(View.VISIBLE);
@@ -84,11 +85,11 @@ public class CheckoutWoeAdapter extends RecyclerView.Adapter<CheckoutWoeAdapter.
         }
 
 
-        if (BenMasterArray.get(position).getFasting().equalsIgnoreCase("Fasting")) {
+        /*if (BenMasterArray.get(position).getFasting().equalsIgnoreCase("Fasting")) {
             holder.lin_fastingDetails.setVisibility(View.VISIBLE);
         } else {
             holder.lin_fastingDetails.setVisibility(View.GONE);
-        }
+        }*/
 
 
         holder.tv_benbarcode.setOnClickListener(new View.OnClickListener() {

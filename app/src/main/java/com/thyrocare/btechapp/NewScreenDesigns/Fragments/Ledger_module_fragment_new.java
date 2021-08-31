@@ -170,7 +170,7 @@ public class Ledger_module_fragment_new extends Fragment {
                         d_to_date = SelectedDate;
                     }
                 });
-                selectDatePickerDialogFragment.show(getFragmentManager(), "From date");
+                selectDatePickerDialogFragment.show(getFragmentManager(),"DatePicker");
 
 
             }
@@ -189,7 +189,7 @@ public class Ledger_module_fragment_new extends Fragment {
                         d_from_date = SelectedDate;
                     }
                 });
-                selectDatePickerDialogFragment.show(getFragmentManager(), "From date");
+                selectDatePickerDialogFragment.show(getFragmentManager(),"DatePicker");
             }
         });
 

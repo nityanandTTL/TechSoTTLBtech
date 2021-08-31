@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/rounded_background_empty_orange">
+    android:id="@+id/bottom_sheet_dialog_parent">
 
 
     <ScrollView
@@ -29,12 +29,23 @@
                     android:textColor="@color/colorPrimary"
                     android:padding="@dimen/_5sdp"/>
 
+<!--                <ImageView-->
+<!--                    android:id="@+id/img_close"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    android:src="@drawable/red_cross_icon"/>-->
+
                 <ImageView
                     android:id="@+id/img_close"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:src="@drawable/red_cross_icon"/>
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:background="@color/white"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
             </RelativeLayout>
 
 

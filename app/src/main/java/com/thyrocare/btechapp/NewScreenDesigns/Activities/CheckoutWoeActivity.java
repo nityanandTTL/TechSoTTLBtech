@@ -42,11 +42,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.mindorks.paracamera.Camera;
+import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.GetCollectionCenterController;
 import com.thyrocare.btechapp.Controller.GetTestController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
@@ -124,7 +126,6 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 
 public class CheckoutWoeActivity extends AppCompatActivity {
 
-
     Activity mActivity;
     Global globalclass;
     ConnectionDetector cd;
@@ -134,7 +135,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     private LinearLayout lin_bottom;
     private TextView txt_amount;
     private TextView txtNoRecord;
-    private Button btn_Pay;
+    private TextView btn_Pay;
     private RecyclerView recyle_OrderDetailWithBarcode;
     private CheckoutWoeAdapter checkoutWoeAdapter;
     private int PaymentMode;
@@ -159,19 +160,20 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     private Boolean canSubmit = false;
     private Camera camera;
     private File selfie_photo;
-    private Button btn_capture_photo;
+    private TextView btn_capture_photo;
     private TextView tv_view_photo;
     private Uri uri;
     ArrayList<String> testList;
     TextView tv_note;
     LinearLayout ll_Note;
     String processLocation;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout_wow);
-        setTitle("Checkout");
         mActivity = CheckoutWoeActivity.this;
         globalclass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
@@ -185,7 +187,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         initView();
         initData();
         initListener();
-        initToolBar();
+//        initToolBar();
         CallTestColorAPI();
     }
 
@@ -276,14 +278,24 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         lin_bottom = (LinearLayout) findViewById(R.id.lin_bottom);
         txt_amount = (TextView) findViewById(R.id.txt_amount);
         txtNoRecord = (TextView) findViewById(R.id.txtNoRecord);
-        btn_Pay = (Button) findViewById(R.id.btn_Pay);
+        btn_Pay = findViewById(R.id.btn_Pay);
         spn_collection = (Spinner) findViewById(R.id.spn_collection);
-        btn_capture_photo = (Button) findViewById(R.id.btn_capture_photo);
+        btn_capture_photo = findViewById(R.id.btn_capture_photo);
         tv_view_photo = (TextView) findViewById(R.id.tv_view_photo);
         tv_note = (TextView) findViewById(R.id.tv_note);
         ll_Note = (LinearLayout) findViewById(R.id.ll_Note);
 
         recyle_OrderDetailWithBarcode = (RecyclerView) findViewById(R.id.recyle_OrderDetailWithBarcode);
+
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+
+        tv_toolbar.setText("Checkout");
+        tv_toolbar.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        tv_toolbar.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+
+        iv_home.setVisibility(View.GONE);
 
 
         if (BundleConstants.isKIOSKOrder && !CommonUtils.ValidateCovidorders(beneficaryWiseArylst.get(0).getTestsCode())) {
@@ -316,15 +328,14 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         }
 
         if (BundleConstants.addPaymentFlag == 1) {
-            btn_Pay.setText("Submit Work Order");
+            btn_Pay.setText("Submit");
         } else {
             if (totalAmountPayable == 0) {
-                btn_Pay.setText("Submit Work Order");
+                btn_Pay.setText("Submit");
             } else {
                 btn_Pay.setText("PAY");
             }
         }
-
 
         if (orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster() != null && orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size() > 0) {
             if (orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode() != null) {
@@ -339,18 +350,13 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             txt_amount.setText(mActivity.getResources().getString(R.string.rupee_symbol) + " " + totalAmountPayable + "/-");
         }
 
-
         if (beneficaryWiseArylst != null && beneficaryWiseArylst.size() > 0) {
             checkoutWoeAdapter = new CheckoutWoeAdapter(mActivity, beneficaryWiseArylst, orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct());
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivity);
             recyle_OrderDetailWithBarcode.setLayoutManager(mLayoutManager);
             recyle_OrderDetailWithBarcode.setAdapter(checkoutWoeAdapter);
-
-
           /*  for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
             }*/
-
-
             btn_Pay.setEnabled(true);
             txtNoRecord.setVisibility(View.GONE);
             recyle_OrderDetailWithBarcode.setVisibility(View.VISIBLE);
@@ -359,10 +365,28 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             txtNoRecord.setVisibility(View.VISIBLE);
             recyle_OrderDetailWithBarcode.setVisibility(View.GONE);
         }
-
     }
 
     private void initListener() {
+
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, HomeScreenActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+            }
+        });
+
         btn_capture_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -393,7 +417,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             }
         });
 
-
         btn_Pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -416,7 +439,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void ProceedWOEonSubmit() {
 
@@ -441,7 +463,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             e.printStackTrace();
 //            WOE();
         }
-
     }
 
     private void WOE() {
@@ -455,7 +476,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                             PaymentMode = 1;
                             OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
                             if (cd.isConnectingToInternet()) {
@@ -495,14 +515,12 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
             }
-
         }
     }
 
     private OrderBookingRequestModel generateOrderBookingRequestModel(String from) {
 
         OrderBookingRequestModel orderBookingRequestModel = new OrderBookingRequestModel();
-
         //SET Order Booking Details Model - START
         OrderBookingDetailsModel orderBookingDetailsModel = new OrderBookingDetailsModel();
         orderBookingDetailsModel.setPaymentMode(PaymentMode);
@@ -511,7 +529,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         orderBookingDetailsModel.setProcessLocation(getProcessLocationFromString());
         ArrayList<OrderDetailsModel> ordtl = new ArrayList<>();
         ordtl = orderVisitDetailsModel.getAllOrderdetails();
-
         String Slot = orderVisitDetailsModel.getSlot();
         Logger.error("Slot" + Slot);
         dateCheck();
@@ -535,17 +552,11 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         orderBookingDetailsModel.setOrddtl(ordtl);
         orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
         //SET Order Booking Details Model - END
-
         //SET Order Details Models Array - START
         orderBookingRequestModel.setOrddtl(ordtl);
         //SET Order Details Models Array - END
-
-
         //SET BENEFICIARY Details Models Array - START
-
         ArrayList<BeneficiaryDetailsModel> benArr = orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster();
-
-
         if (from.equals("Button_proceed_payment")) {
             for (int i = 0; i < benArr.size(); i++) {
                 benArr.get(i).setAddBen(false);
@@ -567,7 +578,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         //SET BENEFICIARY Lab Alerts Models Array - START
         ArrayList<BeneficiaryLabAlertsModel> benLAArr = new ArrayList<>();
 
-
         for (BeneficiaryDetailsModel beneficiaryDetailsModel :
                 benArr) {
 
@@ -585,7 +595,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             }
         }
 
-
         orderBookingRequestModel.setBarcodedtl(benBarcodeArr);
 
         //SET BENEFICIARY Barcode Details Models Array - END
@@ -598,7 +607,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
         orderBookingRequestModel.setLabAlert(benLAArr);
         //SET BENEFICIARY Lab Alerts Models Array - END
-
         return orderBookingRequestModel;
     }
 
@@ -610,7 +618,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     }
 
     public void CallOrderBookingApi(OrderBookingRequestModel orderBookingRequestModel) {
-
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         String postrequest = new Gson().toJson(orderBookingRequestModel);
         System.out.println(postrequest);
@@ -622,7 +629,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                 globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     SendinglatlongOrderAllocation(5);
-
                     orderBookingResponseVisitModel = response.body();
                     if (orderBookingResponseVisitModel.getOrderids() != null) {
                         for (OrderBookingResponseOrderModel obrom :
@@ -630,14 +636,13 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                             orderBookingResponseBeneficiaryModelArr.addAll(obrom.getBenfids());
                         }
                     }
-                    if (!btn_Pay.getText().equals("Submit Work Order")) {
+                    if (!btn_Pay.getText().equals("Submit")) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                         builder.setMessage("Amount payable ₹ " + totalAmountPayable + "/-")
                                 .setPositiveButton("Collect", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         if (btn_Pay.getText().equals("PAY")) {
-
                                             if (isOnlyDigital) {
                                                 PaymentMode = 2;
                                                 Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
@@ -658,7 +663,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                                 } else {
                                                     paymentItems = new String[]{"Cash", "Digital"};
                                                 }
-
                                                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                                 builder.setTitle("Choose payment mode")
                                                         .setItems(paymentItems, new DialogInterface.OnClickListener() {
@@ -679,8 +683,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                                                                     } else {
                                                                                         Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                                                                     }
-
-
                                                                                 }
                                                                             })
                                                                             .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -715,7 +717,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                                             }
                                                         }).show();
                                             }
-                                        } else if (btn_Pay.getText().equals("Submit Work Order")) {
+                                        } else if (btn_Pay.getText().equals("Submit")) {
                                             // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
 
                                             if (BundleConstants.addPaymentFlag == 1) {
@@ -760,7 +762,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                         globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG);
                     }
                 }
-
             }
 
             @Override
@@ -771,7 +772,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             }
         });
     }
-
 
     public void CallWorkOrderEntryAPI(OrderBookingRequestModel orderBookingRequestModel) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
@@ -792,13 +792,11 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String remark = orderVisitDetailsModel.getVisitId();
-                                    new LogUserActivityTagging(mActivity,BundleConstants.WOE,remark);
+                                    new LogUserActivityTagging(mActivity, BundleConstants.WOE, remark);
                                     if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
                                             && test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA")
                                             && test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS)) {
-
                                         Logger.error("should print revisit dialog for both: ");
-
                                         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                         builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS/RBS and INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
                                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -811,9 +809,9 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                                             Intent intent = new Intent(mActivity, KIOSK_Scanner_Activity.class);
                                                             startActivity(intent);
                                                         } else {
-                                                            mActivity.finish();
+                                                            startActivity(new Intent(mActivity,HomeScreenActivity.class));
+//                                                            mActivity.finish();
                                                         }
-
                                                     }
                                                 })
                                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -833,7 +831,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
                                         Logger.error("for PPBS and RBS");
                                         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-
                                         builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS and RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
                                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                     @Override
@@ -859,7 +856,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                                 .show();
 
                                     } else if (test.toUpperCase().contains(AppConstants.INSPP) && test.toUpperCase().contains(AppConstants.INSFA)) {
-
                                         Logger.error("should print revisit dialog for insfa: ");
                                         Logger.error("for INSPP");
                                         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
@@ -891,7 +887,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                     } else if (test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS)) {
                                         Logger.error("should print revisit dialog for rbs: ");
                                         Logger.error("for rbs");
-
                                         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                         builder.setMessage("Please note you have to revisit at customer place to collect sample for RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
                                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -919,7 +914,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                                 .show();
 
                                     } else if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)) {
-
                                         Logger.error("should print revisit dialog for rbs: ");
                                         Logger.error("for ppbs");
                                         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
@@ -967,7 +961,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                     if (!mActivity.isFinishing()) {
                         builder.show();
                     }
-
                 } else {
                     try {
                         if (res.errorBody() != null) {
@@ -979,7 +972,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG);
                     }
-
                     AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                     builder.setTitle("Order Status")
                             .setMessage("Work Order Entry Failed!")
@@ -1653,24 +1645,28 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
     private void ShowSelfieDialog() {
         try {
-            final Dialog maindialog = new Dialog(mActivity);
-            maindialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            maindialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            maindialog.setContentView(R.layout.preview_dialog);
-            maindialog.getWindow().setLayout(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            ImageView imageView = maindialog.findViewById(R.id.viewPager);
-            imageView.setImageURI(uri);
-            ImageView ic_close = (ImageView) maindialog.findViewById(R.id.img_close);
-            ic_close.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    maindialog.dismiss();
-                }
-            });
 
+            BottomSheetController bottomSheetController = new BottomSheetController(mActivity, CheckoutWoeActivity.this, uri);
+            bottomSheetController.SetBottomSheet(mActivity);
 
-            maindialog.setCancelable(true);
-            maindialog.show();
+//            final Dialog maindialog = new Dialog(mActivity);
+//            maindialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//            maindialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//            maindialog.setContentView(R.layout.preview_dialog);
+//            maindialog.getWindow().setLayout(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+//            ImageView imageView = maindialog.findViewById(R.id.viewPager);
+//            imageView.setImageURI(uri);
+//            ImageView ic_close = (ImageView) maindialog.findViewById(R.id.img_close);
+//            ic_close.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    maindialog.dismiss();
+//                }
+//            });
+//
+//
+//            maindialog.setCancelable(true);
+//            maindialog.show();
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
         }
@@ -1697,20 +1693,24 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     private void displayNote(GetTestResponseModel responseModel) {
         if (InputUtils.CheckEqualIgnoreCase(responseModel.getProcessAt(), ConstantsMessages.RPL)) {
             tv_note.setText("Your order will be processed at " + "" + responseModel.getProcessAt());
-            tv_note.setTextColor(getResources().getColor(R.color.blue_shade));
+//            tv_note.setTextColor(getResources().getColor(R.color.blue_shade));
             processLocation = "" + responseModel.getProcessAt().toString().trim();
         } else if (InputUtils.CheckEqualIgnoreCase(responseModel.getProcessAt(), ConstantsMessages.CPL)) {
             tv_note.setText("Your order will be processed at " + "" + responseModel.getProcessAt());
-            tv_note.setTextColor(getResources().getColor(R.color.highlight_color));
+//            tv_note.setTextColor(getResources().getColor(R.color.highlight_color));
             processLocation = "" + responseModel.getProcessAt().toString().trim();
         } else if (InputUtils.CheckEqualIgnoreCase(responseModel.getProcessAt(), ConstantsMessages.ZPL)) {
             tv_note.setText("Your order will be processed at " + "" + responseModel.getProcessAt());
-            tv_note.setTextColor(getResources().getColor(R.color.sample_type_serum));
+//            tv_note.setTextColor(getResources().getColor(R.color.sample_type_serum));
             processLocation = "" + responseModel.getProcessAt().toString().trim();
         } else {
             ll_Note.setVisibility(View.GONE);
             tv_note.setText("");
             processLocation = "";
         }
+    }
+
+    public void getbottomsheetresponse(BottomSheetDialog bottomSheetDialog) {
+        bottomSheetDialog.dismiss();
     }
 }

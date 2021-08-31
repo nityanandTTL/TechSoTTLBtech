@@ -11,6 +11,6 @@
     android:paddingLeft="@dimen/_2sdp"
     android:paddingRight="@dimen/_2sdp"
     android:textColor="@color/black"
-    android:textSize="@dimen/_13sdp"
+    android:textSize="@dimen/value"
     android:gravity="center_vertical"
-    android:textColorHighlight="@color/colorOrange"/>
+    android:textColorHighlight="@color/bg_new_color"/>

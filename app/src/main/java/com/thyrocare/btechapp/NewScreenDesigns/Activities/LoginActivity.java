@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.PostTokenController;
@@ -174,7 +175,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponseModel responseModel = response.body();
                     if (responseModel.getRole().equals(AppConstants.LME_ROLE_ID)) {
-                        globalclass.showCustomToast(mActivity, SUCCESS_LOGIN, Toast.LENGTH_LONG);
+//                        globalclass.showCustomToast(mActivity, SUCCESS_LOGIN, Toast.LENGTH_LONG);
                         OnLoginResponseReceived(responseModel);
                     } else {
                         /*if (responseModel != null && !StringUtils.isNull(responseModel.getRespId()) && responseModel.getRespId().equalsIgnoreCase("1")){
@@ -244,20 +245,22 @@ public class LoginActivity extends AppCompatActivity {
             CallBtechWiseVersionTrackerAPI();
             PostToken();
             if (appPreferenceManager.getLoginResponseModel().getRole().equals(Constants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(Constants.HUB_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(Constants.NBT_ROLE_ID)) {//4 is for btech login & 6 is for hub 13 is for NBT
-                globalclass.showCustomToast(mActivity, SUCCESS_LOGIN, Toast.LENGTH_LONG);
+//                globalclass.showCustomToast(mActivity, SUCCESS_LOGIN, Toast.LENGTH_LONG);
                 notificationMapping();
                 Intent mIntent = new Intent(mActivity, SplashActivity.class);
                 startActivity(mIntent);
                 finish();
             } else if (appPreferenceManager.getLoginResponseModel().getRole().equals(Constants.TSP_ROLE_ID)) {//this is for tsp
-                globalclass.showCustomToast(mActivity, SUCCESS_LOGIN, Toast.LENGTH_LONG);
+//                globalclass.showCustomToast(mActivity, SUCCESS_LOGIN, Toast.LENGTH_LONG);
                 notificationMapping();
                 Intent mIntent = new Intent(mActivity, SplashActivity.class);
                 startActivity(mIntent);
                 finish();
             } else if (appPreferenceManager.getLoginResponseModel().getRole().equals(Constants.NBTTSP_ROLE_ID)) {
-                globalclass.showCustomToast(mActivity, SUCCESS_LOGIN, Toast.LENGTH_LONG);
+//                globalclass.showCustomToast(mActivity, SUCCESS_LOGIN, Toast.LENGTH_LONG);
+//                Toast.makeText(mActivity, SUCCESS_LOGIN, Toast.LENGTH_SHORT).show();
                 notificationMapping();
+//                selfieUploadBottomSheet();
                 Intent i = new Intent(mActivity, SelfieUploadActivity.class);
                 i.putExtra("LEAVEINTIMATION", "0");
                 startActivity(i);
@@ -273,6 +276,23 @@ public class LoginActivity extends AppCompatActivity {
                 globalclass.showCustomToast(mActivity, VALID_BTECH_CREDENTIAL_ALERT, Toast.LENGTH_LONG);
             }
         }
+    }
+
+    private void selfieUploadBottomSheet() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        bottomSheetDialog.setContentView(R.layout.bottomsheet_selfie);
+
+        Button btn_takePhoto = findViewById(R.id.btn_takePhoto);
+
+        btn_takePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+
     }
 
     private void PostToken() {

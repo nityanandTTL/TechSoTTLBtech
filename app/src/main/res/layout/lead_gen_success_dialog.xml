@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_35sdp"
-        android:background="@color/colorOrange"
+        android:background="@color/bg_new_color"
         android:gravity="end"
         android:weightSum="1"
         android:layout_marginBottom="@dimen/_5sdp"

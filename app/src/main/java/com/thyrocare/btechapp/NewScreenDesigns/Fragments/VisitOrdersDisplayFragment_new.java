@@ -2,6 +2,7 @@ package com.thyrocare.btechapp.NewScreenDesigns.Fragments;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -13,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
@@ -40,6 +42,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.sdsmdg.tastytoast.TastyToast;
@@ -110,15 +113,16 @@ import retrofit2.Response;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PLEASE_WAIT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 
 /**
  * http://bts.dxscloud.com/btsapi/api/OrderVisitDetails/884543107
  */
-public class VisitOrdersDisplayFragment_new extends AbstractFragment {
+public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 
     public static final String TAG_FRAGMENT = "VISIT_ORDERS_FRAGMENT";
-    private HomeScreenActivity activity;
+
     private AppPreferenceManager appPreferenceManager;
     private View rootView;
     private RecyclerView recyOrderList;
@@ -133,7 +137,6 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     private ConfirmOrderReleaseDialog cdd;
     private ConfirmRequestReleaseDialog crr;
     private ConfirmOrderPassDialog Cop;
-
     private String kits;
     private String[] kits_arr;
     private RescheduleOrderDialog rod;
@@ -145,7 +148,6 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     private ArrayList<String> remarks_notc_arr;
     private DispositionDetailsModel remarksDataModel;
     private String remarks_notc_str = "";
-
     Dialog dialog_ready;
     int statusCode;
     private ProgressDialog progressDialog;
@@ -158,82 +160,82 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     private GPSTracker gpsTracker;
     private Intent FirebaselocationUpdateIntent;
     private boolean isphonecallstarted = false;
+    TextView tv_toolbar;
+    Activity activity;
+    ImageView iv_home, iv_back;
 
-    public VisitOrdersDisplayFragment_new() {
-        // Required empty public constructor
-    }
-
-    public static VisitOrdersDisplayFragment_new newInstance() {
-        VisitOrdersDisplayFragment_new fragment = new VisitOrdersDisplayFragment_new();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //you can set the title for your toolbar here for different fragments different titles
-        getActivity().setTitle("Visit Orders");
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (HomeScreenActivity) getActivity();
+        setContentView(R.layout.fragment_visit_orders_display_new);
+
+        activity = this;
+
         connectionDetector = new ConnectionDetector(activity);
         global = new Global(activity);
-        if (activity.toolbarHome != null) {
+       /* if (activity.toolbarHome != null) {
             activity.toolbarHome.setTitle("Visit orders");
-        }
+        }*/
+
+//        Global.appBar(getActivity());
+
         try {
-            activity.toolbar_image.setVisibility(View.GONE);
+//            activity.toolbar_image.setVisibility(View.GONE);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        activity.isOnHome = false;
-        FirebaselocationUpdateIntent = new Intent(activity, TrackerService.class);
+//        activity.isOnHome = false;
+        FirebaselocationUpdateIntent = new Intent(VisitOrdersDisplayFragment_new.this, TrackerService.class);
         appPreferenceManager = new AppPreferenceManager(activity);
         BundleConstants.isKIOSKOrder = false;
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_visit_orders_display_new, container, false);
         initUI();
         setListener();
 //        fetchData();
-        getBtechEstEarnings();
+//        getBtechEstEarnings();
         fetchData();
-        return rootView;
     }
 
-    @Override
     public void initUI() {
 
-        tv_RoutineOrders = (TextView) rootView.findViewById(R.id.tv_RoutineOrders);
-        tv_AayushmanOrders = (TextView) rootView.findViewById(R.id.tv_AayushmanOrders);
-        recyOrderList = (RecyclerView) rootView.findViewById(R.id.recyOrderList);
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.srl_visit_orders_display);
-        layoutEarnings = (LinearLayout) rootView.findViewById(R.id.layoutEarnings);
-        lin_categories = (LinearLayout) rootView.findViewById(R.id.lin_categories);
-//        txtEstDistance = (TextView) rootView.findViewById(R.id.txtEstDistance);
-        txtEstEarnings = (TextView) rootView.findViewById(R.id.txtEstEarnings);
-        txtEstKits = (TextView) rootView.findViewById(R.id.txtEstKits);
+        tv_RoutineOrders = (TextView) findViewById(R.id.tv_RoutineOrders);
+        tv_AayushmanOrders = (TextView) findViewById(R.id.tv_AayushmanOrders);
+        recyOrderList = (RecyclerView) findViewById(R.id.recyOrderList);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_visit_orders_display);
+        layoutEarnings = (LinearLayout) findViewById(R.id.layoutEarnings);
+        lin_categories = (LinearLayout) findViewById(R.id.lin_categories);
+//        txtEstDistance = (TextView) findViewById(R.id.txtEstDistance);
+        txtEstEarnings = (TextView) findViewById(R.id.txtEstEarnings);
+        txtEstKits = (TextView) findViewById(R.id.txtEstKits);
         txtEstKits.setSelected(true);
-        txtNoRecord = (TextView) rootView.findViewById(R.id.txt_no_orders);
+        txtNoRecord = (TextView) findViewById(R.id.txt_no_orders);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_home = findViewById(R.id.iv_home);
+        iv_back = findViewById(R.id.iv_back);
+        tv_toolbar.setText("Visit Orders");
+
     }
 
     private void setListener() {
 
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         tv_RoutineOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 isClicledonAayushmanOrders = false;
                 tv_RoutineOrders.setBackgroundResource(R.drawable.rounded_background_filled_oranged);
                 tv_AayushmanOrders.setBackgroundResource(R.drawable.rounded_background_empty_orange);
@@ -278,7 +280,6 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                TastyToast.makeText(activity, "View Refreshed", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                 fetchData();
             }
         });
@@ -288,13 +289,13 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
             public void onClick(View v) {
 
                 try {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     LayoutInflater inflater = activity.getLayoutInflater();
                     View dialogView = inflater.inflate(R.layout.alert_test_edit, null);
                     builder.setView(dialogView);
                     ListView lv_test_codes = (ListView) dialogView.findViewById(R.id.lv_test_codes);
                     Button btn_edit = (Button) dialogView.findViewById(R.id.btn_edit);
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity,
                             android.R.layout.simple_list_item_1, kits_arr);
                     lv_test_codes.setAdapter(adapter);
                     btn_edit.setVisibility(View.GONE);
@@ -314,7 +315,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         if (isphonecallstarted) {
             isphonecallstarted = false;
         } else {
-            if (Constants.isWOEDone){
+            if (Constants.isWOEDone) {
                 Constants.isWOEDone = false;
                 fetchData();
             }
@@ -367,7 +368,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                             }
                         }
                         initData();
-                    }else {
+                    } else {
                         global.hideProgressDialog(activity);
                     }
 
@@ -496,7 +497,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                 btech_VisitDisplayAdapter.UpdateList(orderDetailsResponseModels);
                 btech_VisitDisplayAdapter.notifyDataSetChanged();
             } else {
-                btech_VisitDisplayAdapter = new Btech_VisitDisplayAdapter(activity, activity, orderDetailsResponseModels);
+                btech_VisitDisplayAdapter = new Btech_VisitDisplayAdapter(this, activity, orderDetailsResponseModels);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
                 recyOrderList.setLayoutManager(mLayoutManager);
                 recyOrderList.setAdapter(btech_VisitDisplayAdapter);
@@ -543,12 +544,13 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                 @Override
                 public void onItemReleaseTo(String pincode, OrderVisitDetailsModel orderVisitDetailsModel) {
 
-                    Cop = new ConfirmOrderPassDialog(activity, new refreshDelegate() {
+                    Cop = new ConfirmOrderPassDialog(VisitOrdersDisplayFragment_new.this, new refreshDelegate() {
                         @Override
                         public void onRefreshClicked() {
                             fetchData();
                             swipeRefreshLayout.setRefreshing(true);
-                            pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
+                            startActivity(new Intent(activity,VisitOrdersDisplayFragment_new.class));
+//                            pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
                         }
                     }, pincode, orderVisitDetailsModel);
                     Cop.show();
@@ -671,7 +673,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
     }
 
     private void CallDespositionDialog(final OrderVisitDetailsModel orderVisitDetailsModel, ArrayList<DispositionDetailsModel> allDisp) {
-        dialog_ready = new Dialog(getActivity());
+        dialog_ready = new Dialog(activity);
         dialog_ready.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog_ready.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog_ready.setContentView(R.layout.dialog_desposition);
@@ -709,7 +711,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         remarks_notc_arr.add("Number Does Not Exist");
         remarks_notc_arr.add("Switch off / Not reachable");
 
-        ArrayAdapter<String> spnrnotconnectedremarks = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, remarks_notc_arr);
+        ArrayAdapter<String> spnrnotconnectedremarks = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, remarks_notc_arr);
         spnrnotconnectedremarks.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spn_rem.setAdapter(spnrnotconnectedremarks);
         spn_rem.setSelection(0);
@@ -743,7 +745,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                 }
             }
 
-            ArrayAdapter<String> spinneradapterremarks = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, remarksarr);
+            ArrayAdapter<String> spinneradapterremarks = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, remarksarr);
             spinneradapterremarks.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spn_desp.setAdapter(spinneradapterremarks);
             spn_desp.setSelection(0);
@@ -813,7 +815,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                     // CommonUtils.toastytastyError(activity, "Enter valid Mobile Number ", false);
 
                     final android.app.AlertDialog.Builder builder;
-                    builder = new android.app.AlertDialog.Builder(getActivity());
+                    builder = new android.app.AlertDialog.Builder(activity);
                     builder.setCancelable(false);
                     builder.setTitle("")
                             .setMessage("Invalid text")
@@ -912,7 +914,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
             public void onResponse(Call<String> call, Response<String> response) {
                 global.hideProgressDialog(activity);
                 try {
-                    if (response.isSuccessful() && response.body()!=null){
+                    if (response.isSuccessful() && response.body() != null) {
                         if (response.code() == 200 || response.code() == 204) {
                             onOrderStatusChangedResponseReceived(orderVisitDetailsModel);
                         } else {
@@ -923,7 +925,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                                 Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                             }
                         }
-                    }else {
+                    } else {
                         Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
@@ -943,7 +945,38 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
 
     private void onOrderStatusChangedResponseReceived(final OrderVisitDetailsModel orderVisitDetailsModel) {
         try {
-            AlertDialog.Builder alertDialogBuilder;
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+
+            View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+            String s = "Do you want to Open Map for Direction ?";
+            TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+            tv_text.setText(s);
+
+            Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+            btn_yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProceedToArriveScreen(orderVisitDetailsModel, true);
+                    bottomSheetDialog.dismiss();
+                }
+            });
+
+            Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+            btn_no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProceedToArriveScreen(orderVisitDetailsModel, false);
+                    bottomSheetDialog.dismiss();
+
+                }
+            });
+
+            bottomSheetDialog.setContentView(bottomSheet);
+            bottomSheetDialog.setCancelable(false);
+            bottomSheetDialog.show();
+
+            /*AlertDialog.Builder alertDialogBuilder;
             alertDialogBuilder = new AlertDialog.Builder(activity);
             alertDialogBuilder
                     .setMessage("Do you want to Open Map for Direction ?")
@@ -960,7 +993,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
                 }
             });
             AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            alertDialog.show();*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -971,7 +1004,7 @@ public class VisitOrdersDisplayFragment_new extends AbstractFragment {
         try {
             startTrackerService();
             SendinglatlongOrderAllocation(orderVisitDetailsModel, 7);
-            Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
             Intent intentNavigate = new Intent(activity, StartAndArriveActivity.class);
             intentNavigate.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
             activity.startActivity(intentNavigate);

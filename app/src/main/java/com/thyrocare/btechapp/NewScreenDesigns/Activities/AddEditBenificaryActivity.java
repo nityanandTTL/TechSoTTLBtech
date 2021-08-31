@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -22,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.DisplaySelectedTestsListForCancellationAdapter_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.ExpandableTestMasterListDisplayAdapter_new;
@@ -64,6 +67,7 @@ import com.thyrocare.btechapp.models.data.TestSampleTypeModel;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
+import com.thyrocare.btechapp.utils.app.DateUtils;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
@@ -84,13 +88,11 @@ import static com.thyrocare.btechapp.utils.app.AppConstants.MSG_SERVER_EXCEPTION
 import static com.thyrocare.btechapp.utils.app.BundleConstants.HARDCOPY_CHARGES;
 
 public class AddEditBenificaryActivity extends AppCompatActivity {
-
     private Activity mActivity;
     private Global globalclass;
     private ConnectionDetector cd;
     private GPSTracker gpsTracker;
     private AppPreferenceManager appPreferenceManager;
-
     private boolean FlagADDEditBen = true;
     LinearLayout ll_amt;
     TextView txtAmountPayable, btnclose, txtTestsList, txt_header_title, txtActPrice, txtHardCopyCharge;
@@ -113,7 +115,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     private boolean isTestEdit = false;
     private Dialog CustomDialogforOTPValidation;
     private RemoveBeneficiaryAPIRequestModel removebenModel;
-
     private OrderVisitDetailsModel orderVisitDetailsModel;
     private BeneficiaryDetailsModel selectedbeneficiaryDetailsModel;
     private String orderNo;
@@ -161,20 +162,19 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         imgBenGenderF = (ImageView) findViewById(R.id.img_gender_female);
         imgBenGenderM = (ImageView) findViewById(R.id.img_gender_male);
         imgReportHC = (ImageView) findViewById(R.id.img_report_hc_tick);
-        btnOrderSubmit = (Button) findViewById(R.id.btn_order_submit);
+        btnOrderSubmit = findViewById(R.id.btn_order_submit);
         imgBenAddTests = (ImageView) findViewById(R.id.img_beneficiary_action_edit_tests);
-        ll_amt = (LinearLayout) findViewById(R.id.ll_amt);
+//        ll_amt = (LinearLayout) findViewById(R.id.ll_amt);
 
-        txtActPrice = (TextView) findViewById(R.id.txtActPrice);
+        /*txtActPrice = (TextView) findViewById(R.id.txtActPrice);
         txtHardCopyCharge = (TextView) findViewById(R.id.txtHardCopyCharge);
-        relHardCopyCharge = (RelativeLayout) findViewById(R.id.relHardCopyCharge);
+        relHardCopyCharge = (RelativeLayout) findViewById(R.id.relHardCopyCharge);*/
     }
 
     private void initData() {
 
-        ll_amt.setVisibility(View.GONE);
-        txtAmountPayable.setVisibility(View.GONE);
-
+//        ll_amt.setVisibility(View.GONE);
+        txtAmountPayable.setVisibility(View.INVISIBLE);
 
         if (FlagADDEditBen) {
             benId = (int) (Math.random() * 999);
@@ -187,7 +187,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
         edtBenName.setVisibility(View.VISIBLE);
         if (FlagADDEditBen) {
-            txt_header_title.setText("ADD BENEFICIARY");
+            txt_header_title.setText("Add Beneficiary");
             isM = true;
             imgBenGenderM.setImageDrawable(getResources().getDrawable(R.drawable.male_icon_orange));
             imgBenGenderF.setImageDrawable(getResources().getDrawable(R.drawable.female));
@@ -195,27 +195,27 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             imgReportHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
 
         } else {
-            txt_header_title.setText("EDIT BENEFICIARY");
+            txt_header_title.setText("Edit Beneficiary");
             edtBenName.setText(selectedbeneficiaryDetailsModel.getName());
 
             if (orderVisitDetailsModel.getAllOrderdetails().get(0).getReportHC() == 0) {
-                relHardCopyCharge.setVisibility(View.GONE);
+//                relHardCopyCharge.setVisibility(View.GONE);
                 isRHC = false;
                 imgReportHC.setImageDrawable(getResources().getDrawable(R.drawable.tick_icon));
-                txtActPrice.setText("Rs. " + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
+//                txtActPrice.setText("Rs. " + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
             } else {
-                relHardCopyCharge.setVisibility(View.VISIBLE);
+//                relHardCopyCharge.setVisibility(View.VISIBLE);
                 int PriceWithoutHardCopy = orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() - HARDCOPY_CHARGES;
-                txtHardCopyCharge.setText("Rs. " + HARDCOPY_CHARGES + "/-");
-                txtActPrice.setText("Rs. " + PriceWithoutHardCopy + "/-");
+//                txtHardCopyCharge.setText("Rs. " + HARDCOPY_CHARGES + "/-");
+//                txtActPrice.setText("Rs. " + PriceWithoutHardCopy + "/-");
                 isRHC = true;
                 imgReportHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
             }
 
 
-            ll_amt.setVisibility(View.VISIBLE);
+//            ll_amt.setVisibility(View.VISIBLE);
             txtAmountPayable.setVisibility(View.VISIBLE);
-            txtAmountPayable.setText("Rs. " + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
+            txtAmountPayable.setText(mActivity.getResources().getString(R.string.rupee_symbol) + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
 
 
             SelectedTestCode = selectedbeneficiaryDetailsModel.getTestsCode();
@@ -376,7 +376,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     CommonResponseModel2 responseModel = response.body();
                     if (!TextUtils.isEmpty(responseModel.getRES_ID()) && responseModel.getRES_ID().equalsIgnoreCase("RES0000")) {
-                        globalclass.showCustomToast(mActivity, "OTP send successfully to mobile number mapped to this order.");
+//                        globalclass.showCustomToast(mActivity, "OTP send successfully to mobile number mapped to this order.");
                         ShowDialogToVerifyOTP(Action, orderVisitDetailsModel, orderNo, finalBenId);
                     } else {
                         globalclass.showCustomToast(mActivity, "OTP Generation Failed.");
@@ -395,7 +395,51 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     }
 
     private void ShowDialogToVerifyOTP(final String Action, final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
-        CustomDialogforOTPValidation = new Dialog(mActivity);
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+        final View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.bottomsheet_otp, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+        RelativeLayout rel_main = (RelativeLayout) bottomSheet.findViewById(R.id.rel_main);
+        TextView tv_header = (TextView) bottomSheet.findViewById(R.id.tv_header);
+        ImageView img_btn_validateOTP = (ImageView) bottomSheet.findViewById(R.id.img_btn_validateOTP);
+        ImageView img_close = (ImageView) bottomSheet.findViewById(R.id.img_close);
+        final EditText edt_OTP = (EditText) bottomSheet.findViewById(R.id.edt_OTP);
+
+        img_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+
+        img_btn_validateOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String strOTP = edt_OTP.getText().toString().trim();
+                if (!InputUtils.isNull(strOTP) && strOTP.length() != 4) {
+                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4", mActivity);
+                    edt_OTP.requestFocus();
+                } else {
+                    OrderPassRequestModel model = new OrderPassRequestModel();
+                    model.setMobile(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+                    model.setOTP(strOTP);
+                    model.setVisitId(orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
+                    if (cd.isConnectingToInternet()) {
+                        CallValidateOTPAPI(model, Action, orderNo, finalBenId);
+                    } else {
+                        globalclass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.plz_chk_internet));
+                    }
+                }
+            }
+        });
+        if (!mActivity.isFinishing()) {
+            bottomSheetDialog.show();
+        }
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(false);
+        bottomSheetDialog.show();
+
+       /* CustomDialogforOTPValidation = new Dialog(mActivity);
         CustomDialogforOTPValidation.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         CustomDialogforOTPValidation.requestWindowFeature(Window.FEATURE_NO_TITLE);
         CustomDialogforOTPValidation.setContentView(R.layout.validate_otp_dialog);
@@ -458,7 +502,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
 
     }
 
@@ -474,7 +518,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     String strresponse = response.body();
                     if (!TextUtils.isEmpty(strresponse) && strresponse.toUpperCase().contains("SUCCESS")) {
-                        globalclass.showCustomToast(mActivity, "OTP Validated Successfully.");
+                        Toast.makeText(mActivity, "OTP Validated Successfully.", Toast.LENGTH_SHORT).show();
+//                        globalclass.showCustomToast(mActivity, "OTP Validated Successfully.");
                         if (!mActivity.isFinishing() && CustomDialogforOTPValidation != null && CustomDialogforOTPValidation.isShowing()) {
                             CustomDialogforOTPValidation.dismiss();
                         }
@@ -702,20 +747,23 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         MessageLogger.PrintMsg(" Selected Test : " + str);
         //Todo tejas t -----------
 
-        if (StringUtils.isNull(edtBenAge.getText().toString().trim())) {
-            edtBenAge.setError("Age is Required");
-            return false;
-        } else if (Integer.parseInt(edtBenAge.getText().toString().trim()) < 1 || Integer.parseInt(edtBenAge.getText().toString().trim()) > 120) {
-            edtBenAge.setError("Age should be between 1 to 120");
-            return false;
-        } else if (StringUtils.isNull(edtBenName.getText().toString().trim())) {
+        if (StringUtils.isNull(edtBenName.getText().toString().trim())) {
             edtBenName.setError("Name is Required");
             return false;
         } else if (!StringUtils.isNull(edtBenName.getText().toString().trim()) && edtBenName.getText().toString().trim().length() < 2) {
             edtBenName.setError("Name should have minimum 2 characters");
             return false;
+        } else if (StringUtils.isNull(edtBenAge.getText().toString().trim())) {
+            edtBenAge.setError("Age is Required");
+            return false;
+        } else if (Integer.parseInt(edtBenAge.getText().toString().trim()) < 1 || Integer.parseInt(edtBenAge.getText().toString().trim()) > 120) {
+            edtBenAge.setError("Age should be between 1 to 120");
+            return false;
         } else if (StringUtils.isNull(txtTestsList.getText().toString().trim())) {
             txtTestsList.setError("Tests List is Required");
+            return false;
+        } else if (selectedTestsList.size() == 0) {
+            Toast.makeText(mActivity, "Kindly select test to add", Toast.LENGTH_SHORT).show();
             return false;
         } else if ((str.contains("PSA") || str.contains("FPSA")) && !isM) {
             txtTestsList.setError(PSAandFPSAforMaleMsg);
@@ -916,16 +964,39 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         return entity;
     }
 
-    private void CallAPIFORTESTLIST(boolean b_flag) {
+    /*private void CallAPIFORTESTLIST(boolean b_flag) {
         testListFlag = b_flag;
         if (cd.isConnectingToInternet()) {
             CallGetTechsoProductsAPI();
         } else {
             globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
         }
+    }*/
+
+    private void CallAPIFORTESTLIST(boolean b_flag) {
+        if (!UpdateProduct()) {
+            if (cd.isConnectingToInternet()) {
+                CallGetTechsoProductsAPI();
+            } else {
+                globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+            }
+        } else {
+            BrandTestMasterModel brandTestMasterModel = new Gson().fromJson(appPreferenceManager.getCacheProduct(), BrandTestMasterModel.class);
+            CallTestData(getBrandTestMaster(brandTestMasterModel));
+        }
     }
 
-    private void CallGetTechsoProductsAPI() {
+    private boolean UpdateProduct() {
+        String getPreviouseMillis = appPreferenceManager.getCashingTime();
+        if (getPreviouseMillis.equalsIgnoreCase(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+   /* private void CallGetTechsoProductsAPI() {
 
         try {
             GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
@@ -987,6 +1058,67 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         brandTestMasterModelFinal.setBrandName(brandTestMasterModel.getBrandName());
 
         return brandTestMasterModelFinal;
+    }*/
+
+    private void CallGetTechsoProductsAPI() {
+        try {
+            GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+            Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token());
+            globalclass.showProgressDialog(mActivity, "Fetching products. Please wait..");
+            responseCall.enqueue(new Callback<BrandTestMasterModel>() {
+                @Override
+                public void onResponse(Call<BrandTestMasterModel> call, retrofit2.Response<BrandTestMasterModel> response) {
+                    globalclass.hideProgressDialog(mActivity);
+                    if (response.isSuccessful() && response.body() != null) {
+                        Gson gson22 = new Gson();
+                        String json22 = gson22.toJson(response.body());
+                        appPreferenceManager.setCacheProduct(json22);
+                        appPreferenceManager.setCashingTime(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"));
+                        CallTestData(getBrandTestMaster(response.body()));
+                    } else {
+                        globalclass.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<BrandTestMasterModel> call, Throwable t) {
+                    globalclass.hideProgressDialog(mActivity);
+                    globalclass.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public BrandTestMasterModel getBrandTestMaster(BrandTestMasterModel brandTestMasterModel) {
+        BrandTestMasterModel brandTestMasterModelFinal = new BrandTestMasterModel();
+        ArrayList<TestRateMasterModel> tstratemaster = new ArrayList<>();
+
+        if (brandTestMasterModel != null && brandTestMasterModel.getTstratemaster() != null && brandTestMasterModel.getTstratemaster().size() > 0) {
+            for (int i = 0; i < brandTestMasterModel.getTstratemaster().size(); i++) {
+                if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode() != null && brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size() > 0) {
+                    for (int j = 0; j < brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size(); j++) {
+                        try {
+                            if (Integer.parseInt(brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().get(j).getAccessCode()) == orderVisitDetailsModel.getAllOrderdetails().get(0).getUserAccessCode()) {
+                                tstratemaster.add(brandTestMasterModel.getTstratemaster().get(i));
+                                break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        brandTestMasterModelFinal.setTstratemaster(tstratemaster);
+        brandTestMasterModelFinal.setBrandId(brandTestMasterModel.getBrandId());
+        brandTestMasterModelFinal.setBrandName(brandTestMasterModel.getBrandName());
+
+        return brandTestMasterModelFinal;
     }
 
 
@@ -1017,19 +1149,29 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     }
 
     private void CallEditTestList(final boolean isAddBen) {
-        final Dialog editdialog = new Dialog(mActivity);
-        editdialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        editdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        editdialog.setContentView(R.layout.dailog_edit_order1);
-        ListView lvTestsDisplay = (ListView) editdialog.findViewById(R.id.test_names);
-        TextView close_btn = (TextView) editdialog.findViewById(R.id.close_btn);
 
-        close_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editdialog.dismiss();
-            }
-        });
+        if (!InputUtils.isNull(edit_selectedTestsList)) {
+            addEditTest(isAddBen);
+        } else if (isAddBen && InputUtils.isNull(selectedTestsList)) {
+            Intent intent = new Intent(mActivity, AddRemoveTestProfileActivity.class);
+            intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+            intent.putParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLIST, selectedTestsList);
+            intent.putParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST, edit_selectedTestsList);
+            intent.putExtra("IsAddBen", FlagADDEditBen);
+            startActivityForResult(intent, BundleConstants.ADDEDITTESTREQUESTCODE);
+        } else {
+            addEditTest(isAddBen);
+
+        }
+
+    }
+
+    private void addEditTest(final boolean isAddBen) {
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+        View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.addtestbottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+        ListView lvTestsDisplay = (ListView) bottomSheet.findViewById(R.id.test_names);
+        TextView close_btn = (TextView) bottomSheet.findViewById(R.id.close_btn);
+        Button btn_addtest = bottomSheet.findViewById(R.id.btn_addtest);
 
         try {
             if (isAddBen) {
@@ -1043,7 +1185,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 });
                 lvTestsDisplay.setAdapter(displayAdapter);
             } else {
-
                 if (displayAdapter != null) {
                     displayAdapter = null;
                 }
@@ -1057,9 +1198,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                     }
                 });
                 lvTestsDisplay.setAdapter(displayAdapter);
-
             }
-            Button btn_Save = (Button) editdialog.findViewById(R.id.btn_save);
+            Button btn_Save = (Button) bottomSheet.findViewById(R.id.btn_save);
             if (isAddBen) {
                 if (selectedTestsList.size() != 0) {
                     btn_Save.setVisibility(View.VISIBLE);
@@ -1080,7 +1220,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 //                    editdialog.dismiss();
                     if (isAddBen) {
                         if (selectedTestsList.size() != 0) {
-
                             int FastingCount = 0;
                             boolean isFBSpresent = false;
                             boolean isPPBSpresent = false;
@@ -1089,7 +1228,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                             boolean isINSFApresent = false;
                             boolean isINSFApresentInSuperSet = false;
                             boolean isINSPPpresent = false;
-
                             if (selectedTestsList != null && selectedTestsList.size() > 0) {
                                 ArrayList<TestRateMasterModel> trmmArr = new ArrayList<TestRateMasterModel>();
                                 for (TestRateMasterModel btdm :
@@ -1123,26 +1261,20 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
                                     if (btdm.getTestCode().equalsIgnoreCase(Constants.INSPP)) {
                                         isINSPPpresent = true;
-
                                     }
                                     if (btdm.getTestCode().equalsIgnoreCase(Constants.PPBS)) {
                                         isPPBSpresent = true;
-
                                     }
                                     if (btdm.getTestCode().equalsIgnoreCase(Constants.RBS)) {
                                         isRBSpresent = true;
-
                                     }
                                     if (btdm.getFasting().equalsIgnoreCase("Fasting")) {
                                         FastingCount = FastingCount + 1;
                                         Logger.error("FastingCount " + FastingCount);
                                     }
-
                                 }
-
                                 MessageLogger.PrintMsg("isFBSpresent: " + isFBSpresent);
                                 MessageLogger.PrintMsg("FastingCount: " + FastingCount);
-
 
                                 if (isFBSpresent == true && FastingCount == 1 && !isFBSpresentInSuperSet) {
 
@@ -1155,7 +1287,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                     Toast.makeText(mActivity, "To Avail INSPP You have to select INSFA test", Toast.LENGTH_SHORT).show();
                                 } else {
 
-                                    editdialog.dismiss();
+                                    bottomSheetDialog.dismiss();
                                     String str = "";
                                     for (int i = 0; i < selectedTestsList.size(); i++) {
 
@@ -1174,17 +1306,11 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                 }
 
                             } else {
-
                                 globalclass.showCustomToast(mActivity, "Please select atleast one test");
-
                             }
-
-
                         }
                     } else {
                         if (edit_selectedTestsList.size() != 0) {
-
-
                             int FastingCount = 0;
                             boolean isFBSpresent = false;
                             boolean isPPBSpresent = false;
@@ -1227,29 +1353,23 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
                                     if (btdm.getTestCode().equalsIgnoreCase(Constants.INSPP)) {
                                         isINSPPpresent = true;
-
                                     }
                                     if (btdm.getTestCode().equalsIgnoreCase(Constants.PPBS)) {
                                         isPPBSpresent = true;
-
                                     }
                                     if (btdm.getTestCode().equalsIgnoreCase(Constants.RBS)) {
                                         isRBSpresent = true;
-
                                     }
                                     if (btdm.getFasting().equalsIgnoreCase("Fasting")) {
                                         FastingCount = FastingCount + 1;
                                         Logger.error("FastingCount " + FastingCount);
                                     }
-
                                 }
 
                                 MessageLogger.PrintMsg("isFBSpresent: " + isFBSpresent);
                                 MessageLogger.PrintMsg("FastingCount: " + FastingCount);
 
-
                                 if (isFBSpresent == true && FastingCount == 1 && !isFBSpresentInSuperSet) {
-
                                     Toast.makeText(mActivity, "With FBS atleast one fasting test should be there", Toast.LENGTH_SHORT).show();
                                 } else if (isPPBSpresent && !isFBSpresent) {
                                     Toast.makeText(mActivity, "To Avail PPBS You have to select FBS test", Toast.LENGTH_SHORT).show();
@@ -1258,9 +1378,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                 } else if (isINSPPpresent && !isINSFApresent) {
                                     Toast.makeText(mActivity, "To Avail INSPP You have to select INSFA test", Toast.LENGTH_SHORT).show();
                                 } else {
-
-                                    editdialog.dismiss();
-
+                                    bottomSheetDialog.dismiss();
                                     String str = "";
                                     for (int i = 0; i < edit_selectedTestsList.size(); i++) {
 
@@ -1293,8 +1411,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                             orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setProjId(trmm.getTestCode());
                                         }
                                         selectedTestDetailsArr.add(btdm);
-
-
                                         if (StringUtils.isNull(testsCode)) {
                                             if (!StringUtils.isNull(trmm.getTestType()) && trmm.getTestType().equalsIgnoreCase("OFFER")) {
                                                 testsCode = trmm.getDescription();
@@ -1308,7 +1424,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                                 orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setProjId(trmm.getTestCode());
                                             } else {
                                                 testsCode = testsCode + "," + trmm.getTestCode();
-
                                             }
                                         }
 
@@ -1328,28 +1443,21 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                     orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setTestsCode(testsCode);
                                     orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setTests(testsCode);
                                     orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setSampleType(samples);
-
                                     CallCartAPIFlag = 1;
                                     btnOrderSubmit.performClick();
                                 }
-
                             } else {
-
                                 globalclass.showCustomToast(mActivity, "Please select atleast one test");
-
                             }
-
-
                         }
                     }
                 }
             });
 
-            Button btn_addtest = (Button) editdialog.findViewById(R.id.btn_addtest);
             btn_addtest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    editdialog.dismiss();
+                    bottomSheetDialog.dismiss();
                     Intent intent = new Intent(mActivity, AddRemoveTestProfileActivity.class);
                     intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
                     intent.putParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLIST, selectedTestsList);
@@ -1362,8 +1470,16 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(false);
+        bottomSheetDialog.show();
 
-        editdialog.show();
+        close_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetDialog.dismiss();
+            }
+        });
     }
 
     static ArrayList<String> removeDuplicates(ArrayList<String> list) {
@@ -1582,17 +1698,17 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 orderAmountPayable = orderAmountPayable + cartAPIResponseModel.getOrders().get(j).getAmountDue();
                 orderAmountDue = orderAmountDue + cartAPIResponseModel.getOrders().get(j).getTestCharges() + cartAPIResponseModel.getOrders().get(j).getServiceCharge();
             }
-            ll_amt.setVisibility(View.VISIBLE);
+//            ll_amt.setVisibility(View.VISIBLE);
             txtAmountPayable.setVisibility(View.VISIBLE);
-            txtAmountPayable.setText("Rs. " + orderAmountDue + "/-");
+            txtAmountPayable.setText(mActivity.getResources().getString(R.string.rupee_symbol) + orderAmountDue + "/-");
             if (cartAPIResponseModel.getOrders() != null && cartAPIResponseModel.getOrders().size() > 0 && cartAPIResponseModel.getOrders().get(0).isHC()) {
-                relHardCopyCharge.setVisibility(View.VISIBLE);
+//                relHardCopyCharge.setVisibility(View.VISIBLE);
                 int PriceWithoutHardCopy = orderAmountDue - HARDCOPY_CHARGES;
-                txtHardCopyCharge.setText("Rs. " + HARDCOPY_CHARGES + "/-");
-                txtActPrice.setText("Rs. " + PriceWithoutHardCopy + "/-");
+//                txtHardCopyCharge.setText("Rs. " + HARDCOPY_CHARGES + "/-");
+//                txtActPrice.setText("Rs. " + PriceWithoutHardCopy + "/-");
             } else {
-                relHardCopyCharge.setVisibility(View.GONE);
-                txtActPrice.setText("Rs. " + orderAmountDue + "/-");
+//                relHardCopyCharge.setVisibility(View.GONE);
+//                txtActPrice.setText("Rs. " + orderAmountDue + "/-");
             }
 
 
@@ -1650,7 +1766,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 globalclass.hideProgressDialog(mActivity);
                 if (response.code() == 200) {
-                    globalclass.showCustomToast(mActivity, "SUCCESS");
+                    Toast.makeText(mActivity, "SUCCESS", Toast.LENGTH_SHORT).show();
+//                    globalclass.showCustomToast(mActivity, "SUCCESS");
                     // TODo code to redirect to Arrive Screen
                     setResult(Activity.RESULT_OK);
                     finish();

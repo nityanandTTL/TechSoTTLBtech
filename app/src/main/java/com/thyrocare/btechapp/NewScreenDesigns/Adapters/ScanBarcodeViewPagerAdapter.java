@@ -131,9 +131,11 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         final EditText edt_srf = (EditText) itemView.findViewById(R.id.edt_srf);
         ImageView img_resetSRF = (ImageView) itemView.findViewById(R.id.img_resetSRF);
         TextView tv_saveSRF = (TextView) itemView.findViewById(R.id.tv_saveSRF);
-        Button btn_remove = (Button) itemView.findViewById(R.id.btn_remove);
-        final Button btn_sendopt = (Button) itemView.findViewById(R.id.btn_sendopt);
-        Button btn_verify_otp = (Button) itemView.findViewById(R.id.btn_verify_otp);
+        ImageView btn_remove = (ImageView) itemView.findViewById(R.id.btn_remove);
+        LinearLayout ll_urine = itemView.findViewById(R.id.ll_urine);
+        LinearLayout ll_grey = itemView.findViewById(R.id.ll_grey);
+        final TextView btn_sendopt = itemView.findViewById(R.id.btn_sendopt);
+        TextView btn_verify_otp = itemView.findViewById(R.id.btn_verify_otp);
         final TextView tv_number = (TextView) itemView.findViewById(R.id.tv_number);
         final EditText edt_verify = (EditText) itemView.findViewById(R.id.edt_verify);
         final LinearLayout ll_otpvalidate = (LinearLayout) itemView.findViewById(R.id.ll_otpvalidate);
@@ -151,7 +153,8 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         }
 
 
-        tv_benName.setText(beneficaryWiseScanbarcodeArylst.get(position).getName() + " (" + beneficaryWiseScanbarcodeArylst.get(position).getAge() + "/" + beneficaryWiseScanbarcodeArylst.get(position).getGender() + ")");
+
+        tv_benName.setText(Global.toCamelCase(beneficaryWiseScanbarcodeArylst.get(position).getName()) +" (" + beneficaryWiseScanbarcodeArylst.get(position).getGender() + " | " + beneficaryWiseScanbarcodeArylst.get(position).getAge() +" years" + ")");
         tv_OrderNo.setText(beneficaryWiseScanbarcodeArylst.get(position).getOrderNo());
 
         if (showProduct) {
@@ -165,12 +168,14 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         if (!StringUtils.isNull(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture())) {
             txt_captureBenBarcodePic.setText("View Image");
             txt_captureBenBarcodePic.setPaintFlags(txt_captureBenBarcodePic.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            txt_captureBenBarcodePic.setVisibility(View.VISIBLE);
             imgDelete.setVisibility(View.VISIBLE);
-            img_uploadBenVail.setVisibility(View.GONE);
+            img_uploadBenVail.setVisibility(View.VISIBLE);
         } else {
             txt_captureBenBarcodePic.setText("Upload Image");
             txt_captureBenBarcodePic.setPaintFlags(txt_captureBenBarcodePic.getPaintFlags() | 0);
             imgDelete.setVisibility(View.GONE);
+            txt_captureBenBarcodePic.setVisibility(View.GONE);
             img_uploadBenVail.setVisibility(View.VISIBLE);
         }
 
@@ -186,7 +191,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             img_resetSRF.setVisibility(View.GONE);
         }
 
-        setUrineLogic(btn_remove, position);
+        setUrineLogic(ll_grey, ll_urine, position);
 
         initScanBarcodeView(position, recyle_barcode);
 
@@ -246,7 +251,10 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 if (txt_captureBenBarcodePic.getText().toString().equalsIgnoreCase("View Image")) {
-                    globalclass.OpenImageDialog(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(), mActivity, false);
+                    if (onClickListeners != null) {
+                        onClickListeners.onImageShow(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(),  beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position);
+                    }
+//                   globalclass.OpenImageDialog(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(), mActivity, false);
                 } else if (txt_captureBenBarcodePic.getText().toString().equalsIgnoreCase("Upload Image")) {
                     if (onClickListeners != null) {
                         onClickListeners.onVenupunturePhotoClicked(beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position);
@@ -292,13 +300,14 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         return itemView;
     }
 
-    private void setUrineLogic(Button btn_remove, int position) {
+    private void setUrineLogic(LinearLayout ll_grey, LinearLayout ll_urine, int position) {
 
         if (!InputUtils.isNull(beneficaryWiseScanbarcodeArylst.get(position))) {
             for (int i = 0; i < beneficaryWiseScanbarcodeArylst.get(position).getBarcodedtl().size(); i++) {
                 if (beneficaryWiseScanbarcodeArylst.get(position).getBarcodedtl().get(i).getSamplType().equalsIgnoreCase("URINE")) {
                     if (beneficaryWiseScanbarcodeArylst.get(position).getBarcodedtl().size() > 1) {
-                        btn_remove.setVisibility(View.VISIBLE);
+                        ll_grey.setVisibility(View.VISIBLE);
+                        ll_urine.setVisibility(View.VISIBLE);
                         break;
                     }
                 }
@@ -320,7 +329,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
     }
 
 
-    private void CallsendOTPAPIforOrderEdit(String order, final Button btn_sendopt) {
+    private void CallsendOTPAPIforOrderEdit(String order, final TextView btn_sendopt) {
 
         SendOTPRequestModel model = new SendOTPRequestModel();
         model.setMobile(mobile);
@@ -486,5 +495,6 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
         void onSRFDeleted(String SRFID, int BenPosition);
 
+        void onImageShow(String venepuncture, int benId, int position);
     }
 }

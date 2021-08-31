@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 
+import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,12 +33,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.mindorks.paracamera.Camera;
 import com.thyrocare.btechapp.BuildConfig;
+import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.ScanBarcodeViewPagerAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -84,7 +87,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     private int dotsCount;
     Runnable runnable;
     private ImageView[] dots;
-    private RelativeLayout viewPagerIndicator;
+    private CardView viewPagerIndicator;
     private LinearLayout viewPagerCountDots;
     private ScanBarcodeViewPagerAdapter mAdapter;
     private String SampleTypeToScan = "";
@@ -92,9 +95,12 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     private int BenPositionForScan = 0, BenPositionForDelete = 0;
     private Camera camera;
     private int BenIDToCaptureVenuPhoto = 0, PositionToStoreVenuPhoto = 0, BenIDToDeleteVenuPhoto = 0, PositionToDeleteVenuPhoto = 0;
-    private Button btn_Next, btn_Previous, btn_Proceed;
+    private TextView btn_Proceed;
+    TextView btn_Next, btn_Previous;
     private Spinner spn_ben;
     boolean isRescan = false;
+    TextView tv_toolbar;
+    ImageView iv_back,iv_home;
 
     @Override
     public void onBackPressed() {
@@ -121,7 +127,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode_scan_woe_main);
-        setTitle("Barcode Scanning");
+//        setTitle("Barcode Scanning");
         mActivity = ScanBarcodeWoeActivity.this;
         globalclass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
@@ -129,12 +135,12 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         orderVisitDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
 
         initView();
-        initToolBar();
+//        initToolBar();
         initData();
         initListener();
     }
 
-    private void initToolBar() {
+  /*  private void initToolBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarStockAvailablity);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -146,21 +152,27 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.blank_menu_screen, menu);
         return true;
     }
-
-    @Override
+*/
+    /*@Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
-    }
+    }*/
 
     private void initView() {
         BarcodeScanviewpager = (ViewPager) findViewById(R.id.BarcodeScanviewpager);
-        viewPagerIndicator = (RelativeLayout) findViewById(R.id.viewPagerIndicator);
+        viewPagerIndicator = (CardView) findViewById(R.id.viewPagerIndicator);
         viewPagerCountDots = (LinearLayout) findViewById(R.id.viewPagerCountDots);
         spn_ben = (Spinner) findViewById(R.id.spn_ben);
-        btn_Previous = (Button) findViewById(R.id.btn_Previous);
-        btn_Next = (Button) findViewById(R.id.btn_Next);
-        btn_Proceed = (Button) findViewById(R.id.btn_Proceed);
+        btn_Previous = (TextView) findViewById(R.id.btn_Previous);
+        btn_Next = (TextView) findViewById(R.id.btn_Next);
+        btn_Proceed = (TextView) findViewById(R.id.btn_Proceed);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        tv_toolbar.setText("WOE");
+        tv_toolbar.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        iv_home.setVisibility(View.GONE);
     }
 
     private void initData() {
@@ -233,6 +245,14 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     }
 
     private void initListener() {
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         btn_Previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -293,14 +313,14 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                             isBarcodeScanforAllben = false;
                             BarcodeScanRemainingbenPosition = i;
                         } else {
-                            barcode = ""+beneficaryWiseArylst.get(i).getBarcodedtl().get(j).getBarcode();
+                            barcode = "" + beneficaryWiseArylst.get(i).getBarcodedtl().get(j).getBarcode();
                         }
 
                         if (StringUtils.isNull(beneficaryWiseArylst.get(i).getBarcodedtl().get(j).getRescanBarcode())) {
                             isBarcodeScanforAllben = false;
                             BarcodeScanRemainingbenPosition = i;
                         } else {
-                            confirmBarcode =""+ beneficaryWiseArylst.get(i).getBarcodedtl().get(j).getRescanBarcode();
+                            confirmBarcode = "" + beneficaryWiseArylst.get(i).getBarcodedtl().get(j).getRescanBarcode();
                         }
 
                         if (!barcode.equalsIgnoreCase(confirmBarcode)) {
@@ -311,7 +331,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 }
             }
 
-            if (!isBarcodeScanforAllben  && !isVenupuntureCapturedForAllBen && BarcodeScanRemainingbenPosition == VenupuntureScanRemainingPosition) {
+            if (!isBarcodeScanforAllben && !isVenupuntureCapturedForAllBen && BarcodeScanRemainingbenPosition == VenupuntureScanRemainingPosition) {
                 String name = beneficaryWiseArylst.get(BarcodeScanRemainingbenPosition).getName();
                 androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder;
                 alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(mActivity);
@@ -415,7 +435,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             mAdapter.notifyDataSetChanged();
         } else {
             boolean showProduct = orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct();
-            mAdapter = new ScanBarcodeViewPagerAdapter(mActivity, beneficaryWiseArylst, showProduct,orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+            mAdapter = new ScanBarcodeViewPagerAdapter(mActivity, beneficaryWiseArylst, showProduct, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
             BarcodeScanviewpager.setAdapter(mAdapter);
             DisplayDotsBelowViewpager();
         }
@@ -504,6 +524,12 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                     }
                 }
                 InitViewpager(BenPosition);
+            }
+
+            @Override
+            public void onImageShow(String venepuncture, int benId, int position) {
+                BottomSheetController bottomSheetController = new BottomSheetController(mActivity, ScanBarcodeWoeActivity.this, venepuncture, false, benId, position);
+                bottomSheetController.SetBottomSheet(mActivity);
             }
         });
 
@@ -858,8 +884,25 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     }
 
     private void DisplayTestListDialog(GetTestListResponseModel testListResponseModel) {
-        CustomDialogClass cdd = new CustomDialogClass(mActivity, testListResponseModel);
-        cdd.show();
+        /*CustomDialogClass cdd = new CustomDialogClass(mActivity, testListResponseModel);
+        cdd.show();*/
+
+        if (testListResponseModel != null) {
+            BottomSheetController bottomSheetController = new BottomSheetController(mActivity, ScanBarcodeWoeActivity.this);
+            bottomSheetController.setTestListBottomSheet(mActivity, testListResponseModel);
+        }
+    }
+
+    public void getbottomsheetresponse(BottomSheetDialog bottomSheetDialog) {
+        bottomSheetDialog.dismiss();
+    }
+
+    public void vialImageDelete(int benId, int position, BottomSheetDialog bottomSheetDialog) {
+        BenIDToDeleteVenuPhoto = benId;
+        PositionToDeleteVenuPhoto = position;
+        deleteVialImage();
+        bottomSheetDialog.dismiss();
+
     }
 
     private class CustomDialogClass extends Dialog {
@@ -896,7 +939,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
 
     }
 
-    private void iflateTestGroupName(LinearLayout ll_tests, GetTestListResponseModel testListResponseModel) {
+    public void iflateTestGroupName(LinearLayout ll_tests, GetTestListResponseModel testListResponseModel) {
         if (testListResponseModel.getTestGroupList().size() > 0) {
             // Logger.error("if ");
             ll_tests.removeAllViews();
@@ -924,7 +967,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 ll_child.removeAllViews();
                 for (int j = 0; j < testListResponseModel.getTestGroupList().get(i).getTestDetails().size(); j++) {
                     LayoutInflater vj = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View v1 = vj.inflate(R.layout.item_view_test, null);
+                    View v1 = vj.inflate(R.layout.item_view_test1, null);
                     TextView tv_test1 = (TextView) v1.findViewById(R.id.tv_test);
                     tv_test1.setBackgroundColor(Color.parseColor("#ffffff"));
                     tv_test1.setTextColor(Color.parseColor("#000000"));

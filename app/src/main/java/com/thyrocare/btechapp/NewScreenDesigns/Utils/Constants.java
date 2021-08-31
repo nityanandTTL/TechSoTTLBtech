@@ -1,5 +1,7 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Utils;
 
+import com.thyrocare.btechapp.models.api.response.DynamicBtechAvaliabilityResponseModel;
+
 public class Constants {
 
     public static final String RES00001 = "RES00001";
@@ -49,4 +51,7 @@ public class Constants {
 
     public static String StrAppID = "3";
     public static String LEAD = "LEAD";
+    public static DynamicBtechAvaliabilityResponseModel setAvailabiltity;
+
+    public static boolean QrClick=false;
 }

@@ -14,11 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.text.Line;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.stfalcon.swipeablebutton.SwipeableButton;
+import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
@@ -64,6 +70,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 
+import cheekiat.slideview.OnChangeListener;
+import cheekiat.slideview.OnFinishListener;
+import cheekiat.slideview.SlideView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -92,7 +101,6 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     private Date strDate2;
     private String apiMinusFifdisp, apiPlusFifdisp, apiPlusTwoPBBS;
     CharSequence[] items;
-
     //neha g------------
     String finaltime = "";
     Long time, currenttime;
@@ -108,15 +116,16 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     private Date strDate3;
     private Global globalClass;
     private boolean isCancelRequesGenereted = false;
+    VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new;
 
-    public Btech_VisitDisplayAdapter(HomeScreenActivity homeScreenActivity, Activity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels) {
+    public Btech_VisitDisplayAdapter(VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new, Activity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels) {
         this.activity = activity;
         this.orderVisitDetailsModelsArr = orderDetailsResponseModels;
         layoutInflater = LayoutInflater.from(activity);
         current_date = DateUtil.getDateFromLong(System.currentTimeMillis(), "dd-MM-yyyy");
         appPreferenceManager = new AppPreferenceManager(activity);
         gpsTracker = new GPSTracker(activity);
-        this.homeScreenActivity = homeScreenActivity;
+        this.visitOrdersDisplayFragment_new = visitOrdersDisplayFragment_new;
         globalClass = new Global(activity);
     }
 
@@ -128,8 +137,12 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView txtCustomerName, txtOrderNo, txtDate, txtSlot, txtBeneficiary, txtSamples, txtAddress, txtPPBSStatus, txtFastingStatus, txtRBSStatus, direct_visit, txtKits, txt_visit_day;
         ImageView imgRelease, imgCall, img_accept, imgStart;
-        LinearLayout layoutAccept_Release_Ord, layoutMain, lin_bencount, lin_kits, layoutFasingStatus;
+        LinearLayout layoutAccept_Release_Ord, layoutMain, lin_bencount, lin_kits, layoutFasingStatus, ll_accept, ll_start;
         View view_seperater;
+        LinearLayout LL_swipe;
+        RelativeLayout rel_imgRelease;
+        SlideView slide_view;
+        SwipeableButton swipe_button;
 
         public MyViewHolder(View view) {
             super(view);
@@ -154,9 +167,15 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             img_accept = (ImageView) view.findViewById(R.id.img_accept);
             imgStart = (ImageView) view.findViewById(R.id.imgStart);
             imgRelease = (ImageView) view.findViewById(R.id.imgRelease);
+            rel_imgRelease = (RelativeLayout) view.findViewById(R.id.rel_imgRelease);
+            LL_swipe = (LinearLayout) view.findViewById(R.id.LL_swipe);
             imgCall = (ImageView) view.findViewById(R.id.imgCall);
             view_seperater = (View) view.findViewById(R.id.view_seperater);
             layoutFasingStatus = (LinearLayout) view.findViewById(R.id.layoutFastingStatus);
+            ll_accept = (LinearLayout) view.findViewById(R.id.ll_accept);
+            ll_start = (LinearLayout) view.findViewById(R.id.ll_start);
+            slide_view = view.findViewById(R.id.slide_view);
+            swipe_button = view.findViewById(R.id.swipe_button);
         }
     }
 
@@ -177,7 +196,19 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() > 0
                 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0) != null) {
 
-            holder.txtCustomerName.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+            if (orderVisitDetailsModelsArr.get(pos).getAppointmentDate().equals(current_date)) {
+                holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_green);
+                holder.slide_view.setBackgroundResource(R.drawable.rounded_background_green_2);
+                holder.slide_view.setVisibility(View.GONE);
+                holder.LL_swipe.setBackgroundResource(R.drawable.rounded_background_green_2);
+            } else {
+                holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_yellow);
+                holder.slide_view.setBackgroundResource(R.drawable.rounded_background_yellow_2);
+                holder.slide_view.setVisibility(View.GONE);
+                holder.LL_swipe.setBackgroundResource(R.drawable.rounded_background_yellow_2);
+            }
+
+            holder.txtCustomerName.setText(Global.toCamelCase(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName()));
 
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() > 0) {
                 holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId() + "  (₹" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() + ")");
@@ -189,6 +220,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             holder.txtSlot.setText(", " + DateUtil.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getSlot(), "hh:mm a", "HH:mm"));
 //            holder.txtAddress.setSelected(true);
 //            holder.txtAddress.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress());
+            holder.txtAddress.setText(Global.toCamelCase(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress() + "\n" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getPincode()));
             DisplayBencount(pos, holder);
             // TODO logic needs to be set for sample count
             DisplayDayWiselayoutColor(pos, holder);
@@ -214,15 +246,28 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             }
         });
 
-        holder.imgRelease.setOnClickListener(new View.OnClickListener() {
+        holder.slide_view.setOnFinishListener(new OnFinishListener() {
+            @Override
+            public void onFinish() {
+                onReleaseButtonClicked(pos, holder, holder.txtCustomerName.getText().toString().trim(), holder.txtOrderNo.getText().toString().trim());
+                holder.slide_view.reset();
+            }
+        });
+
+    /*    holder.swipe_button.setOnSwipedListener(new View.OnDragListener(
+
+        ));*/
+
+
+        holder.rel_imgRelease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onReleaseButtonClicked(pos, holder);
+                onReleaseButtonClicked(pos, holder, holder.txtCustomerName.getText().toString().trim(), holder.txtOrderNo.getText().toString().trim());
             }
         });
 
 
-        holder.imgStart.setOnClickListener(new View.OnClickListener() {
+        holder.ll_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isKCF()) {
@@ -263,7 +308,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             @Override
             public void onClick(View v) {
 
-                String address = orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress() + "\n" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getPincode();
+                String address = Global.toCamelCase(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress() + "\n" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getPincode());
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle("Address")
                         .setMessage(address)
@@ -290,13 +335,14 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 if (hours < 3) {
                     onStartClicked(pos, holder);
                 } else {
-                    globalClass.showalert_OK("You Cannot start order before 3 hours of Appointment Time.", activity);
+
+                    BottomSheetController bottomSheetController = new BottomSheetController(activity);
+                    bottomSheetController.SetOKBottomSheet("You Cannot start order before 3 hours of Appointment Time.");
+//                    globalClass.showalert_OK("You Cannot start order before 3 hours of Appointment Time.", activity);
                 }
             } else {
                 onStartClicked(pos, holder);
             }
-
-
         } else {
             Toast.makeText(activity, "Please accept the order first", Toast.LENGTH_SHORT).show();
         }
@@ -323,7 +369,6 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     }
 
     private void DisplayBencount(int pos, MyViewHolder holder) {
-
         int Bencount = 1;
         boolean displayBencount = false;
         try {
@@ -372,7 +417,6 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     }
 
     private void CheckRBSisPresent(int pos, MyViewHolder holder) {
-
         boolean isRBSpresent = false;
         String secondVisitTest = orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getSecondVisitTest();
         if (!InputUtils.isNull(secondVisitTest) && secondVisitTest.contains(AppConstants.RBS)) {
@@ -395,34 +439,38 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             if (appPreferenceManager.getLoginResponseModel() != null) {
                 if (appPreferenceManager.getLoginResponseModel().getRole() != null) {
                     if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
-                        holder.imgRelease.setVisibility(View.GONE);
+                        holder.slide_view.setVisibility(View.GONE);
+                        holder.rel_imgRelease.setVisibility(View.GONE);
                     }
                 }
             }
 
             if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase())) {
-                holder.imgRelease.setVisibility(View.GONE);
+                holder.slide_view.setVisibility(View.GONE);
+                holder.rel_imgRelease.setVisibility(View.GONE);
             }
 
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.PPBS)
                     && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS)) {
-
                 if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
-                    holder.imgRelease.setVisibility(View.GONE);
+                    holder.slide_view.setVisibility(View.GONE);
+                    holder.rel_imgRelease.setVisibility(View.GONE);
                 } else {
-                    holder.imgRelease.setVisibility(View.VISIBLE);
+                    holder.slide_view.setVisibility(View.VISIBLE);
+                    holder.rel_imgRelease.setVisibility(View.VISIBLE);
                 }
             }
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.RBS)
                     && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode().toUpperCase().contains(AppConstants.FBS)) {
 
                 if (appPreferenceManager.getLoginResponseModel().getRole().equals(AppConstants.NBTTSP_ROLE_ID)) {
-                    holder.imgRelease.setVisibility(View.GONE);
+                    holder.slide_view.setVisibility(View.GONE);
+                    holder.rel_imgRelease.setVisibility(View.GONE);
                 } else {
-                    holder.imgRelease.setVisibility(View.VISIBLE);
+                    holder.slide_view.setVisibility(View.VISIBLE);
+                    holder.rel_imgRelease.setVisibility(View.VISIBLE);
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -464,6 +512,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             holder.layoutFasingStatus.setVisibility(View.GONE);
             holder.imgStart.setVisibility(View.GONE);
             holder.imgCall.setVisibility(View.GONE);
+            holder.ll_accept.setVisibility(View.VISIBLE);
+            holder.ll_start.setVisibility(View.GONE);
         } else {
             fastingFlagInt = 1;
             holder.img_accept.setVisibility(View.GONE);
@@ -471,6 +521,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             holder.layoutFasingStatus.setVisibility(View.VISIBLE);
             holder.imgStart.setVisibility(View.VISIBLE);
             holder.imgCall.setVisibility(View.VISIBLE);
+            holder.ll_accept.setVisibility(View.GONE);
+            holder.ll_start.setVisibility(View.VISIBLE);
         }
     }
 
@@ -672,12 +724,47 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         } else {
             ShowAcceptAlert(holder, pos);
         }
-
-
     }
 
     private void ShowAcceptAlert(final MyViewHolder holder, final int pos) {
-        final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+        View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+        String s = "Do you want to accept order?";
+        TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+        tv_text.setText(s);
+        Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+        btn_yes.setText("Accept");
+        btn_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BundleConstants.OrderAccept = 2;
+                appPreferenceManager.setOrderAccept(2);
+                startAlert();
+                //neha g-----------------------
+                fastingFlagInt = 1;
+                holder.txtFastingStatus.setVisibility(View.VISIBLE);
+                holder.slide_view.setVisibility(View.GONE);//remove 11 validation
+                holder.rel_imgRelease.setVisibility(View.VISIBLE);//remove 11 validation
+                if (onClickListeners != null) {
+                    onClickListeners.onAcceptClicked(orderVisitDetailsModelsArr.get(pos));
+                }
+                SendinglatlongOrderAllocation(pos);
+                bottomSheetDialog.dismiss();
+            }
+        });
+        Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+        btn_no.setText("Cancel");
+        btn_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(false);
+        bottomSheetDialog.show();
+
+       /* final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
         builder1.setMessage("Do you want to accept order?").setPositiveButton("Accept", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -689,6 +776,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 fastingFlagInt = 1;
                 holder.txtFastingStatus.setVisibility(View.VISIBLE);
                 holder.imgRelease.setVisibility(View.VISIBLE);//remove 11 validation
+                holder.rel_imgRelease.setVisibility(View.VISIBLE);//remove 11 validation
 
                 if (onClickListeners != null) {
                     onClickListeners.onAcceptClicked(orderVisitDetailsModelsArr.get(pos));
@@ -701,10 +789,26 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 dialog.dismiss();
             }
         });
-        builder1.show();
+        builder1.show();*/
     }
 
-    private void onReleaseButtonClicked(final int pos, MyViewHolder holder) {
+    private void onReleaseButtonClicked(final int pos, MyViewHolder holder, String s_name, String s_order) {
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+
+        final View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.layout_bottomsheet_release, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+        TextView tv_name = bottomSheet.findViewById(R.id.tv_name);
+        TextView tv_order_no = bottomSheet.findViewById(R.id.tv_order_no);
+        TextView tv_ord_resch = bottomSheet.findViewById(R.id.tv_ord_resch);
+        TextView tv_ord_rel = bottomSheet.findViewById(R.id.tv_ord_rel);
+        TextView tv_ord_pass = bottomSheet.findViewById(R.id.tv_ord_pass);
+        TextView tv_cancel_vst = bottomSheet.findViewById(R.id.tv_cancel_vst);
+        Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+        Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+        LinearLayout ll_cancl = bottomSheet.findViewById(R.id.ll_cancl);
+
+        tv_name.setText(s_name);
+        tv_order_no.setText(s_order);
 
         boolean toShowResheduleOption = false;
         if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAppointmentDate())) {
@@ -721,26 +825,133 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")
                 || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
             if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
-                items = new String[]{"Do you want to cancel the visit?"};
+//                items = new String[]{"Do you want to cancel the visit?"};
+                tv_ord_pass.setVisibility(View.GONE);
+                tv_ord_rel.setVisibility(View.GONE);
+                tv_ord_resch.setVisibility(View.GONE);
+                ll_cancl.setVisibility(View.VISIBLE);
+                tv_cancel_vst.setText("Do you want to cancel the visit?");
                 cancelVisit = "y";
             } else {
-                items = new String[]{"Order Release", "Order Pass"};
+                ll_cancl.setVisibility(View.GONE);
+                tv_ord_pass.setVisibility(View.VISIBLE);
+                tv_ord_rel.setVisibility(View.VISIBLE);
+                tv_ord_resch.setVisibility(View.GONE);
+//                items = new String[]{"Order Release", "Order Pass"};
             }
         } else {
             if (isValidForEditing(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
-                items = new String[]{"Do you want to cancel the visit?"};
+                tv_ord_pass.setVisibility(View.GONE);
+                tv_ord_rel.setVisibility(View.GONE);
+                tv_ord_resch.setVisibility(View.GONE);
+                ll_cancl.setVisibility(View.VISIBLE);
+                tv_cancel_vst.setText("Do you want to cancel the visit?");
                 cancelVisit = "y";
             } else {
                 if (toShowResheduleOption) {
-                    items = new String[]{"Order Reschedule",
-                            "Request Release", "Order Pass"};
+                    tv_ord_pass.setVisibility(View.VISIBLE);
+                    tv_ord_rel.setVisibility(View.VISIBLE);
+                    tv_ord_resch.setVisibility(View.VISIBLE);
+                    ll_cancl.setVisibility(View.GONE);
+
+                    /*items = new String[]{"Order Reschedule",
+                            "Request Release", "Order Pass"};*/
                 } else {
-                    items = new String[]{"Request Release", "Order Pass"};
+                    tv_ord_pass.setVisibility(View.VISIBLE);
+                    tv_ord_rel.setVisibility(View.VISIBLE);
+                    tv_ord_resch.setVisibility(View.GONE);
+                    ll_cancl.setVisibility(View.GONE);
+//                    items = new String[]{"Request Release", "Order Pass"};
                 }
             }
         }
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        tv_ord_resch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userChoosenReleaseTask = "Order Reschedule";
+                RescheduleOrderDialog cdd = new RescheduleOrderDialog(activity, new Btech_VisitDisplayAdapter.OrderRescheduleDialogButtonClickedDelegateResult(), orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0));
+                cdd.show();
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        tv_ord_rel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+                View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+                TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+                TextView tv_text1 = bottomSheet.findViewById(R.id.tv_text1);
+                tv_text.setText("Warning");
+                tv_text1.setText("Rs 200 debit will be levied for releasing this Order");
+
+                Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+                btn_yes.setText("Accept Debit");
+                btn_yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onClickListeners != null) {
+                            onClickListeners.onItemRelease(orderVisitDetailsModelsArr.get(pos));
+                        }
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+                Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+                btn_no.setText("Cancel Request");
+                btn_no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheet);
+                bottomSheetDialog.setCancelable(false);
+                bottomSheetDialog.show();
+            }
+        });
+
+        tv_ord_pass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onClickListeners != null) {
+                    onClickListeners.onItemReleaseTo(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getPincode(), orderVisitDetailsModelsArr.get(pos));
+                }
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        if (ll_cancl.getVisibility() == View.VISIBLE) {
+            if (cancelVisit.equals("y")) {
+                btn_yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (cancelVisit.equals("y")) {
+                            if (isNetworkAvailable(activity)) {
+                                CallServiceUpdateAPI(pos);
+                            } else {
+                                Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            bottomSheetDialog.dismiss();
+                        }
+                    }
+                });
+
+                btn_no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+            }
+        }
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(true);
+        bottomSheetDialog.show();
+
+        /*final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Select Action");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
@@ -797,15 +1008,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             builder.setNegativeButton("YES", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (cancelVisit.equals("y")) {
-                        if (isNetworkAvailable(activity)) {
-                            CallServiceUpdateAPI(pos);
-                        } else {
-                            Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        dialog.dismiss();
-                    }
+
                 }
             });
         }
@@ -818,7 +1021,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             });
         }
         builder.show();
-
+*/
     }
 
     private void CallServiceUpdateAPI(int pos) {
@@ -840,7 +1043,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    homeScreenActivity.pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
+                                    activity.startActivity(new Intent(activity,VisitOrdersDisplayFragment_new.class));
+//                                    homeScreenActivity.pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
                                     dialog.dismiss();
 
                                 }
@@ -1002,7 +1206,9 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                                 isAutoTimeSelected = true;
                             } else {
                                 isAutoTimeSelected = false;
-                                homeScreenActivity.pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
+                                Intent intent = new Intent(activity, VisitOrdersDisplayFragment_new.class);
+                                activity.startActivity(intent);
+//                                homeScreenActivity.pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
                             }
                         } catch (Settings.SettingNotFoundException e) {
                             e.printStackTrace();
@@ -1040,7 +1246,35 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
 
             if (new Date().before(date)) {
                 //  Toast.makeText(activity, "is After", Toast.LENGTH_SHORT).show();
-                AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+
+                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+                String string = "Appointment time of this order is at " + orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot() + " " + "still do you want to start?";
+                View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+                TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+                tv_text.setText(string);
+
+                Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+                btn_yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+                        assigned(pos);
+                    }
+                });
+
+                Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+                btn_no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheet);
+                bottomSheetDialog.setCancelable(false);
+                bottomSheetDialog.show();
+               /* AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
 
                 alertDialog.setMessage("Appointment time of this order is at " + orderVisitDetailsModelsArr.get(pos).getAppointmentDate() + " " + orderVisitDetailsModelsArr.get(pos).getSlot() + " " + "still do you want to start?");
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
@@ -1057,9 +1291,41 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
 
                             }
                         });
-                alertDialog.show();
+                alertDialog.show();*/
             } else {
-                //Toast.makeText(activity, "is before", Toast.LENGTH_SHORT).show();
+               /* String s = "Do you want to Start ?";
+                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+
+                View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+                TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+                tv_text.setText(s);
+
+                Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+                btn_yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+                        assigned(pos);
+                    }
+                });
+
+                Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+                btn_no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bottomSheetDialog.dismiss();
+
+                    }
+                });
+
+                bottomSheetDialog.setContentView(bottomSheet);
+                bottomSheetDialog.setCancelable(false);
+                bottomSheetDialog.show();*/
+
+                assigned(pos);
+
+                /*//Toast.makeText(activity, "is before", Toast.LENGTH_SHORT).show();
                 AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
 
                 alertDialog.setMessage("Do you want to Start ?");
@@ -1077,7 +1343,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
 
                             }
                         });
-                alertDialog.show();
+                alertDialog.show();*/
             }
         } else {
             gpsTracker.showSettingsAlert();

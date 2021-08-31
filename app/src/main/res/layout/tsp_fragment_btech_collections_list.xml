@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="UTF-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_fetch_order"
     android:layout_width="match_parent"
@@ -7,130 +8,164 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <TextView
-        android:id="@+id/no_record"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="4dp"
-        android:gravity="center_horizontal"
-        android:text="No Record Found"
-        android:visibility="gone" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="3">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <include layout="@layout/default_toolbar"
+        android:id="@+id/appbarLayout"/>
 
     <LinearLayout
-        android:id="@+id/ll_hub_display_footer"
+        android:layout_below="@+id/appbarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:orientation="vertical"
-        android:weightSum="2">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:gravity="bottom"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-
-            <LinearLayout
-                android:id="@+id/ll_scan_vial_barcode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="2dp"
-                android:layout_weight="1"
-                android:background="@color/colorOrange"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <ImageView
-                    android:layout_height="@dimen/dp_20"
-                    android:layout_width="0dp"
-                    android:src="@drawable/ic_scanbarcode"
-                    android:layout_weight="0.5"
-                    android:layout_gravity="center_vertical"/>
-
-                <TextView
-                    android:id="@+id/tv_centrifuge"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ellipsize="marquee"
-                    android:fadingEdge="horizontal"
-                    android:text="Scan Barcode"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:layout_weight="1.5"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_scan_master_barcode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
-                android:layout_weight="1"
-                android:background="@color/colorOrange"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <ImageView
-                    android:layout_height="@dimen/dp_20"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/barcode_icon_white"
-                    android:padding="@dimen/_2sdp"/>
-
-                <TextView
-                    android:id="@+id/tv_scan_barcode"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1.5"
-                    android:ellipsize="marquee"
-                    android:paddingLeft="@dimen/_2sdp"
-                    android:fadingEdge="horizontal"
-                    android:text="Scan Master Barcode"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <LinearLayout
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/no_record"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:text="No Record Found"
+            android:visibility="gone" />
 
-            <Button
-                android:id="@+id/btn_receive"
-                style="@style/button_style"
-                android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tv_collection_sample"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:text="Collected Sample:"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/value"
+            android:textStyle="bold" />
+
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/appbarLayout"
+            android:layout_marginTop="0dp"
+            android:layout_weight="3">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorOrange"
-                android:text="@string/receiveButton"
-                android:visibility="visible"
-                android:minEms="9"/>
+                android:scrollbars="vertical" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_hub_display_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:weightSum="2">
+
+            <!-- <LinearLayoutandroid:layout_width="match_parent"android:layout_height="65dp"android:layout_gravity="bottom"android:layout_weight="1"android:gravity="bottom"android:orientation="horizontal"android:weightSum="2"><LinearLayoutandroid:id="@+id/ll_scan_vial_barcode"android:layout_width="match_parent"android:layout_height="wrap_content"android:layout_marginEnd="2dp"android:layout_weight="1"android:background="@color/colorOrange"android:orientation="horizontal"android:weightSum="2"><ImageViewandroid:layout_width="0dp"android:layout_height="@dimen/dp_20"android:layout_gravity="center_vertical"android:layout_weight="0.5"android:src="@drawable/ic_scanbarcode" /><TextViewandroid:id="@+id/tv_centrifuge"android:layout_width="0dp"android:layout_height="wrap_content"android:layout_gravity="center"android:layout_weight="1.5"android:ellipsize="marquee"android:fadingEdge="horizontal"android:text="Scan Barcode"android:textColor="@color/white"android:textSize="14sp" /></LinearLayout><LinearLayoutandroid:id="@+id/ll_scan_master_barcode"android:layout_width="match_parent"android:layout_height="wrap_content"android:layout_marginRight="2dp"android:layout_weight="1"android:background="@color/colorOrange"android:orientation="horizontal"android:weightSum="2"><ImageViewandroid:layout_width="0dp"android:layout_height="@dimen/dp_20"android:layout_gravity="center_vertical"android:layout_weight="0.5"android:paddingLeft="@dimen/_5sdp"android:paddingRight="@dimen/_5sdp"android:src="@drawable/barcode_icon_white" /><TextViewandroid:id="@+id/tv_scan_barcode"android:layout_width="0dp"android:layout_height="wrap_content"android:layout_gravity="center"android:layout_weight="1.5"android:ellipsize="marquee"android:fadingEdge="horizontal"android:paddingLeft="@dimen/_5sdp"android:text="Scan Master Barcode"android:textColor="@color/white"android:textSize="14sp" /></LinearLayout></LinearLayout>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    app:cardCornerRadius="@dimen/_5sdp"
+                    app:cardElevation="@dimen/_5sdp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <LinearLayout
+                            android:id="@+id/ll_scan_vial_barcode"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:weightSum="3">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:src="@drawable/ic_barcode_img"
+                                app:tint="@color/colorPrimary" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="Vial Scan"
+                                android:textColor="@color/black" />
+
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/btn_receive"
+                            style="@style/button_style"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:background="@null"
+                            android:minEms="9"
+                            android:text="@string/receiveButton"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/_15sdp"
+                            android:textStyle="bold"
+                            android:visibility="visible" />
+
+                        <LinearLayout
+                            android:id="@+id/ll_scan_master_barcode"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:weightSum="3">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:src="@drawable/ic_barcode_img"
+                                app:tint="@color/colorPrimary" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="Master Scan"
+                                android:textColor="@color/black" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!--<Buttonandroid:id="@+id/btn_receive"style="@style/button_style"android:layout_width="wrap_content"android:layout_height="wrap_content"android:background="@drawable/purple_btn_bg"android:minEms="9"android:text="@string/receiveButton"android:visibility="visible" />-->
+
+
+            </LinearLayout>
+
         </LinearLayout>
+
     </LinearLayout>
-</LinearLayout>
+
+
+</RelativeLayout>

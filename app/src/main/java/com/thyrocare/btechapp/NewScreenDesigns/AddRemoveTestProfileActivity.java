@@ -33,6 +33,7 @@ import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 import com.thyrocare.btechapp.models.data.TestTypeWiseTestRateMasterModelsList;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
+import com.thyrocare.btechapp.utils.app.DateUtils;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
 
@@ -255,12 +256,12 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
     }
 
     private void SetSelectedCategory(TextView textView) {
-        textView.setTextColor(getResources().getColor(R.color.white));
-        textView.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+        textView.setTextColor(getResources().getColor(R.color.bg_new_color));
+        textView.setBackgroundColor(getResources().getColor(R.color.white));
     }
     private void SetUnSelectedCategory(TextView textView) {
-        textView.setTextColor(getResources().getColor(R.color.colorOrange));
-        textView.setBackgroundColor(getResources().getColor(R.color.white));
+        textView.setTextColor(getResources().getColor(R.color.white));
+        textView.setBackgroundColor(getResources().getColor(R.color.bg_new_color));
     }
 
     private void initData() {
@@ -270,15 +271,30 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 DisplaySelectedProducts(edit_selectedTestsList);
             }
         }
-        if (cd.isConnectingToInternet()) {
-            CallGetTechsoProductsAPI();
+
+        if (!UpdateProduct()) {
+            if (cd.isConnectingToInternet()) {
+                CallGetTechsoProductsAPI();
+            } else {
+                globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+            }
+        }else {
+            BrandTestMasterModel brandTestmdel = new Gson().fromJson(appPreferenceManager.getCacheProduct(), BrandTestMasterModel.class);
+            brandTestMasterModel = getBrandTestMaster(brandTestmdel);
+            CallAfterBranDAPIRes();
+        }
+    }
+
+    private boolean UpdateProduct() {
+        String getPreviouseMillis = appPreferenceManager.getCashingTime();
+        if (getPreviouseMillis.equalsIgnoreCase(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"))) {
+            return true;
         } else {
-            globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+            return false;
         }
     }
 
     private void CallGetTechsoProductsAPI() {
-
         try {
             GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token());
@@ -287,15 +303,15 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<BrandTestMasterModel> call, retrofit2.Response<BrandTestMasterModel> response) {
                     globalclass.hideProgressDialog(mActivity);
-
                     if (response.isSuccessful() && response.body() != null) {
-                        brandTestMasterModel = new BrandTestMasterModel();
+
+                        Gson gson22 = new Gson();
+                        String json22 = gson22.toJson(response.body());
+                        appPreferenceManager.setCacheProduct(json22);
+                        appPreferenceManager.setCashingTime(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"));
+
                         brandTestMasterModel = getBrandTestMaster(response.body());
-                        InitTestListView(brandTestMasterModel,"Test");
-                        SetSelectedCategory(tv_Test);
-                        SetUnSelectedCategory(tv_offers);
-                        SetUnSelectedCategory(tv_POP);
-                        SetUnSelectedCategory(tv_Profile);
+                        CallAfterBranDAPIRes();
                     } else {
                         globalclass.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                     }
@@ -312,6 +328,15 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    private void CallAfterBranDAPIRes() {
+        InitTestListView(brandTestMasterModel,"Test");
+        SetSelectedCategory(tv_Test);
+        SetUnSelectedCategory(tv_offers);
+        SetUnSelectedCategory(tv_POP);
+        SetUnSelectedCategory(tv_Profile);
+    }
+
 
     public BrandTestMasterModel getBrandTestMaster(BrandTestMasterModel brandTestMasterModel) {
         Gson gson = new Gson();
@@ -453,7 +478,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             lin_selectedTest.setVisibility(View.GONE);
         }
         tvTestName.setText(""+StringUtils.removeFirstCharacter(selected_products));
-        tvAppRate.setText(""+totalRate);
+        tvAppRate.setText(mActivity.getResources().getString(R.string.rupee_symbol)+""+totalRate+"/-");
     }
 
     static ArrayList<String> removeDuplicates(ArrayList<String> list) {

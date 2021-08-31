@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     tools:context=".NewScreenDesigns.AddRemoveTestProfileActivity">
+
     <RelativeLayout
         android:id="@+id/rel_header"
         android:layout_width="match_parent"
@@ -15,26 +16,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Test"
-            android:layout_margin="@dimen/_5sdp"
             android:layout_centerVertical="true"
+            android:layout_margin="@dimen/_5sdp"
             android:paddingLeft="@dimen/_10sdp"
-            android:textSize="@dimen/_16sdp"
-            android:textStyle="bold"
-            android:textColor="@color/white"/>
+            android:text="Add Test"
+            android:textColor="@color/white"
+            android:textSize="@dimen/label"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/txtClose"
             android:layout_width="@dimen/_25sdp"
             android:layout_height="@dimen/_25sdp"
             android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/_10sdp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/close_icon_while"
-            />
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/new_cancel_icon" />
     </RelativeLayout>
-
 
 
     <RelativeLayout
@@ -43,32 +42,34 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/rel_header"
         android:layout_margin="@dimen/_2sdp"
-        android:background="@drawable/rounded_background_empty_orange">
+        android:background="@drawable/rounded_background_grey">
 
         <EditText
             android:id="@+id/ed_Search"
-            android:layout_toLeftOf="@+id/img_searchIcon"
-            android:layout_centerVertical="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/img_searchIcon"
             android:background="@color/transparent"
-            android:hint="Search profile, test or offer .."/>
+            android:textSize="@dimen/value"
+            android:hint="Search profile, test or offer .." />
 
         <ImageView
             android:id="@+id/img_searchIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:src="@drawable/search_icon_orange"
-            android:layout_alignParentEnd="true"/>
+            app:tint="@color/grey" />
 
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/lin_selectedTest"
-        android:layout_below="@+id/rel_search_option"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/rel_search_option"
         android:layout_marginLeft="@dimen/_2sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_2sdp"
@@ -125,13 +126,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
-                android:padding="3dp"
-                android:maxLines="3"
                 android:gravity="bottom"
-                android:scrollbars = "vertical"
+                android:maxLines="3"
+                android:padding="3dp"
+                android:scrollbars="vertical"
                 android:textAllCaps="true"
-                android:textSize="12dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:textSize="12dp" />
 
             <View
                 android:layout_width="1dp"
@@ -147,8 +148,8 @@
                 android:layout_weight="3"
                 android:gravity="center"
                 android:padding="3dp"
-                android:textSize="12dp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:textSize="12dp" />
 
         </LinearLayout>
 
@@ -156,116 +157,125 @@
 
     <LinearLayout
         android:id="@+id/lin_profileCategory"
-        android:layout_below="@+id/lin_selectedTest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/colorOrange"
+        android:layout_below="@+id/lin_selectedTest"
         android:layout_margin="@dimen/_2sdp"
+        android:background="@color/blue_shadow"
+        android:orientation="horizontal"
         android:weightSum="4">
 
         <TextView
             android:id="@+id/tv_Test"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_margin="@dimen/_2sdp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
             android:padding="@dimen/_6sdp"
             android:text="Tests"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="@color/colorOrange"
-            android:textSize="@dimen/_14sdp"
-            android:background="@color/white"/>
+            android:textColor="@color/bg_new_color"
+            android:textSize="@dimen/value"
+            android:layout_gravity="center"
+            android:textStyle="bold" />
 
         <TextView
-        android:id="@+id/tv_Profile"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:padding="@dimen/_6sdp"
+            android:id="@+id/tv_Profile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/_2sdp"
-        android:text="Profiles"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/colorOrange"
-        android:textSize="@dimen/_14sdp"
-        android:background="@color/white"/>
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:padding="@dimen/_6sdp"
+            android:text="Profiles"
+            android:textColor="@color/bg_new_color"
+            android:textSize="@dimen/value"
+            android:layout_gravity="center"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_POP"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="@dimen/_6sdp"
             android:layout_margin="@dimen/_2sdp"
-            android:text="POP"
+            android:layout_weight="1"
+            android:background="@color/white"
             android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="@color/colorOrange"
-            android:textSize="@dimen/_14sdp"
-            android:background="@color/white"/>
+            android:padding="@dimen/_6sdp"
+            android:text="POP"
+            android:textColor="@color/bg_new_color"
+            android:textSize="@dimen/value"
+            android:layout_gravity="center"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_offers"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="@dimen/_6sdp"
             android:layout_margin="@dimen/_2sdp"
-            android:text="Offers"
+            android:layout_weight="1"
+            android:background="@color/white"
             android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="@color/colorOrange"
-            android:textSize="@dimen/_14sdp"
-            android:background="@color/white"/>
+            android:padding="@dimen/_6sdp"
+            android:text="Offers"
+            android:textColor="@color/bg_new_color"
+            android:textSize="@dimen/value"
+            android:layout_gravity="center"
+            android:textStyle="bold" />
 
 
     </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/lin_profileCategory"
-        android:layout_above="@+id/ll_btn">
+        android:layout_above="@+id/ll_btn"
+        android:layout_below="@+id/lin_profileCategory">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycle_TestList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
 
         <TextView
             android:id="@+id/tv_noDatafound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="NO DATA FOUND"
             android:textSize="@dimen/_18sdp"
-            android:layout_centerInParent="true"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
 
     </RelativeLayout>
 
 
-
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/ll_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/_10sdp"
+        android:clickable="true"
         android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        app:cardCornerRadius="@dimen/_5sdp"
+        app:cardElevation="@dimen/_5sdp">
 
         <Button
             android:id="@+id/btn_save"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_background_filled_oranged"
-            android:minEms="8"
+            android:layout_weight="1"
+            android:background="@color/white"
             android:text="Save"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
-    </LinearLayout>
+            android:textAllCaps="false"
+            android:textColor="@color/bg_new_color"
+            android:textSize="@dimen/label"
+            android:textStyle="bold" />
+
+    </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

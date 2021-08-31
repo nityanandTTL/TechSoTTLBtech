@@ -40,17 +40,17 @@
         android:allowBackup="true"
         android:exported="false"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/app_logo"
-        android:label="@string/app_name"
+        android:icon="@drawable/b_tech_new_logo"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon">
-        <activity android:name=".activity.HCW_Activity"
+        <activity
+            android:name=".activity.HCW_Activity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
@@ -58,6 +58,38 @@
         <activity
             android:name=".NewScreenDesigns.AddRemoveTestProfileActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".NewScreenDesigns.Fragments.TSP_OrdersDisplayFragment_new"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        <activity
+            android:name=".NewScreenDesigns.Fragments.Leave_intimation_fragment_new"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".fragment.TSP_HubMasterBarcodeScanFragment"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".fragment.ScheduleYourDayFragment"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".fragment.TSP_SendFragment"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".fragment.BtechwithHub_HubMasterBarcodeScanFragment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -76,13 +108,21 @@
         <activity
             android:name=".activity.KIOSK_Scanner_Activity"
             android:label="@string/kioskscanner"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".activity.OrderPickUpActivity"
             android:label="Pickup Order"
             android:parentActivityName=".activity.HomeScreenActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NewScreenDesigns.Activities.ScanBarcodeWoeActivity"
             android:screenOrientation="portrait"
@@ -99,7 +139,8 @@
         <activity
             android:name=".NewScreenDesigns.Activities.LoginActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NewScreenDesigns.Activities.SplashActivity"
             android:label="@string/app_name"
@@ -114,9 +155,21 @@
         <activity
             android:name=".activity.HomeScreenActivity"
             android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".NewScreenDesigns.Fragments.BtechCertificateFragment"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".fragment.LeadGenerationFragment"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activity.NotificationClickActivity"
             android:label="@string/app_notificationorders"
@@ -127,6 +180,12 @@
             android:name=".activity.SelfieUploadActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".NewScreenDesigns.Fragments.FeedbackFragment_new"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -140,11 +199,18 @@
             android:label="LME"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".fragment.ChangePasswordFragment"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.OLCPickupDetailMapDisplayFragmentActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+
         <activity
             android:name=".activity.ForgetPasswordActivity"
             android:label="@string/app_name"
@@ -177,13 +243,36 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".activity.DynamicScheduleYourDayActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".activity.Tsp_ScheduleYourDayActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.StockAvailabilityActivity"
+            android:name=".fragment.HubListDisplayFragment"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".fragment.HubMasterBarcodeScanFragment"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+
+        <activity
+            android:name=".NewScreenDesigns.Fragments.ServerdOrderFragment"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.StockAvailabilityActivity"
+
             android:parentActivityName=".activity.HomeScreenActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -270,8 +359,8 @@
         <service
             android:name=".service.FireMsgService"
             android:enabled="true"
-            android:stopWithTask="false"
-            android:exported="false">
+            android:exported="false"
+            android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
+
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.delegate.SlotsSelectionDelegate;
 import com.thyrocare.btechapp.models.data.SlotModel;
@@ -54,18 +56,19 @@ public class SlotsDisplayAdapter extends BaseAdapter{
             convertView = inflater.inflate(R.layout.item_slots,parent,false);
             holder = new ViewHolder();
             holder.txtSlot = (TextView) convertView.findViewById(R.id.txt_slots);
+            holder.card_view = (CardView)convertView.findViewById(R.id.card_view);
             convertView.setTag(holder);
         }
         else{
             holder = (ViewHolder) convertView.getTag();
         }
         if(selectedSlots.contains(slotsArr.get(position))){
-            holder.txtSlot.setTextColor(activity.getResources().getColor(android.R.color.white));
-            holder.txtSlot.setBackgroundColor(activity.getResources().getColor(R.color.colorPrimaryDark));
+            holder.txtSlot.setTextColor(activity.getResources().getColor(R.color.white));
+            holder.card_view.setBackgroundColor(activity.getResources().getColor(R.color.bg_new_color));
         }
         else{
-            holder.txtSlot.setTextColor(activity.getResources().getColor(R.color.lightgray));
-            holder.txtSlot.setBackgroundColor(activity.getResources().getColor(R.color.colorSecondaryDark));
+            holder.txtSlot.setTextColor(activity.getResources().getColor(R.color.bg_new_color));
+            holder.card_view.setBackgroundColor(activity.getResources().getColor(R.color.white));
         }
         holder.txtSlot.setText(slotsArr.get(position).getSlot());
         holder.txtSlot.setOnClickListener(new View.OnClickListener() {
@@ -87,5 +90,6 @@ public class SlotsDisplayAdapter extends BaseAdapter{
     }
     private class ViewHolder{
         private TextView txtSlot;
+        private CardView card_view;
     }
 }

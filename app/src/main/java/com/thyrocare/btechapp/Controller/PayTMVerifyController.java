@@ -43,12 +43,12 @@ public class PayTMVerifyController {
                     try {
                         if (response.isSuccessful() && response.body() != null) {
                             PayTMVerifyResponseModel payTMVerifyResponseModel = response.body();
-                            if (!InputUtils.isNull(payTMVerifyResponseModel.getStatus()) && InputUtils.CheckEqualIgnoreCase(payTMVerifyResponseModel.getStatus(), ConstantsMessages.RES0000)) {
-                                Global.showCustomStaticToast(activity, payTMVerifyResponseModel.getResponseMessage());
-                                paymentsActivity.getSubmitVerifyResponse(payTMVerifyResponseModel, payTMVerifyRequestModel.getOrderNo());
-                            } else {
-                                globalClass.showCustomToast(activity, "" + payTMVerifyResponseModel.getResponseMessage());
-                            }
+//                            if (!InputUtils.isNull(payTMVerifyResponseModel.getStatus()) && InputUtils.CheckEqualIgnoreCase(payTMVerifyResponseModel.getStatus(), ConstantsMessages.RES0000)) {
+//                                Global.showCustomStaticToast(activity, payTMVerifyResponseModel.getResponseMessage());
+//                            } else {
+//                                globalClass.showCustomToast(activity, "" + payTMVerifyResponseModel.getResponseMessage());
+//                            }
+                            paymentsActivity.getSubmitVerifyResponse(payTMVerifyResponseModel, payTMVerifyRequestModel.getOrderNo());
                         } else {
                             globalClass.showCustomToast(activity, "Something went wrong. Try after sometime");
                         }

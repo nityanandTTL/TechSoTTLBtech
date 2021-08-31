@@ -154,7 +154,6 @@
 
     <string name="notification_text">Tracking, tap to cancel</string>
 
-
     <string name="newClientEntry">NEW CLIENT ENTRY</string>
     <string name="clientEntry">Client Entry</string>
     <string name="clientName">Name*</string>
@@ -186,6 +185,11 @@
         <item>Current Stock</item>
     </string-array>
 
+
+    <string-array name="gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
 
     <string name="expectedStock">Expected Stock</string>
     <string name="actualStock">Actual Stock</string>
@@ -235,7 +239,7 @@
     <string name="error_samedate">You cannot select same date.</string>
     <string name="error_FromDatebigger">From date cannot be afterward of to date.</string>
     <string-array name="Reason_mode">
-        <item>--Select--</item>
+        <item>Select Reason</item>
         <item>Unwell</item>
         <item>Personal Work</item>
         <item>Festival</item>
@@ -339,6 +343,9 @@
 
     <string name="PaymentGateway"><b><u>PAYMENT GATEWAYS</u></b></string>
     <string name="PayWithCash"><b><u>PAY WITH CASH</u></b></string>
+    <string name="forgot_password"><u>Forgot Password ?</u></string>
+    <string name="welcome_n_mr_mitanshu_kadam">Welcome ,\n MR. Mitanshu Kadam</string>
+    <string name="add_beneficiary"><u>Add Beneficiary</u></string>
 
 
 </resources>

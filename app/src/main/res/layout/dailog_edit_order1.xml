@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/colorBackground"
+    android:orientation="vertical"
     android:padding="@dimen/_2sdp">
 
     <TextView
@@ -22,9 +22,9 @@
         android:id="@+id/close_btn"
         android:layout_width="@dimen/_20sdp"
         android:layout_height="@dimen/_20sdp"
+        android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/_5sdp"
-        android:background="@drawable/close_icon_while"
-        android:layout_alignParentEnd="true"/>
+        android:background="@drawable/close_icon_while" />
 
 
     <ListView
@@ -38,16 +38,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="5"
+        android:layout_below="@+id/test_names"
         android:gravity="center"
-        android:layout_below="@+id/test_names">
+        android:weightSum="5">
 
         <Button
             android:id="@+id/btn_addtest"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:layout_margin="@dimen/dp_5"
+            android:layout_weight="2"
             android:background="@drawable/rounded_background_filled_oranged"
             android:minEms="5"
             android:text="Add Test"
@@ -60,8 +60,8 @@
             android:id="@+id/btn_save"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:layout_margin="@dimen/dp_5"
+            android:layout_weight="2"
             android:background="@drawable/rounded_background_filled_oranged"
             android:minEms="5"
             android:text="Save"
@@ -69,7 +69,6 @@
             android:textColor="@android:color/white"
             android:textSize="15sp"
             android:textStyle="bold" />
-
 
 
     </LinearLayout>

@@ -7,11 +7,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -24,7 +28,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -58,17 +64,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 /**
  * i)/SpecimenTrack/TSPScannedBarcode/Btechid<br/>
- *ii)/SpecimenTrack/SendConsignment<br/>
- *iii)/SpecimenTrack/CourierModes<br/>
+ * ii)/SpecimenTrack/SendConsignment<br/>
+ * iii)/SpecimenTrack/CourierModes<br/>
  */
-public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBarcodeListAdapter.CallbackInterface {
+public class TSP_SendFragment extends AppCompatActivity implements Tsp_HubScanBarcodeListAdapter.CallbackInterface {
 
     public static final String TAG_FRAGMENT = TSP_SendFragment.class.getSimpleName();
     View rootview;
-    static EditText edt_datetimepicker;
+    EditText edt_datetimepicker;
     private int sampleCollectedYear;
     private int sampleCollectedMonth;
     private int sampleCollectedDay;
@@ -81,45 +88,55 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
     private ArrayList<String> Modes;
     Tsp_SendMode_DataModel tsp_sendMode_dataModel1;
     String regexp = ".{1,7}";
-
     /*barcode*/
-    private HomeScreenActivity activity;
     private IntentIntegrator intentIntegrator;
     private RecyclerView recyclerView;
     private ArrayList<Tsp_ScanBarcodeDataModel> barcodeModels = new ArrayList<>();
     private Tsp_HubScanBarcodeListAdapter hubScanBarcodeListAdapter;
     private Global global;
     private Activity mActivity;
+    AppPreferenceManager appPreferenceManager;
 
-    public TSP_SendFragment() {
-        // Required empty public constructor
-    }
+    TextView tv_toolbar;
+    ImageView iv_back,iv_home;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        rootview = inflater.inflate(R.layout.fragment_tsp__send, container, false);
-        getActivity().setTitle("TSP");
-        activity = new HomeScreenActivity();
-        mActivity = getActivity();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_tsp__send);
+        mActivity = this;
+        appPreferenceManager = new AppPreferenceManager(mActivity);
         global = new Global(mActivity);
         initUI();
         fetchBarcodeData();/***Barcode***/
         //fetchModeData();
         listeners();
-        return rootview;
     }
 
+
     private void fetchModeData() {
-        if (isNetworkAvailable(getActivity())) {
+        if (isNetworkAvailable(mActivity)) {
             CallgetTspModeDataApi();
         } else {
-            Toast.makeText(getActivity(), R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void listeners() {
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         // Get Current DateTime...
         edt_datetimepicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,13 +145,13 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
                 sampleCollectedYear = now.get(Calendar.YEAR);
                 sampleCollectedMonth = now.get(Calendar.MONTH);
                 sampleCollectedDay = now.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(mActivity, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         sampleCollectedDay = dayOfMonth;
                         sampleCollectedMonth = monthOfYear;
                         sampleCollectedYear = year;
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(mActivity, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 String yyyy = sampleCollectedYear + "";
@@ -149,10 +166,10 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
                                 if (cl.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
                                     edt_datetimepicker.setText(sampleCollectedTime);
                                 } else {
-                                    Toast.makeText(getActivity(), "Past time cannot be selected", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, "Past time cannot be selected", Toast.LENGTH_SHORT).show();
                                 }
                             }
-                        }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), DateFormat.is24HourFormat(getActivity()));
+                        }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), DateFormat.is24HourFormat(mActivity));
                         timePickerDialog.show();
                     }
                 }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
@@ -167,9 +184,9 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
             public void onClick(View v) {
 
                 if (validate()) {
-                    View view = getActivity().getCurrentFocus();
+                    View view = mActivity.getCurrentFocus();
                     if (view != null) {
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
 
@@ -196,10 +213,10 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
                     tsp_send_requestModel.setTSP(Integer.parseInt(appPreferenceManager.getBtechID()));
                     tsp_send_requestModel.setMode(tsp_sendMode_dataModel1.getMode());
 
-                    if (isNetworkAvailable(getActivity())) {
+                    if (isNetworkAvailable(mActivity)) {
                         CallgetTspSendConsignmentAPI(tsp_send_requestModel);
                     } else {
-                        Toast.makeText(getActivity(), R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -260,37 +277,36 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
     }
 
     public void initUI() {
-        super.initUI();
-        appPreferenceManager = new AppPreferenceManager(getActivity());
-        edt_datetimepicker = (EditText) rootview.findViewById(R.id.edt_datetimepicker);
-        edt_cid = (EditText) rootview.findViewById(R.id.edt_cid);
-        edt_rpl = (EditText) rootview.findViewById(R.id.edt_rpl);
-        edt_cpl = (EditText) rootview.findViewById(R.id.edt_cpl);
-        //edt_barcode = (EditText) rootview.findViewById(R.id.edt_barcode);
-        edt_routingmode = (EditText) rootview.findViewById(R.id.edt_routingmode);
-        edt_remarks = (EditText) rootview.findViewById(R.id.edt_remarks);
-        btn_send = (Button) rootview.findViewById(R.id.btn_send);
-        spinnerMode = (Spinner) rootview.findViewById(R.id.spnr_mode);
+        edt_datetimepicker = (EditText) findViewById(R.id.edt_datetimepicker);
+        edt_cid = (EditText) findViewById(R.id.edt_cid);
+        edt_rpl = (EditText) findViewById(R.id.edt_rpl);
+        edt_cpl = (EditText) findViewById(R.id.edt_cpl);
+        //edt_barcode = (EditText) findViewById(R.id.edt_barcode);
+        edt_routingmode = (EditText) findViewById(R.id.edt_routingmode);
+        edt_remarks = (EditText) findViewById(R.id.edt_remarks);
+        btn_send = (Button) findViewById(R.id.btn_send);
+        spinnerMode = (Spinner) findViewById(R.id.spnr_mode);
         now = Calendar.getInstance();
 
-        recyclerView = (RecyclerView) rootview.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        tv_toolbar =  findViewById(R.id.tv_toolbar);
+        iv_back =  findViewById(R.id.iv_back);
+        iv_home =  findViewById(R.id.iv_home);
+
+        tv_toolbar.setText("Send");
     }
 
-    public static Fragment newInstance() {
-        return new TSP_SendFragment();
-    }
 
-
-    private void CallgetTspSendConsignmentAPI(Tsp_Send_RequestModel tsp_send_requestModel){
+    private void CallgetTspSendConsignmentAPI(Tsp_Send_RequestModel tsp_send_requestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetTspSendConsignmentAPI(tsp_send_requestModel);
-        global.showProgressDialog(mActivity,"Please wait..");
+        global.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 global.hideProgressDialog(mActivity);
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mActivity);
                     alertDialogBuilder.setCancelable(false);
                     alertDialogBuilder.setMessage("Dispatched Successfully.");
@@ -298,16 +314,17 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface arg0, int arg1) {
-                                    pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                                    startActivity(new Intent(mActivity, HomeScreenActivity.class));
                                 }
                             });
 
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else{
+                } else {
                     Toast.makeText(mActivity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(mActivity);
@@ -319,7 +336,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
     private void CallgetTspModeDataApi() {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<Tsp_SendMode_DataModel>> responseCall = apiInterface.CallgetTspModeDataApi();
-        global.showProgressDialog(mActivity,"Please wait..");
+        global.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<ArrayList<Tsp_SendMode_DataModel>>() {
             @Override
             public void onResponse(Call<ArrayList<Tsp_SendMode_DataModel>> call, retrofit2.Response<ArrayList<Tsp_SendMode_DataModel>> response) {
@@ -337,7 +354,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
                     }
                     tsp_sendMode_dataModel1 = new Tsp_SendMode_DataModel();
 
-                    ArrayAdapter<String> spinneradapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, Modes);
+                    ArrayAdapter<String> spinneradapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, Modes);
                     spinneradapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerMode.setAdapter(spinneradapter);
 
@@ -365,6 +382,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
                     global.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<Tsp_SendMode_DataModel>> call, Throwable t) {
                 global.hideProgressDialog(mActivity);
@@ -379,10 +397,10 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
     /***barcode***/
     private void fetchBarcodeData() {
 
-        if (isNetworkAvailable(getActivity())) {
+        if (isNetworkAvailable(mActivity)) {
             CallgetTspScanBarcodeApi();
         } else {
-            Toast.makeText(getActivity(), R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -390,7 +408,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
     private void CallgetTspScanBarcodeApi() {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<Tsp_ScanBarcodeResponseModel> responseCall = apiInterface.CallgetTspScanBarcodeApi(appPreferenceManager.getBtechID());
-        global.showProgressDialog(mActivity,"Please wait..");
+        global.showProgressDialog(mActivity, "Please wait..");
         responseCall.enqueue(new Callback<Tsp_ScanBarcodeResponseModel>() {
             @Override
             public void onResponse(Call<Tsp_ScanBarcodeResponseModel> call, retrofit2.Response<Tsp_ScanBarcodeResponseModel> response) {
@@ -404,13 +422,15 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
                         fetchModeData();
                     } else {
                         //Toast.makeText(getActivity(), "No records found", Toast.LENGTH_SHORT).show();
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mActivity);
                         alertDialogBuilder.setMessage("No Barcode Records Found.");
                         alertDialogBuilder.setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface arg0, int arg1) {
-                                        pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+
+                                        startActivity(new Intent(mActivity,HomeScreenActivity.class));
+
                                     }
                                 });
 
@@ -421,6 +441,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
                     global.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
+
             @Override
             public void onFailure(Call<Tsp_ScanBarcodeResponseModel> call, Throwable t) {
                 global.hideProgressDialog(mActivity);
@@ -433,9 +454,9 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
     /*barcode*/
     private void prepareRecyclerView() {
         Logger.debug("onsode prepareRecyclerView" + "true");
-        hubScanBarcodeListAdapter = new Tsp_HubScanBarcodeListAdapter(barcodeModels, activity);
+        hubScanBarcodeListAdapter = new Tsp_HubScanBarcodeListAdapter(barcodeModels, mActivity);
         hubScanBarcodeListAdapter.setOnShareClickedListener(this);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivity);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(hubScanBarcodeListAdapter);
@@ -444,6 +465,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
     /*barcode*/
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null && scanningResult.getContents() != null) {
             String scanned_barcode = scanningResult.getContents();
@@ -455,7 +477,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
 
                     if (barcodeModels.get(i).isReceived()) {
                         Logger.debug("inside loop" + "true");
-                        Toast.makeText(getActivity(), "Same Barcode is Already Scanned", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "Same Barcode is Already Scanned", Toast.LENGTH_SHORT).show();
                         break;
                     } else {
                         barcodeModels.get(i).setReceived(true);
@@ -474,7 +496,7 @@ public class TSP_SendFragment extends AbstractFragment implements Tsp_HubScanBar
     /*barcode*/
     @Override
     public void onHandleSelection(int position) {
-        intentIntegrator = new IntentIntegrator(getActivity()) {
+        intentIntegrator = new IntentIntegrator(mActivity) {
             @Override
             protected void startActivityForResult(Intent intent, int code) {
                 TSP_SendFragment.this.startActivityForResult(intent, BundleConstants.START_BARCODE_SCAN); // REQUEST_CODE override

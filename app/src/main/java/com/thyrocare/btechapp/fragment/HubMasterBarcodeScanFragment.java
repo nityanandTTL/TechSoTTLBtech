@@ -1,17 +1,23 @@
 package com.thyrocare.btechapp.fragment;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +53,9 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 
+import static android.view.View.VISIBLE;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 
 /**
@@ -56,11 +64,12 @@ import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
  * Created by Orion on 7/4/2017.
  */
 
-public class HubMasterBarcodeScanFragment extends AbstractFragment implements View.OnClickListener {
+public class HubMasterBarcodeScanFragment extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG_FRAGMENT = HubMasterBarcodeScanFragment.class.getSimpleName();
     private LinearLayout ll_hub_display_footer, ll_scan_master_barcode, ll_scan_vial_barcode;
-    private HomeScreenActivity activity;
+    private TextView tv_collection_sample;
+    private Activity activity;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<HubBarcodeModel> barcodeModels = new ArrayList<>();
@@ -73,34 +82,20 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
     private boolean isCentrifuged = false;
     private TextView tv_centrifuge;
     private Global global;
-
-    public HubMasterBarcodeScanFragment() {
-    }
-
-    public static HubMasterBarcodeScanFragment newInstance(int i) {
-
-        return new HubMasterBarcodeScanFragment();
-    }
-
-    public static HubMasterBarcodeScanFragment newInstance(HUBBTechModel hubbTechModel) {
-        HubMasterBarcodeScanFragment fragment = new HubMasterBarcodeScanFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(BundleConstants.HUB_BTECH_MODEL, hubbTechModel);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
+    AppPreferenceManager appPreferenceManager;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_btech_collections_list, container, false);
-        activity = (HomeScreenActivity) getActivity();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_btech_collections_list);
+        activity = this;
         global = new Global(activity);
-        activity.toolbarHome.setTitle("Hub Scan");
+
         appPreferenceManager = new AppPreferenceManager(activity);
-        hubbTechModel = getArguments().getParcelable(BundleConstants.HUB_BTECH_MODEL);
-        initUI(view);
+        hubbTechModel = getIntent().getExtras().getParcelable(BundleConstants.HUB_BTECH_MODEL);
+        initUI();
         setListeners();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -110,13 +105,13 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
             }
         });
         fetchData();
-        return view;
     }
 
     private void setListeners() {
         ll_scan_master_barcode.setOnClickListener(this);
         ll_scan_vial_barcode.setOnClickListener(this);
         btnDispatch.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
     }
 
     private void fetchData() {
@@ -128,38 +123,45 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
     }
 
 
-
-    private void initUI(View view) {
+    private void initUI() {
 
         if (HubListDisplayFragment.flowDecider == 1) {//for btech_hub flow
-            tv_centrifuge = (TextView) view.findViewById(R.id.tv_centrifuge);
+            tv_centrifuge = (TextView) findViewById(R.id.tv_centrifuge);
             tv_centrifuge.setText("Scan Barcode");
         }
 
-        ll_hub_display_footer = (LinearLayout) view.findViewById(R.id.ll_hub_display_footer);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        ll_scan_master_barcode = (LinearLayout) view.findViewById(R.id.ll_scan_master_barcode);
-        ll_scan_vial_barcode = (LinearLayout) view.findViewById(R.id.ll_scan_vial_barcode);
-        ll_hub_display_footer.setVisibility(View.VISIBLE);
-        btnDispatch = (Button) view.findViewById(R.id.btn_dispatch);
+        ll_hub_display_footer = (LinearLayout) findViewById(R.id.ll_hub_display_footer);
+        tv_collection_sample = findViewById(R.id.tv_collection_sample);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        ll_scan_master_barcode = (LinearLayout) findViewById(R.id.ll_scan_master_barcode);
+        ll_scan_vial_barcode = (LinearLayout) findViewById(R.id.ll_scan_vial_barcode);
+        ll_hub_display_footer.setVisibility(VISIBLE);
+        tv_collection_sample.setVisibility(VISIBLE);
+        btnDispatch = (Button) findViewById(R.id.btn_dispatch);
+
+        tv_toolbar =findViewById(R.id.tv_toolbar);
+        iv_home =findViewById(R.id.iv_home);
+        iv_back =findViewById(R.id.iv_back);
+        tv_toolbar.setText("Hub Scan");
+        iv_home.setVisibility(View.GONE);
+        tv_toolbar.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ll_scan_master_barcode) {
-            if (barcodeModels!=null&&barcodeModels.size()>0){
+            if (barcodeModels != null && barcodeModels.size() > 0) {
                 isMasterBarcode = true;
                 scanFromFragment();
-            }
-            else {
+            } else {
                 Toast.makeText(activity, "No barcode to scan.", Toast.LENGTH_SHORT).show();
             }
         } else if (v.getId() == R.id.ll_scan_vial_barcode) {
-            if (barcodeModels!=null&&barcodeModels.size()>0){
+            if (barcodeModels != null && barcodeModels.size() > 0) {
                 isMasterBarcode = false;
                 scanFromFragment();
-            }else {
+            } else {
                 Toast.makeText(activity, "No barcode to scan.", Toast.LENGTH_SHORT).show();
             }
 
@@ -167,6 +169,10 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
             if (validate()) {
                 callMasterBarcodeMapApi();
             }
+        } else if (v.getId() == R.id.iv_back) {
+            finish();
+        } else if (v.getId() == R.id.iv_home) {
+           startActivity(new Intent(activity,HomeScreenActivity.class));
         }
     }
 
@@ -196,18 +202,16 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
     }
 
     private boolean validate() {
-        if (barcodeModels==null){
+        if (barcodeModels == null) {
             Toast.makeText(activity, "you cannot dispatch", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if (barcodeModels.size()<=0){
+        } else if (barcodeModels.size() <= 0) {
             Toast.makeText(activity, "you cannot dispatch", Toast.LENGTH_SHORT).show();
             return false;
-        }
-        else if (master_scanned_barcode.equals("")) {
+        } else if (master_scanned_barcode.equals("")) {
             Toast.makeText(activity, "scan for master barcode first", Toast.LENGTH_SHORT).show();
             return false;
-        }else if (master_scanned_barcode.toString().trim().length() != 8) {
+        } else if (master_scanned_barcode.toString().trim().length() != 8) {
             Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -232,12 +236,13 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
                     } else {
                         Toast.makeText(activity, "No records found", Toast.LENGTH_SHORT).show();
                     }
-                }else if (response.code() == 401) {
+                } else if (response.code() == 401) {
                     CallLogOutFromComDevice();
                 } else {
-                        Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<BtechCollectionsResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -251,8 +256,8 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
         try {
             TastyToast.makeText(activity, "Authorization failed, need to Login again...", TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
             try {
-                 new LogUserActivityTagging(activity, LOGOUT,"");
-                    appPreferenceManager.clearAllPreferences();
+                new LogUserActivityTagging(activity, LOGOUT, "");
+                appPreferenceManager.clearAllPreferences();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -266,7 +271,7 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);
             homeIntent.addCategory(Intent.CATEGORY_HOME);
             homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            getActivity().startActivity(homeIntent);
+            startActivity(homeIntent);
             // stopService(TImeCheckerIntent);
                /* finish();
                 finishAffinity();*/
@@ -274,8 +279,8 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
             Intent n = new Intent(activity, LoginActivity.class);
             n.setAction(Intent.ACTION_MAIN);
             n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            getActivity().startActivity(n);
-            getActivity().finish();
+            startActivity(n);
+            finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -284,6 +289,7 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         final IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null && scanningResult.getContents() != null) {
 
@@ -300,16 +306,16 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 */
-            if (scanningResult.getContents().startsWith("0") || scanningResult.getContents().startsWith("$")|| scanningResult.getContents().startsWith("1")|| scanningResult.getContents().startsWith(" ")) {
+            if (scanningResult.getContents().startsWith("0") || scanningResult.getContents().startsWith("$") || scanningResult.getContents().startsWith("1") || scanningResult.getContents().startsWith(" ")) {
                 Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
             } else {
                 if (!isMasterBarcode) {
                     String scanned_barcode = scanningResult.getContents();
-                    if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$")|| scanned_barcode.startsWith("1")|| scanned_barcode.startsWith(" ")) {
+                    if (scanned_barcode.startsWith("0") || scanned_barcode.startsWith("$") || scanned_barcode.startsWith("1") || scanned_barcode.startsWith(" ")) {
                         Toast.makeText(activity, "Invalid Barcode", Toast.LENGTH_SHORT).show();
                     } else {
                         for (int i = 0; i < barcodeModels.size(); i++) {
-                            if (barcodeModels.get(i).getBarcode().equals(scanned_barcode)) {
+                            if (barcodeModels.get(i).getBarcode().equals(scanned_barcode) || barcodeModels.get(i).getBarcode().toString().trim().toLowerCase().equals(scanned_barcode.toString().trim().toLowerCase())) {
                                 if (barcodeModels.get(i).isScanned()) {
                                     Toast.makeText(activity, "Same Barcode is Already Scanned", Toast.LENGTH_SHORT).show();
                                     break;
@@ -328,9 +334,9 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
 
                 } else {
                     master_scanned_barcode = scanningResult.getContents();
-                    if(master_scanned_barcode.toString().trim().length() != 8){
+                    if (master_scanned_barcode.toString().trim().length() != 8) {
                         Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         Toast.makeText(activity, "Master barcode scanned successfully", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -395,22 +401,25 @@ public class HubMasterBarcodeScanFragment extends AbstractFragment implements Vi
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
                     alertDialogBuilder.setMessage("Dispatched Successfully.");
                     alertDialogBuilder.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface arg0, int arg1) {
-                                    pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                                    Intent intent = new Intent(activity, HomeScreenActivity.class);
+                                    startActivity(intent);
+//                                    pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
                                 }
                             });
 
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else{
+                } else {
                     global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/_5sdp"
-    android:background="@drawable/rounded_background_empty_orange">
-
+    android:layout_margin="@dimen/_5sdp">
 
     <LinearLayout
         android:id="@+id/linBenDetails"
@@ -27,7 +26,9 @@
                 android:layout_height="@dimen/_20sdp"
                 android:layout_gravity="center"
                 android:layout_weight="0.5"
-                android:src="@drawable/ben_name_icon" />
+                android:src="@drawable/ben_name_icon"
+                android:visibility="gone"
+                app:tint="@color/bg_new_color" />
 
             <TextView
                 android:layout_width="0dp"
@@ -38,8 +39,9 @@
                 android:layout_weight="0.5"
                 android:gravity="center"
                 android:text=" : "
-                android:textColor="@color/black"
-                android:textSize="@dimen/_11sdp" />
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/_11sdp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_benName"
@@ -49,7 +51,7 @@
                 android:layout_weight="3.5"
                 android:gravity="start|center_vertical"
                 android:text=""
-                android:textColor="@color/black"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/_12sdp" />
 
         </LinearLayout>
@@ -69,7 +71,9 @@
                 android:layout_height="@dimen/_20sdp"
                 android:layout_gravity="center"
                 android:layout_weight="0.5"
-                android:src="@drawable/ben_product_icon" />
+                android:src="@drawable/ben_product_icon"
+                android:visibility="gone"
+                app:tint="@color/bg_new_color" />
 
             <TextView
                 android:layout_width="0dp"
@@ -80,8 +84,9 @@
                 android:layout_weight="0.5"
                 android:gravity="center"
                 android:text=" : "
-                android:textColor="@color/black"
-                android:textSize="@dimen/_11sdp" />
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/_11sdp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_benProduct"
@@ -92,7 +97,7 @@
                 android:gravity="start|center_vertical"
                 android:text=""
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="@dimen/_10sdp" />
 
         </LinearLayout>
 
@@ -112,7 +117,9 @@
                 android:layout_height="@dimen/_20sdp"
                 android:layout_gravity="center"
                 android:layout_weight="0.5"
-                android:src="@drawable/scan_barcode_icon" />
+                android:src="@drawable/scan_barcode_icon"
+                android:visibility="gone"
+                app:tint="@color/bg_new_color" />
 
             <TextView
                 android:layout_width="0dp"
@@ -123,8 +130,9 @@
                 android:layout_weight="0.5"
                 android:gravity="center"
                 android:text=" : "
-                android:textColor="@color/black"
-                android:textSize="@dimen/_11sdp" />
+                android:textColor="@color/bg_new_color"
+                android:textSize="@dimen/_11sdp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_benbarcode"
@@ -134,12 +142,11 @@
                 android:layout_weight="3.5"
                 android:gravity="start|center_vertical"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="@dimen/value" />
 
         </LinearLayout>
 
     </LinearLayout>
-
 
 
     <LinearLayout
@@ -181,13 +188,18 @@
                 android:layout_margin="@dimen/_2sdp"
                 android:drawablePadding="@dimen/_2sdp"
                 android:gravity="start|center_vertical"
-                android:textColor="@color/black"
                 android:text="@string/fasting_requried_Msg"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_10sdp" />
 
         </LinearLayout>
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:layout_below="@+id/lin_fastingDetails"
+        android:background="@color/grey" />
 
 </RelativeLayout>

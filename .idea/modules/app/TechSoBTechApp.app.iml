@@ -199,5 +199,8 @@
     <orderEntry type="library" name="Gradle: com.scottyab:rootbeer-lib:0.0.8@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.intuit.sdp:sdp-android:1.0.6@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.ablanco.zoomy:zoomy:1.1.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.stfalcon:swipeable-button:0.1.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.ncorti:slidetoact:0.9.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.cheekiat:slideview:1.6@aar" level="project" />
   </component>
 </module>

@@ -16,12 +16,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.mindorks.paracamera.Camera;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.StartAndArriveActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -51,6 +54,8 @@ public class KIOSK_Scanner_Activity extends AppCompatActivity {
     private AppPreferenceManager appPreferenceManager;
     private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels = new ArrayList<>();
     public static final String TAG_FRAGMENT = "KIOSK_Scanner_Activity";
+    TextView tv_toolbar;
+    ImageView iv_home, iv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,22 +69,45 @@ public class KIOSK_Scanner_Activity extends AppCompatActivity {
 
         BundleConstants.isKIOSKOrder = false;
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         InItUI();
         InItClickListner();
     }
 
     private void InItUI() {
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        tv_toolbar.setText("GQC WOE");
         cdView_ScanQRCode = (CardView) findViewById(R.id.cdView_ScanQRCode);
     }
 
     private void InItClickListner() {
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         cdView_ScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OpenScanPatientQrCodeScreen();
             }
         });
+
+        if (Constants.QrClick) {
+            Constants.QrClick = false;
+            cdView_ScanQRCode.performClick();
+        }
     }
 
     private void OpenScanPatientQrCodeScreen() {
@@ -136,42 +164,45 @@ public class KIOSK_Scanner_Activity extends AppCompatActivity {
                 global.hideProgressDialog(mActivity);
                 try {
                     if (response.isSuccessful()) {
-
                         orderDetailsResponseModels = null;
                         orderDetailsResponseModels = new ArrayList<>();
                         FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
 
-                        if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
-                            for (OrderVisitDetailsModel orderVisitDetailsModel :
-                                    fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
-                                if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
-                                    for (OrderDetailsModel orderDetailsModel :
-                                            orderVisitDetailsModel.getAllOrderdetails()) {
-                                        orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
-                                        orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
-                                        orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
-                                        orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
-                                        orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
-                                        orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
-                                        orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
-                                        orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
-                                        if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
-                                            for (BeneficiaryDetailsModel beneficiaryDetailsModel :
-                                                    orderDetailsModel.getBenMaster()) {
-                                                beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
-                                                beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
-                                                for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
-                                                    beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                        if (CheckisServiced(fetchOrderDetailsResponseModel)) {
+                            global.showCustomToast(mActivity, "Order is already served", Toast.LENGTH_LONG);
+                        } else {
+                            if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
+                                for (OrderVisitDetailsModel orderVisitDetailsModel :
+                                        fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
+                                    if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+                                        for (OrderDetailsModel orderDetailsModel :
+                                                orderVisitDetailsModel.getAllOrderdetails()) {
+                                            orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+                                            orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
+                                            orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
+                                            orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
+                                            orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
+                                            orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
+                                            orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
+                                            orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
+                                            if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
+                                                for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                                                        orderDetailsModel.getBenMaster()) {
+                                                    beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                                                    beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
+                                                    for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
+                                                        beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                                    }
                                                 }
                                             }
                                         }
+                                        orderDetailsResponseModels.add(orderVisitDetailsModel);
+                                        MessageLogger.LogError(TAG_FRAGMENT, "onResponse: " + orderDetailsResponseModels.size());
                                     }
-                                    orderDetailsResponseModels.add(orderVisitDetailsModel);
-                                    MessageLogger.LogError(TAG_FRAGMENT, "onResponse: " + orderDetailsResponseModels.size());
                                 }
                             }
+                            initData();
                         }
-                        initData();
                     } else {
                         global.hideProgressDialog(mActivity);
                     }
@@ -191,6 +222,25 @@ public class KIOSK_Scanner_Activity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private boolean CheckisServiced(FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel) {
+        if (fetchOrderDetailsResponseModel != null) {
+            if (fetchOrderDetailsResponseModel.getOrderVisitDetails() != null) {
+                if (fetchOrderDetailsResponseModel.getOrderVisitDetails().size() != 0) {
+                    if (fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails() != null) {
+                        if (fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0) != null) {
+                            if (fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).getStatus() != null) {
+                                if (fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).getStatus().toString().trim().equalsIgnoreCase("serviced")) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private void initData() {

@@ -22,6 +22,7 @@ import com.thyrocare.btechapp.models.api.response.BtechwithHubResponseModel;
 import com.thyrocare.btechapp.models.api.response.CampListDisplayResponseModel;
 import com.thyrocare.btechapp.models.api.response.CampScanQRResponseModel;
 import com.thyrocare.btechapp.models.api.response.DispatchHubDisplayDetailsResponseModel;
+import com.thyrocare.btechapp.models.api.response.DynamicBtechAvaliabilityResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchLedgerResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetTestListResponseModel;
@@ -74,6 +75,9 @@ public interface GetAPIInterface {
 
     @GET("api/BtechAvaibilityNew/BtechMarkedAvailability/{BtechID}")
     Call<NewBtechAvaliabilityResponseModel> GetBtechAvailability(@Path("BtechID")String BtechID);
+
+    @GET("api/BtechAvaibilityNew/DynamicBtechMarkedAvailability/{BtechID}")
+    Call<DynamicBtechAvaliabilityResponseModel> GetDynamicBtechAvailability(@Path("BtechID")String BtechID);
 
     @GET("api/BtechAvaibilityNew/NBTMarkedAvailability/{ID}")
     Call<ArrayList<TSPNBT_AvilModel>> GetTSP_NBT_Avialability(@Path("ID")String ID);

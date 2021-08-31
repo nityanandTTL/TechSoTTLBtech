@@ -1,114 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".NewScreenDesigns.Activities.StartAndArriveActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/appbarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        <include layout="@layout/default_toolbar"
+            android:id="@id/appbarLayout"/>
 
-        <androidx.appcompat.widget.Toolbar
+        <!--<androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarStockAvailablity"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-        </androidx.appcompat.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>-->
 
-    </com.google.android.material.appbar.AppBarLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyle_OrderDetail"
-        android:layout_below="@+id/appbarLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/lin_bottom"/>
+        android:layout_above="@+id/customSwipeButton2"
+        android:layout_below="@+id/appbarLayout" />
 
     <TextView
         android:id="@+id/txtNoRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:text="Data not found"
         android:textColor="@color/white"
-        android:textStyle="bold"
         android:textSize="@dimen/_17sdp"
-        android:layout_centerInParent="true"
-        android:visibility="gone"/>
+        android:textStyle="bold"
+        android:visibility="gone" />
 
-    <com.thyrocare.btechapp.customview.CircleImageView
+
+    <TextView
         android:id="@+id/btn_floating_add_ben"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:src="@drawable/add_ben_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/customSwipeButton2"
+        android:layout_marginBottom="@dimen/_30sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/lin_bottom"
-        android:background="@drawable/circle_bg"
-        android:layout_margin="@dimen/_10sdp"
+        android:drawableStart="@drawable/ic_add_ben"
+        android:drawablePadding="@dimen/_3sdp"
         android:elevation="@dimen/_5sdp"
-        android:visibility="gone"/>
+        android:gravity="center"
+        android:text="@string/add_beneficiary"
+        android:textAlignment="center"
+        android:textColor="@color/bg_new_color"
+        android:textSize="@dimen/_10sdp"
+        android:visibility="gone" />
 
-    <LinearLayout
+
+    <!-- <com.thyrocare.btechapp.customview.CircleImageView
+         android:id="@+id/btn_floating_add_ben"
+         android:layout_width="@dimen/_20sdp"
+         android:layout_height="@dimen/_20sdp"
+         android:src="@drawable/ic_add_ben"
+         android:layout_alignParentStart="true"
+         android:layout_above="@+id/lin_bottom"
+         android:layout_margin="@dimen/_10sdp"
+         android:elevation="@dimen/_5sdp"
+         android:visibility="gone1"/>-->
+
+
+    <!--<com.stfalcon.swipeablebutton.SwipeableButton
+        android:id="@+id/customSwipeButton2"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/lin_bottom"
+        app:checkedIcon="@drawable/ic_swipe_green"
+        app:uncheckedBackground="@drawable/rounded_background_green"
+        app:checkedToggleBackground="@drawable/rounded_background_grey"
+        app:durationAnimation="250"
+        app:isClickToSwipeEnable="false"
+        app:textChecked="Released"
+        app:textColorUnChecked="@color/bg_new_color"
+        app:textSize="8sp"
+        android:textAlignment="center"
+        android:layout_marginRight="@dimen/_30sdp"
+        android:layout_marginLeft="@dimen/_30sdp"
+        app:textUnchecked="Swipe to release"
+        app:thresholdEnd="0.3"
+        app:thresholdStart="0.7" />-->
+
+    <RelativeLayout
+        android:id="@+id/customSwipeButton2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/lin_bottom"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:layout_marginBottom="-15dp"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:paddingTop="-10dp">
+
+        <!--<cheekiat.slideview.SlideView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            app:slideBackground="@drawable/rounded_background_green"
+            app:slideSrc="@drawable/ic_right_green_circle"
+            app:slideText="Slide to unlock"
+
+            android:background="@drawable/rounded_background_green_2"
+            />-->
+
+        <LinearLayout
+            android:id="@+id/LL_swipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background_green_2"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Order release"
+                android:textAllCaps="false"
+                android:textColor="@color/bg_new_color"
+                android:textSize="@dimen/label"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <com.thyrocare.btechapp.customview.CircleImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-20dp"
+            android:visibility="gone"
+            android:src="@drawable/ic_swipe_green" />
+
+    </RelativeLayout>
+
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/lin_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/rounded_background_empty_orange"
         android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@drawable/new_shadow_background"
         android:padding="@dimen/_5sdp"
-        android:weightSum="2">
+        app:cardCornerRadius="@dimen/_8sdp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="10dp"
+        app:cardUseCompatPadding="true">
 
-        <TextView
-            android:id="@+id/txt_amount"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorOrange"
-            android:textSize="@dimen/_20sdp"
-            android:gravity="center"
-            android:text="" />
+            android:weightSum="2">
 
-        <Button
-            android:id="@+id/btn_start"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Start"
-            android:background="@drawable/rounded_background_filled_oranged"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_15sdp"
-            android:visibility="gone"/>
+            <TextView
+                android:id="@+id/txt_amount"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text=""
+                android:textStyle="bold"
+                android:textColor="@color/bg_new_color"
+                android:textSize="@dimen/_10sdp" />
 
-        <Button
-            android:id="@+id/btn_arrive"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Arrive"
-            android:background="@drawable/rounded_background_filled_oranged"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_15sdp" />
+            <Button
+                android:id="@+id/btn_start"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:text="Start"
+                android:paddingRight="@dimen/_40sdp"
+                android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
+                android:drawableTint="@color/bg_new_color"
+                android:textAllCaps="false"
+                android:textColor="@color/bg_new_color"
+                android:textSize="@dimen/label"
+                android:visibility="gone" />
 
-        <Button
-            android:id="@+id/btn_Proceed"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Proceed"
-            android:background="@drawable/rounded_background_filled_oranged"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_15sdp"
-            android:visibility="gone"/>
+            <Button
+                android:id="@+id/btn_arrive"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="Arrive"
+                android:paddingRight="@dimen/_40sdp"
+                android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
+                android:drawableTint="@color/bg_new_color"
+                android:textAllCaps="false"
+                android:textColor="@color/bg_new_color"
+                android:textSize="@dimen/label" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/btn_Proceed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:text="Proceed"
+                android:paddingRight="@dimen/_40sdp"
+                android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
+                android:drawableTint="@color/bg_new_color"
+                android:textAllCaps="false"
+                android:textColor="@color/bg_new_color"
+                android:textSize="@dimen/label"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
 
 </RelativeLayout>

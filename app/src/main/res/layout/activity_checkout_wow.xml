@@ -6,22 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".NewScreenDesigns.Activities.CheckoutWoeActivity">
 
-    <com.google.android.material.appbar.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    <include
         android:id="@+id/appbarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        layout="@layout/default_toolbar" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarStockAvailablity"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+    <!-- <com.google.android.material.appbar.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+         android:id="@+id/appbarLayout"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:theme="@style/AppTheme.AppBarOverlay">
 
-        </androidx.appcompat.widget.Toolbar>
+         <androidx.appcompat.widget.Toolbar
+             android:id="@+id/toolbarStockAvailablity"
+             android:layout_width="match_parent"
+             android:layout_height="?attr/actionBarSize"
+             android:background="?attr/colorPrimary"
+             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-    </com.google.android.material.appbar.AppBarLayout>
+         </androidx.appcompat.widget.Toolbar>
+
+     </com.google.android.material.appbar.AppBarLayout>-->
 
 
     <Spinner
@@ -31,117 +36,134 @@
         android:layout_below="@+id/appbarLayout"
         android:layout_margin="10dp"
         android:singleLine="true"
-        android:textSize="16sp" />
+        android:textSize="@dimen/value" />
+
+    <TextView
+        android:id="@+id/tv_spinner"
+        android:layout_below="@id/spn_collection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:singleLine="true"
+        android:textSize="@dimen/value" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyle_OrderDetailWithBarcode"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_Note"
-        android:layout_below="@+id/spn_collection" />
+        android:layout_below="@+id/spn_collection"
+        android:layout_margin="10dp" />
 
     <LinearLayout
+        android:id="@+id/ll_Note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/ll_location"
         android:layout_marginLeft="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:layout_above="@+id/ll_location"
         android:gravity="center"
-        android:id="@+id/ll_Note"
-        android:visibility="gone"
-        android:background="@drawable/rounded_background_empty_orange"
-        android:padding="@dimen/_5sdp">
+        android:padding="@dimen/_5sdp"
+        android:visibility="gone">
 
         <TextView
+            android:id="@+id/tv_note"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_note"/>
+            android:textColor="@color/grey"
+            android:textSize="@dimen/value" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/ll_selfie"
         android:layout_marginLeft="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:layout_above="@+id/ll_selfie"
         android:gravity="center"
-        android:visibility="visible"
-        android:background="@drawable/rounded_background_empty_orange"
-        android:padding="@dimen/_5sdp">
+        android:padding="@dimen/_5sdp"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_gravity="center"
-            android:gravity="center"
             android:layout_marginRight="@dimen/_2sdp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="@dimen/_15sdp"
                 android:layout_height="@dimen/_15sdp"
-                android:src="@drawable/zpl"
-                android:scaleType="fitXY"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:scaleType="fitXY" />
+            <!--                android:src="@drawable/zpl" -->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" CPL"/>
+                android:text=" CPL"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_gravity="center"
             android:layout_marginLeft="@dimen/_2sdp"
             android:layout_marginRight="@dimen/_2sdp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_weight="1">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="@dimen/_15sdp"
                 android:layout_height="@dimen/_15sdp"
-                android:src="@drawable/rpl"
+                android:layout_gravity="center"
                 android:scaleType="fitXY"
-                android:layout_gravity="center"/>
+                android:src="@drawable/rpl" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" RPL"
-                />
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_gravity="center"
             android:layout_marginLeft="@dimen/_2sdp"
             android:layout_marginRight="@dimen/_2sdp"
-            android:layout_gravity="center"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_weight="1">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="@dimen/_15sdp"
                 android:layout_height="@dimen/_15sdp"
-                android:src="@drawable/cpl"
-                android:scaleType="fitXY"
                 android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:src="@drawable/cpl"
                 app:tint="@color/sample_type_serum" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" ZPL"/>
+                android:text=" ZPL"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp" />
 
         </LinearLayout>
 
@@ -156,7 +178,6 @@
         android:layout_above="@+id/lin_bottom"
         android:layout_marginLeft="@dimen/_10sdp"
         android:layout_marginRight="@dimen/_10sdp"
-        android:background="@drawable/rounded_background_empty_orange"
         android:orientation="vertical"
         android:padding="@dimen/_5sdp">
 
@@ -165,24 +186,49 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_capture_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:background="@drawable/rounded_background_filled_oranged"
-                android:text="Capture Selfie*"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_10sdp" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="@dimen/_5sdp"
+                app:cardElevation="@dimen/_10sdp">
+
+                <TextView
+                    android:id="@+id/btn_capture_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="@dimen/_8sdp"
+                    android:text="Capture Selfie"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/label"
+                    android:textStyle="bold" />
+
+            </androidx.cardview.widget.CardView>
+
+            <!--            <Button-->
+            <!--                android:id="@+id/btn_capture_photo"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="40dp"-->
+            <!--                android:background="@drawable/rounded_background_filled_oranged"-->
+            <!--                android:text="Capture Selfie*"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="@dimen/_10sdp" />-->
 
             <TextView
                 android:id="@+id/tv_view_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/ViewImage"
-                android:textAllCaps="true"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_10sdp"
+                android:textAllCaps="false"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/value"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -194,8 +240,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Note: Take Selfie while removing PPE"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_10sdp" />
+                android:textColor="@color/grey"
+                android:textSize="@dimen/value" />
         </LinearLayout>
 
     </LinearLayout>
@@ -216,13 +262,14 @@
         android:id="@+id/lin_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/cv_submit"
         android:layout_marginLeft="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_5sdp"
         android:background="@drawable/rounded_background_empty_orange"
         android:padding="@dimen/_5sdp"
+        android:visibility="gone"
         android:weightSum="5">
 
         <TextView
@@ -235,17 +282,58 @@
             android:textColor="@color/colorOrange"
             android:textSize="@dimen/_20sdp" />
 
-        <Button
-            android:id="@+id/btn_Pay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:background="@drawable/rounded_background_filled_oranged"
-            android:text="Pay"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_15sdp" />
+        <!--        <Button-->
+        <!--            android:id="@+id/btn_Pay"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_weight="2"-->
+        <!--            android:background="@drawable/rounded_background_filled_oranged"-->
+        <!--            android:text="Pay"-->
+        <!--            android:textColor="@color/white"-->
+        <!--            android:textSize="@dimen/_15sdp" />-->
 
     </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        app:cardCornerRadius="@dimen/_5sdp"
+        app:cardElevation="@dimen/_10sdp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/procced_button_background"
+            android:padding="@dimen/_10sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:text="Paid"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/_12sdp" />
+
+            <TextView
+                android:id="@+id/btn_Pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:text="Submit"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/label"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
 
 </RelativeLayout>

@@ -1,8 +1,15 @@
 package com.thyrocare.btechapp.adapter;
 
 import android.app.Activity;
+
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +23,10 @@ import com.thyrocare.btechapp.models.api.response.VideosResponseModel;
 import com.thyrocare.btechapp.utils.app.Global;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import pl.droidsonroids.gif.GifImageView;
+import tcking.github.com.giraffeplayer2.VideoView;
 
 
 public class DisplayVideoListAdapter extends RecyclerView.Adapter<DisplayVideoListAdapter.MyViewHolder> {
@@ -48,40 +57,42 @@ public class DisplayVideoListAdapter extends RecyclerView.Adapter<DisplayVideoLi
 
         myViewHolder.tv_title.setText(VideosArylist.get(position).getTitle());
         myViewHolder.tv_description.setText(VideosArylist.get(position).getDescription());
-        if (VideosArylist.get(position).isVideoPlaying()){
+        if (VideosArylist.get(position).isVideoPlaying()) {
             myViewHolder.tv_title.setTextColor(activity.getResources().getColor(R.color.colorPrimary));
             myViewHolder.tv_description.setTextColor(activity.getResources().getColor(R.color.btn_login_start_grd));
             myViewHolder.tv_nowPlaying.setVisibility(View.VISIBLE);
-            if (VideosArylist.get(position).isVideoPaused()){
+            if (VideosArylist.get(position).isVideoPaused()) {
                 myViewHolder.tv_nowPlaying.setText("Paused");
                 myViewHolder.GIF_VideoPlaying.setVisibility(View.GONE);
-            }else{
+            } else {
                 myViewHolder.tv_nowPlaying.setText("Now Playing..");
                 myViewHolder.GIF_VideoPlaying.setVisibility(View.VISIBLE);
             }
-        }else{
+        } else {
             myViewHolder.tv_title.setTextColor(activity.getResources().getColor(R.color.black));
             myViewHolder.tv_description.setTextColor(activity.getResources().getColor(R.color.black));
             myViewHolder.GIF_VideoPlaying.setVisibility(View.GONE);
             myViewHolder.tv_nowPlaying.setVisibility(View.GONE);
         }
 
-        global.DisplayImagewithoutDefaultImage(activity,VideosArylist.get(position).getImageurl(),myViewHolder.img_thumbnail);
+        global.DisplayImagewithoutDefaultImage(activity, VideosArylist.get(position).getImageurl(), myViewHolder.img_thumbnail);
+
+
 
         myViewHolder.rel_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 for (int i = 0; i < VideosArylist.size(); i++) {
-                    if (i == position){
+                    if (i == position) {
                         VideosArylist.get(i).setVideoPlaying(true);
-                    }else{
+                    } else {
                         VideosArylist.get(i).setVideoPlaying(false);
                     }
                 }
 
                 if (onItemClickListener != null) {
-                    onItemClickListener.OnVideoItemSelected(VideosArylist,VideosArylist.get(position));
+                    onItemClickListener.OnVideoItemSelected(VideosArylist, VideosArylist.get(position));
                 }
             }
         });
@@ -94,15 +105,15 @@ public class DisplayVideoListAdapter extends RecyclerView.Adapter<DisplayVideoLi
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout rel_main;
+        CardView rel_main;
         ImageView img_thumbnail;
-        TextView tv_title, tv_description,tv_nowPlaying;
+        TextView tv_title, tv_description, tv_nowPlaying;
         GifImageView GIF_VideoPlaying;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            rel_main = (RelativeLayout) itemView.findViewById(R.id.rel_main);
+            rel_main = itemView.findViewById(R.id.rel_main);
             img_thumbnail = (ImageView) itemView.findViewById(R.id.img_thumbnail);
             tv_title = (TextView) itemView.findViewById(R.id.tv_title);
             tv_description = (TextView) itemView.findViewById(R.id.tv_description);
@@ -119,5 +130,7 @@ public class DisplayVideoListAdapter extends RecyclerView.Adapter<DisplayVideoLi
     public interface OnItemClickListener {
         void OnVideoItemSelected(ArrayList<VideosResponseModel.Outputlang> VideoArrylist, VideosResponseModel.Outputlang SelectedVideo);
     }
-
+    public Bitmap createVideoThumbNail(String path){
+        return ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MICRO_KIND);
+    }
 }

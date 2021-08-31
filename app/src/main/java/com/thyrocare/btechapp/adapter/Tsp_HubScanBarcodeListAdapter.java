@@ -6,6 +6,7 @@ package com.thyrocare.btechapp.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class Tsp_HubScanBarcodeListAdapter extends RecyclerView.Adapter<Tsp_HubS
 
 
     private ArrayList<Tsp_ScanBarcodeDataModel> barcodeModels;
-    private HomeScreenActivity activity;
+    private Activity activity;
     private IntentIntegrator intentIntegrator;
     private CallbackInterface mCallback;
 
@@ -68,7 +69,7 @@ public class Tsp_HubScanBarcodeListAdapter extends RecyclerView.Adapter<Tsp_HubS
     }
 
 
-    public Tsp_HubScanBarcodeListAdapter(ArrayList<Tsp_ScanBarcodeDataModel> barcodeModels, HomeScreenActivity activity) {
+    public Tsp_HubScanBarcodeListAdapter(ArrayList<Tsp_ScanBarcodeDataModel> barcodeModels, Activity activity) {
         this.barcodeModels = barcodeModels;
         this.activity = activity;
 

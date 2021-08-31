@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/_5sdp" />
+                    <padding android:right="@dimen/_10sdp" />
+                    <solid android:color="@color/white" />
+                </shape>
+            </item>
+            <item>
+                <bitmap android:gravity="center|right" android:src="@drawable/ic_arrow_down" />
+            </item>
+        </layer-list>
+    </item>
+</selector>

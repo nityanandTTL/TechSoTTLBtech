@@ -4,10 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.PersistableBundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,29 +61,29 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SO
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Leave_intimation_fragment_new extends Fragment {
+public class Leave_intimation_fragment_new extends AppCompatActivity {
 
     public static final String TAG_FRAGMENT = "LEAVE_INTIMATION";
     private Activity mActivity;
     private ConnectionDetector cd;
-    private Button btn_apply_leaves_id, btn_applied_leaved_id, btn_submit_leave_id;
+    private Button btn_apply_leaves_id, btn_applied_leaved_id;
+    Button btn_submit_leave_id;
     private RadioGroup radio_group_id;
     private RadioButton radio_one_day_id, radio_more_day_id;
     private TextView tv_from_date_id, tv_to_day_id, tv_display_from_date_id;
     private ImageView img_from_date_id, img_to_day_id;
     private Spinner spinner_select_reason_id, spinner_select_nature_id;
     private EditText edt_remark_id;
-    private String[] str_array,Cancel_ReasonArray;
+    private String[] str_array, Cancel_ReasonArray;
     private DatePickerDialog datepicker_id;
     private String yy_mm_dd_str_show2, yy_mm_dd_str_show1;
     private AlertDialog.Builder alertDialog;
     private String todate, remarks;
     private LeaveIntimation_SubmitModel leaveIntimation_submitModel;
-    private int  days = 1;
+    private int days = 1;
     String btech_id = "";
     private Global global;
     private RelativeLayout rl_applyforleave_id;
@@ -87,8 +92,10 @@ public class Leave_intimation_fragment_new extends Fragment {
     private RecyclerView rv_show_applied_leaves_id;
     ArrayList<GetResponse_NatureLeaveModel> getResponse_natureLeaveModel;
     private AppPreferenceManager appPreferenceManager;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
 
-    public Leave_intimation_fragment_new() {
+   /* public Leave_intimation_fragment_new() {
         // Required empty public constructor
     }
 
@@ -97,78 +104,88 @@ public class Leave_intimation_fragment_new extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mActivity = getActivity();
+        setContentView(R.layout.fragment_leave_intimation_modified_new);
+        mActivity = this;
         cd = new ConnectionDetector(mActivity);
         global = new Global(mActivity);
         alertDialog = new AlertDialog.Builder(mActivity);
         appPreferenceManager = new AppPreferenceManager(mActivity);
         btech_id = appPreferenceManager.getLoginResponseModel().getUserID();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_leave_intimation_modified_new, container, false);
-        HomeScreenActivity activity = (HomeScreenActivity) getActivity();
-        if (activity.toolbarHome != null) {
-            activity.toolbarHome.setTitle("Leave Intimation");
-        }
-        init(view);
+        init();
         listeners();
         callapi_forspinner();
-        return view;
     }
 
-    private void init(View view) {
-        btn_applied_leaved_id = view.findViewById(R.id.btn_applied_leaved_id);
-        btn_apply_leaves_id = view.findViewById(R.id.btn_apply_leaves_id);
-        btn_submit_leave_id = view.findViewById(R.id.btn_submit_leave_id);
 
-        radio_group_id = view.findViewById(R.id.radio_group_id);
-        radio_one_day_id = view.findViewById(R.id.radio_one_day_id);
-        radio_more_day_id = view.findViewById(R.id.radio_more_day_id);
+    private void init() {
 
-        tv_from_date_id = view.findViewById(R.id.tv_from_date_id);
-        tv_to_day_id = view.findViewById(R.id.tv_to_day_id);
-        tv_display_from_date_id = view.findViewById(R.id.tv_display_from_date_id);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        tv_toolbar.setText("Leave Intimation");
+        btn_applied_leaved_id = findViewById(R.id.btn_applied_leaved_id);
+        btn_apply_leaves_id = findViewById(R.id.btn_apply_leaves_id);
+        btn_submit_leave_id = findViewById(R.id.btn_submit_leave_id);
 
-        img_from_date_id = view.findViewById(R.id.img_from_date_id);
-        img_to_day_id = view.findViewById(R.id.img_to_day_id);
+        radio_group_id = findViewById(R.id.radio_group_id);
+        radio_one_day_id = findViewById(R.id.radio_one_day_id);
+        radio_more_day_id = findViewById(R.id.radio_more_day_id);
 
-        spinner_select_reason_id = view.findViewById(R.id.spinner_select_reason_id);
-        spinner_select_nature_id = view.findViewById(R.id.spinner_select_nature_id);
+        tv_from_date_id = findViewById(R.id.tv_from_date_id);
+        tv_to_day_id = findViewById(R.id.tv_to_day_id);
+        tv_display_from_date_id = findViewById(R.id.tv_display_from_date_id);
 
-        edt_remark_id = view.findViewById(R.id.edt_remark_id);
+        img_from_date_id = findViewById(R.id.img_from_date_id);
+        img_to_day_id = findViewById(R.id.img_to_day_id);
 
-        ll_layout_from_date_id = view.findViewById(R.id.ll_layout_from_date_id);
-        ll_layout_to_date_id = view.findViewById(R.id.ll_layout_to_date_id);
-        ll_layout_remark_id = view.findViewById(R.id.ll_layout_remark_id);
-        ll_showapplied_leaved = view.findViewById(R.id.ll_showapplied_leaved);
-        ll_spinner_nature_id = view.findViewById(R.id.ll_spinner_nature_id);
-        ll_datepicker_2_id = view.findViewById(R.id.ll_datepicker_2_id);
-        ll_datepicker_1_id = view.findViewById(R.id.ll_datepicker_1_id);
+        spinner_select_reason_id = findViewById(R.id.spinner_select_reason_id);
+        spinner_select_nature_id = findViewById(R.id.spinner_select_nature_id);
 
-        rl_applyforleave_id = view.findViewById(R.id.rl_applyforleave_id);
+        edt_remark_id = findViewById(R.id.edt_remark_id);
 
-        rv_show_applied_leaves_id = view.findViewById(R.id.rv_show_applied_leaves_id);
-        layoutManager = new LinearLayoutManager(getActivity());
+        ll_layout_from_date_id = findViewById(R.id.ll_layout_from_date_id);
+        ll_layout_to_date_id = findViewById(R.id.ll_layout_to_date_id);
+        ll_layout_remark_id = findViewById(R.id.ll_layout_remark_id);
+        ll_showapplied_leaved = findViewById(R.id.ll_showapplied_leaved);
+        ll_spinner_nature_id = findViewById(R.id.ll_spinner_nature_id);
+        ll_datepicker_2_id = findViewById(R.id.ll_datepicker_2_id);
+        ll_datepicker_1_id = findViewById(R.id.ll_datepicker_1_id);
+
+        rl_applyforleave_id = findViewById(R.id.rl_applyforleave_id);
+
+        rv_show_applied_leaves_id = findViewById(R.id.rv_show_applied_leaves_id);
+        layoutManager = new LinearLayoutManager(mActivity);
         rv_show_applied_leaves_id.setLayoutManager(layoutManager);
 
-        str_array = getActivity().getResources().getStringArray(R.array.Reason_mode);
-        Cancel_ReasonArray = getActivity().getResources().getStringArray(R.array.Cancel_Reason_mode);
+        str_array = mActivity.getResources().getStringArray(R.array.Reason_mode);
+        Cancel_ReasonArray = getResources().getStringArray(R.array.Cancel_Reason_mode);
         radio_one_day_id.setSelected(true);
         radio_one_day_id.setChecked(true);
 
     }
 
     private void listeners() {
+
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         ll_datepicker_1_id.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,10 +205,10 @@ public class Leave_intimation_fragment_new extends Fragment {
             public void onClick(View view) {
                 rl_applyforleave_id.setVisibility(View.VISIBLE);
                 ll_showapplied_leaved.setVisibility(View.GONE);
-                btn_applied_leaved_id.setBackground(getContext().getResources().getDrawable(R.drawable.border_checkout_));
-                btn_apply_leaves_id.setBackground(getContext().getResources().getDrawable(R.drawable.background_btn_orange_));
+                btn_applied_leaved_id.setBackground(mActivity.getResources().getDrawable(R.drawable.grey_rect_grey_stroke_bg));
+                btn_apply_leaves_id.setBackground(mActivity.getResources().getDrawable(R.drawable.background_btn_orange_));
 
-                btn_applied_leaved_id.setTextColor(getResources().getColor(R.color.black));
+                btn_applied_leaved_id.setTextColor(getResources().getColor(R.color.bg_new_color));
                 btn_apply_leaves_id.setTextColor(getResources().getColor(R.color.white));
             }
         });
@@ -201,10 +218,10 @@ public class Leave_intimation_fragment_new extends Fragment {
                 rl_applyforleave_id.setVisibility(View.GONE);
                 callapi_forleaveapplied();
                 ll_showapplied_leaved.setVisibility(View.VISIBLE);
-                btn_applied_leaved_id.setBackground(getContext().getResources().getDrawable(R.drawable.background_btn_orange_));
-                btn_apply_leaves_id.setBackground(getContext().getResources().getDrawable(R.drawable.border_checkout_));
+                btn_applied_leaved_id.setBackground(mActivity.getResources().getDrawable(R.drawable.background_btn_orange_));
+                btn_apply_leaves_id.setBackground(mActivity.getResources().getDrawable(R.drawable.grey_rect_grey_stroke_bg));
                 btn_applied_leaved_id.setTextColor(getResources().getColor(R.color.white));
-                btn_apply_leaves_id.setTextColor(getResources().getColor(R.color.black));
+                btn_apply_leaves_id.setTextColor(getResources().getColor(R.color.bg_new_color));
             }
         });
         btn_submit_leave_id.setOnClickListener(new View.OnClickListener() {
@@ -220,17 +237,16 @@ public class Leave_intimation_fragment_new extends Fragment {
         setReasonSpinner(str_array);
 
 
-
         radio_group_id.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if (radioGroup.getCheckedRadioButtonId() == R.id.radio_one_day_id) {
-                    tv_display_from_date_id.setText("Date");
+                    tv_display_from_date_id.setText("Date*");
                     if (ll_layout_to_date_id.getVisibility() == View.VISIBLE) {
                         ll_layout_to_date_id.setVisibility(View.GONE);
                     }
                 } else if (radioGroup.getCheckedRadioButtonId() == R.id.radio_more_day_id) {
-                    tv_display_from_date_id.setText("From date");
+                    tv_display_from_date_id.setText("From date*");
                     if (ll_layout_to_date_id.getVisibility() == View.GONE) {
                         ll_layout_to_date_id.setVisibility(View.VISIBLE);
                     }
@@ -240,12 +256,11 @@ public class Leave_intimation_fragment_new extends Fragment {
     }
 
 
-
     private void callapi_forspinner() {
 
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<GetResponse_NatureLeaveModel>> getResponse_natureLeaveModelCall = apiInterface.Getnature_forleaveintimation();
-        global.showProgressDialog(mActivity,  "Please wait..", false);
+        global.showProgressDialog(mActivity, "Please wait..", false);
         getResponse_natureLeaveModelCall.enqueue(new Callback<ArrayList<GetResponse_NatureLeaveModel>>() {
             @Override
             public void onResponse(Call<ArrayList<GetResponse_NatureLeaveModel>> call, Response<ArrayList<GetResponse_NatureLeaveModel>> response) {
@@ -256,7 +271,7 @@ public class Leave_intimation_fragment_new extends Fragment {
                     getResponse_natureLeaveModel = new ArrayList<>();
                     GetResponse_NatureLeaveModel model = new GetResponse_NatureLeaveModel();
                     model.setId(0);
-                    model.setNature("--Select--");
+                    model.setNature("Select Nature");
                     getResponse_natureLeaveModel.add(model);
                     getResponse_natureLeaveModel.addAll(response.body());
                     if (getResponse_natureLeaveModel.size() > 0) {
@@ -280,16 +295,21 @@ public class Leave_intimation_fragment_new extends Fragment {
     }
 
     private void SetNatureSpinner() {
-        ArrayAdapter spinneradapter = new ArrayAdapter(mActivity, android.R.layout.simple_spinner_item, getResponse_natureLeaveModel);
+        ArrayList<String> arrayList = new ArrayList<>();
+        ;
+        for (int i = 0; i < getResponse_natureLeaveModel.size(); i++) {
+            arrayList.add(Global.toCamelCase(getResponse_natureLeaveModel.get(i).getNature()));
+        }
+        ArrayAdapter spinneradapter = new ArrayAdapter(mActivity, android.R.layout.simple_spinner_item, arrayList);
         spinneradapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_select_nature_id.setAdapter(spinneradapter);
         spinner_select_nature_id.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                if (getResponse_natureLeaveModel.get(position).getNature().equalsIgnoreCase("Cancel")){
+                if (getResponse_natureLeaveModel.get(position).getNature().equalsIgnoreCase("Cancel")) {
                     setReasonSpinner(Cancel_ReasonArray);
-                }else{
+                } else {
                     setReasonSpinner(str_array);
                 }
             }
@@ -326,7 +346,7 @@ public class Leave_intimation_fragment_new extends Fragment {
 
     private void callapi_forleaveapplied() {
 
-        global.showProgressDialog(mActivity,  "Please wait..", false);
+        global.showProgressDialog(mActivity, "Please wait..", false);
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<Get_Leave_Applied_history_Model>> leave_applied_history_call = apiInterface.GetBetch_leavehistory(btech_id);
         leave_applied_history_call.enqueue(new Callback<ArrayList<Get_Leave_Applied_history_Model>>() {
@@ -340,7 +360,7 @@ public class Leave_intimation_fragment_new extends Fragment {
                         rv_show_applied_leaves_id.setAdapter(new Leavehistory_Adapter(mActivity, getLeave_applied_history_model));
                     } else {
                         rv_show_applied_leaves_id.setVisibility(View.GONE);
-                        global.showcenterCustomToast(mActivity,"Not Records found", Toast.LENGTH_LONG);
+                        global.showcenterCustomToast(mActivity, "Not Records found", Toast.LENGTH_LONG);
                     }
                 } else {
                     global.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
@@ -349,7 +369,7 @@ public class Leave_intimation_fragment_new extends Fragment {
 
             @Override
             public void onFailure(Call<ArrayList<Get_Leave_Applied_history_Model>> call, Throwable t) {
-                global.showCustomToast(mActivity,SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
+                global.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
                 global.hideProgressDialog(mActivity);
 
 
@@ -359,19 +379,19 @@ public class Leave_intimation_fragment_new extends Fragment {
     }
 
     private boolean validation() {
-        if (spinner_select_nature_id.getSelectedItem().toString().equalsIgnoreCase("--Select--")) {
-            global.showCustomToast(getActivity(), getResources().getString(R.string.error_nature), Toast.LENGTH_LONG);
+        if (spinner_select_nature_id.getSelectedItem().toString().equalsIgnoreCase("Select Nature")) {
+            global.showCustomToast(mActivity, getResources().getString(R.string.error_nature), Toast.LENGTH_LONG);
             return false;
         }
         if (radio_group_id.getCheckedRadioButtonId() == R.id.radio_one_day_id) {
             if (TextUtils.isEmpty(tv_from_date_id.getText().toString())) {
-                global.showCustomToast(getActivity(), getResources().getString(R.string.Select_date), Toast.LENGTH_LONG);
+                global.showCustomToast(mActivity, getResources().getString(R.string.Select_date), Toast.LENGTH_LONG);
                 return false;
             }
         }
         if (radio_group_id.getCheckedRadioButtonId() == R.id.radio_more_day_id) {
             if (TextUtils.isEmpty(tv_from_date_id.getText().toString()) || TextUtils.isEmpty(tv_to_day_id.getText().toString())) {
-                global.showCustomToast(getActivity(), getResources().getString(R.string.Select_both_date), Toast.LENGTH_LONG);
+                global.showCustomToast(mActivity, getResources().getString(R.string.Select_both_date), Toast.LENGTH_LONG);
                 return false;
             } else if (!TextUtils.isEmpty(tv_from_date_id.getText().toString()) && !TextUtils.isEmpty(tv_to_day_id.getText().toString())) {
 
@@ -382,13 +402,13 @@ public class Leave_intimation_fragment_new extends Fragment {
                     if (d_from_date.equals(d_to_date)) {
                         tv_from_date_id.setText("");
                         tv_to_day_id.setText("");
-                        global.showCustomToast(getActivity(), getResources().getString(R.string.error_samedate), Toast.LENGTH_LONG);
+                        global.showCustomToast(mActivity, getResources().getString(R.string.error_samedate), Toast.LENGTH_LONG);
                         return false;
                     }
                     if (d_from_date.after(d_to_date)) {
                         tv_from_date_id.setText("");
                         tv_to_day_id.setText("");
-                        global.showCustomToast(getActivity(), getResources().getString(R.string.error_FromDatebigger), Toast.LENGTH_LONG);
+                        global.showCustomToast(mActivity, getResources().getString(R.string.error_FromDatebigger), Toast.LENGTH_LONG);
                         return false;
                     }
                 } catch (Exception e) {
@@ -396,13 +416,17 @@ public class Leave_intimation_fragment_new extends Fragment {
                 }
             }
         }
-        if (spinner_select_reason_id.getSelectedItem().toString().equalsIgnoreCase("--Select--")) {
-            global.showCustomToast(getActivity(), getResources().getString(R.string.error_reason), Toast.LENGTH_LONG);
+        if (spinner_select_reason_id.getSelectedItem().toString().equalsIgnoreCase("Select Reason")) {
+            global.showCustomToast(mActivity, getResources().getString(R.string.error_reason), Toast.LENGTH_LONG);
             return false;
         }
         if (spinner_select_reason_id.getSelectedItem().toString().equalsIgnoreCase("Others")) {
             if (TextUtils.isEmpty(edt_remark_id.getText().toString())) {
-                global.showCustomToast(getActivity(), getResources().getString(R.string.error_remark), Toast.LENGTH_LONG);
+                global.showCustomToast(mActivity, getResources().getString(R.string.error_remark), Toast.LENGTH_LONG);
+                return false;
+            }
+            if (edt_remark_id.getText().toString().startsWith(" ")) {
+                Toast.makeText(mActivity, "Cannot start with space", Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
@@ -411,7 +435,6 @@ public class Leave_intimation_fragment_new extends Fragment {
     }
 
     private void callapi_leaveintimation() {
-
         leaveIntimation_submitModel = new LeaveIntimation_SubmitModel();
         leaveIntimation_submitModel.setBtechId(Integer.parseInt(btech_id));
         leaveIntimation_submitModel.setEnteredBy(Integer.parseInt(btech_id));
@@ -436,9 +459,7 @@ public class Leave_intimation_fragment_new extends Fragment {
             leaveIntimation_submitModel.setDays(1);
             leaveIntimation_submitModel.setTodate(yy_mm_dd_str_show1);
         }
-
         leaveIntimation_submitModel.setFromdate(yy_mm_dd_str_show1);
-
 
         global.showProgressDialog(mActivity, "Please Wait..", false);
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
@@ -451,24 +472,24 @@ public class Leave_intimation_fragment_new extends Fragment {
                     CommonResponseModel responseModel = response.body();
                     if (responseModel.getRES_ID().equalsIgnoreCase("RES0000")) {
 
-                        if (getResponse_natureLeaveModel.get(spinner_select_nature_id.getSelectedItemPosition()).getNature().equalsIgnoreCase("Cancel")){
-                            global.showCustomToast(mActivity, "Leave Cancelled Successfully", Toast.LENGTH_LONG);
-                        }else{
-                            global.showCustomToast(mActivity, "Leave Applied Successfully", Toast.LENGTH_LONG);
+                        if (getResponse_natureLeaveModel.get(spinner_select_nature_id.getSelectedItemPosition()).getNature().equalsIgnoreCase("Cancel")) {
+                            Toast.makeText(mActivity, "Leave Cancelled Successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(mActivity, "Leave Applied Successfully", Toast.LENGTH_SHORT).show();
                         }
                         resetAlldata();
                     } else {
-                        global.showCustomToast(mActivity, !StringUtils.isNull(responseModel.getRESPONSE1()) ? responseModel.getRESPONSE1() : SomethingWentwrngMsg, Toast.LENGTH_LONG);
+                        Toast.makeText(mActivity, !StringUtils.isNull(responseModel.getRESPONSE1()) ? responseModel.getRESPONSE1() : SomethingWentwrngMsg, Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    global.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
+                    Toast.makeText(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<CommonResponseModel> call, Throwable t) {
                 global.hideProgressDialog(mActivity);
-                global.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
+                Toast.makeText(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -490,7 +511,7 @@ public class Leave_intimation_fragment_new extends Fragment {
 
             }
         });
-        datePickerDialogFragment.show(getFragmentManager(), "DatePicker");
+        datePickerDialogFragment.show(getSupportFragmentManager(), "DatePicker");
     }
 
     private void showDatepicker2() {
@@ -509,19 +530,16 @@ public class Leave_intimation_fragment_new extends Fragment {
 
             }
         });
-        datePickerDialogFragment.show(getFragmentManager(), "DatePicker");
+        datePickerDialogFragment.show(getSupportFragmentManager(), "DatePicker");
     }
 
 
     private float getDate_diff(String from_date, String to_date) {
-
         Date d_from_date = DateUtil.dateFromString(from_date, "yyyy-MM-dd");
         Date d_to_date = DateUtil.dateFromString(to_date, "yyyy-MM-dd");
         long diff = Math.abs(d_from_date.getTime() - d_to_date.getTime());
         float duration_float = TimeUnit.MILLISECONDS.toDays(diff);
         return (float) (duration_float + 1.0);
-
-
     }
 
     private String total_date_show() {
@@ -536,7 +554,6 @@ public class Leave_intimation_fragment_new extends Fragment {
                             int i = Math.round(diff);
                             String number = "" + i + "";
                             return number;
-
                         } else {
                             String str_diff = "" + diff + "";
                             return str_diff;
@@ -553,7 +570,6 @@ public class Leave_intimation_fragment_new extends Fragment {
                 }
             }
         }
-
         return "";
     }
 

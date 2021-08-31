@@ -6,12 +6,15 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thyrocare.btechapp.Controller.HCWController;
@@ -27,27 +30,42 @@ import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
 public class HCW_Activity extends AppCompatActivity {
-
     ConnectionDetector cd;
     WebView wv_hcw;
     String url = "";
     Global globalClass;
     String ecode = "";
     Activity activity;
-    Toolbar toolbarHCW;
     AppPreferenceManager appPreferenceManager;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_h_c_w_);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         initUI();
-
         setView(url);
         postEcode();
+        listeners();
 
+    }
+
+    private void listeners() {
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     public void getSubmitDataResponse(HCWResponseModel hcwResponseModel) {
@@ -73,7 +91,6 @@ public class HCW_Activity extends AppCompatActivity {
     private void postEcode() {
         try {
             if (cd.isConnectingToInternet()) {
-
                 HCWRequestModel hcwRequestModel = new HCWRequestModel();
                 hcwRequestModel.setUserCode((appPreferenceManager.getLoginResponseModel().getUserID()));
                 hcwRequestModel.setDomain("BTECH");
@@ -87,25 +104,18 @@ public class HCW_Activity extends AppCompatActivity {
         }
     }
 
-
     @SuppressLint("NewApi")
     private void initUI() {
-        toolbarHCW = findViewById(R.id.toolbarHCW);
-        toolbarHCW.setTitle("HCW Letter");
-        toolbarHCW.setTitleTextColor(Color.WHITE);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        tv_toolbar.setText("HCW Letter");
         appPreferenceManager = new AppPreferenceManager(this);
-
         globalClass = new Global(this);
-
         activity = this;
-
         ecode = appPreferenceManager.getLoginResponseModel().getUserID();
-
-
         cd = new ConnectionDetector(this);
-
         wv_hcw = findViewById(R.id.wv_hcw);
-
     }
 
     @Override

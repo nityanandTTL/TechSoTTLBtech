@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <include layout="@layout/default_toolbar"
+        android:id="@+id/toolbar"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,15 +19,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_marginRight="@dimen/_10sdp">
+            android:layout_margin="@dimen/_10sdp"
+            app:cardCornerRadius="@dimen/_5sdp"
+            app:cardElevation="@dimen/_10sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="@dimen/_6sdp"
+                android:layout_margin="@dimen/_5sdp"
                 android:gravity="center">
 
                 <TextView
@@ -32,14 +37,14 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/strScanQRCode"
-                    android:textColor="@color/black"
+                    android:textColor="@color/bg_new_color"
                     android:textSize="@dimen/_12sdp" />
 
                 <ImageView
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="@dimen/_30sdp"
-                    android:src="@drawable/ic_scanbarcode_withbackground" />
-
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:src="@drawable/ic_baseline_qr_code_scanner_24" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

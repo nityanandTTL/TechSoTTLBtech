@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +70,8 @@ public class Tsp_ScheduleYourDayActivity extends AbstractActivity {
     String NBT_date = "";
     String NBT_date_pass = "";
     private Global global;
+    TextView tv_toolbar;
+    ImageView iv_back,iv_home;
 
     public Tsp_ScheduleYourDayActivity() {
         // Required empty public constructor
@@ -152,7 +155,12 @@ public class Tsp_ScheduleYourDayActivity extends AbstractActivity {
         ll_slots_display = (LinearLayout) findViewById(R.id.ll_slots_display);
         gv_slots = (GridView) findViewById(R.id.gv_slots);
         btn_proceed = (Button) findViewById(R.id.btn_proceed);
-
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        tv_toolbar.setText("Schedule");
+        iv_home.setVisibility(View.INVISIBLE);
+        iv_back.setVisibility(View.INVISIBLE);
         btn_proceed.setVisibility(View.GONE);
     }
 

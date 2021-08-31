@@ -1,18 +1,25 @@
 package com.thyrocare.btechapp.fragment;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -44,7 +51,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.view.View.VISIBLE;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
 /**
  * 　APi Used 　　i)/SpecimenTrack/ReceiveHubBarcode/Userid<br/>
@@ -54,11 +63,12 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
  */
 
 
-public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implements View.OnClickListener {
+public class TSP_HubMasterBarcodeScanFragment extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG_FRAGMENT = TSP_HubMasterBarcodeScanFragment.class.getSimpleName();
     private LinearLayout ll_hub_display_footer, ll_scan_master_barcode, ll_scan_vial_barcode;
-    private HomeScreenActivity activity;
+    TextView tv_collection_sample;
+    private Activity activity;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<BtechwithHub_BarcodeDataModel> barcodeModels = new ArrayList<>();
@@ -71,6 +81,9 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
     private GPSTracker gpsTracker;
     private boolean isCentrifuged = false;
     private Global global;
+    AppPreferenceManager appPreferenceManager;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
 
     public TSP_HubMasterBarcodeScanFragment() {
     }
@@ -80,16 +93,16 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
         return new TSP_HubMasterBarcodeScanFragment();
     }
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tsp_fragment_btech_collections_list, container, false);
-        activity = (HomeScreenActivity) getActivity();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.tsp_fragment_btech_collections_list);
+        activity = this;
         global = new Global(activity);
-        activity.toolbarHome.setTitle("TSP Scan");
         appPreferenceManager = new AppPreferenceManager(activity);
 
-        initUI(view);
+        initUI();
         setListeners();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -99,13 +112,15 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
             }
         });
         fetchData();
-        return view;
     }
+
 
     private void setListeners() {
         ll_scan_master_barcode.setOnClickListener(this);
         ll_scan_vial_barcode.setOnClickListener(this);
         btn_receive.setOnClickListener(this);
+        iv_home.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
     }
 
     private void fetchData() {
@@ -116,14 +131,22 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
         }
     }
 
-    private void initUI(View view) {
-        ll_hub_display_footer = (LinearLayout) view.findViewById(R.id.ll_hub_display_footer);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        ll_scan_master_barcode = (LinearLayout) view.findViewById(R.id.ll_scan_master_barcode);
-        ll_scan_vial_barcode = (LinearLayout) view.findViewById(R.id.ll_scan_vial_barcode);
-        ll_hub_display_footer.setVisibility(View.VISIBLE);
-        btn_receive = (Button) view.findViewById(R.id.btn_receive);
+    private void initUI() {
+        ll_hub_display_footer = (LinearLayout) findViewById(R.id.ll_hub_display_footer);
+        tv_collection_sample = findViewById(R.id.tv_collection_sample);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        ll_scan_master_barcode = (LinearLayout) findViewById(R.id.ll_scan_master_barcode);
+        ll_scan_vial_barcode = (LinearLayout) findViewById(R.id.ll_scan_vial_barcode);
+        ll_hub_display_footer.setVisibility(VISIBLE);
+        tv_collection_sample.setVisibility(VISIBLE);
+        btn_receive = (Button) findViewById(R.id.btn_receive);
+
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        tv_toolbar.setText("TSP Scan");
+
     }
 
     @Override
@@ -138,6 +161,11 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
             if (validate()) {
                 callMasterBarcodeMapApi();
             }
+        } else if (v.getId() == R.id.iv_home) {
+            startActivity(new Intent(activity, HomeScreenActivity.class));
+
+        } else if (v.getId() == R.id.iv_back) {
+            finish();
         }
     }
 
@@ -187,6 +215,7 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanningResult != null && scanningResult.getContents() != null) {
 
@@ -258,14 +287,14 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
     private void CallgetTspBarcodeApi() {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<BtechwithHubResponseModel> responseCall = apiInterface.CallgetTspBarcodeApi(appPreferenceManager.getUserID());
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<BtechwithHubResponseModel>() {
             @Override
             public void onResponse(Call<BtechwithHubResponseModel> call, retrofit2.Response<BtechwithHubResponseModel> response) {
                 global.hideProgressDialog(activity);
                 if (response.isSuccessful() && response.body() != null) {
                     BtechwithHubResponseModel btechwithHubResponseModel = response.body();
-                    if (btechwithHubResponseModel != null  && btechwithHubResponseModel.getReceivedHub() != null && btechwithHubResponseModel.getReceivedHub().size() > 0 && btechwithHubResponseModel.getReceivedHub().get(0).getBarcode() != null ) {
+                    if (btechwithHubResponseModel != null && btechwithHubResponseModel.getReceivedHub() != null && btechwithHubResponseModel.getReceivedHub().size() > 0 && btechwithHubResponseModel.getReceivedHub().get(0).getBarcode() != null) {
                         barcodeModels = btechwithHubResponseModel.getReceivedHub();
                         isCentrifuged = false;
                         prepareRecyclerView();
@@ -276,6 +305,7 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
                     global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
+
             @Override
             public void onFailure(Call<BtechwithHubResponseModel> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -284,32 +314,33 @@ public class TSP_HubMasterBarcodeScanFragment extends AbstractFragment implement
         });
     }
 
-    private void CallgetTSP_MasterBarcodeMapRequestAPI(BtechwithHub_MasterBarcodeMappingRequestModel masterBarcodeMappingRequestModel){
+    private void CallgetTSP_MasterBarcodeMapRequestAPI(BtechwithHub_MasterBarcodeMappingRequestModel masterBarcodeMappingRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallgetTSP_MasterBarcodeMapRequestAPI(masterBarcodeMappingRequestModel);
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 global.hideProgressDialog(activity);
-                if (response.isSuccessful()){
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                if (response.isSuccessful()) {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
                     alertDialogBuilder.setMessage("Received Successfully.");
                     alertDialogBuilder.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface arg0, int arg1) {
-                                    pushFragments(HomeScreenFragment.newInstance(), false, false, HomeScreenFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_FRAGMENT);
+                                    startActivity(new Intent(activity, HomeScreenActivity.class));
                                 }
                             });
 
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else{
+                } else {
                     Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 global.hideProgressDialog(activity);

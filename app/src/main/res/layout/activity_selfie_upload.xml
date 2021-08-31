@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/blue_shadow"
     tools:context=".activity.SelfieUploadActivity">
 
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -16,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:background="@android:color/white"/>
+            android:background="@android:color/white" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -30,7 +31,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/_20sdp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -53,7 +56,7 @@
                     android:textSize="20dp"
                     android:textStyle="italic" />
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/tv_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -62,7 +65,7 @@
                     android:gravity="center"
                     android:text="Mr. Ajay Kulkarni"
                     android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold" />-->
 
                 <TextView
                     android:id="@+id/tv_user_address"
@@ -96,7 +99,7 @@
                         android:layout_width="250dp"
                         android:layout_height="250dp"
                         android:layout_gravity="center"
-                        android:background="@color/transparent"/>
+                        android:background="@color/transparent" />
 
                 </LinearLayout>
 
@@ -104,60 +107,62 @@
                     android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Body Temperature (°F)"
                             android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="@dimen/_13sdp"/>
+                            android:textSize="@dimen/_13sdp"
+                            android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/edt_bodyTemp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_2sdp"
                             android:background="@drawable/editextborder"
+                            android:digits="@string/temperature_validation"
+                            android:ems="7"
+                            android:gravity="center"
+                            android:hint="Temp (°F)"
+                            android:maxLength="7"
                             android:paddingTop="@dimen/_5sdp"
                             android:paddingBottom="@dimen/_5sdp"
-                            android:hint="Temp (°F)"
                             android:textColorHint="@color/black"
-                            android:digits="@string/temperature_validation"
-                            android:maxLength="7"
-                            android:ems="7"
-                            android:layout_margin="@dimen/_2sdp"
-                            android:gravity="center"
-                            android:textSize="@dimen/_10sdp"/>
+                            android:textSize="@dimen/_10sdp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Aarogya Setu App"
                             android:textColor="@color/white"
-                            android:textStyle="bold"
-                            android:textSize="@dimen/_13sdp"/>
+                            android:textSize="@dimen/_13sdp"
+                            android:textStyle="bold" />
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/editextborder"
-                            android:layout_margin="@dimen/_2sdp">
+                            android:layout_margin="@dimen/_2sdp"
+                            android:background="@drawable/editextborder">
+
                             <Spinner
                                 android:id="@+id/spn_aarogyaApp"
                                 android:layout_width="wrap_content"
@@ -178,7 +183,7 @@
                     android:orientation="horizontal"
                     android:weightSum="2">
 
-                    <androidx.appcompat.widget.AppCompatButton
+                    <!--<androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_takePhoto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -190,9 +195,9 @@
                         android:text="@string/take_photo"
                         android:textColor="@color/colorOrange"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold" />-->
 
-                    <androidx.appcompat.widget.AppCompatButton
+                    <!--<androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_uploadPhoto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -205,19 +210,20 @@
                         android:textColor="@color/colorOrange"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:visibility="gone" />
+                        android:visibility="gone" />-->
+
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_Logout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/btn_takePhoto"
+                        android:layout_centerHorizontal="true"
                         android:layout_margin="4dp"
+                        android:layout_marginTop="30dp"
                         android:background="@drawable/white_btn_bg"
                         android:gravity="center"
-                        android:layout_centerHorizontal="true"
-                        android:layout_below="@+id/btn_takePhoto"
                         android:minEms="8"
                         android:text="Logout"
-                        android:layout_marginTop="30dp"
                         android:textColor="@color/colorOrange"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -226,5 +232,104 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/ll_new"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/_2sdp"
+        android:layout_marginRight="@dimen/_2sdp"
+        android:background="@drawable/selfie_upload_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Welcome ,"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/ic_selfie" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/refrsh_1" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/ic_sel_m" />
+
+            <ImageView
+                android:id="@+id/iv_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:src="@drawable/refrsh_2" />
+
+            <ImageView
+                android:id="@+id/iv_capture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:src="@drawable/ic_sel_m2" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_takePhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:text="Capture Selfie"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:textSize="@dimen/label"
+            android:background="@drawable/btn_bg_new"
+            android:textColor="@color/bg_new_color"/>
+        <Button
+            android:id="@+id/btn_uploadPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:text="Proceed"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:background="@drawable/btn_bg_new"
+            android:textColor="@color/bg_new_color"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

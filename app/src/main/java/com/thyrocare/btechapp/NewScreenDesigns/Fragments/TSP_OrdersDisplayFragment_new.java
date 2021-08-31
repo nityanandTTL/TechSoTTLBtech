@@ -1,6 +1,7 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -8,17 +9,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ActionMode;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +28,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.sdsmdg.tastytoast.TastyToast;
@@ -47,7 +47,6 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.thyrocare.btechapp.dialog.ConfirmRequestReleaseDialog;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
@@ -60,8 +59,6 @@ import com.thyrocare.btechapp.models.data.DispositionDetailsModel;
 import com.thyrocare.btechapp.models.data.KitsCountModel;
 import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
-
-
 import com.thyrocare.btechapp.network.ResponseParser;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
@@ -98,9 +95,9 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TSP_OrdersDisplayFragment_new extends Fragment {
+public class TSP_OrdersDisplayFragment_new extends AppCompatActivity {
     public static final String TAG_FRAGMENT = TSP_OrdersDisplayFragment_new.class.getSimpleName();
-    HomeScreenActivity activity;
+    Activity activity;
     Global global;
     ConnectionDetector connectionDetector;
     LinearLayoutManager linearLayoutManager;
@@ -121,8 +118,10 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
     Dialog dialog_ready;
     private int DispositionStatusCode;
     private ProgressDialog progressDialog;
+    TextView tv_toolbar;
+    ImageView iv_home,iv_back;
 
-    public TSP_OrdersDisplayFragment_new() {
+    /*public TSP_OrdersDisplayFragment_new() {
         // Required empty public constructor
     }
 
@@ -131,42 +130,36 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        activity = (HomeScreenActivity) getActivity();
+        setContentView(R.layout.fragment_tsp__orders_display_new);
+        activity = this;
         global = new Global(activity);
         connectionDetector = new ConnectionDetector(activity);
         orderDetailsResponseModels = new ArrayList<>();
         orderDetailsModel = new OrderDetailsModel();
         appPreferenceManager = new AppPreferenceManager(activity);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_tsp__orders_display_new, container, false);
-        initUI(v);
+        initUI();
         initListeners();
-
-        return v;
     }
 
-    public void initUI(View view) {
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.srl_visit_orders_display);
-        recyOrderList = (RecyclerView) view.findViewById(R.id.recyOrderList);
+    public void initUI() {
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_visit_orders_display);
+        recyOrderList = (RecyclerView) findViewById(R.id.recyOrderList);
         linearLayoutManager = new LinearLayoutManager(activity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyOrderList.setLayoutManager(linearLayoutManager);
-        txtNoRecord = (TextView) view.findViewById(R.id.txt_no_orders);
-//        txtEstDistance = (TextView) view.findViewById(R.id.txtEstDistance);
-        txtEstEarnings = (TextView) view.findViewById(R.id.txtEstEarnings);
-        txtEstKits = (TextView) view.findViewById(R.id.txtEstKits);
+        txtNoRecord = (TextView) findViewById(R.id.txt_no_orders);
+//        txtEstDistance = (TextView) findViewById(R.id.txtEstDistance);
+        txtEstEarnings = (TextView) findViewById(R.id.txtEstEarnings);
+        txtEstKits = (TextView) findViewById(R.id.txtEstKits);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        tv_toolbar.setText("Visit Orders");
         txtEstKits.setSelected(true);
     }
 
@@ -175,6 +168,19 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
             @Override
             public void onRefresh() {
                 fetchData();
+            }
+        });
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
@@ -287,7 +293,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
                 tsp_orderDisplayAdapter_new.UpdateList(orderDetailsResponseModels);
                 tsp_orderDisplayAdapter_new.notifyDataSetChanged();
             } else {
-                tsp_orderDisplayAdapter_new = new TSP_OrderDisplayAdapterNew(activity, activity, orderDetailsResponseModels);
+                tsp_orderDisplayAdapter_new = new TSP_OrderDisplayAdapterNew(this, activity, orderDetailsResponseModels);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
                 recyOrderList.setLayoutManager(mLayoutManager);
                 recyOrderList.setAdapter(tsp_orderDisplayAdapter_new);
@@ -533,7 +539,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
         remarks_notc_arr.add("Number Does Not Exist");
         remarks_notc_arr.add("Switch off / Not reachable");
 
-        ArrayAdapter<String> spnrnotconnectedremarks = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, remarks_notc_arr);
+        ArrayAdapter<String> spnrnotconnectedremarks = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, remarks_notc_arr);
         spnrnotconnectedremarks.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spn_rem.setAdapter(spnrnotconnectedremarks);
         spn_rem.setSelection(0);
@@ -567,7 +573,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
                 }
             }
 
-            ArrayAdapter<String> spinneradapterremarks = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, remarksarr);
+            ArrayAdapter<String> spinneradapterremarks = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, remarksarr);
             spinneradapterremarks.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spn_desp.setAdapter(spinneradapterremarks);
             spn_desp.setSelection(0);
@@ -637,7 +643,7 @@ public class TSP_OrdersDisplayFragment_new extends Fragment {
                     // CommonUtils.toastytastyError(activity, "Enter valid Mobile Number ", false);
 
                     final android.app.AlertDialog.Builder builder;
-                    builder = new android.app.AlertDialog.Builder(getActivity());
+                    builder = new android.app.AlertDialog.Builder(activity);
                     builder.setCancelable(false);
                     builder.setTitle("")
                             .setMessage("Invalid text")

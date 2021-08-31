@@ -183,7 +183,8 @@ public class NotificationClickActivity extends AppCompatActivity {
                     CallRestartApp();
                 } else {
                     try {
-                        Toast.makeText(mActivity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                        global.showCustomToast(mActivity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_LONG);
+//                        Toast.makeText(mActivity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(mActivity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();

@@ -33,11 +33,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mindorks.paracamera.Camera;
+import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.LeadChannelController;
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.PostEmailValidationController;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
@@ -59,6 +63,7 @@ import com.thyrocare.btechapp.models.api.response.LeadgenerationResponseModel;
 import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
 import com.thyrocare.btechapp.models.data.BrandTestMasterModel;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+import com.thyrocare.btechapp.utils.app.DateUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 import com.thyrocare.btechapp.utils.app.PermissionUtils;
@@ -83,7 +88,7 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LeadGenerationFragment extends Fragment {
+public class LeadGenerationFragment extends AppCompatActivity {
 
     public static final String TAG = LeadGenerationFragment.class.getSimpleName();
     private Activity mActivity;
@@ -104,62 +109,34 @@ public class LeadGenerationFragment extends Fragment {
     private File imagefile;
     private File f_AudioSavePathInDevice;
     private Global globalClass;
-
     private Dialog CustomDialogforSuccess;
     private PackageManager pm;
     private int width, height;
-
     private Camera camera;
     private AppPreferenceManager appPreferenceManager;
     private Spinner spn_purpose;
-    private LinearLayout lin_spnPurpose, lin_upload;
+    private LinearLayout lin_upload;
+    private CardView lin_spnPurpose;
     private boolean isorderSelected = true;
     private String strSelectedPurpose = "";
-
     LinearLayout ll_channel;
     Spinner spr_channel, spr_from;
     TextView tv_selected_purpose;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
     private LeadPurposeResponseModel leadmodel;
-
-
-    public LeadGenerationFragment() {
-        // Required empty public constructor
-    }
-
-    public static LeadGenerationFragment newInstance() {
-        LeadGenerationFragment fragment = new LeadGenerationFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mActivity = getActivity();
+        setContentView(R.layout.fragment_lead_generation);
+        mActivity = this;
         pm = mActivity.getPackageManager();
         globalClass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
-        setHasOptionsMenu(true);
-        mActivity.setTitle("Lead Generation");
 
-
-        try {
-            HomeScreenActivity activity = (HomeScreenActivity) getActivity();
-            activity.toolbar_image.setVisibility(View.GONE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_lead_generation, container, false);
         appPreferenceManager = new AppPreferenceManager(mActivity);
-        initUI(v);
+        initUI();
         initListners();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -175,11 +152,15 @@ public class LeadGenerationFragment extends Fragment {
         }
 
         CallLeadPurposeAPI();
-//        GetLeadChannel();
 
-        return v;
+
+        /*try {
+            HomeScreenActivity activity = (HomeScreenActivity) getActivity();
+//            activity.toolbar_image.setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
     }
-
 
     private void GetLeadChannel() {
         if (cd.isConnectingToInternet()) {
@@ -191,7 +172,7 @@ public class LeadGenerationFragment extends Fragment {
     }
 
     private void CallProductAPI() {
-        if (UpdateProduct()) {
+        if (!UpdateProduct()) {
             if (cd.isConnectingToInternet()) {
                 CallGetTechsoProductsAPI();
             } else {
@@ -203,47 +184,65 @@ public class LeadGenerationFragment extends Fragment {
     }
 
     private boolean UpdateProduct() {
-        long getCurrentMillis = System.currentTimeMillis();
-        long getPreviouseMillis = appPreferenceManager.getCashingTime();
-        long differ_millis = getCurrentMillis - getPreviouseMillis;
-        int days = (int) (differ_millis / (1000 * 60 * 60 * 24));
-
-        if (days >= 30) {
+        String getPreviouseMillis = appPreferenceManager.getCashingTime();
+        if (getPreviouseMillis.equalsIgnoreCase(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"))) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
-    private void initUI(View v) {
-        edt_name = (EditText) v.findViewById(R.id.edt_name);
-        edt_mobile = (EditText) v.findViewById(R.id.edt_mobile);
-        edt_email = (EditText) v.findViewById(R.id.edt_email);
-        edt_remarks = (MultiAutoCompleteTextView) v.findViewById(R.id.edt_remarks);
-        edt_pincode = (EditText) v.findViewById(R.id.edt_pincode);
+
+    private void initUI() {
+        edt_name = (EditText) findViewById(R.id.edt_name);
+        edt_mobile = (EditText) findViewById(R.id.edt_mobile);
+        edt_email = (EditText) findViewById(R.id.edt_email);
+        edt_remarks = (MultiAutoCompleteTextView) findViewById(R.id.edt_remarks);
+        edt_pincode = (EditText) findViewById(R.id.edt_pincode);
 //        spinner_city = (Spinner) findViewById(R.id.spinner_city);
-        btn_submit = (Button) v.findViewById(R.id.btn_submit);
-        img_tick = (ImageView) v.findViewById(R.id.img_tick);
-        img_tick2 = (ImageView) v.findViewById(R.id.img_tick2);
-        edt_setAddress = (EditText) v.findViewById(R.id.edt_setAddress);
-        tv_reset = (TextView) v.findViewById(R.id.tv_reset);
-        rel_upload_img = (RelativeLayout) v.findViewById(R.id.rel_upload_img);
-        rel_upload_voice = (RelativeLayout) v.findViewById(R.id.rel_upload_voice);
-        lin_spnPurpose = (LinearLayout) v.findViewById(R.id.lin_spnPurpose);
-        lin_upload = (LinearLayout) v.findViewById(R.id.lin_upload);
-        spn_purpose = (Spinner) v.findViewById(R.id.spn_purpose);
+        btn_submit = (Button) findViewById(R.id.btn_submit);
+        img_tick = (ImageView) findViewById(R.id.img_tick);
+        img_tick2 = (ImageView) findViewById(R.id.img_tick2);
+        edt_setAddress = (EditText) findViewById(R.id.edt_setAddress);
+        tv_reset = (TextView) findViewById(R.id.tv_reset);
+        rel_upload_img = (RelativeLayout) findViewById(R.id.rel_upload_img);
+        rel_upload_voice = (RelativeLayout) findViewById(R.id.rel_upload_voice);
+        lin_spnPurpose = findViewById(R.id.lin_spnPurpose);
+        lin_upload = (LinearLayout) findViewById(R.id.lin_upload);
+        spn_purpose = (Spinner) findViewById(R.id.spn_purpose);
 
-        ll_channel = v.findViewById(R.id.ll_channel);
-        spr_channel = v.findViewById(R.id.spr_channel);
+        ll_channel = findViewById(R.id.ll_channel);
+        spr_channel = findViewById(R.id.spr_channel);
 
-        tv_selected_purpose = v.findViewById(R.id.tv_selected_purpose);
+        tv_selected_purpose = findViewById(R.id.tv_selected_purpose);
         tv_selected_purpose.setVisibility(View.GONE);
         spr_channel.setVisibility(View.GONE);
-        spr_from = v.findViewById(R.id.spr_from);
+        spr_from = findViewById(R.id.spr_from);
         spr_from.setVisibility(View.GONE);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        tv_toolbar.setText("Lead Generation");
     }
 
 
     private void initListners() {
+
+        iv_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+
+            }
+        });
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               finish();
+            }
+        });
+
 
         rel_upload_img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -323,7 +322,7 @@ public class LeadGenerationFragment extends Fragment {
                 if (model != null && StringUtils.CheckEqualIgnoreCase(model.getRespId(), Constants.RES00001) && model.getPurposeList() != null) {
                     leadmodel = model;
                     ArrayList<String> values = new ArrayList<>();
-                    values.add("Select*");
+                    values.add("Select Type*");
                     for (int i = 0; i < model.getPurposeList().size(); i++) {
                         values.add(model.getPurposeList().get(i).getData());
                     }
@@ -331,13 +330,13 @@ public class LeadGenerationFragment extends Fragment {
                 } else {
                     lin_spnPurpose.setVisibility(View.GONE);
                 }
-                CallProductAPI();
+//                CallProductAPI();
             }
 
             @Override
             public void onFailure() {
                 lin_spnPurpose.setVisibility(View.GONE);
-                CallProductAPI();
+//                CallProductAPI();
             }
         });
     }
@@ -416,22 +415,27 @@ public class LeadGenerationFragment extends Fragment {
 
     private boolean checkRemarksValidation() {
         if (edt_remarks.getText().toString().startsWith(",")) {
-            globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.remarks_val));
+
+            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.remarks_val), Toast.LENGTH_SHORT).show();
+//            globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.remarks_val));
             edt_remarks.requestFocus();
             return false;
         }
         if (edt_remarks.getText().toString().startsWith(".")) {
-            globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.remarks_val));
+            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.remarks_val), Toast.LENGTH_SHORT).show();
+//            globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.remarks_val));
             edt_remarks.requestFocus();
             return false;
         }
         if (edt_remarks.getText().toString().startsWith("-")) {
-            globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.remarks_val));
+            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.remarks_val), Toast.LENGTH_SHORT).show();
+//            globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.remarks_val));
             edt_remarks.requestFocus();
             return false;
         }
         if (edt_remarks.getText().toString().startsWith(" ")) {
-            globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.space_val_remarks));
+            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.space_val_remarks), Toast.LENGTH_SHORT).show();
+//            globalClass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.space_val_remarks));
             edt_remarks.requestFocus();
             return false;
         }
@@ -865,10 +869,13 @@ public class LeadGenerationFragment extends Fragment {
             public void onSuccess(LeadgenerationResponseModel model) {
 
                 if (model != null && StringUtils.CheckEqualIgnoreCase(model.getRespId(), Constants.RES02024)) {
-                    new LogUserActivityTagging(mActivity,Constants.LEAD,mobile);
+                    new LogUserActivityTagging(mActivity, Constants.LEAD, mobile);
 
                     clearAllFields();
-                    globalClass.showalert_OK(model.getResponse(), mActivity);
+
+//                    globalClass.showalert_OK(model.getResponse(), mActivity);
+                    BottomSheetController bottomSheetController = new BottomSheetController(mActivity);
+                    bottomSheetController.SetBasicBottomSheet("Thank You!", "Our team will get back to you soon.");
                 } else {
                     if (model != null) {
                         globalClass.showCustomToast(mActivity, !StringUtils.isNull(model.getResponse()) ? model.getResponse() : ConstantsMessages.SOMETHING_WENT_WRONG);
@@ -914,46 +921,35 @@ public class LeadGenerationFragment extends Fragment {
 
     private void OnLeadGenerationAPIresponseReceived() {
         if (InputUtils.CheckEqualCaseSensitive(testBookingResponseModel.getRES_ID(), "RES0000")) {
-            globalClass.showCustomToast(mActivity, ConstantsMessages.TestBookingDoneSuccessfully);
-            new LogUserActivityTagging(mActivity,Constants.LEAD,testBookingResponseModel.getORDER_NO());
+//            globalClass.showCustomToast(mActivity, ConstantsMessages.TestBookingDoneSuccessfully);
+            new LogUserActivityTagging(mActivity, Constants.LEAD, testBookingResponseModel.getORDER_NO());
 
             clearAllFields();
 
-            CustomDialogforSuccess = new Dialog(mActivity);
-            CustomDialogforSuccess.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-            CustomDialogforSuccess.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            CustomDialogforSuccess.setContentView(R.layout.lead_gen_success_dialog);
-            CustomDialogforSuccess.setCancelable(false);
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+            View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.lead_success_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
 
-            TextView tv_name, tv_mobile, tv_email_id, tv_city, booking_ID, tv_remarks, note;
-            ImageView img_whatsapp, img_mail, img_sms, btnclose;
-            LinearLayout ll_city, ll_email_id, ll_remarks, ll_main;
-
-            tv_name = (TextView) CustomDialogforSuccess.findViewById(R.id.tv_name);
-            tv_mobile = (TextView) CustomDialogforSuccess.findViewById(R.id.tv_mobile);
-            tv_email_id = (TextView) CustomDialogforSuccess.findViewById(R.id.tv_email_id);
-            tv_city = (TextView) CustomDialogforSuccess.findViewById(R.id.tv_city);
-            booking_ID = (TextView) CustomDialogforSuccess.findViewById(R.id.booking_ID);
-            tv_remarks = (TextView) CustomDialogforSuccess.findViewById(R.id.tv_remarks);
-            btnclose = (ImageView) CustomDialogforSuccess.findViewById(R.id.btnclose);
-            img_whatsapp = (ImageView) CustomDialogforSuccess.findViewById(R.id.img_whatsapp);
-            img_mail = (ImageView) CustomDialogforSuccess.findViewById(R.id.img_mail);
-            img_sms = (ImageView) CustomDialogforSuccess.findViewById(R.id.img_sms);
-            ll_city = (LinearLayout) CustomDialogforSuccess.findViewById(R.id.ll_city);
-            ll_email_id = (LinearLayout) CustomDialogforSuccess.findViewById(R.id.ll_email_id);
-            ll_remarks = (LinearLayout) CustomDialogforSuccess.findViewById(R.id.ll_remarks);
-            ll_main = (LinearLayout) CustomDialogforSuccess.findViewById(R.id.ll_main);
-            note = (TextView) CustomDialogforSuccess.findViewById(R.id.note);
-
-
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width - 150, FrameLayout.LayoutParams.WRAP_CONTENT);
-            ll_main.setLayoutParams(lp);
+            TextView tv_name = (TextView) bottomSheet.findViewById(R.id.tv_name);
+            TextView tv_mobile = (TextView) bottomSheet.findViewById(R.id.tv_mobile);
+            TextView tv_email_id = (TextView) bottomSheet.findViewById(R.id.tv_email_id);
+            TextView tv_city = (TextView) bottomSheet.findViewById(R.id.tv_city);
+            TextView booking_ID = (TextView) bottomSheet.findViewById(R.id.booking_ID);
+            TextView tv_remarks = (TextView) bottomSheet.findViewById(R.id.tv_remarks);
+            ImageView btnclose = (ImageView) bottomSheet.findViewById(R.id.btnclose);
+            ImageView img_whatsapp = (ImageView) bottomSheet.findViewById(R.id.img_whatsapp);
+            ImageView img_mail = (ImageView) bottomSheet.findViewById(R.id.img_mail);
+            ImageView img_sms = (ImageView) bottomSheet.findViewById(R.id.img_sms);
+            LinearLayout ll_city = (LinearLayout) bottomSheet.findViewById(R.id.ll_city);
+            LinearLayout ll_email_id = (LinearLayout) bottomSheet.findViewById(R.id.ll_email_id);
+            LinearLayout ll_remarks = (LinearLayout) bottomSheet.findViewById(R.id.ll_remarks);
+            LinearLayout ll_main = (LinearLayout) bottomSheet.findViewById(R.id.ll_main);
+            TextView note = (TextView) bottomSheet.findViewById(R.id.note);
 
             btnclose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onResume();
-                    CustomDialogforSuccess.dismiss();
+                    bottomSheetDialog.dismiss();
                 }
             });
             InputUtils.setTextToTextView(booking_ID, testBookingResponseModel.getREF_ORDERID());
@@ -987,7 +983,8 @@ public class LeadGenerationFragment extends Fragment {
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(whatsappUrl(name, mobile, email, address, testBookingResponseModel.getREF_ORDERID(), type, remarks)));
                         startActivity(intent);
                     } else {
-                        globalClass.showCustomToast(mActivity, ConstantsMessages.WhatsAppNotinstalled);
+                        Toast.makeText(mActivity, ConstantsMessages.WhatsAppNotinstalled, Toast.LENGTH_SHORT).show();
+//                        globalClass.showCustomToast(mActivity, ConstantsMessages.WhatsAppNotinstalled);
                     }
                 }
             });
@@ -1018,7 +1015,8 @@ public class LeadGenerationFragment extends Fragment {
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        globalClass.showCustomToast(mActivity, ConstantsMessages.NoImageClientInstalled);
+                        Toast.makeText(mActivity,  ConstantsMessages.NoImageClientInstalled, Toast.LENGTH_SHORT).show();
+//                        globalClass.showCustomToast(mActivity, ConstantsMessages.NoImageClientInstalled);
                     }
                 }
             });
@@ -1045,9 +1043,9 @@ public class LeadGenerationFragment extends Fragment {
                 }
             });
 
-            CustomDialogforSuccess.show();
-
-
+            bottomSheetDialog.setContentView(bottomSheet);
+            bottomSheetDialog.setCancelable(false);
+            bottomSheetDialog.show();
         } else if (testBookingResponseModel.getRESPONSE().contains("MOBILE NUMBER. IS ALREADY HAS BEEN USED")) {
             globalClass.showalert_OK(ConstantsMessages.Mobilerefferedmorethan10timesMsg, mActivity);
         } else {
@@ -1188,11 +1186,10 @@ public class LeadGenerationFragment extends Fragment {
 
                     if (response.isSuccessful() && response.body() != null) {
                         BrandTestMasterModel brandTestMasterModel = response.body();
-                        ArrayList<String> productsNameArray = getProductsNameArray(brandTestMasterModel);
                         Gson gson22 = new Gson();
-                        String json22 = gson22.toJson(productsNameArray);
+                        String json22 = gson22.toJson(brandTestMasterModel);
                         appPreferenceManager.setCacheProduct(json22);
-                        appPreferenceManager.setCashingTime(System.currentTimeMillis());
+                        appPreferenceManager.setCashingTime(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"));
 
                         SetProductstoAutoCompleteTextView();
 
@@ -1213,6 +1210,7 @@ public class LeadGenerationFragment extends Fragment {
         }
     }
 
+
     private void SetProductstoAutoCompleteTextView() {
 
         if (!InputUtils.isNull(appPreferenceManager.getCacheProduct())) {
@@ -1220,12 +1218,14 @@ public class LeadGenerationFragment extends Fragment {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
             ArrayList<String> productsNameArray = gson.fromJson(appPreferenceManager.getCacheProduct(), type);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_dropdown_item_1line, productsNameArray);
+            ArrayList<String> finalProductNameArray = new ArrayList<>();
+            for (int i = 0; i < productsNameArray.size(); i++) {
+                finalProductNameArray.add(Global.toCamelCase(productsNameArray.get(i)));
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_dropdown_item_1line, finalProductNameArray);
             edt_remarks.setAdapter(adapter);
             edt_remarks.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         }
-
-
     }
 
     private ArrayList<String> getProductsNameArray(BrandTestMasterModel brandTestMasterModel) {

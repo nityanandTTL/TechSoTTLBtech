@@ -44,7 +44,7 @@ public class NewCampWOEModuleActivity extends AppCompatActivity implements GoToC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_camp_module);
 
-        setTitle("Checkout");
+//        setTitle("Checkout");
         mActivity = NewCampWOEModuleActivity.this;
         globalclass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);

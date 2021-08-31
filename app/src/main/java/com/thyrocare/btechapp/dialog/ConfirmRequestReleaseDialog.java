@@ -175,7 +175,8 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
     private boolean ifOTHERRemarksVisible() {
         if(edt__release_remark.getVisibility() == View.VISIBLE){
             if (edt__release_remark.getText().toString().equals("")) {
-                Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
+                global.showCustomToast(activity,activity.getResources().getString(R.string.enter_remarks), Toast.LENGTH_SHORT);
+//                Toast.makeText(activity, R.string.enter_remarks, Toast.LENGTH_SHORT).show();
                 return true;
             }else {
                 return false;
