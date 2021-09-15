@@ -4,163 +4,170 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_new_color"
     tools:context=".NewScreenDesigns.Activities.LoginActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="-3dp"
-            android:layout_marginTop="-2dp"
-            android:layout_marginRight="-2dp"
-            android:background="@drawable/login_bg"
-            android:scaleType="fitXY"
-            android:visibility="visible"
-            app:tint="@color/bg_new_color" />
-
-
-        <com.thyrocare.btechapp.customview.CircleImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_5sdp"
-
-            android:src="@drawable/b_tech_new_logo" />
-
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_30sdp"
+            android:background="@color/white"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:layout_marginBottom="@dimen/_5sdp"
-                app:cardCornerRadius="@dimen/_5sdp"
-                app:cardElevation="@dimen/_5sdp">
+                android:layout_marginLeft="-3dp"
+                android:layout_marginTop="-2dp"
+                android:layout_marginRight="-2dp"
+                android:background="@drawable/login_bg"
+                android:scaleType="fitXY"
+                android:visibility="visible"
+                app:tint="@color/bg_new_color" />
 
-                <com.google.android.material.textfield.TextInputLayout
+
+            <com.thyrocare.btechapp.customview.CircleImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+
+                android:src="@drawable/b_tech_new_logo" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_30sdp"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:clipChildren="true"
-                    app:boxBackgroundMode="none"
-                    app:hintAnimationEnabled="false"
-                    app:hintEnabled="false">
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    app:cardCornerRadius="@dimen/_5sdp"
+                    app:cardElevation="@dimen/_5sdp">
 
-                    <EditText
-                        android:id="@+id/edtUserID"
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:drawableLeft="@drawable/ic_un_new"
-                        android:hint=" User Name"
-                        android:imeOptions="actionNext"
-                        android:maxLines="1"
-                        android:nextFocusDown="@+id/edtPassword"
-                        android:nextFocusForward="@+id/edtPassword"
-                        android:padding="@dimen/_10sdp"
-                        android:singleLine="true"
-                        android:textSize="@dimen/value" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:clipChildren="true"
+                        app:boxBackgroundMode="none"
+                        app:hintAnimationEnabled="false"
+                        app:hintEnabled="false">
+
+                        <EditText
+                            android:id="@+id/edtUserID"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:drawableLeft="@drawable/ic_un_new"
+                            android:hint=" User Name"
+                            android:imeOptions="actionNext"
+                            android:maxLines="1"
+                            android:nextFocusDown="@+id/edtPassword"
+                            android:nextFocusForward="@+id/edtPassword"
+                            android:padding="@dimen/_10sdp"
+                            android:singleLine="true"
+                            android:textSize="@dimen/value" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
-            </androidx.cardview.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_pass"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:layout_marginBottom="@dimen/_5sdp"
-                app:cardCornerRadius="@dimen/_5sdp"
-                app:cardElevation="@dimen/_5sdp">
-
-                <com.google.android.material.textfield.TextInputLayout
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_pass"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:clipChildren="true"
-                    app:boxBackgroundMode="none"
-                    app:hintAnimationEnabled="false"
-                    app:hintEnabled="false"
-                    app:passwordToggleEnabled="true">
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    app:cardCornerRadius="@dimen/_5sdp"
+                    app:cardElevation="@dimen/_5sdp">
 
-                    <EditText
-                        android:id="@+id/edtPassword"
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
                         android:background="@null"
-                        android:drawableStart="@drawable/ic_pass_new"
-                        android:hint=" *********"
-                        android:inputType="textPassword"
-                        android:maxLines="1"
-                        android:padding="@dimen/_10sdp"
-                        android:singleLine="true"
-                        android:textSize="@dimen/value" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </androidx.cardview.widget.CardView>
+                        android:clipChildren="true"
+                        app:boxBackgroundMode="none"
+                        app:hintAnimationEnabled="false"
+                        app:hintEnabled="false"
+                        app:passwordToggleEnabled="true">
+
+                        <EditText
+                            android:id="@+id/edtPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="@null"
+                            android:drawableStart="@drawable/ic_pass_new"
+                            android:hint=" *********"
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:padding="@dimen/_10sdp"
+                            android:singleLine="true"
+                            android:textSize="@dimen/value" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </androidx.cardview.widget.CardView>
 
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:layout_marginBottom="@dimen/_5sdp"
-                app:cardCornerRadius="@dimen/_5sdp"
-                app:cardElevation="@dimen/_5sdp">
-
-                <Button
-                    android:id="@+id/btn_login"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:backgroundTint="@color/bg_new_color"
-                    android:drawableLeft="@drawable/ic_sign_up_new"
-                    android:drawablePadding="@dimen/_10sdp"
-                    android:drawableTint="@color/white"
-                    android:gravity="center"
-                    android:paddingLeft="@dimen/_10sdp"
-                    android:paddingRight="@dimen/_45sdp"
-                    android:text="Sign In"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    app:cardCornerRadius="@dimen/_5sdp"
+                    app:cardElevation="@dimen/_5sdp">
 
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/label" />
-            </androidx.cardview.widget.CardView>
+                    <Button
+                        android:id="@+id/btn_login"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:backgroundTint="@color/bg_new_color"
+                        android:drawableLeft="@drawable/ic_sign_up_new"
+                        android:drawablePadding="@dimen/_10sdp"
+                        android:drawableTint="@color/white"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingRight="@dimen/_45sdp"
+                        android:text="Sign In"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/label" />
+                </androidx.cardview.widget.CardView>
 
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/forget_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="@string/forgot_password"
+                android:textColor="@color/black"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:textSize="@dimen/label" />
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/forget_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:text="@string/forgot_password"
-            android:textColor="@color/black"
-            android:textSize="@dimen/label" />
 
-    </LinearLayout>
+    </ScrollView>
+
+
 
 
 </RelativeLayout>

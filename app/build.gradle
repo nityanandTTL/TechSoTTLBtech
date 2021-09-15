@@ -9,8 +9,8 @@ android {
         applicationId "com.thyrocare.btechapp"
         minSdkVersion 18
         targetSdkVersion 26
-        versionCode 112
-        versionName "2.4.2"
+        versionCode 113
+        versionName "2.4.3"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -161,7 +161,7 @@ dependencies {
     implementation 'com.ablanco.zoomy:zoomy:1.1.0'
 //    implementation 'com.ebanx:swipe-button:0.4.0'
 
-    implementation 'com.github.stfalcon:swipeable-button:0.1.0'
+//    implementation 'com.github.stfalcon:swipeable-button:0.1.0'
 
     implementation "com.ncorti:slidetoact:0.9.0"
 

@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.stfalcon.swipeablebutton.SwipeableButton;
 import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.GetPickupOrderController;
 import com.thyrocare.btechapp.Controller.PostPickupOrderController;
@@ -46,7 +45,7 @@ public class OrderPickUpActivity extends AppCompatActivity implements PickupOrde
     ImageView iv_back, iv_home;
     PickupOrderAdapter pickupOrderAdapter;
 
-    SwipeableButton swipeableButton;
+//    SwipeableButton swipeableButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +102,7 @@ public class OrderPickUpActivity extends AppCompatActivity implements PickupOrde
         appPreferenceManager = new AppPreferenceManager(OrderPickUpActivity.this);
         Btechid = appPreferenceManager.getLoginResponseModel().getUserID();
 
-        swipeableButton = findViewById(R.id.swipe_button);
+//        swipeableButton = findViewById(R.id.swipe_button);
 
     }
 

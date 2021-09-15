@@ -53,6 +53,16 @@
 
                     </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/tv_srf_mob"
+                        android:visibility="gone"
+                        android:textColor="@color/black"
+                        android:padding="@dimen/dp_1"
+                        android:hint="Mobile - 999999999"
+                        android:layout_width="match_parent"
+                        android:textSize="@dimen/_10sdp"
+                        android:layout_height="wrap_content" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -126,8 +136,8 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/_10sdp" />
 
-                    </LinearLayout>
 
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -367,61 +377,73 @@
                         android:orientation="horizontal"
                         android:visibility="gone" />
 
-
-                    <RelativeLayout
-                        android:id="@+id/ll_srfID"
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cv_rel"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_marginTop="@dimen/_30sdp"
-                        android:layout_marginRight="@dimen/_10sdp"
+                        app:cardCornerRadius="@dimen/_5sdp"
+                        app:cardElevation="@dimen/_5sdp"
+                        app:cardUseCompatPadding="true"
                         android:background="@drawable/border_layout"
-                        android:padding="@dimen/_5sdp"
-                        android:visibility="gone">
-
-                        <EditText
-                            android:id="@+id/edt_srf"
+                        android:layout_height="wrap_content">
+                        <RelativeLayout
+                            android:id="@+id/ll_srfID"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/transparent"
-                            android:digits="@string/Mobile_no_validation"
-                            android:hint="SRF ID"
-                            android:inputType="number"
-                            android:lines="1"
-                            android:maxLength="14"
-                            android:paddingStart="@dimen/_5sdp"
-                            android:paddingTop="@dimen/_5sdp"
-                            android:paddingEnd="@dimen/_20sdp"
-                            android:paddingBottom="@dimen/_5sdp" />
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:padding="@dimen/_5sdp"
+                            android:visibility="gone">
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true">
+                            <EditText
+                                android:id="@+id/edt_srf"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/transparent"
+                                android:digits="@string/Mobile_no_validation"
+                                android:hint="SRF ID"
+                                android:inputType="number"
+                                android:lines="1"
+                                android:maxLength="14"
+                                android:paddingStart="@dimen/_5sdp"
+                                android:paddingTop="@dimen/_5sdp"
+                                android:paddingEnd="@dimen/_20sdp"
+                                android:paddingBottom="@dimen/_5sdp" />
 
-                            <ImageView
-                                android:id="@+id/img_resetSRF"
+                            <RelativeLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:padding="@dimen/_3sdp"
-                                android:text="Reset"
-                                android:textSize="@dimen/_14sdp"
-                                app:srcCompat="@drawable/close_icon_red" />
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true">
 
-                            <TextView
-                                android:id="@+id/tv_saveSRF"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/colorPrimary"
-                                android:padding="@dimen/_4sdp"
-                                android:text="Save"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/_14sdp" />
+                                <ImageView
+                                    android:id="@+id/img_resetSRF"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/_3sdp"
+                                    android:text="Reset"
+                                    android:textSize="@dimen/_14sdp"
+                                    app:srcCompat="@drawable/close_icon_red"
+                                    app:tint="@color/bg_new_color" />
+
+                                <TextView
+                                    android:id="@+id/tv_saveSRF"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/border_blue"
+                                    android:padding="@dimen/_4sdp"
+                                    android:backgroundTint="@color/bg_new_color"
+                                    android:text="Save"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_14sdp" />
+
+                            </RelativeLayout>
 
                         </RelativeLayout>
 
-                    </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+
+
 
                 </LinearLayout>
             </ScrollView>

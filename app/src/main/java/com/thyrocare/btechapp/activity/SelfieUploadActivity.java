@@ -228,7 +228,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     private void initData() {
         if (appPreferenceManager.getLoginResponseModel() != null) {
-            tv_username.setText("Welcome ," + Global.toCamelCase(!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserName()) ? appPreferenceManager.getLoginResponseModel().getUserName() : ""));
+            tv_username.setText("Welcome, " + Global.toCamelCase(!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserName()) ? appPreferenceManager.getLoginResponseModel().getUserName() : ""));
         }
 
 

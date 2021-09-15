@@ -6,11 +6,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.provider.Settings;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +26,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.vision.text.Line;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.stfalcon.swipeablebutton.SwipeableButton;
 import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
@@ -142,7 +144,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         LinearLayout LL_swipe;
         RelativeLayout rel_imgRelease;
         SlideView slide_view;
-        SwipeableButton swipe_button;
+//        SwipeableButton swipe_button;
 
         public MyViewHolder(View view) {
             super(view);
@@ -175,7 +177,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             ll_accept = (LinearLayout) view.findViewById(R.id.ll_accept);
             ll_start = (LinearLayout) view.findViewById(R.id.ll_start);
             slide_view = view.findViewById(R.id.slide_view);
-            swipe_button = view.findViewById(R.id.swipe_button);
+//            swipe_button = view.findViewById(R.id.swipe_button);
         }
     }
 
@@ -254,6 +256,15 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             }
         });
 
+        holder.txtKits.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getSampleType().size() != 0) {
+                    toShowkits(holder, pos);
+                }
+            }
+        });
+
     /*    holder.swipe_button.setOnSwipedListener(new View.OnDragListener(
 
         ));*/
@@ -321,6 +332,81 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                         }).show();
             }
         });
+    }
+
+    private void toShowkits(MyViewHolder holder, int pos) {
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+        final View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.bottom_sheet_kit, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+        TextView tv_serum = bottomSheet.findViewById(R.id.tv_serum);
+        TextView tv_edta = bottomSheet.findViewById(R.id.tv_edta);
+        TextView tv_urine = bottomSheet.findViewById(R.id.tv_urine);
+        TextView tv_flouride = bottomSheet.findViewById(R.id.tv_flouride);
+        TextView tv_lith = bottomSheet.findViewById(R.id.tv_lith);
+        TextView tv_sod = bottomSheet.findViewById(R.id.tv_sod);
+        TextView tv_others = bottomSheet.findViewById(R.id.tv_others);
+
+        CardView cv_serum = bottomSheet.findViewById(R.id.cv_serum);
+        CardView cv_edta = bottomSheet.findViewById(R.id.cv_edta);
+        CardView cv_urine = bottomSheet.findViewById(R.id.cv_urine);
+        CardView cv_fluo = bottomSheet.findViewById(R.id.cv_fluo);
+        CardView cv_lith = bottomSheet.findViewById(R.id.cv_lith);
+        CardView cv_others = bottomSheet.findViewById(R.id.cv_other);
+
+        ArrayList<String> aSerum = new ArrayList<>();
+        ArrayList<String> aEdta = new ArrayList<>();
+        ArrayList<String> aUrine = new ArrayList<>();
+        ArrayList<String> afluoride = new ArrayList<>();
+        ArrayList<String> ahep = new ArrayList<>();
+        ArrayList<String> aOthers = new ArrayList<>();
+
+        for (int i = 0; i < orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size(); i++) {
+
+            for (int j = 0; j < orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().size(); j++) {
+                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType().equalsIgnoreCase("SERUM")) {
+                    aSerum.add("" + i);
+                } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType().equalsIgnoreCase("EDTA")) {
+                    aEdta.add("" + i);
+                } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType().contains("HEPARIN")) {
+                    ahep.add("" + i);
+                } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType().equalsIgnoreCase("FLUORIDE") || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType().contains("FLUORIDE")) {
+                    afluoride.add("" + i);
+                } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType().equalsIgnoreCase("URINE")) {
+                    aUrine.add("" + i);
+                } else {
+                    aOthers.add("" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType());
+                }
+            }
+        }
+
+        if (aSerum.size() != 0) {
+            tv_serum.setText("" + aSerum.size() + " - SERUM");
+            cv_serum.setVisibility(View.VISIBLE);
+        }
+        if (aEdta.size() != 0) {
+            tv_edta.setText("" + aEdta.size() + " - EDTA");
+            cv_edta.setVisibility(View.VISIBLE);
+        }
+        if (ahep.size() != 0) {
+            tv_lith.setText("" + ahep.size() + " - HEPARIN");
+            cv_lith.setVisibility(View.VISIBLE);
+        }
+        if (afluoride.size() != 0) {
+            tv_flouride.setText("" + afluoride.size() + " - FLUORIDE");
+            cv_fluo.setVisibility(View.VISIBLE);
+        }
+        if (aUrine.size() != 0) {
+            tv_urine.setText("" + aUrine.size() + " - URINE");
+            cv_urine.setVisibility(View.VISIBLE);
+        }
+        if (aOthers.size() != 0) {
+            String others = TextUtils.join(",", aOthers);
+            tv_others.setText("" + aOthers.size() + "-" + others);
+            cv_others.setVisibility(View.VISIBLE);
+        }
+
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(true);
+        bottomSheetDialog.show();
     }
 
     private void PerformStartFunction(int pos, MyViewHolder holder) {
@@ -644,6 +730,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         }
         if (!StringUtils.isNull(strKit)) {
             holder.txtKits.setText(strKit + " Kits");
+            holder.txtKits.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         } else {
             holder.lin_kits.setVisibility(View.GONE);
         }
@@ -1043,7 +1130,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    activity.startActivity(new Intent(activity,VisitOrdersDisplayFragment_new.class));
+                                    activity.startActivity(new Intent(activity, VisitOrdersDisplayFragment_new.class));
 //                                    homeScreenActivity.pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
                                     dialog.dismiss();
 

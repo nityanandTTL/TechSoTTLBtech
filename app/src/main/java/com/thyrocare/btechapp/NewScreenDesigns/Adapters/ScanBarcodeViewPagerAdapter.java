@@ -3,6 +3,7 @@ package com.thyrocare.btechapp.NewScreenDesigns.Adapters;
 import android.app.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -116,9 +117,11 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         View itemView = LayoutInflater.from(mActivity).inflate(R.layout.barcode_scan_viewpager_item, container, false);
 
         TextView tv_benName = (TextView) itemView.findViewById(R.id.tv_benName);
+        TextView tv_srf_mob = (TextView) itemView.findViewById(R.id.tv_srf_mob);
         TextView tv_OrderNo = (TextView) itemView.findViewById(R.id.tv_OrderNo);
         TextView tv_products = (TextView) itemView.findViewById(R.id.tv_products);
         RelativeLayout ll_srfID = (RelativeLayout) itemView.findViewById(R.id.ll_srfID);
+        CardView cv_rel = itemView.findViewById(R.id.cv_rel);
         LinearLayout lin_benProduct = (LinearLayout) itemView.findViewById(R.id.lin_benProduct);
 //        Button btn_captureBenBarcodePic = (Button) itemView.findViewById(R.id.btn_captureBenBarcodePic);
         final TextView txt_captureBenBarcodePic = (TextView) itemView.findViewById(R.id.txt_captureBenBarcodePic);
@@ -143,13 +146,22 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         try {
             if (CommonUtils.ValidateCovidorders(beneficaryWiseScanbarcodeArylst.get(position).getTestsCode())) {
                 edt_srf.setHint("SRF ID*");
+                cv_rel.setVisibility(View.VISIBLE);
                 ll_srfID.setVisibility(View.VISIBLE);
             } else {
                 edt_srf.setHint("SRF ID");
+                cv_rel.setVisibility(View.GONE);
                 ll_srfID.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        if(ll_srfID.getVisibility() == View.VISIBLE){
+            tv_srf_mob.setVisibility(View.VISIBLE);
+            tv_srf_mob.setText("Mobile - "+mobile);
+        }else{
+            tv_srf_mob.setVisibility(View.GONE);
         }
 
 

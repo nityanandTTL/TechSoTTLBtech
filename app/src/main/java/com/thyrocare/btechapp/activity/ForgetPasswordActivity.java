@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -18,7 +20,6 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.models.api.request.ResetPasswordRequestModel;
-
 
 
 import com.thyrocare.btechapp.uiutils.AbstractActivity;
@@ -40,6 +41,8 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
     String regexp = ".{6,12}";
     String str;
     private Global globalClass;
+    TextView tv_toolbar;
+    ImageView iv_back, iv_home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
     private void setListeners() {
         btn_send_otp.setOnClickListener(this);
         btn_verify_otp.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
     }
 
     @Override
@@ -66,6 +70,11 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
         edt_otp = (EditText) findViewById(R.id.edt_otp);
         edt_confirm_new_password = (EditText) findViewById(R.id.edt_confirm_new_password);
         edt_new_password = (EditText) findViewById(R.id.edt_new_password);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_back = findViewById(R.id.iv_back);
+        iv_home = findViewById(R.id.iv_home);
+        tv_toolbar.setText("Forgot Password");
+        iv_home.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -92,6 +101,9 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
                     Toast.makeText(this, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+        if (v.getId() == R.id.iv_back) {
+            finish();
         }
     }
 
@@ -120,7 +132,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
         return true;
     }
 
-    private void getOtpApi(final String action){
+    private void getOtpApi(final String action) {
 
         ResetPasswordRequestModel resetPasswordRequestModel = new ResetPasswordRequestModel();
         resetPasswordRequestModel.setEmail(edt_mobile_no.getText().toString());
@@ -139,12 +151,12 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(ForgetPasswordActivity.this, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallResetPasswordAPI(resetPasswordRequestModel);
-        globalClass.showProgressDialog(ForgetPasswordActivity.this,"Please wait..");
+        globalClass.showProgressDialog(ForgetPasswordActivity.this, "Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 globalClass.hideProgressDialog(ForgetPasswordActivity.this);
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
 
                     if (action.equals("send otp")) {
                         OtpListenerUtil.startSmsUserConsent(ForgetPasswordActivity.this);
@@ -158,7 +170,7 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
                         Toast.makeText(ForgetPasswordActivity.this, "Password changed successfully", Toast.LENGTH_SHORT).show();
                         finish();
                     }
-                }else{
+                } else {
                     Toast.makeText(ForgetPasswordActivity.this, !StringUtils.isNull(response.body()) ? response.body() : ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
 
@@ -187,10 +199,10 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
                 //That gives all message to us.
                 // We need to get the code from inside with regex
                 String message = data.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE);
-                String OTP  = OtpListenerUtil.getOtpFromMessag(message);
-                if (StringUtils.isNull(OTP)){
-                    globalClass.showcenterCustomToast(ForgetPasswordActivity.this, "Failed to Detect OTP",Toast.LENGTH_LONG);
-                }else{
+                String OTP = OtpListenerUtil.getOtpFromMessag(message);
+                if (StringUtils.isNull(OTP)) {
+                    globalClass.showcenterCustomToast(ForgetPasswordActivity.this, "Failed to Detect OTP", Toast.LENGTH_LONG);
+                } else {
                     edt_otp.setText(OTP);
 
                 }

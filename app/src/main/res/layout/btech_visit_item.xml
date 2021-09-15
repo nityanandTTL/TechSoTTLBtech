@@ -211,11 +211,11 @@
                     android:id="@+id/txtAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="3"
                     android:layout_marginBottom="@dimen/_20sdp"
                     android:hint="@string/address1"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/value" />
+                    android:maxLines="3"
+                    android:textSize="@dimen/value"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -315,16 +315,6 @@
             android:layout_below="@+id/layoutMain">
 
 
-            <com.stfalcon.swipeablebutton.SwipeableButton
-                android:id="@+id/swipe_button"
-                android:visibility="gone"
-                app:uncheckedToggleBackground="@drawable/bg_swipe_green"
-                app:uncheckedBackground="@drawable/rounded_background_green"
-                app:uncheckedIcon="@drawable/ic_rightarrow"
-                android:layout_width="match_parent"
-                app:textColorUnChecked="@color/bg_new_color"
-                app:textUnchecked="Swipe to release"
-                android:layout_height="wrap_content"/>
 
             <cheekiat.slideview.SlideView
                 android:id="@+id/slide_view"

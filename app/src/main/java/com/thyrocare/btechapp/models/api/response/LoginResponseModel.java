@@ -18,6 +18,15 @@ public class LoginResponseModel {
     String RespMessage;
     String error_description;
     int expires_in;
+    int FleboFlag;
+
+    public int getFleboFlag() {
+        return FleboFlag;
+    }
+
+    public void setFleboFlag(int fleboFlag) {
+        FleboFlag = fleboFlag;
+    }
 
     public String getAccess_token() {
         return access_token;
