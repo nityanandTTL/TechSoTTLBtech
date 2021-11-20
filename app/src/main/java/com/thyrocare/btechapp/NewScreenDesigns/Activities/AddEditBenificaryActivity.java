@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -32,6 +33,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.AddRemoveTestProfileActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.OrderUpdateDetailsModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
@@ -104,6 +106,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     ArrayList<TestRateMasterModel> selectedTestsList = new ArrayList<>();
     private String SelectedTestCode = "";
     private int CallCartAPIFlag = 0;
+    private int AddRemoveTestAPIFlag = 0;
     private boolean testListFlag;
     ArrayList<TestRateMasterModel> edit_selectedTestsList = new ArrayList<>();
     private int PSelected_position;
@@ -119,6 +122,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     private BeneficiaryDetailsModel selectedbeneficiaryDetailsModel;
     private String orderNo;
     private RelativeLayout relHardCopyCharge;
+    CartAPIResponseModel cartAPIResponseModelforsubmitFirtsTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +169,14 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         btnOrderSubmit = findViewById(R.id.btn_order_submit);
         imgBenAddTests = (ImageView) findViewById(R.id.img_beneficiary_action_edit_tests);
 //        ll_amt = (LinearLayout) findViewById(R.id.ll_amt);
+
+
+        // TODO TEST EDIT not allowed for PE-Btech time being  GG Sir's instruction
+        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            imgBenAddTests.setVisibility(View.GONE);
+        } else {
+            imgBenAddTests.setVisibility(View.VISIBLE);
+        }
 
         /*txtActPrice = (TextView) findViewById(R.id.txtActPrice);
         txtHardCopyCharge = (TextView) findViewById(R.id.txtHardCopyCharge);
@@ -237,9 +249,13 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 imgBenGenderF.setImageDrawable(getResources().getDrawable(R.drawable.female_icon_orange));
                 imgBenGenderM.setImageDrawable(getResources().getDrawable(R.drawable.male));
             }
-            CallAPIFORTESTLIST(FlagADDEditBen);
-        }
+            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                //TODO No API call for PE login
+            } else {
+                CallAPIFORTESTLIST(FlagADDEditBen);
+            }
 
+        }
     }
 
     private void initListener() {
@@ -295,7 +311,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
                         isRHC = true;
                         imgReportHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
-                        globalclass.showalert_OK(mActivity.getResources().getString(R.string.hardcopycharges), mActivity);
+//                        globalclass.showalert_OK(mActivity.getResources().getString(R.string.hardcopycharges), mActivity);
 
                     }
 
@@ -312,7 +328,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                         isRHC = true;
                         imgReportHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
 
-                        globalclass.showalert_OK(mActivity.getResources().getString(R.string.hardcopycharges), mActivity);
+//                        globalclass.showalert_OK(mActivity.getResources().getString(R.string.hardcopycharges), mActivity);
                     }
 
                     CallCartAPIFlag = 1;
@@ -342,9 +358,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                         globalclass.showalert_OK(Alreadycontains10BenMsg, mActivity);
                     }
                 } else {
-
                     if (validateforEditben()) {
-
                         if (CallCartAPIFlag == 1) {
                             CallSubmitAPIforEditBen(orderNo);
                         } else {
@@ -354,7 +368,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                 globalclass.showCustomToast(mActivity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
                             }
                         }
-
                     }
                 }
             }
@@ -396,7 +409,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
     private void ShowDialogToVerifyOTP(final String Action, final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
 
-        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+        /*final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
         final View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.bottomsheet_otp, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
         RelativeLayout rel_main = (RelativeLayout) bottomSheet.findViewById(R.id.rel_main);
         TextView tv_header = (TextView) bottomSheet.findViewById(R.id.tv_header);
@@ -437,13 +450,14 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         }
         bottomSheetDialog.setContentView(bottomSheet);
         bottomSheetDialog.setCancelable(false);
-        bottomSheetDialog.show();
+        bottomSheetDialog.show();*/
 
-       /* CustomDialogforOTPValidation = new Dialog(mActivity);
+        CustomDialogforOTPValidation = new Dialog(mActivity);
         CustomDialogforOTPValidation.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         CustomDialogforOTPValidation.requestWindowFeature(Window.FEATURE_NO_TITLE);
         CustomDialogforOTPValidation.setContentView(R.layout.validate_otp_dialog);
         CustomDialogforOTPValidation.setCancelable(false);
+        CustomDialogforOTPValidation.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         RelativeLayout rel_main = (RelativeLayout) CustomDialogforOTPValidation.findViewById(R.id.rel_main);
         TextView tv_header = (TextView) CustomDialogforOTPValidation.findViewById(R.id.tv_header);
@@ -502,7 +516,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 }
 
             }
-        });*/
+        });
 
     }
 
@@ -510,7 +524,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallValidateOTPAPI(model);
-        globalclass.showProgressDialog(mActivity, "Requesting for OTP. Please wait..");
+        globalclass.showProgressDialog(mActivity, "Validating OTP. Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -1444,6 +1458,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                     orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setTests(testsCode);
                                     orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setSampleType(samples);
                                     CallCartAPIFlag = 1;
+                                    AddRemoveTestAPIFlag = 1;
                                     btnOrderSubmit.performClick();
                                 }
                             } else {
@@ -1631,14 +1646,51 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
         //CAllAPIforCart
         if (cd.isConnectingToInternet()) {
-            CallTechsoCartAPI(cartAPIRequestModel);
+            if (FlagADDEditBen) {
+                CallApiForSubMitBeforeCartAPI(cartAPIResponseModelforsubmitFirtsTime, cartAPIRequestModel);
+            } else {
+//                CallApiForSubMitBeforeCartAPI(cartAPIResponseModelforsubmitFirtsTime, cartAPIRequestModel);
+                CallTechsoCartAPI(cartAPIRequestModel);
+            }
+
+//
 
         } else {
             globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
         }
     }
 
-    private void CallTechsoCartAPI(CartAPIRequestModel cartAPIRequestModel) {
+    private void CallTechsoOrderbookingAPIFirst(OrderBookingRequestModel finalSubmitDataModel, final CartAPIRequestModel cartAPIRequestModel) {
+
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        Call<String> responseCall = apiInterface.CallTechsoOrderBookingAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(), finalSubmitDataModel);
+        globalclass.showProgressDialog(mActivity, "Please wait..");
+        responseCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                globalclass.hideProgressDialog(mActivity);
+                if (response.code() == 200) {
+                    globalclass.showCustomToast(mActivity, "SUCCESS");
+                    // TODo code to redirect to Arrive Screen
+//                    setResult(Activity.RESULT_OK);
+//                    finish();
+
+                    CallTechsoCartAPI(cartAPIRequestModel);
+                } else {
+
+                    globalclass.showCustomToast(mActivity, SomethingWentwrngMsg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                globalclass.hideProgressDialog(mActivity);
+                globalclass.showCustomToast(mActivity, SomethingWentwrngMsg);
+            }
+        });
+    }
+
+    private void CallTechsoCartAPI(final CartAPIRequestModel cartAPIRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<CartAPIResponseModel> responseCall = apiInterface.CallTechsoCartAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(), cartAPIRequestModel);
@@ -1649,9 +1701,9 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     CartAPIResponseModel cartAPIResponseModel = response.body();
+                    cartAPIResponseModelforsubmitFirtsTime = response.body();
                     onTechsoCartAPIResponseReceived(cartAPIResponseModel);
                 } else {
-
                     globalclass.showCustomToast(mActivity, SomethingWentwrngMsg);
                 }
             }
@@ -1671,12 +1723,29 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 AddBenCartFlag = 0;
                 ShowdatainAmount(cartAPIResponseModel);
             } else {
-                if (CallCartAPIFlag == 1) {
-                    CallCartAPIFlag = 0;
+                if (!FlagADDEditBen &&CallCartAPIFlag == 1) {
+//                    CallCartAPIFlag = 0;
                     ShowdatainAmount(cartAPIResponseModel);
-                } else {
+                    CallApiForSubMitAfterCartAPI(cartAPIResponseModel);
+                }else if (CallCartAPIFlag == 1 && AddRemoveTestAPIFlag == 1){
+                    CallCartAPIFlag = 0;
+                    AddRemoveTestAPIFlag = 0;
+                    ShowdatainAmount(cartAPIResponseModel);
+                }
+                else {
                     CallApiForSubMitAfterCartAPI(cartAPIResponseModel);
                 }
+
+               /*if (!FlagADDEditBen && CallCartAPIFlag ==1){
+                   CallCartAPIFlag = 0;
+                   ShowdatainAmount(cartAPIResponseModel);
+                   CallApiForSubMitAfterCartAPI(cartAPIResponseModel);
+               } else if (CallCartAPIFlag == 1) {
+                    CallCartAPIFlag = 0;
+                    ShowdatainAmount(cartAPIResponseModel);
+                }else {
+                    CallApiForSubMitAfterCartAPI(cartAPIResponseModel);
+                }*/
             }
 
         } catch (Exception e) {
@@ -1724,6 +1793,112 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         CallCartAPI(nm);
     }
 
+    private void CallSubMitAPIAdd(OrderBookingRequestModel nm) {
+        if (FinalSubmitDataModel != null) {
+            FinalSubmitDataModel = null;
+        }
+        FinalSubmitDataModel = nm;
+        if (cd.isConnectingToInternet()) {
+//            CallTechsoOrderbookingAPIFirst(FinalSubmitDataModel);
+        } else {
+            globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+        }
+//        CallCartAPI(nm);
+    }
+
+    private void callSubmitAPIAfterBookingOrder(final String orderNo, final int finalBenId) {
+        ArrayList<BeneficiaryDetailsModel> arrayListData = new ArrayList<>();
+        edtBenAge.setError(null);
+        edtBenName.setError(null);
+        txtTestsList.setError(null);
+
+        int fAge = Integer.parseInt(edtBenAge.getText().toString().trim());
+        String fName = edtBenName.getText().toString().trim();
+
+        if (arrayListData != null) {
+            arrayListData = null;
+        }
+
+        arrayListData = SetBenmaster(fAge, fName, orderNo, isM, finalBenId);
+        OrderBookingRequestModel nm = new OrderBookingRequestModel();
+
+        //TODO -> Add data in orddtl
+        ArrayList<OrderDetailsModel> orddtl = new ArrayList<OrderDetailsModel>();
+        OrderDetailsModel odModel = new OrderDetailsModel();
+        OrderDetailsModel ent_data = orderVisitDetailsModel.getAllOrderdetails().get(0);
+        odModel.setAddress(ent_data.getAddress());
+        odModel.setAmountDue(ent_data.getAmountDue());
+        odModel.setBenCount(ent_data.getBenCount());
+        odModel.setBillingCode(ent_data.getBillingCode());
+        odModel.setBrandId(ent_data.getBrandId());
+        odModel.setDelcode(ent_data.getDelcode());
+        odModel.setDiscount(ent_data.getDiscount());
+        odModel.setDistance(ent_data.getDistance());
+        odModel.setEmail(ent_data.getEmail());
+        odModel.setEstIncome(ent_data.getEstIncome());
+        odModel.setLatitude(ent_data.getLatitude());
+        odModel.setLongitude(ent_data.getLongitude());
+        odModel.setMargin(ent_data.getMargin());
+        odModel.setMobile(ent_data.getMobile());
+        odModel.setOrderNo(orderNo);
+        odModel.setPayType(ent_data.getPayType());
+        odModel.setPincode(ent_data.getPincode());
+        odModel.setRefcode(ent_data.getRefcode());
+        odModel.setReportHC(isRHC ? 1 : 0);
+        odModel.setSlot(ent_data.getSlot());
+        odModel.setStatus(ent_data.getStatus());
+        odModel.setVipOrder(ent_data.isVipOrder());
+        odModel.setYNC(ent_data.getYNC());
+        odModel.setKits(new ArrayList<KitsCountModel>());
+        odModel.setOrdUpdateDetails(new OrderUpdateDetailsModel());
+        odModel.setBenMaster(arrayListData);
+        odModel.setAddBen(false);
+        odModel.setTestEdit(false);
+        odModel.setEditOrder(false);
+
+        orddtl.add(odModel);
+        nm.setOrddtl(orddtl);
+
+        //TODO -> End data in orddtl
+
+        ArrayList<BeneficiaryBarcodeDetailsModel> benBarcodeArr = new ArrayList<>();
+        ArrayList<BeneficiarySampleTypeDetailsModel> benSTArr = new ArrayList<>();
+        ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr = new ArrayList<>();
+        //SET BENEFICIARY Lab Alerts Models Array - START
+        ArrayList<BeneficiaryLabAlertsModel> benLAArr = new ArrayList<>();
+        for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                arrayListData) {
+            if (beneficiaryDetailsModel.getBarcodedtl() != null) {
+                benBarcodeArr.addAll(beneficiaryDetailsModel.getBarcodedtl());
+            }
+            if (beneficiaryDetailsModel.getSampleType() != null) {
+                benSTArr.addAll(beneficiaryDetailsModel.getSampleType());
+            }
+            if (beneficiaryDetailsModel.getClHistory() != null) {
+                benCHArr.addAll(beneficiaryDetailsModel.getClHistory());
+            }
+            if (beneficiaryDetailsModel.getLabAlert() != null) {
+                benLAArr.addAll(beneficiaryDetailsModel.getLabAlert());
+            }
+            //*******
+
+        }
+
+        OrderBookingDetailsModel ordbooking = new OrderBookingDetailsModel();
+        ordbooking.setVisitId(orderNo);
+        ordbooking.setOrddtl(orddtl);
+
+        nm.setSmpldtl(benSTArr);
+        nm.setLabAlert(benLAArr);
+        nm.setClHistory(benCHArr);
+        nm.setBendtl(arrayListData);
+        nm.setBarcodedtl(benBarcodeArr);
+        nm.setOrdbooking(ordbooking);
+
+//        CallSubMitAPIAdd(nm, orderNo, finalBenId);
+        CallSubMitAPI(nm);
+    }
+
     private void CallApiForSubMitAfterCartAPI(CartAPIResponseModel cartAPIResponseModel) {
 
         if (cartAPIResponseModel != null
@@ -1746,10 +1921,49 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                     }
                 }
             }
+
+            for (int j = 0; j < FinalSubmitDataModel.getBendtl().size(); j++) {
+                FinalSubmitDataModel.getBendtl().get(j).setAddBen(false);
+            }
         }
 
         if (cd.isConnectingToInternet()) {
             CallTechsoOrderbookingAPI(FinalSubmitDataModel);
+
+        } else {
+            globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+        }
+    }
+
+    private void CallApiForSubMitBeforeCartAPI(CartAPIResponseModel cartAPIResponseModel, CartAPIRequestModel cartAPIRequestModel) {
+
+        if (cartAPIResponseModel != null
+                && !StringUtils.isNull(cartAPIResponseModel.getResponse())
+                && cartAPIResponseModel.getResponse().equals("SUCCESS")
+                && cartAPIResponseModel.getOrders() != null
+                && cartAPIResponseModel.getOrders().size() > 0) {
+
+            for (int i = 0; i < FinalSubmitDataModel.getOrdbooking().getOrddtl().size(); i++) {
+                int orderAmountPayable = 0;
+                int orderAmountDue = 0;
+                for (int j = 0; j < cartAPIResponseModel.getOrders().size(); j++) {
+                    if (FinalSubmitDataModel.getOrdbooking().getOrddtl().get(i).getOrderNo().equals(cartAPIResponseModel.getOrders().get(j).getOrderNo())) {
+                        orderAmountPayable = orderAmountPayable + cartAPIResponseModel.getOrders().get(j).getAmountDue();
+                        orderAmountDue = orderAmountDue + cartAPIResponseModel.getOrders().get(j).getTestCharges() + cartAPIResponseModel.getOrders().get(j).getServiceCharge();
+                        FinalSubmitDataModel.getOrdbooking().getOrddtl().get(i).getOrdUpdateDetails().setPaymentDue(orderAmountPayable);
+                        FinalSubmitDataModel.getOrdbooking().getOrddtl().get(i).setAmountDue(orderAmountDue);
+                        FinalSubmitDataModel.getOrdbooking().getOrddtl().get(i).setReportHC(isRHC ? 1 : 0);
+
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        if (cd.isConnectingToInternet()) {
+//            CallTechsoOrderbookingAPI(FinalSubmitDataModel);
+            CallTechsoOrderbookingAPIFirst(FinalSubmitDataModel, cartAPIRequestModel);
 
         } else {
             globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
@@ -1767,12 +1981,20 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 globalclass.hideProgressDialog(mActivity);
                 if (response.code() == 200) {
                     Toast.makeText(mActivity, "SUCCESS", Toast.LENGTH_SHORT).show();
+                    new LogUserActivityTagging(mActivity, BundleConstants.WOE, "Order Booking");
+                    if (FlagADDEditBen) {
+                        setResult(Activity.RESULT_OK);
+                        finish();
+                    } else if (CallCartAPIFlag == 1) {
+                        CallCartAPIFlag = 0;
+                    } else if (CallCartAPIFlag == 0) {
+                        setResult(Activity.RESULT_OK);
+                        finish();
+                    }
 //                    globalclass.showCustomToast(mActivity, "SUCCESS");
                     // TODo code to redirect to Arrive Screen
-                    setResult(Activity.RESULT_OK);
-                    finish();
-                } else {
 
+                } else {
                     globalclass.showCustomToast(mActivity, SomethingWentwrngMsg);
                 }
             }

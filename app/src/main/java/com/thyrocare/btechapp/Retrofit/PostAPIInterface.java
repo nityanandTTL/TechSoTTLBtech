@@ -52,8 +52,10 @@ import com.thyrocare.btechapp.models.api.request.OrderAllocationTrackLocationReq
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
+import com.thyrocare.btechapp.models.api.request.PEPaymentRequestModel;
 import com.thyrocare.btechapp.models.api.request.PayTMRequestModel;
 import com.thyrocare.btechapp.models.api.request.PayTMVerifyRequestModel;
+import com.thyrocare.btechapp.models.api.request.PaytypeRequestModel;
 import com.thyrocare.btechapp.models.api.request.PickupOrderRequestModel;
 import com.thyrocare.btechapp.models.api.request.PostPickupOrderRequestClass;
 import com.thyrocare.btechapp.models.api.request.Post_DeviceID;
@@ -82,11 +84,13 @@ import com.thyrocare.btechapp.models.api.response.LoginDeviceResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginResponseModel;
 import com.thyrocare.btechapp.models.api.response.NewCommonResponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseVisitModel;
+import com.thyrocare.btechapp.models.api.response.PEPaymentResponseModel;
 import com.thyrocare.btechapp.models.api.response.PayTMResponseModel;
 import com.thyrocare.btechapp.models.api.response.PayTMVerifyResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentStartTransactionAPIResponseModel;
+import com.thyrocare.btechapp.models.api.response.PaytypeResponseModel;
 import com.thyrocare.btechapp.models.api.response.PickupOrderResponseModel;
 import com.thyrocare.btechapp.models.api.response.PostPickupOrderResponseModel;
 import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsResponseModel;
@@ -224,7 +228,6 @@ public interface PostAPIInterface {
     @POST("api/CallPatchSrcDest/CallPatchRequest")
     Call<String> CallpatchRequestAPI(@Field("Srcnumber") String Srcnumber, @Field("DestNumber") String DestNumber, @Field("VisitID") String VisitID);
 
-
     @POST("api/Account/Logout")
     Call<String> CallLogoutRequestApi();
 
@@ -242,7 +245,6 @@ public interface PostAPIInterface {
 
     @POST("api/BtechAvaibilityNew/Avaibility")
     Call<String> callBtechAvailabilityRequestApi(@Body SetBtechAvailabilityAPIRequestModel setBtechAvailabilityAPIRequestModel);
-
 
     @POST("api/MaterialOrderHome/PostMaterialOrderApprove")
     Call<String> CallGetPostMaterialOrderApi(@Body MaterialorderRequestModel materialorderRequestModel);
@@ -262,7 +264,6 @@ public interface PostAPIInterface {
     @POST("api/Account/ChangePassword")
     Call<String> CallGetChangePasswordRequestApi(@Body ChangePasswordRequestModel changePasswordRequestModel);
 
-
     @Headers("Content-Type: application/json")
     @POST("COMMON.svc/SSLKey")
     Call<GetSSLKeyResponseModel> CallGetSSLAPI(@Body GetSSLKeyRequestModel model);
@@ -278,6 +279,9 @@ public interface PostAPIInterface {
 
     @POST("api/PayThyrocare/StartTransaction")
     Call<PaymentStartTransactionAPIResponseModel> CallFetchTransactionResponseOnStartTransactionApi(@Body JsonObject jsonRequest);
+
+    @POST("api/PayThyrocare/ReStartTransaction")
+    Call<PaymentStartTransactionAPIResponseModel> CallFetchTransactionResponseOnReStartTransactionApi(@Body JsonObject jsonRequest);
 
     @POST
     Call<PaymentDoCaptureResponseAPIResponseModel> CallgetDoCaptureResponseRequestApi(@Url String URL, @Body JsonObject jsonRequest);
@@ -321,7 +325,6 @@ public interface PostAPIInterface {
 
     @POST("B2B/WO.svc/postworkorder")
     Call<B2BWoeResponseModel> CallSubmitCampWOEAPI(@Body SubmitB2BWoeRequestModel submitB2BWoeRequestModel);
-
 
     @Multipart
     @POST("pickso/api/Campintimation/PatientDetails")
@@ -392,7 +395,6 @@ public interface PostAPIInterface {
                                      @Part("ORDERNO") RequestBody OrderNo,
                                      @Part MultipartBody.Part selfieFileMultiBody);
 
-
     @POST("api/OrderAllocation/Pickuporders")
     Call<PickupOrderResponseModel> getPickupOrder(@Body PickupOrderRequestModel pickupOrderRequestModel);
 
@@ -411,10 +413,25 @@ public interface PostAPIInterface {
     @POST("api/Account/BtechSignInsummary")
     Call<SignSummaryResponseModel> signInSummary(@Body SignINSummaryRequestModel summaryRequestModel);
 
-
     @POST("api/PayThyrocare/PaytmSendPaymentLink")
     Call<PayTMResponseModel> payTM(@Body PayTMRequestModel payTMRequestModel);
 
     @POST("api/PayThyrocare/CheckPaymentLinkResponse")
     Call<PayTMVerifyResponseModel> payTMVerify(@Body PayTMVerifyRequestModel payTMVerifyRequestModel);
+
+    @Multipart
+    @POST("api/OrderAllocation/Uploadblob")
+    Call<String> CallUploadVialAPI(@Part("ORDERNO") RequestBody OrderNO,
+                                   @Part("BENID") RequestBody benID,
+                                   @Part("TEST") RequestBody test,
+                                   @Part("TYPE") RequestBody type,
+                                   @Part("APPID") RequestBody appID,
+                                   @Part MultipartBody.Part vialFileMultiBody);
+
+    @POST("api/PayThyrocare/PEVerifyPayment")
+    Call<PEPaymentResponseModel> PEVerifyPayment(@Body PEPaymentRequestModel pePaymentRequestModel);
+
+    @POST("api/OrderAllocation/GetOrderPaytype")
+    Call<PaytypeResponseModel> getOrderPaytype(@Body PaytypeRequestModel paytypeRequestModel);
+
 }

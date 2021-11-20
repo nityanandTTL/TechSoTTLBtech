@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,21 +18,21 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_background_green"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/_5sdp"
             android:paddingStart="@dimen/_5sdp"
+            android:paddingTop="@dimen/_5sdp"
             android:paddingEnd="@dimen/_5sdp"
             android:paddingBottom="@dimen/_10sdp">
 
             <LinearLayout
-                android:paddingBottom="@dimen/_10sdp"
                 android:id="@+id/layoutOrdDetails"
                 android:layout_width="0dp"
-                android:layout_marginLeft="@dimen/_5sdp"
-                android:paddingLeft="@dimen/_2sdp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_5sdp"
                 android:layout_weight="2"
                 android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/_2sdp"
+                android:paddingBottom="@dimen/_5sdp">
 
                 <LinearLayout
                     android:id="@+id/lin_btechName"
@@ -60,17 +60,19 @@
                     android:id="@+id/lin_CustomerName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:weightSum="7">
 
                     <TextView
                         android:id="@+id/txtCustomerName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/label"
+                        android:layout_weight="6"
                         android:text=""
+                        android:textAllCaps="false"
                         android:textColor="@color/bg_new_color"
-                        android:textStyle="bold"
-                        android:textAllCaps="false"/>
+                        android:textSize="@dimen/label"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/imgCall"
@@ -78,6 +80,7 @@
                         android:layout_height="19dp"
                         android:layout_alignParentEnd="true"
                         android:layout_margin="@dimen/_2sdp"
+                        android:layout_weight="1"
                         android:src="@drawable/ic_call"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -98,9 +101,9 @@
                         android:id="@+id/txtOrderNo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/value"
                         android:textAllCaps="true"
-                        android:textStyle="bold"/>
+                        android:textSize="@dimen/value"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -238,7 +241,8 @@
                         android:layout_height="match_parent"
                         android:layout_margin="@dimen/_2sdp"
                         android:background="@color/colorOrange"
-                        android:visibility="gone"/>
+                        android:backgroundTint="@color/bg_new_color"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/txtPPBSStatus"
@@ -247,6 +251,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_margin="@dimen/_2sdp"
                         android:background="@drawable/ic_circle"
+                        android:backgroundTint="@color/bg_new_color"
                         android:gravity="center"
                         android:padding="@dimen/_2sdp"
                         android:text="P"
@@ -260,6 +265,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_margin="@dimen/_2sdp"
                         android:background="@drawable/ic_circle"
+                        android:backgroundTint="@color/bg_new_color"
                         android:gravity="center"
                         android:padding="@dimen/_2sdp"
                         android:text="R"
@@ -285,10 +291,10 @@
                     android:layout_alignParentEnd="true"
                     android:padding="@dimen/_3sdp"
                     android:text=""
-                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/direct_visit"
@@ -296,6 +302,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:text="Direct Visit"
                     android:textColor="@color/bg_new_color"
                     android:textSize="12sp"
@@ -307,55 +314,53 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/rel_imgRelease"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="-25dp"
-            android:id="@+id/rel_imgRelease"
-            android:layout_below="@+id/layoutMain">
-
-
+            android:layout_below="@+id/layoutMain"
+            android:layout_marginTop="-15dp"
+            android:gravity="center">
 
             <cheekiat.slideview.SlideView
                 android:id="@+id/slide_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_background_green"
+                android:visibility="gone"
                 app:slideSrc="@drawable/ic_right_green_circle"
                 app:slideText="Slide to release"
-                android:visibility="gone"
                 app:slideTextColor="@color/bg_new_color" />
 
             <LinearLayout
-                android:visibility="visible"
                 android:id="@+id/LL_swipe"
                 android:layout_width="match_parent"
-                android:gravity="center"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_background_green_2">
+                android:background="@drawable/rounded_background_green_2"
+                android:gravity="center"
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:textColor="@color/bg_new_color"
+                    android:text="Order release"
                     android:textAllCaps="false"
-                    android:textStyle="bold"
+                    android:textColor="@color/bg_new_color"
                     android:textSize="@dimen/label"
-                    android:layout_height="wrap_content"
-                    android:text="Order release"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <com.thyrocare.btechapp.customview.CircleImageView
                 android:id="@+id/imgRelease"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-20dp"
-                android:visibility="gone"
                 android:layout_marginLeft="-15dp"
-                android:src="@drawable/ic_swipe_green"/>
+                android:layout_marginTop="-20dp"
+                android:src="@drawable/ic_swipe_green"
+                android:visibility="gone" />
 
-    </RelativeLayout>
+        </RelativeLayout>
 
     </RelativeLayout>
 
@@ -363,9 +368,9 @@
         android:id="@+id/layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerInParent="true"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginRight="25dp"
         android:orientation="vertical">
@@ -401,8 +406,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textSize="@dimen/value"
-                        android:text="Accept" />
+                        android:text="Accept"
+                        android:textSize="@dimen/value" />
 
                 </LinearLayout>
 
@@ -425,8 +430,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textSize="@dimen/value"
-                        android:text="Start" />
+                        android:text="Start"
+                        android:textSize="@dimen/value" />
 
                 </LinearLayout>
             </LinearLayout>

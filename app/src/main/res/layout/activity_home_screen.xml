@@ -8,11 +8,11 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbarLayout"
-        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:visibility="visible">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -48,9 +48,9 @@
 
                         <TextView
                             android:id="@+id/txt_username"
-                            android:text=""
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text=""
                             android:textColor="@color/white" />
 
                     </LinearLayout>
@@ -81,33 +81,28 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:visibility="gone"
         android:fitsSystemWindows="true"
+        android:visibility="gone"
         app:itemIconTint="@android:color/black"
         app:menu="@menu/activity_home_screen_drawer">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="@dimen/dp_2"
+            android:background="@color/white"
             android:gravity="bottom"
-            android:background="@color/white">
+            android:orientation="vertical">
 
 
             <ImageView
                 android:id="@+id/img_thyrocare"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:src="@drawable/thyro_logo"
-                />
-            <TextView
-                android:id="@+id/txt_version_code"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:text="" />
+                android:src="@drawable/thyro_logo" />
+
+
         </LinearLayout>
 
 
@@ -118,37 +113,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/appbarLayout"
-        android:gravity="center"
         android:layout_centerInParent="true"
+        android:gravity="center"
         android:orientation="vertical">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
             android:orientation="horizontal"
             android:padding="@dimen/_5sdp">
 
             <TextView
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/_20sdp"
                 android:layout_weight="2"
                 android:text="Quick Links"
                 android:textColor="@color/text_color_grey"
                 android:textSize="@dimen/_16sdp"
-                android:layout_marginRight="@dimen/_20sdp"
                 android:textStyle="bold" />
 
 
             <LinearLayout
+                android:id="@+id/ll_gqc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/_10sdp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/_2sdp">
 
                 <ImageView
                     android:id="@+id/iv_gqc"
@@ -161,21 +158,20 @@
                     android:layout_height="wrap_content"
                     android:text="GQC"
                     android:textColor="@color/grey"
-                    android:textSize="@dimen/label"/>
+                    android:textSize="@dimen/label" />
             </LinearLayout>
-
 
 
         </LinearLayout>
 
 
         <View
-            android:layout_marginTop="@dimen/_10sdp"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:background="@color/grey_2" />
+            android:background="@drawable/drawable_line" />
 
 
         <LinearLayout
@@ -201,8 +197,8 @@
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_baseline_event_leaves_24" />
 
                 <TextView
@@ -215,6 +211,7 @@
 
 
             <View
+                android:id="@+id/v_1"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/_5sdp"
@@ -235,8 +232,8 @@
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_baseline_border_color_24" />
 
                 <TextView
@@ -269,8 +266,8 @@
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_baseline_library_add_check_24" />
 
                 <TextView
@@ -294,11 +291,11 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:background="@drawable/drawable_line"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_10sdp" />
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/drawable_line" />
 
 
         <LinearLayout
@@ -324,8 +321,8 @@
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_baseline_hub_24" />
 
                 <TextView
@@ -338,6 +335,7 @@
 
 
             <View
+                android:id="@+id/v_3"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/_5sdp"
@@ -358,8 +356,8 @@
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_baseline_edit_note_24" />
 
                 <TextView
@@ -372,6 +370,7 @@
 
 
             <View
+                android:id="@+id/v_2"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/_5sdp"
@@ -392,8 +391,8 @@
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_baseline_checklist_rtl_24" />
 
                 <TextView
@@ -412,21 +411,21 @@
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:background="@color/grey_2" />
+            android:background="@drawable/drawable_line" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Others"
             android:layout_gravity="start"
-            android:textColor="@color/text_color_grey"
-            android:textSize="@dimen/_16sdp"
-            android:textStyle="bold"
             android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:layout_marginRight="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_20sdp"/>
+            android:text="Others"
+            android:textColor="@color/text_color_grey"
+            android:textSize="@dimen/_16sdp"
+            android:textStyle="bold" />
 
 
         <View
@@ -434,7 +433,7 @@
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:background="@color/grey_2" />
+            android:background="@drawable/drawable_line" />
 
 
         <LinearLayout
@@ -460,8 +459,8 @@
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_baseline_mail_24" />
 
                 <TextView
@@ -494,8 +493,8 @@
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_baseline_password_24" />
 
                 <TextView
@@ -528,8 +527,8 @@
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_baseline_feedback_24" />
 
                 <TextView
@@ -547,18 +546,17 @@
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_marginRight="@dimen/_10sdp"
-            />
+            android:layout_marginRight="@dimen/_10sdp" />
 
 
         <View
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:background="@drawable/drawable_line"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_10sdp" />
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/drawable_line" />
 
 
         <LinearLayout
@@ -584,8 +582,8 @@
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_baseline_video_library_24" />
 
                 <TextView
@@ -618,8 +616,8 @@
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_baseline_workspace_premium_24" />
 
                 <TextView
@@ -652,8 +650,8 @@
                     android:layout_width="@dimen/_24sdp"
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
-                    android:padding="@dimen/_2sdp"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:padding="@dimen/_2sdp"
                     android:src="@drawable/ic_baseline_logout_24" />
 
                 <TextView
@@ -672,7 +670,18 @@
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:background="@color/grey_2" />
+            android:background="@drawable/drawable_line" />
+
+
+        <TextView
+            android:id="@+id/txt_version_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/grey_2" />
 
 
     </LinearLayout>

@@ -171,7 +171,12 @@ public class ForgetPasswordActivity extends AbstractActivity implements View.OnC
                         finish();
                     }
                 } else {
-                    Toast.makeText(ForgetPasswordActivity.this, !StringUtils.isNull(response.body()) ? response.body() : ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
+                    if ( response.code() == 404 && response.message()!=null){
+                        Toast.makeText(ForgetPasswordActivity.this, ""+response.message(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(ForgetPasswordActivity.this, !StringUtils.isNull(response.body()) ? response.body() : ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
+                    }
+
                 }
 
             }

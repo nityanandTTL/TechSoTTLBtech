@@ -21,6 +21,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
+import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class ServedOrdersListAdapter extends RecyclerView.Adapter<ServedOrdersLi
     Global globalclass;
     ConnectionDetector cd;
     OnItemClickListener onItemClickListener;
+    AppPreferenceManager appPreferenceManager;
 
     public ServedOrdersListAdapter(Activity pActivity, ArrayList<ServedOrderResponseModel.btchOrd> ServedOrderArylist) {
 
@@ -42,6 +44,7 @@ public class ServedOrdersListAdapter extends RecyclerView.Adapter<ServedOrdersLi
         this.ServedOrderArylist = ServedOrderArylist;
         globalclass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
+        appPreferenceManager = new AppPreferenceManager(mActivity);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -92,6 +95,12 @@ public class ServedOrdersListAdapter extends RecyclerView.Adapter<ServedOrdersLi
         holder.tv_Order_status.setText(ServedOrderArylist.get(position).getStatus());
         holder.tv_orderAmount.setText("" + ServedOrderArylist.get(position).getAmountCollected());
         holder.tv_Bencount.setText("(" + ServedOrderArylist.get(position).getBenCount() + " Ben)");
+
+        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+            holder.rl_receipt.setVisibility(View.INVISIBLE);
+        }else{
+            holder.rl_receipt.setVisibility(View.VISIBLE);
+        }
 
         if (ServedOrderArylist.get(position).getBtchBracodeDtl() != null && ServedOrderArylist.get(position).getBtchBracodeDtl().size() > 0) {
 

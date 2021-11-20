@@ -52,6 +52,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Adapters.Btech_VisitDisplayAdapte
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
@@ -222,7 +223,9 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(activity, HomeScreenActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
 
@@ -240,7 +243,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                 tv_RoutineOrders.setBackgroundResource(R.drawable.rounded_background_filled_oranged);
                 tv_AayushmanOrders.setBackgroundResource(R.drawable.rounded_background_empty_orange);
                 tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.white));
-                tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.colorOrange));
+                tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.bg_new_color));
 
                 layoutEarnings.setVisibility(View.VISIBLE);
                 if (orderDetailsResponseModels_RoutineOrders.size() > 0) {
@@ -263,7 +266,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 
                 tv_RoutineOrders.setBackgroundResource(R.drawable.rounded_background_empty_orange);
                 tv_AayushmanOrders.setBackgroundResource(R.drawable.rounded_background_filled_oranged);
-                tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.colorOrange));
+                tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.bg_new_color));
                 tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.white));
                 layoutEarnings.setVisibility(View.GONE);
                 if (orderDetailsResponseModels_AayushmanOrders.size() > 0) {
@@ -459,7 +462,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         if (isClicledonAayushmanOrders) {
             tv_RoutineOrders.setBackgroundResource(R.drawable.rounded_background_empty_orange);
             tv_AayushmanOrders.setBackgroundResource(R.drawable.rounded_background_filled_oranged);
-            tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.colorOrange));
+            tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.bg_new_color));
             tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.white));
             layoutEarnings.setVisibility(View.GONE);
             prepareRecyclerView(orderDetailsResponseModels_AayushmanOrders);
@@ -468,7 +471,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             tv_RoutineOrders.setBackgroundResource(R.drawable.rounded_background_filled_oranged);
             tv_AayushmanOrders.setBackgroundResource(R.drawable.rounded_background_empty_orange);
             tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.white));
-            tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.colorOrange));
+            tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.bg_new_color));
             prepareRecyclerView(orderDetailsResponseModels_RoutineOrders);
         }
 
@@ -477,7 +480,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             tv_RoutineOrders.setBackgroundResource(R.drawable.rounded_background_filled_oranged);
             tv_AayushmanOrders.setBackgroundResource(R.drawable.rounded_background_empty_orange);
             tv_RoutineOrders.setTextColor(ContextCompat.getColor(activity, R.color.white));
-            tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.colorOrange));
+            tv_AayushmanOrders.setTextColor(ContextCompat.getColor(activity, R.color.bg_new_color));
             prepareRecyclerView(orderDetailsResponseModels_RoutineOrders);
         } else {
             prepareRecyclerView(orderDetailsResponseModels_RoutineOrders);
@@ -549,7 +552,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                         public void onRefreshClicked() {
                             fetchData();
                             swipeRefreshLayout.setRefreshing(true);
-                            startActivity(new Intent(activity,VisitOrdersDisplayFragment_new.class));
+                            startActivity(new Intent(activity, VisitOrdersDisplayFragment_new.class));
 //                            pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
                         }
                     }, pincode, orderVisitDetailsModel);
@@ -916,7 +919,11 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                 try {
                     if (response.isSuccessful() && response.body() != null) {
                         if (response.code() == 200 || response.code() == 204) {
-                            onOrderStatusChangedResponseReceived(orderVisitDetailsModel);
+                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                                ProceedToArriveScreen(orderVisitDetailsModel, false);
+                            }else{
+                                onOrderStatusChangedResponseReceived(orderVisitDetailsModel);
+                            }
                         } else {
                             try {
                                 Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
@@ -1004,6 +1011,8 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         try {
             startTrackerService();
             SendinglatlongOrderAllocation(orderVisitDetailsModel, 7);
+            String remarks = "Order Started";
+            new LogUserActivityTagging(activity, BundleConstants.WOE, remarks);
 //            Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
             Intent intentNavigate = new Intent(activity, StartAndArriveActivity.class);
             intentNavigate.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
@@ -1013,12 +1022,9 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                         Uri.parse("google.navigation:q=" + orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude() + "," + orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude()));
                 startActivity(intent);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void SendinglatlongOrderAllocation(OrderVisitDetailsModel orderVisitDetailsModel, int status) {
@@ -1096,6 +1102,8 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                 int statusCode = response.code();
                 if (statusCode == 204 || statusCode == 200) {
                     TastyToast.makeText(activity, "Order Accepted Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                    String remarks = "Order Accepted";
+                    new LogUserActivityTagging(activity, BundleConstants.WOE, remarks);
                     fetchData();
                 } else {
                     try {
@@ -1228,6 +1236,15 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                 entity.addPart("Remarks", new StringBody("" + setDispositionDataModel.getRemarks()));
                 entity.addPart("ToNo", new StringBody("" + setDispositionDataModel.getToNo()));
                 entity.addPart("UserId", new StringBody("" + setDispositionDataModel.getUserId()));
+
+
+                System.out.println("AppId :" + "" + setDispositionDataModel.getAppId());
+                System.out.println("DispId :" + "" + setDispositionDataModel.getDispId());
+                System.out.println("FrmNo : " + "" + setDispositionDataModel.getFrmNo());
+                System.out.println("OrderNo : " + "" + setDispositionDataModel.getOrderNo());
+                System.out.println("Remarks : " + "" + setDispositionDataModel.getRemarks());
+                System.out.println("ToNo : " + "" + setDispositionDataModel.getToNo());
+                System.out.println("UserId :" + "" + setDispositionDataModel.getUserId());
 
                 request.setEntity(entity);
                 HttpResponse response = httpClient.execute(request);

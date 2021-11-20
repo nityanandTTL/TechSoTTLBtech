@@ -18,14 +18,14 @@ public class LoginResponseModel {
     String RespMessage;
     String error_description;
     int expires_in;
-    int FleboFlag;
+    String CompanyName;
 
-    public int getFleboFlag() {
-        return FleboFlag;
+    public String getCompanyName() {
+        return CompanyName;
     }
 
-    public void setFleboFlag(int fleboFlag) {
-        FleboFlag = fleboFlag;
+    public void setCompanyName(String companyName) {
+        CompanyName = companyName;
     }
 
     public String getAccess_token() {

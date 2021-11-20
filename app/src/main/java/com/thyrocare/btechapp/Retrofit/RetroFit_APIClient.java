@@ -44,7 +44,6 @@ public class RetroFit_APIClient {
             apiClient = new RetroFit_APIClient();
         }
         return apiClient;
-
     }
 
     public Retrofit getClient(final Activity mActivity ,final String BASE_URL) {
@@ -52,12 +51,6 @@ public class RetroFit_APIClient {
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-
-
-
-
-
-
 
         if (BuildConfig.DEBUG) {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);   // development build

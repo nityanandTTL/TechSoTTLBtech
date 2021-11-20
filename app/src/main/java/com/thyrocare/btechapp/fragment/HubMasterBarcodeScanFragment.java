@@ -85,6 +85,7 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
     AppPreferenceManager appPreferenceManager;
     TextView tv_toolbar;
     ImageView iv_back, iv_home;
+    TextView txt_master_barcode;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -139,7 +140,7 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
         ll_hub_display_footer.setVisibility(VISIBLE);
         tv_collection_sample.setVisibility(VISIBLE);
         btnDispatch = (Button) findViewById(R.id.btn_dispatch);
-
+        txt_master_barcode = findViewById(R.id.txt_master_barcode);
         tv_toolbar =findViewById(R.id.tv_toolbar);
         iv_home =findViewById(R.id.iv_home);
         iv_back =findViewById(R.id.iv_back);
@@ -337,6 +338,8 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
                     if (master_scanned_barcode.toString().trim().length() != 8) {
                         Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
                     } else {
+                        txt_master_barcode.setVisibility(VISIBLE);
+                        txt_master_barcode.setText("Master Barcode:"+master_scanned_barcode);
                         Toast.makeText(activity, "Master barcode scanned successfully", Toast.LENGTH_SHORT).show();
                     }
                 }

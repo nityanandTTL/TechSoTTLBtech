@@ -150,45 +150,51 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
     @Override
     public void onBindViewHolder(MyViewHolder holder, int pos) {
 
-        if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0
-                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() > 0
-                && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0) != null) {
+        try {
+            if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0
+                    && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size() > 0
+                    && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0) != null) {
 
-            if (orderVisitDetailsModelsArr.get(pos).getAppointmentDate().equals(current_date)) {
-                holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_green);
-                holder.LL_swipe.setBackgroundResource(R.drawable.rounded_background_green_2);
-            } else {
-                holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_yellow);
-                holder.LL_swipe.setBackgroundResource(R.drawable.rounded_background_yellow_2);
+                if (orderVisitDetailsModelsArr.get(pos).getAppointmentDate().equals(current_date)) {
+                    holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_green);
+                    holder.LL_swipe.setBackgroundResource(R.drawable.rounded_background_green_2);
+                } else {
+                    holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_yellow);
+                    holder.LL_swipe.setBackgroundResource(R.drawable.rounded_background_yellow_2);
+                }
+
+
+                holder.txtDate.setText(orderVisitDetailsModelsArr.get(pos).getAppointmentDate());
+                holder.txtSlot.setText(", "+DateUtil.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getSlot(),"hh:mm a","HH:mm"));
+                holder.txtAddress.setSelected(true);
+                holder.txtAddress.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress());
+                holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
+
+                // Display Btech Name
+                holder.lin_btechName.setVisibility(View.VISIBLE);
+                holder.txtBtechName.setText(Global.toCamelCase(orderVisitDetailsModelsArr.get(pos).getBtechName()));
+
+                DisplayBencount(pos,holder);
+                // TODO logic needs to be set for sample count
+                DisplayDayWiselayoutColor(pos,holder);
+                DisplayDirectVisit(pos,holder);
+                holder.view_seperater.setVisibility(View.GONE);
+                CheckPPBSisPresent(pos, holder);
+                CheckRBSisPresent(pos, holder);
+                ShowreleaseOption(pos, holder);
+                ShowAndHideAcceptOption(pos,holder);
+                ShowFastingNonFasting(pos, holder);
+                dateCheck(pos); // To Check Time for PPBS and RBS orders
+
+                DisplayKitData(holder, pos);
+
+                initLIsteners(pos,holder);
+
+            }else{
+
             }
-
-
-            holder.txtDate.setText(orderVisitDetailsModelsArr.get(pos).getAppointmentDate());
-            holder.txtSlot.setText(", "+DateUtil.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getSlot(),"hh:mm a","HH:mm"));
-            holder.txtAddress.setSelected(true);
-            holder.txtAddress.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress());
-            holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
-
-            // Display Btech Name
-            holder.lin_btechName.setVisibility(View.VISIBLE);
-            holder.txtBtechName.setText(Global.toCamelCase(orderVisitDetailsModelsArr.get(pos).getBtechName()));
-
-            DisplayBencount(pos,holder);
-            // TODO logic needs to be set for sample count
-            DisplayDayWiselayoutColor(pos,holder);
-            DisplayDirectVisit(pos,holder);
-            holder.view_seperater.setVisibility(View.GONE);
-            CheckPPBSisPresent(pos, holder);
-            CheckRBSisPresent(pos, holder);
-            ShowreleaseOption(pos, holder);
-            ShowAndHideAcceptOption(pos,holder);
-            ShowFastingNonFasting(pos, holder);
-            dateCheck(pos); // To Check Time for PPBS and RBS orders
-
-            DisplayKitData(holder, pos);
-
-            initLIsteners(pos,holder);
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

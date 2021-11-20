@@ -114,4 +114,9 @@ public class BundleConstants {
     public static boolean isKIOSKOrder = false;
 
     public static String WOE = "WOE";
+    public static int callOTPFlag = 0;
+    public static String PROCESSING_LOCATION="processing_location";
+    public static String ADDRESS="address";
+    public static String newTimeTWO="newTimeTWO";
+    public static String newTimeTWOHalf = "newTimeTWOHalf";
 }

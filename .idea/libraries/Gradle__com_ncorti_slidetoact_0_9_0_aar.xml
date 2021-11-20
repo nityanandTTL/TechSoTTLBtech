@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.ncorti:slidetoact:0.9.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b6c3878aee441c2fcea5bbbc4adf43cd/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b6c3878aee441c2fcea5bbbc4adf43cd/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b6c3878aee441c2fcea5bbbc4adf43cd/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b6c3878aee441c2fcea5bbbc4adf43cd/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />

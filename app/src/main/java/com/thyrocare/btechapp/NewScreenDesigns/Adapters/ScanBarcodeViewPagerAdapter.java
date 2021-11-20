@@ -72,20 +72,26 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
     private BarcodeInitAdapter barcodeinitAdapter;
     private String mobile = "";
     private boolean flagremove = false;
+    boolean isHCL;
+    String filename,filepath;
 
-    public ScanBarcodeViewPagerAdapter(Activity mActivity, ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst, boolean showProduct, String mobile) {
+    public ScanBarcodeViewPagerAdapter(Activity mActivity, ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst, boolean showProduct, String mobile,boolean isHCL,String filename) {
         this.mActivity = mActivity;
         this.beneficaryWiseScanbarcodeArylst = beneficaryWiseScanbarcodeArylst;
         globalclass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
         appPreferenceManager = new AppPreferenceManager(mActivity);
         this.showProduct = showProduct;
+        this.isHCL = isHCL;
         this.mobile = mobile;
+        this.filename = filename;
     }
 
 
-    public void updateScanData(ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst) {
+    public void updateScanData(ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst, String filename, String filepath) {
         this.beneficaryWiseScanbarcodeArylst = beneficaryWiseScanbarcodeArylst;
+        this.filename = filename;
+        this.filepath = filepath;
     }
 
 
@@ -123,20 +129,26 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         RelativeLayout ll_srfID = (RelativeLayout) itemView.findViewById(R.id.ll_srfID);
         CardView cv_rel = itemView.findViewById(R.id.cv_rel);
         LinearLayout lin_benProduct = (LinearLayout) itemView.findViewById(R.id.lin_benProduct);
+        LinearLayout lin_BenAffidavitPic = (LinearLayout) itemView.findViewById(R.id.lin_BenAffidavitPic);
 //        Button btn_captureBenBarcodePic = (Button) itemView.findViewById(R.id.btn_captureBenBarcodePic);
         final TextView txt_captureBenBarcodePic = (TextView) itemView.findViewById(R.id.txt_captureBenBarcodePic);
+        final TextView txt_captureAffidavitPic = (TextView) itemView.findViewById(R.id.txt_captureAffidavitPic);
         /*ImageView img_benImage_tick = (ImageView) itemView.findViewById(R.id.img_benImage_tick);
         TextView tv_viewImage = (TextView) itemView.findViewById(R.id.tv_viewImage);*/
         final ImageView imgDelete = (ImageView) itemView.findViewById(R.id.imgDelete);
+        final ImageView imgDeleteA = (ImageView) itemView.findViewById(R.id.imgDeleteA);
         final ImageView img_uploadBenVail = (ImageView) itemView.findViewById(R.id.img_uploadBenVail);
+        ImageView img_uploadAffidavit = (ImageView) itemView.findViewById(R.id.img_uploadAffidavit);
         RecyclerView recyle_barcode = (RecyclerView) itemView.findViewById(R.id.recyle_barcode);
 
         final EditText edt_srf = (EditText) itemView.findViewById(R.id.edt_srf);
         ImageView img_resetSRF = (ImageView) itemView.findViewById(R.id.img_resetSRF);
+
         TextView tv_saveSRF = (TextView) itemView.findViewById(R.id.tv_saveSRF);
         ImageView btn_remove = (ImageView) itemView.findViewById(R.id.btn_remove);
         LinearLayout ll_urine = itemView.findViewById(R.id.ll_urine);
         LinearLayout ll_grey = itemView.findViewById(R.id.ll_grey);
+        LinearLayout ll_view = itemView.findViewById(R.id.ll_view);
         final TextView btn_sendopt = itemView.findViewById(R.id.btn_sendopt);
         TextView btn_verify_otp = itemView.findViewById(R.id.btn_verify_otp);
         final TextView tv_number = (TextView) itemView.findViewById(R.id.tv_number);
@@ -162,6 +174,36 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             tv_srf_mob.setText("Mobile - "+mobile);
         }else{
             tv_srf_mob.setVisibility(View.GONE);
+        }
+
+        if (isHCL){
+            lin_BenAffidavitPic.setVisibility(View.VISIBLE);
+            ll_view.setVisibility(View.VISIBLE);
+
+            if (!StringUtils.isNull(filename)) {
+
+                if (filename.contains(".pdf")){
+                    txt_captureAffidavitPic.setText(filename);
+                    txt_captureAffidavitPic.setPaintFlags(txt_captureAffidavitPic.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    txt_captureAffidavitPic.setVisibility(View.VISIBLE);
+                    txt_captureAffidavitPic.setSelected(true);
+                    imgDeleteA.setVisibility(View.VISIBLE);
+                    img_uploadBenVail.setVisibility(View.VISIBLE);
+                }else{
+                    txt_captureAffidavitPic.setText("View Image");
+                    txt_captureAffidavitPic.setPaintFlags(txt_captureAffidavitPic.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    txt_captureAffidavitPic.setVisibility(View.VISIBLE);
+                    txt_captureAffidavitPic.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                    imgDelete.setVisibility(View.VISIBLE);
+                    img_uploadBenVail.setVisibility(View.VISIBLE);
+                }
+            } else {
+                txt_captureAffidavitPic.setText("Upload");
+                txt_captureAffidavitPic.setPaintFlags(txt_captureAffidavitPic.getPaintFlags() | 0);
+                imgDeleteA.setVisibility(View.GONE);
+                txt_captureAffidavitPic.setVisibility(View.GONE);
+                img_uploadBenVail.setVisibility(View.VISIBLE);
+            }
         }
 
 
@@ -250,6 +292,17 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             }
         });
 
+        imgDeleteA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                removePDF(txt_captureAffidavitPic.getText().toString(),txt_captureAffidavitPic,imgDeleteA);
+
+                if (onClickListeners != null) {
+                    onClickListeners.onAffidavitDelete(beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position);
+                }
+            }
+        });
+
         img_uploadBenVail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -259,17 +312,42 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             }
         });
 
+        img_uploadAffidavit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onClickListeners!=null){
+                    onClickListeners.onAffidavitClicked(beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position);
+                }
+            }
+        });
+
         txt_captureBenBarcodePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (txt_captureBenBarcodePic.getText().toString().equalsIgnoreCase("View Image")) {
                     if (onClickListeners != null) {
-                        onClickListeners.onImageShow(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(),  beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position);
+                        onClickListeners.onImageShow(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(),  beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position,0);
                     }
 //                   globalclass.OpenImageDialog(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(), mActivity, false);
                 } else if (txt_captureBenBarcodePic.getText().toString().equalsIgnoreCase("Upload Image")) {
                     if (onClickListeners != null) {
                         onClickListeners.onVenupunturePhotoClicked(beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position);
+                    }
+                }
+            }
+        });
+
+        txt_captureAffidavitPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (txt_captureAffidavitPic.getText().toString().equalsIgnoreCase("View Image")) {
+                    if (onClickListeners != null) {
+                        onClickListeners.onImageShow(filepath,beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position,1);
+                    }
+//                   globalclass.OpenImageDialog(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(), mActivity, false);
+                } else if (txt_captureAffidavitPic.getText().toString().equalsIgnoreCase("Upload")) {
+                    if (onClickListeners != null) {
+                        onClickListeners.onAffidavitClicked(beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position);
                     }
                 }
             }
@@ -310,6 +388,13 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
         container.addView(itemView);
         return itemView;
+    }
+
+    private void removePDF(String strPDF,TextView textView,ImageView iv) {
+        if (strPDF.length()!=0){
+            textView.setText("");
+            iv.setVisibility(View.GONE);
+        }
     }
 
     private void setUrineLogic(LinearLayout ll_grey, LinearLayout ll_urine, int position) {
@@ -495,11 +580,15 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
         void onVenupunturePhotoClicked(int BenID, int position);
 
+        void onAffidavitClicked(int BenID, int position);
+
         void onRefresh();
 
         void onBarcodeDelete(String barcode, int BenPosition, String flag);
 
         void onVialImageDelete(int BenID, int position);
+
+        void onAffidavitDelete(int BenID, int position);
 
         void onViewTestDetailsClicked(String benId);
 
@@ -507,6 +596,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
         void onSRFDeleted(String SRFID, int BenPosition);
 
-        void onImageShow(String venepuncture, int benId, int position);
+        void onImageShow(String venepuncture, int benId, int position,int flag);
+
     }
 }

@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Handler;
 
 import androidx.cardview.widget.CardView;
@@ -33,6 +35,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -41,15 +44,18 @@ import com.gun0912.tedpermission.TedPermission;
 import com.mindorks.paracamera.Camera;
 import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.Controller.BottomSheetController;
+import com.thyrocare.btechapp.Controller.VenupunctureAPIController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.ScanBarcodeViewPagerAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
+import com.thyrocare.btechapp.models.api.request.VenupunctureUploadRequestModel;
 import com.thyrocare.btechapp.models.api.response.GetTestListResponseModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryBarcodeDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
@@ -62,8 +68,10 @@ import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.DeviceUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
+import com.thyrocare.btechapp.utils.fileutils.FilePath;
 
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,13 +102,20 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     private int BenIDToScan = 0, BarcodepositionToScan = 0;
     private int BenPositionForScan = 0, BenPositionForDelete = 0;
     private Camera camera;
-    private int BenIDToCaptureVenuPhoto = 0, PositionToStoreVenuPhoto = 0, BenIDToDeleteVenuPhoto = 0, PositionToDeleteVenuPhoto = 0;
+    private int BenIDToCaptureVenuPhoto = 0, PositionToStoreVenuPhoto = 0, BenIDToDeleteVenuPhoto = 0, PositionToDeleteVenuPhoto = 0, BenIDToUploadAffidavit = 0,BenIDToDeleteAffidavit = 0, PositionToDeleteAffidavit = 0;
     private TextView btn_Proceed;
     TextView btn_Next, btn_Previous;
     private Spinner spn_ben;
     boolean isRescan = false;
     TextView tv_toolbar;
-    ImageView iv_back,iv_home;
+    ImageView iv_back, iv_home;
+    File BenBarcodePicimagefile;
+    File Affidavitfile;
+    private int pick = 1123;
+    private int Select_PDFFILE = 2121;
+    String fileName = "",filepath ="";
+    int ImageFlag = 0;
+    int DelFlag;
 
     @Override
     public void onBackPressed() {
@@ -249,7 +264,9 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(mActivity, StartAndArriveActivity.class);
+                intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+                startActivity(intent);
             }
         });
 
@@ -271,6 +288,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (ValidateAllBarcodeScan()) {
+                    new LogUserActivityTagging(mActivity, BundleConstants.WOE, "Scan Barcode");
                     Intent intent = new Intent(mActivity, CheckoutWoeActivity.class);
                     intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
                     intent.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficaryWiseArylst);
@@ -431,11 +449,12 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
 
     private void InitViewpager(int Currentposition) {
         if (mAdapter != null) {
-            mAdapter.updateScanData(beneficaryWiseArylst);
+            mAdapter.updateScanData(beneficaryWiseArylst, fileName,filepath);
             mAdapter.notifyDataSetChanged();
         } else {
             boolean showProduct = orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct();
-            mAdapter = new ScanBarcodeViewPagerAdapter(mActivity, beneficaryWiseArylst, showProduct, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+            boolean isHCL = orderVisitDetailsModel.getAllOrderdetails().get(0).isISHclOrder();
+            mAdapter = new ScanBarcodeViewPagerAdapter(mActivity, beneficaryWiseArylst, showProduct, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile(), isHCL, fileName);
             BarcodeScanviewpager.setAdapter(mAdapter);
             DisplayDotsBelowViewpager();
         }
@@ -482,6 +501,13 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onAffidavitClicked(int BenID, int position) {
+                BenIDToUploadAffidavit = BenID;
+                PositionToStoreVenuPhoto = position;
+                CaptureAffidavitDetails();
+            }
+
+            @Override
             public void onRefresh() {
 
             }
@@ -497,6 +523,13 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 BenIDToDeleteVenuPhoto = BenID;
                 PositionToDeleteVenuPhoto = position;
                 deleteVialImage();
+            }
+
+            @Override
+            public void onAffidavitDelete(int BenID, int position) {
+                BenIDToDeleteVenuPhoto = BenID;
+                PositionToDeleteVenuPhoto = position;
+                deleteAffidavit();
             }
 
             @Override
@@ -527,8 +560,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onImageShow(String venepuncture, int benId, int position) {
-                BottomSheetController bottomSheetController = new BottomSheetController(mActivity, ScanBarcodeWoeActivity.this, venepuncture, false, benId, position);
+            public void onImageShow(String venepuncture, int benId, int position, int flag) {
+                BottomSheetController bottomSheetController = new BottomSheetController(mActivity, ScanBarcodeWoeActivity.this, venepuncture, false, benId, position,flag);
                 bottomSheetController.SetBottomSheet(mActivity);
             }
         });
@@ -543,6 +576,118 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         } else {
             btn_Previous.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void deleteAffidavit() {
+        String imageurl = "";
+        if(filepath!=null ){
+           imageurl = filepath;
+        }else if (fileName!=null){
+            imageurl = fileName;
+        }
+
+//        imageurl = camera.getCameraBitmapPath();
+        File BenBarcodePicimagefile = new File(imageurl);
+        if (BenBarcodePicimagefile !=null) {
+            for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                if (beneficaryWiseArylst.get(i).getBenId() == BenIDToDeleteVenuPhoto && i == PositionToDeleteVenuPhoto) {
+                    fileName ="";
+                    filepath = "";
+                }
+            }
+            InitViewpager(PositionToStoreVenuPhoto);
+        } else {
+            Toast.makeText(mActivity, "Failed to delete Affidavit", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void CaptureAffidavitDetails() {
+
+        try {
+            final CharSequence[] items = {"Take Photo","Gallery", "Cancel"};
+            final String[] userChoosenTask = {""};
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mActivity);
+            builder.setTitle("Upload Affidavit!");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+
+                    if (items[item].equals("Take Photo")) {
+                        userChoosenTask[0] = "Take Photo";
+                        TedPermission.with(mActivity)
+                                .setPermissions(Manifest.permission.CAMERA)
+                                .setRationaleMessage("We need permission to capture photo from your camera to Upload Vail Photo.")
+                                .setRationaleConfirmText("OK")
+                                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission > Camera")
+                                .setPermissionListener(new PermissionListener() {
+                                    @Override
+                                    public void onPermissionGranted() {
+                                        ImageFlag = 1;
+                                        globalclass.cropImageFullScreenActivity(mActivity, 0);
+                                    }
+
+                                    @Override
+                                    public void onPermissionDenied(List<String> deniedPermissions) {
+                                        Toast.makeText(mActivity, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }).check();
+
+                    } else if (items[item].equals("Gallery")) {
+                        userChoosenTask[0] = "Gallery";
+                        TedPermission.with(mActivity)
+                                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                .setRationaleMessage("We need permission to capture photo from your camera to Upload Vail Photo.")
+                                .setRationaleConfirmText("OK")
+                                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission > Camera")
+                                .setPermissionListener(new PermissionListener() {
+                                    @Override
+                                    public void onPermissionGranted() {
+                                        showGallery();
+                                    }
+
+                                    @Override
+                                    public void onPermissionDenied(List<String> deniedPermissions) {
+                                        Toast.makeText(mActivity, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }).check();
+
+                    } else if (items[item].equals("Cancel")) {
+                        dialog.dismiss();
+                    }
+                }
+            });
+            builder.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ShowImagepickerDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mActivity);
+        alertDialog.setTitle("Select")
+                .setCancelable(true)
+                .setMessage("Choose any one ")
+                .setPositiveButton("Gallery", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        showGallery();
+                    }
+                })
+                .setNegativeButton("Camera", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        globalclass.cropImageFullScreenActivity(mActivity, 0);
+                    }
+                })
+                .show();
+    }
+
+    private void showGallery() {
+        Intent intent = new Intent();
+        intent.setType("application/pdf");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select PDF"), Select_PDFFILE);
     }
 
     private void EnterBarocodeManually() {
@@ -637,7 +782,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-                        selectImage();
+                        globalclass.cropImageFullScreenActivity(mActivity, 0);
+//                        selectImage();
                     }
 
                     @Override
@@ -698,19 +844,38 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 }
 
             }
-        } else if (requestCode == Camera.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+        } else if (requestCode == ImagePicker.REQUEST_CODE && resultCode == RESULT_OK) {
             String imageurl = "";
+            VenupunctureUploadRequestModel vrm = null;
             try {
-                imageurl = camera.getCameraBitmapPath();
-                File BenBarcodePicimagefile = new File(imageurl);
+                imageurl = ImagePicker.Companion.getFile(data).toString();
+//                imageurl = camera.getCameraBitmapPath();
+                BenBarcodePicimagefile = new File(imageurl);
                 if (BenBarcodePicimagefile.exists()) {
                     boolean ImageUpdated = false;
-                    for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
-                        if (beneficaryWiseArylst.get(i).getBenId() == BenIDToCaptureVenuPhoto && i == PositionToStoreVenuPhoto) {
-                            beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BenBarcodePicimagefile.getAbsolutePath());
-                            ImageUpdated = true;
+                    if (ImageFlag == 1){
+                        fileName = BenBarcodePicimagefile.getName().toString();
+                        filepath = BenBarcodePicimagefile.getAbsoluteFile().toString();
+                        for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                            if (beneficaryWiseArylst.get(i).getBenId() == BenIDToUploadAffidavit && i == PositionToStoreVenuPhoto) {
+//                                        beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BenBarcodePicimagefile.getAbsolutePath());
+                                ImageUpdated = true;
+                            }
+                            //TODO Venupucture Image API
+                            vrm = getVenupunctureUploadRequestModel(i, "AFFEDEBIT", BenBarcodePicimagefile);
+                        }
+                        ImageFlag = 0;
+                    }else{
+                        for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                            if (beneficaryWiseArylst.get(i).getBenId() == BenIDToCaptureVenuPhoto && i == PositionToStoreVenuPhoto) {
+                                beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BenBarcodePicimagefile.getAbsolutePath());
+                                ImageUpdated = true;
+                            }
+                            //TODO Venupucture Image API
+                            vrm = getVenupunctureUploadRequestModel(i, "VIAL", BenBarcodePicimagefile);
                         }
                     }
+                    callVenupuctureAPI(vrm);
                     if (ImageUpdated) {
                         InitViewpager(PositionToStoreVenuPhoto);
                     }
@@ -720,27 +885,96 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (requestCode == Select_PDFFILE) {
+            try {
+                Uri path;
+                if (data != null && data.getData() != null) {
+                    path = data.getData();
+                    if (path.toString().contains(".pdf")) {
+                        String pt = FilePath.getPath(mActivity, path);
+                        if (pt == null) {
+                            Toast.makeText(mActivity, "Please move your .pdf file to internal storage and retry", Toast.LENGTH_SHORT).show();
+                        } else {
+                            VenupunctureUploadRequestModel vrm = null;
+                            Affidavitfile = new File(FilePath.getPath(mActivity, path));
+                            fileName = Affidavitfile.getName().toString();
+                            if (Affidavitfile.exists()) {
+                                boolean ImageUpdated = false;
+                                for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                                    if (beneficaryWiseArylst.get(i).getBenId() == BenIDToUploadAffidavit && i == PositionToStoreVenuPhoto) {
+//                                        beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(Affidavitfile.getAbsolutePath());
+                                        ImageUpdated = true;
+                                    }
+                                    //TODO Venupucture Image API
+                                    vrm = getVenupunctureUploadRequestModel(i, "AFFEDEBIT", Affidavitfile);
+                                }
+                                callVenupuctureAPI(vrm);
+                                if (ImageUpdated) {
+                                    InitViewpager(PositionToStoreVenuPhoto);
+                                }
+                            } else {
+                                Toast.makeText(mActivity, "Failed to Upload data", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(mActivity, "Please move your .pdf file to internal storage and retry", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } catch (Exception e) {
+                Toast.makeText(mActivity, "Something wrong with file", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
     }
 
+    private VenupunctureUploadRequestModel getVenupunctureUploadRequestModel(int i, String affedebit, File benBarcodePicimagefile) {
+        VenupunctureUploadRequestModel vrm;
+        vrm = new VenupunctureUploadRequestModel();
+        vrm.setBENID(String.valueOf(beneficaryWiseArylst.get(i).getBenId()));
+        vrm.setORDERNO(beneficaryWiseArylst.get(i).getOrderNo());
+        vrm.setTEST(beneficaryWiseArylst.get(i).getTests());
+        vrm.setTYPE(affedebit);
+        vrm.setAPPID(appPreferenceManager.getLoginResponseModel().getBrandId());
+        vrm.setFile(benBarcodePicimagefile);
+        return vrm;
+    }
+
+    private void callVenupuctureAPI(VenupunctureUploadRequestModel vrm) {
+        VenupunctureAPIController vpc = new VenupunctureAPIController(this);
+        vpc.CallAPI(vrm);
+    }
+
+
     private void deleteVialImage() {
         String imageurl = "";
-        try {
-            imageurl = camera.getCameraBitmapPath();
-            File BenBarcodePicimagefile = new File(imageurl);
-            if (BenBarcodePicimagefile.exists()) {
-                for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
-                    if (beneficaryWiseArylst.get(i).getBenId() == BenIDToDeleteVenuPhoto && i == PositionToDeleteVenuPhoto) {
-                        beneficaryWiseArylst.get(PositionToDeleteVenuPhoto).setVenepuncture("");
-                    }
+        String imgurl = "";
+
+        for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+            if (beneficaryWiseArylst.get(i).getVenepuncture() != null) {
+                if (beneficaryWiseArylst.get(i).getBenId() == BenIDToDeleteVenuPhoto && i == PositionToDeleteVenuPhoto) {
+                    imgurl = beneficaryWiseArylst.get(PositionToDeleteVenuPhoto).getVenepuncture();
+                    break;
                 }
-                InitViewpager(PositionToStoreVenuPhoto);
-            } else {
-                Toast.makeText(mActivity, "Failed to delete photo", Toast.LENGTH_SHORT).show();
+            }else{
+                imgurl = "";
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+        imageurl = imgurl;
+//        imageurl = camera.getCameraBitmapPath();
+        File BenBarcodePicimagefile = new File(imageurl);
+        if (BenBarcodePicimagefile.exists()) {
+            for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                if (beneficaryWiseArylst.get(i).getBenId() == BenIDToDeleteVenuPhoto && i == PositionToDeleteVenuPhoto) {
+                    beneficaryWiseArylst.get(PositionToDeleteVenuPhoto).setVenepuncture("");
+                }
+            }
+            InitViewpager(PositionToStoreVenuPhoto);
+        } else {
+            Toast.makeText(mActivity, "Failed to delete photo", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     private void OpenBarcodeDeleteDiaog(final String scannedBarcode, final String flag) {
@@ -897,10 +1131,15 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         bottomSheetDialog.dismiss();
     }
 
-    public void vialImageDelete(int benId, int position, BottomSheetDialog bottomSheetDialog) {
+    public void vialImageDelete(int benId, int position, BottomSheetDialog bottomSheetDialog,int imageFlag) {
         BenIDToDeleteVenuPhoto = benId;
         PositionToDeleteVenuPhoto = position;
-        deleteVialImage();
+        DelFlag = imageFlag;
+        if (DelFlag == 0){
+            deleteVialImage();
+        }else{
+            deleteAffidavit();
+        }
         bottomSheetDialog.dismiss();
 
     }

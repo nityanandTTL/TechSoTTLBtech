@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.tcking:ijkplayer-java:0.8.8@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/53dcba3698563103060ac275cf48cfe7/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/53dcba3698563103060ac275cf48cfe7/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/53dcba3698563103060ac275cf48cfe7/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/53dcba3698563103060ac275cf48cfe7/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/53dcba3698563103060ac275cf48cfe7/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

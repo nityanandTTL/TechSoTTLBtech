@@ -63,6 +63,7 @@ public class AppPreferenceManager {
     private String isLoadSpotlightOnPager = "isLoadSpotlightOnPager";
     private String isLoadSpotlightOnHome = "isLoadSpotlightOnHome";
     public String ratecal = "ratecal";
+    public String OTPFlagOneTime = "OTPFlag";
 
     //Neha G---------------------------------
     private String ShowTimeInNotificatn="";
@@ -116,6 +117,14 @@ public class AppPreferenceManager {
 
     public void setCashingTime(String cashingTime) {
         appPreference.putString(this.cashingTime,cashingTime);
+    }
+
+    public String getOTPOnetime() {
+        return appPreference.getString(OTPFlagOneTime,"");
+    }
+
+    public void setOTPFlagOneTime(String OTpflag) {
+        appPreference.putString(this.OTPFlagOneTime,OTpflag);
     }
 
     public String getCacheProduct() {

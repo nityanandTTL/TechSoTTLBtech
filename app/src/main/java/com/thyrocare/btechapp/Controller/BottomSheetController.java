@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,6 +32,7 @@ import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
+import com.thyrocare.btechapp.utils.app.OnPinchListener;
 
 public class BottomSheetController {
 
@@ -45,6 +48,9 @@ public class BottomSheetController {
     int benId, position;
     String imgUrl, dialogMsg;
     boolean isFromURL;
+    ScaleGestureDetector scaleGestureDetector;
+    float mScalefloat = 1.0f;
+    int FlagDel = 0;
     PickupOrderResponseModel.PickupordersDTO pickupordersDTO;
 
     public BottomSheetController(Activity activity, ChangePasswordFragment changePasswordFragment) {
@@ -57,7 +63,7 @@ public class BottomSheetController {
         this.activity = activity;
     }
 
-    public BottomSheetController(Activity mActivity, ScanBarcodeWoeActivity scanBarcodeWoeActivity, String imgUrl, boolean isFromURL, final int benId, final int position) {
+    public BottomSheetController(Activity mActivity, ScanBarcodeWoeActivity scanBarcodeWoeActivity, String imgUrl, boolean isFromURL, final int benId, final int position,final int flagDel) {
         this.activity = mActivity;
         this.scanBarcodeWoeActivity = scanBarcodeWoeActivity;
         globalclass = new Global(mActivity);
@@ -65,6 +71,7 @@ public class BottomSheetController {
         this.isFromURL = isFromURL;
         this.benId = benId;
         this.position = position;
+        this.FlagDel = flagDel;
         flag = 2;
     }
 
@@ -224,6 +231,7 @@ public class BottomSheetController {
         bottomSheetDialog.show();
     }
 
+
     public void SetBottomSheet(Activity mActivity) {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
         View bottomSheet = null;
@@ -237,11 +245,12 @@ public class BottomSheetController {
             bottomSheet = LayoutInflater.from(activity).inflate(R.layout.bottom_sheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
         }
         ImageView img_close = bottomSheet.findViewById(R.id.img_close);
-        ImageView imageview = bottomSheet.findViewById(R.id.imageview);
+        final ImageView imageview = bottomSheet.findViewById(R.id.imageview);
         CardView btn_delete = bottomSheet.findViewById(R.id.btn_delete);
         TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
         CardView btn_yes = bottomSheet.findViewById(R.id.btn_yes);
         CardView btn_no = bottomSheet.findViewById(R.id.btn_no);
+
         if (flag == 3) {
             btn_delete.setVisibility(View.GONE);
         } else {
@@ -263,7 +272,7 @@ public class BottomSheetController {
             @Override
             public void onClick(View view) {
                 if (flag == 2) {
-                    scanBarcodeWoeActivity.vialImageDelete(benId, position, bottomSheetDialog);
+                    scanBarcodeWoeActivity.vialImageDelete(benId, position, bottomSheetDialog,FlagDel);
                 }
             }
         });
@@ -332,5 +341,8 @@ public class BottomSheetController {
         bottomSheetDialog.setCancelable(false);
         bottomSheetDialog.show();
     }
+
+    
+
 }
 

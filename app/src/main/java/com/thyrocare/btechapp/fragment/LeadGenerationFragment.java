@@ -37,6 +37,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -239,7 +240,7 @@ public class LeadGenerationFragment extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               finish();
+                finish();
             }
         });
 
@@ -794,7 +795,10 @@ public class LeadGenerationFragment extends AppCompatActivity {
     }
 
     private void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Cancel"};
+
+        globalClass.cropImageFullScreenActivity(this, 0);
+
+        /*final CharSequence[] items = {"Take Photo", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         builder.setTitle("Upload Image !");
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -807,7 +811,7 @@ public class LeadGenerationFragment extends AppCompatActivity {
                 }
             }
         });
-        builder.show();
+        builder.show();*/
     }
 
     private void openCamera() {
@@ -842,6 +846,15 @@ public class LeadGenerationFragment extends AppCompatActivity {
             try {
                 img_tick.setVisibility(View.VISIBLE);
                 imageurl = camera.getCameraBitmapPath();
+                imagefile = new File(imageurl);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (requestCode == ImagePicker.REQUEST_CODE && resultCode == RESULT_OK) {
+
+            try {
+                img_tick.setVisibility(View.VISIBLE);
+                String imageurl = ImagePicker.Companion.getFile(data).toString();
                 imagefile = new File(imageurl);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1015,7 +1028,7 @@ public class LeadGenerationFragment extends AppCompatActivity {
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(mActivity,  ConstantsMessages.NoImageClientInstalled, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, ConstantsMessages.NoImageClientInstalled, Toast.LENGTH_SHORT).show();
 //                        globalClass.showCustomToast(mActivity, ConstantsMessages.NoImageClientInstalled);
                     }
                 }

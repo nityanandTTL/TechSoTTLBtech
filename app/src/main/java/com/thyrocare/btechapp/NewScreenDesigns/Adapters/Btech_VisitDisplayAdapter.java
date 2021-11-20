@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.vision.text.Line;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
@@ -69,6 +70,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -212,7 +214,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
 
             holder.txtCustomerName.setText(Global.toCamelCase(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName()));
 
-            if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() > 0) {
+            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() > 0) {
                 holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId() + "  (₹" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() + ")");
             } else {
                 holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
@@ -399,8 +401,18 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             cv_urine.setVisibility(View.VISIBLE);
         }
         if (aOthers.size() != 0) {
+            String Others = "";
+            Others = "" + aOthers.size();
+            ArrayList<String> newAothers = new ArrayList<>();
+            HashSet<String> removeDuplicate = new HashSet<>();
+            for (int i = 0; i < aOthers.size(); i++) {
+                newAothers.add(aOthers.get(i).toString());
+            }
+            removeDuplicate.addAll(newAothers);
+            aOthers.clear();
+            aOthers.addAll(removeDuplicate);
             String others = TextUtils.join(",", aOthers);
-            tv_others.setText("" + aOthers.size() + "-" + others);
+            tv_others.setText("" + Others + "-" + others);
             cv_others.setVisibility(View.VISIBLE);
         }
 
@@ -542,7 +554,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                     holder.slide_view.setVisibility(View.GONE);
                     holder.rel_imgRelease.setVisibility(View.GONE);
                 } else {
-                    holder.slide_view.setVisibility(View.VISIBLE);
+                    holder.slide_view.setVisibility(View.GONE);
                     holder.rel_imgRelease.setVisibility(View.VISIBLE);
                 }
             }
@@ -553,7 +565,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                     holder.slide_view.setVisibility(View.GONE);
                     holder.rel_imgRelease.setVisibility(View.GONE);
                 } else {
-                    holder.slide_view.setVisibility(View.VISIBLE);
+                    holder.slide_view.setVisibility(View.GONE);
                     holder.rel_imgRelease.setVisibility(View.VISIBLE);
                 }
             }
@@ -606,9 +618,18 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
 //            holder.txtFastingStatus.setVisibility(View.VISIBLE);
             holder.layoutFasingStatus.setVisibility(View.VISIBLE);
             holder.imgStart.setVisibility(View.VISIBLE);
-            holder.imgCall.setVisibility(View.VISIBLE);
+            checkDirectVisit(holder);
+//            holder.imgCall.setVisibility(View.VISIBLE);
             holder.ll_accept.setVisibility(View.GONE);
             holder.ll_start.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void checkDirectVisit(MyViewHolder holder) {
+        if (orderVisitDetailsModelsArr.get(0).getAllOrderdetails().get(0).isDirectVisit()) {
+            holder.imgCall.setVisibility(View.GONE);
+        } else {
+            holder.imgCall.setVisibility(View.VISIBLE);
         }
     }
 
@@ -620,6 +641,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         final ArrayList<String> benFastingDetails = new ArrayList<>();
         for (OrderDetailsModel odm :
                 orderVisitDetailsModelsArr.get(pos).getAllOrderdetails()) {
+            System.out.println("Mitanshu >> " + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getOrderNo());
             for (BeneficiaryDetailsModel bdm :
                     odm.getBenMaster()) {
                 if (bdm.getFasting().equalsIgnoreCase("Fasting")) {
@@ -722,14 +744,15 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null) {
                     if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits() != null) {
                         if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits().size() != 0) {
-                            strKit = CallViewKitsstr(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits());
+                            strKit = "" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits().size();
+//                            strKit = CallViewKitsstr(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits());
                         }
                     }
                 }
             }
         }
         if (!StringUtils.isNull(strKit)) {
-            holder.txtKits.setText(strKit + " Kits");
+            holder.txtKits.setText("Kit");
             holder.txtKits.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         } else {
             holder.lin_kits.setVisibility(View.GONE);
@@ -967,11 +990,13 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         tv_ord_rel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bottomSheetDialog.dismiss();
                 final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
                 View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
                 TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
                 TextView tv_text1 = bottomSheet.findViewById(R.id.tv_text1);
                 tv_text.setText("Warning");
+                tv_text1.setVisibility(View.VISIBLE);
                 tv_text1.setText("Rs 200 debit will be levied for releasing this Order");
 
                 Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
@@ -1202,7 +1227,10 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                     }
                 } else {
                     try {
-                        Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+
+                        TastyToast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, TastyToast.LENGTH_SHORT, TastyToast.INFO);
+
                     } catch (IOException e) {
                         e.printStackTrace();
                         Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();

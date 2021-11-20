@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -58,6 +59,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Adapters.Btech_VisitDisplayAdapte
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.DisplaySelectedTestsListForCancellationAdapter_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.ExpandableTestMasterListDisplayAdapter_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.StartArriveOrderDetailsAdapter;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SendSMSAfterBenRemovedRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -71,6 +73,7 @@ import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import application.ApplicationController;
 
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
+import com.thyrocare.btechapp.activity.KIOSK_Scanner_Activity;
 import com.thyrocare.btechapp.activity.PaymentsActivity;
 import com.thyrocare.btechapp.customview.CircleImageView;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
@@ -137,6 +140,7 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 
 import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 import static com.thyrocare.btechapp.utils.app.AppConstants.MSG_SERVER_EXCEPTION;
+import static com.thyrocare.btechapp.utils.app.BundleConstants.API_FOR_OTP;
 import static com.thyrocare.btechapp.utils.app.CommonUtils.isValidForEditing;
 
 
@@ -372,6 +376,13 @@ public class StartAndArriveActivity extends AppCompatActivity {
         tv_toolbar.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         iv_home.setVisibility(View.GONE);
 
+        // TODO Add ben not allowed for PE-Btech time being  GG Sir's instruction
+        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || btn_arrive.getVisibility() == View.VISIBLE){
+            btn_floating_add_ben.setVisibility(View.GONE);
+        }else{
+            btn_floating_add_ben.setVisibility(View.VISIBLE);
+        }
+
         if (BundleConstants.isKIOSKOrder) {
             customSwipeButton2.setVisibility(View.GONE);
         } else {
@@ -391,7 +402,17 @@ public class StartAndArriveActivity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if(BundleConstants.isKIOSKOrder){
+                    Intent intent1 = new Intent(mActivity, KIOSK_Scanner_Activity.class);
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent1);
+                }else{
+                    Intent intent = new Intent(mActivity, VisitOrdersDisplayFragment_new.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+
+//                finish();
             }
         });
 
@@ -455,7 +476,11 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     if (isNetworkAvailable(mActivity)) {
                         VenuPuntureUtils.ClearVenupumtureTempGlobalArry();
 //                                        stopService(new Intent(getApplicationContext(), TrackerService.class));
-                        callOrderStatusChangeApi(3, "Arrive", "", "");
+                        if(BundleConstants.callOTPFlag == 1 || !Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                            callOrderStatusChangeApi(3, "Arrive", "", "");
+                        }else{
+                            callAPIforOTP(orderDetailsModel);
+                        }
                     } else {
                         Toast.makeText(mActivity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
                     }
@@ -468,28 +493,68 @@ public class StartAndArriveActivity extends AppCompatActivity {
         btn_Proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                totalAmountPayable = 0;
-                setpayMentActivity();
 
-                /*AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
-                alertDialog.setMessage("You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?");
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
+
+                try {
+                    if(Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                        String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
+                        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+
+                        View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+                        TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+                        tv_text.setText(string);
+
+                        Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+                        btn_yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                bottomSheetDialog.dismiss();
                                 Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
                                 intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
                                 startActivity(intentOrderBooking);
                                 finish();
                             }
                         });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
+
+                        Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+                        btn_no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                bottomSheetDialog.dismiss();
+
                             }
                         });
-                alertDialog.show();*/
+
+                        bottomSheetDialog.setContentView(bottomSheet);
+                        bottomSheetDialog.setCancelable(false);
+                        bottomSheetDialog.show();
+                        /*AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
+                        alertDialog.setMessage("You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?");
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+                                        intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+                                        startActivity(intentOrderBooking);
+                                        finish();
+                                    }
+                                });
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();*/
+                    }else {
+                        totalAmountPayable = 0;
+                        setpayMentActivity();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -524,7 +589,13 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                 if (!recyle_OrderDetail.canScrollVertically(1)) {
                                     btn_floating_add_ben.setVisibility(View.GONE);
                                 } else {
-                                    btn_floating_add_ben.setVisibility(View.VISIBLE);
+//                                    btn_floating_add_ben.setVisibility(View.VISIBLE);
+
+                                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                                        btn_floating_add_ben.setVisibility(View.GONE);
+                                    }else{
+                                        btn_floating_add_ben.setVisibility(View.VISIBLE);
+                                    }
                                 }
                             } else {
                                 btn_floating_add_ben.setVisibility(View.GONE);
@@ -533,7 +604,14 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
                                 btn_floating_add_ben.setVisibility(View.GONE);
                             } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
-                                btn_floating_add_ben.setVisibility(View.VISIBLE);
+//                                btn_floating_add_ben.setVisibility(View.VISIBLE);
+
+                                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                                    btn_floating_add_ben.setVisibility(View.GONE);
+                                }else{
+                                    btn_floating_add_ben.setVisibility(View.VISIBLE);
+                                }
+
                             } else {
                                 btn_floating_add_ben.setVisibility(View.GONE);
                             }
@@ -552,6 +630,190 @@ public class StartAndArriveActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void callAPIforOTP(final OrderVisitDetailsModel orderDetailsModel) {
+        SendOTPRequestModel model = new SendOTPRequestModel();
+        model.setMobile(orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+        model.setOrderno(orderDetailsModel.getAllOrderdetails().get(0).getVisitId());
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        Call<CommonResponseModel2> responseCall = apiInterface.CallSendOTPAPI(model);
+        globalclass.showProgressDialog(mActivity, "Requesting for OTP. Please wait..");
+        responseCall.enqueue(new Callback<CommonResponseModel2>() {
+            @Override
+            public void onResponse(Call<CommonResponseModel2> call, Response<CommonResponseModel2> response) {
+                globalclass.hideProgressDialog(mActivity);
+                if (response.isSuccessful() && response.body() != null) {
+                    CommonResponseModel2 responseModel = response.body();
+                    if (!TextUtils.isEmpty(responseModel.getRES_ID()) && responseModel.getRES_ID().equalsIgnoreCase("RES0000")) {
+//                        globalclass.showCustomToast(mActivity, "OTP send successfully to mobile number mapped to this order.");
+                        ShowDialogToVerifyOTP(orderDetailsModel);
+                    } else {
+                        globalclass.showCustomToast(mActivity, "OTP Generation Failed.");
+                    }
+                } else {
+                    globalclass.showCustomToast(mActivity, MSG_SERVER_EXCEPTION);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CommonResponseModel2> call, Throwable t) {
+                globalclass.hideProgressDialog(mActivity);
+                globalclass.showCustomToast(mActivity, MSG_SERVER_EXCEPTION);
+            }
+        });
+    }
+
+    private void ShowDialogToVerifyOTP(final OrderVisitDetailsModel orderVisitDetailsModel) {
+
+        CustomDialogforOTPValidation = new Dialog(mActivity);
+        CustomDialogforOTPValidation.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        CustomDialogforOTPValidation.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        CustomDialogforOTPValidation.setContentView(R.layout.validate_otp_dialog);
+        CustomDialogforOTPValidation.setCancelable(false);
+        CustomDialogforOTPValidation.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        RelativeLayout rel_main = (RelativeLayout) CustomDialogforOTPValidation.findViewById(R.id.rel_main);
+        TextView tv_header = (TextView) CustomDialogforOTPValidation.findViewById(R.id.tv_header);
+        ImageView img_btn_validateOTP = (ImageView) CustomDialogforOTPValidation.findViewById(R.id.img_btn_validateOTP);
+        ImageView img_close = (ImageView) CustomDialogforOTPValidation.findViewById(R.id.img_close);
+        final EditText edt_OTP = (EditText) CustomDialogforOTPValidation.findViewById(R.id.edt_OTP);
+
+        tv_header.setText("Enter OTP send to mobile number linked with this order, to proceed with WOE.");
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+
+        int height = 0, width = 0;
+        if (displayMetrics != null) {
+            try {
+                height = displayMetrics.heightPixels;
+                width = displayMetrics.widthPixels;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width - 150, FrameLayout.LayoutParams.WRAP_CONTENT);
+        rel_main.setLayoutParams(lp);
+
+        CustomDialogforOTPValidation.show();
+
+        img_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CustomDialogforOTPValidation.dismiss();
+            }
+        });
+
+
+        img_btn_validateOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String strOTP = edt_OTP.getText().toString().trim();
+                if (!InputUtils.isNull(strOTP) && strOTP.length() != 4) {
+                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4", mActivity);
+                    edt_OTP.requestFocus();
+                } else {
+                    OrderPassRequestModel model = new OrderPassRequestModel();
+                    model.setMobile(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+                    model.setOTP(strOTP);
+                    model.setVisitId(orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
+                    if (cd.isConnectingToInternet()) {
+                        CallValidateOTPAPI(model);
+                    } else {
+                        globalclass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.plz_chk_internet));
+                    }
+                }
+
+            }
+        });
+
+    }
+        /*final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+        final View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.bottomsheet_otp, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+        RelativeLayout rel_main = (RelativeLayout) bottomSheet.findViewById(R.id.rel_main);
+        TextView tv_header = (TextView) bottomSheet.findViewById(R.id.tv_header);
+        ImageView img_btn_validateOTP = (ImageView) bottomSheet.findViewById(R.id.img_btn_validateOTP);
+        ImageView img_close = (ImageView) bottomSheet.findViewById(R.id.img_close);
+        final EditText edt_OTP = (EditText) bottomSheet.findViewById(R.id.edt_OTP);
+        bottomSheetDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        tv_header.setText("Enter OTP send to mobile number linked with this order, to proceed with WOE.");
+
+        img_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+
+        img_btn_validateOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String strOTP = edt_OTP.getText().toString().trim();
+                if (!InputUtils.isNull(strOTP) && strOTP.length() != 4) {
+                    globalclass.showalert_OK("Please enter valid OTP. Length required : 4", mActivity);
+                    edt_OTP.requestFocus();
+                } else {
+                    OrderPassRequestModel model = new OrderPassRequestModel();
+                    model.setMobile(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+                    model.setOTP(strOTP);
+                    model.setVisitId(orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
+                    if (cd.isConnectingToInternet()) {
+                        CallValidateOTPAPI(model, bottomSheetDialog);
+                    } else {
+                        globalclass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.plz_chk_internet));
+                    }
+                }
+            }
+        });
+        if (!mActivity.isFinishing()) {
+            bottomSheetDialog.show();
+        }
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(false);
+        bottomSheetDialog.show();
+    }*/
+
+    private void CallValidateOTPAPI(OrderPassRequestModel model) {
+
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        Call<String> responseCall = apiInterface.CallValidateOTPAPI(model);
+        globalclass.showProgressDialog(mActivity, "Validating OTP. Please wait..");
+        responseCall.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                globalclass.hideProgressDialog(mActivity);
+                if (response.isSuccessful() && response.body() != null) {
+                    String strresponse = response.body();
+                    if (!TextUtils.isEmpty(strresponse) && strresponse.toUpperCase().contains("SUCCESS")) {
+                        Toast.makeText(mActivity, "OTP Validated Successfully.", Toast.LENGTH_SHORT).show();
+//                        globalclass.showCustomToast(mActivity, "OTP Validated Successfully.");
+                        callOrderStatusChangeApi(3, "Arrive", "", "");
+                        CustomDialogforOTPValidation.dismiss();
+                        BundleConstants.callOTPFlag = 1;
+
+                    } else {
+                        globalclass.showCustomToast(mActivity, "Invalid OTP.");
+                    }
+                } else if (response.code() == 401) {
+                    globalclass.showCustomToast(mActivity, "Invalid OTP.");
+                } else {
+                    globalclass.showCustomToast(mActivity, MSG_SERVER_EXCEPTION);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                globalclass.hideProgressDialog(mActivity);
+                globalclass.showCustomToast(mActivity, MSG_SERVER_EXCEPTION);
+            }
+        });
 
     }
 
@@ -1034,10 +1296,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 customSwipeButton2.setVisibility(View.GONE);
                 txt_amount.setText("Paid");
             } else {
-                if(BundleConstants.isKIOSKOrder){
+                if (BundleConstants.isKIOSKOrder) {
                     customSwipeButton2.setVisibility(View.GONE);
-                }
-                else {
+                } else {
                     customSwipeButton2.setVisibility(View.VISIBLE);
                 }
                 txt_amount.setText(mActivity.getResources().getString(R.string.rupee_symbol) + " " + orderDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
@@ -1583,6 +1844,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
                 TextView tv_text1 = bottomSheet.findViewById(R.id.tv_text1);
                 tv_text.setText("Warning");
+                tv_text1.setVisibility(View.VISIBLE);
                 tv_text1.setText("Rs 200 debit will be levied for releasing this Order");
                 Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
                 btn_yes.setText("Accept Debit");
@@ -1615,6 +1877,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
                 TextView tv_text1 = bottomSheet.findViewById(R.id.tv_text1);
                 tv_text.setText("Warning");
+                tv_text1.setVisibility(View.VISIBLE);
                 tv_text1.setText("Rs 200 debit will be levied for releasing this Order");
                 Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
                 btn_yes.setText("Accept Debit");
@@ -2163,7 +2426,13 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
                     btn_floating_add_ben.setVisibility(View.GONE);
                 } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
-                    btn_floating_add_ben.setVisibility(View.VISIBLE);
+//                    btn_floating_add_ben.setVisibility(View.VISIBLE);
+
+                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                        btn_floating_add_ben.setVisibility(View.GONE);
+                    }else{
+                        btn_floating_add_ben.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     btn_floating_add_ben.setVisibility(View.GONE);
                 }
@@ -2276,6 +2545,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         CustomDialogforOTPValidation.requestWindowFeature(Window.FEATURE_NO_TITLE);
         CustomDialogforOTPValidation.setContentView(R.layout.validate_otp_dialog);
         CustomDialogforOTPValidation.setCancelable(false);
+        CustomDialogforOTPValidation.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         RelativeLayout rel_main = (RelativeLayout) CustomDialogforOTPValidation.findViewById(R.id.rel_main);
         TextView tv_header = (TextView) CustomDialogforOTPValidation.findViewById(R.id.tv_header);

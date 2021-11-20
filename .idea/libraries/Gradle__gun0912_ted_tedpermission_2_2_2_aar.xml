@@ -2,8 +2,8 @@
   <library name="Gradle: gun0912.ted:tedpermission:2.2.2@aar">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/663e82e79f7c547600c27a91c36a71af/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/663e82e79f7c547600c27a91c36a71af/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/663e82e79f7c547600c27a91c36a71af/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/663e82e79f7c547600c27a91c36a71af/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/gun0912.ted/tedpermission/2.2.2/227ab3f6a67c4a857736004a433d8c829093e2fe/tedpermission-2.2.2-javadoc.jar!/" />

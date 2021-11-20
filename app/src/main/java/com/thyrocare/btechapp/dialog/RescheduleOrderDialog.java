@@ -126,6 +126,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
                                             edt_remark.setVisibility(View.VISIBLE);
                                         } else {
                                             edt_remark.setVisibility(View.GONE);
+
                                         }
                                         for (RemarksResponseModel RRM :
                                                 remarksResponseModelsarr) {

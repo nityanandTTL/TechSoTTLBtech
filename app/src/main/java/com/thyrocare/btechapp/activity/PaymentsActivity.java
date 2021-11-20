@@ -36,6 +36,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.JsonObject;
 import com.thyrocare.btechapp.Controller.PayTMController;
 import com.thyrocare.btechapp.Controller.PayTMVerifyController;
+import com.thyrocare.btechapp.Controller.WOEController;
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.CheckoutWoeActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.ScanBarcodeWoeActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
@@ -46,13 +48,23 @@ import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.adapter.PaymentDetailsAdapter;
+import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
+import com.thyrocare.btechapp.models.api.request.PEPaymentRequestModel;
 import com.thyrocare.btechapp.models.api.request.PayTMRequestModel;
 import com.thyrocare.btechapp.models.api.request.PayTMVerifyRequestModel;
+import com.thyrocare.btechapp.models.api.response.PEPaymentResponseModel;
 import com.thyrocare.btechapp.models.api.response.PayTMResponseModel;
 import com.thyrocare.btechapp.models.api.response.PayTMVerifyResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentStartTransactionAPIResponseModel;
+import com.thyrocare.btechapp.models.data.BeneficiaryBarcodeDetailsModel;
+import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
+import com.thyrocare.btechapp.models.data.BeneficiaryLabAlertsModel;
+import com.thyrocare.btechapp.models.data.BeneficiarySampleTypeDetailsModel;
+import com.thyrocare.btechapp.models.data.BeneficiaryTestWiseClinicalHistoryModel;
+import com.thyrocare.btechapp.models.data.OrderBookingDetailsModel;
+import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.models.data.PaymentNameValueModel;
 import com.thyrocare.btechapp.service.CheckPaymentResponseService;
@@ -61,13 +73,18 @@ import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
+import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -107,9 +124,13 @@ public class PaymentsActivity extends AbstractActivity {
     private Global global;
     ConnectionDetector cd;
     TextView tv_toolbar;
-    ImageView iv_back,iv_home;
-
+    ImageView iv_back, iv_home;
+    CheckoutWoeActivity checkoutWoeActivity;
+    ArrayList<BeneficiaryDetailsModel> beneficaryWiseArylst;
     private RecyclerView recy_paymentmode;
+    private int PaymentMode;
+    private int totalAmountPayable = 0;
+    String test, location, address, newTimeaddTwoHrs = "", newTimeaddTwoHalfHrs = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,8 +151,14 @@ public class PaymentsActivity extends AbstractActivity {
             BillingAddr = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_ADDRESS);
             BillingPin = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_PIN);
             BillingMob = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_MOBILE);
+            location = getIntent().getExtras().getString(BundleConstants.PROCESSING_LOCATION);
+            address = getIntent().getExtras().getString(BundleConstants.ADDRESS);
+            newTimeaddTwoHrs = getIntent().getExtras().getString(BundleConstants.newTimeTWO);
+            newTimeaddTwoHalfHrs = getIntent().getExtras().getString(BundleConstants.newTimeTWOHalf);
 
             orderDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
+            beneficaryWiseArylst = getIntent().getExtras().getParcelableArrayList(BundleConstants.BENEFICIARY_DETAILS_MODEL);
+
             Logger.error("BillingMob " + BillingMob);
             BillingEmail = getIntent().getExtras().getString(BundleConstants.PAYMENTS_BILLING_EMAIL);
         }
@@ -223,6 +250,10 @@ public class PaymentsActivity extends AbstractActivity {
                 bottomSheetDialog.show();
             }
         });
+
+        for (OrderDetailsModel orderDetailsModel : orderDetailsModel.getAllOrderdetails()) {
+            totalAmountPayable = totalAmountPayable + orderDetailsModel.getAmountPayable();
+        }
     }
 
 
@@ -232,6 +263,70 @@ public class PaymentsActivity extends AbstractActivity {
         } else {
             Toast.makeText(activity, getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void callPEPaymentModeAPI(final PEPaymentRequestModel pePaymentRequestModel) {
+
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        Call<PEPaymentResponseModel> responseCall = apiInterface.PEVerifyPayment(pePaymentRequestModel);
+        global.showProgressDialog(activity, "Please wait..");
+        responseCall.enqueue(new Callback<PEPaymentResponseModel>() {
+            @Override
+            public void onResponse(Call<PEPaymentResponseModel> call, retrofit2.Response<PEPaymentResponseModel> response) {
+                global.hideProgressDialog(activity);
+                if (response.isSuccessful() && response.body() != null) {
+                    if (InputUtils.CheckEqualIgnoreCase(response.body().getResponseCode(), Constants.RES000)) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setTitle("Payment Status")
+                                .setCancelable(false)
+                                .setMessage(response.body().getResponseMessage())
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent();
+                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
+                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                        finish();
+                                    }
+                                })
+                                /*.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        callPEPaymentModeAPI(pePaymentRequestModel);
+                                    }
+                                })*/.show();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setTitle("Verify Payment")
+                                .setMessage(response.body().getResponseMessage())
+                                .setCancelable(false)
+                                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        callPEPaymentModeAPI(pePaymentRequestModel);
+                                    }
+                                }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Intent intent = new Intent();
+                                intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                finish();
+                            }
+                        }).show();
+                    }
+                } else {
+                    Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PEPaymentResponseModel> call, Throwable t) {
+                global.hideProgressDialog(activity);
+                global.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+            }
+        });
     }
 
 
@@ -273,7 +368,7 @@ public class PaymentsActivity extends AbstractActivity {
             final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             params.setMargins(20, 25, 10, 25);
             TextView PayableAmount = new TextView(activity);
-            PayableAmount.setText("Payable Amount : " + activity.getResources().getString(R.string.rupee_symbol) +" "+Amount+"/-" );
+            PayableAmount.setText("Payable Amount : " + activity.getResources().getString(R.string.rupee_symbol) + " " + Amount + "/-");
             PayableAmount.setTextSize(18);
             PayableAmount.setTextColor(getResources().getColor(R.color.bg_new_color));
             PayableAmount.setLayoutParams(params);
@@ -404,33 +499,87 @@ public class PaymentsActivity extends AbstractActivity {
 
     private void SetpaymentGateways(ArrayList<PaymentProcessAPIResponseModel> paymentModesArr) {
         try {
-            View dynamicListview = activity.getLayoutInflater().inflate(R.layout.payment_recy, null);
-            recy_paymentmode = (RecyclerView) dynamicListview.findViewById(R.id.recy_paymentmode);
 
-            LinearLayoutManager lm1 = new LinearLayoutManager(activity);
-            recy_paymentmode.setLayoutManager(lm1);
-            recy_paymentmode.setHasFixedSize(true);
-            PaymentDetailsAdapter adpter_inc = new PaymentDetailsAdapter(PaymentsActivity.this, paymentModesArr);
-            recy_paymentmode.setAdapter(adpter_inc);
-            llPaymentModes.addView(dynamicListview);
-
-            View ViewPaytmLink = activity.getLayoutInflater().inflate(R.layout.paymentsgateway_row_items, null);
-            TextView txt_paymentModename = (TextView) ViewPaytmLink.findViewById(R.id.txt_paymentModename);
-            ImageView img_ident = (ImageView) ViewPaytmLink.findViewById(R.id.img_ident);
-            LinearLayout ll_rowmainelmnt = (LinearLayout) ViewPaytmLink.findViewById(R.id.ll_rowmainelmnt);
-
-            img_ident.setBackground(activity.getResources().getDrawable(R.drawable.ic_paytm_logo_n));
-            txt_paymentModename.setText("Send link on SMS");
-
-            ll_rowmainelmnt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callPaytmLinkAPI();
+            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                /*ArrayList<PaymentProcessAPIResponseModel> NewPaymentModesArr = new ArrayList<PaymentProcessAPIResponseModel>();
+                for (int i = 0; i <paymentModesArr.size(); i++) {
+                    for (int j = 0; j < paymentModesArr.get(i).getNameValueCollection().size(); j++) {
+                        if (paymentModesArr.get(i).getNameValueCollection().get(j).getValue().equalsIgnoreCase("Paytm")){
+                            NewPaymentModesArr.add(paymentModesArr.get(i));
+                        }
+                    }
                 }
-            });
+                paymentModesArr.clear();
+                paymentModesArr = NewPaymentModesArr;*/
 
-            llPaymentModes.addView(ViewPaytmLink);
+                View ViewPaytmLink = activity.getLayoutInflater().inflate(R.layout.paymentsgateway_row_items, null);
+                TextView txt_paymentModename = (TextView) ViewPaytmLink.findViewById(R.id.txt_paymentModename);
+                ImageView img_ident = (ImageView) ViewPaytmLink.findViewById(R.id.img_ident);
+                LinearLayout ll_rowmainelmnt = (LinearLayout) ViewPaytmLink.findViewById(R.id.ll_rowmainelmnt);
 
+                img_ident.setBackground(activity.getResources().getDrawable(R.drawable.ic_olpay));
+                txt_paymentModename.setText("Send payment link");
+
+                ll_rowmainelmnt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fetchTransactionResponsePEonStartTransaction();
+//                        fetchTransactionResponseOnStartTransaction();
+//                        callPaytmLinkAPI();
+                    }
+                });
+
+                llPaymentModes.addView(ViewPaytmLink);
+            } else {
+                View dynamicListview = activity.getLayoutInflater().inflate(R.layout.payment_recy, null);
+                recy_paymentmode = (RecyclerView) dynamicListview.findViewById(R.id.recy_paymentmode);
+
+                LinearLayoutManager lm1 = new LinearLayoutManager(activity);
+                recy_paymentmode.setLayoutManager(lm1);
+                recy_paymentmode.setHasFixedSize(true);
+                PaymentDetailsAdapter adpter_inc = new PaymentDetailsAdapter(PaymentsActivity.this, paymentModesArr);
+                recy_paymentmode.setAdapter(adpter_inc);
+                llPaymentModes.addView(dynamicListview);
+
+                View ViewPaytmLink = activity.getLayoutInflater().inflate(R.layout.paymentsgateway_row_items, null);
+                TextView txt_paymentModename = (TextView) ViewPaytmLink.findViewById(R.id.txt_paymentModename);
+                ImageView img_ident = (ImageView) ViewPaytmLink.findViewById(R.id.img_ident);
+                LinearLayout ll_rowmainelmnt = (LinearLayout) ViewPaytmLink.findViewById(R.id.ll_rowmainelmnt);
+                img_ident.setBackground(activity.getResources().getDrawable(R.drawable.ic_paytm_logo_n));
+                txt_paymentModename.setText("Send link on SMS");
+
+                ll_rowmainelmnt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callPaytmLinkAPI();
+                    }
+                });
+
+                llPaymentModes.addView(ViewPaytmLink);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fetchTransactionResponsePEonStartTransaction() {
+        JsonObject jsonRequest = new JsonObject();
+        try {
+            jsonRequest.addProperty("SourceCode", appPreferenceManager.getLoginResponseModel().getUserID());
+            jsonRequest.addProperty("UserId", appPreferenceManager.getLoginResponseModel().getUserID());
+            jsonRequest.addProperty("Amount", totalAmountPayable);
+            jsonRequest.addProperty("OrderNo", OrderNo);
+            jsonRequest.addProperty("TransactionDtls", "");
+            jsonRequest.addProperty("ACCode", "");
+            jsonRequest.addProperty("ModeId", 3);
+
+//            {"URLId":9,"NarrationId":"2","ModeId":"3","Amount":"1","OrderNo":"VLF532DC","SourceCode":"884543141","ACCode":"","TransactionDtls":"","UserId":"884543141"}
+
+            if (isNetworkAvailable(activity)) {
+                CallFetchTransactionResponseOnStartTransactionApi(jsonRequest);
+            } else {
+                Toast.makeText(activity, getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -721,7 +870,7 @@ public class PaymentsActivity extends AbstractActivity {
         }
     }
 
-    private void CallFetchTransactionResponseOnStartTransactionApi(JsonObject jsonRequest) {
+    private void CallFetchTransactionResponseOnStartTransactionApi(final JsonObject jsonRequest) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<PaymentStartTransactionAPIResponseModel> responseCall = apiInterface.CallFetchTransactionResponseOnStartTransactionApi(jsonRequest);
         global.showProgressDialog(activity, "Please wait..");
@@ -733,22 +882,7 @@ public class PaymentsActivity extends AbstractActivity {
                     paymentStartTransactionAPIResponseModel = response.body();
                     if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
                         // mobileflag = 0;
-                        if (NarrationId == 1 || NarrationId == 3) {
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                            builder.setTitle("UPI Payment")
-                                    .setMessage("Your Payment request has been initiated. Please access your UPI banking app to complete the process.")
-                                    .setCancelable(false)
-                                    .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Intent intent = new Intent();
-                                            intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                                            setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                            finish();
-                                        }
-                                    }).show();
-                        } else if (NarrationId == 2 && (ModeId == 1 || ModeId == 10)) {
+                        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                             builder.setTitle("Verify Payment")
                                     .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
@@ -756,19 +890,65 @@ public class PaymentsActivity extends AbstractActivity {
                                     .setPositiveButton("Verify Payment", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            fetchDoCaptureResponse(true);
+                                            PEPaymentRequestModel pePaymentRequestModel = new PEPaymentRequestModel();
+                                            pePaymentRequestModel.setOrderNo(OrderNo);
+                                            pePaymentRequestModel.setTransactionId(paymentStartTransactionAPIResponseModel.getTransactionId());
+                                            callPEPaymentModeAPI(pePaymentRequestModel);
                                         }
-                                    }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                                    }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent();
+                                    CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
+                                    /*Intent intent = new Intent();
                                     intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
                                     setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                    finish();
+                                    finish();*/
+                           /*     }
+                            }).setNeutralButton("Retry", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);*/
                                 }
                             }).show();
                         } else {
-                            initDoCaptureResponseData();
+                            // mobileflag = 0;
+                            if (NarrationId == 1 || NarrationId == 3) {
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                builder.setTitle("UPI Payment")
+                                        .setMessage("Your Payment request has been initiated. Please access your UPI banking app to complete the process.")
+                                        .setCancelable(false)
+                                        .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent intent = new Intent();
+                                                intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                                finish();
+                                            }
+                                        }).show();
+                            } else if ((NarrationId == 2 && (ModeId == 1 || ModeId == 10))) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                builder.setTitle("Verify Payment")
+                                        .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
+                                        .setCancelable(false)
+                                        .setPositiveButton("Verify Payment", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                fetchDoCaptureResponse(true);
+                                            }
+                                        }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent();
+                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                        finish();
+                                    }
+                                }).show();
+                            } else {
+                                initDoCaptureResponseData();
+                            }
                         }
                     } else {
                         if (paymentStartTransactionAPIResponseModel.getResponseMessage() != null) {
@@ -791,6 +971,59 @@ public class PaymentsActivity extends AbstractActivity {
                 global.hideProgressDialog(activity);
             }
         });
+    }
+
+    private void CallFetchTransactionResponseOnReStartTransactionApi(final JsonObject jsonRequest) {
+        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+        Call<PaymentStartTransactionAPIResponseModel> responseCall = apiInterface.CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
+        global.showProgressDialog(activity, "Please wait..");
+        responseCall.enqueue(new Callback<PaymentStartTransactionAPIResponseModel>() {
+            @Override
+            public void onResponse(Call<PaymentStartTransactionAPIResponseModel> call, Response<PaymentStartTransactionAPIResponseModel> response) {
+                global.hideProgressDialog(activity);
+                if (response.isSuccessful()) {
+                    paymentStartTransactionAPIResponseModel = response.body();
+                    if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
+                        Toast.makeText(activity,""+response.body().getResponseMessage(),Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setTitle("Verify Payment")
+                                .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
+                                .setCancelable(false)
+                                .setPositiveButton("Verify Payment", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        PEPaymentRequestModel pePaymentRequestModel = new PEPaymentRequestModel();
+                                        pePaymentRequestModel.setOrderNo(OrderNo);
+                                        pePaymentRequestModel.setTransactionId(paymentStartTransactionAPIResponseModel.getTransactionId());
+                                        callPEPaymentModeAPI(pePaymentRequestModel);
+                                    }
+                                }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
+                                /*Intent intent = new Intent();
+                                intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                finish();*/
+                            }
+                        })/*.setNeutralButton("Retry", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
+                            }
+                        })*/.show();
+                    } else {
+                        Toast.makeText(activity, ""+response.body().getResponseMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PaymentStartTransactionAPIResponseModel> call, Throwable t) {
+                global.hideProgressDialog(activity);
+            }
+        });
+
     }
 
     private void initDoCaptureResponseData() {
@@ -1009,10 +1242,15 @@ public class PaymentsActivity extends AbstractActivity {
                                         .setPositiveButton("Close", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                Intent intent = new Intent();
-                                                intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                                finish();
+
+                                                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                                    WOEPEBtech();//TODO For PE-BTech as per GG Sir's remark
+                                                } else {
+                                                    Intent intent = new Intent();
+                                                    intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                                    setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                                    finish();
+                                                }
                                             }
                                         }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                                     @Override
@@ -1074,6 +1312,121 @@ public class PaymentsActivity extends AbstractActivity {
                 global.hideProgressDialog(activity);
             }
         });
+    }
+
+    private void WOEPEBtech() {
+        BundleConstants.addPaymentFlag = 1;
+        if (BundleConstants.addPaymentFlag == 1) {
+            PaymentMode = 1;
+        }
+
+        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_prepaid");
+        if (cd.isConnectingToInternet()) {
+            WOEController wc = new WOEController(this);
+            wc.CallWorkOrderEntryAPI(orderBookingRequestModel, orderDetailsModel, test, newTimeaddTwoHrs, newTimeaddTwoHalfHrs, null);
+//            CallWorkOrderEntryAPI(orderBookingRequestModel);
+        } else {
+            Toast.makeText(activity, activity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+        }
+
+
+        Intent intent = new Intent();
+        intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+        setResult(BundleConstants.PAYMENTS_FINISH, intent);
+        finish();
+    }
+
+
+    private OrderBookingRequestModel generateOrderBookingRequestModel(String from) {
+
+        OrderBookingRequestModel orderBookingRequestModel = new OrderBookingRequestModel();
+        //SET Order Booking Details Model - START
+        OrderBookingDetailsModel orderBookingDetailsModel = new OrderBookingDetailsModel();
+        orderBookingDetailsModel.setPaymentMode(PaymentMode);
+        orderBookingDetailsModel.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+        orderBookingDetailsModel.setVisitId(orderDetailsModel.getVisitId());
+        orderBookingDetailsModel.setProcessLocation(location);
+        ArrayList<OrderDetailsModel> ordtl = new ArrayList<>();
+        ordtl = orderDetailsModel.getAllOrderdetails();
+        String Slot = orderDetailsModel.getSlot();
+        Logger.error("Slot" + Slot);
+        dateCheck();
+        if (from.equals("Button_proceed_payment")) {
+            for (int i = 0; i < ordtl.size(); i++) {
+                ordtl.get(i).setAddBen(false);
+            }
+        }
+        Logger.error("Amount when order booking " + orderDetailsModel.getAllOrderdetails().get(0).getAmountPayable());
+        for (int i = 0; i < ordtl.size(); i++) {
+            ordtl.get(i).setAmountDue(totalAmountPayable);
+            ordtl.get(i).setAmountPayable(totalAmountPayable);
+            if (BundleConstants.isKIOSKOrder && !CommonUtils.ValidateCovidorders(beneficaryWiseArylst.get(0).getTestsCode())) {
+                ordtl.get(i).setAddress("" + address);
+            } else if (BundleConstants.isKIOSKOrder && CommonUtils.ValidateCovidorders(beneficaryWiseArylst.get(0).getTestsCode())) {
+                if (!InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getAddress())) {
+                    ordtl.get(i).setAddress("" + orderDetailsModel.getAllOrderdetails().get(0).getAddress());
+                }
+            }
+        }
+        orderBookingDetailsModel.setOrddtl(ordtl);
+        orderBookingRequestModel.setOrdbooking(orderBookingDetailsModel);
+        //SET Order Booking Details Model - END
+        //SET Order Details Models Array - START
+        orderBookingRequestModel.setOrddtl(ordtl);
+        //SET Order Details Models Array - END
+        //SET BENEFICIARY Details Models Array - START
+        ArrayList<BeneficiaryDetailsModel> benArr = orderDetailsModel.getAllOrderdetails().get(0).getBenMaster();
+        if (from.equals("Button_proceed_payment")) {
+            for (int i = 0; i < benArr.size(); i++) {
+                benArr.get(i).setAddBen(false);
+            }
+        }
+
+        orderBookingRequestModel.setBendtl(benArr);
+        //SET BENEFICIARY Details Models Array - END
+
+        //SET BENEFICIARY Barcode Details Models Array - START
+        ArrayList<BeneficiaryBarcodeDetailsModel> benBarcodeArr = new ArrayList<>();
+
+        //SET BENEFICIARY Sample Types Details Models Array - START
+        ArrayList<BeneficiarySampleTypeDetailsModel> benSTArr = new ArrayList<>();
+
+        //SET BENEFICIARY Test Wise Clinical History Models Array - START
+        ArrayList<BeneficiaryTestWiseClinicalHistoryModel> benCHArr = new ArrayList<>();
+
+        //SET BENEFICIARY Lab Alerts Models Array - START
+        ArrayList<BeneficiaryLabAlertsModel> benLAArr = new ArrayList<>();
+
+        for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                benArr) {
+
+            if (beneficiaryDetailsModel.getBarcodedtl() != null) {
+                benBarcodeArr.addAll(beneficiaryDetailsModel.getBarcodedtl());
+            }
+            if (beneficiaryDetailsModel.getSampleType() != null) {
+                benSTArr.addAll(beneficiaryDetailsModel.getSampleType());
+            }
+            if (beneficiaryDetailsModel.getClHistory() != null) {
+                benCHArr.addAll(beneficiaryDetailsModel.getClHistory());
+            }
+            if (beneficiaryDetailsModel.getLabAlert() != null) {
+                benLAArr.addAll(beneficiaryDetailsModel.getLabAlert());
+            }
+        }
+
+        orderBookingRequestModel.setBarcodedtl(benBarcodeArr);
+
+        //SET BENEFICIARY Barcode Details Models Array - END
+
+        orderBookingRequestModel.setSmpldtl(benSTArr);
+        //SET BENEFICIARY Sample Type Details Models Array - END
+
+        orderBookingRequestModel.setClHistory(benCHArr);
+        //SET BENEFICIARY Test Wise Clinical History Models Array - END
+
+        orderBookingRequestModel.setLabAlert(benLAArr);
+        //SET BENEFICIARY Lab Alerts Models Array - END
+        return orderBookingRequestModel;
     }
 
     private boolean isServiceRunning(Class<?> serviceClass) {
@@ -1195,6 +1548,30 @@ public class PaymentsActivity extends AbstractActivity {
                     Toast.makeText(activity, getResources().getString(R.string.sync_no_data), Toast.LENGTH_SHORT).show();
                 }
             }
+        }
+    }
+
+    private void dateCheck() {
+        //jai
+        //minus 30 min
+        Date strDate = null;
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("hh:mm:a");
+            Calendar cal = Calendar.getInstance();
+            Date currentTime = cal.getTime();
+            Logger.error(">> " + currentTime);
+            Calendar cal1 = Calendar.getInstance();
+            cal1.setTime(currentTime);
+            cal1.add(Calendar.HOUR, +2);
+            Calendar cal2 = Calendar.getInstance();
+            cal2.setTime(currentTime);
+            cal2.add(Calendar.MINUTE, +150);
+            newTimeaddTwoHrs = df.format(cal1.getTime());
+            newTimeaddTwoHalfHrs = df.format(cal2.getTime());
+            Logger.error(">> ....." + newTimeaddTwoHrs);
+            Logger.error(">> ....." + newTimeaddTwoHalfHrs);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

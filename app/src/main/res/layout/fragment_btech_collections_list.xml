@@ -37,6 +37,14 @@
                 android:scrollbars="vertical" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+        <TextView
+            android:id="@+id/txt_master_barcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/_20sdp"
+            android:textColor="@color/grey"
+            android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/ll_hub_display_footer"
             android:layout_width="match_parent"

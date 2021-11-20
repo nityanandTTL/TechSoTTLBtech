@@ -23,9 +23,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.appbar.AppBarLayout;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.R;
@@ -43,6 +46,8 @@ import java.util.Locale;
 
 public class Global {
 
+    public static String PE_BTech="3";
+    public static String Prepaid = "PREPAID";
     private Context context;
     public String fontDefault = "OPENSANS-REGULAR_3.TTF";
     public String fontRegular = "OPENSANS-REGULAR_3.TTF";
@@ -80,6 +85,10 @@ public class Global {
         if (context != null && !InputUtils.isNull(message)) {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static boolean checkLogin(String s){
+        return s != null && s.equalsIgnoreCase(Global.PE_BTech);
     }
 
     public static boolean getDays(Activity activity) {
@@ -689,5 +698,33 @@ public class Global {
     public static void appBar(Activity activity){
         AppBarLayout appBarLayout = activity.findViewById(R.id.appbarLayout);
         appBarLayout.setVisibility(View.GONE);
+    }
+
+
+    public static void cropImageFullScreenActivity(Activity activity, int flag) {
+        if (flag == 1) {
+            ImagePicker.Companion.with(activity).crop().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
+        } else if (flag == 0) {
+            ImagePicker.Companion.with(activity).crop().cameraOnly().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
+        } else if (flag == 2) {
+            ImagePicker.Companion.with(activity).crop().galleryOnly().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
+        }
+    }
+
+    public static void cropImageFullScreenFragment(Fragment fragment, int flag) {
+
+        if (flag == 1) {
+            ImagePicker.Companion.with(fragment).crop().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
+        } else if (flag == 0) {
+            ImagePicker.Companion.with(fragment).crop().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).cameraOnly().start();
+        } else if (flag == 2) {
+            ImagePicker.Companion.with(fragment).crop().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).galleryOnly().start();
+        }
     }
 }

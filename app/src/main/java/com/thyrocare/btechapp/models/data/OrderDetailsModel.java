@@ -64,6 +64,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private boolean IsPPE;
     private String PPE_AlertMsg;
     private boolean isKCF;
+    private boolean ISHclOrder;
 
 
     protected OrderDetailsModel(Parcel in) {
@@ -119,6 +120,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         displayProduct = in.readByte() != 0;
         IsPPE = in.readByte() != 0;
         isKCF = in.readByte() != 0;
+        ISHclOrder = in.readByte() != 0;
         PPE_AlertMsg = in.readString();
     }
 
@@ -176,6 +178,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeByte((byte) (displayProduct ? 1 : 0));
         dest.writeByte((byte) (IsPPE ? 1 : 0));
         dest.writeByte((byte) (isKCF ? 1 : 0));
+        dest.writeByte((byte) (ISHclOrder ? 1 : 0));
         dest.writeString(PPE_AlertMsg);
     }
 
@@ -199,6 +202,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public boolean isKCF() {
         return isKCF;
+    }
+
+    public boolean isISHclOrder() {
+        return ISHclOrder;
+    }
+
+    public void setISHclOrder(boolean ISHclOrder) {
+        this.ISHclOrder = ISHclOrder;
     }
 
     public void setKCF(boolean KCF) {

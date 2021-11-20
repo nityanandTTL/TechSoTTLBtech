@@ -7,10 +7,10 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.thyrocare.btechapp"
-        minSdkVersion 18
+        minSdkVersion 19
         targetSdkVersion 26
-        versionCode 113
-        versionName "2.4.3"
+        versionCode 119
+        versionName "2.4.8"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -165,6 +165,7 @@ dependencies {
 
     implementation "com.ncorti:slidetoact:0.9.0"
 
+    implementation 'com.github.dhaval2404:imagepicker:1.7.5'
     implementation 'com.cheekiat:slideview:1.6'
 }
 

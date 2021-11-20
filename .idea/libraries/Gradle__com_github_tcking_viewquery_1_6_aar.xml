@@ -1,9 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.tcking:viewquery:1.6@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/01dda35095e2b58ed8038814ff891734/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/19f17c2f8a760eb1d793ff25c1e5d8bc/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/01dda35095e2b58ed8038814ff891734/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/01dda35095e2b58ed8038814ff891734/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/01dda35095e2b58ed8038814ff891734/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />

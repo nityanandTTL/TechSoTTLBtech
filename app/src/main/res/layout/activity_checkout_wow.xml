@@ -40,9 +40,9 @@
 
     <TextView
         android:id="@+id/tv_spinner"
-        android:layout_below="@id/spn_collection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/spn_collection"
         android:layout_margin="10dp"
         android:singleLine="true"
         android:textSize="@dimen/value" />
@@ -314,6 +314,7 @@
             android:padding="@dimen/_10sdp">
 
             <TextView
+                android:id="@+id/tv_pay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_20sdp"

@@ -9,6 +9,7 @@ public class Constants {
     public static final String RESP0000 = "RESP0000";
     public static final String RES0001 = "RES0001";
     public static final String RES200 = "200";
+    public static final String RES000 = "RES000";
     public static int ServerTime = 0;
     public static String TestingBtechID = "884544334";
     public static String StockAvialablity_TestingBtechID = "884544758";
@@ -54,4 +55,8 @@ public class Constants {
     public static DynamicBtechAvaliabilityResponseModel setAvailabiltity;
 
     public static boolean QrClick=false;
+
+    public static int MaxImageSize = 512; // In KB
+    public static int MaxImageWidth = 1080; // in pixels
+    public static int MaxImageHeight = 1080; // in pixels
 }

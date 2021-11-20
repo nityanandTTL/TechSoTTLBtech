@@ -70,6 +70,7 @@ import com.thyrocare.btechapp.models.api.request.SignInRequestModel;
 import com.thyrocare.btechapp.models.api.response.SignInResponseModel;
 import com.thyrocare.btechapp.models.api.response.SignSummaryResponseModel;
 import com.thyrocare.btechapp.models.data.DeviceLoginDetailsModel;
+import com.thyrocare.btechapp.service.Timecheckservice;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -97,7 +98,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     private FloatingActionButton fabBtn;
     private DrawerLayout drawer;
     private NavigationView navigationView;
-    public Toolbar toolbarHome,nbt_toolbar,tsp_toolbar;
+    public Toolbar toolbarHome, nbt_toolbar, tsp_toolbar;
     private CircularImageView rivSelfie;
     private TextView txtUserName, txt_version_code, txt_no_of_camps;
     private LinearLayout llNavHeader;
@@ -121,12 +122,12 @@ public class HomeScreenActivity extends AppCompatActivity {
     int screenCategory;
     ConnectionDetector cd;
     int flag_sign = 0;
-    CircleImageView civ_profile,civ_tsp_profile,civ_nbt_profile;
-    TextView txt_username,txt_nbt_username;
+    CircleImageView civ_profile, civ_tsp_profile, civ_nbt_profile;
+    TextView txt_username, txt_nbt_username;
     public AppBarLayout appbarLayout;
     ImageView iv_gqc;
     //for B-Tech
-    LinearLayout ll_schedule, ll_orders, ll_served, ll_hub, ll_lead, ll_pick_orders, ll_leaves, ll_hcw, ll_password, ll_feedback, ll_video, ll_certificate, ll_logout;
+    LinearLayout ll_schedule, ll_orders, ll_served, ll_hub, ll_lead, ll_pick_orders, ll_leaves, ll_hcw, ll_password, ll_feedback, ll_video, ll_certificate, ll_logout, ll_gqc;
     private Dialog MainDailog;
     //for TSP
     LinearLayout ll_tsp_certificate, ll_tsp_logout, ll_tsp_hub, ll_tsp_orders, ll_tsp_served, ll_tsp_earning, ll_tsp_send, ll_tsp_receive, ll_tsp_lead, ll_tsp_pick_orders, ll_tsp_hcw, ll_tsp_password, ll_tsp_feedback, ll_tsp_video;
@@ -210,8 +211,8 @@ public class HomeScreenActivity extends AppCompatActivity {
 //        }
 //        CallBTechSignINOUTSummaryAPI();
 
-       /* TImeCheckerIntent = new Intent(this, Timecheckservice.class);
-        startService(TImeCheckerIntent);*/
+        TImeCheckerIntent = new Intent(this, Timecheckservice.class);
+        startService(TImeCheckerIntent);
 
         /*if (isFromPayment) {
             pushFragments(CreditFragment.newInstance(), false, false,
@@ -229,7 +230,20 @@ public class HomeScreenActivity extends AppCompatActivity {
     private void iniTNBT() {
         txt_nbt_username = (TextView) findViewById(R.id.txt_nbt_username);
         globalclass.DisplayDeviceImages(activity, appPreferenceManager.getSelfieResponseModel().getPic(), civ_nbt_profile);
-        txt_nbt_username.setText("Welcome ,\n"+appPreferenceManager.getLoginResponseModel().getUserName());
+        txt_nbt_username.setText("Welcome ,\n" + appPreferenceManager.getLoginResponseModel().getUserName());
+
+        try {
+            if (EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD)).equals(EncryptionUtils.Dcrp_Hex(getString(R.string.BASE_URL_TOCHECK)))) {
+                txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
+            } else {
+                txt_version_code.setText("Stag Version: " + CommonUtils.getAppVersion(activity));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
+        }
+
+
     }
 
     private void initListeners_NBT() {
@@ -390,6 +404,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         civ_nbt_profile = findViewById(R.id.civ_nbt_profile);
         txt_nbt_username = findViewById(R.id.txt_nbt_username);
         nbt_toolbar = findViewById(R.id.nbt_toolbar);
+        txt_version_code = findViewById(R.id.txt_version_code);
         nbt_toolbar.setTitle("");
     }
 
@@ -554,6 +569,17 @@ public class HomeScreenActivity extends AppCompatActivity {
         txt_username = (TextView) findViewById(R.id.tv_tsp_username);
 //        globalclass.DisplayDeviceImages(activity, appPreferenceManager.getSelfieResponseModel().getPic(), civ_tsp_profile);
         txt_username.setText("Welcome ,\n" + Global.toCamelCase(appPreferenceManager.getLoginResponseModel().getUserName()));
+
+        try {
+            if (EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD)).equals(EncryptionUtils.Dcrp_Hex(getString(R.string.BASE_URL_TOCHECK)))) {
+                txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
+            } else {
+                txt_version_code.setText("Stag Version: " + CommonUtils.getAppVersion(activity));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
+        }
     }
 
     private void CallBTechSignINOUTSummaryAPI() {
@@ -578,6 +604,17 @@ public class HomeScreenActivity extends AppCompatActivity {
             if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID()))
                 y = appPreferenceManager.getLoginResponseModel().getUserID();
 
+            try {
+                if (EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD)).equals(EncryptionUtils.Dcrp_Hex(getString(R.string.BASE_URL_TOCHECK)))) {
+                    txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
+                } else {
+                    txt_version_code.setText("Stag Version: " + CommonUtils.getAppVersion(activity));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -585,6 +622,9 @@ public class HomeScreenActivity extends AppCompatActivity {
     }
 
     public void initUI() {
+        View v_1 = findViewById(R.id.v_1);
+        View v_2 = findViewById(R.id.v_2);
+        View v_3 = findViewById(R.id.v_3);
         iv_gqc = findViewById(R.id.iv_gqc);
         ll_schedule = findViewById(R.id.ll_schedule);
         ll_orders = findViewById(R.id.ll_orders);
@@ -599,10 +639,28 @@ public class HomeScreenActivity extends AppCompatActivity {
         ll_video = findViewById(R.id.ll_video);
         ll_certificate = findViewById(R.id.ll_certificate);
         ll_logout = findViewById(R.id.ll_logout);
+        txt_version_code = findViewById(R.id.txt_version_code);
+        ll_gqc = findViewById(R.id.ll_gqc);
 
 
-
-
+        //Todo 3 - Pharmeasy 2 for Thyrocare
+        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            ll_leaves.setVisibility(View.GONE);
+            ll_pick_orders.setVisibility(View.GONE);
+            ll_gqc.setVisibility(View.GONE);
+            ll_lead.setVisibility(View.GONE);
+            v_1.setVisibility(View.GONE);
+            v_2.setVisibility(View.GONE);
+            v_3.setVisibility(View.GONE);
+        } else {
+            ll_gqc.setVisibility(View.VISIBLE);
+            ll_lead.setVisibility(View.VISIBLE);
+            ll_leaves.setVisibility(View.VISIBLE);
+            ll_pick_orders.setVisibility(View.VISIBLE);
+            v_1.setVisibility(View.VISIBLE);
+            v_2.setVisibility(View.VISIBLE);
+            v_3.setVisibility(View.VISIBLE);
+        }
         txt_no_of_camps = (TextView) findViewById(R.id.txt_no_of_camps);
 
         toolbarHome = (Toolbar) findViewById(R.id.toolbar);
@@ -635,6 +693,17 @@ public class HomeScreenActivity extends AppCompatActivity {
         if (appPreferenceManager.getLoginResponseModel().getRole().equalsIgnoreCase(AppConstants.NBT_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
             Menu nav_menu = navigationView.getMenu();
             nav_menu.findItem(R.id.nav_gqc).setVisible(true);
+        }
+
+        try {
+            if (EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD)).equals(EncryptionUtils.Dcrp_Hex(getString(R.string.BASE_URL_TOCHECK)))) {
+                txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
+            } else {
+                txt_version_code.setText("Stag Version: " + CommonUtils.getAppVersion(activity));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            txt_version_code.setText("Version: " + CommonUtils.getAppVersion(activity));
         }
 
     }
@@ -923,6 +992,8 @@ public class HomeScreenActivity extends AppCompatActivity {
         txt_username = (TextView) findViewById(R.id.tv_tsp_username);
         tsp_toolbar = findViewById(R.id.tsp_toolbar);
         tsp_toolbar.setTitle("");
+
+        txt_version_code = findViewById(R.id.txt_version_code);
 
     }
 

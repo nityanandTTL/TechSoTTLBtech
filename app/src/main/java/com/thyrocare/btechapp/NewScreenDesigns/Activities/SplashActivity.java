@@ -87,6 +87,7 @@ public class SplashActivity extends AppCompatActivity {
     Global global;
     Boolean isFromNotification = false;
     int screenCategory = 0;
+    String isFlebo;
     private VersionControlResponseModel versionAPIResponseModel;
     private Intent locationUpdateIntent;
 
@@ -94,6 +95,8 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        System.out.println("-------techso-------------"+EncryptionUtils.Dcrp_Hex("A536CA9ED08E620954D86502D5AE538526CF2D34997BDCB01DB2ABF3BC10AC962E5A700AA55BDBCEDBF08BC89E7F0896"));
 
         init();
         initData();
@@ -110,6 +113,8 @@ public class SplashActivity extends AppCompatActivity {
             isFromNotification = getIntent().getBooleanExtra("isFromNotification", false);
             screenCategory = getIntent().getIntExtra("screenCategory", 0);
         }
+
+        isFlebo = getIntent().getStringExtra("isFlebo");
         locationUpdateIntent = new Intent(this, LocationUpdateService.class);
     }
 
@@ -384,9 +389,32 @@ public class SplashActivity extends AppCompatActivity {
                         startActivity(i);
                     }
                 } else {
+
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.MILLISECOND, 0);
+                    c.set(Calendar.SECOND, 0);
+                    c.set(Calendar.MINUTE, 0);
+                    c.set(Calendar.HOUR_OF_DAY, 0);
+                    if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+                        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                            i.putExtra("LEAVEINTIMATION", "0");
+                            i.putExtra("isFromNotification", isFromNotification);
+                            i.putExtra("screenCategory", screenCategory);
+                            startActivity(i);
+                            finish();
+                        } else {
+                            GetDynBtechAvailability();
+                        }
+                    } else {
+                        Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+                    }
+
                     //                    GetBtechAvailability();
                     //Added to make it dynamic availability
-                    GetDynBtechAvailability();
+//                    GetDynBtechAvailability();
                 }
 
             }
