@@ -214,12 +214,22 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
 
             holder.txtCustomerName.setText(Global.toCamelCase(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName()));
 
-            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() > 0) {
+            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() > 0) {
+                    holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId() + "  (₹" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() + ")");
+                } else {
+                    holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
+                }
+            } else {
+                holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId() + "  (₹" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() + ")");
+            }
+
+            /*if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() > 0) {
                 holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId() + "  (₹" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() + ")");
             } else {
                 holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
             }
-
+*/
             holder.txtDate.setText(orderVisitDetailsModelsArr.get(pos).getAppointmentDate());
             holder.txtSlot.setText(", " + DateUtil.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getSlot(), "hh:mm a", "HH:mm"));
 //            holder.txtAddress.setSelected(true);
@@ -991,7 +1001,11 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             @Override
             public void onClick(View v) {
                 bottomSheetDialog.dismiss();
-                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+                if (onClickListeners != null) {
+                    onClickListeners.onItemRelease(orderVisitDetailsModelsArr.get(pos));
+                }
+                //TODO Removed Release pop up
+                /*final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
                 View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
                 TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
                 TextView tv_text1 = bottomSheet.findViewById(R.id.tv_text1);
@@ -1020,7 +1034,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 });
                 bottomSheetDialog.setContentView(bottomSheet);
                 bottomSheetDialog.setCancelable(false);
-                bottomSheetDialog.show();
+                bottomSheetDialog.show();*/
             }
         });
 

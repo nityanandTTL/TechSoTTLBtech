@@ -41,7 +41,6 @@ public class ConfirmRequestReleaseDialog extends Dialog implements View.OnClickL
     private Dialog d;
     private Button btn_yes, btn_no;
     private TextView tv_title;
-
     private EditText edt__release_remark;
     private Spinner edt_remark;
     private RemarksRequestToReleaseResponseModel remarksResponseModelmain;

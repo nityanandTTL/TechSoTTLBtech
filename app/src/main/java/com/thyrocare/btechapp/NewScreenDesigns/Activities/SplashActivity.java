@@ -96,8 +96,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        System.out.println("-------techso-------------"+EncryptionUtils.Dcrp_Hex("A536CA9ED08E620954D86502D5AE538526CF2D34997BDCB01DB2ABF3BC10AC962E5A700AA55BDBCEDBF08BC89E7F0896"));
-
         init();
         initData();
 
@@ -246,7 +244,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void trackUserActivity() {
-        new LogUserActivityTagging(mActivity, "","");
+        new LogUserActivityTagging(mActivity, "", "");
     }
 
     private void onVersionControlResponseReceived(final VersionControlResponseModel versionAPIResponseModel) {
@@ -277,7 +275,7 @@ public class SplashActivity extends AppCompatActivity {
                             finishAffinity();
                         }
                     } else {
-                        new LogUserActivityTagging(mActivity, LOGOUT,"");
+                        new LogUserActivityTagging(mActivity, LOGOUT, "");
                         appPreferenceManager.clearAllPreferences();
                         new DhbDao(mActivity).deleteTablesonLogout();
                         //jai
@@ -316,7 +314,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {
                 if (response.code() == 200) {
-                    new LogUserActivityTagging(mActivity, LOGOUT,"");
+                    new LogUserActivityTagging(mActivity, LOGOUT, "");
                     appPreferenceManager.clearAllPreferences();
                     new DhbDao(mActivity).deleteTablesonLogout();
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(versionAPIResponseModel.getAppUrl()));
@@ -389,28 +387,33 @@ public class SplashActivity extends AppCompatActivity {
                         startActivity(i);
                     }
                 } else {
-
-                    Calendar c = Calendar.getInstance();
-                    c.set(Calendar.MILLISECOND, 0);
-                    c.set(Calendar.SECOND, 0);
-                    c.set(Calendar.MINUTE, 0);
-                    c.set(Calendar.HOUR_OF_DAY, 0);
-                    if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
-                        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                            i.putExtra("LEAVEINTIMATION", "0");
-                            i.putExtra("isFromNotification", isFromNotification);
-                            i.putExtra("screenCategory", screenCategory);
-                            startActivity(i);
-                            finish();
+                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                        Calendar c = Calendar.getInstance();
+                        c.set(Calendar.MILLISECOND, 0);
+                        c.set(Calendar.SECOND, 0);
+                        c.set(Calendar.MINUTE, 0);
+                        c.set(Calendar.HOUR_OF_DAY, 0);
+                        if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                                i.putExtra("LEAVEINTIMATION", "0");
+                                i.putExtra("isFromNotification", isFromNotification);
+                                i.putExtra("screenCategory", screenCategory);
+                                startActivity(i);
+                                finish();
+                            } else {
+                                GetDynBtechAvailability();
+                            }
                         } else {
-                            GetDynBtechAvailability();
+                            Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
+                            i.putExtra("LEAVEINTIMATION", "0");
+                            startActivity(i);
                         }
                     } else {
-                        Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
-                        i.putExtra("LEAVEINTIMATION", "0");
-                        startActivity(i);
+                        GetDynBtechAvailability();
                     }
+
+
 
                     //                    GetBtechAvailability();
                     //Added to make it dynamic availability
@@ -616,23 +619,20 @@ public class SplashActivity extends AppCompatActivity {
                         startActivity(i);
                         finish();
                     } else {
-
                         Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
                         startActivity(i);
                         finish();
                     }
                 }
             }
-
-
         }
     }
 
     private boolean validateDays(DynamicBtechAvaliabilityResponseModel btechAvaliabilityResponseModel) {
-        if(btechAvaliabilityResponseModel != null){
-            if(btechAvaliabilityResponseModel.getAllDays() != null){
+        if (btechAvaliabilityResponseModel != null) {
+            if (btechAvaliabilityResponseModel.getAllDays() != null) {
                 for (int i = 0; i < btechAvaliabilityResponseModel.getAllDays().size(); i++) {
-                    if(btechAvaliabilityResponseModel.getAllDays().get(i).getDay() == 1){
+                    if (btechAvaliabilityResponseModel.getAllDays().get(i).getDay() == 1) {
                         return true;
                     }
                 }
@@ -719,7 +719,7 @@ public class SplashActivity extends AppCompatActivity {
         model.setDeviceId(DeviceUtils.getDeviceId(mActivity));
         model.setUserId(appPreferenceManager.getLoginResponseModel().getUserID());
         try {
-            new LogUserActivityTagging(mActivity, LOGOUT,"");
+            new LogUserActivityTagging(mActivity, LOGOUT, "");
             PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
             Call<CommonResponseModel> commonResponeModelCall = postAPIInterface.CallLogoutAPI(model);
             global.showProgressDialog(mActivity, "Please wait..", false);
@@ -762,7 +762,7 @@ public class SplashActivity extends AppCompatActivity {
     public void CallLogOutFromDevice() {
         try {
             global.showCustomToast(mActivity, "Authorization failed, need to Login again...", Toast.LENGTH_SHORT);
-            new LogUserActivityTagging(mActivity, LOGOUT,"");
+            new LogUserActivityTagging(mActivity, LOGOUT, "");
             appPreferenceManager.clearAllPreferences();
             try {
                 new DhbDao(mActivity).deleteTablesonLogout();

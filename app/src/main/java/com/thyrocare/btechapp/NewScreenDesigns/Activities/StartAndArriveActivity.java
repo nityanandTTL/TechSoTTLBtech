@@ -1839,7 +1839,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
         tv_ord_rel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+                crr = new ConfirmRequestReleaseDialog(mActivity, new CConfirmOrderReleaseDialogButtonClickedDelegateResult(), orderDetailsModel);
+                crr.show();
+                //TODO Removed Relese pop up
+               /* final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
                 View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
                 TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
                 TextView tv_text1 = bottomSheet.findViewById(R.id.tv_text1);
@@ -1865,14 +1868,17 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 });
                 bottomSheetDialog.setContentView(bottomSheet);
                 bottomSheetDialog.setCancelable(false);
-                bottomSheetDialog.show();
+                bottomSheetDialog.show();*/
             }
         });
 
         tv_ord_pass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+                crr = new ConfirmRequestReleaseDialog(mActivity, new CConfirmOrderReleaseDialogButtonClickedDelegateResult(), orderDetailsModel);
+                crr.show();
+                //TODO Removed Release pop up
+               /* final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
                 View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
                 TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
                 TextView tv_text1 = bottomSheet.findViewById(R.id.tv_text1);
@@ -1898,7 +1904,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 });
                 bottomSheetDialog.setContentView(bottomSheet);
                 bottomSheetDialog.setCancelable(false);
-                bottomSheetDialog.show();
+                bottomSheetDialog.show();*/
             }
         });
 

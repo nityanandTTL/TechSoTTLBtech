@@ -9,8 +9,8 @@ android {
         applicationId "com.thyrocare.btechapp"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 119
-        versionName "2.4.8"
+        versionCode 123
+        versionName "2.5.2"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -71,6 +71,7 @@ android {
     defaultConfig {
         resValue "string", "SERVER_BASE_API_URL_PROD", SERVER_BASE_API_URL_PROD
         resValue "string", "BASE_URL_TOCHECK", BASE_URL_TOCHECK
+        resValue "string", "PE_API", SERVER_BASE_API_URL_PROD.equals(BASE_URL_TOCHECK) ? PE_LIVE : PE_STAGING
         resValue "string", "B2C_API_VERSION", SERVER_BASE_API_URL_PROD.equals(BASE_URL_TOCHECK) ? B2C_API_VERSION_LIVE : B2C_API_VERSION_STNG
         resValue "string", "B2B_API_VERSION", SERVER_BASE_API_URL_PROD.equals(BASE_URL_TOCHECK) ? B2B_API_VERSION_LIVE : B2B_API_VERSION_STNG
         resValue "string", "NUCLEAR_URL", SERVER_BASE_API_URL_PROD.equals(BASE_URL_TOCHECK) ? LIVE_NUCLEAR_URL : STNG_NUCLEAR_URL
@@ -84,7 +85,6 @@ android {
         resValue "string", "BTECH_LOCATION", BTECH_LOCATION
 
         resValue "string", "google_maps_key", google_maps_key
-
     }
 }
 

@@ -6,19 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".NewScreenDesigns.Activities.StartAndArriveActivity">
 
-        <include layout="@layout/default_toolbar"
-            android:id="@id/appbarLayout"/>
-
-        <!--<androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarStockAvailablity"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
-
-        </androidx.appcompat.widget.Toolbar>-->
-
-
+    <include
+        android:id="@id/appbarLayout"
+        layout="@layout/default_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyle_OrderDetail"
@@ -44,9 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/customSwipeButton2"
-        android:layout_marginBottom="@dimen/_2sdp"
-        android:layout_marginLeft="@dimen/_10sdp"
         android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_2sdp"
         android:drawableStart="@drawable/ic_add_ben"
         android:drawablePadding="@dimen/_3sdp"
         android:elevation="@dimen/_5sdp"
@@ -97,10 +87,10 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/lin_bottom"
         android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_2sdp"
         android:layout_marginRight="@dimen/_20sdp"
         android:layout_marginBottom="-15dp"
         android:gravity="center"
-        android:layout_marginTop="@dimen/_2sdp"
         android:paddingTop="-10dp">
 
         <!--<cheekiat.slideview.SlideView
@@ -136,8 +126,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="-20dp"
-            android:visibility="gone"
-            android:src="@drawable/ic_swipe_green" />
+            android:src="@drawable/ic_swipe_green"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -167,13 +157,13 @@
                 android:id="@+id/txt_amount"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:layout_gravity="center"
                 android:text=""
-                android:textStyle="bold"
                 android:textColor="@color/bg_new_color"
-                android:textSize="@dimen/_10sdp" />
+                android:textSize="@dimen/_10sdp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_start"
@@ -181,10 +171,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null"
-                android:text="Start"
-                android:paddingRight="@dimen/_40sdp"
                 android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
                 android:drawableTint="@color/bg_new_color"
+                android:paddingRight="@dimen/_40sdp"
+                android:text="Start"
                 android:textAllCaps="false"
                 android:textColor="@color/bg_new_color"
                 android:textSize="@dimen/label"
@@ -194,14 +184,14 @@
                 android:id="@+id/btn_arrive"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@null"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:text="Arrive"
-                android:paddingRight="@dimen/_40sdp"
                 android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
                 android:drawableTint="@color/bg_new_color"
+                android:gravity="center"
+                android:paddingRight="@dimen/_40sdp"
+                android:text="Arrive"
                 android:textAllCaps="false"
                 android:textColor="@color/bg_new_color"
                 android:textSize="@dimen/label" />
@@ -212,10 +202,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null"
-                android:text="Proceed"
-                android:paddingRight="@dimen/_40sdp"
                 android:drawableEnd="@drawable/ic_chevron_right_black_24dp"
                 android:drawableTint="@color/bg_new_color"
+                android:paddingRight="@dimen/_40sdp"
+                android:text="Proceed"
                 android:textAllCaps="false"
                 android:textColor="@color/bg_new_color"
                 android:textSize="@dimen/label"

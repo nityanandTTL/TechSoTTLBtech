@@ -59,4 +59,7 @@ public class Constants {
     public static int MaxImageSize = 512; // In KB
     public static int MaxImageWidth = 1080; // in pixels
     public static int MaxImageHeight = 1080; // in pixels
+
+    public static final String XSource ="THYROCARE";
+    public static final String clientid ="9997582333813533";
 }

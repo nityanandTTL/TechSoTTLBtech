@@ -50,7 +50,6 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
     private List<String> tempselectedTests1;
     private OnClickListeners onClickListeners;
 
-
     public DisplayAllTestApdter(Activity activity, ArrayList<TestRateMasterModel> testRateMasterModelArry, ArrayList<TestRateMasterModel> allProductList , ArrayList<TestRateMasterModel> selectedTests, boolean isM) {
         this.activity = activity;
         appPreferenceManager = new AppPreferenceManager(activity);
@@ -61,10 +60,7 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
         this.filteredList = testRateMasterModelArry;
         this.selectedTests = selectedTests;
         this.isM = isM;
-
     }
-
-
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 

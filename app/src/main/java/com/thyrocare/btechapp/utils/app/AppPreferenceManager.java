@@ -52,6 +52,7 @@ public class AppPreferenceManager {
 
     private String loginRole = "loginRole";
     private String btechID = "btechID";
+    private String authToken = "authToken";
     private String userID = "userID";
     private String userNAME = "username";
     private String userChatWith = "userChatWith";
@@ -66,26 +67,25 @@ public class AppPreferenceManager {
     public String OTPFlagOneTime = "OTPFlag";
 
     //Neha G---------------------------------
-    private String ShowTimeInNotificatn="";
+    private String ShowTimeInNotificatn = "";
     private int not_avail_tom;
     private int Day_aftr_tom;
 
 
-
     private int delay;
     private int DataInVisitModel;
-    private  int NotifyOrderone ;
+    private int NotifyOrderone;
     private int OrderAccept;
 
 //Neha G -------------------------------------
 
     public NewBtechAvaliabilityResponseModel getNEWBTECHAVALIABILITYRESPONSEMODEL() {
-        String value=appPreference.getString(this.NEWBTECHAVALIABILITYRESPONSEMODEL,"");
-        return new Gson().fromJson(value,NewBtechAvaliabilityResponseModel.class);
+        String value = appPreference.getString(this.NEWBTECHAVALIABILITYRESPONSEMODEL, "");
+        return new Gson().fromJson(value, NewBtechAvaliabilityResponseModel.class);
     }
 
     public void setNEWBTECHAVALIABILITYRESPONSEMODEL(NewBtechAvaliabilityResponseModel newbtechavaliabilityresponsemodel) {
-       appPreference.putString(this.NEWBTECHAVALIABILITYRESPONSEMODEL,new Gson().toJson(newbtechavaliabilityresponsemodel));
+        appPreference.putString(this.NEWBTECHAVALIABILITYRESPONSEMODEL, new Gson().toJson(newbtechavaliabilityresponsemodel));
     }
 
 
@@ -112,27 +112,27 @@ public class AppPreferenceManager {
     }*/
 
     public String getCashingTime() {
-        return appPreference.getString(cashingTime,"");
+        return appPreference.getString(cashingTime, "");
     }
 
     public void setCashingTime(String cashingTime) {
-        appPreference.putString(this.cashingTime,cashingTime);
+        appPreference.putString(this.cashingTime, cashingTime);
     }
 
     public String getOTPOnetime() {
-        return appPreference.getString(OTPFlagOneTime,"");
+        return appPreference.getString(OTPFlagOneTime, "");
     }
 
     public void setOTPFlagOneTime(String OTpflag) {
-        appPreference.putString(this.OTPFlagOneTime,OTpflag);
+        appPreference.putString(this.OTPFlagOneTime, OTpflag);
     }
 
     public String getCacheProduct() {
-        return appPreference.getString(CacheProduct,"");
+        return appPreference.getString(CacheProduct, "");
     }
 
     public void setCacheProduct(String myObject) {
-        appPreference.putString(this.CacheProduct,myObject);
+        appPreference.putString(this.CacheProduct, myObject);
     }
 
     public int getOrderAccept() {
@@ -141,6 +141,15 @@ public class AppPreferenceManager {
 
     public void setOrderAccept(int orderAccept) {
         OrderAccept = orderAccept;
+    }
+
+
+    public String getAuthToken() {
+        return appPreference.getString(authToken, "");
+    }
+
+    public void setAuthToken(String btechID) {
+        appPreference.putString(this.authToken, btechID);
     }
 
     public String getShowTimeInNotificatn() {
@@ -254,6 +263,7 @@ public class AppPreferenceManager {
     public void setScheduleCounter(String scheduleCounter) {
         appPreference.putString(this.scheduleCounter, scheduleCounter);
     }
+
     public boolean isChatRegister() {
         return appPreference.getBoolean(this.isAChatRgister, false);
     }
@@ -261,6 +271,7 @@ public class AppPreferenceManager {
     public void setChatRegister(boolean value) {
         appPreference.putBoolean(this.isAChatRgister, value);
     }
+
     public String getScheduleCounter2() {
         return scheduleCounter2;
     }
@@ -277,7 +288,7 @@ public class AppPreferenceManager {
         this.scheduleDate2 = scheduleDate2;
     }
 
-        public AppPreferenceManager(Activity activity) {
+    public AppPreferenceManager(Activity activity) {
         super();
         appPreference = AppPreference.getAppPreferences(activity);
     }
@@ -387,6 +398,7 @@ public class AppPreferenceManager {
     public void setLoadSpotlightOnOrderd(boolean value) {
         appPreference.putBoolean(this.isLoadSpotlightOnOrderd, value);
     }
+
     public String getTotalDistance() {
         return appPreference.getString(totalDistance, "");
     }
@@ -468,6 +480,7 @@ public class AppPreferenceManager {
         appPreference.clearPreferences();
         appPreference.putBoolean(this.are_terms_and_conditions_accepted, termsAndConditionsAccepted);
     }
+
     public String getChatPassword() {
         return appPreference.getString(ChatPassword, "");
     }
@@ -475,6 +488,7 @@ public class AppPreferenceManager {
     public void setChatPassword(String password) {
         appPreference.putString(this.ChatPassword, password);
     }
+
     public boolean isAfterLogin() {
         return appPreference.getBoolean(this.isAfterLogin, false);
     }

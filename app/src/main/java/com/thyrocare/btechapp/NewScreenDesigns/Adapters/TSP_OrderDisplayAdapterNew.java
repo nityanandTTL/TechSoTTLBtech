@@ -2,10 +2,14 @@ package com.thyrocare.btechapp.NewScreenDesigns.Adapters;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Paint;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +31,9 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
+
 import application.ApplicationController;
+
 import com.thyrocare.btechapp.delegate.OrderRescheduleDialogButtonClickedDelegate;
 import com.thyrocare.btechapp.dialog.RescheduleOrderDialog;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
@@ -53,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -78,7 +85,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
     private OnClickListeners onClickListeners;
     private int fastingFlagInt;
     private String apiPlusFif, apiMinusFif;
-    private String newTimeAfterMinusSixty1,  cancelVisit = "n", apiTime;
+    private String newTimeAfterMinusSixty1, cancelVisit = "n", apiTime;
     private Date apitimeinHHMMFormat;
     private Date strDate;
     CharSequence[] items;
@@ -97,15 +104,15 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
         layoutInflater = LayoutInflater.from(activity);
     }
 
-    public void UpdateList(ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels){
+    public void UpdateList(ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels) {
         this.orderVisitDetailsModelsArr = orderDetailsResponseModels;
     }
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView  txtBtechName, txtOrderNo, txtDate, txtSlot, txtBeneficiary, txtSamples, txtAddress,txtPPBSStatus,txtFastingStatus,txtRBSStatus,direct_visit,txtKits,txt_visit_day;
-        ImageView imgRelease, imgCall,img_accept,imgProceed;
-        LinearLayout layoutAccept_Release_Ord, layoutMain,lin_bencount,lin_kits,lin_btechName,LL_swipe,ll_accept;
+        TextView txtBtechName, txtOrderNo, txtDate, txtSlot, txtBeneficiary, txtSamples, txtAddress, txtPPBSStatus, txtFastingStatus, txtRBSStatus, direct_visit, txtKits, txt_visit_day;
+        ImageView imgRelease, imgCall, img_accept, imgProceed;
+        LinearLayout layoutAccept_Release_Ord, layoutMain, lin_bencount, lin_kits, lin_btechName, LL_swipe, ll_accept;
         View view_seperater;
         RelativeLayout rel_imgRelease;
 
@@ -165,7 +172,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
 
 
                 holder.txtDate.setText(orderVisitDetailsModelsArr.get(pos).getAppointmentDate());
-                holder.txtSlot.setText(", "+DateUtil.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getSlot(),"hh:mm a","HH:mm"));
+                holder.txtSlot.setText(", " + DateUtil.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getSlot(), "hh:mm a", "HH:mm"));
                 holder.txtAddress.setSelected(true);
                 holder.txtAddress.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getAddress());
                 holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
@@ -174,23 +181,23 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                 holder.lin_btechName.setVisibility(View.VISIBLE);
                 holder.txtBtechName.setText(Global.toCamelCase(orderVisitDetailsModelsArr.get(pos).getBtechName()));
 
-                DisplayBencount(pos,holder);
+                DisplayBencount(pos, holder);
                 // TODO logic needs to be set for sample count
-                DisplayDayWiselayoutColor(pos,holder);
-                DisplayDirectVisit(pos,holder);
+                DisplayDayWiselayoutColor(pos, holder);
+                DisplayDirectVisit(pos, holder);
                 holder.view_seperater.setVisibility(View.GONE);
                 CheckPPBSisPresent(pos, holder);
                 CheckRBSisPresent(pos, holder);
                 ShowreleaseOption(pos, holder);
-                ShowAndHideAcceptOption(pos,holder);
+                ShowAndHideAcceptOption(pos, holder);
                 ShowFastingNonFasting(pos, holder);
                 dateCheck(pos); // To Check Time for PPBS and RBS orders
 
                 DisplayKitData(holder, pos);
 
-                initLIsteners(pos,holder);
+                initLIsteners(pos, holder);
 
-            }else{
+            } else {
 
             }
         } catch (Exception e) {
@@ -204,14 +211,14 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
         holder.ll_accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onAcceptButtonClicked(holder,pos);
+                onAcceptButtonClicked(holder, pos);
             }
         });
 
         holder.rel_imgRelease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onReleaseButtonClicked(pos,holder,holder.txtBtechName.getText().toString(),holder.txtOrderNo.getText().toString());
+                onReleaseButtonClicked(pos, holder, holder.txtBtechName.getText().toString(), holder.txtOrderNo.getText().toString());
             }
         });
 
@@ -225,7 +232,102 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
             }
         });
 
+        holder.txtKits.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getSampleType().size() != 0) {
+                    toShowkits(holder, pos);
+                }
+            }
+        });
 
+
+
+    }
+
+    private void toShowkits(MyViewHolder holder, int pos) {
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+        final View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.bottom_sheet_kit, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+        TextView tv_serum = bottomSheet.findViewById(R.id.tv_serum);
+        TextView tv_edta = bottomSheet.findViewById(R.id.tv_edta);
+        TextView tv_urine = bottomSheet.findViewById(R.id.tv_urine);
+        TextView tv_flouride = bottomSheet.findViewById(R.id.tv_flouride);
+        TextView tv_lith = bottomSheet.findViewById(R.id.tv_lith);
+        TextView tv_sod = bottomSheet.findViewById(R.id.tv_sod);
+        TextView tv_others = bottomSheet.findViewById(R.id.tv_others);
+
+        CardView cv_serum = bottomSheet.findViewById(R.id.cv_serum);
+        CardView cv_edta = bottomSheet.findViewById(R.id.cv_edta);
+        CardView cv_urine = bottomSheet.findViewById(R.id.cv_urine);
+        CardView cv_fluo = bottomSheet.findViewById(R.id.cv_fluo);
+        CardView cv_lith = bottomSheet.findViewById(R.id.cv_lith);
+        CardView cv_others = bottomSheet.findViewById(R.id.cv_other);
+
+        ArrayList<String> aSerum = new ArrayList<>();
+        ArrayList<String> aEdta = new ArrayList<>();
+        ArrayList<String> aUrine = new ArrayList<>();
+        ArrayList<String> afluoride = new ArrayList<>();
+        ArrayList<String> ahep = new ArrayList<>();
+        ArrayList<String> aOthers = new ArrayList<>();
+
+        for (int i = 0; i < orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().size(); i++) {
+
+            for (int j = 0; j < orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().size(); j++) {
+                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType().equalsIgnoreCase("SERUM")) {
+                    aSerum.add("" + i);
+                } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType().equalsIgnoreCase("EDTA")) {
+                    aEdta.add("" + i);
+                } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType().contains("HEPARIN")) {
+                    ahep.add("" + i);
+                } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType().equalsIgnoreCase("FLUORIDE") || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType().contains("FLUORIDE")) {
+                    afluoride.add("" + i);
+                } else if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType().equalsIgnoreCase("URINE")) {
+                    aUrine.add("" + i);
+                } else {
+                    aOthers.add("" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(i).getSampleType().get(j).getSampleType());
+                }
+            }
+        }
+
+        if (aSerum.size() != 0) {
+            tv_serum.setText("" + aSerum.size() + " - SERUM");
+            cv_serum.setVisibility(View.VISIBLE);
+        }
+        if (aEdta.size() != 0) {
+            tv_edta.setText("" + aEdta.size() + " - EDTA");
+            cv_edta.setVisibility(View.VISIBLE);
+        }
+        if (ahep.size() != 0) {
+            tv_lith.setText("" + ahep.size() + " - HEPARIN");
+            cv_lith.setVisibility(View.VISIBLE);
+        }
+        if (afluoride.size() != 0) {
+            tv_flouride.setText("" + afluoride.size() + " - FLUORIDE");
+            cv_fluo.setVisibility(View.VISIBLE);
+        }
+        if (aUrine.size() != 0) {
+            tv_urine.setText("" + aUrine.size() + " - URINE");
+            cv_urine.setVisibility(View.VISIBLE);
+        }
+        if (aOthers.size() != 0) {
+            String Others = "";
+            Others = "" + aOthers.size();
+            ArrayList<String> newAothers = new ArrayList<>();
+            HashSet<String> removeDuplicate = new HashSet<>();
+            for (int i = 0; i < aOthers.size(); i++) {
+                newAothers.add(aOthers.get(i).toString());
+            }
+            removeDuplicate.addAll(newAothers);
+            aOthers.clear();
+            aOthers.addAll(removeDuplicate);
+            String others = TextUtils.join(",", aOthers);
+            tv_others.setText("" + Others + "-" + others);
+            cv_others.setVisibility(View.VISIBLE);
+        }
+
+        bottomSheetDialog.setContentView(bottomSheet);
+        bottomSheetDialog.setCancelable(true);
+        bottomSheetDialog.show();
     }
 
     private void DisplayBencount(int pos, MyViewHolder holder) {
@@ -248,18 +350,18 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (displayBencount){
+        if (displayBencount) {
             if (Bencount == 1) {
                 holder.txtBeneficiary.setText("" + Bencount + " Beneficiary");
             } else {
                 holder.txtBeneficiary.setText("" + Bencount + " Beneficiaries");
             }
-        }else{
+        } else {
             holder.lin_bencount.setVisibility(View.GONE);
         }
     }
 
-    private void DisplayDayWiselayoutColor(int pos , MyViewHolder holder) {
+    private void DisplayDayWiselayoutColor(int pos, MyViewHolder holder) {
         if (orderVisitDetailsModelsArr.get(pos).getAppointmentDate().equals(current_date)) {
             holder.txt_visit_day.setBackgroundColor(activity.getResources().getColor(R.color.test1));
             holder.txt_visit_day.setText("Today");
@@ -275,7 +377,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
 //            layoutMain.setBackgroundColor(activity.getResources().getColor(R.color.directVisit));
             holder.direct_visit.setVisibility(View.VISIBLE);
             holder.imgCall.setVisibility(View.GONE);
-        }else {
+        } else {
             holder.direct_visit.setVisibility(View.GONE);
             holder.imgCall.setVisibility(View.VISIBLE);
         }
@@ -283,9 +385,9 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
 
     private void CheckPPBSisPresent(int pos, MyViewHolder holder) {
         boolean isPPBSpresent = false;
-        String secondVisitTest  = orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getSecondVisitTest();
+        String secondVisitTest = orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getSecondVisitTest();
         if (!InputUtils.isNull(secondVisitTest) && secondVisitTest.contains(AppConstants.PPBS)) {
-            isPPBSpresent =  true;
+            isPPBSpresent = true;
         }
         if (isPPBSpresent) {
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
@@ -294,7 +396,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                 holder.view_seperater.setVisibility(View.VISIBLE);
                 holder.txtPPBSStatus.setVisibility(View.VISIBLE);
             }
-        }else {
+        } else {
             holder.txtPPBSStatus.setVisibility(View.GONE);
         }
     }
@@ -302,9 +404,9 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
     private void CheckRBSisPresent(int pos, MyViewHolder holder) {
 
         boolean isRBSpresent = false;
-        String secondVisitTest  = orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getSecondVisitTest();
+        String secondVisitTest = orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getSecondVisitTest();
         if (!InputUtils.isNull(secondVisitTest) && secondVisitTest.contains(AppConstants.RBS)) {
-            isRBSpresent =  true;
+            isRBSpresent = true;
         }
         if (isRBSpresent) {
             if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")) {
@@ -313,7 +415,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                 holder.view_seperater.setVisibility(View.VISIBLE);
                 holder.txtRBSStatus.setVisibility(View.VISIBLE);
             }
-        }else {
+        } else {
             holder.txtRBSStatus.setVisibility(View.GONE);
         }
     }
@@ -442,7 +544,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
             } else {
                 holder.txtFastingStatus.setVisibility(View.GONE);
             }
-        }else {
+        } else {
             holder.txtFastingStatus.setVisibility(View.GONE);
         }
 
@@ -507,15 +609,17 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null) {
                     if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits() != null) {
                         if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits().size() != 0) {
-                            strKit = CallViewKitsstr(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits());
+//                            strKit = CallViewKitsstr(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits());
+                            strKit = ""+orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getKits();
                         }
                     }
                 }
             }
         }
-        if (!StringUtils.isNull(strKit)){
-            holder.txtKits.setText(strKit);
-        }else{
+        if (!StringUtils.isNull(strKit)) {
+            holder.txtKits.setText("Kit");
+            holder.txtKits.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+        } else {
             holder.lin_kits.setVisibility(View.GONE);
         }
     }
@@ -560,7 +664,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
             ApplicationController.sendLatLongforOrderController = null;
         }
         ApplicationController.sendLatLongforOrderController = new SendLatLongforOrderController(activity);
-        ApplicationController.sendLatLongforOrderController.SendLatlongToToServer(orderVisitDetailsModelsArr.get(pos).getVisitId(),8);
+        ApplicationController.sendLatLongforOrderController.SendLatlongToToServer(orderVisitDetailsModelsArr.get(pos).getVisitId(), 8);
         ApplicationController.sendLatLongforOrderController.setOnResponseListener(new SendLatLongforOrderController.OnResponseListener() {
             @Override
             public void onSuccess(String response) {
@@ -592,7 +696,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
 
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isDirectVisit()) {
                     holder.imgCall.setVisibility(View.GONE);
-                }else {
+                } else {
                     holder.imgCall.setVisibility(View.VISIBLE);
                 }
                 if (onClickListeners != null) {
@@ -644,7 +748,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
 
     }
 
-    private void onReleaseButtonClicked(final int pos, MyViewHolder holder,String s_name,String s_order) {
+    private void onReleaseButtonClicked(final int pos, MyViewHolder holder, String s_name, String s_order) {
 
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
 
@@ -715,7 +819,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
 //                cancelVisit = "y";
                 cancelVisit = "y";
             } else {
-                if (toShowResheduleOption){
+                if (toShowResheduleOption) {
                     tv_ord_pass.setVisibility(View.GONE);
                     tv_ord_rel.setVisibility(View.VISIBLE);
                     tv_ord_resch.setVisibility(View.VISIBLE);
@@ -723,7 +827,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                /*
                     items = new String[]{"Order Reschedule",
                             "Request Release"};*/
-                }else{
+                } else {
                     tv_ord_pass.setVisibility(View.GONE);
                     tv_ord_rel.setVisibility(View.VISIBLE);
                     tv_ord_resch.setVisibility(View.GONE);
@@ -746,7 +850,11 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
         tv_ord_rel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+                //TODO Removed Release pop up
+                if (onClickListeners != null) {
+                    onClickListeners.onItemRelease(orderVisitDetailsModelsArr.get(pos));
+                }
+            /*    final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
                 View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.logout_bottomsheet, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
                 TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
                 TextView tv_text1 = bottomSheet.findViewById(R.id.tv_text1);
@@ -773,7 +881,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                 });
                 bottomSheetDialog.setContentView(bottomSheet);
                 bottomSheetDialog.setCancelable(false);
-                bottomSheetDialog.show();
+                bottomSheetDialog.show();*/
             }
         });
 
@@ -918,8 +1026,8 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
     private void CallOrderStatusChangeAPI(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel,orderStatusChangeRequestModel.getId());
-        globalClass.showProgressDialog(activity,activity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
+        Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
+        globalClass.showProgressDialog(activity, activity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -948,6 +1056,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalClass.hideProgressDialog(activity);
@@ -963,7 +1072,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
         serviceUpdateRequestModel.setVisitId(orderVisitDetailsModelsArr.get(pos).getVisitId());
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallServiceUpdateAPI(serviceUpdateRequestModel);
-        globalClass.showProgressDialog(activity,activity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
+        globalClass.showProgressDialog(activity, activity.getResources().getString(R.string.progress_message_changing_order_status_please_wait));
 
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -976,7 +1085,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(activity,TSP_OrdersDisplayFragment_new.class);
+                                    Intent intent = new Intent(activity, TSP_OrdersDisplayFragment_new.class);
                                     activity.startActivity(intent);
 //                                    homeScreenActivity.pushFragments(TSP_OrdersDisplayFragment_new.newInstance(), false, false, TSP_OrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TSP_OrdersDisplayFragment_new.TAG_FRAGMENT);
                                     dialog.dismiss();
@@ -989,6 +1098,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
                 } else {
                 }
             }
+
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 globalClass.hideProgressDialog(activity);

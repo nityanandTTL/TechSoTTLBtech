@@ -332,7 +332,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                     }
 
                     CallCartAPIFlag = 1;
-
+                    AddRemoveTestAPIFlag = 0;
                     CallSubmitAPIforEditBen(orderNo);
 
                 }
@@ -1723,16 +1723,15 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 AddBenCartFlag = 0;
                 ShowdatainAmount(cartAPIResponseModel);
             } else {
-                if (!FlagADDEditBen &&CallCartAPIFlag == 1) {
+                if (AddRemoveTestAPIFlag == 0 && CallCartAPIFlag == 1) {
 //                    CallCartAPIFlag = 0;
                     ShowdatainAmount(cartAPIResponseModel);
                     CallApiForSubMitAfterCartAPI(cartAPIResponseModel);
-                }else if (CallCartAPIFlag == 1 && AddRemoveTestAPIFlag == 1){
+                } else if (CallCartAPIFlag == 1 && AddRemoveTestAPIFlag == 1) {
                     CallCartAPIFlag = 0;
                     AddRemoveTestAPIFlag = 0;
                     ShowdatainAmount(cartAPIResponseModel);
-                }
-                else {
+                } else {
                     CallApiForSubMitAfterCartAPI(cartAPIResponseModel);
                 }
 

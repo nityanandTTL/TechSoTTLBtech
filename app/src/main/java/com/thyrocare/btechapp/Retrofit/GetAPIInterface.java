@@ -32,6 +32,7 @@ import com.thyrocare.btechapp.models.api.response.NewBtechAvaliabilityResponseMo
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.VersionControlResponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderPassresponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderServedResponseModel;
+import com.thyrocare.btechapp.models.api.response.PEAuthResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentModeMasterResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentProcessAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsResponseModel;
@@ -284,5 +285,8 @@ public interface GetAPIInterface {
     @GET("api/BenTestList/GetTestList/{benID}")
     Call<GetTestListResponseModel> CallGetTestDetailsAPI(@Path("benID") String benID);
 
+    @Headers("Content-Type: application/json")
+    @GET("api/integration/v1/auth")
+    Call<PEAuthResponseModel> callPEAuthorization(@Header("x-source") String source,@Header("x-client") String client);
 }
 

@@ -1300,7 +1300,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
     private void UploadSelfieAPI() {
         String BtechID = appPreferenceManager.getLoginResponseModel().getUserID();
-        final String OrderNo = orderVisitDetailsModel.getVisitId();
+        final String OrderNo = orderVisitDetailsModel.getVisitId().trim();
 
         BTechSelfieRequestModel bTechSelfieRequestModel = new BTechSelfieRequestModel();
         bTechSelfieRequestModel.setBtechid(BtechID);

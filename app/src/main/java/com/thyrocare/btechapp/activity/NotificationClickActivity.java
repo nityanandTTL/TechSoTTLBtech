@@ -6,8 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
@@ -22,7 +24,6 @@ import com.thyrocare.btechapp.delegate.ConfirmOrderReleaseDialogButtonClickedDel
 import com.thyrocare.btechapp.dialog.ConfirmRequestReleaseDialog;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
-
 
 
 import com.thyrocare.btechapp.utils.app.BundleConstants;
@@ -104,7 +105,9 @@ public class NotificationClickActivity extends AppCompatActivity {
     }
 
     private void CallRejectDialog() {
-        final AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
+        CallConfirmRequestReleaseDialog();
+        //TODO Removed Relese pop up
+       /* final AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
         builder1.setTitle("Warning ")
                 .setMessage("Rs 200 debit will be levied for Releasing this Order ").setPositiveButton("Accept Debit", new DialogInterface.OnClickListener() {
             @Override
@@ -119,7 +122,7 @@ public class NotificationClickActivity extends AppCompatActivity {
                 CallRestartApp();
             }
         });
-        builder1.show();
+        builder1.show();*/
     }
 
     private void CallConfirmRequestReleaseDialog() {
@@ -157,6 +160,7 @@ public class NotificationClickActivity extends AppCompatActivity {
                 TastyToast.makeText(mContext, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
             }
         }
+
         @Override
         public void onCancelButtonClicked() {
             CallRestartApp();
@@ -175,9 +179,9 @@ public class NotificationClickActivity extends AppCompatActivity {
                 global.hideProgressDialog(mActivity);
                 if (response.code() == 200 || response.code() == 204) {
                     BundleConstants.ORDER_Notification = true;
-                    if (orderStatusChangeRequestModel.getStatus() == 8){
+                    if (orderStatusChangeRequestModel.getStatus() == 8) {
                         TastyToast.makeText(mActivity, "Order Accepted Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-                    }else{
+                    } else {
                         TastyToast.makeText(mActivity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                     }
                     CallRestartApp();

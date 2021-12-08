@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.Controller.PostTokenController;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.BtechWiseVersionTrackerRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.NotificationMappingRequestModel;
@@ -174,10 +175,13 @@ public class LoginActivity extends AppCompatActivity {
                 globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponseModel responseModel = response.body();
-                    if (responseModel.getRole().equals(AppConstants.LME_ROLE_ID)) {
-//                        globalclass.showCustomToast(mActivity, SUCCESS_LOGIN, Toast.LENGTH_LONG);
+                    if (/*BuildConfig.DEBUG ||*/ Global.checkLogin(responseModel.getCompanyName())) {
                         OnLoginResponseReceived(responseModel);
                     } else {
+                        if (responseModel.getRole().equals(AppConstants.LME_ROLE_ID)) {
+//                        globalclass.showCustomToast(mActivity, SUCCESS_LOGIN, Toast.LENGTH_LONG);
+                            OnLoginResponseReceived(responseModel);
+                        } else {
                         /*if (responseModel != null && !StringUtils.isNull(responseModel.getRespId()) && responseModel.getRespId().equalsIgnoreCase("1")){
                             new LogUserActivityTagging(mActivity, LOGIN);
                             OnLoginResponseReceived(responseModel);
@@ -185,8 +189,10 @@ public class LoginActivity extends AppCompatActivity {
                             TastyToast.makeText(mActivity, !InputUtils.isNull(responseModel.getRespMessage()) ? responseModel.getRespMessage() :SomethingWentwrngMsg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
                         }*/
 
-                        CallDeviceIDLoginAPI(responseModel);
+                            CallDeviceIDLoginAPI(responseModel);
+                        }
                     }
+
                 } else {
                     globalclass.showCustomToast(mActivity, INVALID_LOG, Toast.LENGTH_LONG);
                 }
@@ -235,7 +241,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void OnLoginResponseReceived(LoginResponseModel responseModel) {
 
-        new LogUserActivityTagging(mActivity, LOGIN,"");
+        new LogUserActivityTagging(mActivity, LOGIN, "");
         if (responseModel != null) {
             //btech_hub
             appPreferenceManager.setLoginRole(responseModel.getRole());
@@ -290,7 +296,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-
 
 
     }

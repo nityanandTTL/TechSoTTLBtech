@@ -434,4 +434,7 @@ public interface PostAPIInterface {
     @POST("api/OrderAllocation/GetOrderPaytype")
     Call<PaytypeResponseModel> getOrderPaytype(@Body PaytypeRequestModel paytypeRequestModel);
 
+    @POST("/api/partner-integration/v1/events")
+    Call<PaytypeResponseModel> getStatusUpdate(@Body PaytypeRequestModel paytypeRequestModel);
+
 }

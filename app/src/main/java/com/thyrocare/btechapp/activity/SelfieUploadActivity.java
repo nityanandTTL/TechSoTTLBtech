@@ -438,7 +438,28 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                         leaveFlag = selfieUploadResponseModel.getFlag();
                         fromdateapi = selfieUploadResponseModel.getFromDate();
                         todateapi = selfieUploadResponseModel.getToDate();
-                        callMasterSync();
+                        if(!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                            callMasterSync();
+                        }else{
+                            try {
+                                appPreferenceManager.setIsAfterLogin(true);
+                                isAfterMasterSyncDone = true;
+                                appPreferenceManager.setLeaveFlag(leaveFlag);
+                                appPreferenceManager.setLeaveFromDate(fromdateapi);
+                                appPreferenceManager.setLeaveToDate(todateapi);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            try {
+                                Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                                i.putExtra("LEAVEINTIMATION", "0");
+                                startActivity(i);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
                     }
 
                 } else if (response.code() == 401) {

@@ -711,23 +711,39 @@ public class HomeScreenActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //stopService(TImeCheckerIntent);
-
+        stopService(TImeCheckerIntent);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //stopService(TImeCheckerIntent);
+        stopService(TImeCheckerIntent);
     }
 
     @Override
     public void onBackPressed() {
 
-
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
-            //  stopService(TImeCheckerIntent);
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle("Close Application")
+                    .setMessage("Are you sure you want to close the application")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            stopService(TImeCheckerIntent);
+                            finishAffinity();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+
             return;
         }
 
@@ -1251,13 +1267,17 @@ public class HomeScreenActivity extends AppCompatActivity {
 
     public void CallCheckUserLoginDeviceId() {
         if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
-            if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+            if (InputUtils.CheckEqualIgnoreCase(appPreferenceManager.getLoginResponseModel().getCompanyName(), Global.PE_BTech)) {
 
             } else {
-                if (isNetworkAvailable(activity)) {
-                    CallgetLoginDeviceDataApi();
+                if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+
                 } else {
-                    Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                    if (isNetworkAvailable(activity)) {
+                        CallgetLoginDeviceDataApi();
+                    } else {
+                        Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
