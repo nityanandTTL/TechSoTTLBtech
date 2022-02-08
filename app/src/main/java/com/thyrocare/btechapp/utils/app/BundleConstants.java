@@ -35,10 +35,12 @@ public class BundleConstants {
     //Bundle Constants
     public static final int ADDEDITBENREQUESTCODE = 3214;
     public static final int ADDEDITTESTREQUESTCODE = 3457;
+    public static final String PE_TEST_LIST_MODEL = "petestlistmodel";
     public static final String VISIT_ORDER_DETAILS_MODEL = "visitOrderDetailsModel";
     public static final String CAMP_ORDER_DETAILS_MODEL = "campOrderDetailsModel";
     public static final String BENEFICIARY_DETAILS_MODEL = "beneficiaryDetailsModel";
     public static final String ADD_BEN_SELECTED_TESTLIST = "addBenSelectedTestlist";
+    public static final String ADD_BEN_SELECTED_TESTLISTPE = "addBenSelectedTestlistPE";
     public static final String EDIT_BEN_SELECTED_TESTLIST = "EditBenSelectedTestlist";
     public static final String ORDER_DETAILS_MODEL = "orderDetailsModel";
     public static final String HUB_BTECH_MODEL = "hubBtechModel";
@@ -119,4 +121,6 @@ public class BundleConstants {
     public static String ADDRESS="address";
     public static String newTimeTWO="newTimeTWO";
     public static String newTimeTWOHalf = "newTimeTWOHalf";
+    public static String isNBT = "isNBT";
+    public static String PERATES ="PETestRates";
 }

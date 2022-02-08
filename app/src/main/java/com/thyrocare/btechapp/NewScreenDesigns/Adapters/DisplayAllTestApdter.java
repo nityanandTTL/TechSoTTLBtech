@@ -3,6 +3,7 @@ package com.thyrocare.btechapp.NewScreenDesigns.Adapters;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Paint;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
+import com.thyrocare.btechapp.models.api.response.GetPETestResponseModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.ChildTestsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
@@ -49,6 +51,12 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
     private ArrayList<TestRateMasterModel> tempselectedTests;
     private List<String> tempselectedTests1;
     private OnClickListeners onClickListeners;
+    private ArrayList<GetPETestResponseModel.DataDTO> peTestRateModelArry;
+    private ArrayList<GetPETestResponseModel.DataDTO> peNewTestRateModelArry = new ArrayList<>();
+    private ArrayList<GetPETestResponseModel.DataDTO> peFilteredList = new ArrayList<>();
+    private ArrayList<GetPETestResponseModel.DataDTO> peSelectedTests = new ArrayList<>();
+    int flag;
+
 
     public DisplayAllTestApdter(Activity activity, ArrayList<TestRateMasterModel> testRateMasterModelArry, ArrayList<TestRateMasterModel> allProductList , ArrayList<TestRateMasterModel> selectedTests, boolean isM) {
         this.activity = activity;
@@ -60,14 +68,28 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
         this.filteredList = testRateMasterModelArry;
         this.selectedTests = selectedTests;
         this.isM = isM;
+        flag = 1;
+
     }
+
+    public DisplayAllTestApdter(Activity activity, ArrayList<GetPETestResponseModel.DataDTO> peTestRateModelArry, ArrayList<GetPETestResponseModel.DataDTO> peSelectedTests) {
+        this.activity = activity;
+        appPreferenceManager = new AppPreferenceManager(activity);
+        globalClass = new Global(activity);
+        this.peTestRateModelArry = peTestRateModelArry;
+        this.peFilteredList = peTestRateModelArry;
+        this.peSelectedTests = peSelectedTests;
+        flag = 2;
+    }
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView img_test_type;
-        ImageView imgCheck, imgChecked,img_unCheckDisabled;
-        TextView txt_test, txt_dis_amt;
+        ImageView imgCheck, imgChecked, img_unCheckDisabled;
+        TextView txt_test, txt_dis_amt, mrp_rate, dis_percent;
         ImageView imgTestFasting;
+        LinearLayout ll_discount;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -77,8 +99,11 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
             img_test_type = (ImageView) itemView.findViewById(R.id.img_test_type);
             imgCheck = (ImageView) itemView.findViewById(R.id.img_check);
             imgChecked = (ImageView) itemView.findViewById(R.id.img_checked);
+            imgTestFasting = itemView.findViewById(R.id.test_fasting);
             img_unCheckDisabled = (ImageView) itemView.findViewById(R.id.img_unCheckDisabled);
-            imgTestFasting = (ImageView) itemView.findViewById(R.id.test_fasting);
+            ll_discount = itemView.findViewById(R.id.ll_discount);
+            mrp_rate = itemView.findViewById(R.id.mrp_rate);
+            dis_percent = itemView.findViewById(R.id.dis_percent);
         }
     }
 
@@ -91,21 +116,25 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
 
-        final TestRateMasterModel testRateMasterModel = filteredList.get(position);
-        holder.txt_dis_amt.setText("₹ " + testRateMasterModel.getRate() + "/-");
-        if (!StringUtils.isNull(testRateMasterModel.getTestType()) && (testRateMasterModel.getTestType().equals("TEST") || testRateMasterModel.getTestType().equals("OFFER"))
-                && !StringUtils.isNull(testRateMasterModel.getDescription())) {
-            // holder.txt_test.setText(testRateMasterModel.getDescription()+"("+testRateMasterModel.getTestCode()+")");
-            holder.txt_test.setText(testRateMasterModel.getDescription());
-        } else {
-            //holder.txt_test.setText(testRateMasterModel.getDescription());
-            holder.txt_test.setText(testRateMasterModel.getTestCode());
-        }
 
-        //todo tejas t  dont show fasting non fasting ----------------
-        holder.imgTestFasting.setVisibility(View.GONE);//todo tejas t ------
+        if (flag == 1) {
+
+            final TestRateMasterModel testRateMasterModel = filteredList.get(position);
+            holder.ll_discount.setVisibility(View.GONE);
+            holder.txt_dis_amt.setText("₹ " + testRateMasterModel.getRate() + "/-");
+            if (!StringUtils.isNull(testRateMasterModel.getTestType()) && (testRateMasterModel.getTestType().equals("TEST") || testRateMasterModel.getTestType().equals("OFFER"))
+                    && !StringUtils.isNull(testRateMasterModel.getDescription())) {
+                // holder.txt_test.setText(testRateMasterModel.getDescription()+"("+testRateMasterModel.getTestCode()+")");
+                holder.txt_test.setText(testRateMasterModel.getDescription());
+            } else {
+                //holder.txt_test.setText(testRateMasterModel.getDescription());
+                holder.txt_test.setText(testRateMasterModel.getTestCode());
+            }
+
+            //todo tejas t  dont show fasting non fasting ----------------
+            holder.imgTestFasting.setVisibility(View.GONE);//todo tejas t ------
        /* if(testRateMasterModel.getFasting().equalsIgnoreCase("fasting")){
             holder.imgTestFasting.setVisibility(View.VISIBLE);
             holder.imgTestFasting.setImageDrawable(activity.getResources().getDrawable(R.drawable.visit_fasting));
@@ -117,240 +146,294 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
         else{
             holder.imgTestFasting.setVisibility(View.INVISIBLE);
         }*/
-        //todo tejas t  dont show fasting non fasting ----------------
+            //todo tejas t  dont show fasting non fasting ----------------
 
-        holder.imgChecked.setVisibility(View.GONE);
-        holder.img_unCheckDisabled.setVisibility(View.GONE);
-        holder.imgCheck.setVisibility(View.VISIBLE);
-        if (selectedTests != null && selectedTests.size() > 0) {
-            for (int i = 0; i < selectedTests.size(); i++) {
-                TestRateMasterModel selectedTestModel = selectedTests.get(i);
-                if (selectedTestModel.getTestCode().equals(testRateMasterModel.getTestCode())) {
-                    holder.imgChecked.setVisibility(View.VISIBLE);
-                    holder.imgCheck.setVisibility(View.GONE);
-                    break;
-                } else if (selectedTestModel.getChldtests() != null && testRateMasterModel.getChldtests() != null && selectedTestModel.checkIfChildsContained(testRateMasterModel)) {
-                    holder.img_unCheckDisabled.setVisibility(View.VISIBLE);
-                    holder.imgChecked.setVisibility(View.GONE);
-                    holder.imgCheck.setVisibility(View.GONE);
-                    break;
-                } else {
-                    if (selectedTestModel.getChldtests() != null && selectedTestModel.getChldtests().size() > 0) {
-                        for (ChildTestsModel ctm :
-                                selectedTestModel.getChldtests()) {
-                            if (ctm.getChildTestCode().equals(testRateMasterModel.getTestCode())) {
-                                holder.img_unCheckDisabled.setVisibility(View.VISIBLE);
-                                holder.imgChecked.setVisibility(View.GONE);
-                                holder.imgCheck.setVisibility(View.GONE);
-                                break;
-                            } else {
-                                holder.img_unCheckDisabled.setVisibility(View.GONE);
-                                holder.imgChecked.setVisibility(View.GONE);
-                                holder.imgCheck.setVisibility(View.VISIBLE);
+            holder.imgChecked.setVisibility(View.GONE);
+            holder.img_unCheckDisabled.setVisibility(View.GONE);
+            holder.imgCheck.setVisibility(View.VISIBLE);
+            if (selectedTests != null && selectedTests.size() > 0) {
+                for (int i = 0; i < selectedTests.size(); i++) {
+                    TestRateMasterModel selectedTestModel = selectedTests.get(i);
+                    if (selectedTestModel.getTestCode().equals(testRateMasterModel.getTestCode())) {
+                        holder.imgChecked.setVisibility(View.VISIBLE);
+                        holder.imgCheck.setVisibility(View.GONE);
+                        break;
+                    } else if (selectedTestModel.getChldtests() != null && testRateMasterModel.getChldtests() != null && selectedTestModel.checkIfChildsContained(testRateMasterModel)) {
+                        holder.img_unCheckDisabled.setVisibility(View.VISIBLE);
+                        holder.imgChecked.setVisibility(View.GONE);
+                        holder.imgCheck.setVisibility(View.GONE);
+                        break;
+                    } else {
+                        if (selectedTestModel.getChldtests() != null && selectedTestModel.getChldtests().size() > 0) {
+                            for (ChildTestsModel ctm :
+                                    selectedTestModel.getChldtests()) {
+                                if (ctm.getChildTestCode().equals(testRateMasterModel.getTestCode())) {
+                                    holder.img_unCheckDisabled.setVisibility(View.VISIBLE);
+                                    holder.imgChecked.setVisibility(View.GONE);
+                                    holder.imgCheck.setVisibility(View.GONE);
+                                    break;
+                                } else {
+                                    holder.img_unCheckDisabled.setVisibility(View.GONE);
+                                    holder.imgChecked.setVisibility(View.GONE);
+                                    holder.imgCheck.setVisibility(View.VISIBLE);
+                                }
+                            }
+//                        break;
+                        } else {
+                            holder.img_unCheckDisabled.setVisibility(View.GONE);
+                            holder.imgChecked.setVisibility(View.GONE);
+                            holder.imgCheck.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            } else {
+                holder.img_unCheckDisabled.setVisibility(View.GONE);
+                holder.imgChecked.setVisibility(View.GONE);
+                holder.imgCheck.setVisibility(View.VISIBLE);
+            }
+
+            holder.imgCheck.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String str = "";
+                    if (testRateMasterModel.getTestType().equalsIgnoreCase("OFFER")) {
+                        str = str + testRateMasterModel.getDescription() + ",";
+                    } else {
+                        str = str + testRateMasterModel.getTestCode() + ",";
+                    }
+                    if ((str.contains("PSA") || str.contains("FPSA")) && !isM) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setMessage(PSAandFPSAforMaleMsg)
+                                .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setCancelable(false)
+                                .show();
+                    } else {
+                        String slectedpackage = "";
+
+                        if (testRateMasterModel.getTestType().equals("TEST") || testRateMasterModel.getTestType().equals("OFFER")
+                                && !StringUtils.isNull(testRateMasterModel.getDescription())) {
+                            slectedpackage = testRateMasterModel.getDescription();
+                        } else {
+                            slectedpackage = testRateMasterModel.getTestCode();
+                        }
+                        if (testRateMasterModel.getTestType().equalsIgnoreCase("OFFER") && checkIfOfferExists(selectedTests)) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setTitle("Confirm Action")
+                                    .setMessage(SelectingofferwillreplaceofferMsg)
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            if (onClickListeners != null) {
+                                                onClickListeners.onCheckChange(selectedTests);
+                                            }
+                                        }
+                                    })
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            selectedTests = replaceOffer(selectedTests, testRateMasterModel);
+                                            if (onClickListeners != null) {
+                                                onClickListeners.onCheckChange(selectedTests);
+                                            }
+                                        }
+                                    })
+                                    .setCancelable(false)
+                                    .show();
+
+                        } else if (testRateMasterModel.getTestType().equalsIgnoreCase("POP") && checkIfPOPExists(selectedTests)) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setTitle("Confirm Action")
+                                    .setMessage(SelectingPOPwillreplaceofferMsg)
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            if (onClickListeners != null) {
+                                                onClickListeners.onCheckChange(selectedTests);
+                                            }
+                                        }
+                                    })
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            selectedTests = replacePOP(selectedTests, testRateMasterModel);
+                                            if (onClickListeners != null) {
+                                                onClickListeners.onCheckChange(selectedTests);
+                                            }
+                                        }
+                                    })
+                                    .setCancelable(false)
+                                    .show();
+
+                        } else {
+
+                            tempselectedTests = new ArrayList<>();
+                            tempselectedTests1 = new ArrayList<>();
+
+                            if (testRateMasterModel.getChldtests() != null) {
+                                for (int i = 0; i < testRateMasterModel.getChldtests().size(); i++) {
+                                    //tejas t -----------------------------
+                                    for (int j = 0; j < selectedTests.size(); j++) {
+
+                                        if (testRateMasterModel.getChldtests().get(i).getChildTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
+                                            MessageLogger.PrintMsg("Cart selectedtestlist Description :" + selectedTests.get(j).getDescription() + "Cart selectedtestlist Code :" + selectedTests.get(j).getTestCode());
+
+                                            if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
+                                                    && !StringUtils.isNull(selectedTests.get(j).getDescription())) {
+                                                tempselectedTests1.add(selectedTests.get(j).getDescription());
+                                            } else {
+                                                tempselectedTests1.add(selectedTests.get(j).getTestCode());
+                                            }
+
+                                            tempselectedTests.add(selectedTests.get(j));
+                                        }
+                                    }
+                                }
+                            }
+                            for (int j = 0; j < selectedTests.size(); j++) {
+                                TestRateMasterModel selectedTestModel123 = selectedTests.get(j);
+                                if (selectedTestModel123.getChldtests() != null && testRateMasterModel.getChldtests() != null && testRateMasterModel.checkIfChildsContained(selectedTestModel123)) {
+
+                                    if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
+                                            && !StringUtils.isNull(selectedTests.get(j).getDescription())) {
+                                        tempselectedTests1.add(selectedTests.get(j).getDescription());
+                                    } else {
+                                        tempselectedTests1.add(selectedTests.get(j).getTestCode());
+                                    }
+                                    tempselectedTests.add(selectedTestModel123);
+                                }
+                            }
+
+                            if (tempselectedTests.size() > 0 && tempselectedTests != null) {
+                                String cartproduct = TextUtils.join(",", tempselectedTests1);
+                                globalClass.showalert_OK(Html.fromHtml("<b>" + cartproduct + "</b>" + " has been upgraded to " + "<b>" + slectedpackage + "</b>").toString(), activity);
+                            }
+                            for (int i = 0; i < tempselectedTests.size(); i++) {
+                                for (int j = 0; j < selectedTests.size(); j++) {
+                                    if (tempselectedTests.get(i).getTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
+                                        selectedTests.remove(j);
+                                    }
+                                }
+                            }
+                            //tejas t -----------------------------
+                            selectedTests.add(testRateMasterModel);
+                            if (onClickListeners != null) {
+                                onClickListeners.onCheckChange(selectedTests);
                             }
                         }
-//                        break;
+                    }
+                }
+            });
+
+            holder.img_unCheckDisabled.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean isSelectedDueToParent = false;
+                    String parentTestCode = "";
+                    if (selectedTests != null && selectedTests.size() > 0) {
+                        for (int i = 0; i < selectedTests.size(); i++) {
+                            TestRateMasterModel selectedTestModel = selectedTests.get(i);
+                            if (selectedTestModel.getTestCode().equals(testRateMasterModel.getTestCode())) {
+                                isSelectedDueToParent = false;
+                                parentTestCode = "";
+                                break;
+                            } else if (selectedTestModel.getChldtests() != null && testRateMasterModel.getChldtests() != null && selectedTestModel.checkIfChildsContained(testRateMasterModel)) {
+                                isSelectedDueToParent = true;
+                                parentTestCode = selectedTestModel.getTestCode();
+                            } else {
+                                if (selectedTestModel.getChldtests() != null && selectedTestModel.getChldtests().size() > 0) {
+                                    for (ChildTestsModel ctm :
+                                            selectedTestModel.getChldtests()) {
+                                        if (ctm.getChildTestCode().equals(testRateMasterModel.getTestCode())) {
+                                            isSelectedDueToParent = true;
+                                            parentTestCode = selectedTestModel.getTestCode();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (isSelectedDueToParent) {
+                        Toast.makeText(activity, "This test was selected because of its parent. If you wish to remove this test please remove the parent: " + parentTestCode, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            holder.imgChecked.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    selectedTests.remove(testRateMasterModel);
+                    if (onClickListeners != null) {
+                        onClickListeners.onCheckChange(selectedTests);
+                    }
+                }
+            });
+
+        } else if (flag == 2) {
+
+            //TODO for PE login
+            final GetPETestResponseModel.DataDTO peResponseModel = peFilteredList.get(position);
+            holder.ll_discount.setVisibility(View.VISIBLE);
+            holder.imgTestFasting.setVisibility(View.GONE);
+            holder.txt_dis_amt.setText(activity.getResources().getString(R.string.rupee_symbol) + peResponseModel.getPrice());
+            holder.dis_percent.setText(peResponseModel.getDiscount_percent()+ " %");
+            holder.mrp_rate.setText(activity.getResources().getString(R.string.rupee_symbol) + peResponseModel.getMrp());
+            holder.mrp_rate.setPaintFlags(holder.mrp_rate.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.txt_test.setText(peResponseModel.getName());
+
+            holder.imgChecked.setVisibility(View.GONE);
+            holder.imgCheck.setVisibility(View.VISIBLE);
+
+
+            if (peSelectedTests != null && peSelectedTests.size() > 0) {
+                for (int i = 0; i < peSelectedTests.size(); i++) {
+                    GetPETestResponseModel.DataDTO selectedTestModel = peSelectedTests.get(i);
+                    if (selectedTestModel.getName().equals(peResponseModel.getName())) {
+                        holder.imgChecked.setVisibility(View.VISIBLE);
+                        holder.imgCheck.setVisibility(View.GONE);
+                        break;
                     } else {
                         holder.img_unCheckDisabled.setVisibility(View.GONE);
                         holder.imgChecked.setVisibility(View.GONE);
                         holder.imgCheck.setVisibility(View.VISIBLE);
+
                     }
                 }
+            } else {
+                holder.img_unCheckDisabled.setVisibility(View.GONE);
+                holder.imgChecked.setVisibility(View.GONE);
+                holder.imgCheck.setVisibility(View.VISIBLE);
             }
-        } else {
-            holder.img_unCheckDisabled.setVisibility(View.GONE);
-            holder.imgChecked.setVisibility(View.GONE);
-            holder.imgCheck.setVisibility(View.VISIBLE);
+
+            holder.imgCheck.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    peSelectedTests.add(peResponseModel);
+                    if (onClickListeners != null) {
+                        onClickListeners.onPECheckChange(peSelectedTests);
+                    }
+                }
+            });
+
+            holder.imgChecked.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    peSelectedTests.remove(peResponseModel);
+                    if (onClickListeners != null) {
+                        onClickListeners.onPECheckChange(peSelectedTests);
+                    }
+                }
+            });
         }
-
-        holder.imgCheck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String str = "";
-                if (testRateMasterModel.getTestType().equalsIgnoreCase("OFFER")) {
-                    str = str + testRateMasterModel.getDescription() + ",";
-                } else {
-                    str = str + testRateMasterModel.getTestCode() + ",";
-                }
-                if ((str.contains("PSA") || str.contains("FPSA")) && !isM) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setMessage(PSAandFPSAforMaleMsg)
-                            .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setCancelable(false)
-                            .show();
-                } else {
-                    String slectedpackage = "";
-
-                    if (testRateMasterModel.getTestType().equals("TEST") || testRateMasterModel.getTestType().equals("OFFER")
-                            && !StringUtils.isNull(testRateMasterModel.getDescription())) {
-                        slectedpackage = testRateMasterModel.getDescription();
-                    } else {
-                        slectedpackage = testRateMasterModel.getTestCode();
-                    }
-                    if (testRateMasterModel.getTestType().equalsIgnoreCase("OFFER") && checkIfOfferExists(selectedTests)) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setTitle("Confirm Action")
-                                .setMessage(SelectingofferwillreplaceofferMsg)
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        if (onClickListeners != null) {
-                                            onClickListeners.onCheckChange(selectedTests);
-                                        }
-                                    }
-                                })
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        selectedTests = replaceOffer(selectedTests, testRateMasterModel);
-                                        if (onClickListeners != null) {
-                                            onClickListeners.onCheckChange(selectedTests);
-                                        }
-                                    }
-                                })
-                                .setCancelable(false)
-                                .show();
-
-                    }else if (testRateMasterModel.getTestType().equalsIgnoreCase("POP") && checkIfPOPExists(selectedTests)) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setTitle("Confirm Action")
-                                .setMessage(SelectingPOPwillreplaceofferMsg)
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        if (onClickListeners != null) {
-                                            onClickListeners.onCheckChange(selectedTests);
-                                        }
-                                    }
-                                })
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        selectedTests = replacePOP(selectedTests, testRateMasterModel);
-                                        if (onClickListeners != null) {
-                                            onClickListeners.onCheckChange(selectedTests);
-                                        }
-                                    }
-                                })
-                                .setCancelable(false)
-                                .show();
-
-                    } else {
-
-                        tempselectedTests = new ArrayList<>();
-                        tempselectedTests1 = new ArrayList<>();
-
-                        if (testRateMasterModel.getChldtests() != null) {
-                            for (int i = 0; i < testRateMasterModel.getChldtests().size(); i++) {
-                                //tejas t -----------------------------
-                                for (int j = 0; j < selectedTests.size(); j++) {
-
-                                    if (testRateMasterModel.getChldtests().get(i).getChildTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
-                                        MessageLogger.PrintMsg("Cart selectedtestlist Description :" + selectedTests.get(j).getDescription() + "Cart selectedtestlist Code :" + selectedTests.get(j).getTestCode());
-
-                                        if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
-                                                && !StringUtils.isNull(selectedTests.get(j).getDescription())) {
-                                            tempselectedTests1.add(selectedTests.get(j).getDescription());
-                                        } else {
-                                            tempselectedTests1.add(selectedTests.get(j).getTestCode());
-                                        }
-
-                                        tempselectedTests.add(selectedTests.get(j));
-                                    }
-                                }
-                            }
-                        }
-                        for (int j = 0; j < selectedTests.size(); j++) {
-                            TestRateMasterModel selectedTestModel123 = selectedTests.get(j);
-                            if (selectedTestModel123.getChldtests() != null && testRateMasterModel.getChldtests() != null && testRateMasterModel.checkIfChildsContained(selectedTestModel123)) {
-
-                                if (selectedTests.get(j).getTestType().equals("TEST") || selectedTests.get(j).getTestType().equals("OFFER")
-                                        && !StringUtils.isNull(selectedTests.get(j).getDescription())) {
-                                    tempselectedTests1.add(selectedTests.get(j).getDescription());
-                                } else {
-                                    tempselectedTests1.add(selectedTests.get(j).getTestCode());
-                                }
-                                tempselectedTests.add(selectedTestModel123);
-                            }
-                        }
-
-                        if (tempselectedTests.size() > 0 && tempselectedTests != null) {
-                            String cartproduct = TextUtils.join(",", tempselectedTests1);
-                            globalClass.showalert_OK(Html.fromHtml("<b>" + cartproduct + "</b>" + " has been upgraded to " + "<b>" + slectedpackage + "</b>").toString(), activity);
-                        }
-                        for (int i = 0; i < tempselectedTests.size(); i++) {
-                            for (int j = 0; j < selectedTests.size(); j++) {
-                                if (tempselectedTests.get(i).getTestCode().equalsIgnoreCase(selectedTests.get(j).getTestCode())) {
-                                    selectedTests.remove(j);
-                                }
-                            }
-                        }
-                        //tejas t -----------------------------
-                        selectedTests.add(testRateMasterModel);
-                        if (onClickListeners != null) {
-                            onClickListeners.onCheckChange(selectedTests);
-                        }
-                    }
-                }
-
-
-            }
-        });
-
-        holder.img_unCheckDisabled.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isSelectedDueToParent = false;
-                String parentTestCode = "";
-                if (selectedTests != null && selectedTests.size() > 0) {
-                    for (int i = 0; i < selectedTests.size(); i++) {
-                        TestRateMasterModel selectedTestModel = selectedTests.get(i);
-                        if (selectedTestModel.getTestCode().equals(testRateMasterModel.getTestCode())) {
-                            isSelectedDueToParent = false;
-                            parentTestCode = "";
-                            break;
-                        }else if (selectedTestModel.getChldtests() != null && testRateMasterModel.getChldtests() != null && selectedTestModel.checkIfChildsContained(testRateMasterModel)) {
-                            isSelectedDueToParent = true;
-                            parentTestCode = selectedTestModel.getTestCode();
-                        } else {
-                            if (selectedTestModel.getChldtests() != null && selectedTestModel.getChldtests().size() > 0) {
-                                for (ChildTestsModel ctm :
-                                        selectedTestModel.getChldtests()) {
-                                    if (ctm.getChildTestCode().equals(testRateMasterModel.getTestCode())) {
-                                        isSelectedDueToParent = true;
-                                        parentTestCode = selectedTestModel.getTestCode();
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (isSelectedDueToParent) {
-                    Toast.makeText(activity, "This test was selected because of its parent. If you wish to remove this test please remove the parent: " + parentTestCode, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        holder.imgChecked.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                selectedTests.remove(testRateMasterModel);
-                if (onClickListeners != null) {
-                    onClickListeners.onCheckChange(selectedTests);
-                }
-            }
-        });
-
     }
 
     private boolean checkIfOfferExists(ArrayList<TestRateMasterModel> selTests) {
@@ -397,6 +480,9 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
 
     @Override
     public int getItemCount() {
+        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            return peFilteredList.size();
+        }
         return filteredList.size();
     }
 
@@ -428,14 +514,41 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
         notifyDataSetChanged();
     }
 
+    public void filterDataPE(String query) {
+
+        query = query.toLowerCase();
+        Logger.verbose("FilteredListSizeBeforeFilter: " + String.valueOf(peFilteredList.size()));
+
+        if (query.isEmpty()) {
+            peFilteredList = new ArrayList<>();
+            peFilteredList.addAll(peTestRateModelArry);
+            Logger.verbose("FilteredListSizeAfterFilerQueryEmpty: " + String.valueOf(peFilteredList.size()));
+
+        } else {
+            peFilteredList = new ArrayList<>();
+
+            ArrayList<GetPETestResponseModel.DataDTO> oldList = peTestRateModelArry;
+            ArrayList<GetPETestResponseModel.DataDTO> newList = new ArrayList<GetPETestResponseModel.DataDTO>();
+            for (GetPETestResponseModel.DataDTO testModel : oldList) {
+                if (testModel.getName().toLowerCase().contains(query) ||testModel.getName().contains(query)|| testModel.getDos_code().toLowerCase().contains(query) ) {
+                    newList.add(testModel);
+                }
+            }
+            if (newList.size() > 0) {
+                peFilteredList.addAll(newList);
+            }
+            notifyDataSetChanged();
+        }
+
+    }
 
     public void setOnItemClickListener(OnClickListeners onClickListeners) {
         this.onClickListeners = onClickListeners;
     }
 
     public interface OnClickListeners {
-
         void onCheckChange(ArrayList<TestRateMasterModel> selectedTests);
 
+        void onPECheckChange(ArrayList<GetPETestResponseModel.DataDTO> peTestList);
     }
 }

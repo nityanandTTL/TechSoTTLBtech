@@ -186,10 +186,15 @@
                 <TextView
                     android:id="@+id/txt_beneficiary_tests"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/_5sdp"
                     android:layout_weight="2"
                     android:gravity="center|left"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:padding="@dimen/_2sdp"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
                     android:text="Click to view or add tests from list"
                     android:textColor="@color/grey"
                     android:textSize="@dimen/value" />
@@ -242,6 +247,37 @@
         </LinearLayout>-->
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cv_mob_no"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            app:cardCornerRadius="@dimen/_5sdp"
+            app:cardElevation="@dimen/_5sdp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10sdp">
+
+                <TextView
+                    android:id="@+id/tv_mobile"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_weight="2"
+                    android:gravity="center|left"
+                    android:text=""
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/value" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_RHC"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
@@ -277,6 +313,7 @@
         <TextView
             android:id="@+id/tv_rhcMessage"
             android:layout_margin="@dimen/_10sdp"
+            android:visibility="visible"
             android:text="@string/hardcopycharges"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

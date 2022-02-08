@@ -1227,7 +1227,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             String json = "";
             try {
                 HttpPost request = new HttpPost(EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD)) + "/api/OrderAllocation/MediaUpload");
-
+                System.out.println("Mith >> " +EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD)) + "/api/OrderAllocation/MediaUpload" );
                 MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 entity.addPart("AppId", new StringBody("" + setDispositionDataModel.getAppId()));
                 entity.addPart("DispId", new StringBody("" + setDispositionDataModel.getDispId()));

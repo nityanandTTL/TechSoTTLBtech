@@ -73,6 +73,31 @@
                         android:visibility="visible" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/ll_discount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/mrp_rate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/dp_10"
+                        android:text="test"
+                        android:textSize="@dimen/value" />
+
+                    <TextView
+                        android:id="@+id/dis_percent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/dp_10"
+                        android:text="16.83 %"
+                        android:textSize="@dimen/value" />
+                </LinearLayout>
+
+
             </LinearLayout>
 
 

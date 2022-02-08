@@ -175,4 +175,5 @@ public class ConstantsMessages {
     public static String WOESubmitFailed = "Failed to submit WOE. Please try Again.";
     public static String ThisWillResetAllPatientDetails = "This will reset all patient details. Do you want to proceed ?";
     public static String InvalidSRFIDMsg = "Enter Valid SRF ID (Length Min: 5 and Max: 14)";
+    public static String BenefiaryAdded="Beneficiary added successfully";
 }

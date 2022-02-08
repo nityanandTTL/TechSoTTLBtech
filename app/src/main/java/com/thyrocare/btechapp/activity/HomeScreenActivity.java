@@ -91,6 +91,8 @@ import retrofit2.Callback;
 
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
+import static com.thyrocare.btechapp.utils.app.AppConstants.ORDERS;
+import static com.thyrocare.btechapp.utils.app.AppConstants.PickupOrder;
 import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
 
 public class HomeScreenActivity extends AppCompatActivity {
@@ -130,11 +132,11 @@ public class HomeScreenActivity extends AppCompatActivity {
     LinearLayout ll_schedule, ll_orders, ll_served, ll_hub, ll_lead, ll_pick_orders, ll_leaves, ll_hcw, ll_password, ll_feedback, ll_video, ll_certificate, ll_logout, ll_gqc;
     private Dialog MainDailog;
     //for TSP
-    LinearLayout ll_tsp_certificate, ll_tsp_logout, ll_tsp_hub, ll_tsp_orders, ll_tsp_served, ll_tsp_earning, ll_tsp_send, ll_tsp_receive, ll_tsp_lead, ll_tsp_pick_orders, ll_tsp_hcw, ll_tsp_password, ll_tsp_feedback, ll_tsp_video;
+    LinearLayout ll_tsp_certificate, ll_tsp_logout, ll_tsp_hub, ll_tsp_orders, ll_tsp_served, ll_tsp_earning, ll_tsp_send, ll_tsp_receive, ll_tsp_lead, ll_tsp_pick_orders, ll_tsp_hcw, ll_tsp_password, ll_tsp_feedback, ll_tsp_video, ll_tsp_leaves;
     //    public ImageView toolbar_image;
     ImageView iv_tsp_gqc, iv_nbt_gqc;
 
-    LinearLayout ll_nbt_served, ll_nbt_certificate, ll_nbt_logout, ll_nbt_hub, ll_nbt_orders, ll_nbt_send, ll_nbt_receive, ll_nbt_lead, ll_nbt_pick_orders, ll_nbt_hcw, ll_nbt_password, ll_nbt_feedback, ll_nbt_video;
+    LinearLayout ll_nbt_served, ll_nbt_certificate, ll_nbt_logout, ll_nbt_hub, ll_nbt_orders, ll_nbt_leaves, ll_nbt_send, ll_nbt_receive, ll_nbt_lead, ll_nbt_pick_orders, ll_nbt_hcw, ll_nbt_password, ll_nbt_feedback, ll_nbt_video;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,11 +221,11 @@ public class HomeScreenActivity extends AppCompatActivity {
                     CreditFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         }*/
 
-        /*if (getIntent().hasExtra("isFromNotification") && getIntent().hasExtra("screenCategory")) {
+        if (getIntent().hasExtra("isFromNotification") && getIntent().hasExtra("screenCategory")) {
             isFromNotification = getIntent().getBooleanExtra("isFromNotification", false);
             screenCategory = getIntent().getIntExtra("screenCategory", 0);
             getNotification(navigationView);
-        }*/
+        }
 
     }
 
@@ -278,6 +280,17 @@ public class HomeScreenActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        ll_nbt_leaves.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, Leave_intimation_fragment_new.class);
+                intent.putExtra(BundleConstants.isNBT, true);
+                startActivity(intent);
+                startActivity(new Intent(activity, Leave_intimation_fragment_new.class));
+            }
+        });
+
 
         ll_nbt_certificate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -394,6 +407,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         ll_nbt_logout = findViewById(R.id.ll_nbt_logout);
         ll_nbt_hub = findViewById(R.id.ll_nbt_hub);
         ll_nbt_orders = findViewById(R.id.ll_nbt_orders);
+        ll_nbt_leaves = findViewById(R.id.ll_nbt_leaves);
         ll_nbt_lead = findViewById(R.id.ll_nbt_lead);
         ll_nbt_pick_orders = findViewById(R.id.ll_nbt_pick_orders);
         ll_nbt_hcw = findViewById(R.id.ll_nbt_hcw);
@@ -525,6 +539,13 @@ public class HomeScreenActivity extends AppCompatActivity {
             }
         });
 
+        ll_tsp_leaves.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, Leave_intimation_fragment_new.class);
+                startActivity(intent);
+            }
+        });
 
         ll_tsp_video.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -679,7 +700,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         appbarLayout.setVisibility(View.VISIBLE);
 
         /**/
-        if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID) || appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
+        /*if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID) || appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
             Menu nav_Menu = navigationView.getMenu();
             nav_Menu.findItem(R.id.nav_leave).setVisible(false);
             Menu nav_Menu1 = navigationView.getMenu();
@@ -688,12 +709,12 @@ public class HomeScreenActivity extends AppCompatActivity {
                 Menu nav_Menu2 = navigationView.getMenu();
                 nav_Menu2.findItem(R.id.nav_certificates).setVisible(false);
             }
-        }
+        }*/
 
-        if (appPreferenceManager.getLoginResponseModel().getRole().equalsIgnoreCase(AppConstants.NBT_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
+        /*if (appPreferenceManager.getLoginResponseModel().getRole().equalsIgnoreCase(AppConstants.NBT_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
             Menu nav_menu = navigationView.getMenu();
             nav_menu.findItem(R.id.nav_gqc).setVisible(true);
-        }
+        }*/
 
         try {
             if (EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD)).equals(EncryptionUtils.Dcrp_Hex(getString(R.string.BASE_URL_TOCHECK)))) {
@@ -711,13 +732,13 @@ public class HomeScreenActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        stopService(TImeCheckerIntent);
+//        stopService(TImeCheckerIntent);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        stopService(TImeCheckerIntent);
+//        stopService(TImeCheckerIntent);
     }
 
     @Override
@@ -733,7 +754,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            stopService(TImeCheckerIntent);
+//                            stopService(TImeCheckerIntent);
                             finishAffinity();
                         }
                     })
@@ -877,8 +898,8 @@ public class HomeScreenActivity extends AppCompatActivity {
 
     }
 
-    /*private void getNotification(NavigationView navigationView) {
-        if (screenCategory == HOME) {
+    private void getNotification(NavigationView navigationView) {
+        /*if (screenCategory == HOME) {
             navigationView.getMenu().performIdentifierAction(R.id.nav_home, 0);
         } else if (screenCategory == LEAVES) {
             navigationView.getMenu().performIdentifierAction(R.id.nav_leave, 0);
@@ -898,9 +919,13 @@ public class HomeScreenActivity extends AppCompatActivity {
             navigationView.getMenu().performIdentifierAction(R.id.nav_feedback, 0);
         } else if (screenCategory == SCHEDULE) {
             pushFragments(ScheduleYourDayFragment.newInstance(), false, false, ScheduleYourDayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-        } else if (screenCategory == ORDERS) {
-            pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-        } else if (screenCategory == MATERIALS) {
+        } else*/ if (screenCategory == ORDERS) {
+//            pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
+
+            Intent intent = new Intent(activity, VisitOrdersDisplayFragment_new.class);
+            startActivity(intent);
+
+        } /*else if (screenCategory == MATERIALS) {
             pushFragments(MaterialFragment.newInstance(), false, false, MaterialFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
         } else if (screenCategory == HUB) {
             pushFragments(HubListDisplayFragment.newInstance(), false, false, HubListDisplayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
@@ -914,8 +939,8 @@ public class HomeScreenActivity extends AppCompatActivity {
             Intent n = new Intent(this, OrderPickUpActivity.class);
             n.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(n);
-        }
-    }*/
+        }*/
+    }
 
     public void getSubmitDataResponse(SignSummaryResponseModel responseModel) {
         if (responseModel != null) {
@@ -1004,6 +1029,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         ll_tsp_video = findViewById(R.id.ll_tsp_video);
         ll_tsp_logout = findViewById(R.id.ll_tsp_logout);
         ll_tsp_certificate = findViewById(R.id.ll_tsp_certificate);
+        ll_tsp_leaves = findViewById(R.id.ll_tsp_leaves);
         civ_tsp_profile = findViewById(R.id.civ_tsp_profile);
         txt_username = (TextView) findViewById(R.id.tv_tsp_username);
         tsp_toolbar = findViewById(R.id.tsp_toolbar);
@@ -1177,7 +1203,9 @@ public class HomeScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                pushFragments(ScheduleYourDayFragment.newInstance(), false, false, ScheduleYourDayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-                startActivity(new Intent(activity, Leave_intimation_fragment_new.class));
+                Intent intent = new Intent(activity, Leave_intimation_fragment_new.class);
+                intent.putExtra(BundleConstants.isNBT, false);
+                startActivity(intent);
             }
         });
 

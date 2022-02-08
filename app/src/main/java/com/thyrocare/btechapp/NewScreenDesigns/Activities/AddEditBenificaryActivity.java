@@ -1,8 +1,5 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Activities;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -15,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -22,11 +20,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.thyrocare.btechapp.Controller.GetDSAProductsController;
+import com.thyrocare.btechapp.Controller.PEAddOnController;
+import com.thyrocare.btechapp.Controller.PEAuthorizationController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.DisplaySelectedTestsListForCancellationAdapter_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.ExpandableTestMasterListDisplayAdapter_new;
 import com.thyrocare.btechapp.NewScreenDesigns.AddRemoveTestProfileActivity;
@@ -40,8 +46,10 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.delegate.RemoveSelectedTestFromListDelegate_new;
+import com.thyrocare.btechapp.models.api.request.AddONRequestModel;
 import com.thyrocare.btechapp.models.api.request.CartAPIRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
@@ -49,6 +57,8 @@ import com.thyrocare.btechapp.models.api.request.RemoveBeneficiaryAPIRequestMode
 import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
 import com.thyrocare.btechapp.models.api.response.CartAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
+import com.thyrocare.btechapp.models.api.response.DSAProductsResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetPETestResponseModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryBarcodeDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryLabAlertsModel;
@@ -122,7 +132,15 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     private BeneficiaryDetailsModel selectedbeneficiaryDetailsModel;
     private String orderNo;
     private RelativeLayout relHardCopyCharge;
+    Spinner spn_purpose;
     CartAPIResponseModel cartAPIResponseModelforsubmitFirtsTime;
+    DSAProductsResponseModel dsaProductsResponseModelfinal;
+    ArrayList<GetPETestResponseModel.DataDTO> peTestArraylist;
+    ArrayList<GetPETestResponseModel.DataDTO> peselectedTestsList = new ArrayList<>();
+    String peTestRates = "";
+    CardView cv_RHC, cv_mob_no;
+    TextView tv_rhcMessage, tv_mobile;
+    int peAddben = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +158,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         cd = new ConnectionDetector(mActivity);
         gpsTracker = new GPSTracker(mActivity);
         appPreferenceManager = new AppPreferenceManager(mActivity);
+        peAddben = getIntent().getIntExtra(Constants.PEAddBen, 0);
         orderVisitDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
         selectedbeneficiaryDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.BENEFICIARY_DETAILS_MODEL);
         FlagADDEditBen = getIntent().getBooleanExtra("IsAddBen", true);
@@ -154,6 +173,9 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             }
         }
         orderNo = orderVisitDetailsModel.getVisitId();
+        if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            callAPIDSAProducts();
+        }
     }
 
     private void iniView() {
@@ -168,12 +190,35 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         imgReportHC = (ImageView) findViewById(R.id.img_report_hc_tick);
         btnOrderSubmit = findViewById(R.id.btn_order_submit);
         imgBenAddTests = (ImageView) findViewById(R.id.img_beneficiary_action_edit_tests);
+        spn_purpose = findViewById(R.id.spn_purpose);
+        cv_RHC = findViewById(R.id.cv_RHC);
+        tv_rhcMessage = findViewById(R.id.tv_rhcMessage);
+        tv_mobile = findViewById(R.id.tv_mobile);
+        cv_mob_no = findViewById(R.id.cv_mob_no);
+
+
+        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            cv_RHC.setVisibility(View.GONE);
+            tv_rhcMessage.setVisibility(View.GONE);
+            cv_mob_no.setVisibility(View.VISIBLE);
+            tv_mobile.setText("Mobile No- " + orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+        } else {
+            cv_RHC.setVisibility(View.VISIBLE);
+            tv_rhcMessage.setVisibility(View.VISIBLE);
+            cv_mob_no.setVisibility(View.GONE);
+        }
+
 //        ll_amt = (LinearLayout) findViewById(R.id.ll_amt);
 
 
         // TODO TEST EDIT not allowed for PE-Btech time being  GG Sir's instruction
         if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-            imgBenAddTests.setVisibility(View.GONE);
+            if (FlagADDEditBen) {
+                imgBenAddTests.setVisibility(View.VISIBLE);
+            } else {
+                imgBenAddTests.setVisibility(View.GONE);
+            }
+
         } else {
             imgBenAddTests.setVisibility(View.VISIBLE);
         }
@@ -206,6 +251,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             isRHC = true;
             imgReportHC.setImageDrawable(getResources().getDrawable(R.drawable.check_mark));
 
+//
         } else {
             txt_header_title.setText("Edit Beneficiary");
             edtBenName.setText(selectedbeneficiaryDetailsModel.getName());
@@ -233,6 +279,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             SelectedTestCode = selectedbeneficiaryDetailsModel.getTestsCode();
             txtTestsList.setError(null);
             txtTestsList.setText(SelectedTestCode.toString().trim());
+            txtTestsList.setSelected(true);
             txtTestsList.setError(null);
 
 
@@ -249,21 +296,54 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 imgBenGenderF.setImageDrawable(getResources().getDrawable(R.drawable.female_icon_orange));
                 imgBenGenderM.setImageDrawable(getResources().getDrawable(R.drawable.male));
             }
+
             if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 //TODO No API call for PE login
             } else {
                 CallAPIFORTESTLIST(FlagADDEditBen);
             }
-
         }
+    }
+
+    private void callAPIDSAProducts() {
+        GetDSAProductsController getDSAProductsController = new GetDSAProductsController(this);
+        getDSAProductsController.getDSAProducts(orderNo);
+    }
+
+    private void CallAPIFORPETESTLIST() {
+        PEAuthorizationController peAC = new PEAuthorizationController(this);
+        peAC.getPETests("" + orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
     }
 
     private void initListener() {
 
+        spn_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    isM = true;
+                } else if (position == 1) {
+                    isM = false;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         btnclose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                if (peAddben == 1) {
+                    Intent intent = new Intent(mActivity, HomeScreenActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                } else {
+                    finish();
+                }
+
             }
         });
 
@@ -344,34 +424,98 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         btnOrderSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int Bencount = orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size();
-                if (FlagADDEditBen) {
-                    if (Bencount < 10) {
-                        if (validateforAddben()) {
+                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                    if (FlagADDEditBen) {
+                        if (validateforAddbenPE()) {
                             if (cd.isConnectingToInternet()) {
-                                CallsendOTPAPIforOrderEdit("Add", orderVisitDetailsModel, orderNo, finalBenId);
+                                if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
+                                    CallSubmitAPIforAddBen(orderNo, finalBenId);
+                                } else {
+                                    CallsendOTPAPIforOrderEdit("Add", orderVisitDetailsModel, orderNo, finalBenId);
+                                }
                             } else {
                                 globalclass.showCustomToast(mActivity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
                             }
+//                            CallsendOTPAPIforOrderEdit("Add", orderVisitDetailsModel, orderNo, finalBenId);
                         }
                     } else {
-                        globalclass.showalert_OK(Alreadycontains10BenMsg, mActivity);
+                        if (checkBeneficiaryDtls()) {
+                            if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
+                                CallSubmitAPIforEditBen(orderNo);
+                            } else {
+                                CallsendOTPAPIforOrderEdit("Edit", orderVisitDetailsModel, orderNo, finalBenId);
+                            }
+                        }
                     }
                 } else {
-                    if (validateforEditben()) {
-                        if (CallCartAPIFlag == 1) {
-                            CallSubmitAPIforEditBen(orderNo);
+                    int Bencount = orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size();
+                    if (FlagADDEditBen) {
+                        if (Bencount < 10) {
+                            if (validateforAddben()) {
+                                if (cd.isConnectingToInternet()) {
+                                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                        if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
+                                            CallSubmitAPIforAddBen(orderNo, finalBenId);
+                                        } else {
+                                            CallsendOTPAPIforOrderEdit("Add", orderVisitDetailsModel, orderNo, finalBenId);
+                                        }
+                                    } else {
+                                        CallsendOTPAPIforOrderEdit("Add", orderVisitDetailsModel, orderNo, finalBenId);
+                                    }
+                                } else {
+                                    globalclass.showCustomToast(mActivity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
+                                }
+                            }
                         } else {
-                            if (cd.isConnectingToInternet()) {
-                                CallsendOTPAPIforOrderEdit("Edit", orderVisitDetailsModel, orderNo, finalBenId);
+                            globalclass.showalert_OK(Alreadycontains10BenMsg, mActivity);
+                        }
+                    } else {
+
+                        if (validateforEditben()) {
+                            if (CallCartAPIFlag == 1) {
+                                CallSubmitAPIforEditBen(orderNo);
                             } else {
-                                globalclass.showCustomToast(mActivity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
+                                if (cd.isConnectingToInternet()) {
+                                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                        if (checkBeneficiaryDtls()) {
+                                            if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
+                                                CallSubmitAPIforEditBen(orderNo);
+                                            } else {
+                                                CallsendOTPAPIforOrderEdit("Edit", orderVisitDetailsModel, orderNo, finalBenId);
+                                            }
+                                        }
+
+                                    } else {
+                                        CallsendOTPAPIforOrderEdit("Edit", orderVisitDetailsModel, orderNo, finalBenId);
+                                    }
+                                } else {
+                                    globalclass.showCustomToast(mActivity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
+                                }
                             }
                         }
                     }
                 }
             }
         });
+    }
+
+    private boolean checkBeneficiaryDtls() {
+        if (edtBenName.getText().toString().trim().contains("Test_user") || edtBenName.getText().toString().trim().contains("TEST_USER") ||
+                StringUtils.isNull(edtBenName.getText().toString().trim())) {
+            Toast.makeText(mActivity, "Kindly edit beneficiary name", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (!StringUtils.isNull(edtBenName.getText().toString().trim()) && edtBenName.getText().toString().trim().length() < 2) {
+            Toast.makeText(mActivity, "Name should have minimum 2 characters", Toast.LENGTH_SHORT).show();
+            //edtBenName.setError("Name should have minimum 2 characters");
+            return false;
+        } else if (edtBenAge.getText().toString().equalsIgnoreCase("150") || StringUtils.isNull(edtBenAge.getText().toString().trim())) {
+            Toast.makeText(mActivity, "Kindly edit beneficiary age", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (Integer.parseInt(edtBenAge.getText().toString().trim()) < 1 || Integer.parseInt(edtBenAge.getText().toString().trim()) > 120) {
+            Toast.makeText(mActivity, "Age should be between 1 to 120", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private void CallsendOTPAPIforOrderEdit(final String Action, final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
@@ -465,6 +609,12 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         ImageView img_close = (ImageView) CustomDialogforOTPValidation.findViewById(R.id.img_close);
         final EditText edt_OTP = (EditText) CustomDialogforOTPValidation.findViewById(R.id.edt_OTP);
 
+        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            tv_header.setText(R.string.pe_otp_message);
+        } else {
+            tv_header.setText(R.string.tc_otp_message);
+        }
+
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
@@ -538,7 +688,13 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                             CustomDialogforOTPValidation.dismiss();
                         }
                         if (Action.equalsIgnoreCase("Add")) {
-                            CallSubmitAPIforAddBen(orderNo, finalBenId);
+                            ArrayList<AddONRequestModel.test> arrTest = new ArrayList<AddONRequestModel.test>();
+                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                addAddOnRequest(arrTest);
+                            } else {
+                                CallSubmitAPIforAddBen(orderNo, finalBenId);
+                            }
+
                         } else if (Action.equalsIgnoreCase("Edit")) {
                             CallSubmitAPIforEditBen(orderNo);
                         }
@@ -559,6 +715,28 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void addAddOnRequest(ArrayList<AddONRequestModel.test> arrTest) {
+        AddONRequestModel.patient patient = new AddONRequestModel.patient();
+//        patient.setId(DeviceUtils.randomInt(10000000, 99999999));
+        patient.setId(0);
+        System.out.println("Mith>>>>>" + patient.getId());
+        patient.setName(edtBenName.getText().toString());
+        patient.setAge(Integer.parseInt("" + edtBenAge.getText().toString()));
+        patient.setGender(isM ? "Male" : "Female");
+
+        for (int i = 0; i < peselectedTestsList.size(); i++) {
+            AddONRequestModel.test test = new AddONRequestModel.test();
+            test.setId(peselectedTestsList.get(i).getId());
+            test.setType(peselectedTestsList.get(i).getType());
+            arrTest.add(test);
+        }
+        AddONRequestModel addONRequestModel = new AddONRequestModel();
+        addONRequestModel.setPatient(patient);
+        addONRequestModel.setTest(arrTest);
+        PEAddOnController peAddOnController = new PEAddOnController(this);
+        peAddOnController.getAddOnOrder(orderVisitDetailsModel.getVisitId(), addONRequestModel, peAddben);
     }
 
     private void CallSubmitAPIforEditBen(String orderNo) {
@@ -610,7 +788,9 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         odModel.setVipOrder(ent_data.isVipOrder());
         odModel.setYNC(ent_data.getYNC());
         odModel.setKits(new ArrayList<KitsCountModel>());
-        odModel.setOrdUpdateDetails(new OrderUpdateDetailsModel());
+        OrderUpdateDetailsModel orderUpdate = new OrderUpdateDetailsModel();
+        orderUpdate.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+        odModel.setOrdUpdateDetails(orderUpdate);
         odModel.setBenMaster(arrayListData);
         odModel.setAddBen(false);
         odModel.setTestEdit(true);
@@ -644,8 +824,16 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         }
 
         OrderBookingDetailsModel ordbooking = new OrderBookingDetailsModel();
+        ordbooking.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+        System.out.println(">>>>>>>>>>>>>>>>>>>>" + ordbooking.getBtechId());
         ordbooking.setVisitId(orderNo);
         ordbooking.setOrddtl(orddtl);
+
+        /*OrderUpdateDetailsModel orderUpdate = new OrderUpdateDetailsModel();
+        orderUpdate.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+
+        OrderDetailsModel odm = new OrderDetailsModel();
+        odm.setOrdUpdateDetails(orderUpdate);*/
 
         nm.setSmpldtl(benSTArr);
         nm.setLabAlert(benLAArr);
@@ -739,6 +927,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         ordbooking.setVisitId(orderNo);
         ordbooking.setOrddtl(orddtl);
         ordbooking.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>Mith" + ordbooking.getBtechId());
         nm.setSmpldtl(benSTArr);
         nm.setLabAlert(benLAArr);
         nm.setClHistory(benCHArr);
@@ -782,6 +971,29 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         } else if ((str.contains("PSA") || str.contains("FPSA")) && !isM) {
             txtTestsList.setError(PSAandFPSAforMaleMsg);
             globalclass.showalert_OK(PSAandFPSAforMaleMsg, mActivity);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateforAddbenPE() {
+        if (StringUtils.isNull(edtBenName.getText().toString().trim())) {
+            edtBenName.setError("Name is Required");
+            return false;
+        } else if (!StringUtils.isNull(edtBenName.getText().toString().trim()) && edtBenName.getText().toString().trim().length() < 2) {
+            edtBenName.setError("Name should have minimum 2 characters");
+            return false;
+        } else if (StringUtils.isNull(edtBenAge.getText().toString().trim())) {
+            edtBenAge.setError("Age is Required");
+            return false;
+        } else if (Integer.parseInt(edtBenAge.getText().toString().trim()) < 1 || Integer.parseInt(edtBenAge.getText().toString().trim()) > 120) {
+            edtBenAge.setError("Age should be between 1 to 120");
+            return false;
+        } else if (StringUtils.isNull(txtTestsList.getText().toString().trim())) {
+            txtTestsList.setError("Tests List is Required");
+            return false;
+        } else if (peselectedTestsList.size() == 0) {
+            Toast.makeText(mActivity, "Kindly select test to add", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -996,7 +1208,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             }
         } else {
             BrandTestMasterModel brandTestMasterModel = new Gson().fromJson(appPreferenceManager.getCacheProduct(), BrandTestMasterModel.class);
-            CallTestData(getBrandTestMaster(brandTestMasterModel));
+            // CallTestData(getBrandTestMaster(brandTestMasterModel));
+            CallTestData(getBrandTestMaster1(brandTestMasterModel, dsaProductsResponseModelfinal));
         }
     }
 
@@ -1076,8 +1289,9 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
     private void CallGetTechsoProductsAPI() {
         try {
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + "Bearer " + appPreferenceManager.getAccess_Token());
             GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-            Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token());
+            Call<BrandTestMasterModel> responseCall = apiInterface.CallGetTechsoPRoductsAPI("Bearer " + appPreferenceManager.getAccess_Token());
             globalclass.showProgressDialog(mActivity, "Fetching products. Please wait..");
             responseCall.enqueue(new Callback<BrandTestMasterModel>() {
                 @Override
@@ -1088,7 +1302,14 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                         String json22 = gson22.toJson(response.body());
                         appPreferenceManager.setCacheProduct(json22);
                         appPreferenceManager.setCashingTime(DateUtils.getCurrentdateWithFormat("yyyy-MM-dd"));
-                        CallTestData(getBrandTestMaster(response.body()));
+                        //callAPIDSAProducts();
+                        if (dsaProductsResponseModelfinal != null) {
+                            CallTestData(getBrandTestMaster1(response.body(), dsaProductsResponseModelfinal));
+                        } else {
+                            CallTestData(getBrandTestMaster(response.body()));
+                        }
+
+                        //   CallTestData(getBrandTestMaster(response.body()));
                     } else {
                         globalclass.showcenterCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                     }
@@ -1104,6 +1325,155 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private BrandTestMasterModel getBrandTestMaster1(BrandTestMasterModel brandTestMasterModel, DSAProductsResponseModel dsaProductResponseModel) {
+        BrandTestMasterModel brandTestMasterModel1 = new BrandTestMasterModel();
+        ArrayList<TestRateMasterModel> testRateMasterModels = new ArrayList<>();
+        ArrayList<TestRateMasterModel> testRateMasterModelsNew = new ArrayList<>();
+        ArrayList<TestRateMasterModel> testRateMasterModelsFinal = new ArrayList<>();
+
+        if (brandTestMasterModel != null && brandTestMasterModel.getTstratemaster() != null && brandTestMasterModel.getTstratemaster().size() > 0) {
+            for (int i = 0; i < brandTestMasterModel.getTstratemaster().size(); i++) {
+                if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode() != null && brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size() > 0) {
+                    for (int j = 0; j < brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size(); j++) {
+                        try {
+                            if (Integer.parseInt(brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().get(j).getAccessCode()) == orderVisitDetailsModel.getAllOrderdetails().get(0).getUserAccessCode()) {
+                                testRateMasterModels.add(brandTestMasterModel.getTstratemaster().get(i));
+                                break;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+
+//        testRateMasterModelsNew.addAll(testRateMasterModels);
+        if (dsaProductResponseModel != null && dsaProductResponseModel.getTstratemaster() != null && dsaProductResponseModel.getTstratemaster().size() > 0) {
+            testRateMasterModelsNew.addAll(dsaProductResponseModel.getTstratemaster());
+        }
+      /*  if (dsaProductResponseModel != null && dsaProductResponseModel.getTstratemaster() != null && dsaProductResponseModel.getTstratemaster().size() > 0) {
+            testRateMasterModels.addAll(dsaProductResponseModel.getTstratemaster());
+        }
+
+        java.util.List<TestRateMasterModel> testRateMasterModelList1 = new ArrayList<>();
+        testRateMasterModelList1.addAll(testRateMasterModels);
+
+        java.util.List<TestRateMasterModel> testRateMasterModelList = testRateMasterModels.stream().distinct().collect(Collectors.toList());*/
+        testRateMasterModels.addAll(testRateMasterModelsNew);
+
+        ArrayList<TestRateMasterModel> tempArr = new ArrayList<>();
+
+        for (TestRateMasterModel data : testRateMasterModels) {
+            if (!tempArr.contains(data)) {
+                tempArr.add(data);
+            }
+        }
+        System.out.println("1Arraylist>>>>>>>>>>>>>>>" + tempArr.size());
+        testRateMasterModels.clear();
+        testRateMasterModels.addAll(tempArr);
+
+        /*for (int i = 0; i <testRateMasterModels.size(); i++) {
+            for (int j = 0; j < testRateMasterModelsNew.size(); j++) {
+                if (testRateMasterModels.get(i).getDescription().toString().trim().equalsIgnoreCase(testRateMasterModelsNew.get(j).getDescription().toString().trim()) ||
+                        testRateMasterModels.get(i).getTestId()==(testRateMasterModelsNew.get(j).getTestId())){
+                    tempArr.add(testRateMasterModelsNew.get(j));
+                    break;
+                }
+            }
+        }
+
+        testRateMasterModels.removeAll(tempArr);
+        testRateMasterModels.addAll(testRateMasterModelsNew);
+
+        for (int i = 0; i <testRateMasterModels.size() ; i++) {
+            System.out.println(testRateMasterModels.get(i).getDescription());
+        }
+*/
+        /*int position = 0;
+
+        for (TestRateMasterModel test2 : testRateMasterModelsNew) {
+            boolean found = false;
+            for (TestRateMasterModel test1 : testRateMasterModels) {
+                if (test2.getDescription().equalsIgnoreCase(test1.getDescription())) {
+                    found = true;
+                }
+            }
+            position++;
+
+            if (!found) {
+                testRateMasterModelsFinal.add(testRateMasterModelsNew.get(position));
+            }
+        }*/
+
+/*        if (dsaProductResponseModel != null && dsaProductResponseModel.getTstratemaster() != null && dsaProductResponseModel.getTstratemaster().size() > 0) {
+            for (int i = 0; i < testRateMasterModels.size(); i++) {
+                for (int j = 0; j < dsaProductResponseModel.getTstratemaster().size(); j++) {
+                    if (!testRateMasterModels.get(i).getDescription().contains(dsaProductResponseModel.getTstratemaster().get(j).getDescription())) {
+                        if (testRateMasterModelsNew.size() == 0) {
+                            testRateMasterModelsNew.add(dsaProductResponseModel.getTstratemaster().get(j));
+                        } else {
+                            for (int k = 0; k < testRateMasterModelsNew.size(); k++) {
+                                if (!testRateMasterModels.get(i).getDescription().contains(dsaProductResponseModel.getTstratemaster().get(j).getDescription())) {
+
+                                }
+
+                            }
+                        }
+                        testRateMasterModelsNew.add(dsaProductResponseModel.getTstratemaster().get(j));
+//                        break;
+                    }
+                }
+            }
+//            testRateMasterModels.addAll(dsaProductResponseModel.getTstratemaster());
+        }*/
+
+
+/*
+        Set<TestRateMasterModel>toRetain = new TreeSet<TestRateMasterModel>( TEst.CASE_INSENSITIVE_ORDER);
+        toRetain.addAll(testRateMasterModels);
+        Set<TestRateMasterModel>newList = new LinkedHashSet<>(testRateMasterModels);
+        newList.retainAll(new LinkedHashSet<TestRateMasterModel>(toRetain));
+        testRateMasterModels = new ArrayList<TestRateMasterModel>(newList);*/
+
+        /*testRateMasterModelsFinal.addAll(testRateMasterModels);
+        for (int i = 0; i < testRateMasterModels.size(); i++) {
+            for (int j = 0; j < testRateMasterModelsNew.size(); j++) {
+                if (!testRateMasterModels.get(i).getDescription().equalsIgnoreCase(testRateMasterModelsNew.get(j).getDescription())){
+                    testRateMasterModelsFinal.add(testRateMasterModelsNew.get(j));
+                }
+                break;
+            }
+        }*/
+
+
+
+        /*ArrayList<TestRateMasterModel> testRateMasterModelsFinal = new ArrayList<>();
+        for (int i = 0; i < testRateMasterModels.size(); i++) {
+            if (testRateMasterModelsFinal.size() > 0) {
+                for (int j = 0; j < testRateMasterModelsFinal.size(); j++) {
+                    if (!testRateMasterModels.get(i).getDescription().equalsIgnoreCase(testRateMasterModelsFinal.get(j).getDescription())) {
+                        testRateMasterModelsFinal.add(testRateMasterModels.get(i));
+                    }
+                }
+            } else {
+                testRateMasterModelsFinal.add(testRateMasterModels.get(i));
+            }
+        }
+        System.out.println("2Arraylist>>>>>>>>>>>>>>>"+testRateMasterModelsFinal.size());
+        testRateMasterModels.clear();
+        testRateMasterModels.addAll(testRateMasterModelsFinal);*/
+        // brandTestMasterModel1.setTstratemaster(tempArr);
+        brandTestMasterModel1.setTstratemaster(testRateMasterModels);
+        brandTestMasterModel1.setBrandId(brandTestMasterModel.getBrandId());
+        brandTestMasterModel1.setBrandName(brandTestMasterModel.getBrandName());
+
+        String json = new Gson().toJson(brandTestMasterModel1);
+        System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" + json);
+
+        return brandTestMasterModel1;
     }
 
     public BrandTestMasterModel getBrandTestMaster(BrandTestMasterModel brandTestMasterModel) {
@@ -1166,6 +1536,17 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
         if (!InputUtils.isNull(edit_selectedTestsList)) {
             addEditTest(isAddBen);
+        } else if (isAddBen && Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            if (peselectedTestsList != null && peselectedTestsList.size() > 0) {
+                addEditTest(isAddBen);
+            } else {
+                Intent intent = new Intent(mActivity, AddRemoveTestProfileActivity.class);
+                intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+                intent.putParcelableArrayListExtra(BundleConstants.PE_TEST_LIST_MODEL, peTestArraylist);
+                intent.putExtra("IsAddBen", FlagADDEditBen);
+                startActivityForResult(intent, BundleConstants.ADDEDITTESTREQUESTCODE);
+            }
+
         } else if (isAddBen && InputUtils.isNull(selectedTestsList)) {
             Intent intent = new Intent(mActivity, AddRemoveTestProfileActivity.class);
             intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
@@ -1181,50 +1562,114 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     }
 
     private void addEditTest(final boolean isAddBen) {
+        ArrayList<String> DisTest = new ArrayList<>();
+        final int ArraySize;
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
         View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.addtestbottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
         ListView lvTestsDisplay = (ListView) bottomSheet.findViewById(R.id.test_names);
         TextView close_btn = (TextView) bottomSheet.findViewById(R.id.close_btn);
         Button btn_addtest = bottomSheet.findViewById(R.id.btn_addtest);
 
+        /*if (edit_selectedTestsList.size()==0 && !InputUtils.isNull(SelectedTestCode)){
+            DisTest = new ArrayList<>();
+            String[] str = SelectedTestCode.split(",");
+            for (int i = 0; i < str.length; i++) {
+                String str1 = str[i].trim();
+                DisTest.add(str1);
+            }
+        }
+
+        ArraySize = DisTest.size();*/
+
         try {
             if (isAddBen) {
-                displayAdapter = new DisplaySelectedTestsListForCancellationAdapter_new(mActivity, selectedTestsList, new RemoveSelectedTestFromListDelegate_new() {
-                    @Override
-                    public void onRemoveButtonClicked(ArrayList<TestRateMasterModel> selectedTests) {
-                        isTestEdit = true;
-                        selectedTestsList = selectedTests;
-                        displayAdapter.notifyDataSetChanged();
-                    }
-                });
+                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                    displayAdapter = new DisplaySelectedTestsListForCancellationAdapter_new(mActivity, true, selectedTestsList, peselectedTestsList, SelectedTestCode, new RemoveSelectedTestFromListDelegate_new() {
+                        @Override
+                        public void onRemoveButtonClicked(ArrayList<TestRateMasterModel> selectedTests, String newDistest) {
+                        }
+
+                        @Override
+                        public void onRemovePEButtonClicked(ArrayList<GetPETestResponseModel.DataDTO> peselectedTest) {
+                            isTestEdit = true;
+                            peselectedTestsList = peselectedTest;
+                            displayAdapter.notifyDataSetChanged();
+                        }
+                    });
+                } else {
+                    displayAdapter = new DisplaySelectedTestsListForCancellationAdapter_new(mActivity, true, selectedTestsList, peselectedTestsList, SelectedTestCode, new RemoveSelectedTestFromListDelegate_new() {
+                        @Override
+                        public void onRemoveButtonClicked(ArrayList<TestRateMasterModel> selectedTests, String newDistest) {
+                            isTestEdit = true;
+                            selectedTestsList = selectedTests;
+                            displayAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onRemovePEButtonClicked(ArrayList<GetPETestResponseModel.DataDTO> peselectedTests) {
+
+                        }
+                    });
+
+                }
                 lvTestsDisplay.setAdapter(displayAdapter);
+
             } else {
                 if (displayAdapter != null) {
                     displayAdapter = null;
                 }
 
-                displayAdapter = new DisplaySelectedTestsListForCancellationAdapter_new(mActivity, edit_selectedTestsList, new RemoveSelectedTestFromListDelegate_new() {
+                ArrayList<String> newEdit = new ArrayList<>();
+                String test = "";
+                if (edit_selectedTestsList != null && edit_selectedTestsList.size() > 0) {
+                    for (int i = 0; i < edit_selectedTestsList.size(); i++) {
+                        if (!StringUtils.isNull(edit_selectedTestsList.get(i).getDescription())) {
+                            test = edit_selectedTestsList.get(i).getDescription();
+                        } else {
+                            test = edit_selectedTestsList.get(i).getTestCode();
+                        }
+                        newEdit.add(test);
+                    }
+                    SelectedTestCode = TextUtils.join(",", newEdit);
+                }
+                displayAdapter = new DisplaySelectedTestsListForCancellationAdapter_new(mActivity, false, edit_selectedTestsList, peselectedTestsList, SelectedTestCode, new RemoveSelectedTestFromListDelegate_new() {
                     @Override
-                    public void onRemoveButtonClicked(ArrayList<TestRateMasterModel> selectedTests) {
+                    public void onRemoveButtonClicked(ArrayList<TestRateMasterModel> selectedTests, String newDistest) {
+                        SelectedTestCode = newDistest;
                         isTestEdit = true;
                         edit_selectedTestsList = selectedTests;
                         displayAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onRemovePEButtonClicked(ArrayList<GetPETestResponseModel.DataDTO> peselectedTests) {
+
                     }
                 });
                 lvTestsDisplay.setAdapter(displayAdapter);
             }
             Button btn_Save = (Button) bottomSheet.findViewById(R.id.btn_save);
-            if (isAddBen) {
-                if (selectedTestsList.size() != 0) {
-                    btn_Save.setVisibility(View.VISIBLE);
-                } else {
-                    btn_Save.setVisibility(View.GONE);
+            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                if (isAddBen) {
+                    if (peselectedTestsList.size() != 0) {
+                        btn_Save.setVisibility(View.VISIBLE);
+                    } else {
+                        btn_Save.setVisibility(View.GONE);
+                    }
                 }
             } else {
-                if (edit_selectedTestsList.size() != 0) {
-                    btn_Save.setVisibility(View.VISIBLE);
+                if (isAddBen) {
+                    if (selectedTestsList.size() != 0) {
+                        btn_Save.setVisibility(View.VISIBLE);
+                    } else {
+                        btn_Save.setVisibility(View.GONE);
+                    }
                 } else {
-                    btn_Save.setVisibility(View.GONE);
+                    if (edit_selectedTestsList.size() != 0) {
+                        btn_Save.setVisibility(View.VISIBLE);
+                    } else {
+                        btn_Save.setVisibility(View.GONE);
+                    }
                 }
             }
 
@@ -1232,237 +1677,262 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 //                    editdialog.dismiss();
-                    if (isAddBen) {
-                        if (selectedTestsList.size() != 0) {
-                            int FastingCount = 0;
-                            boolean isFBSpresent = false;
-                            boolean isPPBSpresent = false;
-                            boolean isRBSpresent = false;
-                            boolean isFBSpresentInSuperSet = false;
-                            boolean isINSFApresent = false;
-                            boolean isINSFApresentInSuperSet = false;
-                            boolean isINSPPpresent = false;
-                            if (selectedTestsList != null && selectedTestsList.size() > 0) {
-                                ArrayList<TestRateMasterModel> trmmArr = new ArrayList<TestRateMasterModel>();
-                                for (TestRateMasterModel btdm :
-                                        selectedTestsList) {
-                                    MessageLogger.PrintMsg("test:" + btdm.getTestCode());
-
-                                    if (btdm.getTestCode().equalsIgnoreCase(Constants.FBS)) {
-                                        isFBSpresent = true;
-                                    }
-                                    if (btdm.getTestCode().equalsIgnoreCase(Constants.INSFA)) {
-                                        isINSFApresent = true;
-                                    }
-
-                                    if (btdm.getChldtests() != null) {
-                                        if (btdm.getChldtests().size() != 0) {
-                                            for (int i = 0; i < btdm.getChldtests().size(); i++) {
-                                                if (btdm.getChldtests().get(i).getChildTestCode() != null) {
-
-                                                    if (btdm.getChldtests().get(i).getChildTestCode().toString().trim().equalsIgnoreCase(Constants.FBS)) {
-                                                        isFBSpresent = true;
-                                                        isFBSpresentInSuperSet = true;
-                                                    }
-                                                    if (btdm.getChldtests().get(i).getChildTestCode().toString().trim().equalsIgnoreCase(Constants.INSFA)) {
-                                                        isINSFApresent = true;
-                                                        isINSFApresentInSuperSet = true;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    if (btdm.getTestCode().equalsIgnoreCase(Constants.INSPP)) {
-                                        isINSPPpresent = true;
-                                    }
-                                    if (btdm.getTestCode().equalsIgnoreCase(Constants.PPBS)) {
-                                        isPPBSpresent = true;
-                                    }
-                                    if (btdm.getTestCode().equalsIgnoreCase(Constants.RBS)) {
-                                        isRBSpresent = true;
-                                    }
-                                    if (btdm.getFasting().equalsIgnoreCase("Fasting")) {
-                                        FastingCount = FastingCount + 1;
-                                        Logger.error("FastingCount " + FastingCount);
-                                    }
+                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                        if (isAddBen) {
+                            if (peselectedTestsList.size() != 0) {
+                                bottomSheetDialog.dismiss();
+                                String str = "";
+                                for (int i = 0; i < peselectedTestsList.size(); i++) {
+                                    str = str + peselectedTestsList.get(i).getName() + ",";
                                 }
-                                MessageLogger.PrintMsg("isFBSpresent: " + isFBSpresent);
-                                MessageLogger.PrintMsg("FastingCount: " + FastingCount);
-
-                                if (isFBSpresent == true && FastingCount == 1 && !isFBSpresentInSuperSet) {
-
-                                    Toast.makeText(mActivity, "With FBS atleast one fasting test should be there", Toast.LENGTH_SHORT).show();
-                                } else if (isPPBSpresent && !isFBSpresent) {
-                                    Toast.makeText(mActivity, "To Avail PPBS You have to select FBS test", Toast.LENGTH_SHORT).show();
-                                } else if (isRBSpresent && !isFBSpresent) {
-                                    Toast.makeText(mActivity, "To Avail RBS You have to select FBS test", Toast.LENGTH_SHORT).show();
-                                } else if (isINSPPpresent && !isINSFApresent) {
-                                    Toast.makeText(mActivity, "To Avail INSPP You have to select INSFA test", Toast.LENGTH_SHORT).show();
-                                } else {
-
-                                    bottomSheetDialog.dismiss();
-                                    String str = "";
-                                    for (int i = 0; i < selectedTestsList.size(); i++) {
-
-                                        if (selectedTestsList.get(i).getTestType().equalsIgnoreCase("OFFER")) {
-                                            str = str + selectedTestsList.get(i).getDescription() + ",";
-                                        } else {
-                                            str = str + selectedTestsList.get(i).getTestCode() + ",";
-                                        }
-//                                str = str + selectedTestsList.get(i).getDescription() + ",";
-                                    }
-                                    str = str.substring(0, str.length() - 1);
-                                    txtTestsList.setError(null);
-                                    txtTestsList.setText("" + str);
-                                    txtTestsList.setError(null);
-                                    CallCartAPIForAdd(selectedTestsList);
-                                }
-
+                                str = str.substring(0, str.length() - 1);
+                                txtTestsList.setError(null);
+                                txtTestsList.setText("" + str);
+                                txtTestsList.setSelected(true);
+                                txtTestsList.setError(null);
+//                                CallCartAPIForAdd(peselectedTestsList);
                             } else {
-                                globalclass.showCustomToast(mActivity, "Please select atleast one test");
+                                bottomSheetDialog.dismiss();
                             }
                         }
                     } else {
-                        if (edit_selectedTestsList.size() != 0) {
-                            int FastingCount = 0;
-                            boolean isFBSpresent = false;
-                            boolean isPPBSpresent = false;
-                            boolean isRBSpresent = false;
-                            boolean isFBSpresentInSuperSet = false;
-                            boolean isINSFApresent = false;
-                            boolean isINSFApresentInSuperSet = false;
-                            boolean isINSPPpresent = false;
+                        if (isAddBen) {
+                            if (selectedTestsList.size() != 0) {
+                                int FastingCount = 0;
+                                boolean isFBSpresent = false;
+                                boolean isPPBSpresent = false;
+                                boolean isRBSpresent = false;
+                                boolean isFBSpresentInSuperSet = false;
+                                boolean isINSFApresent = false;
+                                boolean isINSFApresentInSuperSet = false;
+                                boolean isINSPPpresent = false;
+                                if (selectedTestsList != null && selectedTestsList.size() > 0) {
+                                    ArrayList<TestRateMasterModel> trmmArr = new ArrayList<TestRateMasterModel>();
+                                    for (TestRateMasterModel btdm :
+                                            selectedTestsList) {
+                                        MessageLogger.PrintMsg("test:" + btdm.getTestCode());
 
-                            if (edit_selectedTestsList != null && edit_selectedTestsList.size() > 0) {
-                                ArrayList<TestRateMasterModel> trmmArr = new ArrayList<TestRateMasterModel>();
-                                for (TestRateMasterModel btdm :
-                                        edit_selectedTestsList) {
-                                    MessageLogger.PrintMsg("test:" + btdm.getTestCode());
+                                        if (btdm.getTestCode().equalsIgnoreCase(Constants.FBS)) {
+                                            isFBSpresent = true;
+                                        }
+                                        if (btdm.getTestCode().equalsIgnoreCase(Constants.INSFA)) {
+                                            isINSFApresent = true;
+                                        }
 
-                                    if (btdm.getTestCode().equalsIgnoreCase(Constants.FBS)) {
-                                        isFBSpresent = true;
-                                    }
-                                    if (btdm.getTestCode().equalsIgnoreCase(Constants.INSFA)) {
-                                        isINSFApresent = true;
-                                    }
+                                        if (btdm.getChldtests() != null) {
+                                            if (btdm.getChldtests().size() != 0) {
+                                                for (int i = 0; i < btdm.getChldtests().size(); i++) {
+                                                    if (btdm.getChldtests().get(i).getChildTestCode() != null) {
 
-                                    if (btdm.getChldtests() != null) {
-                                        if (btdm.getChldtests().size() != 0) {
-                                            for (int i = 0; i < btdm.getChldtests().size(); i++) {
-                                                if (btdm.getChldtests().get(i).getChildTestCode() != null) {
-
-                                                    if (btdm.getChldtests().get(i).getChildTestCode().toString().trim().equalsIgnoreCase(Constants.FBS)) {
-                                                        isFBSpresent = true;
-                                                        isFBSpresentInSuperSet = true;
-                                                    }
-                                                    if (btdm.getChldtests().get(i).getChildTestCode().toString().trim().equalsIgnoreCase(Constants.INSFA)) {
-                                                        isINSFApresent = true;
-                                                        isINSFApresentInSuperSet = true;
+                                                        if (btdm.getChldtests().get(i).getChildTestCode().toString().trim().equalsIgnoreCase(Constants.FBS)) {
+                                                            isFBSpresent = true;
+                                                            isFBSpresentInSuperSet = true;
+                                                        }
+                                                        if (btdm.getChldtests().get(i).getChildTestCode().toString().trim().equalsIgnoreCase(Constants.INSFA)) {
+                                                            isINSFApresent = true;
+                                                            isINSFApresentInSuperSet = true;
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
-                                    }
 
-                                    if (btdm.getTestCode().equalsIgnoreCase(Constants.INSPP)) {
-                                        isINSPPpresent = true;
+                                        if (btdm.getTestCode().equalsIgnoreCase(Constants.INSPP)) {
+                                            isINSPPpresent = true;
+                                        }
+                                        if (btdm.getTestCode().equalsIgnoreCase(Constants.PPBS)) {
+                                            isPPBSpresent = true;
+                                        }
+                                        if (btdm.getTestCode().equalsIgnoreCase(Constants.RBS)) {
+                                            isRBSpresent = true;
+                                        }
+                                        if (btdm.getFasting().equalsIgnoreCase("Fasting")) {
+                                            FastingCount = FastingCount + 1;
+                                            Logger.error("FastingCount " + FastingCount);
+                                        }
                                     }
-                                    if (btdm.getTestCode().equalsIgnoreCase(Constants.PPBS)) {
-                                        isPPBSpresent = true;
-                                    }
-                                    if (btdm.getTestCode().equalsIgnoreCase(Constants.RBS)) {
-                                        isRBSpresent = true;
-                                    }
-                                    if (btdm.getFasting().equalsIgnoreCase("Fasting")) {
-                                        FastingCount = FastingCount + 1;
-                                        Logger.error("FastingCount " + FastingCount);
-                                    }
-                                }
+                                    MessageLogger.PrintMsg("isFBSpresent: " + isFBSpresent);
+                                    MessageLogger.PrintMsg("FastingCount: " + FastingCount);
 
-                                MessageLogger.PrintMsg("isFBSpresent: " + isFBSpresent);
-                                MessageLogger.PrintMsg("FastingCount: " + FastingCount);
+                                    //TODO Remove logic
+                                /*if (isFBSpresent == true && FastingCount == 1 && !isFBSpresentInSuperSet) {
 
-                                if (isFBSpresent == true && FastingCount == 1 && !isFBSpresentInSuperSet) {
                                     Toast.makeText(mActivity, "With FBS atleast one fasting test should be there", Toast.LENGTH_SHORT).show();
                                 } else if (isPPBSpresent && !isFBSpresent) {
                                     Toast.makeText(mActivity, "To Avail PPBS You have to select FBS test", Toast.LENGTH_SHORT).show();
                                 } else if (isRBSpresent && !isFBSpresent) {
                                     Toast.makeText(mActivity, "To Avail RBS You have to select FBS test", Toast.LENGTH_SHORT).show();
-                                } else if (isINSPPpresent && !isINSFApresent) {
-                                    Toast.makeText(mActivity, "To Avail INSPP You have to select INSFA test", Toast.LENGTH_SHORT).show();
+                                } else */
+                                    if (isINSPPpresent && !isINSFApresent) {
+                                        Toast.makeText(mActivity, "To Avail INSPP You have to select INSFA test", Toast.LENGTH_SHORT).show();
+                                    } else {
+
+                                        bottomSheetDialog.dismiss();
+                                        String str = "";
+                                        for (int i = 0; i < selectedTestsList.size(); i++) {
+
+                                            if (selectedTestsList.get(i).getTestType().equalsIgnoreCase("OFFER")) {
+                                                str = str + selectedTestsList.get(i).getDescription() + ",";
+                                            } else {
+                                                str = str + selectedTestsList.get(i).getTestCode() + ",";
+                                            }
+//                                str = str + selectedTestsList.get(i).getDescription() + ",";
+                                        }
+                                        str = str.substring(0, str.length() - 1);
+                                        txtTestsList.setError(null);
+                                        txtTestsList.setText("" + str);
+                                        txtTestsList.setSelected(true);
+                                        txtTestsList.setError(null);
+                                        CallCartAPIForAdd(selectedTestsList);
+                                    }
+
                                 } else {
-                                    bottomSheetDialog.dismiss();
-                                    String str = "";
-                                    for (int i = 0; i < edit_selectedTestsList.size(); i++) {
-
-                                        if (edit_selectedTestsList.get(i).getTestType().equalsIgnoreCase("OFFER")) {
-                                            str = str + edit_selectedTestsList.get(i).getDescription() + ",";
-                                        } else {
-                                            str = str + edit_selectedTestsList.get(i).getTestCode() + ",";
-                                        }
-                                    }
-                                    str = str.substring(0, str.length() - 1);
-                                    txtTestsList.setText("" + str);
-                                    txtTestsList.setError(null);
-
-                                    String testsCode = "";
-                                    ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
-                                    ArrayList<BeneficiaryTestDetailsModel> selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
-                                    for (TestRateMasterModel trmm :
-                                            edit_selectedTestsList) {
-                                        BeneficiaryTestDetailsModel btdm = new BeneficiaryTestDetailsModel();
-                                        btdm.setFasting(trmm.getFasting());
-                                        btdm.setChldtests(trmm.getChldtests() != null ? trmm.getChldtests() : new ArrayList<ChildTestsModel>());
-                                        btdm.setTests(trmm.getTestCode());
-                                        btdm.setTestType(trmm.getTestType());
-                                        btdm.setProjId("");
-                                        btdm.setSampleType(trmm.getSampltype() != null ? trmm.getSampltype() : new ArrayList<TestSampleTypeModel>());
-                                        btdm.setTstClinicalHistory(trmm.getTstClinicalHistory() != null ? trmm.getTstClinicalHistory() : new ArrayList<TestClinicalHistoryModel>());
-                                        if (!StringUtils.isNull(trmm.getTestType()) && trmm.getTestType().equalsIgnoreCase("offer")) {
-                                            btdm.setProjId(trmm.getTestCode());
-                                            btdm.setTests(trmm.getDescription());
-                                            orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setProjId(trmm.getTestCode());
-                                        }
-                                        selectedTestDetailsArr.add(btdm);
-                                        if (StringUtils.isNull(testsCode)) {
-                                            if (!StringUtils.isNull(trmm.getTestType()) && trmm.getTestType().equalsIgnoreCase("OFFER")) {
-                                                testsCode = trmm.getDescription();
-                                                orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setProjId(trmm.getTestCode());
-                                            } else {
-                                                testsCode = trmm.getTestCode();
-                                            }
-                                        } else {
-                                            if (!StringUtils.isNull(trmm.getTestType()) && trmm.getTestType().equalsIgnoreCase("OFFER")) {
-                                                testsCode = testsCode + "," + trmm.getDescription();
-                                                orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setProjId(trmm.getTestCode());
-                                            } else {
-                                                testsCode = testsCode + "," + trmm.getTestCode();
-                                            }
-                                        }
-
-                                        for (TestSampleTypeModel tstm :
-                                                trmm.getSampltype()) {
-                                            BeneficiarySampleTypeDetailsModel bstdm = new BeneficiarySampleTypeDetailsModel();
-                                            bstdm.setBenId(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).getBenId());
-                                            bstdm.setSampleType(tstm.getSampleType());
-                                            bstdm.setId(tstm.getId());
-                                            if (!samples.contains(bstdm)) {
-                                                samples.add(bstdm);
-                                            }
-                                        }
-                                    }
-                                    orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setTestEdit(true);
-                                    orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setTestSampleType(selectedTestDetailsArr);
-                                    orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setTestsCode(testsCode);
-                                    orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setTests(testsCode);
-                                    orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setSampleType(samples);
-                                    CallCartAPIFlag = 1;
-                                    AddRemoveTestAPIFlag = 1;
-                                    btnOrderSubmit.performClick();
+                                    globalclass.showCustomToast(mActivity, "Please select atleast one test");
                                 }
-                            } else {
-                                globalclass.showCustomToast(mActivity, "Please select atleast one test");
+                            }
+                        } else {
+                            if (edit_selectedTestsList.size() != 0) {
+                                int FastingCount = 0;
+                                boolean isFBSpresent = false;
+                                boolean isPPBSpresent = false;
+                                boolean isRBSpresent = false;
+                                boolean isFBSpresentInSuperSet = false;
+                                boolean isINSFApresent = false;
+                                boolean isINSFApresentInSuperSet = false;
+                                boolean isINSPPpresent = false;
+
+                                if (edit_selectedTestsList != null && edit_selectedTestsList.size() > 0) {
+                                    ArrayList<TestRateMasterModel> trmmArr = new ArrayList<TestRateMasterModel>();
+                                    for (TestRateMasterModel btdm :
+                                            edit_selectedTestsList) {
+                                        MessageLogger.PrintMsg("test:" + btdm.getTestCode());
+
+                                        if (btdm.getTestCode().equalsIgnoreCase(Constants.FBS)) {
+                                            isFBSpresent = true;
+                                        }
+                                        if (btdm.getTestCode().equalsIgnoreCase(Constants.INSFA)) {
+                                            isINSFApresent = true;
+                                        }
+
+                                        if (btdm.getChldtests() != null) {
+                                            if (btdm.getChldtests().size() != 0) {
+                                                for (int i = 0; i < btdm.getChldtests().size(); i++) {
+                                                    if (btdm.getChldtests().get(i).getChildTestCode() != null) {
+
+                                                        if (btdm.getChldtests().get(i).getChildTestCode().toString().trim().equalsIgnoreCase(Constants.FBS)) {
+                                                            isFBSpresent = true;
+                                                            isFBSpresentInSuperSet = true;
+                                                        }
+                                                        if (btdm.getChldtests().get(i).getChildTestCode().toString().trim().equalsIgnoreCase(Constants.INSFA)) {
+                                                            isINSFApresent = true;
+                                                            isINSFApresentInSuperSet = true;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        if (btdm.getTestCode().equalsIgnoreCase(Constants.INSPP)) {
+                                            isINSPPpresent = true;
+                                        }
+                                        if (btdm.getTestCode().equalsIgnoreCase(Constants.PPBS)) {
+                                            isPPBSpresent = true;
+                                        }
+                                        if (btdm.getTestCode().equalsIgnoreCase(Constants.RBS)) {
+                                            isRBSpresent = true;
+                                        }
+                                        if (btdm.getFasting().equalsIgnoreCase("Fasting")) {
+                                            FastingCount = FastingCount + 1;
+                                            Logger.error("FastingCount " + FastingCount);
+                                        }
+                                    }
+
+                                    MessageLogger.PrintMsg("isFBSpresent: " + isFBSpresent);
+                                    MessageLogger.PrintMsg("FastingCount: " + FastingCount);
+
+                                /*if (isFBSpresent == true && FastingCount == 1 && !isFBSpresentInSuperSet) {
+                                    Toast.makeText(mActivity, "With FBS atleast one fasting test should be there", Toast.LENGTH_SHORT).show();
+                                } else if (isPPBSpresent && !isFBSpresent) {
+                                    Toast.makeText(mActivity, "To Avail PPBS You have to select FBS test", Toast.LENGTH_SHORT).show();
+                                } else if (isRBSpresent && !isFBSpresent) {
+                                    Toast.makeText(mActivity, "To Avail RBS You have to select FBS test", Toast.LENGTH_SHORT).show();
+                                } else*/
+                                    if (isINSPPpresent && !isINSFApresent) {
+                                        Toast.makeText(mActivity, "To Avail INSPP You have to select INSFA test", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        bottomSheetDialog.dismiss();
+                                        String str = "";
+                                        for (int i = 0; i < edit_selectedTestsList.size(); i++) {
+
+                                            if (edit_selectedTestsList.get(i).getTestType().equalsIgnoreCase("OFFER")) {
+                                                str = str + edit_selectedTestsList.get(i).getDescription() + ",";
+                                            } else {
+                                                str = str + edit_selectedTestsList.get(i).getTestCode() + ",";
+                                            }
+                                        }
+                                        str = str.substring(0, str.length() - 1);
+                                        txtTestsList.setText("" + str);
+                                        txtTestsList.setSelected(true);
+                                        txtTestsList.setError(null);
+
+                                        String testsCode = "";
+                                        ArrayList<BeneficiarySampleTypeDetailsModel> samples = new ArrayList<>();
+                                        ArrayList<BeneficiaryTestDetailsModel> selectedTestDetailsArr = new ArrayList<BeneficiaryTestDetailsModel>();
+                                        for (TestRateMasterModel trmm :
+                                                edit_selectedTestsList) {
+                                            BeneficiaryTestDetailsModel btdm = new BeneficiaryTestDetailsModel();
+                                            btdm.setFasting(trmm.getFasting());
+                                            btdm.setChldtests(trmm.getChldtests() != null ? trmm.getChldtests() : new ArrayList<ChildTestsModel>());
+                                            btdm.setTests(trmm.getTestCode());
+                                            btdm.setTestType(trmm.getTestType());
+                                            btdm.setProjId("");
+                                            btdm.setSampleType(trmm.getSampltype() != null ? trmm.getSampltype() : new ArrayList<TestSampleTypeModel>());
+                                            btdm.setTstClinicalHistory(trmm.getTstClinicalHistory() != null ? trmm.getTstClinicalHistory() : new ArrayList<TestClinicalHistoryModel>());
+                                            if (!StringUtils.isNull(trmm.getTestType()) && trmm.getTestType().equalsIgnoreCase("offer")) {
+                                                btdm.setProjId(trmm.getTestCode());
+                                                btdm.setTests(trmm.getDescription());
+                                                orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setProjId(trmm.getTestCode());
+                                            }
+                                            selectedTestDetailsArr.add(btdm);
+                                            if (StringUtils.isNull(testsCode)) {
+                                                if (!StringUtils.isNull(trmm.getTestType()) && trmm.getTestType().equalsIgnoreCase("OFFER")) {
+                                                    testsCode = trmm.getDescription();
+                                                    orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setProjId(trmm.getTestCode());
+                                                } else {
+                                                    testsCode = trmm.getTestCode();
+                                                }
+                                            } else {
+                                                if (!StringUtils.isNull(trmm.getTestType()) && trmm.getTestType().equalsIgnoreCase("OFFER")) {
+                                                    testsCode = testsCode + "," + trmm.getDescription();
+                                                    orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setProjId(trmm.getTestCode());
+                                                } else {
+                                                    testsCode = testsCode + "," + trmm.getTestCode();
+                                                }
+                                            }
+
+                                            for (TestSampleTypeModel tstm :
+                                                    trmm.getSampltype()) {
+                                                BeneficiarySampleTypeDetailsModel bstdm = new BeneficiarySampleTypeDetailsModel();
+                                                bstdm.setBenId(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).getBenId());
+                                                bstdm.setSampleType(tstm.getSampleType());
+                                                bstdm.setId(tstm.getId());
+                                                if (!samples.contains(bstdm)) {
+                                                    samples.add(bstdm);
+                                                }
+                                            }
+                                        }
+                                        orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setTestEdit(true);
+                                        orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setTestSampleType(selectedTestDetailsArr);
+                                        orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setTestsCode(testsCode);
+                                        orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setTests(testsCode);
+                                        orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(PSelected_position).setSampleType(samples);
+                                        CallCartAPIFlag = 1;
+                                        AddRemoveTestAPIFlag = 1;
+                                        btnOrderSubmit.performClick();
+                                    }
+                                } else {
+                                    globalclass.showCustomToast(mActivity, "Please select atleast one test");
+                                }
                             }
                         }
                     }
@@ -1472,13 +1942,24 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             btn_addtest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    bottomSheetDialog.dismiss();
-                    Intent intent = new Intent(mActivity, AddRemoveTestProfileActivity.class);
-                    intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
-                    intent.putParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLIST, selectedTestsList);
-                    intent.putParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST, edit_selectedTestsList);
-                    intent.putExtra("IsAddBen", FlagADDEditBen);
-                    startActivityForResult(intent, BundleConstants.ADDEDITTESTREQUESTCODE);
+                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                        bottomSheetDialog.dismiss();
+                        Intent intent = new Intent(mActivity, AddRemoveTestProfileActivity.class);
+                        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+                        intent.putParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLISTPE, peselectedTestsList);
+//                        intent.putParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST, edit_selectedTestsList);
+                        intent.putExtra("IsAddBen", FlagADDEditBen);
+                        startActivityForResult(intent, BundleConstants.ADDEDITTESTREQUESTCODE);
+                    } else {
+                        bottomSheetDialog.dismiss();
+                        Intent intent = new Intent(mActivity, AddRemoveTestProfileActivity.class);
+                        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+                        intent.putParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLIST, selectedTestsList);
+                        intent.putParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST, edit_selectedTestsList);
+                        //  intent.putExtra("ArraySize", ArraySize);
+                        intent.putExtra("IsAddBen", FlagADDEditBen);
+                        startActivityForResult(intent, BundleConstants.ADDEDITTESTREQUESTCODE);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -2014,6 +2495,15 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     if (cd.isConnectingToInternet()) {
                         try {
+                            peTestRates = data.getStringExtra(BundleConstants.PERATES);
+                            peTestRates = data.getExtras().getString(BundleConstants.PERATES);
+                            System.out.println("Mith>>>>>>" + data.getExtras().getString(BundleConstants.PERATES));
+                            System.out.println("Mith>>>>>>" + data);
+                            txtAmountPayable.setVisibility(View.VISIBLE);
+                            if (!StringUtils.isNull(peTestRates)) {
+                                txtAmountPayable.setText(mActivity.getResources().getString(R.string.rupee_symbol) + peTestRates + "/-");
+                            }
+                            peselectedTestsList = data.getParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLISTPE);
                             selectedTestsList = data.getParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLIST);
                             edit_selectedTestsList = data.getParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST);
                         } catch (Exception e) {
@@ -2029,5 +2519,20 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 break;
         }
 
+    }
+
+    public void getTestList(GetPETestResponseModel getPETestResponseModel) {
+        peTestArraylist = new ArrayList<GetPETestResponseModel.DataDTO>();
+        if (getPETestResponseModel != null) {
+            if (getPETestResponseModel.getStatus() == 1) {
+                peTestArraylist = getPETestResponseModel.getData();
+            }
+        }
+    }
+
+    public void getDSAProducts(DSAProductsResponseModel dsaProductsResponseModel) {
+        dsaProductsResponseModelfinal = new DSAProductsResponseModel();
+        dsaProductsResponseModelfinal = dsaProductsResponseModel;
+        CallAPIFORTESTLIST(FlagADDEditBen);
     }
 }

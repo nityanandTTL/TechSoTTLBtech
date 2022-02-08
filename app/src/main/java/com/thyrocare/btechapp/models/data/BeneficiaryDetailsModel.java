@@ -35,6 +35,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
     private boolean isTestEdit;
     private boolean isAddBen;
     private boolean isTRF;
+    private boolean IsCovidOrder;
 
 
     public BeneficiaryDetailsModel() {
@@ -68,6 +69,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         isTestEdit = in.readByte() != 0;
         isAddBen = in.readByte() != 0;
         isTRF = in.readByte() != 0;
+        IsCovidOrder = in.readByte() != 0;
     }
 
     @Override
@@ -96,6 +98,7 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
         dest.writeByte((byte) (isTestEdit ? 1 : 0));
         dest.writeByte((byte) (isAddBen ? 1 : 0));
         dest.writeByte((byte) (isTRF ? 1 : 0));
+        dest.writeByte((byte) (IsCovidOrder ? 1 : 0));
     }
 
     @Override
@@ -298,6 +301,14 @@ public class BeneficiaryDetailsModel extends BaseModel implements Parcelable {
 
     public void setTRF(boolean TRF) {
         isTRF = TRF;
+    }
+
+    public boolean isCovidOrder() {
+        return IsCovidOrder;
+    }
+
+    public void setCovidOrder(boolean covidOrder) {
+        IsCovidOrder = covidOrder;
     }
 
     @NonNull

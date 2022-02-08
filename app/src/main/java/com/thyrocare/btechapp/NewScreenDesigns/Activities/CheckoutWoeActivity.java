@@ -48,6 +48,7 @@ import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.mindorks.paracamera.Camera;
+import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.GetCollectionCenterController;
 import com.thyrocare.btechapp.Controller.GetTestController;
@@ -191,7 +192,10 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         initData();
         initListener();
 //        initToolBar();
-        CallTestColorAPI();
+
+//        if (!BuildConfig.DEBUG) {
+            CallTestColorAPI();
+//        }
     }
 
     private void CallTestColorAPI() {
@@ -302,7 +306,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         iv_home.setVisibility(View.GONE);
 
 
-        if (BundleConstants.isKIOSKOrder && !CommonUtils.ValidateCovidorders(beneficaryWiseArylst.get(0).getTestsCode())) {
+        if (BundleConstants.isKIOSKOrder && !beneficaryWiseArylst.get(0).isCovidOrder()) {
             spn_collection.setVisibility(View.VISIBLE);
             CallCollectionAPI();
         } else {
@@ -469,7 +473,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     private void ProceedWOEonSubmit() {
 
         try {
-            if (BundleConstants.isKIOSKOrder && !CommonUtils.ValidateCovidorders(beneficaryWiseArylst.get(0).getTestsCode())) {
+            if (BundleConstants.isKIOSKOrder && !beneficaryWiseArylst.get(0).isCovidOrder()) {
                 if (spn_collection != null && spn_collection.getSelectedItem() != null) {
                     if (!InputUtils.isNull(spn_collection.getSelectedItem().toString())) {
                         if (spn_collection.getSelectedItem().toString().equalsIgnoreCase("Select Collection Center")) {
@@ -579,9 +583,9 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         for (int i = 0; i < ordtl.size(); i++) {
             ordtl.get(i).setAmountDue(totalAmountPayable);
             ordtl.get(i).setAmountPayable(totalAmountPayable);
-            if (BundleConstants.isKIOSKOrder && !CommonUtils.ValidateCovidorders(beneficaryWiseArylst.get(0).getTestsCode())) {
+            if (BundleConstants.isKIOSKOrder && !beneficaryWiseArylst.get(0).isCovidOrder()) {
                 ordtl.get(i).setAddress("" + address);
-            } else if (BundleConstants.isKIOSKOrder && CommonUtils.ValidateCovidorders(beneficaryWiseArylst.get(0).getTestsCode())) {
+            } else if (BundleConstants.isKIOSKOrder && (beneficaryWiseArylst.get(0).isCovidOrder())) {
                 if (!InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress())) {
                     ordtl.get(i).setAddress("" + orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
                 }

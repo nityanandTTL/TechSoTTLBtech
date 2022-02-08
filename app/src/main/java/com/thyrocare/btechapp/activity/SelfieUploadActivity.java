@@ -131,8 +131,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private EditText edt_bodyTemp;
     private Spinner spn_aarogyaApp;
     private String strAarogyaSetuApp = "";
-    ImageView iv_refresh, iv_capture;
-
+    ImageView iv_refresh, iv_capture, iv_verify_selfie;
+    String url = "";
 
     @Override
     protected void onStart() {
@@ -350,6 +350,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         btn_uploadPhoto = (Button) findViewById(R.id.btn_uploadPhoto);
         edt_bodyTemp = (EditText) findViewById(R.id.edt_bodyTemp);
         spn_aarogyaApp = (Spinner) findViewById(R.id.spn_aarogyaApp);
+        iv_verify_selfie = findViewById(R.id.iv_verify_selfie);
 
         iv_refresh = findViewById(R.id.iv_refresh);
         iv_capture = findViewById(R.id.iv_capture);
@@ -438,9 +439,9 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                         leaveFlag = selfieUploadResponseModel.getFlag();
                         fromdateapi = selfieUploadResponseModel.getFromDate();
                         todateapi = selfieUploadResponseModel.getToDate();
-                        if(!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                        if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                             callMasterSync();
-                        }else{
+                        } else {
                             try {
                                 appPreferenceManager.setIsAfterLogin(true);
                                 isAfterMasterSyncDone = true;
@@ -557,6 +558,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CAMERA) {
                 onCaptureImageResult(data);
@@ -594,6 +596,11 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 iv_capture.setVisibility(View.VISIBLE);
                 btn_uploadPhoto.setVisibility(View.VISIBLE);
                 btn_takePhoto.setVisibility(View.GONE);
+                Uri uri = Uri.fromFile(imagefile);
+                iv_capture.setImageURI(uri);
+//                globalClass.DisplayImagewithoutDefaultImage(activity,imagefile.getAbsolutePath(),iv_capture);
+//                globalClass.DisplayImagewithoutDefaultImage(activity,imagefile.getAbsolutePath(),iv_capture);
+//                globalClass.DisplayDeviceImages(activity, camera.getCameraBitmapPath(), iv_capture);
             }
         } else {
             iv_refresh.setVisibility(View.GONE);
@@ -601,6 +608,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             btn_uploadPhoto.setVisibility(View.GONE);
             btn_takePhoto.setVisibility(View.VISIBLE);
         }
+//        globalClass.DisplayImagewithoutDefaultImage(activity,imagefile.getAbsolutePath(),iv_capture);
         globalClass.DisplayDeviceImages(activity, camera.getCameraBitmapPath(), img_user_picture);
     }
 
@@ -623,6 +631,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             } else {
                 iv_refresh.setVisibility(View.VISIBLE);
                 iv_capture.setVisibility(View.VISIBLE);
+                iv_capture.setImageBitmap(thumbnail);
                 btn_uploadPhoto.setVisibility(View.VISIBLE);
                 btn_takePhoto.setVisibility(View.GONE);
             }
@@ -867,6 +876,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 if (response.isSuccessful() && response.body() != null) {
                     BtechImageResponseModel availableSlotsResponseModel = response.body();
                     if (availableSlotsResponseModel != null) {
+                        /*url = availableSlotsResponseModel.getImgUrl();
+                        loadImageVerify(url);*/
                         BundleConstants.Flag_facedetection = availableSlotsResponseModel.getFlag();
                         sub_key = "" + availableSlotsResponseModel.getSubscriptionKey();
                         end_key = "" + availableSlotsResponseModel.getEndpointKey();
@@ -891,6 +902,12 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 globalClass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
             }
         });
+    }
+
+    private void loadImageVerify(String url) {
+        if (url != null) {
+            globalClass.DisplayImagewithoutDefaultImage(this, url.replace("\\", "/"), iv_verify_selfie);
+        }
     }
 
     private void GetResponseBtechImage(final BtechImageResponseModel availableSlotsResponseModel) {

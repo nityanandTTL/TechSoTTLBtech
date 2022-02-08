@@ -72,10 +72,10 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
     private BarcodeInitAdapter barcodeinitAdapter;
     private String mobile = "";
     private boolean flagremove = false;
-    boolean isHCL;
-    String filename,filepath;
+    boolean isHCL, isOTP;
+    String filename, filepath;
 
-    public ScanBarcodeViewPagerAdapter(Activity mActivity, ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst, boolean showProduct, String mobile,boolean isHCL,String filename) {
+    public ScanBarcodeViewPagerAdapter(Activity mActivity, ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst, boolean showProduct, String mobile, boolean isHCL, String filename, boolean isOTP) {
         this.mActivity = mActivity;
         this.beneficaryWiseScanbarcodeArylst = beneficaryWiseScanbarcodeArylst;
         globalclass = new Global(mActivity);
@@ -83,6 +83,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         appPreferenceManager = new AppPreferenceManager(mActivity);
         this.showProduct = showProduct;
         this.isHCL = isHCL;
+        this.isOTP = isOTP;
         this.mobile = mobile;
         this.filename = filename;
     }
@@ -156,7 +157,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         final LinearLayout ll_otpvalidate = (LinearLayout) itemView.findViewById(R.id.ll_otpvalidate);
 
         try {
-            if (CommonUtils.ValidateCovidorders(beneficaryWiseScanbarcodeArylst.get(position).getTestsCode())) {
+            if (beneficaryWiseScanbarcodeArylst.get(position).isCovidOrder()) {
                 edt_srf.setHint("SRF ID*");
                 cv_rel.setVisibility(View.VISIBLE);
                 ll_srfID.setVisibility(View.VISIBLE);
@@ -169,27 +170,27 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             e.printStackTrace();
         }
 
-        if(ll_srfID.getVisibility() == View.VISIBLE){
+        if (ll_srfID.getVisibility() == View.VISIBLE) {
             tv_srf_mob.setVisibility(View.VISIBLE);
-            tv_srf_mob.setText("Mobile - "+mobile);
-        }else{
+            tv_srf_mob.setText("Mobile - " + mobile);
+        } else {
             tv_srf_mob.setVisibility(View.GONE);
         }
 
-        if (isHCL){
+        if (isHCL) {
             lin_BenAffidavitPic.setVisibility(View.VISIBLE);
             ll_view.setVisibility(View.VISIBLE);
 
             if (!StringUtils.isNull(filename)) {
 
-                if (filename.contains(".pdf")){
+                if (filename.contains(".pdf")) {
                     txt_captureAffidavitPic.setText(filename);
                     txt_captureAffidavitPic.setPaintFlags(txt_captureAffidavitPic.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                     txt_captureAffidavitPic.setVisibility(View.VISIBLE);
                     txt_captureAffidavitPic.setSelected(true);
                     imgDeleteA.setVisibility(View.VISIBLE);
                     img_uploadBenVail.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     txt_captureAffidavitPic.setText("View Image");
                     txt_captureAffidavitPic.setPaintFlags(txt_captureAffidavitPic.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                     txt_captureAffidavitPic.setVisibility(View.VISIBLE);
@@ -207,8 +208,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         }
 
 
-
-        tv_benName.setText(Global.toCamelCase(beneficaryWiseScanbarcodeArylst.get(position).getName()) +" (" + beneficaryWiseScanbarcodeArylst.get(position).getGender() + " | " + beneficaryWiseScanbarcodeArylst.get(position).getAge() +" years" + ")");
+        tv_benName.setText(Global.toCamelCase(beneficaryWiseScanbarcodeArylst.get(position).getName()) + " (" + beneficaryWiseScanbarcodeArylst.get(position).getGender() + " | " + beneficaryWiseScanbarcodeArylst.get(position).getAge() + " years" + ")");
         tv_OrderNo.setText(beneficaryWiseScanbarcodeArylst.get(position).getOrderNo());
 
         if (showProduct) {
@@ -253,8 +253,17 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ll_otpvalidate.setVisibility(View.VISIBLE);
-                tv_number.setText("OTP will be sent to " + mobile);
+                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                    if (!isOTP) {
+                        CallRemoveSample(beneficaryWiseScanbarcodeArylst.get(position));
+                    } else {
+                        ll_otpvalidate.setVisibility(View.VISIBLE);
+                        tv_number.setText("OTP will be sent to " + mobile);
+                    }
+                } else {
+                    ll_otpvalidate.setVisibility(View.VISIBLE);
+                    tv_number.setText("OTP will be sent to " + mobile);
+                }
             }
         });
 
@@ -315,7 +324,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         img_uploadAffidavit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onClickListeners!=null){
+                if (onClickListeners != null) {
                     onClickListeners.onAffidavitClicked(beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position);
                 }
             }
@@ -326,7 +335,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             public void onClick(View v) {
                 if (txt_captureBenBarcodePic.getText().toString().equalsIgnoreCase("View Image")) {
                     if (onClickListeners != null) {
-                        onClickListeners.onImageShow(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(),  beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position,0);
+                        onClickListeners.onImageShow(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(), beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position, 0);
                     }
 //                   globalclass.OpenImageDialog(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(), mActivity, false);
                 } else if (txt_captureBenBarcodePic.getText().toString().equalsIgnoreCase("Upload Image")) {
@@ -342,7 +351,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             public void onClick(View v) {
                 if (txt_captureAffidavitPic.getText().toString().equalsIgnoreCase("View Image")) {
                     if (onClickListeners != null) {
-                        onClickListeners.onImageShow(filepath,beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position,1);
+                        onClickListeners.onImageShow(filepath, beneficaryWiseScanbarcodeArylst.get(position).getBenId(), position, 1);
                     }
 //                   globalclass.OpenImageDialog(beneficaryWiseScanbarcodeArylst.get(position).getVenepuncture(), mActivity, false);
                 } else if (txt_captureAffidavitPic.getText().toString().equalsIgnoreCase("Upload")) {
@@ -390,8 +399,8 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         return itemView;
     }
 
-    private void removePDF(String strPDF,TextView textView,ImageView iv) {
-        if (strPDF.length()!=0){
+    private void removePDF(String strPDF, TextView textView, ImageView iv) {
+        if (strPDF.length() != 0) {
             textView.setText("");
             iv.setVisibility(View.GONE);
         }
@@ -410,7 +419,6 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
                 }
             }
         }
-
     }
 
     private boolean ValidateOTP(String s) {
@@ -596,7 +604,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
         void onSRFDeleted(String SRFID, int BenPosition);
 
-        void onImageShow(String venepuncture, int benId, int position,int flag);
+        void onImageShow(String venepuncture, int benId, int position, int flag);
 
     }
 }

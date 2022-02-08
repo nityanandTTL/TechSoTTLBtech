@@ -114,6 +114,15 @@ public class SplashActivity extends AppCompatActivity {
 
         isFlebo = getIntent().getStringExtra("isFlebo");
         locationUpdateIntent = new Intent(this, LocationUpdateService.class);
+
+        System.out.println("Mith<<<<<<<<<<<<"+EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD)));
+        System.out.println("Mith<<<<<<<<<<<<QA"+EncryptionUtils.Ecrp_Hex("https://qa-dx-integration.staging.k8s.neontech.cloud/"));
+        String str = ""+EncryptionUtils.Ecrp_Hex("https://techsostng1.thyrocare.cloud/");
+        System.out.println("<><><><<><<><>><>><<><><><><><><><"+str);
+        String str1 = ""+EncryptionUtils.Dcrp_Hex(str);
+        System.out.println("------------"+str1);
+
+
     }
 
     private void CheckIfDeviceIsRooted() {
@@ -213,7 +222,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void fetchVersionControlDetails() {
         trackUserActivity();
-        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+        GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<VersionControlResponseModel> responseCall = apiInterface.VersionControlAPI();
         responseCall.enqueue(new Callback<VersionControlResponseModel>() {
             @Override
@@ -685,6 +694,7 @@ public class SplashActivity extends AppCompatActivity {
     private void notificationMapping() {
         // Get new Instance ID token
         String token = FirebaseInstanceId.getInstance().getToken();
+        System.out.println("Firebase>>>>>>>>>>>>>>>>"+token);
         NotificationMappingRequestModel model = new NotificationMappingRequestModel();
         model.setAppName("BTech");
         model.setClient_Id(appPreferenceManager.getLoginResponseModel().getUserID());

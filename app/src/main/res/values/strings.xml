@@ -346,6 +346,10 @@
     <string name="forgot_password"><u>Forgot Password ?</u></string>
     <string name="welcome_n_mr_mitanshu_kadam">Welcome ,\n MR. Mitanshu Kadam</string>
     <string name="add_beneficiary"><u>Add Beneficiary</u></string>
+    <string name="tc_otp_message">Enter OTP send to mobile number linked with this order, to proceed with Order Editing.</string>
+    <string name="pe_otp_message">Enter OTP sent to mobile number linked with this order, to proceed with order creation</string>
+
+
 
 
 </resources>

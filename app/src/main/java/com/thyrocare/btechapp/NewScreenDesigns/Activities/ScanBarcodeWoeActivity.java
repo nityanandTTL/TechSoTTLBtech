@@ -102,7 +102,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     private int BenIDToScan = 0, BarcodepositionToScan = 0;
     private int BenPositionForScan = 0, BenPositionForDelete = 0;
     private Camera camera;
-    private int BenIDToCaptureVenuPhoto = 0, PositionToStoreVenuPhoto = 0, BenIDToDeleteVenuPhoto = 0, PositionToDeleteVenuPhoto = 0, BenIDToUploadAffidavit = 0,BenIDToDeleteAffidavit = 0, PositionToDeleteAffidavit = 0;
+    private int BenIDToCaptureVenuPhoto = 0, PositionToStoreVenuPhoto = 0, BenIDToDeleteVenuPhoto = 0, PositionToDeleteVenuPhoto = 0, BenIDToUploadAffidavit = 0, BenIDToDeleteAffidavit = 0, PositionToDeleteAffidavit = 0;
     private TextView btn_Proceed;
     TextView btn_Next, btn_Previous;
     private Spinner spn_ben;
@@ -113,7 +113,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     File Affidavitfile;
     private int pick = 1123;
     private int Select_PDFFILE = 2121;
-    String fileName = "",filepath ="";
+    String fileName = "", filepath = "";
     int ImageFlag = 0;
     int DelFlag;
 
@@ -429,7 +429,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             if (beneficaryWiseArylst.size() != 0) {
                 for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
                     if (beneficaryWiseArylst.get(i).getTestsCode() != null) {
-                        if (CommonUtils.ValidateCovidorders(beneficaryWiseArylst.get(i).getTestsCode())) {
+//                        if (CommonUtils.ValidateCovidorders(beneficaryWiseArylst.get(i).getTestsCode())) {
+                        if (beneficaryWiseArylst.get(i).isCovidOrder()) {
                             if (beneficaryWiseArylst.get(i).getSRFID() != null) {
                                 if (beneficaryWiseArylst.get(i).getSRFID().toString().trim().length() > 4) {
 
@@ -449,12 +450,13 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
 
     private void InitViewpager(int Currentposition) {
         if (mAdapter != null) {
-            mAdapter.updateScanData(beneficaryWiseArylst, fileName,filepath);
+            mAdapter.updateScanData(beneficaryWiseArylst, fileName, filepath);
             mAdapter.notifyDataSetChanged();
         } else {
             boolean showProduct = orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct();
             boolean isHCL = orderVisitDetailsModel.getAllOrderdetails().get(0).isISHclOrder();
-            mAdapter = new ScanBarcodeViewPagerAdapter(mActivity, beneficaryWiseArylst, showProduct, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile(), isHCL, fileName);
+            boolean isOTP = orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP();
+            mAdapter = new ScanBarcodeViewPagerAdapter(mActivity, beneficaryWiseArylst, showProduct, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile(), isHCL, fileName,isOTP);
             BarcodeScanviewpager.setAdapter(mAdapter);
             DisplayDotsBelowViewpager();
         }
@@ -468,13 +470,13 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 BarcodepositionToScan = barcodePosition;
                 BenPositionForScan = BenPosition;
                 isRescan = false;
-               /* if (BuildConfig.DEBUG) {
-                    OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
-//                   EnterBarocodeManually();
+                if (BuildConfig.DEBUG) {
+                 //   OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
+                   EnterBarocodeManually();
 //                   OpenScanBarcodeScreen();
-                } else {*/
+                } else {
                 OpenScanBarcodeScreen();
-//                }
+                }
             }
 
             @Override
@@ -484,13 +486,13 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 BarcodepositionToScan = barcodePosition;
                 BenPositionForScan = BenPosition;
                 isRescan = true;
-//                if (BuildConfig.DEBUG) {
-//                    OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
-////                   EnterBarocodeManually();
+                if (BuildConfig.DEBUG) {
+                  //  OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
+                   EnterBarocodeManually();
 ////                   OpenScanBarcodeScreen();
-//                } else {
+                } else {
                 OpenScanBarcodeScreen();
-//                }
+                }
             }
 
             @Override
@@ -561,7 +563,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
 
             @Override
             public void onImageShow(String venepuncture, int benId, int position, int flag) {
-                BottomSheetController bottomSheetController = new BottomSheetController(mActivity, ScanBarcodeWoeActivity.this, venepuncture, false, benId, position,flag);
+                BottomSheetController bottomSheetController = new BottomSheetController(mActivity, ScanBarcodeWoeActivity.this, venepuncture, false, benId, position, flag);
                 bottomSheetController.SetBottomSheet(mActivity);
             }
         });
@@ -580,18 +582,18 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
 
     private void deleteAffidavit() {
         String imageurl = "";
-        if(filepath!=null ){
-           imageurl = filepath;
-        }else if (fileName!=null){
+        if (filepath != null) {
+            imageurl = filepath;
+        } else if (fileName != null) {
             imageurl = fileName;
         }
 
 //        imageurl = camera.getCameraBitmapPath();
         File BenBarcodePicimagefile = new File(imageurl);
-        if (BenBarcodePicimagefile !=null) {
+        if (BenBarcodePicimagefile != null) {
             for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
                 if (beneficaryWiseArylst.get(i).getBenId() == BenIDToDeleteVenuPhoto && i == PositionToDeleteVenuPhoto) {
-                    fileName ="";
+                    fileName = "";
                     filepath = "";
                 }
             }
@@ -605,7 +607,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     private void CaptureAffidavitDetails() {
 
         try {
-            final CharSequence[] items = {"Take Photo","Gallery", "Cancel"};
+            final CharSequence[] items = {"Take Photo", "Gallery", "Cancel"};
             final String[] userChoosenTask = {""};
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(mActivity);
             builder.setTitle("Upload Affidavit!");
@@ -827,102 +829,104 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == BundleConstants.START_BARCODE_SCAN) {
-            IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-            if ((scanningResult != null) && (scanningResult.getContents() != null)) {
-                final String scanned_barcode = scanningResult.getContents().trim();
-                if (!InputUtils.isNull(scanned_barcode)) {
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            OpenBarcodeConfirnationDialog(scanned_barcode);
-                        }
-                    }, 500);
-                } else {
-                    Toast.makeText(mActivity, "Retry scanning barcode", Toast.LENGTH_SHORT).show();
-                }
+        if (data != null) {
+            if (requestCode == BundleConstants.START_BARCODE_SCAN) {
+                IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+                if ((scanningResult != null) && (scanningResult.getContents() != null)) {
+                    final String scanned_barcode = scanningResult.getContents().trim();
+                    if (!InputUtils.isNull(scanned_barcode)) {
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                OpenBarcodeConfirnationDialog(scanned_barcode);
+                            }
+                        }, 500);
+                    } else {
+                        Toast.makeText(mActivity, "Retry scanning barcode", Toast.LENGTH_SHORT).show();
+                    }
 
-            }
-        } else if (requestCode == ImagePicker.REQUEST_CODE && resultCode == RESULT_OK) {
-            String imageurl = "";
-            VenupunctureUploadRequestModel vrm = null;
-            try {
-                imageurl = ImagePicker.Companion.getFile(data).toString();
-//                imageurl = camera.getCameraBitmapPath();
-                BenBarcodePicimagefile = new File(imageurl);
-                if (BenBarcodePicimagefile.exists()) {
-                    boolean ImageUpdated = false;
-                    if (ImageFlag == 1){
-                        fileName = BenBarcodePicimagefile.getName().toString();
-                        filepath = BenBarcodePicimagefile.getAbsoluteFile().toString();
-                        for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
-                            if (beneficaryWiseArylst.get(i).getBenId() == BenIDToUploadAffidavit && i == PositionToStoreVenuPhoto) {
-//                                        beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BenBarcodePicimagefile.getAbsolutePath());
-                                ImageUpdated = true;
-                            }
-                            //TODO Venupucture Image API
-                            vrm = getVenupunctureUploadRequestModel(i, "AFFEDEBIT", BenBarcodePicimagefile);
-                        }
-                        ImageFlag = 0;
-                    }else{
-                        for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
-                            if (beneficaryWiseArylst.get(i).getBenId() == BenIDToCaptureVenuPhoto && i == PositionToStoreVenuPhoto) {
-                                beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BenBarcodePicimagefile.getAbsolutePath());
-                                ImageUpdated = true;
-                            }
-                            //TODO Venupucture Image API
-                            vrm = getVenupunctureUploadRequestModel(i, "VIAL", BenBarcodePicimagefile);
-                        }
-                    }
-                    callVenupuctureAPI(vrm);
-                    if (ImageUpdated) {
-                        InitViewpager(PositionToStoreVenuPhoto);
-                    }
-                } else {
-                    Toast.makeText(mActivity, "Failed to capture photo", Toast.LENGTH_SHORT).show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (requestCode == Select_PDFFILE) {
-            try {
-                Uri path;
-                if (data != null && data.getData() != null) {
-                    path = data.getData();
-                    if (path.toString().contains(".pdf")) {
-                        String pt = FilePath.getPath(mActivity, path);
-                        if (pt == null) {
-                            Toast.makeText(mActivity, "Please move your .pdf file to internal storage and retry", Toast.LENGTH_SHORT).show();
-                        } else {
-                            VenupunctureUploadRequestModel vrm = null;
-                            Affidavitfile = new File(FilePath.getPath(mActivity, path));
-                            fileName = Affidavitfile.getName().toString();
-                            if (Affidavitfile.exists()) {
-                                boolean ImageUpdated = false;
-                                for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
-                                    if (beneficaryWiseArylst.get(i).getBenId() == BenIDToUploadAffidavit && i == PositionToStoreVenuPhoto) {
-//                                        beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(Affidavitfile.getAbsolutePath());
-                                        ImageUpdated = true;
-                                    }
-                                    //TODO Venupucture Image API
-                                    vrm = getVenupunctureUploadRequestModel(i, "AFFEDEBIT", Affidavitfile);
+            } else if (requestCode == ImagePicker.REQUEST_CODE && resultCode == RESULT_OK) {
+                String imageurl = "";
+                VenupunctureUploadRequestModel vrm = null;
+                try {
+                    imageurl = ImagePicker.Companion.getFile(data).toString();
+//                    imageurl = camera.getCameraBitmapPath();
+                    BenBarcodePicimagefile = new File(imageurl);
+                    if (BenBarcodePicimagefile.exists()) {
+                        boolean ImageUpdated = false;
+                        if (ImageFlag == 1) {
+                            fileName = BenBarcodePicimagefile.getName().toString();
+                            filepath = BenBarcodePicimagefile.getAbsoluteFile().toString();
+                            for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                                if (beneficaryWiseArylst.get(i).getBenId() == BenIDToUploadAffidavit && i == PositionToStoreVenuPhoto) {
+//                                        beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BenBarcodePicimagefile.getAbsolutePath());
+                                    ImageUpdated = true;
                                 }
-                                callVenupuctureAPI(vrm);
-                                if (ImageUpdated) {
-                                    InitViewpager(PositionToStoreVenuPhoto);
-                                }
-                            } else {
-                                Toast.makeText(mActivity, "Failed to Upload data", Toast.LENGTH_SHORT).show();
+                                //TODO Venupucture Image API
+                                vrm = getVenupunctureUploadRequestModel(i, "AFFEDEBIT", BenBarcodePicimagefile);
                             }
+                            ImageFlag = 0;
+                        } else {
+                            for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                                if (beneficaryWiseArylst.get(i).getBenId() == BenIDToCaptureVenuPhoto && i == PositionToStoreVenuPhoto) {
+                                    beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BenBarcodePicimagefile.getAbsolutePath());
+                                    ImageUpdated = true;
+                                }
+                                //TODO Venupucture Image API
+                                vrm = getVenupunctureUploadRequestModel(i, "VIAL", BenBarcodePicimagefile);
+                            }
+                        }
+                        callVenupuctureAPI(vrm);
+                        if (ImageUpdated) {
+                            InitViewpager(PositionToStoreVenuPhoto);
                         }
                     } else {
-                        Toast.makeText(mActivity, "Please move your .pdf file to internal storage and retry", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "Failed to capture photo", Toast.LENGTH_SHORT).show();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                Toast.makeText(mActivity, "Something wrong with file", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
+            } else if (requestCode == Select_PDFFILE) {
+                try {
+                    Uri path;
+                    if (data != null && data.getData() != null) {
+                        path = data.getData();
+                        if (path.toString().contains(".pdf")) {
+                            String pt = FilePath.getPath(mActivity, path);
+                            if (pt == null) {
+                                Toast.makeText(mActivity, "Please move your .pdf file to internal storage and retry", Toast.LENGTH_SHORT).show();
+                            } else {
+                                VenupunctureUploadRequestModel vrm = null;
+                                Affidavitfile = new File(FilePath.getPath(mActivity, path));
+                                fileName = Affidavitfile.getName().toString();
+                                if (Affidavitfile.exists()) {
+                                    boolean ImageUpdated = false;
+                                    for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
+                                        if (beneficaryWiseArylst.get(i).getBenId() == BenIDToUploadAffidavit && i == PositionToStoreVenuPhoto) {
+//                                        beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(Affidavitfile.getAbsolutePath());
+                                            ImageUpdated = true;
+                                        }
+                                        //TODO Venupucture Image API
+                                        vrm = getVenupunctureUploadRequestModel(i, "AFFEDEBIT", Affidavitfile);
+                                    }
+                                    callVenupuctureAPI(vrm);
+                                    if (ImageUpdated) {
+                                        InitViewpager(PositionToStoreVenuPhoto);
+                                    }
+                                } else {
+                                    Toast.makeText(mActivity, "Failed to Upload data", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } else {
+                            Toast.makeText(mActivity, "Please move your .pdf file to internal storage and retry", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(mActivity, "Something wrong with file", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -955,7 +959,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                     imgurl = beneficaryWiseArylst.get(PositionToDeleteVenuPhoto).getVenepuncture();
                     break;
                 }
-            }else{
+            } else {
                 imgurl = "";
             }
         }
@@ -1131,13 +1135,13 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         bottomSheetDialog.dismiss();
     }
 
-    public void vialImageDelete(int benId, int position, BottomSheetDialog bottomSheetDialog,int imageFlag) {
+    public void vialImageDelete(int benId, int position, BottomSheetDialog bottomSheetDialog, int imageFlag) {
         BenIDToDeleteVenuPhoto = benId;
         PositionToDeleteVenuPhoto = position;
         DelFlag = imageFlag;
-        if (DelFlag == 0){
+        if (DelFlag == 0) {
             deleteVialImage();
-        }else{
+        } else {
             deleteAffidavit();
         }
         bottomSheetDialog.dismiss();

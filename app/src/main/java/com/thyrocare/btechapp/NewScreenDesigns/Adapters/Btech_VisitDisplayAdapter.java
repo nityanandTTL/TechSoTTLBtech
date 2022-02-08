@@ -88,11 +88,19 @@ import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitDisplayAdapter.MyViewHolder> {
     private static final String TAG = Btech_VisitDisplayAdapter.class.getSimpleName();
     private final Activity activity;
-    private HomeScreenActivity homeScreenActivity;
     private final GPSTracker gpsTracker;
+    private final String current_date;
+    boolean isAutoTimeSelected = false;
+    CharSequence[] items;
+    //neha g------------
+    String finaltime = "";
+    Long time, currenttime;
+    int hr = 0;
+    int minnew = 0;
+    VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new;
+    private HomeScreenActivity homeScreenActivity;
     private LayoutInflater layoutInflater;
     private ArrayList<OrderVisitDetailsModel> orderVisitDetailsModelsArr;
-    private final String current_date;
     private OnClickListeners onClickListeners;
     private AppPreferenceManager appPreferenceManager;
     private int fastingFlagInt;
@@ -101,15 +109,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     private refreshDelegate refreshDelegate1;
     private Date strDate;
     private Date apitimeinHHMMFormat;
-    boolean isAutoTimeSelected = false;
     private Date strDate2;
     private String apiMinusFifdisp, apiPlusFifdisp, apiPlusTwoPBBS;
-    CharSequence[] items;
-    //neha g------------
-    String finaltime = "";
-    Long time, currenttime;
-    int hr = 0;
-    int minnew = 0;
     private String userChoosenReleaseTask;
     //neha g----------------------
     private String Test;
@@ -120,7 +121,6 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     private Date strDate3;
     private Global globalClass;
     private boolean isCancelRequesGenereted = false;
-    VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new;
 
     public Btech_VisitDisplayAdapter(VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new, Activity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels) {
         this.activity = activity;
@@ -135,52 +135,6 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
 
     public void UpdateList(ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels) {
         this.orderVisitDetailsModelsArr = orderDetailsResponseModels;
-    }
-
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView txtCustomerName, txtOrderNo, txtDate, txtSlot, txtBeneficiary, txtSamples, txtAddress, txtPPBSStatus, txtFastingStatus, txtRBSStatus, direct_visit, txtKits, txt_visit_day;
-        ImageView imgRelease, imgCall, img_accept, imgStart;
-        LinearLayout layoutAccept_Release_Ord, layoutMain, lin_bencount, lin_kits, layoutFasingStatus, ll_accept, ll_start;
-        View view_seperater;
-        LinearLayout LL_swipe;
-        RelativeLayout rel_imgRelease;
-        SlideView slide_view;
-//        SwipeableButton swipe_button;
-
-        public MyViewHolder(View view) {
-            super(view);
-
-            txtOrderNo = (TextView) view.findViewById(R.id.txtOrderNo);
-            txtDate = (TextView) view.findViewById(R.id.txtDate);
-            txtSlot = (TextView) view.findViewById(R.id.txtSlot);
-            txtBeneficiary = (TextView) view.findViewById(R.id.txtBeneficiary);
-            txtKits = (TextView) view.findViewById(R.id.txtKits);
-            txtSamples = (TextView) view.findViewById(R.id.txtSamples);
-            txtCustomerName = (TextView) view.findViewById(R.id.txtCustomerName);
-            txtAddress = (TextView) view.findViewById(R.id.txtAddress);
-            layoutAccept_Release_Ord = (LinearLayout) view.findViewById(R.id.layoutAccept_Release_Ord);
-            layoutMain = (LinearLayout) view.findViewById(R.id.layoutMain);
-            lin_bencount = (LinearLayout) view.findViewById(R.id.lin_bencount);
-            lin_kits = (LinearLayout) view.findViewById(R.id.lin_kits);
-            txtFastingStatus = (TextView) view.findViewById(R.id.txtFastingStatus);
-            txtPPBSStatus = (TextView) view.findViewById(R.id.txtPPBSStatus);
-            txtRBSStatus = (TextView) view.findViewById(R.id.txtRBSStatus);
-            direct_visit = (TextView) view.findViewById(R.id.direct_visit);
-            txt_visit_day = (TextView) view.findViewById(R.id.txt_visit_day);
-            img_accept = (ImageView) view.findViewById(R.id.img_accept);
-            imgStart = (ImageView) view.findViewById(R.id.imgStart);
-            imgRelease = (ImageView) view.findViewById(R.id.imgRelease);
-            rel_imgRelease = (RelativeLayout) view.findViewById(R.id.rel_imgRelease);
-            LL_swipe = (LinearLayout) view.findViewById(R.id.LL_swipe);
-            imgCall = (ImageView) view.findViewById(R.id.imgCall);
-            view_seperater = (View) view.findViewById(R.id.view_seperater);
-            layoutFasingStatus = (LinearLayout) view.findViewById(R.id.layoutFastingStatus);
-            ll_accept = (LinearLayout) view.findViewById(R.id.ll_accept);
-            ll_start = (LinearLayout) view.findViewById(R.id.ll_start);
-            slide_view = view.findViewById(R.id.slide_view);
-//            swipe_button = view.findViewById(R.id.swipe_button);
-        }
     }
 
     @Override
@@ -277,18 +231,12 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             }
         });
 
-    /*    holder.swipe_button.setOnSwipedListener(new View.OnDragListener(
-
-        ));*/
-
-
         holder.rel_imgRelease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onReleaseButtonClicked(pos, holder, holder.txtCustomerName.getText().toString().trim(), holder.txtOrderNo.getText().toString().trim());
             }
         });
-
 
         holder.ll_start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,8 +261,6 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                         Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
                     }
                 }
-
-
             }
         });
 
@@ -801,8 +747,6 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         return kitsReq;
     }
 
-    // TODO ---------------- methods of listeners -----------------------------------------------------
-
     private void SendinglatlongOrderAllocation(int pos) {
 
         if (ApplicationController.sendLatLongforOrderController != null) {
@@ -823,6 +767,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         });
 
     }
+
+    // TODO ---------------- methods of listeners -----------------------------------------------------
 
     private void onAcceptButtonClicked(final MyViewHolder holder, final int pos) {
 
@@ -969,7 +915,11 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 cancelVisit = "y";
             } else {
                 if (toShowResheduleOption) {
-                    tv_ord_pass.setVisibility(View.VISIBLE);
+                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                        tv_ord_pass.setVisibility(View.GONE);
+                    }else{
+                        tv_ord_pass.setVisibility(View.VISIBLE);
+                    }
                     tv_ord_rel.setVisibility(View.VISIBLE);
                     tv_ord_resch.setVisibility(View.VISIBLE);
                     ll_cancl.setVisibility(View.GONE);
@@ -977,7 +927,11 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                     /*items = new String[]{"Order Reschedule",
                             "Request Release", "Order Pass"};*/
                 } else {
-                    tv_ord_pass.setVisibility(View.VISIBLE);
+                   if(Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                       tv_ord_pass.setVisibility(View.GONE);
+                    }else{
+                        tv_ord_pass.setVisibility(View.VISIBLE);
+                    }
                     tv_ord_rel.setVisibility(View.VISIBLE);
                     tv_ord_resch.setVisibility(View.GONE);
                     ll_cancl.setVisibility(View.GONE);
@@ -1188,31 +1142,6 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 MessageLogger.LogDebug("Errror", t.getMessage());
             }
         });
-    }
-
-
-    private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
-
-        @Override
-        public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark, String date) {
-
-            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
-            orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
-            orderStatusChangeRequestModel.setRemarks(remark);
-            orderStatusChangeRequestModel.setStatus(11);
-            orderStatusChangeRequestModel.setAppointmentDate(date);
-
-            if (isNetworkAvailable(activity)) {
-                CallOrderStatusChangeAPI(orderStatusChangeRequestModel);
-            } else {
-                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onCancelButtonClicked() {
-
-        }
     }
 
     private void CallOrderStatusChangeAPI(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
@@ -1720,8 +1649,6 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
 
 
     }
-    //TODO NEHA
-
 
     @Override
     public int getItemCount() {
@@ -1732,7 +1659,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     public long getItemId(int position) {
         return super.getItemId(position);
     }
-
+    //TODO NEHA
 
     public void setOnItemClickListener(OnClickListeners onClickListeners) {
         this.onClickListeners = onClickListeners;
@@ -1750,5 +1677,74 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         void onStart(OrderVisitDetailsModel orderVisitDetailsModel);
 
         void onRefresh();
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView txtCustomerName, txtOrderNo, txtDate, txtSlot, txtBeneficiary, txtSamples, txtAddress, txtPPBSStatus, txtFastingStatus, txtRBSStatus, direct_visit, txtKits, txt_visit_day;
+        ImageView imgRelease, imgCall, img_accept, imgStart;
+        LinearLayout layoutAccept_Release_Ord, layoutMain, lin_bencount, lin_kits, layoutFasingStatus, ll_accept, ll_start;
+        View view_seperater;
+        LinearLayout LL_swipe;
+        RelativeLayout rel_imgRelease;
+        SlideView slide_view;
+//        SwipeableButton swipe_button;
+
+        public MyViewHolder(View view) {
+            super(view);
+
+            txtOrderNo = (TextView) view.findViewById(R.id.txtOrderNo);
+            txtDate = (TextView) view.findViewById(R.id.txtDate);
+            txtSlot = (TextView) view.findViewById(R.id.txtSlot);
+            txtBeneficiary = (TextView) view.findViewById(R.id.txtBeneficiary);
+            txtKits = (TextView) view.findViewById(R.id.txtKits);
+            txtSamples = (TextView) view.findViewById(R.id.txtSamples);
+            txtCustomerName = (TextView) view.findViewById(R.id.txtCustomerName);
+            txtAddress = (TextView) view.findViewById(R.id.txtAddress);
+            layoutAccept_Release_Ord = (LinearLayout) view.findViewById(R.id.layoutAccept_Release_Ord);
+            layoutMain = (LinearLayout) view.findViewById(R.id.layoutMain);
+            lin_bencount = (LinearLayout) view.findViewById(R.id.lin_bencount);
+            lin_kits = (LinearLayout) view.findViewById(R.id.lin_kits);
+            txtFastingStatus = (TextView) view.findViewById(R.id.txtFastingStatus);
+            txtPPBSStatus = (TextView) view.findViewById(R.id.txtPPBSStatus);
+            txtRBSStatus = (TextView) view.findViewById(R.id.txtRBSStatus);
+            direct_visit = (TextView) view.findViewById(R.id.direct_visit);
+            txt_visit_day = (TextView) view.findViewById(R.id.txt_visit_day);
+            img_accept = (ImageView) view.findViewById(R.id.img_accept);
+            imgStart = (ImageView) view.findViewById(R.id.imgStart);
+            imgRelease = (ImageView) view.findViewById(R.id.imgRelease);
+            rel_imgRelease = (RelativeLayout) view.findViewById(R.id.rel_imgRelease);
+            LL_swipe = (LinearLayout) view.findViewById(R.id.LL_swipe);
+            imgCall = (ImageView) view.findViewById(R.id.imgCall);
+            view_seperater = (View) view.findViewById(R.id.view_seperater);
+            layoutFasingStatus = (LinearLayout) view.findViewById(R.id.layoutFastingStatus);
+            ll_accept = (LinearLayout) view.findViewById(R.id.ll_accept);
+            ll_start = (LinearLayout) view.findViewById(R.id.ll_start);
+            slide_view = view.findViewById(R.id.slide_view);
+//            swipe_button = view.findViewById(R.id.swipe_button);
+        }
+    }
+
+    private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
+
+        @Override
+        public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark, String date) {
+
+            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
+            orderStatusChangeRequestModel.setId(orderDetailsModel.getSlotId() + "");
+            orderStatusChangeRequestModel.setRemarks(remark);
+            orderStatusChangeRequestModel.setStatus(11);
+            orderStatusChangeRequestModel.setAppointmentDate(date);
+
+            if (isNetworkAvailable(activity)) {
+                CallOrderStatusChangeAPI(orderStatusChangeRequestModel);
+            } else {
+                Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
     }
 }

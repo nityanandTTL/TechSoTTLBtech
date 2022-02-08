@@ -80,10 +80,11 @@ public class CommonUtils {
 
     public static boolean ValidateCovidorders(String testsCode) {
         if (testsCode != null) {
-            return testsCode.toString().trim().equalsIgnoreCase("COVID-19") || testsCode.toString().trim().equalsIgnoreCase("COVID 19") || testsCode.toString().trim().equalsIgnoreCase("COVID19");
+            return testsCode.toString().trim().contains("COVID-19") || testsCode.toString().trim().contains("COVID 19") || testsCode.toString().trim().contains("COVID19") || testsCode.toString().trim().contains("RTPCR");
         }
         return false;
     }
+
 
     public static String encodeImage(Bitmap bm) {
         try {

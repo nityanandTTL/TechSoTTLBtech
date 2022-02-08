@@ -65,6 +65,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private String PPE_AlertMsg;
     private boolean isKCF;
     private boolean ISHclOrder;
+    private boolean IsOTP;
+    private boolean isdisabledelete;
 
 
     protected OrderDetailsModel(Parcel in) {
@@ -121,6 +123,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         IsPPE = in.readByte() != 0;
         isKCF = in.readByte() != 0;
         ISHclOrder = in.readByte() != 0;
+        IsOTP = in.readByte() != 0;
+        isdisabledelete = in.readByte() != 0;
         PPE_AlertMsg = in.readString();
     }
 
@@ -179,6 +183,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeByte((byte) (IsPPE ? 1 : 0));
         dest.writeByte((byte) (isKCF ? 1 : 0));
         dest.writeByte((byte) (ISHclOrder ? 1 : 0));
+        dest.writeByte((byte) (IsOTP ? 1 : 0));
+        dest.writeByte((byte) (isdisabledelete ? 1 : 0));
         dest.writeString(PPE_AlertMsg);
     }
 
@@ -210,6 +216,22 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setISHclOrder(boolean ISHclOrder) {
         this.ISHclOrder = ISHclOrder;
+    }
+
+    public boolean isOTP() {
+        return IsOTP;
+    }
+
+    public void setOTP(boolean OTP) {
+        IsOTP = OTP;
+    }
+
+    public boolean isIsdisabledelete() {
+        return isdisabledelete;
+    }
+
+    public void setIsdisabledelete(boolean isdisabledelete) {
+        this.isdisabledelete = isdisabledelete;
     }
 
     public void setKCF(boolean KCF) {

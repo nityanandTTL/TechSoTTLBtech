@@ -31,12 +31,14 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetBtechCert
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.MainMaterialModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.NotificationMappingResponseModel;
+import com.thyrocare.btechapp.models.api.request.AddONRequestModel;
 import com.thyrocare.btechapp.models.api.request.BtechsRequestModel;
 import com.thyrocare.btechapp.models.api.request.BtechwithHub_MasterBarcodeMappingRequestModel;
 import com.thyrocare.btechapp.models.api.request.CampStartedRequestModel;
 import com.thyrocare.btechapp.models.api.request.CartAPIRequestModel;
 import com.thyrocare.btechapp.models.api.request.CashDepositEntryRequestModel;
 import com.thyrocare.btechapp.models.api.request.ChangePasswordRequestModel;
+import com.thyrocare.btechapp.models.api.request.GetNBTDetailRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetPatientDetailsRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetTestCodeRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetVideoLanguageWiseRequestModel;
@@ -71,11 +73,13 @@ import com.thyrocare.btechapp.models.api.request.SignInRequestModel;
 import com.thyrocare.btechapp.models.api.request.StockAvailabilityRequestModel;
 import com.thyrocare.btechapp.models.api.request.Tsp_Send_RequestModel;
 import com.thyrocare.btechapp.models.api.request.UpdateMaterial;
+import com.thyrocare.btechapp.models.api.response.AddOnResponseModel;
 import com.thyrocare.btechapp.models.api.response.CartAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel1;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
 import com.thyrocare.btechapp.models.api.response.GetCollectionReqModel;
 import com.thyrocare.btechapp.models.api.response.GetCollectionRespModel;
+import com.thyrocare.btechapp.models.api.response.GetNBTDetailResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetTestResponseModel;
 import com.thyrocare.btechapp.models.api.response.LeadChannelRespModel;
 import com.thyrocare.btechapp.models.api.response.LeadPurposeResponseModel;
@@ -437,4 +441,13 @@ public interface PostAPIInterface {
     @POST("/api/partner-integration/v1/events")
     Call<PaytypeResponseModel> getStatusUpdate(@Body PaytypeRequestModel paytypeRequestModel);
 
+    @POST("api/Account/getNBTDetail")
+    Call<GetNBTDetailResponseModel> getNBTDetails(@Body GetNBTDetailRequestModel getNBTDetailRequestModel);
+
+    @Headers({"Content-Type: application/json",
+            "x-source: THYROCARE",
+            "x-api-auth: 9551825306485694"
+    })
+    @POST("/api/partner-integration/v1/order/{orderID}/add-on-order")
+    Call<AddOnResponseModel> getAddOnOrder(@Path("orderID")String OrderID, @Body AddONRequestModel addONRequestModel);
 }

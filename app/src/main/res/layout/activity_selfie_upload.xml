@@ -282,8 +282,9 @@
                 android:src="@drawable/refrsh_1" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/iv_verify_selfie"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:src="@drawable/ic_sel_m" />
@@ -299,12 +300,12 @@
 
             <ImageView
                 android:id="@+id/iv_capture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:visibility="gone"
-                android:src="@drawable/ic_sel_m2" />
+                android:src="@drawable/ic_sel_m"/>
         </LinearLayout>
 
         <Button

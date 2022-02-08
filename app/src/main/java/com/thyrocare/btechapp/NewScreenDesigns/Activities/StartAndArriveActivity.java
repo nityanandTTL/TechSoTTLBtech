@@ -199,10 +199,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
     private String[] paymentItems;
     private int PaymentMode;
     RelativeLayout customSwipeButton2;
-
     TextView tv_toolbar;
     ImageView iv_back, iv_home;
-
 
     @Override
     public void onBackPressed() {
@@ -303,7 +301,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
             }
         }
 
-
     }
 
     private void SetTitleHead(String head_titl) {
@@ -377,11 +374,11 @@ public class StartAndArriveActivity extends AppCompatActivity {
         iv_home.setVisibility(View.GONE);
 
         // TODO Add ben not allowed for PE-Btech time being  GG Sir's instruction
-        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || btn_arrive.getVisibility() == View.VISIBLE){
-            btn_floating_add_ben.setVisibility(View.GONE);
-        }else{
-            btn_floating_add_ben.setVisibility(View.VISIBLE);
-        }
+     //   if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || btn_arrive.getVisibility() == View.VISIBLE) {
+      //      btn_floating_add_ben.setVisibility(View.GONE);
+     //   } else {
+      //      btn_floating_add_ben.setVisibility(View.VISIBLE);
+      //  }
 
         if (BundleConstants.isKIOSKOrder) {
             customSwipeButton2.setVisibility(View.GONE);
@@ -402,11 +399,11 @@ public class StartAndArriveActivity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(BundleConstants.isKIOSKOrder){
+                if (BundleConstants.isKIOSKOrder) {
                     Intent intent1 = new Intent(mActivity, KIOSK_Scanner_Activity.class);
                     intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent1);
-                }else{
+                } else {
                     Intent intent = new Intent(mActivity, VisitOrdersDisplayFragment_new.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -476,10 +473,14 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     if (isNetworkAvailable(mActivity)) {
                         VenuPuntureUtils.ClearVenupumtureTempGlobalArry();
 //                                        stopService(new Intent(getApplicationContext(), TrackerService.class));
-                        if(BundleConstants.callOTPFlag == 1 || !Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                        if (BundleConstants.callOTPFlag == 1 || !Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                             callOrderStatusChangeApi(3, "Arrive", "", "");
-                        }else{
-                            callAPIforOTP(orderDetailsModel);
+                        } else {
+                            if (!orderDetailsModel.getAllOrderdetails().get(0).isOTP()) {
+                                callOrderStatusChangeApi(3, "Arrive", "", "");
+                            } else {
+                                callAPIforOTP(orderDetailsModel);
+                            }
                         }
                     } else {
                         Toast.makeText(mActivity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
@@ -496,39 +497,41 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
 
                 try {
-                    if(Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
-                        String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
-                        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
 
-                        View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                        if (checkBeneficiaryDtls()){
+                            String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
+                            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
 
-                        TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
-                        tv_text.setText(string);
+                            View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
 
-                        Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
-                        btn_yes.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                bottomSheetDialog.dismiss();
-                                Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
-                                intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
-                                startActivity(intentOrderBooking);
-                                finish();
-                            }
-                        });
+                            TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+                            tv_text.setText(string);
 
-                        Button btn_no = bottomSheet.findViewById(R.id.btn_no);
-                        btn_no.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                bottomSheetDialog.dismiss();
+                            Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+                            btn_yes.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    bottomSheetDialog.dismiss();
+                                    Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+                                    intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+                                    startActivity(intentOrderBooking);
+                                    finish();
+                                }
+                            });
 
-                            }
-                        });
+                            Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+                            btn_no.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    bottomSheetDialog.dismiss();
 
-                        bottomSheetDialog.setContentView(bottomSheet);
-                        bottomSheetDialog.setCancelable(false);
-                        bottomSheetDialog.show();
+                                }
+                            });
+
+                            bottomSheetDialog.setContentView(bottomSheet);
+                            bottomSheetDialog.setCancelable(false);
+                            bottomSheetDialog.show();
                         /*AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
                         alertDialog.setMessage("You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?");
                         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
@@ -548,7 +551,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                     }
                                 });
                         alertDialog.show();*/
-                    }else {
+                        }
+                    } else {
                         totalAmountPayable = 0;
                         setpayMentActivity();
                     }
@@ -583,37 +587,32 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                 && orderDetailsModel.getAllOrderdetails().get(0).getBenMaster() != null
                                 && orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().size() > 3) {
 
-                            if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
-                                btn_floating_add_ben.setVisibility(View.GONE);
-                            } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
-                                if (!recyle_OrderDetail.canScrollVertically(1)) {
+                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                btn_floating_add_ben.setVisibility(View.VISIBLE);
+                            } else {
+                                if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
                                     btn_floating_add_ben.setVisibility(View.GONE);
-                                } else {
-//                                    btn_floating_add_ben.setVisibility(View.VISIBLE);
-
-                                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                                } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
+                                    if (!recyle_OrderDetail.canScrollVertically(1)) {
                                         btn_floating_add_ben.setVisibility(View.GONE);
-                                    }else{
+                                    } else {
                                         btn_floating_add_ben.setVisibility(View.VISIBLE);
                                     }
+                                } else {
+                                    btn_floating_add_ben.setVisibility(View.GONE);
                                 }
-                            } else {
-                                btn_floating_add_ben.setVisibility(View.GONE);
                             }
                         } else {
-                            if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
-                                btn_floating_add_ben.setVisibility(View.GONE);
-                            } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
-//                                btn_floating_add_ben.setVisibility(View.VISIBLE);
-
-                                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
-                                    btn_floating_add_ben.setVisibility(View.GONE);
-                                }else{
-                                    btn_floating_add_ben.setVisibility(View.VISIBLE);
-                                }
-
+                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                btn_floating_add_ben.setVisibility(View.VISIBLE);
                             } else {
-                                btn_floating_add_ben.setVisibility(View.GONE);
+                                if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
+                                    btn_floating_add_ben.setVisibility(View.GONE);
+                                } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
+                                    btn_floating_add_ben.setVisibility(View.VISIBLE);
+                                } else {
+                                    btn_floating_add_ben.setVisibility(View.GONE);
+                                }
                             }
                         }
                     } else {
@@ -631,6 +630,24 @@ public class StartAndArriveActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private boolean checkBeneficiaryDtls() {
+        for (int i = 0; i < orderDetailsModel.getAllOrderdetails().size(); i++) {
+            for (int j = 0; j < orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().size(); j++) {
+                if (orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getName().trim().contains("Test_user") ||orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getName().trim().contains("TEST_USER") ){
+                    Toast.makeText(mActivity, "Kindly edit beneficiary name", Toast.LENGTH_SHORT).show();
+                    return false;
+                }else if(orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getAge() == 150){
+                    Toast.makeText(mActivity, "Kindly edit beneficiary age", Toast.LENGTH_SHORT).show();
+                    return false;
+                }else if(orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getGender().equalsIgnoreCase("Dummy")){
+                    Toast.makeText(mActivity, "Kindly edit beneficiary gender", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void callAPIforOTP(final OrderVisitDetailsModel orderDetailsModel) {
@@ -2246,7 +2263,15 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     removebenModel.setIsAdded(orderVisitDetailsModel.getAllOrderdetails().get(0).isAddBen() ? "1" : "0");
                     bottomSheetDialog.dismiss();
                     if (cd.isConnectingToInternet()) {
-                        CallsendOTPAPIforOrderEdit("Delete", orderVisitDetailsModel, orderVisitDetailsModel.getVisitId(), selectedbeneficiaryDetailsModel.getBenId());
+                        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                            if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
+                                CallRemoveBenAPI(removebenModel);
+                            } else {
+                                CallsendOTPAPIforOrderEdit("Delete", orderVisitDetailsModel, orderVisitDetailsModel.getVisitId(), selectedbeneficiaryDetailsModel.getBenId());
+                            }
+                        } else {
+                            CallsendOTPAPIforOrderEdit("Delete", orderVisitDetailsModel, orderVisitDetailsModel.getVisitId(), selectedbeneficiaryDetailsModel.getBenId());
+                        }
                     } else {
                         globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
                     }
@@ -2430,21 +2455,26 @@ public class StartAndArriveActivity extends AppCompatActivity {
         } else if (strButton.equalsIgnoreCase("Arrive")) {
             try {
                 if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
-                    btn_floating_add_ben.setVisibility(View.GONE);
-                } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
-//                    btn_floating_add_ben.setVisibility(View.VISIBLE);
-
                     if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
-                        btn_floating_add_ben.setVisibility(View.GONE);
-                    }else{
                         btn_floating_add_ben.setVisibility(View.VISIBLE);
+                    }else {
+                        btn_floating_add_ben.setVisibility(View.GONE);
                     }
+                } else if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                    btn_floating_add_ben.setVisibility(View.VISIBLE);
+                } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
+                    btn_floating_add_ben.setVisibility(View.VISIBLE);
                 } else {
                     btn_floating_add_ben.setVisibility(View.GONE);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                btn_floating_add_ben.setVisibility(View.GONE);
+                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                    btn_floating_add_ben.setVisibility(View.VISIBLE);
+                } else {
+                    btn_floating_add_ben.setVisibility(View.GONE);
+                }
+
             }
             btn_Proceed.setVisibility(View.VISIBLE);
             btn_arrive.setVisibility(View.GONE);
@@ -2542,8 +2572,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
     }
 
     private void ShowDialogToVerifyOTP(final String Action, final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
-
-
 
 
         CustomDialogforOTPValidation = new Dialog(mActivity);

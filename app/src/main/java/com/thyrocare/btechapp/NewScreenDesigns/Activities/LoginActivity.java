@@ -175,7 +175,7 @@ public class LoginActivity extends AppCompatActivity {
                 globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponseModel responseModel = response.body();
-                    if (/*BuildConfig.DEBUG ||*/ Global.checkLogin(responseModel.getCompanyName())) {
+                    if (BuildConfig.DEBUG || Global.checkLogin(responseModel.getCompanyName())) {
                         OnLoginResponseReceived(responseModel);
                     } else {
                         if (responseModel.getRole().equals(AppConstants.LME_ROLE_ID)) {
@@ -248,6 +248,8 @@ public class LoginActivity extends AppCompatActivity {
             appPreferenceManager.setUserID(responseModel.getUserID());
             appPreferenceManager.setAPISessionKey(responseModel.getAccess_token());
             appPreferenceManager.setLoginResponseModel(responseModel);
+            appPreferenceManager.setAccess_Token(responseModel.getAccess_token());
+            System.out.println("fsfsfsfsfsffdsfffffffffffffffffffff"+appPreferenceManager.getLoginResponseModel().getAccess_token());
             CallBtechWiseVersionTrackerAPI();
             PostToken();
             if (appPreferenceManager.getLoginResponseModel().getRole().equals(Constants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(Constants.HUB_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(Constants.NBT_ROLE_ID)) {//4 is for btech login & 6 is for hub 13 is for NBT
@@ -390,5 +392,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
 
         super.onResume();
+    }
+
+    public void swithtoactivity(LoginResponseModel responseModel) {
+        OnLoginResponseReceived(responseModel);
     }
 }

@@ -2,10 +2,8 @@ package com.thyrocare.btechapp.NewScreenDesigns.Adapters;
 
 import android.app.Activity;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,39 +14,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
-import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
-import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.delegate.OrderRescheduleDialogButtonClickedDelegate;
-import com.thyrocare.btechapp.dialog.RescheduleOrderDialog;
-import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
-import com.thyrocare.btechapp.models.api.request.ServiceUpdateRequestModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
-import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
-import com.thyrocare.btechapp.utils.app.CommonUtils;
-import com.thyrocare.btechapp.utils.app.DateUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
-import org.joda.time.DateTimeComparator;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
+import static com.thyrocare.btechapp.utils.app.OtpListenerUtil.mActivity;
 
 public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartArriveOrderDetailsAdapter.MyViewHolder> {
 
@@ -88,6 +66,7 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
 
         LinearLayout ll_kits;
         TextView tv_str_kits;
+
         public MyViewHolder(View itemView) {
             super(itemView);
             linBenDetails = (LinearLayout) itemView.findViewById(R.id.linBenDetails);
@@ -161,27 +140,74 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
         if (Status.equalsIgnoreCase("Arrive")) {
             if (isValidForEditing(BenMasterArray.get(position).getTestsCode())) {
                 holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
-            } else if (orderVisitDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
-                if (BenMasterArray.size() > 1) {
+            } else if (orderVisitDetailsModel.getAllOrderdetails().get(0).isIsdisabledelete()) {
+                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                    if (BenMasterArray.size() > 1) {
+                        checBenDetails(holder, position, orderVisitDetailsModel.getAllOrderdetails().get(0).isIsdisabledelete());
+                    } else {
+                        holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+                        holder.img_editBenDetails.setVisibility(View.VISIBLE);
+                        holder.img_DeleteBen.setVisibility(View.GONE);
+                    }
+                }else {
                     holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
                     holder.img_editBenDetails.setVisibility(View.VISIBLE);
-                    holder.img_DeleteBen.setVisibility(View.VISIBLE);
+                    holder.img_DeleteBen.setVisibility(View.GONE);
+                }
+            } else if (orderVisitDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
+                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                    if (BenMasterArray.size() > 1) {
+                        checBenDetails(holder, position, false);
+                        //   holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+                        //  holder.img_editBenDetails.setVisibility(View.VISIBLE);
+                        //  holder.img_DeleteBen.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.img_editBenDetails.setVisibility(View.VISIBLE);
+                        holder.img_DeleteBen.setVisibility(View.GONE);
+                        holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    if (BenMasterArray.size()>1){
+                        holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+                        holder.img_editBenDetails.setVisibility(View.VISIBLE);
+                        holder.img_DeleteBen.setVisibility(View.VISIBLE);
+                    }else {
+                        holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+                        holder.img_editBenDetails.setVisibility(View.VISIBLE);
+                        holder.img_DeleteBen.setVisibility(View.GONE);
+                    }
+                }
+
+                /*if (BenMasterArray.size() > 1) {
+                    checBenDetails(holder,position, false);
+                 //   holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+                  //  holder.img_editBenDetails.setVisibility(View.VISIBLE);
+                  //  holder.img_DeleteBen.setVisibility(View.VISIBLE);
                 } else {
                     holder.img_editBenDetails.setVisibility(View.VISIBLE);
                     holder.img_DeleteBen.setVisibility(View.GONE);
                     holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
-                }
+                }*/
             } else {
-                holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+                if(Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                    if (BenMasterArray.size() > 1) {
+                        checBenDetails(holder, position, true);
+                    } else {
+                        holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+                    }
+                }else {
+                    holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+                }
             }
         } else {
             holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+
         }
 
 
-        holder.tv_FirstBenName.setText(BenMasterArray.get(position).getName() + " (" + BenMasterArray.get(position).getGender() + " | " + BenMasterArray.get(position).getAge() + " years" +")");
+        holder.tv_FirstBenName.setText(BenMasterArray.get(position).getName() + " (" + BenMasterArray.get(position).getGender() + " | " + BenMasterArray.get(position).getAge() + " years" + ")");
         holder.tv_OrderNo.setText(!StringUtils.isNull(orderVisitDetailsModel.getVisitId()) ? orderVisitDetailsModel.getVisitId() : "");
-        holder.tv_Address.setText(!StringUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress().toString().trim()) ? Global.toCamelCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress().toString().trim()): "");
+        holder.tv_Address.setText(!StringUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress().toString().trim()) ? Global.toCamelCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress().toString().trim()) : "");
         holder.tv_MobileNo.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
         holder.tv_EmailID.setText(!StringUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail()) ? orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail() : "");
         holder.tv_AppointmentDateTime.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAppointmentDate() + ", " + DateUtil.Req_Date_Req(orderVisitDetailsModel.getAllOrderdetails().get(0).getSlot(), "hh:mm a", "HH:mm"));
@@ -193,10 +219,76 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
             holder.lin_benProduct.setVisibility(View.GONE);
         }
 
+        //if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+        // editBeneficiaryDetails(holder,position);
+        //  }
         holder.tv_benPrice.setText("" + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
 
         InitListener(holder, position);
 
+    }
+
+    private void checBenDetails(MyViewHolder holder, int position, boolean b) {
+        for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
+            for (int j = 0; j < orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().size(); j++) {
+                if (orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getName().trim().contains("Test_user") || orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getName().trim().contains("TEST_USER")) {
+                    holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+                    if (b) {
+                        holder.img_DeleteBen.setVisibility(View.GONE);
+                    }
+                } else if (orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getAge() == 150) {
+                    holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+                    if (b) {
+                        holder.img_DeleteBen.setVisibility(View.GONE);
+                    }
+                } else if (orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getGender().equalsIgnoreCase("Dummy")) {
+                    holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+                    if (b) {
+                        holder.img_DeleteBen.setVisibility(View.GONE);
+                    }
+                }else {
+                    if (orderVisitDetailsModel.getAllOrderdetails().get(i).isEditOrder()){
+                        holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+                        if (b) {
+                            holder.img_DeleteBen.setVisibility(View.GONE);
+                        }
+                    }else{
+                        holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+                        if (b) {
+                            holder.img_DeleteBen.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void editBeneficiaryDetails(MyViewHolder holder, int position) {
+        if (BenMasterArray.get(position).getName().toString().trim().contains("Test_user_")) {
+            holder.tv_benName.setText(BenMasterArray.get(position).getName());
+        }
+        if (BenMasterArray.get(position).getAge() == 150) {
+            holder.tv_benName.setText(BenMasterArray.get(position).getAge());
+        }
+    }
+
+
+    private boolean checkBeneficiaryDtls() {
+        for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
+            for (int j = 0; j < orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().size(); j++) {
+                if (orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getName().trim().contains("Test_user") || orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getName().trim().contains("TEST_USER")) {
+                    Toast.makeText(mActivity, "Kindly edit beneficiary name", Toast.LENGTH_SHORT).show();
+                    return false;
+                } else if (orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getAge() == 150) {
+                    Toast.makeText(mActivity, "Kindly edit beneficiary age", Toast.LENGTH_SHORT).show();
+                    return false;
+                } else if (orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getGender().equalsIgnoreCase("Dummy")) {
+                    Toast.makeText(mActivity, "Kindly edit beneficiary gender", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private boolean isValidForEditing(String tests) {

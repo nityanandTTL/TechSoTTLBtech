@@ -21,10 +21,12 @@ import com.thyrocare.btechapp.models.api.response.BtechImageResponseModel;
 import com.thyrocare.btechapp.models.api.response.BtechwithHubResponseModel;
 import com.thyrocare.btechapp.models.api.response.CampListDisplayResponseModel;
 import com.thyrocare.btechapp.models.api.response.CampScanQRResponseModel;
+import com.thyrocare.btechapp.models.api.response.DSAProductsResponseModel;
 import com.thyrocare.btechapp.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.DynamicBtechAvaliabilityResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchLedgerResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetPETestResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetTestListResponseModel;
 import com.thyrocare.btechapp.models.api.response.MaterialBtechStockResponseModel;
 import com.thyrocare.btechapp.models.api.response.MaterialINVResponseModel;
@@ -285,8 +287,14 @@ public interface GetAPIInterface {
     @GET("api/BenTestList/GetTestList/{benID}")
     Call<GetTestListResponseModel> CallGetTestDetailsAPI(@Path("benID") String benID);
 
-    @Headers("Content-Type: application/json")
     @GET("api/integration/v1/auth")
-    Call<PEAuthResponseModel> callPEAuthorization(@Header("x-source") String source,@Header("x-client") String client);
+    Call<PEAuthResponseModel> callPEAuthorization(@Header("Content-Type") String content_type, @Header("x-source") String source, @Header("client-id") String client);
+
+    @GET("/api/partner-integration/v1/catalog/pincode/{pincode}/items")
+    Call<GetPETestResponseModel> getPETests(@Header("Content-Type") String content_type, @Header("x-source") String source, @Header("x-api-auth") String authToken, @Path("pincode") String pincode);
+
+    //TODO DSA brandtestmaster
+    @GET("api/DSAProducts/Products/{OrderNo}")
+    Call<DSAProductsResponseModel> getDSAProducts(@Path("OrderNo") String OrderNo);
 }
 

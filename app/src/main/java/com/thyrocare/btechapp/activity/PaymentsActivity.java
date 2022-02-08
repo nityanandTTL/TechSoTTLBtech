@@ -288,13 +288,7 @@ public class PaymentsActivity extends AbstractActivity {
                                         setResult(BundleConstants.PAYMENTS_FINISH, intent);
                                         finish();
                                     }
-                                })
-                                /*.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        callPEPaymentModeAPI(pePaymentRequestModel);
-                                    }
-                                })*/.show();
+                                }).show();
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                         builder.setTitle("Verify Payment")
@@ -1360,9 +1354,9 @@ public class PaymentsActivity extends AbstractActivity {
         for (int i = 0; i < ordtl.size(); i++) {
             ordtl.get(i).setAmountDue(totalAmountPayable);
             ordtl.get(i).setAmountPayable(totalAmountPayable);
-            if (BundleConstants.isKIOSKOrder && !CommonUtils.ValidateCovidorders(beneficaryWiseArylst.get(0).getTestsCode())) {
+            if (BundleConstants.isKIOSKOrder && !beneficaryWiseArylst.get(0).isCovidOrder()) {
                 ordtl.get(i).setAddress("" + address);
-            } else if (BundleConstants.isKIOSKOrder && CommonUtils.ValidateCovidorders(beneficaryWiseArylst.get(0).getTestsCode())) {
+            } else if (BundleConstants.isKIOSKOrder && beneficaryWiseArylst.get(0).isCovidOrder()) {
                 if (!InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getAddress())) {
                     ordtl.get(i).setAddress("" + orderDetailsModel.getAllOrderdetails().get(0).getAddress());
                 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thyrocare.btechapp.models.api.request.SetBtechAvailabilityAPIRequestModel;
+import com.thyrocare.btechapp.models.api.response.DSAProductsResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginResponseModel;
 import com.thyrocare.btechapp.models.api.response.NewBtechAvaliabilityResponseModel;
 import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
@@ -33,6 +34,7 @@ public class AppPreferenceManager {
     private String are_terms_and_conditions_accepted = "are_terms_and_conditions_accepted";
     private String selfieResponse = "selfieResponse";
     private String loginResponse = "loginResponse";
+    private String dsaProductResponse = "dsaProductResponse";
     private String btechAvailabilityResponseModel = "btechAvailabilityResponseModel";
     private String NEWBTECHAVALIABILITYRESPONSEMODEL = "NEWBTECHAVALIABILITYRESPONSEMODEL";
     private String selectedSlotsArr = "selectedSlotsArr";
@@ -65,6 +67,7 @@ public class AppPreferenceManager {
     private String isLoadSpotlightOnHome = "isLoadSpotlightOnHome";
     public String ratecal = "ratecal";
     public String OTPFlagOneTime = "OTPFlag";
+    public String Access_Token = "access_token";
 
     //Neha G---------------------------------
     private String ShowTimeInNotificatn = "";
@@ -150,6 +153,15 @@ public class AppPreferenceManager {
 
     public void setAuthToken(String btechID) {
         appPreference.putString(this.authToken, btechID);
+    }
+
+
+    public String getAccess_Token() {
+        return appPreference.getString(Access_Token, "");
+    }
+
+    public void setAccess_Token(String access_Token) {
+        appPreference.putString(this.Access_Token, access_Token);
     }
 
     public String getShowTimeInNotificatn() {
@@ -320,6 +332,15 @@ public class AppPreferenceManager {
 
     public void setLoginResponseModel(LoginResponseModel loginResponseModel) {
         appPreference.putString(this.loginResponse, new Gson().toJson(loginResponseModel));
+    }
+
+    public DSAProductsResponseModel getDSAProductResponseModel(){
+        String value = appPreference.getString(this.dsaProductResponse, "");
+        return new Gson().fromJson(value, DSAProductsResponseModel.class);
+    }
+
+    public void setDSAProductResponseModel(DSAProductsResponseModel dsaProductsResponseModel) {
+        appPreference.putString(this.dsaProductResponse, new Gson().toJson(dsaProductsResponseModel));
     }
 
     public SelfieUploadResponseModel getSelfieResponseModel() {

@@ -92,7 +92,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
     private void CallgetremarksRequestApi() {
         GetAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
         Call<ArrayList<RemarksResponseModel>> responseCall = apiInterface.CallgetremarksRequestApi(11);
-        global.showProgressDialog(activity,"Please wait..");
+        global.showProgressDialog(activity, "Please wait..");
         responseCall.enqueue(new Callback<ArrayList<RemarksResponseModel>>() {
             @Override
             public void onResponse(Call<ArrayList<RemarksResponseModel>> call, retrofit2.Response<ArrayList<RemarksResponseModel>> response) {
@@ -121,13 +121,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
                                     //jai
                                     if (position > 0) {
                                         remarksResponseModelmain = remarksResponseModelsarr.get(position - 1);
-                                        String Remarksstr = remarks.get(position - 1);
-                                        if (Remarksstr.equals("OTHERS")) {
-                                            edt_remark.setVisibility(View.VISIBLE);
-                                        } else {
-                                            edt_remark.setVisibility(View.GONE);
-
-                                        }
+                                        String Remarksstr = remarks.get(position);
                                         for (RemarksResponseModel RRM :
                                                 remarksResponseModelsarr) {
                                             if (RRM.getReason().equals(Remarksstr)) {
@@ -135,8 +129,16 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
                                                 break;
                                             }
                                         }
+
+                                        if (Remarksstr.equalsIgnoreCase("OTHERS") || Remarksstr.equalsIgnoreCase("other")) {
+                                            edt_remark.setVisibility(View.VISIBLE);
+                                        } else {
+                                            edt_remark.setVisibility(View.GONE);
+
+                                        }
                                     }
                                 }
+
                                 @Override
                                 public void onNothingSelected(AdapterView<?> parent) {
 
@@ -148,6 +150,7 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
                     Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<RemarksResponseModel>> call, Throwable t) {
                 global.hideProgressDialog(activity);
@@ -220,38 +223,38 @@ public class RescheduleOrderDialog extends Dialog implements View.OnClickListene
                     sampleCollectedDay = dayOfMonth;
                     sampleCollectedMonth = monthOfYear;
                     sampleCollectedYear = year;*/
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(activity, AlertDialog.THEME_HOLO_LIGHT, new TimePickerDialog.OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                            String yyyy = sampleCollectedYear + "";
-                            String MM = (sampleCollectedMonth + 1) < 10 ? "0" + (sampleCollectedMonth + 1) : (sampleCollectedMonth + 1) + "";
-                            String dd = sampleCollectedDay < 10 ? "0" + sampleCollectedDay : sampleCollectedDay + "";
-                            String HH = hourOfDay < 10 ? "0" + hourOfDay : hourOfDay + "";
-                            minute = getRoundedMinute(minute);
-                            String mm = minute < 10 ? "0" + minute : minute + "";
-                            onlyTime = Integer.parseInt(HH);
-                            Logger.error(" onlyTime " + onlyTime);
-                            //SimpleDateFormat dateFormat=new SimpleDateFormat("HH:mm");
-                            String sampleCollectedTime = yyyy + "-" + MM + "-" + dd + " " + HH + ":" + mm;
-                            Logger.error("sampleCollectedTime: " + sampleCollectedTime);
-                            Calendar cl = Calendar.getInstance();
-                            cl.set(sampleCollectedYear, sampleCollectedMonth, sampleCollectedDay, hourOfDay, minute);
-                            if (cl.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
-                                if (5 <= onlyTime && onlyTime <= 17) {
-                                    Logger.error("onlyTime1 " + onlyTime);
-                                    txt_from_date.setText(sampleCollectedTime);
-                                } else {
-                                    Logger.error("onlyTime2 " + onlyTime);
-                                    TastyToast.makeText(activity, "Select time between 5 AM to 5 PM", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-                                    //Toast.makeText(activity, "Select time between 5 AM to 5 PM", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                TastyToast.makeText(activity, "Past time cannot be selected", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-                                //  Toast.makeText(activity, "Past time cannot be selected", Toast.LENGTH_SHORT).show();
-                            }
+            TimePickerDialog timePickerDialog = new TimePickerDialog(activity, AlertDialog.THEME_HOLO_LIGHT, new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    String yyyy = sampleCollectedYear + "";
+                    String MM = (sampleCollectedMonth + 1) < 10 ? "0" + (sampleCollectedMonth + 1) : (sampleCollectedMonth + 1) + "";
+                    String dd = sampleCollectedDay < 10 ? "0" + sampleCollectedDay : sampleCollectedDay + "";
+                    String HH = hourOfDay < 10 ? "0" + hourOfDay : hourOfDay + "";
+                    minute = getRoundedMinute(minute);
+                    String mm = minute < 10 ? "0" + minute : minute + "";
+                    onlyTime = Integer.parseInt(HH);
+                    Logger.error(" onlyTime " + onlyTime);
+                    //SimpleDateFormat dateFormat=new SimpleDateFormat("HH:mm");
+                    String sampleCollectedTime = yyyy + "-" + MM + "-" + dd + " " + HH + ":" + mm;
+                    Logger.error("sampleCollectedTime: " + sampleCollectedTime);
+                    Calendar cl = Calendar.getInstance();
+                    cl.set(sampleCollectedYear, sampleCollectedMonth, sampleCollectedDay, hourOfDay, minute);
+                    if (cl.getTimeInMillis() > Calendar.getInstance().getTimeInMillis()) {
+                        if (5 <= onlyTime && onlyTime <= 17) {
+                            Logger.error("onlyTime1 " + onlyTime);
+                            txt_from_date.setText(sampleCollectedTime);
+                        } else {
+                            Logger.error("onlyTime2 " + onlyTime);
+                            TastyToast.makeText(activity, "Select time between 5 AM to 5 PM", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+                            //Toast.makeText(activity, "Select time between 5 AM to 5 PM", Toast.LENGTH_SHORT).show();
                         }
-                    }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
-                    timePickerDialog.show();
+                    } else {
+                        TastyToast.makeText(activity, "Past time cannot be selected", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+                        //  Toast.makeText(activity, "Past time cannot be selected", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), false);
+            timePickerDialog.show();
             /*}, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
             datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());

@@ -36,6 +36,7 @@ import com.thyrocare.btechapp.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -130,6 +131,9 @@ public class Global {
     }
 
 
+    public static void DsaResponseModel(){
+
+    }
 
 
     public String convertNumberToPrice(String s) {

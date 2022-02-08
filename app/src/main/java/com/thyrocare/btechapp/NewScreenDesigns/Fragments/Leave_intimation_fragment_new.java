@@ -7,16 +7,12 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.PersistableBundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,12 +26,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.thyrocare.btechapp.Controller.GetNBTListController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.Leavehistory_Adapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.LeaveIntimation_SubmitModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetResponse_NatureLeaveModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.Get_Leave_Applied_history_Model;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.SelectDatePickerDialogFragment;
@@ -44,9 +42,13 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.activity.HomeScreenActivity;
+import com.thyrocare.btechapp.models.api.request.GetNBTDetailRequestModel;
+import com.thyrocare.btechapp.models.api.response.GetNBTDetailResponseModel;
+import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
+import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,7 +77,7 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
     private RadioButton radio_one_day_id, radio_more_day_id;
     private TextView tv_from_date_id, tv_to_day_id, tv_display_from_date_id;
     private ImageView img_from_date_id, img_to_day_id;
-    private Spinner spinner_select_reason_id, spinner_select_nature_id;
+    private Spinner spinner_select_reason_id, spinner_select_nature_id, spinner_select_nbt;
     private EditText edt_remark_id;
     private String[] str_array, Cancel_ReasonArray;
     private DatePickerDialog datepicker_id;
@@ -88,23 +90,14 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
     private Global global;
     private RelativeLayout rl_applyforleave_id;
     private RecyclerView.LayoutManager layoutManager;
-    private LinearLayout ll_layout_from_date_id, ll_layout_to_date_id, ll_layout_remark_id, ll_showapplied_leaved, ll_spinner_nature_id, ll_datepicker_2_id, ll_datepicker_1_id;
+    private LinearLayout ll_layout_from_date_id, ll_layout_to_date_id, ll_layout_remark_id, ll_showapplied_leaved, ll_spinner_nature_id, ll_datepicker_2_id, ll_datepicker_1_id, ll_spinner_nbt;
     private RecyclerView rv_show_applied_leaves_id;
     ArrayList<GetResponse_NatureLeaveModel> getResponse_natureLeaveModel;
     private AppPreferenceManager appPreferenceManager;
     TextView tv_toolbar;
     ImageView iv_back, iv_home;
-
-   /* public Leave_intimation_fragment_new() {
-        // Required empty public constructor
-    }
-
-    public static Leave_intimation_fragment_new newInstance() {
-        Leave_intimation_fragment_new fragment = new Leave_intimation_fragment_new();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }*/
+    boolean isNBT;
+    int screenFlag = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,8 +113,18 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
         init();
         listeners();
         callapi_forspinner();
+        toDisplaySpinnerForNBT();
     }
 
+    private void toDisplaySpinnerForNBT() {
+        if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)) {
+//            ll_spinner_nbt.setVisibility(View.VISIBLE);
+            callgetNBTlist();
+        } else {
+            ll_spinner_nbt.setVisibility(View.GONE);
+            ll_showapplied_leaved.setVisibility(View.GONE);
+        }
+    }
 
     private void init() {
 
@@ -146,6 +149,7 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
 
         spinner_select_reason_id = findViewById(R.id.spinner_select_reason_id);
         spinner_select_nature_id = findViewById(R.id.spinner_select_nature_id);
+        spinner_select_nbt = findViewById(R.id.spinner_select_nbt);
 
         edt_remark_id = findViewById(R.id.edt_remark_id);
 
@@ -156,6 +160,7 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
         ll_spinner_nature_id = findViewById(R.id.ll_spinner_nature_id);
         ll_datepicker_2_id = findViewById(R.id.ll_datepicker_2_id);
         ll_datepicker_1_id = findViewById(R.id.ll_datepicker_1_id);
+        ll_spinner_nbt = findViewById(R.id.ll_spinner_nbt);
 
         rl_applyforleave_id = findViewById(R.id.rl_applyforleave_id);
 
@@ -167,12 +172,18 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
         Cancel_ReasonArray = getResources().getStringArray(R.array.Cancel_Reason_mode);
         radio_one_day_id.setSelected(true);
         radio_one_day_id.setChecked(true);
+        isNBT = getIntent().getBooleanExtra(BundleConstants.isNBT, false);
 
     }
 
+    private void callgetNBTlist() {
+        GetNBTDetailRequestModel gndrm = new GetNBTDetailRequestModel();
+        gndrm.setSourceCode(appPreferenceManager.getLoginResponseModel().getUserID());
+        GetNBTListController nbtListController = new GetNBTListController(this);
+        nbtListController.getNBTList(gndrm);
+    }
+
     private void listeners() {
-
-
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,21 +214,30 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
         btn_apply_leaves_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rl_applyforleave_id.setVisibility(View.VISIBLE);
-                ll_showapplied_leaved.setVisibility(View.GONE);
+                screenFlag = 0;
                 btn_applied_leaved_id.setBackground(mActivity.getResources().getDrawable(R.drawable.grey_rect_grey_stroke_bg));
                 btn_apply_leaves_id.setBackground(mActivity.getResources().getDrawable(R.drawable.background_btn_orange_));
-
                 btn_applied_leaved_id.setTextColor(getResources().getColor(R.color.bg_new_color));
                 btn_apply_leaves_id.setTextColor(getResources().getColor(R.color.white));
+                ll_spinner_nbt.setVisibility(View.VISIBLE);
+                rl_applyforleave_id.setVisibility(View.VISIBLE);
+                ll_showapplied_leaved.setVisibility(View.GONE);
+                NBTSpinnerSelection();
             }
         });
         btn_applied_leaved_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rl_applyforleave_id.setVisibility(View.GONE);
-                callapi_forleaveapplied();
-                ll_showapplied_leaved.setVisibility(View.VISIBLE);
+                screenFlag = 1;
+                if (InputUtils.CheckEqualIgnoreCase(appPreferenceManager.getLoginResponseModel().getRole(), Constants.TSP_ROLE_ID)) {
+                    ll_spinner_nbt.setVisibility(View.VISIBLE);
+                    rl_applyforleave_id.setVisibility(View.GONE);
+                    NBTSpinnerSelection();
+                    ll_showapplied_leaved.setVisibility(View.GONE);
+                } else {
+                    callapi_forleaveapplied();
+                    ll_showapplied_leaved.setVisibility(View.VISIBLE);
+                }
                 btn_applied_leaved_id.setBackground(mActivity.getResources().getDrawable(R.drawable.background_btn_orange_));
                 btn_apply_leaves_id.setBackground(mActivity.getResources().getDrawable(R.drawable.grey_rect_grey_stroke_bg));
                 btn_applied_leaved_id.setTextColor(getResources().getColor(R.color.white));
@@ -233,9 +253,7 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
             }
         });
 
-
         setReasonSpinner(str_array);
-
 
         radio_group_id.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -255,6 +273,12 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
         });
     }
 
+    private void NBTSpinnerSelection() {
+        if (ll_spinner_nbt.getVisibility() == View.VISIBLE) {
+            spinner_select_nbt.setSelection(0);
+            ll_showapplied_leaved.setVisibility(View.GONE);
+        }
+    }
 
     private void callapi_forspinner() {
 
@@ -266,7 +290,6 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
             public void onResponse(Call<ArrayList<GetResponse_NatureLeaveModel>> call, Response<ArrayList<GetResponse_NatureLeaveModel>> response) {
                 global.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
-
                     getResponse_natureLeaveModel = null;
                     getResponse_natureLeaveModel = new ArrayList<>();
                     GetResponse_NatureLeaveModel model = new GetResponse_NatureLeaveModel();
@@ -288,15 +311,12 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
             public void onFailure(Call<ArrayList<GetResponse_NatureLeaveModel>> call, Throwable t) {
                 global.hideProgressDialog(mActivity);
                 global.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
-
             }
         });
-
     }
 
     private void SetNatureSpinner() {
         ArrayList<String> arrayList = new ArrayList<>();
-        ;
         for (int i = 0; i < getResponse_natureLeaveModel.size(); i++) {
             arrayList.add(Global.toCamelCase(getResponse_natureLeaveModel.get(i).getNature()));
         }
@@ -343,7 +363,6 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
         });
     }
 
-
     private void callapi_forleaveapplied() {
 
         global.showProgressDialog(mActivity, "Please wait..", false);
@@ -371,14 +390,16 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
             public void onFailure(Call<ArrayList<Get_Leave_Applied_history_Model>> call, Throwable t) {
                 global.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG);
                 global.hideProgressDialog(mActivity);
-
-
             }
         });
-
     }
 
     private boolean validation() {
+        if (ll_spinner_nbt.getVisibility() == View.VISIBLE && spinner_select_nbt.getSelectedItem().toString().equalsIgnoreCase("--Select Name--")) {
+            global.showCustomToast(mActivity, "Kindly select b-tech", Toast.LENGTH_LONG);
+            return false;
+        }
+
         if (spinner_select_nature_id.getSelectedItem().toString().equalsIgnoreCase("Select Nature")) {
             global.showCustomToast(mActivity, getResources().getString(R.string.error_nature), Toast.LENGTH_LONG);
             return false;
@@ -429,8 +450,11 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
                 Toast.makeText(mActivity, "Cannot start with space", Toast.LENGTH_SHORT).show();
                 return false;
             }
+            if (edt_remark_id.getText().toString().length() < 20) {
+                Toast.makeText(mActivity, "Minimum 20 characters required", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
-
         return true;
     }
 
@@ -492,7 +516,6 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
                 Toast.makeText(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
     private void showDatepicker1() {
@@ -532,7 +555,6 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
         });
         datePickerDialogFragment.show(getSupportFragmentManager(), "DatePicker");
     }
-
 
     private float getDate_diff(String from_date, String to_date) {
         Date d_from_date = DateUtil.dateFromString(from_date, "yyyy-MM-dd");
@@ -587,5 +609,57 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
         radio_one_day_id.setChecked(true);
         radio_one_day_id.setSelected(true);
         edt_remark_id.setText("");
+    }
+
+    public void NBTList(GetNBTDetailResponseModel getNBTDetailResponseModel) {
+
+        if (InputUtils.CheckEqualIgnoreCase(getNBTDetailResponseModel.getResponseId(), Constants.RES00001)) {
+            ll_spinner_nbt.setVisibility(View.VISIBLE);
+            setAdapter(getNBTDetailResponseModel.getNBTDetailList());
+        } else {
+            global.showCustomToast(mActivity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+        }
+    }
+
+    private void setAdapter(final ArrayList<GetNBTDetailResponseModel.NBTDetailListDTO> nbt) {
+
+        GetNBTDetailResponseModel.NBTDetailListDTO nbt1 = new GetNBTDetailResponseModel.NBTDetailListDTO();
+        nbt1.setName("--Select Name--");
+        nbt.add(0, nbt1);
+        ArrayAdapter<GetNBTDetailResponseModel.NBTDetailListDTO> spinneradapter71 = new ArrayAdapter<GetNBTDetailResponseModel.NBTDetailListDTO>(mActivity, android.R.layout.simple_spinner_item, nbt);
+        spinneradapter71.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_select_nbt.setAdapter(spinneradapter71);
+        spinner_select_nbt.setSelection(0);
+        spinner_select_nbt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (position != 0) {
+                    String str = spinner_select_nbt.getSelectedItem().toString();
+                    String btech = "";
+                    for (int i = 0; i < nbt.size(); i++) {
+                        if (str.equalsIgnoreCase(nbt.get(i).getName())) {
+                            btech = nbt.get(i).getCode();
+                            btech_id = btech;
+                        }
+                    }
+                    if (screenFlag == 0) {
+                        rl_applyforleave_id.setVisibility(View.VISIBLE);
+                    } else {
+                        rl_applyforleave_id.setVisibility(View.GONE);
+                        callapi_forleaveapplied();
+                    }
+                    ll_showapplied_leaved.setVisibility(View.VISIBLE);
+                } else {
+                    ll_showapplied_leaved.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+
     }
 }

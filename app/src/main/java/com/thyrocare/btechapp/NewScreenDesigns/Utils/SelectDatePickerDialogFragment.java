@@ -42,7 +42,8 @@ public class SelectDatePickerDialogFragment extends DialogFragment implements Da
         DatePickerDialog datePickerDialog = new DatePickerDialog(mActivity, AlertDialog.THEME_HOLO_DARK, this, yy, mm, dd);
         datePickerDialog.setTitle(Title);
         DatePicker dp = datePickerDialog.getDatePicker();
-        dp.setMinDate(Mindate);
+//        dp.setMinDate(Mindate);
+        dp.setMinDate(System.currentTimeMillis() -1000);
         dp.setMaxDate(MaxDate);
 
         return datePickerDialog;

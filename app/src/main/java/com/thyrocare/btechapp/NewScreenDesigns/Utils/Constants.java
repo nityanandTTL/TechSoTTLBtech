@@ -61,5 +61,7 @@ public class Constants {
     public static int MaxImageHeight = 1080; // in pixels
 
     public static final String XSource ="THYROCARE";
-    public static final String clientid ="9997582333813533";
+    public static final String clientid ="9551825306485694";
+    public static String content_type = "application/json";
+    public static String PEAddBen ="PEAddBen";
 }
