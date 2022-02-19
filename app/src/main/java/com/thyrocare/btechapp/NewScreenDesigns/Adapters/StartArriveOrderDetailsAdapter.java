@@ -141,7 +141,7 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
             if (isValidForEditing(BenMasterArray.get(position).getTestsCode())) {
                 holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
             } else if (orderVisitDetailsModel.getAllOrderdetails().get(0).isIsdisabledelete()) {
-                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (BenMasterArray.size() > 1) {
                         checBenDetails(holder, position, orderVisitDetailsModel.getAllOrderdetails().get(0).isIsdisabledelete());
                     } else {
@@ -149,7 +149,7 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                         holder.img_editBenDetails.setVisibility(View.VISIBLE);
                         holder.img_DeleteBen.setVisibility(View.GONE);
                     }
-                }else {
+                } else {
                     holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
                     holder.img_editBenDetails.setVisibility(View.VISIBLE);
                     holder.img_DeleteBen.setVisibility(View.GONE);
@@ -167,11 +167,11 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                         holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    if (BenMasterArray.size()>1){
+                    if (BenMasterArray.size() > 1) {
                         holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
                         holder.img_editBenDetails.setVisibility(View.VISIBLE);
                         holder.img_DeleteBen.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
                         holder.img_editBenDetails.setVisibility(View.VISIBLE);
                         holder.img_DeleteBen.setVisibility(View.GONE);
@@ -189,13 +189,13 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                     holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
                 }*/
             } else {
-                if(Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (BenMasterArray.size() > 1) {
                         checBenDetails(holder, position, true);
                     } else {
                         holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
                     }
-                }else {
+                } else {
                     holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
                 }
             }
@@ -246,17 +246,13 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                     if (b) {
                         holder.img_DeleteBen.setVisibility(View.GONE);
                     }
-                }else {
-                    if (orderVisitDetailsModel.getAllOrderdetails().get(i).isEditOrder()){
+                } else {
+                    if (orderVisitDetailsModel.getAllOrderdetails().get(i).isEditOrder()) {
                         holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
-                        if (b) {
-                            holder.img_DeleteBen.setVisibility(View.GONE);
-                        }
-                    }else{
+                        holder.img_DeleteBen.setVisibility(View.GONE);
+                    } else {
                         holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
-                        if (b) {
-                            holder.img_DeleteBen.setVisibility(View.GONE);
-                        }
+                        holder.img_DeleteBen.setVisibility(View.GONE);
                     }
                 }
             }

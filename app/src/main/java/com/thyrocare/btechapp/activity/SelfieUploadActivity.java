@@ -20,6 +20,7 @@ import android.os.PowerManager;
 
 import androidx.core.app.ActivityCompat;
 
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
@@ -39,7 +40,6 @@ import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -76,10 +76,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import okhttp3.MediaType;
@@ -101,7 +105,6 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     //RoundedImageView img_user_picture;
     CircularImageView img_user_picture;
     //changes_1june2017
-
     Button btn_takePhoto, btn_uploadPhoto;
     String userChoosenTask, encodedProImg;
     Bitmap thumbnail, thumbnailToDisplay;// = null;
@@ -133,6 +136,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     private String strAarogyaSetuApp = "";
     ImageView iv_refresh, iv_capture, iv_verify_selfie;
     String url = "";
+    String imageurl = "";
 
     @Override
     protected void onStart() {
@@ -377,6 +381,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                     if (imagefile != null && imagefile.isAbsolute()) {
                         if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
                             CallSelfieUploadAPI(appPreferenceManager.getLoginResponseModel().getUserID(), imagefile);
+                            proceedFurther();
                         } else {
                             Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_SHORT).show();
                         }
@@ -439,9 +444,9 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                         leaveFlag = selfieUploadResponseModel.getFlag();
                         fromdateapi = selfieUploadResponseModel.getFromDate();
                         todateapi = selfieUploadResponseModel.getToDate();
-                        if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                        /*if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                             callMasterSync();
-                        } else {
+                        } else {*/
                             try {
                                 appPreferenceManager.setIsAfterLogin(true);
                                 isAfterMasterSyncDone = true;
@@ -452,14 +457,14 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                                 e.printStackTrace();
                             }
 
-                            try {
+                           /* try {
                                 Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                                 i.putExtra("LEAVEINTIMATION", "0");
                                 startActivity(i);
                             } catch (Exception e) {
                                 e.printStackTrace();
-                            }
-                        }
+                            }*/
+                        //}
 
                     }
 
@@ -586,10 +591,11 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             faceCount(thumbnail);
         }
 
-        String imageurl = "";
+
         imageurl = camera.getCameraBitmapPath();
         imagefile = new File(imageurl);
         if (imagefile != null && imagefile.exists()) {
+            appPreferenceManager.setBtechSelfie(camera.getCameraBitmapPath());
             if (BundleConstants.Flag_facedetection == 1) {
             } else {
                 iv_refresh.setVisibility(View.VISIBLE);
@@ -598,6 +604,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 btn_takePhoto.setVisibility(View.GONE);
                 Uri uri = Uri.fromFile(imagefile);
                 iv_capture.setImageURI(uri);
+                appPreferenceManager.setBtechSelfie(camera.getCameraBitmapPath());
 //                globalClass.DisplayImagewithoutDefaultImage(activity,imagefile.getAbsolutePath(),iv_capture);
 //                globalClass.DisplayImagewithoutDefaultImage(activity,imagefile.getAbsolutePath(),iv_capture);
 //                globalClass.DisplayDeviceImages(activity, camera.getCameraBitmapPath(), iv_capture);
@@ -1213,6 +1220,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             TastyToast.makeText(activity, "" + verificationResult, TastyToast.LENGTH_LONG, TastyToast.INFO);
             if (appPreferenceManager.getLoginResponseModel() != null && !InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
                 CallSelfieUploadAPI(appPreferenceManager.getLoginResponseModel().getUserID(), imagefile);
+                //TODO As per instructions to process further flow irrespective of selfie upload response
+                proceedFurther();
             } else {
                 Toast.makeText(getApplicationContext(), "Invalid Login", Toast.LENGTH_SHORT).show();
             }
@@ -1223,5 +1232,90 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
     }
 
+    private void proceedFurther() {
+        if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+         //   checkFor7daysLogic();
+            callMasterSync();
+        } else {
+            /*try {
+                appPreferenceManager.setIsAfterLogin(true);
+                isAfterMasterSyncDone = true;
+                appPreferenceManager.setLeaveFlag(leaveFlag);
+                appPreferenceManager.setLeaveFromDate(fromdateapi);
+                appPreferenceManager.setLeaveToDate(todateapi);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }*/
 
+            try {
+                Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                i.putExtra("LEAVEINTIMATION", "0");
+                startActivity(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void checkFor7daysLogic() {
+        try {
+            int days = 7;
+            SimpleDateFormat s = null;
+            String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+            System.out.println("---"+currentDate);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            Date myDate = null;
+            Date newDate = null;
+            try {
+                myDate = dateFormat.parse(currentDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(myDate);
+            calendar.add(Calendar.DAY_OF_YEAR, days);
+            newDate = calendar.getTime();
+            String date = dateFormat.format(newDate);
+            // getCalculatedDate(s,currentDate,"dd-MM-yyyy",7);
+            System.out.println(""+date);
+            checkdays(myDate,date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //checkDate();
+    }
+
+    private void checkdays(Date myDate, String date) {
+        try {
+            Date date1= null;
+           String test = appPreferenceManager.get7days();
+            System.out.println(""+test);
+            if (InputUtils.CheckEqualIgnoreCase("",appPreferenceManager.get7days())){
+                callMasterSync();
+                appPreferenceManager.set7date(date);
+            }else if (appPreferenceManager.get7days()!=null){
+                String date2 = appPreferenceManager.get7days();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                try {
+                    date1 = sdf.parse(date2);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if (myDate.after(date1)){
+                    callMasterSync();
+                }else{
+                    try {
+                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

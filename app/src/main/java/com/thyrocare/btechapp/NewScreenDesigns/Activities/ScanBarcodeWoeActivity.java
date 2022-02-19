@@ -456,7 +456,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             boolean showProduct = orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct();
             boolean isHCL = orderVisitDetailsModel.getAllOrderdetails().get(0).isISHclOrder();
             boolean isOTP = orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP();
-            mAdapter = new ScanBarcodeViewPagerAdapter(mActivity, beneficaryWiseArylst, showProduct, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile(), isHCL, fileName,isOTP);
+            mAdapter = new ScanBarcodeViewPagerAdapter(mActivity, beneficaryWiseArylst, showProduct,orderVisitDetailsModel ,orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile(), isHCL, fileName,isOTP);
             BarcodeScanviewpager.setAdapter(mAdapter);
             DisplayDotsBelowViewpager();
         }

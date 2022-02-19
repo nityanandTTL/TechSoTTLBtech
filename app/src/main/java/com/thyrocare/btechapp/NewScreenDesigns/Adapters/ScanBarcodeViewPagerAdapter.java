@@ -4,30 +4,26 @@ import android.app.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.thyrocare.btechapp.Controller.RemoveUrineSampleController;
-import com.thyrocare.btechapp.NewScreenDesigns.Activities.ScanBarcodeWoeActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
@@ -35,19 +31,15 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.adapter.BarcodeInitAdapter;
-import com.thyrocare.btechapp.adapter.DisplayVideoListAdapter;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
 import com.thyrocare.btechapp.models.api.request.RemoveUrineReqModel;
 import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
 import com.thyrocare.btechapp.models.api.response.RemoveUrineSampleRespModel;
-import com.thyrocare.btechapp.models.data.BeneficiaryBarcodeDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
-import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
-import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
@@ -65,6 +57,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
     Activity mActivity;
     Global globalclass;
     ConnectionDetector cd;
+    private OrderVisitDetailsModel orderVisitDetailsModel;
     AppPreferenceManager appPreferenceManager;
     ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst;
     private static boolean Is_RBS_PPBS;
@@ -75,7 +68,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
     boolean isHCL, isOTP;
     String filename, filepath;
 
-    public ScanBarcodeViewPagerAdapter(Activity mActivity, ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst, boolean showProduct, String mobile, boolean isHCL, String filename, boolean isOTP) {
+    public ScanBarcodeViewPagerAdapter(Activity mActivity, ArrayList<BeneficiaryDetailsModel> beneficaryWiseScanbarcodeArylst, boolean showProduct, OrderVisitDetailsModel orderVisitDetailsModel, String mobile, boolean isHCL, String filename, boolean isOTP) {
         this.mActivity = mActivity;
         this.beneficaryWiseScanbarcodeArylst = beneficaryWiseScanbarcodeArylst;
         globalclass = new Global(mActivity);
@@ -86,6 +79,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         this.isOTP = isOTP;
         this.mobile = mobile;
         this.filename = filename;
+        this.orderVisitDetailsModel = orderVisitDetailsModel;
     }
 
 
@@ -148,6 +142,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         TextView tv_saveSRF = (TextView) itemView.findViewById(R.id.tv_saveSRF);
         ImageView btn_remove = (ImageView) itemView.findViewById(R.id.btn_remove);
         LinearLayout ll_urine = itemView.findViewById(R.id.ll_urine);
+        CardView cv_del_ben = itemView.findViewById(R.id.cv_del_ben);
         LinearLayout ll_grey = itemView.findViewById(R.id.ll_grey);
         LinearLayout ll_view = itemView.findViewById(R.id.ll_view);
         final TextView btn_sendopt = itemView.findViewById(R.id.btn_sendopt);
@@ -247,7 +242,38 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
         setUrineLogic(ll_grey, ll_urine, position);
 
+
+        // TODO if ben has single urine sample
+        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            deleteBenUrine(cv_del_ben, position);
+        }
+
         initScanBarcodeView(position, recyle_barcode);
+
+
+        cv_del_ben.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(mActivity);
+                alertDialog.setTitle("Delete Beneficiary")
+                        .setMessage("Are you sure you want to delete beneficiary")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                CallRemoveSample(beneficaryWiseScanbarcodeArylst.get(position),2);
+                                deleteBen(position);
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .show();
+
+            }
+        });
 
 
         btn_remove.setOnClickListener(new View.OnClickListener() {
@@ -255,7 +281,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             public void onClick(View v) {
                 if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (!isOTP) {
-                        CallRemoveSample(beneficaryWiseScanbarcodeArylst.get(position));
+                        CallRemoveSample(beneficaryWiseScanbarcodeArylst.get(position), 1);
                     } else {
                         ll_otpvalidate.setVisibility(View.VISIBLE);
                         tv_number.setText("OTP will be sent to " + mobile);
@@ -399,6 +425,24 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         return itemView;
     }
 
+    private void deleteBen(int position) {
+        beneficaryWiseScanbarcodeArylst.remove(position);
+        notifyDataSetChanged();
+    }
+
+    private void deleteBenUrine(CardView cv_del_ben, int position) {
+        if (!InputUtils.isNull(beneficaryWiseScanbarcodeArylst.get(position))) {
+            for (int i = 0; i < beneficaryWiseScanbarcodeArylst.get(position).getBarcodedtl().size(); i++) {
+                if (beneficaryWiseScanbarcodeArylst.get(position).getBarcodedtl().get(i).getSamplType().equalsIgnoreCase("URINE")) {
+                    if (beneficaryWiseScanbarcodeArylst.get(position).getBarcodedtl().size() == 1) {
+                        cv_del_ben.setVisibility(View.VISIBLE);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     private void removePDF(String strPDF, TextView textView, ImageView iv) {
         if (strPDF.length() != 0) {
             textView.setText("");
@@ -481,7 +525,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
                     String strresponse = response.body();
                     if (!TextUtils.isEmpty(strresponse) && strresponse.toUpperCase().contains("SUCCESS")) {
                         globalclass.showCustomToast(mActivity, "OTP Validated Successfully.");
-                        CallRemoveSample(beneficiaryDetailsModel);
+                        CallRemoveSample(beneficiaryDetailsModel, 1);
                     } else {
                         globalclass.showCustomToast(mActivity, "Invalid OTP.");
                     }
@@ -501,11 +545,10 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
     }
 
-    private void CallRemoveSample(BeneficiaryDetailsModel beneficiaryDetailsModel) {
+    private void CallRemoveSample(BeneficiaryDetailsModel beneficiaryDetailsModel, int i) {
 
         if (cd.isConnectingToInternet()) {
             RemoveUrineReqModel removeUrineReqModel = new RemoveUrineReqModel();
-
             removeUrineReqModel.setRemarks("");
             removeUrineReqModel.setSampleType("URINE");
             removeUrineReqModel.setOrderNo("" + beneficiaryDetailsModel.getOrderNo());
@@ -513,7 +556,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             removeUrineReqModel.setBtechID(appPreferenceManager.getLoginResponseModel().getUserID());
 
             RemoveUrineSampleController removeUrineSampleController = new RemoveUrineSampleController(this, mActivity);
-            removeUrineSampleController.CallAPI(removeUrineReqModel, beneficiaryDetailsModel);
+            removeUrineSampleController.CallAPI(removeUrineReqModel, beneficiaryDetailsModel,i);
         } else {
             globalclass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.plz_chk_internet));
         }

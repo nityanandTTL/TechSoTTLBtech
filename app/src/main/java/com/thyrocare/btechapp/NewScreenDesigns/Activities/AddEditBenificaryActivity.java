@@ -218,7 +218,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             } else {
                 imgBenAddTests.setVisibility(View.GONE);
             }
-
         } else {
             imgBenAddTests.setVisibility(View.VISIBLE);
         }
@@ -298,6 +297,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             }
 
             if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+               // CallAPIFORPETESTLIST();
                 //TODO No API call for PE login
             } else {
                 CallAPIFORTESTLIST(FlagADDEditBen);

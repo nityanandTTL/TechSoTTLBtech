@@ -1234,7 +1234,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
             }
         } else {
-            try {
+            /*try {
                 GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
                 Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID());
                 globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.fetchingOrders), false);
@@ -1291,7 +1291,43 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 globalclass.hideProgressDialog(mActivity);
                 e.printStackTrace();
                 globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
+            }*/
+
+            if (appPreferenceManager.getfetchOrderDetailsResponseModel()!= null && appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails() != null && appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails().size() > 0) {
+                for (OrderVisitDetailsModel orderVisitDetailsModel :
+                        appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails()) {
+                    if (orderVisitDetailsModel.getVisitId().equalsIgnoreCase(strOrderNo)) {
+                        if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+                            for (OrderDetailsModel orderDetailsModel :
+                                    orderVisitDetailsModel.getAllOrderdetails()) {
+                                orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+                                orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
+                                orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
+                                orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
+                                orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
+                                orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
+                                orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
+                                orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
+                                orderDetailsModel.setAddBen(orderDetailsModel.isEditOrder());
+                                if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
+                                    for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                                            orderDetailsModel.getBenMaster()) {
+                                        beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                                        beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
+                                        for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
+                                            beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                        }
+                                    }
+                                }
+                            }
+                            orderDetailsModel = null;
+                            orderDetailsModel = orderVisitDetailsModel;
+                            break;
+                        }
+                    }
+                }
             }
+            initData(Status);
         }
     }
 

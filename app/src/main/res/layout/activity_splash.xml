@@ -4,9 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="-10dp"
+    android:layout_marginLeft="-5dp"
+    android:layout_marginRight="-5dp"
+    android:background="@drawable/pe_splash"
     tools:context=".btechapp.NewScreenDesigns.Activities.SplashActivity">
 
-    <ImageView
+
+    <!--<ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="-10dp"
@@ -20,7 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/_60sdp"
-        android:src="@drawable/ic_btech_logo_1"/>
-
+        android:src="@drawable/ic_btech_logo_1"/>-->
 
 </RelativeLayout>

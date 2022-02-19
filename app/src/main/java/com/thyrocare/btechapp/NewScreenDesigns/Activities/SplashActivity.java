@@ -116,8 +116,8 @@ public class SplashActivity extends AppCompatActivity {
         locationUpdateIntent = new Intent(this, LocationUpdateService.class);
 
         System.out.println("Mith<<<<<<<<<<<<"+EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD)));
-        System.out.println("Mith<<<<<<<<<<<<QA"+EncryptionUtils.Ecrp_Hex("https://qa-dx-integration.staging.k8s.neontech.cloud/"));
-        String str = ""+EncryptionUtils.Ecrp_Hex("https://techsostng1.thyrocare.cloud/");
+      //  System.out.println("Mith<<<<<<<<<<<<QA"+EncryptionUtils.Ecrp_Hex("https://qa-dx-integration.staging.k8s.neontech.cloud/"));
+        String str = ""+EncryptionUtils.Ecrp_Hex("http://techsostng.thyrocare.cloud/");
         System.out.println("<><><><<><<><>><>><<><><><><><><><"+str);
         String str1 = ""+EncryptionUtils.Dcrp_Hex(str);
         System.out.println("------------"+str1);

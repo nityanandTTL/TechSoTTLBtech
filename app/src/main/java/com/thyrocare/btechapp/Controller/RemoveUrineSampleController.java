@@ -33,7 +33,7 @@ public class RemoveUrineSampleController {
         flag = 1;
     }
 
-    public void CallAPI(RemoveUrineReqModel removeUrineReqModel, final BeneficiaryDetailsModel beneficiaryDetailsModel) {
+    public void CallAPI(RemoveUrineReqModel removeUrineReqModel, final BeneficiaryDetailsModel beneficiaryDetailsModel, final int i) {
         try {
             PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
             Call<RemoveUrineSampleRespModel> responseModelCall = apiInterface.removeUrineSample(removeUrineReqModel);
@@ -41,11 +41,17 @@ public class RemoveUrineSampleController {
             responseModelCall.enqueue(new Callback<RemoveUrineSampleRespModel>() {
                 @Override
                 public void onResponse(Call<RemoveUrineSampleRespModel> call, retrofit2.Response<RemoveUrineSampleRespModel> response) {
-                    globalClass.hideProgressDialog(activity);
-                    if (response.isSuccessful() && response.body()!=null){
-                        if (flag==1){
-                            scanBarcodeViewPagerAdapter.getResponse(response.body(),beneficiaryDetailsModel);
+                    try {
+                        globalClass.hideProgressDialog(activity);
+                        if (response.isSuccessful() && response.body()!=null){
+                            if (flag==1){
+                                if (i == 1){
+                                    scanBarcodeViewPagerAdapter.getResponse(response.body(),beneficiaryDetailsModel);
+                                }
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 

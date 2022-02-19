@@ -278,8 +278,9 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
+                android:layout_marginRight="@dimen/_4sdp"
                 android:background="@null"
-                android:src="@drawable/thyro_logo" />
+                android:src="@drawable/pe_logo" />
         </RelativeLayout>
 
 

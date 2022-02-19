@@ -7,13 +7,16 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thyrocare.btechapp.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.btechapp.models.api.response.DSAProductsResponseModel;
+import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginResponseModel;
 import com.thyrocare.btechapp.models.api.response.NewBtechAvaliabilityResponseModel;
 import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.btechapp.models.data.BrandTestMasterModel;
+import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.models.data.SlotModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class AppPreferenceManager {
@@ -34,6 +37,8 @@ public class AppPreferenceManager {
     private String are_terms_and_conditions_accepted = "are_terms_and_conditions_accepted";
     private String selfieResponse = "selfieResponse";
     private String loginResponse = "loginResponse";
+    private String fetchOrderDetailsResponseModel = "fetchOrderDetailsResponseModel";
+    private String orderVisitDetailsModel = "orderVisitDetailsModel";
     private String dsaProductResponse = "dsaProductResponse";
     private String btechAvailabilityResponseModel = "btechAvailabilityResponseModel";
     private String NEWBTECHAVALIABILITYRESPONSEMODEL = "NEWBTECHAVALIABILITYRESPONSEMODEL";
@@ -79,6 +84,8 @@ public class AppPreferenceManager {
     private int DataInVisitModel;
     private int NotifyOrderone;
     private int OrderAccept;
+    private String selfieURl = "selfieURl";
+    private String date = "date";
 
 //Neha G -------------------------------------
 
@@ -103,6 +110,22 @@ public class AppPreferenceManager {
     }
 
 
+    public String getBtechSelfie() {
+        return appPreference.getString(selfieURl, "");
+    }
+
+    public void setBtechSelfie(String selfieURl) {
+        appPreference.putString(this.selfieURl, selfieURl);
+    }
+
+
+    public String get7days() {
+        return appPreference.getString(date, "");
+    }
+
+    public void set7date(String date) {
+        appPreference.putString(this.date, date);
+    }
 
 
     /*public NewBtechAvaliabilityResponseModel getNEWBTECHAVALIABILITYRESPONSEMODEL() {
@@ -334,7 +357,25 @@ public class AppPreferenceManager {
         appPreference.putString(this.loginResponse, new Gson().toJson(loginResponseModel));
     }
 
-    public DSAProductsResponseModel getDSAProductResponseModel(){
+    public com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel getfetchOrderDetailsResponseModel() {
+        String value = appPreference.getString(this.fetchOrderDetailsResponseModel, "");
+        return new Gson().fromJson(value, FetchOrderDetailsResponseModel.class);
+    }
+
+    public void setfetchOrderDetailsResponseModel(com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel) {
+        appPreference.putString(this.fetchOrderDetailsResponseModel, new Gson().toJson(fetchOrderDetailsResponseModel));
+    }
+
+    public OrderVisitDetailsModel getorderVisitDetailsModel() {
+        String value = appPreference.getString(this.orderVisitDetailsModel, "");
+        return new Gson().fromJson(value, OrderVisitDetailsModel.class);
+    }
+
+    public void setorderVisitDetailsModel(OrderVisitDetailsModel orderVisitDetailsModel) {
+        appPreference.putString(this.orderVisitDetailsModel, new Gson().toJson(orderVisitDetailsModel));
+    }
+
+    public DSAProductsResponseModel getDSAProductResponseModel() {
         String value = appPreference.getString(this.dsaProductResponse, "");
         return new Gson().fromJson(value, DSAProductsResponseModel.class);
     }

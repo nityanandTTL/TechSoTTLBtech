@@ -204,6 +204,10 @@ public interface PostAPIInterface {
     Call<String> CallTechsoOrderBookingAPI(@Header("Authorization") String token, @Body OrderBookingRequestModel model);
 
     @Headers("Content-Type: application/json")
+    @POST("api/OrderBooking")
+    Call<OrderBookingResponseVisitModel> CallTechsoOrderBookingAPIFirst(@Header("Authorization") String token, @Body OrderBookingRequestModel model);
+
+    @Headers("Content-Type: application/json")
     @POST("MASTER.svc/EmailValidate")
     Call<EmailValidationResponseModel> PostEmailValidationAPI(@Body EmailVaildationPostModel model);
 

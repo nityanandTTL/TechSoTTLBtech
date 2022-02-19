@@ -341,6 +341,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                         orderDetailsResponseModels = new ArrayList<>();
                         FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
                         if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
+                            appPreferenceManager.setfetchOrderDetailsResponseModel(fetchOrderDetailsResponseModel);
                             for (OrderVisitDetailsModel orderVisitDetailsModel :
                                     fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
                                 if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {

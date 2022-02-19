@@ -231,7 +231,7 @@ public class HomeScreenActivity extends AppCompatActivity {
 
     private void iniTNBT() {
         txt_nbt_username = (TextView) findViewById(R.id.txt_nbt_username);
-        globalclass.DisplayDeviceImages(activity, appPreferenceManager.getSelfieResponseModel().getPic(), civ_nbt_profile);
+        globalclass.DisplayDeviceImages(activity, appPreferenceManager.getBtechSelfie(), civ_nbt_profile);
         txt_nbt_username.setText("Welcome ,\n" + appPreferenceManager.getLoginResponseModel().getUserName());
 
         try {
@@ -689,9 +689,16 @@ public class HomeScreenActivity extends AppCompatActivity {
 //        toolbar_image = (ImageView) findViewById(R.id.toolbar_image);
         txtUserName = (TextView) findViewById(R.id.txt_username);
         toolbarHome.setTitle("");
+      //  String str1 = ""+appPreferenceManager.getSelfieResponseModel().getPic();
+        String str2 = ""+appPreferenceManager.getBtechSelfie();
+   //     System.out.println(str1);
+        System.out.println(str2);
 
-
-        globalclass.DisplayDeviceImages(activity, appPreferenceManager.getSelfieResponseModel().getPic(), civ_profile);
+       /* if (appPreferenceManager.getSelfieResponseModel().getPic()!=null){
+            globalclass.DisplayDeviceImages(activity, appPreferenceManager.getSelfieResponseModel().getPic(), civ_profile);
+        }else{*/
+            globalclass.DisplayDeviceImages(activity, appPreferenceManager.getBtechSelfie(), civ_profile);
+        //}
         setSupportActionBar(toolbarHome);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -732,6 +739,11 @@ public class HomeScreenActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        /*if (!InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())){
+            globalclass.DisplayDeviceImages(activity, appPreferenceManager.getSelfieResponseModel().getPic(), civ_profile);
+        }else{*/
+            globalclass.DisplayDeviceImages(activity, appPreferenceManager.getBtechSelfie(), civ_profile);
+        //}
 //        stopService(TImeCheckerIntent);
     }
 
