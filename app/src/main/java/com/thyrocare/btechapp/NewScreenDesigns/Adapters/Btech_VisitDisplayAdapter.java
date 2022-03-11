@@ -29,6 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
@@ -55,6 +56,7 @@ import com.thyrocare.btechapp.network.MyBroadcastReceiver;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
+import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.DateUtils;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
@@ -118,11 +120,12 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     private String Test2;
     private int apihours;
     private int apiminutes;
+    private int orderPosition;
     private Date strDate3;
     private Global globalClass;
     private boolean isCancelRequesGenereted = false;
 
-    public Btech_VisitDisplayAdapter(VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new, Activity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels) {
+    public Btech_VisitDisplayAdapter(VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new, Activity activity, ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels, int orderPosition) {
         this.activity = activity;
         this.orderVisitDetailsModelsArr = orderDetailsResponseModels;
         layoutInflater = LayoutInflater.from(activity);
@@ -131,6 +134,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         gpsTracker = new GPSTracker(activity);
         this.visitOrdersDisplayFragment_new = visitOrdersDisplayFragment_new;
         globalClass = new Global(activity);
+        this.orderPosition = orderPosition;
     }
 
     public void UpdateList(ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels) {
@@ -241,25 +245,49 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         holder.ll_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isKCF()) {
-                    goAheadWithNormalFlow(pos);
-                } else {
-                    if (pos == 0) {
-                        if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPPE()) {
-                            final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
-                            builder1.setMessage(ConstantsMessages.EnsureToWearPPE).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    PerformStartFunction(pos, holder);
-                                }
-                            });
-                            builder1.show();
-                        } else {
-                            PerformStartFunction(pos, holder);
-                        }
+                try {
+                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isKCF()) {
+                        goAheadWithNormalFlow(pos);
                     } else {
-                        Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
+                        if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && orderPosition == 0) {
+                            if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPPE()) {
+                                final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+                                builder1.setMessage(ConstantsMessages.EnsureToWearPPE).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        PerformStartFunction(pos, holder);
+                                    }
+                                });
+                                builder1.show();
+                            } else {
+                                PerformStartFunction(pos, holder);
+                            }
+                        } else {
+                            //TODO To start order form any position if the order is PE B2B order
+                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                if (appPreferenceManager.getLoginResponseModel().getB2bLogin() != null && InputUtils.CheckEqualIgnoreCase(appPreferenceManager.getLoginResponseModel().getB2bLogin().trim(), BundleConstants.B2BLogin.trim())) {
+                                    if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPPE()) {
+                                        final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+                                        builder1.setMessage(ConstantsMessages.EnsureToWearPPE).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                PerformStartFunction(pos, holder);
+                                            }
+                                        });
+                                        builder1.show();
+                                    } else {
+                                        PerformStartFunction(pos, holder);
+                                    }
+                                } else {
+                                    Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -915,9 +943,9 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 cancelVisit = "y";
             } else {
                 if (toShowResheduleOption) {
-                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                         tv_ord_pass.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         tv_ord_pass.setVisibility(View.VISIBLE);
                     }
                     tv_ord_rel.setVisibility(View.VISIBLE);
@@ -927,9 +955,9 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                     /*items = new String[]{"Order Reschedule",
                             "Request Release", "Order Pass"};*/
                 } else {
-                   if(Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                       tv_ord_pass.setVisibility(View.GONE);
-                    }else{
+                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                        tv_ord_pass.setVisibility(View.GONE);
+                    } else {
                         tv_ord_pass.setVisibility(View.VISIBLE);
                     }
                     tv_ord_rel.setVisibility(View.VISIBLE);
@@ -1123,7 +1151,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    activity.startActivity(new Intent(activity, VisitOrdersDisplayFragment_new.class));
+//                                    activity.startActivity(new Intent(activity, VisitOrdersDisplayFragment_new.class));
+                                    activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
 //                                    homeScreenActivity.pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
                                     dialog.dismiss();
 
@@ -1144,7 +1173,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
         });
     }
 
-    private void CallOrderStatusChangeAPI(OrderStatusChangeRequestModel orderStatusChangeRequestModel) {
+    private void CallOrderStatusChangeAPI(OrderStatusChangeRequestModel orderStatusChangeRequestModel, final OrderDetailsModel orderDetailsModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderStatusChangeRequestModel.getId());
@@ -1156,14 +1185,14 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 globalClass.hideProgressDialog(activity);
                 if (response.code() == 200) {
                     if (onClickListeners != null) {
-                        onClickListeners.onRefresh();
+                        onClickListeners.onRefresh(orderDetailsModel.getVisitId());
                     }
                     if (userChoosenReleaseTask.equals("Visit Cancellation")) {
                         if (!isCancelRequesGenereted) {
                             isCancelRequesGenereted = true;
                             Toast.makeText(activity, "Order rescheduled successfully", Toast.LENGTH_SHORT).show();
                             if (onClickListeners != null) {
-                                onClickListeners.onRefresh();
+                                onClickListeners.onRefresh(orderDetailsModel.getVisitId());
                             }
                             activity.finish();
                         }
@@ -1676,7 +1705,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
 
         void onStart(OrderVisitDetailsModel orderVisitDetailsModel);
 
-        void onRefresh();
+        void onRefresh(String orderNo);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -1736,7 +1765,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             orderStatusChangeRequestModel.setAppointmentDate(date);
 
             if (isNetworkAvailable(activity)) {
-                CallOrderStatusChangeAPI(orderStatusChangeRequestModel);
+                CallOrderStatusChangeAPI(orderStatusChangeRequestModel,orderDetailsModel);
             } else {
                 Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }

@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.text.Html;
 import android.text.TextUtils;
@@ -24,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.thyrocare.btechapp.Controller.RemoveUrineSampleController;
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.ScanBarcodeWoeActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
@@ -36,10 +38,13 @@ import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
 import com.thyrocare.btechapp.models.api.request.RemoveUrineReqModel;
 import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
+import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.RemoveUrineSampleRespModel;
+import com.thyrocare.btechapp.models.data.BeneficiaryBarcodeDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
@@ -245,11 +250,23 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
         // TODO if ben has single urine sample
         if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-            deleteBenUrine(cv_del_ben, position);
+            for (int i = 0; i < beneficaryWiseScanbarcodeArylst.size(); i++) {
+                if (beneficaryWiseScanbarcodeArylst.size() == 1) {
+                    for (int j = 0; j < beneficaryWiseScanbarcodeArylst.get(i).getBarcodedtl().size(); j++) {
+                        if (beneficaryWiseScanbarcodeArylst.get(i).getBarcodedtl().size() == 1) {
+                            if (beneficaryWiseScanbarcodeArylst.get(position).getBarcodedtl().get(i).getSamplType().equalsIgnoreCase("URINE")) {
+                                cv_del_ben.setVisibility(View.GONE);
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    deleteBenUrine(cv_del_ben, position);
+                }
+            }
         }
 
         initScanBarcodeView(position, recyle_barcode);
-
 
         cv_del_ben.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,7 +277,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                CallRemoveSample(beneficaryWiseScanbarcodeArylst.get(position),2);
+                                CallRemoveSample(beneficaryWiseScanbarcodeArylst.get(position), 2);
                                 deleteBen(position);
                             }
                         })
@@ -426,8 +443,18 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
     }
 
     private void deleteBen(int position) {
-        beneficaryWiseScanbarcodeArylst.remove(position);
-        notifyDataSetChanged();
+        //  beneficaryWiseScanbarcodeArylst.remove(position);
+        //  notifyDataSetChanged();
+        for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
+            for (int j = 0; j < orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().size(); j++) {
+                if (j == position) {
+                    orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().remove(position);
+                }
+            }
+        }
+        Intent intent = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+        mActivity.startActivity(intent);
     }
 
     private void deleteBenUrine(CardView cv_del_ben, int position) {
@@ -556,7 +583,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             removeUrineReqModel.setBtechID(appPreferenceManager.getLoginResponseModel().getUserID());
 
             RemoveUrineSampleController removeUrineSampleController = new RemoveUrineSampleController(this, mActivity);
-            removeUrineSampleController.CallAPI(removeUrineReqModel, beneficiaryDetailsModel,i);
+            removeUrineSampleController.CallAPI(removeUrineReqModel, beneficiaryDetailsModel, i);
         } else {
             globalclass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.plz_chk_internet));
         }
@@ -614,6 +641,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
                 for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {
                     if (beneficiaryDetailsModel.getBarcodedtl().get(i).getSamplType().equalsIgnoreCase("URINE")) {
                         beneficiaryDetailsModel.getBarcodedtl().remove(i);
+                    //    removedatafromlocal(beneficiaryDetailsModel);
                         notifyDataSetChanged();
                     }
                 }
@@ -622,6 +650,23 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             globalclass.showCustomToast(mActivity, "" + body.getResponse());
         }
 
+    }
+
+    private void removedatafromlocal(BeneficiaryDetailsModel beneficiaryDetailsModel) {
+        for (int i = 0; i < appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails().size(); i++) {
+            if (appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails().get(i).getVisitId().equalsIgnoreCase(beneficiaryDetailsModel.getOrderNo())) {
+                for (int j = 0; j < appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails().get(i).getAllOrderdetails().size(); j++) {
+                    for (int k = 0; k < appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails().get(i).getAllOrderdetails().get(j).getBenMaster().size(); k++) {
+                        if (appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails().get(i).getAllOrderdetails().get(j).getBenMaster().get(k).getBenId() == beneficiaryDetailsModel.getBenId()) {
+                            appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails().get(i).getAllOrderdetails().get(j).getBenMaster().add(beneficiaryDetailsModel);
+                        }
+                    }
+                }
+            }
+        }
+        FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = new FetchOrderDetailsResponseModel();
+        fetchOrderDetailsResponseModel.setOrderVisitDetails(appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails());
+        System.out.println("" + fetchOrderDetailsResponseModel);
     }
 
     public interface OnClickListeners {

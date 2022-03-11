@@ -244,6 +244,9 @@ public class LoginActivity extends AppCompatActivity {
         new LogUserActivityTagging(mActivity, LOGIN, "");
         if (responseModel != null) {
             //btech_hub
+            /*if (BuildConfig.DEBUG){
+                responseModel.setB2bLogin(true);
+            }*/
             appPreferenceManager.setLoginRole(responseModel.getRole());
             appPreferenceManager.setUserID(responseModel.getUserID());
             appPreferenceManager.setAPISessionKey(responseModel.getAccess_token());

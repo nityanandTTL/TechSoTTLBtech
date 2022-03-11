@@ -22,7 +22,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 
 import android.text.Editable;
 import android.text.Html;
@@ -53,12 +52,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.sdsmdg.tastytoast.TastyToast;
-import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
-import com.thyrocare.btechapp.NewScreenDesigns.Adapters.Btech_VisitDisplayAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.DisplaySelectedTestsListForCancellationAdapter_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.ExpandableTestMasterListDisplayAdapter_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.StartArriveOrderDetailsAdapter;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SendSMSAfterBenRemovedRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
@@ -75,7 +73,6 @@ import application.ApplicationController;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.activity.KIOSK_Scanner_Activity;
 import com.thyrocare.btechapp.activity.PaymentsActivity;
-import com.thyrocare.btechapp.customview.CircleImageView;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.thyrocare.btechapp.delegate.OrderRescheduleDialogButtonClickedDelegate;
@@ -98,8 +95,6 @@ import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 import com.thyrocare.btechapp.service.TrackerService;
-import com.thyrocare.btechapp.utils.api.Logger;
-import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.DateUtils;
@@ -140,7 +135,6 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.So
 
 import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 import static com.thyrocare.btechapp.utils.app.AppConstants.MSG_SERVER_EXCEPTION;
-import static com.thyrocare.btechapp.utils.app.BundleConstants.API_FOR_OTP;
 import static com.thyrocare.btechapp.utils.app.CommonUtils.isValidForEditing;
 
 
@@ -201,6 +195,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
     RelativeLayout customSwipeButton2;
     TextView tv_toolbar;
     ImageView iv_back, iv_home;
+
 
     @Override
     public void onBackPressed() {
@@ -331,6 +326,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -374,11 +370,11 @@ public class StartAndArriveActivity extends AppCompatActivity {
         iv_home.setVisibility(View.GONE);
 
         // TODO Add ben not allowed for PE-Btech time being  GG Sir's instruction
-     //   if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || btn_arrive.getVisibility() == View.VISIBLE) {
-      //      btn_floating_add_ben.setVisibility(View.GONE);
-     //   } else {
-      //      btn_floating_add_ben.setVisibility(View.VISIBLE);
-      //  }
+        //   if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || btn_arrive.getVisibility() == View.VISIBLE) {
+        //      btn_floating_add_ben.setVisibility(View.GONE);
+        //   } else {
+        //      btn_floating_add_ben.setVisibility(View.VISIBLE);
+        //  }
 
         if (BundleConstants.isKIOSKOrder) {
             customSwipeButton2.setVisibility(View.GONE);
@@ -499,7 +495,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 try {
 
                     if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                        if (checkBeneficiaryDtls()){
+                        if (checkBeneficiaryDtls()) {
                             String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
                             final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
 
@@ -635,13 +631,13 @@ public class StartAndArriveActivity extends AppCompatActivity {
     private boolean checkBeneficiaryDtls() {
         for (int i = 0; i < orderDetailsModel.getAllOrderdetails().size(); i++) {
             for (int j = 0; j < orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().size(); j++) {
-                if (orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getName().trim().contains("Test_user") ||orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getName().trim().contains("TEST_USER") ){
+                if (orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getName().trim().contains("Test_user") || orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getName().trim().contains("TEST_USER")) {
                     Toast.makeText(mActivity, "Kindly edit beneficiary name", Toast.LENGTH_SHORT).show();
                     return false;
-                }else if(orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getAge() == 150){
+                } else if (orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getAge() == 150) {
                     Toast.makeText(mActivity, "Kindly edit beneficiary age", Toast.LENGTH_SHORT).show();
                     return false;
-                }else if(orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getGender().equalsIgnoreCase("Dummy")){
+                } else if (orderDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getGender().equalsIgnoreCase("Dummy")) {
                     Toast.makeText(mActivity, "Kindly edit beneficiary gender", Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -1234,100 +1230,137 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
             }
         } else {
-            /*try {
-                GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
-                Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID());
-                globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.fetchingOrders), false);
-                fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
-                    @Override
-                    public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
-                        globalclass.hideProgressDialog(mActivity);
-
-                        FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
-                        if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails() != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
-                            for (OrderVisitDetailsModel orderVisitDetailsModel :
-                                    fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
-                                if (orderVisitDetailsModel.getVisitId().equalsIgnoreCase(strOrderNo)) {
-                                    if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
-                                        for (OrderDetailsModel orderDetailsModel :
-                                                orderVisitDetailsModel.getAllOrderdetails()) {
-                                            orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
-                                            orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
-                                            orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
-                                            orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
-                                            orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
-                                            orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
-                                            orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
-                                            orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
-                                            orderDetailsModel.setAddBen(orderDetailsModel.isEditOrder());
-                                            if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
-                                                for (BeneficiaryDetailsModel beneficiaryDetailsModel :
-                                                        orderDetailsModel.getBenMaster()) {
-                                                    beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
-                                                    beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
-                                                    for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
-                                                        beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
-                                                    }
-                                                }
+            /*if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && !Global.callAPIEditOrder) {
+                if (appPreferenceManager.getfetchOrderDetailsResponseModel() != null && appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails() != null && appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails().size() > 0) {
+                    for (OrderVisitDetailsModel orderVisitDetailsModel :
+                            appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails()) {
+                        if (orderVisitDetailsModel.getVisitId().equalsIgnoreCase(strOrderNo)) {
+                            if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+                                for (OrderDetailsModel orderDetailsModel :
+                                        orderVisitDetailsModel.getAllOrderdetails()) {
+                                    orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+                                    orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
+                                    orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
+                                    orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
+                                    orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
+                                    orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
+                                    orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
+                                    orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
+                                    orderDetailsModel.setAddBen(orderDetailsModel.isEditOrder());
+                                    if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
+                                        for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                                                orderDetailsModel.getBenMaster()) {
+                                            beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                                            beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
+                                            for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
+                                                beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
                                             }
                                         }
-                                        orderDetailsModel = null;
-                                        orderDetailsModel = orderVisitDetailsModel;
-                                        break;
                                     }
                                 }
+                                orderDetailsModel = null;
+                                orderDetailsModel = orderVisitDetailsModel;
+                                break;
                             }
-                        }
-                        initData(Status);
-                    }
-
-                    @Override
-                    public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
-                        globalclass.hideProgressDialog(mActivity);
-                        globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
-                    }
-                });
-            } catch (Exception e) {
-                globalclass.hideProgressDialog(mActivity);
-                e.printStackTrace();
-                globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
-            }*/
-
-            if (appPreferenceManager.getfetchOrderDetailsResponseModel()!= null && appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails() != null && appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails().size() > 0) {
-                for (OrderVisitDetailsModel orderVisitDetailsModel :
-                        appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails()) {
-                    if (orderVisitDetailsModel.getVisitId().equalsIgnoreCase(strOrderNo)) {
-                        if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
-                            for (OrderDetailsModel orderDetailsModel :
-                                    orderVisitDetailsModel.getAllOrderdetails()) {
-                                orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
-                                orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
-                                orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
-                                orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
-                                orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
-                                orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
-                                orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
-                                orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
-                                orderDetailsModel.setAddBen(orderDetailsModel.isEditOrder());
-                                if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
-                                    for (BeneficiaryDetailsModel beneficiaryDetailsModel :
-                                            orderDetailsModel.getBenMaster()) {
-                                        beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
-                                        beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
-                                        for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
-                                            beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
-                                        }
-                                    }
-                                }
-                            }
-                            orderDetailsModel = null;
-                            orderDetailsModel = orderVisitDetailsModel;
-                            break;
                         }
                     }
                 }
-            }
-            initData(Status);
+            } else if(!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && Global.callAPIEditOrder) {*/
+                try {
+                    GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+//                    Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID());
+                    Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getOrderDetail(BundleConstants.setSelectedOrder);
+                    globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.fetchingOrders), false);
+                    fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
+                        @Override
+                        public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
+                            globalclass.hideProgressDialog(mActivity);
+                            FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
+                            if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails() != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
+                                for (OrderVisitDetailsModel orderVisitDetailsModel :
+                                        fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
+                                    if (orderVisitDetailsModel.getVisitId().equalsIgnoreCase(strOrderNo)) {
+                                        if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+                                            for (OrderDetailsModel orderDetailsModel :
+                                                    orderVisitDetailsModel.getAllOrderdetails()) {
+                                                orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+                                                orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
+                                                orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
+                                                orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
+                                                orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
+                                                orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
+                                                orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
+                                                orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
+                                                orderDetailsModel.setAddBen(orderDetailsModel.isEditOrder());
+                                                if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
+                                                    for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                                                            orderDetailsModel.getBenMaster()) {
+                                                        beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                                                        beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
+                                                        for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
+                                                            beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            orderDetailsModel = null;
+                                            orderDetailsModel = orderVisitDetailsModel;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            initData(Status);
+                        }
+
+                        @Override
+                        public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
+                            globalclass.hideProgressDialog(mActivity);
+                            globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
+                        }
+                    });
+                } catch (Exception e) {
+                    globalclass.hideProgressDialog(mActivity);
+                    e.printStackTrace();
+                    globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
+                }
+           /* }else if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && InputUtils.CheckEqualIgnoreCase(BundleConstants.B2BLogin, appPreferenceManager.getLoginResponseModel().getB2bLogin())) {
+                if (appPreferenceManager.getfetchOrderDetailsResponseModel() != null && appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails() != null && appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails().size() > 0) {
+                    for (OrderVisitDetailsModel orderVisitDetailsModel :
+                            appPreferenceManager.getfetchOrderDetailsResponseModel().getOrderVisitDetails()) {
+                        if (orderVisitDetailsModel.getVisitId().equalsIgnoreCase(strOrderNo)) {
+                            if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+                                for (OrderDetailsModel orderDetailsModel :
+                                        orderVisitDetailsModel.getAllOrderdetails()) {
+                                    orderDetailsModel.setVisitId(orderVisitDetailsModel.getVisitId());
+                                    orderDetailsModel.setResponse(orderVisitDetailsModel.getResponse());
+                                    orderDetailsModel.setSlot(orderVisitDetailsModel.getSlot());
+                                    orderDetailsModel.setSlotId(orderVisitDetailsModel.getSlotId());
+                                    orderDetailsModel.setAmountPayable(orderDetailsModel.getAmountDue());
+                                    orderDetailsModel.setEstIncome(orderVisitDetailsModel.getEstIncome());
+                                    orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
+                                    orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
+                                    orderDetailsModel.setAddBen(orderDetailsModel.isEditOrder());
+                                    if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
+                                        for (BeneficiaryDetailsModel beneficiaryDetailsModel :
+                                                orderDetailsModel.getBenMaster()) {
+                                            beneficiaryDetailsModel.setOrderNo(orderDetailsModel.getOrderNo());
+                                            beneficiaryDetailsModel.setTests(beneficiaryDetailsModel.getTestsCode());
+                                            for (int i = 0; i < beneficiaryDetailsModel.getSampleType().size(); i++) {
+                                                beneficiaryDetailsModel.getSampleType().get(i).setBenId(beneficiaryDetailsModel.getBenId());
+                                            }
+                                        }
+                                    }
+                                }
+                                orderDetailsModel = null;
+                                orderDetailsModel = orderVisitDetailsModel;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }*/
+         //   initData(Status);
         }
     }
 
@@ -1347,6 +1380,15 @@ public class StartAndArriveActivity extends AppCompatActivity {
             btn_start.setEnabled(true);
             if (orderDetailsModel.getAllOrderdetails().get(0).getAmountDue() == 0) {
                 customSwipeButton2.setVisibility(View.GONE);
+                if (!BundleConstants.isKIOSKOrder) {
+                    if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
+                        customSwipeButton2.setVisibility(View.VISIBLE);
+                    } else {
+                        customSwipeButton2.setVisibility(View.GONE);
+                    }
+                } else {
+                    customSwipeButton2.setVisibility(View.GONE);
+                }
                 txt_amount.setText("Paid");
             } else {
                 if (BundleConstants.isKIOSKOrder) {
@@ -2301,7 +2343,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     if (cd.isConnectingToInternet()) {
                         if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                             if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
-                                CallRemoveBenAPI(removebenModel);
+                                CallRemoveBenAPI(appPreferenceManager.getfetchOrderDetailsResponseModel(), removebenModel, orderVisitDetailsModel.getVisitId(), selectedbeneficiaryDetailsModel.getBenId());
+                              //  CallRemoveBenAPI(removebenModel);
                             } else {
                                 CallsendOTPAPIforOrderEdit("Delete", orderVisitDetailsModel, orderVisitDetailsModel.getVisitId(), selectedbeneficiaryDetailsModel.getBenId());
                             }
@@ -2357,7 +2400,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         }
     }
 
-    private void CallRemoveBenAPI(final RemoveBeneficiaryAPIRequestModel rembenmode) {
+    private void CallRemoveBenAPI(final FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel, final RemoveBeneficiaryAPIRequestModel rembenmode, final String orderNo, final int benId) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<OrderVisitDetailsModel> responseCall = apiInterface.CallRemoveBenAPI("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(), rembenmode);
@@ -2368,7 +2411,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 globalclass.hideProgressDialog(mActivity);
                 if (response.isSuccessful() && response.body() != null) {
                     OrderVisitDetailsModel visitDetailsModel = response.body();
-                    onRemoveBenAPIResponseReceived(visitDetailsModel, rembenmode);
+                    onRemoveBenAPIResponseReceived(fetchOrderDetailsResponseModel, visitDetailsModel, rembenmode, orderNo, benId);
                 } else {
 
                     globalclass.showCustomToast(mActivity, SomethingWentwrngMsg);
@@ -2383,7 +2426,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         });
     }
 
-    private void onRemoveBenAPIResponseReceived(OrderVisitDetailsModel orderVisitDetailsModel, RemoveBeneficiaryAPIRequestModel rembenmode) {
+    private void onRemoveBenAPIResponseReceived(FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel, OrderVisitDetailsModel orderVisitDetailsModel, RemoveBeneficiaryAPIRequestModel rembenmode, String orderNo, int benId) {
 
 //        globalclass.showCustomToast(mActivity, "Beneficiary Removed Successfully");
         Toast.makeText(mActivity, "Beneficiary Removed Successfully", Toast.LENGTH_SHORT).show();
@@ -2392,6 +2435,22 @@ public class StartAndArriveActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        /*if (fetchOrderDetailsResponseModel != null) {
+            for (int i = 0; i < fetchOrderDetailsResponseModel.getOrderVisitDetails().size(); i++) {
+                if (InputUtils.CheckEqualIgnoreCase(fetchOrderDetailsResponseModel.getOrderVisitDetails().get(i).getVisitId(), orderNo)) {
+                    for (int j = 0; j < fetchOrderDetailsResponseModel.getOrderVisitDetails().get(i).getAllOrderdetails().size(); j++) {
+                        for (int k = 0; k < fetchOrderDetailsResponseModel.getOrderVisitDetails().get(i).getAllOrderdetails().get(j).getBenMaster().size(); k++) {
+                            if (benId == fetchOrderDetailsResponseModel.getOrderVisitDetails().get(i).getAllOrderdetails().get(j).getBenMaster().get(k).getBenId()) {
+                                fetchOrderDetailsResponseModel.getOrderVisitDetails().get(i).getAllOrderdetails().get(j).getBenMaster().remove(k);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        appPreferenceManager.setfetchOrderDetailsResponseModel(fetchOrderDetailsResponseModel);*/
+
+      //  startActivity(new Intent(this, StartAndArriveActivity.class));
 
         if (cd.isConnectingToInternet()) {
             CallOrderDetailAPI("Arrive");
@@ -2451,7 +2510,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
             public void onResponse(Call<String> call, Response<String> response) {
                 globalclass.hideProgressDialog(mActivity);
                 if (response.code() == 200 || response.code() == 204) {
-                    onOrderStatusChangedResponseReceived(strButton);
+                    onOrderStatusChangedResponseReceived(strButton, orderDetailsModel.getVisitId());
                 } else {
                     try {
                         Toast.makeText(mActivity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
@@ -2470,7 +2529,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         });
     }
 
-    private void onOrderStatusChangedResponseReceived(String strButton) {
+    private void onOrderStatusChangedResponseReceived(String strButton, String visitId) {
         btn_start.setEnabled(false);
         if (strButton.equalsIgnoreCase("Start")) {
             new Handler().postDelayed(new Runnable() {
@@ -2491,9 +2550,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
         } else if (strButton.equalsIgnoreCase("Arrive")) {
             try {
                 if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
-                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
+                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                         btn_floating_add_ben.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         btn_floating_add_ben.setVisibility(View.GONE);
                     }
                 } else if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
@@ -2527,11 +2586,44 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
         } else if (strButton.equalsIgnoreCase("Manipulation")) {
 //            globalclass.showCustomToast(mActivity,"Order Released Successfully");
+            /*if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && InputUtils.CheckEqualIgnoreCase(appPreferenceManager.getLoginResponseModel().getB2bLogin(), BundleConstants.B2BLogin)) {
+                RemoveOrderFromLocal(visitId);
+            }*/
             TastyToast.makeText(mActivity, "Order Released Successfully", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-            finish();
+//            Intent intent = new Intent(this, VisitOrdersDisplayFragment_new.class);
+            Intent intent = new Intent(this, B2BVisitOrdersDisplayFragment.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            // finish();
         } else if (strButton.equalsIgnoreCase("Reschedule")) {
+           /* if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && InputUtils.CheckEqualIgnoreCase(appPreferenceManager.getLoginResponseModel().getB2bLogin(), BundleConstants.B2BLogin)) {
+                appPreferenceManager.setfetchOrderDetailsResponseModel(null);
+            }*/
             Toast.makeText(mActivity, "Order Rescheduled successfully", Toast.LENGTH_SHORT).show();
-            finish();
+//            Intent intent = new Intent(this, VisitOrdersDisplayFragment_new.class);
+            Intent intent = new Intent(this, B2BVisitOrdersDisplayFragment.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+    }
+
+    private void RemoveOrderFromLocal(String orderVisitID) {
+        try {
+            FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = appPreferenceManager.getfetchOrderDetailsResponseModel();
+            if (fetchOrderDetailsResponseModel != null) {
+                if (fetchOrderDetailsResponseModel.getOrderVisitDetails() != null) {
+                    for (int i = 0; i < fetchOrderDetailsResponseModel.getOrderVisitDetails().size(); i++) {
+                        System.out.println("Order ID >> " + orderVisitID + " >> " + fetchOrderDetailsResponseModel.getOrderVisitDetails().get(i).getVisitId());
+                        if (orderVisitID.toString().trim().equalsIgnoreCase(fetchOrderDetailsResponseModel.getOrderVisitDetails().get(i).getVisitId().toString().trim())) {
+                            fetchOrderDetailsResponseModel.getOrderVisitDetails().remove(i);
+                            break;
+                        }
+                    }
+                }
+            }
+            appPreferenceManager.setfetchOrderDetailsResponseModel(fetchOrderDetailsResponseModel);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -2693,7 +2785,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             CustomDialogforOTPValidation.dismiss();
                         }
                         if (Action.equalsIgnoreCase("Delete")) {
-                            CallRemoveBenAPI(removebenModel);
+                            CallRemoveBenAPI(appPreferenceManager.getfetchOrderDetailsResponseModel(), removebenModel, orderNo, benId);
                         }
                     } else {
                         globalclass.showCustomToast(mActivity, "Invalid OTP.");

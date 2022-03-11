@@ -39,6 +39,7 @@ import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.Controller.SignINOUTController;
 import com.thyrocare.btechapp.Controller.SignSummaryController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.BtechCertificateFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.FeedbackFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.Leave_intimation_fragment_new;
@@ -758,26 +759,10 @@ public class HomeScreenActivity extends AppCompatActivity {
 
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle("Close Application")
-                    .setMessage("Are you sure you want to close the application")
-                    .setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-//                            stopService(TImeCheckerIntent);
-                            finishAffinity();
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
-
+            dialogtoExit();
             return;
+        }else{
+            dialogtoExit();
         }
 
         new Handler().postDelayed(new Runnable() {
@@ -786,6 +771,27 @@ public class HomeScreenActivity extends AppCompatActivity {
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
+    }
+
+    private void dialogtoExit() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Close Application")
+                .setMessage("Are you sure you want to close the application")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+//                            stopService(TImeCheckerIntent);
+                        finishAffinity();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
     @Override
@@ -1140,8 +1146,9 @@ public class HomeScreenActivity extends AppCompatActivity {
         ll_orders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity, VisitOrdersDisplayFragment_new.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(activity, VisitOrdersDisplayFragment_new.class);
+                startActivity(intent);*/
+                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);startActivity(intent);
 
 //                pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             }

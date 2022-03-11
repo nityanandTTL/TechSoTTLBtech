@@ -61,8 +61,8 @@ public class RetroFit_APIClient {
         client.addInterceptor(interceptor);
 
         client.protocols(Util.immutableList(Protocol.HTTP_1_1));
-        client.readTimeout(60, TimeUnit.SECONDS);
-        client.writeTimeout(60, TimeUnit.SECONDS);
+        client.readTimeout(120, TimeUnit.SECONDS);
+        client.writeTimeout(120, TimeUnit.SECONDS);
         client.connectTimeout(120, TimeUnit.SECONDS);
         client.addInterceptor(new Interceptor() {
             @Override

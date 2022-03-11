@@ -76,6 +76,7 @@ public class Global {
     //Live ---------------------------
 
     ProgressDialog progressDialog;
+    public static boolean callAPIEditOrder = false;
 
     public Global(Context context) {
         this.context = context;

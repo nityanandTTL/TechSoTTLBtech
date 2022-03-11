@@ -116,6 +116,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     String fileName = "", filepath = "";
     int ImageFlag = 0;
     int DelFlag;
+    boolean isRemovedUrine = false;
 
     @Override
     public void onBackPressed() {
@@ -243,18 +244,35 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                             beneficaryWiseArylst.get(i).getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
                         }
                     }
-
-                    if (beneficaryWiseArylst.get(i).getTestsCode().equalsIgnoreCase("RBS,PPBS") || beneficaryWiseArylst.get(i).getTestsCode().equalsIgnoreCase("PPBS,RBS")) {
-                        BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModelRBS = new BeneficiaryBarcodeDetailsModel();
-                        beneficiaryBarcodeDetailsModelRBS.setBenId(beneficaryWiseArylst.get(i).getBenId());
-                        beneficiaryBarcodeDetailsModelRBS.setId(DeviceUtils.getRandomUUID());
-                        beneficiaryBarcodeDetailsModelRBS.setSamplType("FLUORIDE-R");
-                        beneficiaryBarcodeDetailsModelRBS.setOrderNo(beneficaryWiseArylst.get(i).getOrderNo());
-                        beneficiaryBarcodeDetailsModelRBS.setRBS_PPBS(true);
-                        beneficaryWiseArylst.get(i).getBarcodedtl().add(beneficiaryBarcodeDetailsModelRBS);
+                    if (!InputUtils.isNull(beneficaryWiseArylst.get(i).getTestsCode())){
+                        if (beneficaryWiseArylst.get(i).getTestsCode().equalsIgnoreCase("RBS,PPBS") || beneficaryWiseArylst.get(i).getTestsCode().equalsIgnoreCase("PPBS,RBS")) {
+                            BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModelRBS = new BeneficiaryBarcodeDetailsModel();
+                            beneficiaryBarcodeDetailsModelRBS.setBenId(beneficaryWiseArylst.get(i).getBenId());
+                            beneficiaryBarcodeDetailsModelRBS.setId(DeviceUtils.getRandomUUID());
+                            beneficiaryBarcodeDetailsModelRBS.setSamplType("FLUORIDE-R");
+                            beneficiaryBarcodeDetailsModelRBS.setOrderNo(beneficaryWiseArylst.get(i).getOrderNo());
+                            beneficiaryBarcodeDetailsModelRBS.setRBS_PPBS(true);
+                            beneficaryWiseArylst.get(i).getBarcodedtl().add(beneficiaryBarcodeDetailsModelRBS);
+                        }
                     }
                 }
             }
+
+            for (int j = 0; j < beneficaryWiseArylst.size(); j++) {
+                for (int i = 0; i < beneficaryWiseArylst.get(j).getBarcodedtl().size(); i++) {
+                    if (beneficaryWiseArylst.get(j).getBarcodedtl().get(i).getSamplType().equalsIgnoreCase(BundleConstants.URINE)) {
+                        beneficaryWiseArylst.get(j).getBarcodedtl().remove(i);
+                        isRemovedUrine = true;
+                    }
+                }
+
+                if (isRemovedUrine) {
+                    BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
+                    beneficiaryBarcodeDetailsModel.setSamplType(BundleConstants.URINE);
+                    beneficaryWiseArylst.get(j).getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
+                }
+            }
+
             InitViewpager(0);
         }
     }
@@ -264,9 +282,25 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mActivity, StartAndArriveActivity.class);
-                intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
-                startActivity(intent);
+                androidx.appcompat.app.AlertDialog alertDialog = new androidx.appcompat.app.AlertDialog.Builder(mActivity).create();
+                alertDialog.setMessage("All changes made will be reset.\nAre you sure, you want to go back ?");
+                alertDialog.setButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE, "YES",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(mActivity, StartAndArriveActivity.class);
+                                intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+                alertDialog.setButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE, "NO",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
             }
         });
 
@@ -449,6 +483,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     }
 
     private void InitViewpager(int Currentposition) {
+
+
         if (mAdapter != null) {
             mAdapter.updateScanData(beneficaryWiseArylst, fileName, filepath);
             mAdapter.notifyDataSetChanged();
@@ -456,7 +492,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
             boolean showProduct = orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct();
             boolean isHCL = orderVisitDetailsModel.getAllOrderdetails().get(0).isISHclOrder();
             boolean isOTP = orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP();
-            mAdapter = new ScanBarcodeViewPagerAdapter(mActivity, beneficaryWiseArylst, showProduct,orderVisitDetailsModel ,orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile(), isHCL, fileName,isOTP);
+            mAdapter = new ScanBarcodeViewPagerAdapter(mActivity, beneficaryWiseArylst, showProduct, orderVisitDetailsModel, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile(), isHCL, fileName, isOTP);
             BarcodeScanviewpager.setAdapter(mAdapter);
             DisplayDotsBelowViewpager();
         }
@@ -471,11 +507,11 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 BenPositionForScan = BenPosition;
                 isRescan = false;
                 if (BuildConfig.DEBUG) {
-                 //   OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
-                   EnterBarocodeManually();
+                    //   OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
+                    EnterBarocodeManually();
 //                   OpenScanBarcodeScreen();
                 } else {
-                OpenScanBarcodeScreen();
+                    OpenScanBarcodeScreen();
                 }
             }
 
@@ -487,11 +523,11 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 BenPositionForScan = BenPosition;
                 isRescan = true;
                 if (BuildConfig.DEBUG) {
-                  //  OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
-                   EnterBarocodeManually();
+                    //  OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
+                    EnterBarocodeManually();
 ////                   OpenScanBarcodeScreen();
                 } else {
-                OpenScanBarcodeScreen();
+                    OpenScanBarcodeScreen();
                 }
             }
 

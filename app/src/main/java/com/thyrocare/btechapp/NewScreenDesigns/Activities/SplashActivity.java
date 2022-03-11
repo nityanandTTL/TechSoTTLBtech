@@ -115,14 +115,9 @@ public class SplashActivity extends AppCompatActivity {
         isFlebo = getIntent().getStringExtra("isFlebo");
         locationUpdateIntent = new Intent(this, LocationUpdateService.class);
 
+        System.out.println("techsoapisha----------------------------------"+EncryptionUtils.Ecrp_Hex("https://techsoapisha1.azurewebsites.net"));
+
         System.out.println("Mith<<<<<<<<<<<<"+EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD)));
-      //  System.out.println("Mith<<<<<<<<<<<<QA"+EncryptionUtils.Ecrp_Hex("https://qa-dx-integration.staging.k8s.neontech.cloud/"));
-        String str = ""+EncryptionUtils.Ecrp_Hex("http://techsostng.thyrocare.cloud/");
-        System.out.println("<><><><<><<><>><>><<><><><><><><><"+str);
-        String str1 = ""+EncryptionUtils.Dcrp_Hex(str);
-        System.out.println("------------"+str1);
-
-
     }
 
     private void CheckIfDeviceIsRooted() {
@@ -404,6 +399,7 @@ public class SplashActivity extends AppCompatActivity {
                         c.set(Calendar.HOUR_OF_DAY, 0);
                         if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
                             if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+
                                 Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                                 i.putExtra("LEAVEINTIMATION", "0");
                                 i.putExtra("isFromNotification", isFromNotification);

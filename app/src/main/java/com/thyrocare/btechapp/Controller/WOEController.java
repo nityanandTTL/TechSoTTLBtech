@@ -30,15 +30,21 @@ import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.activity.KIOSK_Scanner_Activity;
 import com.thyrocare.btechapp.activity.PaymentsActivity;
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
+import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
+import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
+import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
+import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +60,7 @@ public class WOEController {
     PaymentsActivity paymentsActivity;
     AppPreferenceManager appPreferenceManager;
     int flag;
+    private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels = new ArrayList<>();
 
     public WOEController(CheckoutWoeActivity checkoutWoeActivity) {
         this.activity = checkoutWoeActivity;
@@ -110,8 +117,12 @@ public class WOEController {
                 globalClass.hideProgressDialog(activity);
                 if (res.isSuccessful() && res.body() != null) {
                     if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                        //TODO local storage for B2B login
+//                        RemoveOrderFromLocal(orderVisitDetailsModel.getVisitId());
+                        //    clearOrderFromLocal(orderVisitDetailsModel.getVisitId());
                         toDisplayWOEDialogPE(orderVisitDetailsModel, test, newTimeaddTwoHrs, newTimeaddTwoHalfHrs);
                     } else {
+//                        RemoveOrderFromLocal(orderVisitDetailsModel.getVisitId());
                         toDisplayWOEDialogTC(orderVisitDetailsModel, test, newTimeaddTwoHrs, newTimeaddTwoHalfHrs);
                     }
                 } else {
@@ -202,7 +213,6 @@ public class WOEController {
             @Override
             public void onClick(View v) {
                 try {
-
                     boolean FlagADDEditBen = true;
                     int peAddben = 1;
                     Intent intent = new Intent(checkoutWoeActivity, AddEditBenificaryActivity.class);
@@ -226,6 +236,7 @@ public class WOEController {
                     dialog_batch.dismiss();
                     String remark = orderVisitDetailsModel.getVisitId();
                     new LogUserActivityTagging(activity, BundleConstants.WOE, remark);
+                    //TODO clear order from local after WOE done
                     if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
                             && test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA")
                             && test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS)) {
@@ -583,6 +594,26 @@ public class WOEController {
         if (!activity.isFinishing()) {
             builder.show();
         }*/
+    }
+
+    private void RemoveOrderFromLocal(String orderVisitID) {
+        try {
+            FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = appPreferenceManager.getfetchOrderDetailsResponseModel();
+            if (fetchOrderDetailsResponseModel != null) {
+                if (fetchOrderDetailsResponseModel.getOrderVisitDetails() != null) {
+                    for (int i = 0; i < fetchOrderDetailsResponseModel.getOrderVisitDetails().size(); i++) {
+                        System.out.println("Order ID >> " + orderVisitID + " >> " + fetchOrderDetailsResponseModel.getOrderVisitDetails().get(i).getVisitId());
+                        if (orderVisitID.toString().trim().equalsIgnoreCase(fetchOrderDetailsResponseModel.getOrderVisitDetails().get(i).getVisitId().toString().trim())) {
+                            fetchOrderDetailsResponseModel.getOrderVisitDetails().remove(i);
+                            break;
+                        }
+                    }
+                }
+            }
+            appPreferenceManager.setfetchOrderDetailsResponseModel(fetchOrderDetailsResponseModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void toDisplayWOEDialogTC(final OrderVisitDetailsModel orderVisitDetailsModel, final String test, final String newTimeaddTwoHrs, final String newTimeaddTwoHalfHrs) {

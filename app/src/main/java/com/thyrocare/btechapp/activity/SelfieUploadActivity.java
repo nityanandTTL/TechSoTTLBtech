@@ -20,7 +20,6 @@ import android.os.PowerManager;
 
 import androidx.core.app.ActivityCompat;
 
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,6 +36,7 @@ import com.google.android.gms.vision.face.FaceDetector;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.mindorks.paracamera.Camera;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
@@ -137,6 +137,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     ImageView iv_refresh, iv_capture, iv_verify_selfie;
     String url = "";
     String imageurl = "";
+    String sevenDate = "";
 
     @Override
     protected void onStart() {
@@ -447,15 +448,15 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                         /*if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                             callMasterSync();
                         } else {*/
-                            try {
-                                appPreferenceManager.setIsAfterLogin(true);
-                                isAfterMasterSyncDone = true;
-                                appPreferenceManager.setLeaveFlag(leaveFlag);
-                                appPreferenceManager.setLeaveFromDate(fromdateapi);
-                                appPreferenceManager.setLeaveToDate(todateapi);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            appPreferenceManager.setIsAfterLogin(true);
+                            isAfterMasterSyncDone = true;
+                            appPreferenceManager.setLeaveFlag(leaveFlag);
+                            appPreferenceManager.setLeaveFromDate(fromdateapi);
+                            appPreferenceManager.setLeaveToDate(todateapi);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                            /* try {
                                 Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
@@ -471,14 +472,14 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 } else if (response.code() == 401) {
                     CommonUtils.CallLogOutFromDevice(activity, activity, appPreferenceManager, dhbDao);
                 } else {
-                    globalClass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+                    //  globalClass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
                 }
             }
 
             @Override
             public void onFailure(Call<SelfieUploadResponseModel> call, Throwable t) {
-                globalClass.hideProgressDialog(activity);
-                globalClass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);
+                /*globalClass.hideProgressDialog(activity);
+                globalClass.showcenterCustomToast(activity, SomethingWentwrngMsg, Toast.LENGTH_LONG);*/
             }
         });
     }
@@ -615,6 +616,10 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             btn_uploadPhoto.setVisibility(View.GONE);
             btn_takePhoto.setVisibility(View.VISIBLE);
         }
+        iv_refresh.setVisibility(View.VISIBLE);
+        iv_capture.setVisibility(View.VISIBLE);
+        Uri uri = Uri.fromFile(imagefile);
+        iv_capture.setImageURI(uri);
 //        globalClass.DisplayImagewithoutDefaultImage(activity,imagefile.getAbsolutePath(),iv_capture);
         globalClass.DisplayDeviceImages(activity, camera.getCameraBitmapPath(), img_user_picture);
     }
@@ -641,6 +646,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 iv_capture.setImageBitmap(thumbnail);
                 btn_uploadPhoto.setVisibility(View.VISIBLE);
                 btn_takePhoto.setVisibility(View.GONE);
+                iv_refresh.setVisibility(View.VISIBLE);
+                iv_capture.setImageBitmap(thumbnail);
             }
         } else {
             iv_refresh.setVisibility(View.GONE);
@@ -649,6 +656,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             btn_takePhoto.setVisibility(View.VISIBLE);
         }
         img_user_picture.setImageBitmap(thumbnail);
+        iv_refresh.setVisibility(View.VISIBLE);
+        iv_capture.setImageBitmap(thumbnail);
     }
 
     private void showImage(Bitmap bm) {
@@ -693,7 +702,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
 
-    public void callMasterSync() {
+    public void callMasterSync(String date) {
+        appPreferenceManager.set7date(date);
         if (NetworkUtils.isNetworkAvailable(activity)) {
             if (isMasterTableSyncServiceIsInProgress()) {
                 TastyToast.makeText(activity, getString(R.string.progress_message_fetching_test_master_please_wait), TastyToast.LENGTH_LONG, TastyToast.DEFAULT);
@@ -795,6 +805,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 //                            TastyToast.makeText(activity, getString(R.string.sync_done_master_table), TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                             //Toast.makeText(activity, getResources().getString(R.string.sync_done_master_table), Toast.LENGTH_SHORT).show();
 
+                            appPreferenceManager.set7date(sevenDate);
                             appPreferenceManager.setIsAfterLogin(true);
                             isAfterMasterSyncDone = true;
                             appPreferenceManager.setLeaveFlag(leaveFlag);
@@ -1234,8 +1245,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     private void proceedFurther() {
         if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-         //   checkFor7daysLogic();
-            callMasterSync();
+            checkFor7daysLogic();
+            //callMasterSync(date);
         } else {
             /*try {
                 appPreferenceManager.setIsAfterLogin(true);
@@ -1259,41 +1270,50 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
     private void checkFor7daysLogic() {
         try {
-            int days = 7;
             SimpleDateFormat s = null;
             String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-            System.out.println("---"+currentDate);
+            System.out.println("---" + currentDate);
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
             Date myDate = null;
-            Date newDate = null;
             try {
                 myDate = dateFormat.parse(currentDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(myDate);
-            calendar.add(Calendar.DAY_OF_YEAR, days);
-            newDate = calendar.getTime();
-            String date = dateFormat.format(newDate);
+            String SeventhDate = appPreferenceManager.get7days();
+            if (SeventhDate.equalsIgnoreCase("")) {
+                ToGetSeventhDate(BundleConstants.days, dateFormat, myDate);
+            } else {
+                checkdays(myDate, SeventhDate);
+            }
+
             // getCalculatedDate(s,currentDate,"dd-MM-yyyy",7);
-            System.out.println(""+date);
-            checkdays(myDate,date);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         //checkDate();
     }
 
+    private void ToGetSeventhDate(int days, SimpleDateFormat dateFormat, Date myDate) {
+        Date newDate;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(myDate);
+        calendar.add(Calendar.DAY_OF_YEAR, days);
+        newDate = calendar.getTime();
+        sevenDate = dateFormat.format(newDate);
+        System.out.println("" + sevenDate);
+        checkdays(myDate, sevenDate);
+    }
+
     private void checkdays(Date myDate, String date) {
         try {
-            Date date1= null;
-           String test = appPreferenceManager.get7days();
-            System.out.println(""+test);
-            if (InputUtils.CheckEqualIgnoreCase("",appPreferenceManager.get7days())){
-                callMasterSync();
-                appPreferenceManager.set7date(date);
-            }else if (appPreferenceManager.get7days()!=null){
+            Date date1 = null;
+            String test = appPreferenceManager.get7days();
+            System.out.println("" + test);
+            if (test.equalsIgnoreCase("")) {
+                callMasterSync(date);
+            } else if (appPreferenceManager.get7days() != null) {
                 String date2 = appPreferenceManager.get7days();
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                 try {
@@ -1301,9 +1321,18 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                if (myDate.after(date1)){
-                    callMasterSync();
-                }else{
+                if (myDate.after(date1)) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    //  ToGetSeventhDate(BundleConstants.days,dateFormat,myDate);
+                    Date newDate;
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(myDate);
+                    calendar.add(Calendar.DAY_OF_YEAR, BundleConstants.days);
+                    newDate = calendar.getTime();
+                    sevenDate = dateFormat.format(newDate);
+                    System.out.println("" + sevenDate);
+                    callMasterSync(sevenDate);
+                } else {
                     try {
                         Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
                         i.putExtra("LEAVEINTIMATION", "0");

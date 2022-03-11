@@ -46,6 +46,7 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
     ArrayList<String>DisTest;
     int ArraySize;
     AppPreferenceManager appPreferenceManager;
+    ArrayList<String> strArray;
 
     public DisplaySelectedTestsListForCancellationAdapter_new(Activity activity, boolean b, ArrayList<TestRateMasterModel> selectedTestsListArr, ArrayList<GetPETestResponseModel.DataDTO> peselectedTestsList, String selectedTestCode, RemoveSelectedTestFromListDelegate_new removeSelectedTestFromListDelegate) {
         this.activity = activity;
@@ -69,6 +70,14 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
         }
         layoutInflater = activity.getLayoutInflater();
         appPreferenceManager = new AppPreferenceManager(activity);
+        strArray = new ArrayList<>();
+        String str1 = selectedTest.trim();
+        System.out.println(""+str1);
+        String[] strings = selectedTest.split(",");
+        for (int i = 0; i < strings.length; i++) {
+            String st = strings[i].trim();
+            strArray.add(st);
+        }
     }
 
     @Override
@@ -78,6 +87,9 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
         }
        /* if (selectedTestsListArr.size()==0 && ArraySize!=0){
             return ArraySize;
+        }*/
+        /*if (selectedTestsListArr.size()!= strArray.size()){
+            return strArray.size();
         }*/
         return selectedTestsListArr.size();
     }

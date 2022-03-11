@@ -42,7 +42,7 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView tv_serumtype, txtSampleType, txtSampleTypeRBS, edtBarcode, edt_barcode_confirm;
-        LinearLayout lin_sampleType,ll_sample_type;
+        LinearLayout lin_sampleType, ll_sample_type;
         ImageView imgScan, imgDelete, imgScanConfirm, imgDeleteconfirm;
 
         public MyViewHolder(View view) {
@@ -96,11 +96,15 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
         // TODO code to show Primary and secondary serum
 
         holder.txtSampleType.setText(Global.toCamelCase(barcodedetailArylist.get(position).getSamplType()));
-        if (beneficaryWiseScanbarcodeModel.getTestsCode().equalsIgnoreCase("RBS,PPBS") || beneficaryWiseScanbarcodeModel.getTestsCode().equalsIgnoreCase("PPBS,RBS")) {
-            if (barcodedetailArylist.get(position).getSamplType().equalsIgnoreCase("FLUORIDE-R")) {
-                holder.txtSampleType.setText(Global.toCamelCase("FLUORIDE RBS"));
+
+        if (!InputUtils.isNull(beneficaryWiseScanbarcodeModel.getTestsCode())) {
+            if (beneficaryWiseScanbarcodeModel.getTestsCode().equalsIgnoreCase("RBS,PPBS") || beneficaryWiseScanbarcodeModel.getTestsCode().equalsIgnoreCase("PPBS,RBS")) {
+                if (barcodedetailArylist.get(position).getSamplType().equalsIgnoreCase("FLUORIDE-R")) {
+                    holder.txtSampleType.setText(Global.toCamelCase("FLUORIDE RBS"));
+                }
             }
         }
+
         if (barcodedetailArylist.get(position).getSamplType().equals("SERUM")) {
             holder.ll_sample_type.setBackgroundDrawable(mActivity.getResources().getDrawable(R.drawable.bg_sample_type_serum));
         } else if (barcodedetailArylist.get(position).getSamplType().equals("EDTA")) {

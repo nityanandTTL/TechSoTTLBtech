@@ -413,7 +413,7 @@ public interface PostAPIInterface {
     Call<GetTestResponseModel> postTest(@Body GetTestCodeRequestModel getTestCodeRequestModel);
 
     @POST("api/PendingVisitsOptimize/RemoveSample")
-    Call<RemoveUrineSampleRespModel> removeUrineSample(@Body RemoveUrineReqModel removeUrineReqModel);
+    Call<RemoveUrineSampleRespModel> removeUrineSample(@Header("Authorization") String Token,@Body RemoveUrineReqModel removeUrineReqModel);
 
     @POST("api/Account/BtechSignInout")
     Call<SignInResponseModel> signINOUT(@Body SignInRequestModel signInRequestModel);
@@ -454,4 +454,5 @@ public interface PostAPIInterface {
     })
     @POST("/api/partner-integration/v1/order/{orderID}/add-on-order")
     Call<AddOnResponseModel> getAddOnOrder(@Path("orderID")String OrderID, @Body AddONRequestModel addONRequestModel);
+
 }

@@ -75,6 +75,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
     String pincode;
     int totalRate = 0;
     int ArraySize;
+    String selectedTest="";
     ArrayList<GetPETestResponseModel.DataDTO> peTestArraylist;
     ArrayList<GetPETestResponseModel.DataDTO> newPETestArray = new ArrayList<>();
 
@@ -100,6 +101,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         peselectedTestsList = getIntent().getParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLISTPE);
         edit_selectedTestsList = getIntent().getParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST);
         peTestArraylist = getIntent().getParcelableArrayListExtra(BundleConstants.PE_TEST_LIST_MODEL);
+        selectedTest = getIntent().getStringExtra(BundleConstants.EDITSELECTEDTEST);
     //    ArraySize = getIntent().getIntExtra("",0);
         FlagADDEditBen = getIntent().getBooleanExtra("IsAddBen", true);
         pincode = orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode();
@@ -594,6 +596,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
     }
 
     private void DisplaySelectedProductsPE(ArrayList<GetPETestResponseModel.DataDTO> peTestList) {
+        totalRate = 0;
         String selected_products = "";
         if (peTestList != null && peTestList.size() > 0) {
             lin_selectedTest.setVisibility(View.VISIBLE);
@@ -604,6 +607,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         } else {
             lin_selectedTest.setVisibility(View.GONE);
         }
+
         tvTestName.setText("" + StringUtils.removeFirstCharacter(selected_products));
         tvAppRate.setText(mActivity.getResources().getString(R.string.rupee_symbol) + "" + totalRate + "/-");
     }

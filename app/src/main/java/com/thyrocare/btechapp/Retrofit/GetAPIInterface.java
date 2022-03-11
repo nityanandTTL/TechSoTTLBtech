@@ -26,6 +26,7 @@ import com.thyrocare.btechapp.models.api.response.DispatchHubDisplayDetailsRespo
 import com.thyrocare.btechapp.models.api.response.DynamicBtechAvaliabilityResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchLedgerResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetOrderDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetPETestResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetTestListResponseModel;
 import com.thyrocare.btechapp.models.api.response.MaterialBtechStockResponseModel;
@@ -118,7 +119,8 @@ public interface GetAPIInterface {
     @GET("api/OrderVisitDetailsOptimize/ByOrderNo/{btechId}/{orderId}")
     Call<FetchOrderDetailsResponseModel> getOrderAllVisitDetails(@Path("btechId")String btechId, @Path("orderId")String orderId);
 
-    @GET("api/OrderDetailsByVisit/{orderno}")
+//    @GET("api/OrderDetailsByVisit/{orderno}")
+    @GET("api/OrderVisitDetailsOptimize/GetOrderVisitDetailsorderwise/{orderno}")
     Call<FetchOrderDetailsResponseModel> getOrderDetail(@Path("orderno")String orderno);
 
     @Headers("Content-Type: application/json")
@@ -296,5 +298,10 @@ public interface GetAPIInterface {
     //TODO DSA brandtestmaster
     @GET("api/DSAProducts/Products/{OrderNo}")
     Call<DSAProductsResponseModel> getDSAProducts(@Path("OrderNo") String OrderNo);
+
+    @GET("api/OrderVisitDetailsOptimize/GetOrdersdetails/{BtechID}")
+    Call<GetOrderDetailsResponseModel> getpendingOrderDetails(@Path("BtechID") String BtechID);
+
+
 }
 

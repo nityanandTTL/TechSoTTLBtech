@@ -19,6 +19,15 @@ public class LoginResponseModel {
     String error_description;
     int expires_in;
     String CompanyName;
+    String b2bLogin;
+
+    public String getB2bLogin() {
+        return b2bLogin;
+    }
+
+    public void setB2bLogin(String b2bLogin) {
+        this.b2bLogin = b2bLogin;
+    }
 
     public String getCompanyName() {
         return CompanyName;

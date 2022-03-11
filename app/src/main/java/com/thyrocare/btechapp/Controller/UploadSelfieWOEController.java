@@ -34,7 +34,7 @@ public class UploadSelfieWOEController {
     public void CallAPI(String RequestToken, BTechSelfieRequestModel bTechSelfieRequestModel) {
 
         globalClass = new Global(mActivity);
-        globalClass.showProgressDialog(mActivity, "Please wait...", false);
+     //   globalClass.showProgressDialog(mActivity, "Please wait...", false);
 
         try {
             RequestBody BtechID = RequestBody.create(MediaType.parse("multipart/form-data"), bTechSelfieRequestModel.getBtechid());
@@ -53,21 +53,21 @@ public class UploadSelfieWOEController {
                 public void onResponse(Call<String> call, Response<String> response) {
                     globalClass.hideProgressDialog(mActivity);
                     if (response.isSuccessful() && response.body() != null) {
-                        Toast.makeText(mActivity, "Selfie uploaded successfully", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mActivity, "Selfie uploaded successfully", Toast.LENGTH_SHORT).show();
                         checkoutWoeActivity.getSelfieResponse();
                     } else {
-                        Toast.makeText(mActivity, "Failed to upload selfie, Please try again!", Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(mActivity, "Failed to upload selfie, Please try again!", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
-                    globalClass.hideProgressDialog(mActivity);
-                    Toast.makeText(mActivity, "Something went wrong, Please try again!", Toast.LENGTH_SHORT).show();
+                    /*globalClass.hideProgressDialog(mActivity);
+                    Toast.makeText(mActivity, "Something went wrong, Please try again!", Toast.LENGTH_SHORT).show();*/
                 }
             });
         } catch (Exception e) {
-            globalClass.hideProgressDialog(mActivity);
+          //  globalClass.hideProgressDialog(mActivity);
         }
     }
 }

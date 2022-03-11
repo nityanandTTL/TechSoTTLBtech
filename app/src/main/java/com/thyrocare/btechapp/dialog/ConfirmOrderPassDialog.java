@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -367,7 +368,8 @@ public class ConfirmOrderPassDialog extends Dialog implements View.OnClickListen
                 new OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         MessageLogger.LogError(TAG, "onClick: dismiss ");
-                        activity.startActivity(new Intent(activity,VisitOrdersDisplayFragment_new.class));
+//                        activity.startActivity(new Intent(activity,VisitOrdersDisplayFragment_new.class));
+                        activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
 //                        activity.pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
                         dismissD();
                     }

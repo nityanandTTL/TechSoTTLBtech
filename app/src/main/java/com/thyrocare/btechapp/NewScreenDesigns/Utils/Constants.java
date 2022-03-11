@@ -64,4 +64,5 @@ public class Constants {
     public static final String clientid ="9551825306485694";
     public static String content_type = "application/json";
     public static String PEAddBen ="PEAddBen";
+    public static String Success="SUCCESS";
 }
