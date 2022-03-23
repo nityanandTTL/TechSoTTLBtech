@@ -279,7 +279,22 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                                         PerformStartFunction(pos, holder);
                                     }
                                 } else {
-                                    Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
+                                    if (orderPosition == 0) {
+                                        if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPPE()) {
+                                            final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+                                            builder1.setMessage(ConstantsMessages.EnsureToWearPPE).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    PerformStartFunction(pos, holder);
+                                                }
+                                            });
+                                            builder1.show();
+                                        } else {
+                                            PerformStartFunction(pos, holder);
+                                        }
+                                    } else {
+                                        Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             } else {
                                 Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
@@ -1765,7 +1780,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             orderStatusChangeRequestModel.setAppointmentDate(date);
 
             if (isNetworkAvailable(activity)) {
-                CallOrderStatusChangeAPI(orderStatusChangeRequestModel,orderDetailsModel);
+                CallOrderStatusChangeAPI(orderStatusChangeRequestModel, orderDetailsModel);
             } else {
                 Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
             }

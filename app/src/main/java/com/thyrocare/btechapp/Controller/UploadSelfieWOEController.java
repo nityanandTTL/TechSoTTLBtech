@@ -20,10 +20,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.google.firebase.crashlytics.internal.Logger.TAG;
+
 public class UploadSelfieWOEController {
     Activity mActivity;
     CheckoutWoeActivity checkoutWoeActivity;
     Global globalClass;
+    int Total_retries =3;
+    int retry_count =0;
 
     public UploadSelfieWOEController(CheckoutWoeActivity checkoutWoeActivity, Activity activity) {
         this.mActivity = activity;
@@ -54,7 +58,7 @@ public class UploadSelfieWOEController {
                     globalClass.hideProgressDialog(mActivity);
                     if (response.isSuccessful() && response.body() != null) {
                         //Toast.makeText(mActivity, "Selfie uploaded successfully", Toast.LENGTH_SHORT).show();
-                        checkoutWoeActivity.getSelfieResponse();
+//                        checkoutWoeActivity.getSelfieResponse();
                     } else {
                       //  Toast.makeText(mActivity, "Failed to upload selfie, Please try again!", Toast.LENGTH_SHORT).show();
                     }
@@ -62,12 +66,29 @@ public class UploadSelfieWOEController {
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
+                    try {
+                        if (retry_count++ < Total_retries) {
+                            Log.v(TAG, "Retrying... (" + retry_count + " out of " + retry_count + ")");
+                            retry(call);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     /*globalClass.hideProgressDialog(mActivity);
                     Toast.makeText(mActivity, "Something went wrong, Please try again!", Toast.LENGTH_SHORT).show();*/
                 }
             });
         } catch (Exception e) {
           //  globalClass.hideProgressDialog(mActivity);
+        }
+    }
+
+    private void retry(Call<String> call) {
+        try {
+            call.clone().enqueue((Callback<String>) this);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

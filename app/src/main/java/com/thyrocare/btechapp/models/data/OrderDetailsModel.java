@@ -67,6 +67,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private boolean ISHclOrder;
     private boolean IsOTP;
     private boolean isdisabledelete;
+    private String APIValue;
+    private String orderValue;
 
 
     protected OrderDetailsModel(Parcel in) {
@@ -126,6 +128,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         IsOTP = in.readByte() != 0;
         isdisabledelete = in.readByte() != 0;
         PPE_AlertMsg = in.readString();
+        APIValue = in.readString();
+        orderValue = in.readString();
     }
 
     @Override
@@ -186,6 +190,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeByte((byte) (IsOTP ? 1 : 0));
         dest.writeByte((byte) (isdisabledelete ? 1 : 0));
         dest.writeString(PPE_AlertMsg);
+        dest.writeString(orderValue);
+        dest.writeString(APIValue);
     }
 
     @Override
@@ -650,6 +656,22 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setPPE_AlertMsg(String PPE_AlertMsg) {
         this.PPE_AlertMsg = PPE_AlertMsg;
+    }
+
+    public String getAPIValue() {
+        return APIValue;
+    }
+
+    public void setAPIValue(String APIValue) {
+        this.APIValue = APIValue;
+    }
+
+    public String getOrderValue() {
+        return orderValue;
+    }
+
+    public void setOrderValue(String orderValue) {
+        this.orderValue = orderValue;
     }
 
     @Override

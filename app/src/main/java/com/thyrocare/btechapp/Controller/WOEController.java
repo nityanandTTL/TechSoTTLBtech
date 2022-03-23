@@ -207,7 +207,7 @@ public class WOEController {
         rel_main.setLayoutParams(lp);
 
         tv_msg.setText("Order Served");
-        tv_msg1.setText("Work order entry successfull");
+        tv_msg1.setText("Work order entry successful.");
 
         btn_add_on.setOnClickListener(new View.OnClickListener() {
             @Override

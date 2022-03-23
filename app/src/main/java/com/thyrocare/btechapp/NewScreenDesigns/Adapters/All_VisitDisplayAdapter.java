@@ -112,9 +112,11 @@ public class All_VisitDisplayAdapter extends RecyclerView.Adapter<All_VisitDispl
 
         holder.txtDate.setText(orderVisitDetailsModelsArr.get(pos).getAppointmentDate());
         holder.txtCustomerName.setText(Global.toCamelCase(orderVisitDetailsModelsArr.get(pos).getName()));
-        if (orderVisitDetailsModelsArr.get(pos).getStatus().equalsIgnoreCase(BundleConstants.ACCEPTED)){
+        if (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModelsArr.get(pos).getStatus(), BundleConstants.ACCEPTED) ||
+                !InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModelsArr.get(pos).getStatus(), "fix appointment") ||
+                !InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModelsArr.get(pos).getStatus(), "ASSIGNED")) {
             holder.txtStatus.setText("Status : " + orderVisitDetailsModelsArr.get(pos).getStatus());
-        }else{
+        } else {
             holder.txtStatus.setVisibility(View.GONE);
         }
         holder.txtDate.setText(DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy HH:mm"));

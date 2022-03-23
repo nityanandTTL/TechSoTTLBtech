@@ -277,8 +277,9 @@ public class HomeScreenActivity extends AppCompatActivity {
         ll_nbt_orders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity, VisitOrdersDisplayFragment_new.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(activity, VisitOrdersDisplayFragment_new.class);
+                startActivity(intent);*/
+                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);startActivity(intent);
             }
         });
 

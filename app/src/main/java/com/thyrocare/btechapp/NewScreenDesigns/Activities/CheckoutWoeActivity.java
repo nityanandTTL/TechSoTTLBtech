@@ -194,7 +194,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 //        initToolBar();
 
 //        if (!BuildConfig.DEBUG) {
-            CallTestColorAPI();
+        CallTestColorAPI();
 //        }
     }
 
@@ -313,7 +313,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             spn_collection.setVisibility(View.GONE);
         }
 
-        if (!InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue()) && orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() != 0 ) {
+        if (!InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue()) && orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() != 0) {
             tv_pay.setText(mActivity.getResources().getString(R.string.rupee_symbol) + " " + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
         } else if (orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() == 0) {
             tv_pay.setText("Paid");
@@ -500,7 +500,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
         Logger.error("Selcted testssssssss" + orderBookingRequestModel.getBendtl().get(0).getTestsCode());
         boolean isEditMobile_email = orderVisitDetailsModel.getAllOrderdetails().get(0).isEditME();
-        if (CommonUtils.isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTestsCode())) {
+        if (!InputUtils.isNull(orderBookingRequestModel.getBendtl().get(0).getTestsCode()) && CommonUtils.isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTestsCode())) {
             Logger.error("for PPBS");
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
             builder.setMessage("Payment already received. Please proceed")
@@ -535,6 +535,15 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             }
         } else if (!isEditMobile_email) {
             // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+            OrderBookingRequestModel orderBookingRequestModel1 = generateOrderBookingRequestModel("work_order_entry_prepaid");
+            if (cd.isConnectingToInternet()) {
+                CallWOEAPI(orderBookingRequestModel1);
+//                CallWorkOrderEntryAPI(orderBookingRequestModel1);
+            } else {
+                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+            }
+        } else if (InputUtils.isNull(orderBookingRequestModel.getBendtl().get(0).getTestsCode()) && isEditMobile_email) {
+//TODO Done if testcode is null and isEDITME is true // for testing
             OrderBookingRequestModel orderBookingRequestModel1 = generateOrderBookingRequestModel("work_order_entry_prepaid");
             if (cd.isConnectingToInternet()) {
                 CallWOEAPI(orderBookingRequestModel1);
@@ -1308,6 +1317,7 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         bTechSelfieRequestModel.setORDERNO(OrderNo);
 
         if (selfie_photo.exists()) {
+            canSubmit=true;
             bTechSelfieRequestModel.setFile(selfie_photo);
             UploadSelfieWOEController uploadSelfieWOEController = new UploadSelfieWOEController(CheckoutWoeActivity.this, mActivity);
             uploadSelfieWOEController.CallAPI(appPreferenceManager.getLoginResponseModel().getAccess_token(), bTechSelfieRequestModel);
