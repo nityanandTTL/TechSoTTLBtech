@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.AddEditBenificaryActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.StartAndArriveActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.AddRemoveTestProfileActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
@@ -24,7 +25,7 @@ import retrofit2.Callback;
 public class PEAuthorizationController {
 
     Activity activity;
-    LoginActivity loginActivity;
+    StartAndArriveActivity startAndArriveActivity;
     Global globalClass;
     AddEditBenificaryActivity addEditBenificaryActivity;
     AddRemoveTestProfileActivity addRemoveTestProfileActivity;
@@ -32,11 +33,12 @@ public class PEAuthorizationController {
     int flag;
     String Str_pincode,Str_auth_token;
 
-    public PEAuthorizationController(LoginActivity activity) {
+    public PEAuthorizationController(StartAndArriveActivity activity) {
         this.activity = activity;
-        this.loginActivity = activity;
+        this.startAndArriveActivity = activity;
         globalClass = new Global(activity);
         appPreferenceManager = new AppPreferenceManager(activity);
+        flag = 0;
     }
 
     public PEAuthorizationController(AddEditBenificaryActivity addEditBenificaryActivity) {
@@ -76,9 +78,7 @@ public class PEAuthorizationController {
                             PEAuthResponseModel peAuthResponseModel = response.body();
                             if (peAuthResponseModel.isStatus() == true) {
                                 if (flag == 0) {
-                                    loginActivity.swithtoactivity(responseModel);
-                                    appPreferenceManager.setAuthToken(peAuthResponseModel.getData().getAuthtoken());
-                                    System.out.println("shared>>>mith-----" + appPreferenceManager.getAuthToken());
+                                    getPETests(Str_pincode);
                                 } else if (flag == 1 || flag == 2) {
                                     appPreferenceManager.setAuthToken(peAuthResponseModel.getData().getAuthtoken());
                                     System.out.println("shared>>>mith-----" + appPreferenceManager.getAuthToken());

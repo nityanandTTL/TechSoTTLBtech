@@ -76,7 +76,6 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
 
-
         // TODO code to show Primary and secondary serum
         if (barcodedetailArylist.get(position).getSamplType().equals("SERUM")) {
             if (Serumcount > 1) {
@@ -126,7 +125,6 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
         Logger.error("beneficiaryBarcodeDetailsModel.getBarcode() " + barcodedetailArylist.get(position).getBarcode());
         Logger.error("barcode value: " + barcodedetailArylist.get(position).getBarcode());
 
-
         if (!TextUtils.isEmpty(barcodedetailArylist.get(position).getBarcode())) {
             holder.edtBarcode.setText("  " + barcodedetailArylist.get(position).getBarcode() + "  ");
             holder.imgScan.setVisibility(View.GONE);
@@ -148,7 +146,6 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
 
         final int finalI = position;
         initListeners(holder, position, finalI);
-
     }
 
     private void initListeners(@NonNull MyViewHolder holder, final int position, final int finalI) {
@@ -221,7 +218,5 @@ public class BarcodeInitAdapter extends RecyclerView.Adapter<BarcodeInitAdapter.
         void onBarcodeScanClickedConfirm(String SampleType, int BenID, int barcodePosition, int BenPosition);
 
         void onBarcodeDelete(String barcode, int BenPosition, String isflag);
-
     }
-
 }

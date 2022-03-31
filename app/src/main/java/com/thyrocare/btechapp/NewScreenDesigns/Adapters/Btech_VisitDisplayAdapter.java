@@ -24,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.text.Line;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.BottomSheetController;
@@ -56,7 +55,6 @@ import com.thyrocare.btechapp.network.MyBroadcastReceiver;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
-import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.DateUtils;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
@@ -76,7 +74,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 
-import cheekiat.slideview.OnChangeListener;
 import cheekiat.slideview.OnFinishListener;
 import cheekiat.slideview.SlideView;
 import retrofit2.Call;
@@ -855,7 +852,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 holder.slide_view.setVisibility(View.GONE);//remove 11 validation
                 holder.rel_imgRelease.setVisibility(View.VISIBLE);//remove 11 validation
                 if (onClickListeners != null) {
-                    onClickListeners.onAcceptClicked(orderVisitDetailsModelsArr.get(pos));
+                    onClickListeners.onAcceptClicked(orderVisitDetailsModelsArr.get(pos),orderPosition);
                 }
                 SendinglatlongOrderAllocation(pos);
                 bottomSheetDialog.dismiss();
@@ -1710,7 +1707,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     }
 
     public interface OnClickListeners {
-        void onAcceptClicked(OrderVisitDetailsModel orderVisitDetailsModels);
+        void onAcceptClicked(OrderVisitDetailsModel orderVisitDetailsModels, int orderPosition);
 
         void onCallCustomer(OrderVisitDetailsModel orderVisitDetailsModels);
 

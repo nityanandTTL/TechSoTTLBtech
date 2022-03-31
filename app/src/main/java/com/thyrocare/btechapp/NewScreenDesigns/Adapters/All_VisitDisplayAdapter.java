@@ -1,86 +1,26 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Adapters;
 
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
-import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Paint;
-import android.provider.Settings;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.sdsmdg.tastytoast.TastyToast;
-import com.thyrocare.btechapp.Controller.BottomSheetController;
-import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
-import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
-import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
-import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.activity.HomeScreenActivity;
-import com.thyrocare.btechapp.delegate.OrderRescheduleDialogButtonClickedDelegate;
-import com.thyrocare.btechapp.delegate.refreshDelegate;
-import com.thyrocare.btechapp.dialog.RescheduleOrderDialog;
-import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
-import com.thyrocare.btechapp.models.api.request.ServiceUpdateRequestModel;
 import com.thyrocare.btechapp.models.api.response.GetOrderDetailsResponseModel;
-import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
-import com.thyrocare.btechapp.models.data.KitsCountModel;
-import com.thyrocare.btechapp.models.data.OrderDetailsModel;
-import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
-import com.thyrocare.btechapp.network.MyBroadcastReceiver;
-import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.DateUtils;
-import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
-import org.joda.time.DateTimeComparator;
-
-import java.io.IOException;
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Locale;
-
-import application.ApplicationController;
-import cheekiat.slideview.OnFinishListener;
-import cheekiat.slideview.SlideView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class All_VisitDisplayAdapter extends RecyclerView.Adapter<All_VisitDisplayAdapter.MyViewHolder> {
     private static final String TAG = All_VisitDisplayAdapter.class.getSimpleName();

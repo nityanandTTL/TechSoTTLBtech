@@ -122,6 +122,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CheckInternetConnectionMsg;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PLEASE_WAIT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
 
@@ -487,7 +488,12 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                 if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && InputUtils.CheckEqualIgnoreCase(btn_Pay.getText().toString(), "PAY")) {
                     CallPayTypeAPI();
                 } else {
-                    WOE();
+                    if (orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner() && InputUtils.CheckEqualIgnoreCase(btn_Pay.getText().toString(), "PAY")){
+                        CallPayTypeAPI();
+                    }else{
+                        WOE();
+                    }
+
                 }
             }
         } catch (Exception e) {
@@ -497,73 +503,82 @@ public class CheckoutWoeActivity extends AppCompatActivity {
     }
 
     public void WOE() {
-        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
-        Logger.error("Selcted testssssssss" + orderBookingRequestModel.getBendtl().get(0).getTestsCode());
-        boolean isEditMobile_email = orderVisitDetailsModel.getAllOrderdetails().get(0).isEditME();
-        if (!InputUtils.isNull(orderBookingRequestModel.getBendtl().get(0).getTestsCode()) && CommonUtils.isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTestsCode())) {
-            Logger.error("for PPBS");
-            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-            builder.setMessage("Payment already received. Please proceed")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            PaymentMode = 1;
-                            OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
-                            if (cd.isConnectingToInternet()) {
-                                CallWOEAPI(orderBookingRequestModel);
+        try {
+            OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("Button_proceed_payment");
+            Logger.error("Selcted testssssssss" + orderBookingRequestModel.getBendtl().get(0).getTestsCode());
+            boolean isEditMobile_email = orderVisitDetailsModel.getAllOrderdetails().get(0).isEditME();
+            if (CommonUtils.isValidForEditing(orderBookingRequestModel.getBendtl().get(0).getTestsCode())) {
+                Logger.error("for PPBS");
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                builder.setMessage("Payment already received. Please proceed")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                PaymentMode = 1;
+                                OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_cash");
+                                if (cd.isConnectingToInternet()) {
+                                    CallWOEAPI(orderBookingRequestModel);
 
-//                                CallWorkOrderEntryAPI(orderBookingRequestModel);
-                            } else {
-                                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+    //                                CallWorkOrderEntryAPI(orderBookingRequestModel);
+                                } else {
+                                    Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
 
-            //neha g -----------------------------------
-            CheckDelay();
+                //neha g -----------------------------------
+                CheckDelay();
 
-            if (BundleConstants.delay != 0) {
-                MessageLogger.PrintMsg("notify enter");
-                showNotiication();
-                //neha g---------------------
+                if (BundleConstants.delay != 0) {
+                    MessageLogger.PrintMsg("notify enter");
+                    showNotiication();
+                    //neha g---------------------
+                }
+            } else if (!isEditMobile_email) {
+                // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
+                OrderBookingRequestModel orderBookingRequestModel1 = generateOrderBookingRequestModel("work_order_entry_prepaid");
+                if (cd.isConnectingToInternet()) {
+                    CallWOEAPI(orderBookingRequestModel1);
+    //                CallWorkOrderEntryAPI(orderBookingRequestModel1);
+                } else {
+                    Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                }
+            } /*else if (InputUtils.isNull(orderBookingRequestModel.getBendtl().get(0).getTestsCode()) && isEditMobile_email) {
+    //TODO Done if testcode is null and isEDITME is true // for testing
+                OrderBookingRequestModel orderBookingRequestModel1 = generateOrderBookingRequestModel("work_order_entry_prepaid");
+                if (cd.isConnectingToInternet()) {
+                    CallWOEAPI(orderBookingRequestModel1);
+    //                CallWorkOrderEntryAPI(orderBookingRequestModel1);
+                } else {
+                    Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                }
+            }*/ else {
+                Logger.error("Other than PPBS");
+                if (cd.isConnectingToInternet()) {
+                    CallOrderBookingApi(orderBookingRequestModel);
+                } else {
+                    Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                }
             }
-        } else if (!isEditMobile_email) {
-            // TODO code to Add again the Venupunture images stored in global array in MainbookingRequestModel
-            OrderBookingRequestModel orderBookingRequestModel1 = generateOrderBookingRequestModel("work_order_entry_prepaid");
-            if (cd.isConnectingToInternet()) {
-                CallWOEAPI(orderBookingRequestModel1);
-//                CallWorkOrderEntryAPI(orderBookingRequestModel1);
-            } else {
-                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
-            }
-        } else if (InputUtils.isNull(orderBookingRequestModel.getBendtl().get(0).getTestsCode()) && isEditMobile_email) {
-//TODO Done if testcode is null and isEDITME is true // for testing
-            OrderBookingRequestModel orderBookingRequestModel1 = generateOrderBookingRequestModel("work_order_entry_prepaid");
-            if (cd.isConnectingToInternet()) {
-                CallWOEAPI(orderBookingRequestModel1);
-//                CallWorkOrderEntryAPI(orderBookingRequestModel1);
-            } else {
-                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Logger.error("Other than PPBS");
-            if (cd.isConnectingToInternet()) {
-                CallOrderBookingApi(orderBookingRequestModel);
-            } else {
-                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
-            }
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
         }
     }
 
     private void CallWOEAPI(OrderBookingRequestModel orderBookingRequestModel) {
-        WOEController wc = new WOEController(this);
-        wc.CallWorkOrderEntryAPI(orderBookingRequestModel, orderVisitDetailsModel, test, newTimeaddTwoHrs, newTimeaddTwoHalfHrs, btn_Pay);
+        if (cd.isConnectingToInternet()){
+            WOEController wc = new WOEController(this);
+            wc.CallWorkOrderEntryAPI(orderBookingRequestModel, orderVisitDetailsModel, test, newTimeaddTwoHrs, newTimeaddTwoHalfHrs, btn_Pay);
+        }else{
+            globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+        }
+
     }
 
     private OrderBookingRequestModel generateOrderBookingRequestModel(String from) {
@@ -717,27 +732,37 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                     }
                     if (!btn_Pay.getText().equals("Submit")) {
                         if (btn_Pay.getText().equals("PAY")) {
-//                            CallPayTypeAPI();
-                            if (isOnlyDigital && !InputUtils.CheckEqualIgnoreCase(appPreferenceManager.getLoginResponseModel().getCompanyName(), Global.PE_BTech)) {
-                                PaymentMode = 2;
-                                Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
-                                Logger.error("tejastotalAmountPayableatsending " + totalAmountPayable);
-                                intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
-                                intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 2);
-                                intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO, orderVisitDetailsModel.getVisitId());
-                                intentPayments.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
-                                intentPayments.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficaryWiseArylst);
-                                intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE, Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
-                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME, orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
-                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS, orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
-                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
-                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
-                                intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL, orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail());
-                                intentPayments.putExtra(BundleConstants.PROCESSING_LOCATION, processLocation);
-                                intentPayments.putExtra(BundleConstants.ADDRESS, address);
-                                intentPayments.putExtra(BundleConstants.newTimeTWO, newTimeaddTwoHrs);
-                                intentPayments.putExtra(BundleConstants.newTimeTWOHalf, newTimeaddTwoHalfHrs);
-                                startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+                            if (isOnlyDigital && !InputUtils.CheckEqualIgnoreCase(appPreferenceManager.getLoginResponseModel().getCompanyName(), Global.PE_BTech) /*&& !orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()*/) {
+                                if (orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()){
+                                    if (strPaytype.equalsIgnoreCase(Global.Prepaid)) {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                                        builder.setMessage("Payment already received. Please proceed")
+                                                .setCancelable(false)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        PaymentMode = 2;
+                                                        OrderBookingRequestModel orderBookingRequestModel = generateOrderBookingRequestModel("work_order_entry_prepaid");
+                                                        if (cd.isConnectingToInternet()) {
+                                                            CallWOEAPI(orderBookingRequestModel);
+                                                        } else {
+                                                            Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                })
+                                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                }).show();
+
+                                    } else{
+                                        redirectToPaymentScreen();
+                                    }
+                                }else{
+                                    redirectToPaymentScreen();
+                                }
                             } else {
                                 if (strPaytype.equalsIgnoreCase(Global.Prepaid)) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
@@ -852,8 +877,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                 Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                             }
                         }
-
-
                         /*AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                         builder.setMessage("Amount payable ₹ " + totalAmountPayable + "/-")
                                 .setPositiveButton("Collect", new DialogInterface.OnClickListener() {
@@ -983,7 +1006,6 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                             Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                         }
                     }
-
                 } else {
                     try {
                         if (response.errorBody() != null) {
@@ -1005,6 +1027,32 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                 MessageLogger.LogDebug("Errror", t.getMessage());
             }
         });
+    }
+
+    private void redirectToPaymentScreen() {
+        try {
+            PaymentMode = 2;
+            Intent intentPayments = new Intent(mActivity, PaymentsActivity.class);
+            Logger.error("tejastotalAmountPayableatsending " + totalAmountPayable);
+            intentPayments.putExtra(BundleConstants.PAYMENTS_AMOUNT, totalAmountPayable + "");
+            intentPayments.putExtra(BundleConstants.PAYMENTS_NARRATION_ID, 2);
+            intentPayments.putExtra(BundleConstants.PAYMENTS_ORDER_NO, orderVisitDetailsModel.getVisitId());
+            intentPayments.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+            intentPayments.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, beneficaryWiseArylst);
+            intentPayments.putExtra(BundleConstants.PAYMENTS_SOURCE_CODE, Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
+            intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_NAME, orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getName());
+            intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_ADDRESS, orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress());
+            intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_PIN, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
+            intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_MOBILE, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+            intentPayments.putExtra(BundleConstants.PAYMENTS_BILLING_EMAIL, orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail());
+            intentPayments.putExtra(BundleConstants.PROCESSING_LOCATION, processLocation);
+            intentPayments.putExtra(BundleConstants.ADDRESS, address);
+            intentPayments.putExtra(BundleConstants.newTimeTWO, newTimeaddTwoHrs);
+            intentPayments.putExtra(BundleConstants.newTimeTWOHalf, newTimeaddTwoHalfHrs);
+            startActivityForResult(intentPayments, BundleConstants.PAYMENTS_START);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     private void CallPayTypeAPI() {

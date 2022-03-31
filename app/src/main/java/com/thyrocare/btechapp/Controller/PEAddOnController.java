@@ -57,7 +57,6 @@ public class PEAddOnController {
                                 peaddON = true;
                                 BundleConstants.callOTPFlag = 0;
                                 TastyToast.makeText(mactivity, ConstantsMessages.BenefiaryAdded, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-//                                Intent intent = new Intent(mactivity, VisitOrdersDisplayFragment_new.class);
                                 Intent intent = new Intent(mactivity, B2BVisitOrdersDisplayFragment.class);
                                 intent.putExtra(BundleConstants.PEADDON,peaddON);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

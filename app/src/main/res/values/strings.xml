@@ -187,6 +187,7 @@
 
 
     <string-array name="gender">
+        <item>Select Gender</item>
         <item>Male</item>
         <item>Female</item>
     </string-array>

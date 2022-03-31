@@ -1,9 +1,6 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Adapters;
 
 import android.app.Activity;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,7 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
@@ -25,8 +23,6 @@ import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import java.util.ArrayList;
-
-import static com.thyrocare.btechapp.utils.app.OtpListenerUtil.mActivity;
 
 public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartArriveOrderDetailsAdapter.MyViewHolder> {
 
@@ -42,6 +38,7 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
     private String cancelVisit;
     private String userChoosenReleaseTask;
     private boolean isCancelRequesGenereted = false;
+    String str_benProduct;
 
 
     public StartArriveOrderDetailsAdapter(Activity activity, OrderVisitDetailsModel orderVisitDetailsModel, ArrayList<BeneficiaryDetailsModel> BenMasterArray, String Status) {
@@ -136,7 +133,6 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
             }
         }
 
-
         if (Status.equalsIgnoreCase("Arrive")) {
             if (isValidForEditing(BenMasterArray.get(position).getTestsCode())) {
                 holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
@@ -145,22 +141,16 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                     if (BenMasterArray.size() > 1) {
                         checBenDetails(holder, position, orderVisitDetailsModel.getAllOrderdetails().get(0).isIsdisabledelete());
                     } else {
-                        holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
-                        holder.img_editBenDetails.setVisibility(View.VISIBLE);
-                        holder.img_DeleteBen.setVisibility(View.GONE);
+                        //To edit single beneficiary No delete
+                        editSingleBeneficiary(holder, View.GONE);
                     }
                 } else {
-                    holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
-                    holder.img_editBenDetails.setVisibility(View.VISIBLE);
-                    holder.img_DeleteBen.setVisibility(View.GONE);
+                    editSingleBeneficiary(holder, View.GONE);
                 }
             } else if (orderVisitDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
                 if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (BenMasterArray.size() > 1) {
                         checBenDetails(holder, position, false);
-                        //   holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
-                        //  holder.img_editBenDetails.setVisibility(View.VISIBLE);
-                        //  holder.img_DeleteBen.setVisibility(View.VISIBLE);
                     } else {
                         holder.img_editBenDetails.setVisibility(View.VISIBLE);
                         holder.img_DeleteBen.setVisibility(View.GONE);
@@ -168,26 +158,11 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                     }
                 } else {
                     if (BenMasterArray.size() > 1) {
-                        holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
-                        holder.img_editBenDetails.setVisibility(View.VISIBLE);
-                        holder.img_DeleteBen.setVisibility(View.VISIBLE);
+                        editSingleBeneficiary(holder, View.VISIBLE);
                     } else {
-                        holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
-                        holder.img_editBenDetails.setVisibility(View.VISIBLE);
-                        holder.img_DeleteBen.setVisibility(View.GONE);
+                        editSingleBeneficiary(holder, View.GONE);
                     }
                 }
-
-                /*if (BenMasterArray.size() > 1) {
-                    checBenDetails(holder,position, false);
-                 //   holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
-                  //  holder.img_editBenDetails.setVisibility(View.VISIBLE);
-                  //  holder.img_DeleteBen.setVisibility(View.VISIBLE);
-                } else {
-                    holder.img_editBenDetails.setVisibility(View.VISIBLE);
-                    holder.img_DeleteBen.setVisibility(View.GONE);
-                    holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
-                }*/
             } else {
                 if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (BenMasterArray.size() > 1) {
@@ -196,12 +171,18 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                         holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
                     }
                 } else {
-                    holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+                    if (orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()){
+                        holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+                        holder.img_editBenDetails.setVisibility(View.VISIBLE);
+                        holder.img_DeleteBen.setVisibility(View.GONE);
+                    }else{
+                        holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
+                    }
+
                 }
             }
         } else {
             holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
-
         }
 
 
@@ -215,17 +196,22 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
         if (orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct()) {
             holder.tv_benProduct.setText(Html.fromHtml(!StringUtils.isNull(BenMasterArray.get(position).getTestsCode()) ? "<u>" + BenMasterArray.get(position).getTestsCode() + "</u>" : ""));
             holder.lin_benProduct.setVisibility(View.VISIBLE);
+            str_benProduct = holder.tv_benProduct.getText().toString().trim();
+            System.out.println("" + str_benProduct);
         } else {
             holder.lin_benProduct.setVisibility(View.GONE);
         }
 
-        //if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())){
-        // editBeneficiaryDetails(holder,position);
-        //  }
         holder.tv_benPrice.setText("" + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue());
 
         InitListener(holder, position);
 
+    }
+
+    private void editSingleBeneficiary(MyViewHolder holder, int gone) {
+        holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
+        holder.img_editBenDetails.setVisibility(View.VISIBLE);
+        holder.img_DeleteBen.setVisibility(gone);
     }
 
     private void checBenDetails(MyViewHolder holder, int position, boolean b) {
@@ -259,33 +245,6 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
         }
     }
 
-    private void editBeneficiaryDetails(MyViewHolder holder, int position) {
-        if (BenMasterArray.get(position).getName().toString().trim().contains("Test_user_")) {
-            holder.tv_benName.setText(BenMasterArray.get(position).getName());
-        }
-        if (BenMasterArray.get(position).getAge() == 150) {
-            holder.tv_benName.setText(BenMasterArray.get(position).getAge());
-        }
-    }
-
-
-    private boolean checkBeneficiaryDtls() {
-        for (int i = 0; i < orderVisitDetailsModel.getAllOrderdetails().size(); i++) {
-            for (int j = 0; j < orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().size(); j++) {
-                if (orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getName().trim().contains("Test_user") || orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getName().trim().contains("TEST_USER")) {
-                    Toast.makeText(mActivity, "Kindly edit beneficiary name", Toast.LENGTH_SHORT).show();
-                    return false;
-                } else if (orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getAge() == 150) {
-                    Toast.makeText(mActivity, "Kindly edit beneficiary age", Toast.LENGTH_SHORT).show();
-                    return false;
-                } else if (orderVisitDetailsModel.getAllOrderdetails().get(i).getBenMaster().get(j).getGender().equalsIgnoreCase("Dummy")) {
-                    Toast.makeText(mActivity, "Kindly edit beneficiary gender", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     private boolean isValidForEditing(String tests) {
 
@@ -311,8 +270,6 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                 return true;
             }
         }
-
-
         return false;
     }
 
@@ -327,7 +284,6 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
             }
         });
 
-
         holder.img_DeleteBen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -341,7 +297,7 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
             @Override
             public void onClick(View view) {
                 if (onClickListeners != null) {
-                    onClickListeners.onEditBenClicked(orderVisitDetailsModel, BenMasterArray.get(position), position);
+                    onClickListeners.onEditBenClicked(orderVisitDetailsModel, BenMasterArray.get(position), position, str_benProduct);
                 }
             }
         });
@@ -367,7 +323,7 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
     }
 
     public interface OnClickListeners {
-        void onEditBenClicked(OrderVisitDetailsModel orderVisitDetailsModel, BeneficiaryDetailsModel beneficiaryDetailsModel, int position);
+        void onEditBenClicked(OrderVisitDetailsModel orderVisitDetailsModel, BeneficiaryDetailsModel beneficiaryDetailsModel, int position, String str_benProduct);
 
         void onDeleteBenClicked(OrderVisitDetailsModel orderVisitDetailsModel, BeneficiaryDetailsModel beneficiaryDetailsModel);
 
@@ -376,7 +332,6 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
         void onShowTestDetailsnClicked(String benId);
 
         void onCallCustomer();
-
 
     }
 }

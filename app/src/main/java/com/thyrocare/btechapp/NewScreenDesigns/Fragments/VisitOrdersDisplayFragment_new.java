@@ -52,7 +52,6 @@ import com.thyrocare.btechapp.NewScreenDesigns.Activities.StartAndArriveActivity
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.Btech_VisitDisplayAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
@@ -61,14 +60,12 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
-import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.thyrocare.btechapp.delegate.refreshDelegate;
 import com.thyrocare.btechapp.dialog.ConfirmOrderPassDialog;
 import com.thyrocare.btechapp.dialog.ConfirmOrderReleaseDialog;
 import com.thyrocare.btechapp.dialog.ConfirmRequestReleaseDialog;
 import com.thyrocare.btechapp.dialog.RescheduleOrderDialog;
-import com.thyrocare.btechapp.fragment.BtechwithHub_HubMasterBarcodeScanFragment;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.btechapp.models.api.request.SetDispositionDataModel;
 import com.thyrocare.btechapp.models.api.response.BtechEstEarningsResponseModel;
@@ -84,7 +81,6 @@ import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 
 import com.thyrocare.btechapp.service.TrackerService;
 import com.thyrocare.btechapp.utils.api.Logger;
-import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
@@ -751,7 +747,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 
             btech_VisitDisplayAdapter.setOnItemClickListener(new Btech_VisitDisplayAdapter.OnClickListeners() {
                 @Override
-                public void onAcceptClicked(OrderVisitDetailsModel orderVisitDetailsModels) {
+                public void onAcceptClicked(OrderVisitDetailsModel orderVisitDetailsModels, int orderPosition) {
                     OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
                     orderStatusChangeRequestModel.setId(orderVisitDetailsModels.getSlotId() + "");
                     orderStatusChangeRequestModel.setRemarks("");
@@ -1391,7 +1387,10 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                     }*/
                     fetchData();
                //     orderStatusUpdate(appPreferenceManager.getfetchOrderDetailsResponseModel(), visitId);
-                    startActivity(new Intent(activity, VisitOrdersDisplayFragment_new.class));
+//                    startActivity(new Intent(activity, VisitOrdersDisplayFragment_new.class));
+                    Intent i = new Intent(activity,VisitOrdersDisplayFragment_new.class);
+                    i.putExtra(BundleConstants.POSITION,orderPosition);
+                    startActivity(i);
 
                 } else {
                     try {

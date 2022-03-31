@@ -494,7 +494,7 @@ public class PaymentsActivity extends AbstractActivity {
     private void SetpaymentGateways(ArrayList<PaymentProcessAPIResponseModel> paymentModesArr) {
         try {
 
-            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                 /*ArrayList<PaymentProcessAPIResponseModel> NewPaymentModesArr = new ArrayList<PaymentProcessAPIResponseModel>();
                 for (int i = 0; i <paymentModesArr.size(); i++) {
                     for (int j = 0; j < paymentModesArr.get(i).getNameValueCollection().size(); j++) {
@@ -865,18 +865,125 @@ public class PaymentsActivity extends AbstractActivity {
     }
 
     private void CallFetchTransactionResponseOnStartTransactionApi(final JsonObject jsonRequest) {
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<PaymentStartTransactionAPIResponseModel> responseCall = apiInterface.CallFetchTransactionResponseOnStartTransactionApi(jsonRequest);
-        global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback<PaymentStartTransactionAPIResponseModel>() {
-            @Override
-            public void onResponse(Call<PaymentStartTransactionAPIResponseModel> call, Response<PaymentStartTransactionAPIResponseModel> response) {
-                global.hideProgressDialog(activity);
-                if (response.isSuccessful()) {
-                    paymentStartTransactionAPIResponseModel = response.body();
-                    if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
-                        // mobileflag = 0;
-                        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+        try {
+            PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+            Call<PaymentStartTransactionAPIResponseModel> responseCall = apiInterface.CallFetchTransactionResponseOnStartTransactionApi(jsonRequest);
+            global.showProgressDialog(activity, "Please wait..");
+            responseCall.enqueue(new Callback<PaymentStartTransactionAPIResponseModel>() {
+                @Override
+                public void onResponse(Call<PaymentStartTransactionAPIResponseModel> call, Response<PaymentStartTransactionAPIResponseModel> response) {
+                    global.hideProgressDialog(activity);
+                    if (response.isSuccessful()) {
+                        paymentStartTransactionAPIResponseModel = response.body();
+                        if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
+                            // mobileflag = 0;
+                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                builder.setTitle("Verify Payment")
+                                        .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
+                                        .setCancelable(false)
+                                        .setPositiveButton("Verify Payment", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                PEPaymentRequestModel pePaymentRequestModel = new PEPaymentRequestModel();
+                                                pePaymentRequestModel.setOrderNo(OrderNo);
+                                                pePaymentRequestModel.setTransactionId(paymentStartTransactionAPIResponseModel.getTransactionId());
+                                                callPEPaymentModeAPI(pePaymentRequestModel);
+                                            }
+                                        }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
+                                        /*Intent intent = new Intent();
+                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                        finish();*/
+                               /*     }
+                                }).setNeutralButton("Retry", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);*/
+                                    }
+                                }).show();
+                            } else {
+                                // mobileflag = 0;
+                                if (NarrationId == 1 || NarrationId == 3) {
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                    builder.setTitle("UPI Payment")
+                                            .setMessage("Your Payment request has been initiated. Please access your UPI banking app to complete the process.")
+                                            .setCancelable(false)
+                                            .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Intent intent = new Intent();
+                                                    intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                                    setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                                    finish();
+                                                }
+                                            }).show();
+                                } else if ((NarrationId == 2 && (ModeId == 1 || ModeId == 10))) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                    builder.setTitle("Verify Payment")
+                                            .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
+                                            .setCancelable(false)
+                                            .setPositiveButton("Verify Payment", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    fetchDoCaptureResponse(true);
+                                                }
+                                            }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent intent = new Intent();
+                                            intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                            setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                            finish();
+                                        }
+                                    }).show();
+                                } else {
+                                    initDoCaptureResponseData();
+                                }
+                            }
+                        } else {
+                            if (paymentStartTransactionAPIResponseModel.getResponseMessage() != null) {
+                                if (paymentStartTransactionAPIResponseModel.getResponseMessage().equalsIgnoreCase("MOBILE_NUMBER_NOT_REGISTERED")) {
+                                    Toast.makeText(activity, "Mobile Number is not Registered", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(activity, paymentStartTransactionAPIResponseModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PaymentStartTransactionAPIResponseModel> call, Throwable t) {
+                    global.hideProgressDialog(activity);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void CallFetchTransactionResponseOnReStartTransactionApi(final JsonObject jsonRequest) {
+        try {
+            PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+            Call<PaymentStartTransactionAPIResponseModel> responseCall = apiInterface.CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
+            global.showProgressDialog(activity, "Please wait..");
+            responseCall.enqueue(new Callback<PaymentStartTransactionAPIResponseModel>() {
+                @Override
+                public void onResponse(Call<PaymentStartTransactionAPIResponseModel> call, Response<PaymentStartTransactionAPIResponseModel> response) {
+                    global.hideProgressDialog(activity);
+                    if (response.isSuccessful()) {
+                        paymentStartTransactionAPIResponseModel = response.body();
+                        if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
+                            Toast.makeText(activity,""+response.body().getResponseMessage(),Toast.LENGTH_SHORT).show();
                             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                             builder.setTitle("Verify Payment")
                                     .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
@@ -897,127 +1004,27 @@ public class PaymentsActivity extends AbstractActivity {
                                     intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
                                     setResult(BundleConstants.PAYMENTS_FINISH, intent);
                                     finish();*/
-                           /*     }
-                            }).setNeutralButton("Retry", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);*/
                                 }
-                            }).show();
+                            })/*.setNeutralButton("Retry", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
+                                }
+                            })*/.show();
                         } else {
-                            // mobileflag = 0;
-                            if (NarrationId == 1 || NarrationId == 3) {
-
-                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                builder.setTitle("UPI Payment")
-                                        .setMessage("Your Payment request has been initiated. Please access your UPI banking app to complete the process.")
-                                        .setCancelable(false)
-                                        .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                Intent intent = new Intent();
-                                                intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                                finish();
-                                            }
-                                        }).show();
-                            } else if ((NarrationId == 2 && (ModeId == 1 || ModeId == 10))) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                builder.setTitle("Verify Payment")
-                                        .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
-                                        .setCancelable(false)
-                                        .setPositiveButton("Verify Payment", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                fetchDoCaptureResponse(true);
-                                            }
-                                        }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent();
-                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                        finish();
-                                    }
-                                }).show();
-                            } else {
-                                initDoCaptureResponseData();
-                            }
-                        }
-                    } else {
-                        if (paymentStartTransactionAPIResponseModel.getResponseMessage() != null) {
-                            if (paymentStartTransactionAPIResponseModel.getResponseMessage().equalsIgnoreCase("MOBILE_NUMBER_NOT_REGISTERED")) {
-                                Toast.makeText(activity, "Mobile Number is not Registered", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(activity, paymentStartTransactionAPIResponseModel.getResponseMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, ""+response.body().getResponseMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
-                } else {
-                    Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
-            }
 
-            @Override
-            public void onFailure(Call<PaymentStartTransactionAPIResponseModel> call, Throwable t) {
-                global.hideProgressDialog(activity);
-            }
-        });
-    }
-
-    private void CallFetchTransactionResponseOnReStartTransactionApi(final JsonObject jsonRequest) {
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<PaymentStartTransactionAPIResponseModel> responseCall = apiInterface.CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
-        global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback<PaymentStartTransactionAPIResponseModel>() {
-            @Override
-            public void onResponse(Call<PaymentStartTransactionAPIResponseModel> call, Response<PaymentStartTransactionAPIResponseModel> response) {
-                global.hideProgressDialog(activity);
-                if (response.isSuccessful()) {
-                    paymentStartTransactionAPIResponseModel = response.body();
-                    if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
-                        Toast.makeText(activity,""+response.body().getResponseMessage(),Toast.LENGTH_SHORT).show();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setTitle("Verify Payment")
-                                .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
-                                .setCancelable(false)
-                                .setPositiveButton("Verify Payment", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        PEPaymentRequestModel pePaymentRequestModel = new PEPaymentRequestModel();
-                                        pePaymentRequestModel.setOrderNo(OrderNo);
-                                        pePaymentRequestModel.setTransactionId(paymentStartTransactionAPIResponseModel.getTransactionId());
-                                        callPEPaymentModeAPI(pePaymentRequestModel);
-                                    }
-                                }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
-                                /*Intent intent = new Intent();
-                                intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                finish();*/
-                            }
-                        })/*.setNeutralButton("Retry", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                CallFetchTransactionResponseOnReStartTransactionApi(jsonRequest);
-                            }
-                        })*/.show();
-                    } else {
-                        Toast.makeText(activity, ""+response.body().getResponseMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                @Override
+                public void onFailure(Call<PaymentStartTransactionAPIResponseModel> call, Throwable t) {
+                    global.hideProgressDialog(activity);
                 }
-            }
-
-            @Override
-            public void onFailure(Call<PaymentStartTransactionAPIResponseModel> call, Throwable t) {
-                global.hideProgressDialog(activity);
-            }
-        });
-
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initDoCaptureResponseData() {
@@ -1191,7 +1198,7 @@ public class PaymentsActivity extends AbstractActivity {
 
             if (isNetworkAvailable(activity)) {
                 CallgetDoCaptureResponseRequestApi(jsonRequest, paymentDoCaptureResponseAPIResponseModel.getReqParameters().getAPIUrl());
-                ;
+
             } else {
                 Toast.makeText(activity, getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
             }
@@ -1202,110 +1209,114 @@ public class PaymentsActivity extends AbstractActivity {
 
 
     private void CallgetDoCaptureResponseRequestApi(JsonObject jsonRequest, String URL) {
-        PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<PaymentDoCaptureResponseAPIResponseModel> responseCall = apiInterface.CallgetDoCaptureResponseRequestApi(URL, jsonRequest);
-        global.showProgressDialog(activity, "Please wait..");
-        responseCall.enqueue(new Callback<PaymentDoCaptureResponseAPIResponseModel>() {
-            @Override
-            public void onResponse(Call<PaymentDoCaptureResponseAPIResponseModel> call, Response<PaymentDoCaptureResponseAPIResponseModel> response) {
-                global.hideProgressDialog(activity);
-                if (response.isSuccessful()) {
-                    PaymentDoCaptureResponseAPIResponseModel tempPDCRAPRM = response.body();
-                    if (tempPDCRAPRM.getStatus() != null) {
-                        paymentDoCaptureResponseAPIResponseModel = tempPDCRAPRM;
-                        switch (paymentDoCaptureResponseAPIResponseModel.getStatus()) {
-                            case "PAYMENT SUCCESS": {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                builder.setTitle("Payment Status")
-                                        .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                Intent intent = new Intent();
-                                                intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
-                                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                                finish();
-                                            }
-                                        }).show();
-                                break;
-                            }
-                            case "PAYMENT FAILED": {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                builder.setTitle("Payment Status")
-                                        .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
-                                        .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
+        try {
+            PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+            Call<PaymentDoCaptureResponseAPIResponseModel> responseCall = apiInterface.CallgetDoCaptureResponseRequestApi(URL, jsonRequest);
+            global.showProgressDialog(activity, "Please wait..");
+            responseCall.enqueue(new Callback<PaymentDoCaptureResponseAPIResponseModel>() {
+                @Override
+                public void onResponse(Call<PaymentDoCaptureResponseAPIResponseModel> call, Response<PaymentDoCaptureResponseAPIResponseModel> response) {
+                    global.hideProgressDialog(activity);
+                    if (response.isSuccessful()) {
+                        PaymentDoCaptureResponseAPIResponseModel tempPDCRAPRM = response.body();
+                        if (tempPDCRAPRM.getStatus() != null) {
+                            paymentDoCaptureResponseAPIResponseModel = tempPDCRAPRM;
+                            switch (paymentDoCaptureResponseAPIResponseModel.getStatus()) {
+                                case "PAYMENT SUCCESS": {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                    builder.setTitle("Payment Status")
+                                            .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Intent intent = new Intent();
+                                                    intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
+                                                    setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                                    finish();
+                                                }
+                                            }).show();
+                                    break;
+                                }
+                                case "PAYMENT FAILED": {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                    builder.setTitle("Payment Status")
+                                            .setMessage(paymentDoCaptureResponseAPIResponseModel.getResponseMessage())
+                                            .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                                                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                                                    WOEPEBtech();//TODO For PE-BTech as per GG Sir's remark
-                                                } else {
+                                                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                                        WOEPEBtech();//TODO For PE-BTech as per GG Sir's remark
+                                                    } else {
+                                                        Intent intent = new Intent();
+                                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                                        finish();
+                                                    }
+                                                }
+                                            }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            fetchRecheckResponseData();
+                                        }
+                                    }).show();
+                                    break;
+                                }
+                                default: {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                    builder.setTitle("Verify Payment")
+                                            .setMessage("Verify Payment Status failed! Please click Retry to check payment status again.")
+                                            .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    fetchRecheckResponseData();
+                                                }
+                                            })
+                                            .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
                                                     Intent intent = new Intent();
                                                     intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
                                                     setResult(BundleConstants.PAYMENTS_FINISH, intent);
                                                     finish();
                                                 }
-                                            }
-                                        }).setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        fetchRecheckResponseData();
-                                    }
-                                }).show();
-                                break;
+                                            }).show();
+                                    break;
+                                }
                             }
-                            default: {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                                builder.setTitle("Verify Payment")
-                                        .setMessage("Verify Payment Status failed! Please click Retry to check payment status again.")
-                                        .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                fetchRecheckResponseData();
-                                            }
-                                        })
-                                        .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                Intent intent = new Intent();
-                                                intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                                finish();
-                                            }
-                                        }).show();
-                                break;
-                            }
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setTitle("Verify Payment")
+                                    .setMessage("Verify Payment Status failed! Please click Retry to check payment status again.")
+                                    .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            fetchDoCaptureResponse(true);
+                                        }
+                                    })
+                                    .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent intent = new Intent();
+                                            intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                            setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                            finish();
+                                        }
+                                    }).show();
                         }
                     } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setTitle("Verify Payment")
-                                .setMessage("Verify Payment Status failed! Please click Retry to check payment status again.")
-                                .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        fetchDoCaptureResponse(true);
-                                    }
-                                })
-                                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent();
-                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                        finish();
-                                    }
-                                }).show();
+                        Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(activity, ConstantsMessages.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
                 }
-            }
 
-            @Override
-            public void onFailure(Call<PaymentDoCaptureResponseAPIResponseModel> call, Throwable t) {
-                global.hideProgressDialog(activity);
-            }
-        });
+                @Override
+                public void onFailure(Call<PaymentDoCaptureResponseAPIResponseModel> call, Throwable t) {
+                    global.hideProgressDialog(activity);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void WOEPEBtech() {

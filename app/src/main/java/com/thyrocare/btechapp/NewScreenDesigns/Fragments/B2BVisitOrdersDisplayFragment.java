@@ -228,17 +228,20 @@ public class B2BVisitOrdersDisplayFragment extends AppCompatActivity {
     }
 
     private void setDataOnUI(GetOrderDetailsResponseModel allOrders) {
-
-        All_VisitDisplayAdapter btech_VisitDisplayAdapter = new All_VisitDisplayAdapter(this, allOrders, activity);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
-        recyOrderList.setLayoutManager(mLayoutManager);
-        recyOrderList.setAdapter(btech_VisitDisplayAdapter);
-
+        if (allOrders.getGetVisitcount() != null && allOrders.getGetVisitcount().size() > 0) {
+            All_VisitDisplayAdapter btech_VisitDisplayAdapter = new All_VisitDisplayAdapter(this, allOrders, activity);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
+            recyOrderList.setLayoutManager(mLayoutManager);
+            recyOrderList.setAdapter(btech_VisitDisplayAdapter);
+        } else {
+            recyOrderList.setVisibility(View.GONE);
+            txtNoRecord.setVisibility(View.VISIBLE);
+        }
     }
 
     public void orderSelected(int pos) {
         Intent intent = new Intent(activity, VisitOrdersDisplayFragment_new.class);
-        intent.putExtra(BundleConstants.POSITION,pos);
+        intent.putExtra(BundleConstants.POSITION, pos);
         startActivity(intent);
     }
 }

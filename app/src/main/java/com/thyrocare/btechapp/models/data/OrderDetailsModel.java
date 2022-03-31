@@ -67,8 +67,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private boolean ISHclOrder;
     private boolean IsOTP;
     private boolean isdisabledelete;
-    private String APIValue;
-    private String orderValue;
+    private boolean isPEPartner;
+
 
 
     protected OrderDetailsModel(Parcel in) {
@@ -127,9 +127,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         ISHclOrder = in.readByte() != 0;
         IsOTP = in.readByte() != 0;
         isdisabledelete = in.readByte() != 0;
+        isPEPartner = in.readByte() != 0;
         PPE_AlertMsg = in.readString();
-        APIValue = in.readString();
-        orderValue = in.readString();
     }
 
     @Override
@@ -189,9 +188,8 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeByte((byte) (ISHclOrder ? 1 : 0));
         dest.writeByte((byte) (IsOTP ? 1 : 0));
         dest.writeByte((byte) (isdisabledelete ? 1 : 0));
+        dest.writeByte((byte) (isPEPartner ? 1 : 0));
         dest.writeString(PPE_AlertMsg);
-        dest.writeString(orderValue);
-        dest.writeString(APIValue);
     }
 
     @Override
@@ -238,6 +236,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setIsdisabledelete(boolean isdisabledelete) {
         this.isdisabledelete = isdisabledelete;
+    }
+
+    public boolean isPEPartner() {
+        return isPEPartner;
+    }
+
+    public void setPEPartner(boolean PEPartner) {
+        isPEPartner = PEPartner;
     }
 
     public void setKCF(boolean KCF) {
@@ -656,22 +662,6 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setPPE_AlertMsg(String PPE_AlertMsg) {
         this.PPE_AlertMsg = PPE_AlertMsg;
-    }
-
-    public String getAPIValue() {
-        return APIValue;
-    }
-
-    public void setAPIValue(String APIValue) {
-        this.APIValue = APIValue;
-    }
-
-    public String getOrderValue() {
-        return orderValue;
-    }
-
-    public void setOrderValue(String orderValue) {
-        this.orderValue = orderValue;
     }
 
     @Override

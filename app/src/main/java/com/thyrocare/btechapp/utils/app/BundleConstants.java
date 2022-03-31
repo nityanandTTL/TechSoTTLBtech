@@ -76,6 +76,7 @@ public class BundleConstants {
     public static final String ACCEPTED = "ACCEPTED";
     public static final String POSITION = "position";
     public static final String URINE = "URINE";
+    public static final String BENPRODUCT = "BENPRODUCT";
 
     // neha G --------------------------
     public static int DataInVisitModel = 0;
