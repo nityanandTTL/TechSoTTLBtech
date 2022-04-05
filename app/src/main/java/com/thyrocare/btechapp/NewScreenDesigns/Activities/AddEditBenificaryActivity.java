@@ -176,8 +176,22 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             }
         }
         orderNo = orderVisitDetailsModel.getVisitId();
-        if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && !orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
+        /*if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
             callAPIDSAProducts();
+        }*/
+
+        if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            if (orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()){
+                if (cd.isConnectingToInternet()) {
+                    PEAuthorizationController peAuthorizationController = new PEAuthorizationController(this);
+                    peAuthorizationController.getAuthorizationToken(1, appPreferenceManager.getLoginResponseModel(), orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
+                } else {
+                    globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+                }
+
+            }else{
+                callAPIDSAProducts();
+            }
         }
     }
 

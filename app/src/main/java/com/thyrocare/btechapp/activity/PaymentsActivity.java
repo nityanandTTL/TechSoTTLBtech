@@ -39,6 +39,7 @@ import com.thyrocare.btechapp.Controller.PayTMVerifyController;
 import com.thyrocare.btechapp.Controller.WOEController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.CheckoutWoeActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.ScanBarcodeWoeActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
@@ -283,10 +284,16 @@ public class PaymentsActivity extends AbstractActivity {
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent();
-                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
-                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                        finish();
+                                        /*if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) &&orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()){
+                                            Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                        }else{*/
+                                            Intent intent = new Intent();
+                                            intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
+                                            setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                            finish();
+//                                        }
                                     }
                                 }).show();
                     } else {

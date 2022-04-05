@@ -126,7 +126,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        finish();
+                        onbackpress();
+                       // finish();
 
                     }
                 });
@@ -267,6 +268,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 }
 
                 if (isRemovedUrine) {
+                    isRemovedUrine = false;
                     BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModel = new BeneficiaryBarcodeDetailsModel();
                     beneficiaryBarcodeDetailsModel.setSamplType(BundleConstants.URINE);
                     beneficaryWiseArylst.get(j).getBarcodedtl().add(beneficiaryBarcodeDetailsModel);
@@ -287,11 +289,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 alertDialog.setButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE, "YES",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(mActivity, StartAndArriveActivity.class);
-                                intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                                finish();
+                                onbackpress();
+                                //finish();
                             }
                         });
                 alertDialog.setButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE, "NO",
@@ -342,6 +341,13 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void onbackpress() {
+        Intent intent = new Intent(mActivity, StartAndArriveActivity.class);
+        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     private boolean ValidateAllBarcodeScan() {

@@ -610,8 +610,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
     }
 
     private void bottomsheetScanBarcode() {
+        final BottomSheetDialog bottomSheetDialog1;
         String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
-        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+        bottomSheetDialog1 = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
 
         View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
 
@@ -622,11 +623,15 @@ public class StartAndArriveActivity extends AppCompatActivity {
         btn_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetDialog.dismiss();
-                Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
-                intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
-                startActivity(intentOrderBooking);
-                finish();
+                try {
+                    bottomSheetDialog1.dismiss();
+                    Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+//                    intentOrderBooking.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+                    startActivity(intentOrderBooking);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -634,14 +639,14 @@ public class StartAndArriveActivity extends AppCompatActivity {
         btn_no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetDialog.dismiss();
+                bottomSheetDialog1.dismiss();
 
             }
         });
 
-        bottomSheetDialog.setContentView(bottomSheet);
-        bottomSheetDialog.setCancelable(false);
-        bottomSheetDialog.show();
+        bottomSheetDialog1.setContentView(bottomSheet);
+        bottomSheetDialog1.setCancelable(false);
+        bottomSheetDialog1.show();
     }
 
     private boolean checkBeneficiaryDtls() {
@@ -821,10 +826,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     String strresponse = response.body();
                     if (!TextUtils.isEmpty(strresponse) && strresponse.toUpperCase().contains("SUCCESS")) {
+                        CustomDialogforOTPValidation.dismiss();
                         Toast.makeText(mActivity, "OTP Validated Successfully.", Toast.LENGTH_SHORT).show();
 //                        globalclass.showCustomToast(mActivity, "OTP Validated Successfully.");
                         callOrderStatusChangeApi(3, "Arrive", "", "");
-                        CustomDialogforOTPValidation.dismiss();
                         BundleConstants.callOTPFlag = 1;
 
                     } else {

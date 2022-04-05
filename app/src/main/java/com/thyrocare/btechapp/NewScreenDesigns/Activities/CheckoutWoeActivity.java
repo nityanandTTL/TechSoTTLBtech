@@ -1374,69 +1374,73 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
     private OrderBookingRequestModel fixForAddBeneficiary(OrderBookingRequestModel orderBookingRequestModel) {
         //Update Visit ID in OrdBooking Model
-        if (orderBookingRequestModel.getOrdbooking().getVisitId().equals(orderBookingResponseVisitModel.getOldVisitId())) {
-            orderBookingRequestModel.getOrdbooking().setVisitId(orderBookingResponseVisitModel.getNewVisitId());
-        }
-        //Update Order No and Visit ID in Order Dtl Arr
-        for (int i = 0; i < orderBookingRequestModel.getOrddtl().size(); i++) {
-            if (orderBookingRequestModel.getOrddtl().get(i).getVisitId().equals(orderBookingResponseVisitModel.getOldVisitId())) {
-                orderBookingRequestModel.getOrddtl().get(i).setVisitId(orderBookingResponseVisitModel.getNewVisitId());
+        try {
+            if (orderBookingRequestModel.getOrdbooking().getVisitId().equalsIgnoreCase(orderBookingResponseVisitModel.getOldVisitId())) {
+                orderBookingRequestModel.getOrdbooking().setVisitId(orderBookingResponseVisitModel.getNewVisitId());
             }
-            for (int j = 0; j < orderBookingResponseVisitModel.getOrderids().size(); j++) {
-                if (orderBookingRequestModel.getOrddtl().get(i).getOrderNo().equals(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())) {
-                    orderBookingRequestModel.getOrddtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+            //Update Order No and Visit ID in Order Dtl Arr
+            for (int i = 0; i < orderBookingRequestModel.getOrddtl().size(); i++) {
+                if (orderBookingRequestModel.getOrddtl().get(i).getVisitId().equalsIgnoreCase(orderBookingResponseVisitModel.getOldVisitId())) {
+                    orderBookingRequestModel.getOrddtl().get(i).setVisitId(orderBookingResponseVisitModel.getNewVisitId());
+                }
+                for (int j = 0; j < orderBookingResponseVisitModel.getOrderids().size(); j++) {
+                    if (orderBookingRequestModel.getOrddtl().get(i).getOrderNo().equalsIgnoreCase(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())) {
+                        orderBookingRequestModel.getOrddtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+                    }
                 }
             }
-        }
-        //Update Order No and BenId in Bendtl Arr
-        for (int i = 0; i < orderBookingRequestModel.getBendtl().size(); i++) {
-            for (int j = 0; j < orderBookingResponseVisitModel.getOrderids().size(); j++) {
-                if (orderBookingRequestModel.getBendtl().get(i).getOrderNo().equals(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())) {
-                    orderBookingRequestModel.getBendtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+            //Update Order No and BenId in Bendtl Arr
+            for (int i = 0; i < orderBookingRequestModel.getBendtl().size(); i++) {
+                for (int j = 0; j < orderBookingResponseVisitModel.getOrderids().size(); j++) {
+                    if (orderBookingRequestModel.getBendtl().get(i).getOrderNo().equalsIgnoreCase(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())) {
+                        orderBookingRequestModel.getBendtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+                    }
+                }
+                for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                    if ((orderBookingRequestModel.getBendtl().get(i).getBenId() + "").equalsIgnoreCase(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                        orderBookingRequestModel.getBendtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                    }
                 }
             }
-            for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
-                if ((orderBookingRequestModel.getBendtl().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
-                    orderBookingRequestModel.getBendtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+            //Update orderNo and BenId in BarcodeDtl Arr
+            for (int i = 0; i < orderBookingRequestModel.getBarcodedtl().size(); i++) {
+                for (int j = 0; j < orderBookingResponseVisitModel.getOrderids().size(); j++) {
+                    if (orderBookingRequestModel.getBarcodedtl().get(i).getOrderNo().equalsIgnoreCase(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())) {
+                        orderBookingRequestModel.getBarcodedtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+                    }
+                }
+                for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                    if ((orderBookingRequestModel.getBarcodedtl().get(i).getBenId() + "").equalsIgnoreCase(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                        orderBookingRequestModel.getBarcodedtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                    }
                 }
             }
-        }
-        //Update orderNo and BenId in BarcodeDtl Arr
-        for (int i = 0; i < orderBookingRequestModel.getBarcodedtl().size(); i++) {
-            for (int j = 0; j < orderBookingResponseVisitModel.getOrderids().size(); j++) {
-                if (orderBookingRequestModel.getBarcodedtl().get(i).getOrderNo().equals(orderBookingResponseVisitModel.getOrderids().get(j).getOldOrderId())) {
-                    orderBookingRequestModel.getBarcodedtl().get(i).setOrderNo(orderBookingResponseVisitModel.getOrderids().get(j).getNewOrderId());
+            //Update BenId in SmplDtl Arr
+            for (int i = 0; i < orderBookingRequestModel.getSmpldtl().size(); i++) {
+                for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                    if ((orderBookingRequestModel.getSmpldtl().get(i).getBenId() + "").equalsIgnoreCase(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                        orderBookingRequestModel.getSmpldtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                    }
                 }
             }
-            for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
-                if ((orderBookingRequestModel.getBarcodedtl().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
-                    orderBookingRequestModel.getBarcodedtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+            //Update BenId in ClHistory Arr
+            for (int i = 0; i < orderBookingRequestModel.getClHistory().size(); i++) {
+                for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                    if ((orderBookingRequestModel.getClHistory().get(i).getBenId() + "").equalsIgnoreCase(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                        orderBookingRequestModel.getClHistory().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                    }
                 }
             }
-        }
-        //Update BenId in SmplDtl Arr
-        for (int i = 0; i < orderBookingRequestModel.getSmpldtl().size(); i++) {
-            for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
-                if ((orderBookingRequestModel.getSmpldtl().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
-                    orderBookingRequestModel.getSmpldtl().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+            //Update BenId in LabAlert Arr
+            for (int i = 0; i < orderBookingRequestModel.getLabAlert().size(); i++) {
+                for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
+                    if ((orderBookingRequestModel.getLabAlert().get(i).getBenId() + "").equalsIgnoreCase(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
+                        orderBookingRequestModel.getLabAlert().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
+                    }
                 }
             }
-        }
-        //Update BenId in ClHistory Arr
-        for (int i = 0; i < orderBookingRequestModel.getClHistory().size(); i++) {
-            for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
-                if ((orderBookingRequestModel.getClHistory().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
-                    orderBookingRequestModel.getClHistory().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
-                }
-            }
-        }
-        //Update BenId in LabAlert Arr
-        for (int i = 0; i < orderBookingRequestModel.getLabAlert().size(); i++) {
-            for (int j = 0; j < orderBookingResponseBeneficiaryModelArr.size(); j++) {
-                if ((orderBookingRequestModel.getLabAlert().get(i).getBenId() + "").equals(orderBookingResponseBeneficiaryModelArr.get(j).getOldBenIds())) {
-                    orderBookingRequestModel.getLabAlert().get(i).setBenId(Integer.parseInt(orderBookingResponseBeneficiaryModelArr.get(j).getNewBenIds()));
-                }
-            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
         return orderBookingRequestModel;
     }
