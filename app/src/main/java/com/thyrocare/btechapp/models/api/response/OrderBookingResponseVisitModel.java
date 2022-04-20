@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class OrderBookingResponseVisitModel implements Parcelable {
     private String oldVisitId;
     private String newVisitId;
+    Boolean isSecondVisitGenerated;
     private ArrayList<OrderBookingResponseOrderModel> orderids;
 
     public OrderBookingResponseVisitModel() {
@@ -21,6 +22,7 @@ public class OrderBookingResponseVisitModel implements Parcelable {
         oldVisitId = in.readString();
         newVisitId = in.readString();
         orderids = in.createTypedArrayList(OrderBookingResponseOrderModel.CREATOR);
+        isSecondVisitGenerated = in.readByte() != 0;
     }
 
     @Override
@@ -28,6 +30,7 @@ public class OrderBookingResponseVisitModel implements Parcelable {
         dest.writeString(oldVisitId);
         dest.writeString(newVisitId);
         dest.writeTypedList(orderids);
+        dest.writeByte((byte) (isSecondVisitGenerated ? 1 : 0));
     }
 
     @Override
@@ -46,6 +49,14 @@ public class OrderBookingResponseVisitModel implements Parcelable {
             return new OrderBookingResponseVisitModel[size];
         }
     };
+
+    public Boolean getSecondVisitGenerated() {
+        return isSecondVisitGenerated;
+    }
+
+    public void setSecondVisitGenerated(Boolean secondVisitGenerated) {
+        isSecondVisitGenerated = secondVisitGenerated;
+    }
 
     public String getOldVisitId() {
         return oldVisitId;

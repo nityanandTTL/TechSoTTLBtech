@@ -86,6 +86,7 @@ public class AppPreferenceManager {
     private int OrderAccept;
     private String selfieURl = "selfieURl";
     private String date = "date";
+    private String OrderNo = "";
 
 //Neha G -------------------------------------
 
@@ -96,6 +97,14 @@ public class AppPreferenceManager {
 
     public void setNEWBTECHAVALIABILITYRESPONSEMODEL(NewBtechAvaliabilityResponseModel newbtechavaliabilityresponsemodel) {
         appPreference.putString(this.NEWBTECHAVALIABILITYRESPONSEMODEL, new Gson().toJson(newbtechavaliabilityresponsemodel));
+    }
+
+    public String getOrderNo() {
+        return appPreference.getString(OrderNo, "");
+    }
+
+    public void setOrderNo(String orderNo) {
+        appPreference.putString(this.OrderNo, orderNo);
     }
 
 

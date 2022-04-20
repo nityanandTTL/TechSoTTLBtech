@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -47,6 +48,7 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.GetOrderDetailsController;
+import com.thyrocare.btechapp.Controller.OrderReleaseRemarksController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.StartAndArriveActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.Btech_VisitDisplayAdapter;
@@ -60,6 +62,8 @@ import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
 import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+import com.thyrocare.btechapp.activity.NewOrderReleaseActivity;
+import com.thyrocare.btechapp.adapter.OrderReleaseAdapter;
 import com.thyrocare.btechapp.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.thyrocare.btechapp.delegate.refreshDelegate;
 import com.thyrocare.btechapp.dialog.ConfirmOrderPassDialog;
@@ -71,6 +75,8 @@ import com.thyrocare.btechapp.models.api.request.SetDispositionDataModel;
 import com.thyrocare.btechapp.models.api.response.BtechEstEarningsResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetOrderDetailsResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetPECancelRemarksResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetRemarksResponseModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.DispositionDataModel;
 import com.thyrocare.btechapp.models.data.DispositionDetailsModel;
@@ -111,6 +117,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CheckInternetConnectionMsg;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PLEASE_WAIT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
@@ -196,6 +203,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         FirebaselocationUpdateIntent = new Intent(VisitOrdersDisplayFragment_new.this, TrackerService.class);
         appPreferenceManager = new AppPreferenceManager(activity);
         BundleConstants.isKIOSKOrder = false;
+        BundleConstants.setPEOrderEdit = false;
 
         initUI();
         setListener();
@@ -461,8 +469,12 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         if (CallAPIForOrders()) {
             GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
 //            Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID());
-            Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getOrderDetail(BundleConstants.setSelectedOrder);
-            global.showProgressDialog(activity, activity.getResources().getString(R.string.fetchingOrders), false);
+            Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getOrderDetail(BundleConstants.setSelectedOrder.trim());
+            try {
+                global.showProgressDialog(activity, activity.getResources().getString(R.string.fetchingOrders), false);
+            } catch (Resources.NotFoundException e) {
+                e.printStackTrace();
+            }
             fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
                 @Override
                 public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
@@ -1149,6 +1161,77 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         }
     }
 
+    public void orderRelease() {
+            if (connectionDetector.isConnectingToInternet()) {
+                OrderReleaseRemarksController orc = new OrderReleaseRemarksController(this);
+                orc.getRemarks(BundleConstants.OrderReleaseOptionsID, 2);
+            } else {
+                global.showCustomToast(activity, activity.getResources().getString(R.string.plz_chk_internet));
+            }
+    }
+
+    public void remarksArrayList(ArrayList<GetRemarksResponseModel> responseModelArrayList) {
+        ArrayList<GetRemarksResponseModel> responseArray = new ArrayList<>();
+        responseArray = responseModelArrayList;
+        setBottomSheet(responseArray);
+
+    }
+
+    private void setBottomSheet(ArrayList<GetRemarksResponseModel> responseArray) {
+        BottomSheetDialog bottomSheetOrderReschedule = new BottomSheetDialog(activity, R.style.BottomSheetTheme);
+
+        final View bottomSheet = LayoutInflater.from(activity).inflate(R.layout.layout_bottomsheet_pe_release, (ViewGroup) activity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+        RecyclerView rec_orderRelease = bottomSheet.findViewById(R.id.rec_orderRelease);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rec_orderRelease.setLayoutManager(linearLayoutManager);
+
+        OrderReleaseAdapter orAdapter = new OrderReleaseAdapter(this, responseArray);
+        rec_orderRelease.setAdapter(orAdapter);
+
+        bottomSheetOrderReschedule.setContentView(bottomSheet);
+        bottomSheetOrderReschedule.setCancelable(true);
+        bottomSheetOrderReschedule.show();
+    }
+
+    public void onRemarksClick(GetRemarksResponseModel getRemarksResponseModel, int position) {
+        Global.selectedPosition = position;
+        Global.selectedRemarksID = getRemarksResponseModel.getId();
+        if (Integer.parseInt(getRemarksResponseModel.getReCallRemarksId()) != 0) {
+            OrderReleaseRemarksController orc = new OrderReleaseRemarksController(this);
+            orc.getRemarks(getRemarksResponseModel.getReCallRemarksId().toString(), 2);
+        } else {
+            callAPIforOrderCancellationsRemarks(getRemarksResponseModel.getId().toString());
+        }
+
+    }
+
+    private void callAPIforOrderCancellationsRemarks(String toString) {
+        if (connectionDetector.isConnectingToInternet()) {
+            OrderReleaseRemarksController orrC = new OrderReleaseRemarksController(this);
+            orrC.getReasons(toString);
+        } else {
+            Toast.makeText(activity, CheckInternetConnectionMsg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void getReasons(ArrayList<GetPECancelRemarksResponseModel> responseModelArrayList, String ID) {
+        ArrayList<GetPECancelRemarksResponseModel> arrayList = new ArrayList<>();
+        arrayList = responseModelArrayList;
+        Intent intent = new Intent(this, NewOrderReleaseActivity.class);
+        intent.putExtra(BundleConstants.RELEASE_REMARKS, arrayList);
+        intent.putExtra(BundleConstants.ORDER, orderDetailsResponseModels.get(0).getVisitId());
+        intent.putExtra(BundleConstants.ORDER_SLOTID, orderDetailsResponseModels.get(0).getSlotId());
+        intent.putExtra(BundleConstants.APPOINTMENT_DATE, orderDetailsResponseModels.get(0).getAppointmentDate());
+        int slot = orderDetailsResponseModels.get(0).getSlotId();
+        System.out.println(slot);
+        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsResponseModels);
+//        intent.putExtra(BundleConstants.POS, 3);
+        intent.putExtra(BundleConstants.PINCODE, orderDetailsResponseModels.get(0).getAllOrderdetails().get(0).getPincode());
+        startActivity(intent);
+    }
+
 
     public class CConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
         @Override
@@ -1187,6 +1270,9 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                 try {
                     if (response.isSuccessful() && response.body() != null) {
                         if (response.code() == 200 || response.code() == 204) {
+                            BundleConstants.companyOrderFlag = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner();
+                            //fungible
+//                            if (BundleConstants.companyOrderFlag) {
                             if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                 ProceedToArriveScreen(orderVisitDetailsModel, false);
                             } else {
@@ -1280,6 +1366,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             startTrackerService();
             SendinglatlongOrderAllocation(orderVisitDetailsModel, 7);
             String remarks = "Order Started";
+//            BundleConstants.companyOrderFlag = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner();
             new LogUserActivityTagging(activity, BundleConstants.WOE, remarks);
 //            Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
             Intent intentNavigate = new Intent(activity, StartAndArriveActivity.class);

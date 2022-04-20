@@ -56,9 +56,10 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
     private ArrayList<GetPETestResponseModel.DataDTO> peFilteredList = new ArrayList<>();
     private ArrayList<GetPETestResponseModel.DataDTO> peSelectedTests = new ArrayList<>();
     int flag;
+    boolean isPEpartner;
 
 
-    public DisplayAllTestApdter(Activity activity, ArrayList<TestRateMasterModel> testRateMasterModelArry, ArrayList<TestRateMasterModel> allProductList , ArrayList<TestRateMasterModel> selectedTests, boolean isM) {
+    public DisplayAllTestApdter(Activity activity, boolean pePartner, ArrayList<TestRateMasterModel> testRateMasterModelArry, ArrayList<TestRateMasterModel> allProductList, ArrayList<TestRateMasterModel> selectedTests, boolean isM) {
         this.activity = activity;
         appPreferenceManager = new AppPreferenceManager(activity);
         globalClass = new Global(activity);
@@ -69,10 +70,11 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
         this.selectedTests = selectedTests;
         this.isM = isM;
         flag = 1;
+        isPEpartner = pePartner;
 
     }
 
-    public DisplayAllTestApdter(Activity activity, ArrayList<GetPETestResponseModel.DataDTO> peTestRateModelArry, ArrayList<GetPETestResponseModel.DataDTO> peSelectedTests) {
+    public DisplayAllTestApdter(Activity activity, boolean pePartner, ArrayList<GetPETestResponseModel.DataDTO> peTestRateModelArry, ArrayList<GetPETestResponseModel.DataDTO> peSelectedTests) {
         this.activity = activity;
         appPreferenceManager = new AppPreferenceManager(activity);
         globalClass = new Global(activity);
@@ -80,6 +82,7 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
         this.peFilteredList = peTestRateModelArry;
         this.peSelectedTests = peSelectedTests;
         flag = 2;
+        isPEpartner = pePartner;
     }
 
 
@@ -427,7 +430,12 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
             holder.imgChecked.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    peSelectedTests.remove(peResponseModel);
+                    for (int i = 0; i < peSelectedTests.size(); i++) {
+                        if (peSelectedTests.get(i).getName().equalsIgnoreCase(peResponseModel.getName())){
+                            peSelectedTests.remove(i);
+                        }
+                    }
+//                    peSelectedTests.remove(peResponseModel);
                     if (onClickListeners != null) {
                         onClickListeners.onPECheckChange(peSelectedTests);
                     }

@@ -249,6 +249,8 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
 
         // TODO if ben has single urine sample
+        //fungible
+//        if (BundleConstants.companyOrderFlag) {
         if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             for (int i = 0; i < beneficaryWiseScanbarcodeArylst.size(); i++) {
                 if (beneficaryWiseScanbarcodeArylst.size() == 1) {
@@ -296,6 +298,8 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
         btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //fungible
+//                if (BundleConstants.companyOrderFlag) {
                 if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (!isOTP) {
                         CallRemoveSample(beneficaryWiseScanbarcodeArylst.get(position), 1);
@@ -635,7 +639,7 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
     }
 
     public void getResponse(RemoveUrineSampleRespModel body, BeneficiaryDetailsModel beneficiaryDetailsModel) {
-        if (!InputUtils.isNull(body.getResID()) && body.getResID().equalsIgnoreCase("RES0000")) {
+        if (!InputUtils.isNull(body.getResID()) && body.getResID().equalsIgnoreCase(ConstantsMessages.RES0000)) {
             globalclass.showCustomToast(mActivity, "" + body.getResponse());
             if (!InputUtils.isNull(beneficiaryDetailsModel)) {
                 for (int i = 0; i < beneficiaryDetailsModel.getBarcodedtl().size(); i++) {

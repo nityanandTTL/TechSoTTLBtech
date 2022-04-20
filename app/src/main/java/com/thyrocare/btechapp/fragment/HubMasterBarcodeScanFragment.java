@@ -398,7 +398,7 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
         Call<String> responseCall = apiInterface.CallGetMasterBarcodeMapApi(masterBarcodeMappingRequestModel);
-        global.showProgressDialog(activity, "Fetching products. Please wait..");
+        global.showProgressDialog(activity, "Submitting data. Please wait..");
         responseCall.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, retrofit2.Response<String> response) {

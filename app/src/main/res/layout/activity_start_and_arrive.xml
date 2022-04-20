@@ -14,7 +14,7 @@
         android:id="@+id/recyle_OrderDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/customSwipeButton2"
+        android:layout_above="@id/tv_note_res"
         android:layout_below="@+id/appbarLayout" />
 
     <TextView
@@ -28,12 +28,23 @@
         android:textStyle="bold"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/tv_note_res"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btn_floating_add_ben"
+        android:layout_margin="@dimen/_4sdp"
+        android:background="@color/brown_1"
+        android:padding="@dimen/_10sdp"
+        android:text="@string/note_reschedule_the_collection_if_the_order_is_getting_delayed"
+        android:textColor="@color/brown"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/btn_floating_add_ben"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/customSwipeButton2"
+        android:layout_above="@+id/ll_timer"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_2sdp"
@@ -46,6 +57,47 @@
         android:textColor="@color/bg_new_color"
         android:textSize="@dimen/_10sdp"
         android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/customSwipeButton2"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:orientation="vertical"
+        android:padding="@dimen/_5sdp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/ic_timer" />
+
+            <TextView
+                android:id="@+id/tv_timerCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:textColor="@color/grey_dark"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_timerTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_4sdp"
+            android:text="Let the customer call you back"
+            android:textColor="@color/grey_dark" />
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/customSwipeButton2"
@@ -67,6 +119,7 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/tv_order_release"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

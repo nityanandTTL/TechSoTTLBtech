@@ -125,9 +125,10 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
         alertDialog.setButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE, "YES",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        BundleConstants.setRefreshStartArriveActivity=1;
                         dialog.dismiss();
-                        onbackpress();
-                       // finish();
+                        //onbackpress();
+                       finish();
 
                     }
                 });
@@ -246,7 +247,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                         }
                     }
                     if (!InputUtils.isNull(beneficaryWiseArylst.get(i).getTestsCode())){
-                        if (beneficaryWiseArylst.get(i).getTestsCode().equalsIgnoreCase("RBS,PPBS") || beneficaryWiseArylst.get(i).getTestsCode().equalsIgnoreCase("PPBS,RBS")) {
+                        if (beneficaryWiseArylst.get(i).getTestsCode().equalsIgnoreCase("RBS,PPBS") ||
+                                beneficaryWiseArylst.get(i).getTestsCode().equalsIgnoreCase("PPBS,RBS")) {
                             BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModelRBS = new BeneficiaryBarcodeDetailsModel();
                             beneficiaryBarcodeDetailsModelRBS.setBenId(beneficaryWiseArylst.get(i).getBenId());
                             beneficiaryBarcodeDetailsModelRBS.setId(DeviceUtils.getRandomUUID());
@@ -254,6 +256,16 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                             beneficiaryBarcodeDetailsModelRBS.setOrderNo(beneficaryWiseArylst.get(i).getOrderNo());
                             beneficiaryBarcodeDetailsModelRBS.setRBS_PPBS(true);
                             beneficaryWiseArylst.get(i).getBarcodedtl().add(beneficiaryBarcodeDetailsModelRBS);
+                        }else if (beneficaryWiseArylst.get(i).getTestsCode().contains("RBS,PPBS") || beneficaryWiseArylst.get(i).getTestsCode().contains("PPBS,RBS")){
+                            if (beneficaryWiseArylst.get(i).getFasting().trim().equalsIgnoreCase("NON-FASTING")){
+                                BeneficiaryBarcodeDetailsModel beneficiaryBarcodeDetailsModelRBS = new BeneficiaryBarcodeDetailsModel();
+                                beneficiaryBarcodeDetailsModelRBS.setBenId(beneficaryWiseArylst.get(i).getBenId());
+                                beneficiaryBarcodeDetailsModelRBS.setId(DeviceUtils.getRandomUUID());
+                                beneficiaryBarcodeDetailsModelRBS.setSamplType("FLUORIDE-R");
+                                beneficiaryBarcodeDetailsModelRBS.setOrderNo(beneficaryWiseArylst.get(i).getOrderNo());
+                                beneficiaryBarcodeDetailsModelRBS.setRBS_PPBS(true);
+                                beneficaryWiseArylst.get(i).getBarcodedtl().add(beneficiaryBarcodeDetailsModelRBS);
+                            }
                         }
                     }
                 }
@@ -344,6 +356,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
     }
 
     private void onbackpress() {
+        BundleConstants.setRefreshStartArriveActivity=1;
         Intent intent = new Intent(mActivity, StartAndArriveActivity.class);
         intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -513,9 +526,9 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 BenPositionForScan = BenPosition;
                 isRescan = false;
                 if (BuildConfig.DEBUG) {
-                    //   OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
+//                       OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
                     EnterBarocodeManually();
-//                   OpenScanBarcodeScreen();
+              //     OpenScanBarcodeScreen();
                 } else {
                     OpenScanBarcodeScreen();
                 }
@@ -531,7 +544,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 if (BuildConfig.DEBUG) {
                     //  OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
                     EnterBarocodeManually();
-////                   OpenScanBarcodeScreen();
+ //                  OpenScanBarcodeScreen();
                 } else {
                     OpenScanBarcodeScreen();
                 }

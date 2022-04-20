@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.NewOrderReleaseActivity">
+
+    <include
+        android:id="@id/appbarLayout"
+        layout="@layout/default_toolbar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rec_rel_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/edt_other"
+        android:layout_below="@id/appbarLayout" />
+
+    <EditText
+        android:id="@+id/edt_other"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5sdp"
+        android:paddingTop="@dimen/_2sdp"
+        android:paddingLeft="@dimen/_10sdp"
+        android:background="@drawable/editbox_bg"
+        android:gravity="start"
+        android:lines="4"
+        android:hint="Enter remarks*"
+        android:maxLines="4"
+        android:layout_above="@+id/ll_main"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/new_shadow_background"
+            android:padding="@dimen/_5sdp"
+            app:cardCornerRadius="@dimen/_8sdp"
+            app:cardElevation="4dp"
+            app:cardMaxElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <Button
+                android:id="@+id/btn_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:gravity="center"
+                android:text="Back"
+                android:textAllCaps="false"
+                android:textColor="@color/bg_new_color"
+                android:textSize="@dimen/label" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/new_shadow_background"
+            android:padding="@dimen/_5sdp"
+            app:cardCornerRadius="@dimen/_8sdp"
+            app:cardElevation="4dp"
+            app:cardMaxElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:gravity="center"
+                android:text="Submit"
+                android:textAllCaps="false"
+                android:textColor="@color/bg_new_color"
+                android:textSize="@dimen/label" />
+
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+</RelativeLayout>

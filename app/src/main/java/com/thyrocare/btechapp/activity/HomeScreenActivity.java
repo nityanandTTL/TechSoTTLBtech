@@ -1155,6 +1155,15 @@ public class HomeScreenActivity extends AppCompatActivity {
             }
         });
 
+        try {
+            if (BundleConstants.setVisitOrderScreen){
+                BundleConstants.setVisitOrderScreen = false;
+                ll_orders.performClick();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         ll_certificate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.Html;
@@ -51,6 +52,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.btechapp.Controller.OrderReleaseRemarksController;
+import com.thyrocare.btechapp.Controller.PEAuthorizationController;
+import com.thyrocare.btechapp.Controller.PEOrderEditController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.DisplaySelectedTestsListForCancellationAdapter_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.ExpandableTestMasterListDisplayAdapter_new;
@@ -59,6 +63,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFr
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SendSMSAfterBenRemovedRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
@@ -68,7 +73,10 @@ import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.activity.KIOSK_Scanner_Activity;
+import com.thyrocare.btechapp.activity.NewOrderReleaseActivity;
 import com.thyrocare.btechapp.activity.PaymentsActivity;
+import com.thyrocare.btechapp.adapter.OrderReleaseAdapter;
+import com.thyrocare.btechapp.adapter.SlotDateAdapter;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
 import com.thyrocare.btechapp.delegate.OrderRescheduleDialogButtonClickedDelegate;
@@ -77,12 +85,16 @@ import com.thyrocare.btechapp.dialog.RescheduleOrderDialog;
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
+import com.thyrocare.btechapp.models.api.request.PEOrderEditRequestModel;
 import com.thyrocare.btechapp.models.api.request.RemoveBeneficiaryAPIRequestModel;
 import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
 import com.thyrocare.btechapp.models.api.request.ServiceUpdateRequestModel;
 import com.thyrocare.btechapp.models.api.request.SetDispositionDataModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
 import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetPECancelRemarksResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetPETestResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetRemarksResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetTestListResponseModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.DispositionDataModel;
@@ -114,16 +126,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import application.ApplicationController;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CHECK_INTERNET_CONN;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CheckInternetConnectionMsg;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.NO_DATA_FOUND;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.OrdercontainonlyOneBeneficaryCannotremovedMsg;
@@ -150,8 +166,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
     private GPSTracker gpsTracker;
     private StartArriveOrderDetailsAdapter startArriveOrderDetailsAdapter;
     private NestedScrollView nestedScroll_StartArrive;
-    private TextView btn_floating_add_ben;
-    private String strOrderNo;
+    private TextView btn_floating_add_ben, tv_note_res;
+    private String strOrderNo, pincode;
     // add edit ben dialog
     private Dialog bendialog;
     private boolean FlagADDEditBen = false;
@@ -189,9 +205,14 @@ public class StartAndArriveActivity extends AppCompatActivity {
     private String[] paymentItems;
     private int PaymentMode;
     RelativeLayout customSwipeButton2;
-    TextView tv_toolbar;
+    TextView tv_toolbar, tv_timerCount, tv_timerTxt, tv_order_release;
     ImageView iv_back, iv_home;
     String productType;
+    ArrayList<GetPETestResponseModel.DataDTO> peTestArraylist;
+    LinearLayout ll_timer, LL_swipe;
+    ArrayList<GetRemarksResponseModel> remarksArray;
+    CountDownTimer countDownTimer;
+    BottomSheetDialog bottomSheetOrderReschedule, bottomSheetOrderRelease;
 
     @Override
     public void onBackPressed() {
@@ -231,6 +252,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_and_arrive);
         mActivity = StartAndArriveActivity.this;
+
         globalclass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
         gpsTracker = new GPSTracker(mActivity);
@@ -240,7 +262,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         bundle = getIntent().getExtras();
         orderDetailsModel = bundle.getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
         strOrderNo = orderDetailsModel.getVisitId();
-
+        pincode = orderDetailsModel.getAllOrderdetails().get(0).getPincode();
         BundleConstants.addPaymentFlag = 0;
 
         initView();
@@ -252,6 +274,17 @@ public class StartAndArriveActivity extends AppCompatActivity {
             btn_arrive.setVisibility(View.GONE);
             btn_start.setVisibility(View.GONE);
             btn_Proceed.setVisibility(View.VISIBLE);
+            //fungible
+//            if (BundleConstants.companyOrderFlag) {
+            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                btn_floating_add_ben.setVisibility(View.VISIBLE);
+            } else {
+                if (orderDetailsModel.getAllOrderdetails().get(0).getAmountPayable() == 0) {
+                    btn_floating_add_ben.setVisibility(View.GONE);
+                } else {
+                    btn_floating_add_ben.setVisibility(View.VISIBLE);
+                }
+            }
             if (cd.isConnectingToInternet()) {
                 CallOrderDetailAPI("Arrive");
             } else {
@@ -293,6 +326,24 @@ public class StartAndArriveActivity extends AppCompatActivity {
         }
 
     }
+
+  /*  private void initTimer() {
+        if (!InputUtils.isNull(appPreferenceManager.getOrderNo()) &&
+                InputUtils.CheckEqualIgnoreCase(appPreferenceManager.getOrderNo(), orderDetailsModel.getVisitId())) {
+            if (Global.toDisplayTimerFlag) {
+                if (Global.TimerFlag) {
+                    reloadActivity();
+                } else {
+                    displayTimerCount();
+                    ll_timer.setVisibility(View.VISIBLE);
+                }
+            } else {
+                ll_timer.setVisibility(View.GONE);
+            }
+        } else {
+            ll_timer.setVisibility(View.GONE);
+        }
+    }*/
 
     private void SetTitleHead(String head_titl) {
         try {
@@ -352,6 +403,12 @@ public class StartAndArriveActivity extends AppCompatActivity {
         tv_toolbar = findViewById(R.id.tv_toolbar);
         iv_back = findViewById(R.id.iv_back);
         iv_home = findViewById(R.id.iv_home);
+        tv_note_res = (TextView) findViewById(R.id.tv_note_res);
+        ll_timer = findViewById(R.id.ll_timer);
+        LL_swipe = findViewById(R.id.LL_swipe);
+        tv_timerCount = findViewById(R.id.tv_timerCount);
+        tv_timerTxt = findViewById(R.id.tv_timerTxt);
+        tv_order_release = findViewById(R.id.tv_order_release);
         txt_amount = (TextView) findViewById(R.id.txt_amount);
         txtNoRecord = (TextView) findViewById(R.id.txtNoRecord);
         btn_start = (Button) findViewById(R.id.btn_start);
@@ -376,6 +433,48 @@ public class StartAndArriveActivity extends AppCompatActivity {
         } else {
             customSwipeButton2.setVisibility(View.VISIBLE);
         }
+
+        //Mith
+        //fungible
+//        if (BundleConstants.companyOrderFlag) {
+        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            callAPIForPETest();
+        }
+
+    }
+
+    private void reloadActivity() {
+        Global.TimerFlag = false;
+        startActivity(getIntent());
+    }
+
+    private void displayTimerCount() {
+        Global.displayedtimer = true;
+        new CountDownTimer(300000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                String text = String.format(Locale.getDefault(), "Wait for %02d min: %02d sec",
+                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60,
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60);
+                tv_timerCount.setText(text);
+                customSwipeButton2.setEnabled(false);
+                LL_swipe.setBackground(getResources().getDrawable(R.drawable.rounded_background_grey));
+            }
+
+            public void onFinish() {
+                tv_timerCount.setText("Wait for 00:00");
+                tv_timerTxt.setText("Release the order if you did not connect with the customer");
+                customSwipeButton2.setEnabled(true);
+                LL_swipe.setBackground(getResources().getDrawable(R.drawable.rounded_background_green_2));
+            }
+        };
+    }
+
+    private void callAPIForPETest() {
+
+        String productType = "Integration_Order";
+        PEAuthorizationController peAC = new PEAuthorizationController(this);
+        peAC.getAuthorizationToken(0, orderDetailsModel.getAllOrderdetails().get(0).getPincode(), orderDetailsModel.getAllOrderdetails().get(0).getVisitId());
     }
 
     private void initListerners() {
@@ -383,7 +482,16 @@ public class StartAndArriveActivity extends AppCompatActivity {
         customSwipeButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onReleaseButtonClicked();
+                //TODO for testing order release.
+                //fungible
+//                if (BundleConstants.companyOrderFlag) {
+                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                    onOrderRelease();
+                } else {
+                    onReleaseButtonClicked();
+                }
+
+
             }
         });
 
@@ -464,6 +572,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     if (isNetworkAvailable(mActivity)) {
                         VenuPuntureUtils.ClearVenupumtureTempGlobalArry();
 //                                        stopService(new Intent(getApplicationContext(), TrackerService.class));
+                        //fungible
+//                        if (BundleConstants.callOTPFlag == 0 && !BundleConstants.companyOrderFlag) {
                         if (BundleConstants.callOTPFlag == 0 && !Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                             callOrderStatusChangeApi(3, "Arrive", "", "");
                         } else {
@@ -487,9 +597,42 @@ public class StartAndArriveActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
 
+                    //fungible
+//                    if (BundleConstants.companyOrderFlag) {
                     if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                         if (checkBeneficiaryDtls()) {
-                            bottomsheetScanBarcode();
+                            String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
+                            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+
+                            View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+                            TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+                            tv_text.setText(string);
+
+                            Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+                            btn_yes.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    bottomSheetDialog.dismiss();
+                                    Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+                                    intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+                                    startActivity(intentOrderBooking);
+//                                    finish();
+                                }
+                            });
+
+                            Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+                            btn_no.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    bottomSheetDialog.dismiss();
+
+                                }
+                            });
+
+                            bottomSheetDialog.setContentView(bottomSheet);
+                            bottomSheetDialog.setCancelable(false);
+                            bottomSheetDialog.show();
                         /*AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
                         alertDialog.setMessage("You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?");
                         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
@@ -511,13 +654,47 @@ public class StartAndArriveActivity extends AppCompatActivity {
                         alertDialog.show();*/
                         }
                     } else {
+                        //fungible
+//                        if (BundleConstants.companyOrderFlag) {
                         if (orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                             //To check ben details for DSA migration order
-                            if (checkBeneficiaryDtls()){
-                                bottomsheetScanBarcode();
+                            if (checkBeneficiaryDtls()) {
+                                String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
+                                final BottomSheetDialog bottomSheetDialog2 = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+
+                                View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+                                TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+                                tv_text.setText(string);
+
+                                Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+                                btn_yes.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        bottomSheetDialog2.dismiss();
+                                        Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+                                        intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+                                        startActivity(intentOrderBooking);
+//                                        finish();
+                                    }
+                                });
+
+                                Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+                                btn_no.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        bottomSheetDialog2.dismiss();
+
+                                    }
+                                });
+
+                                bottomSheetDialog2.setContentView(bottomSheet);
+                                bottomSheetDialog2.setCancelable(false);
+                                bottomSheetDialog2.show();
+//                                bottomsheetScanBarcode();
                             }
                         } else {
-                            if(checkBeneficiaryDtls()){
+                            if (checkBeneficiaryDtls()) {
                                 totalAmountPayable = 0;
                                 setpayMentActivity();
                             }
@@ -554,10 +731,14 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                 && orderDetailsModel.getAllOrderdetails().get(0).getBenMaster() != null
                                 && orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().size() > 3) {
 
+                            //fungible
+//                            if (BundleConstants.companyOrderFlag) {
                             if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                 btn_floating_add_ben.setVisibility(View.VISIBLE);
                             } else {
                                 //TODO hide add ben for TC PE DSA order
+                                //fungible
+//                                if (BundleConstants.companyOrderFlag) {
                                 if (orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                                     btn_floating_add_ben.setVisibility(View.GONE);
                                 } else {
@@ -576,16 +757,26 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
                             }
                         } else {
+                            //fungible
+//                            if (BundleConstants.companyOrderFlag) {
                             if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                 btn_floating_add_ben.setVisibility(View.VISIBLE);
                             } else {
+                                //fungible
+//                                if (BundleConstants.companyOrderFlag) {
                                 if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                     btn_floating_add_ben.setVisibility(View.VISIBLE);
                                 } else {
                                     if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
                                         btn_floating_add_ben.setVisibility(View.GONE);
                                     } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
-                                        btn_floating_add_ben.setVisibility(View.VISIBLE);
+                                        //fungible
+//                                        if (BundleConstants.companyOrderFlag) {
+                                        if (orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
+                                            btn_floating_add_ben.setVisibility(View.GONE);
+                                        } else {
+                                            btn_floating_add_ben.setVisibility(View.VISIBLE);
+                                        }
                                     } else {
                                         btn_floating_add_ben.setVisibility(View.GONE);
                                     }
@@ -609,6 +800,24 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     }
 
+    private void callAPIforOrderCancellationsRemarks(String s) {
+        if (cd.isConnectingToInternet()) {
+            OrderReleaseRemarksController orrC = new OrderReleaseRemarksController(this);
+            orrC.getReasons(s);
+        } else {
+            Toast.makeText(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onOrderRelease() {
+        if (cd.isConnectingToInternet()) {
+            OrderReleaseRemarksController orc = new OrderReleaseRemarksController(this);
+            orc.getRemarks(BundleConstants.OrderReleaseOptionsID, 0);
+        } else {
+            globalclass.showCustomToast(mActivity, mActivity.getResources().getString(R.string.plz_chk_internet));
+        }
+    }
+
     private void bottomsheetScanBarcode() {
         final BottomSheetDialog bottomSheetDialog1;
         String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
@@ -624,11 +833,12 @@ public class StartAndArriveActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    bottomSheetDialog1.dismiss();
+//                    bottomSheetDialog1.dismiss();
                     Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
-//                    intentOrderBooking.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intentOrderBooking.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
                     startActivity(intentOrderBooking);
+                    bottomSheetDialog1.dismiss();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -860,7 +1070,41 @@ public class StartAndArriveActivity extends AppCompatActivity {
         }
 
         if (totalAmountPayable == 0) {
-            bottomsheetScanBarcode();
+            String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
+
+            final BottomSheetDialog bottomSheetDialog3 = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+
+            View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+            TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+            tv_text.setText(string);
+
+            Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+            btn_yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetDialog3.dismiss();
+                    Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+                    intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+                    startActivity(intentOrderBooking);
+//                    finish();
+                }
+            });
+
+            Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+            btn_no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetDialog3.dismiss();
+
+                }
+            });
+
+            bottomSheetDialog3.setContentView(bottomSheet);
+            bottomSheetDialog3.setCancelable(false);
+            bottomSheetDialog3.show();
+
+//            bottomsheetScanBarcode();
 
            /* AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
             alertDialog.setMessage("You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?");
@@ -1257,7 +1501,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
             try {
                 GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
 //                    Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getAllVisitDetails(appPreferenceManager.getLoginResponseModel().getUserID());
-                Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getOrderDetail(BundleConstants.setSelectedOrder);
+                Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getOrderDetail(BundleConstants.setSelectedOrder.trim());
                 globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.fetchingOrders), false);
                 fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
                     @Override
@@ -1280,6 +1524,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                             orderDetailsModel.setAppointmentDate(orderVisitDetailsModel.getAppointmentDate());
                                             orderDetailsModel.setBtechName(orderVisitDetailsModel.getBtechName());
                                             orderDetailsModel.setAddBen(orderDetailsModel.isEditOrder());
+                                            orderDetailsModel.setEditME(orderDetailsModel.isEditME());
                                             if (orderDetailsModel.getBenMaster() != null && orderDetailsModel.getBenMaster().size() > 0) {
                                                 for (BeneficiaryDetailsModel beneficiaryDetailsModel :
                                                         orderDetailsModel.getBenMaster()) {
@@ -1386,9 +1631,43 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 }
                 txt_amount.setText(mActivity.getResources().getString(R.string.rupee_symbol) + " " + orderDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
             }
+            //TO show Time and note
+            String orderTime = orderDetailsModel.getAllOrderdetails().get(0).getAppointmentDate() + " " + DateUtil.Req_Date_Req(orderDetailsModel.getAllOrderdetails().get(0).getSlot(), "hh:mm a", "HH:mm:ss");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            boolean toShowRemainingTime = false;
+            long minutes = 0;
+            try {
+                Date slotDate = dateFormat.parse(orderTime);
+                Date currentDate = new Date();
+                if (currentDate.getTime() < slotDate.getTime()) {
+                    long diff = slotDate.getTime() - currentDate.getTime();
+                    long seconds = diff / 1000;
+                    minutes = seconds / 60;
+                    if (minutes <= 30) {
+                        tv_note_res.setVisibility(View.VISIBLE);
+                        toShowRemainingTime = true;
+                    } else if (minutes <= 60) {
+                        tv_note_res.setVisibility(View.GONE);
+                        toShowRemainingTime = true;
+                    } else {
+                        tv_note_res.setVisibility(View.GONE);
+                        toShowRemainingTime = false;
+                    }
+                } else {
+                    tv_note_res.setVisibility(View.GONE);
+                    toShowRemainingTime = false;
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            //^^^^TO show Time and note^^^^
+
             txtNoRecord.setVisibility(View.GONE);
             recyle_OrderDetail.setVisibility(View.VISIBLE);
-            startArriveOrderDetailsAdapter = new StartArriveOrderDetailsAdapter(mActivity, orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getBenMaster(), status);
+
+            //Sushil
+            startArriveOrderDetailsAdapter = new StartArriveOrderDetailsAdapter(mActivity, orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getBenMaster(), status, this, toShowRemainingTime, minutes);
             startArriveOrderDetailsAdapter.setOnItemClickListener(new StartArriveOrderDetailsAdapter.OnClickListeners() {
                 @Override
                 public void onEditBenClicked(OrderVisitDetailsModel orderVisitDetailsModel, BeneficiaryDetailsModel SelectedbeneficiaryDetailsModel, int position, String str_benProduct) {
@@ -1400,7 +1679,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     intent.putExtra(BundleConstants.BENEFICIARY_DETAILS_MODEL, SelectedbeneficiaryDetailsModel);
                     intent.putExtra("IsAddBen", FlagADDEditBen);
                     intent.putExtra("SelectedBenPosition", PSelected_position);
-                    intent.putExtra(BundleConstants.BENPRODUCT,str_benProduct);
+                    intent.putExtra(BundleConstants.BENPRODUCT, str_benProduct);
                     startActivityForResult(intent, BundleConstants.ADDEDITBENREQUESTCODE);
                 }
 
@@ -1439,6 +1718,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
             recyle_OrderDetail.setLayoutManager(mLayoutManager);
             recyle_OrderDetail.setAdapter(startArriveOrderDetailsAdapter);
 
+//            displayDelayTimer(orderDetailsModel);
 
         } else {
             btn_start.setEnabled(false);
@@ -1729,6 +2009,105 @@ public class StartAndArriveActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void displayBottomsheet(ArrayList<GetRemarksResponseModel> arrayList) {
+
+        bottomSheetOrderRelease = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+
+        final View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.layout_bottomsheet_pe_release, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+        RecyclerView rec_orderRelease = bottomSheet.findViewById(R.id.rec_orderRelease);
+        TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+        tv_text.setText("Select reason for not serving");
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rec_orderRelease.setLayoutManager(linearLayoutManager);
+
+        SlotDateAdapter orAdapter = new SlotDateAdapter(this, arrayList);
+        rec_orderRelease.setAdapter(orAdapter);
+
+        bottomSheetOrderRelease.setContentView(bottomSheet);
+        bottomSheetOrderRelease.setCancelable(true);
+        bottomSheetOrderRelease.show();
+
+    }
+
+    public void remarksArrayList(ArrayList<GetRemarksResponseModel> responseModelArrayList, int i) {
+        remarksArray = new ArrayList<>();
+        remarksArray = responseModelArrayList;
+        if (i == 0) {
+            setBottomSheet(remarksArray, i);
+        } else {
+            displayBottomsheet(remarksArray);
+        }
+    }
+
+    private void setBottomSheet(ArrayList<GetRemarksResponseModel> remarksArray, int i) {
+        bottomSheetOrderReschedule = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+
+        final View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.layout_bottomsheet_pe_release, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+
+        RecyclerView rec_orderRelease = bottomSheet.findViewById(R.id.rec_orderRelease);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rec_orderRelease.setLayoutManager(linearLayoutManager);
+
+        OrderReleaseAdapter orAdapter = new OrderReleaseAdapter(this, remarksArray);
+        rec_orderRelease.setAdapter(orAdapter);
+
+        bottomSheetOrderReschedule.setContentView(bottomSheet);
+        bottomSheetOrderReschedule.setCancelable(true);
+        bottomSheetOrderReschedule.show();
+    }
+
+
+    public void onRemarksClick(GetRemarksResponseModel getRemarksResponseModel, int position) {
+        if (bottomSheetOrderReschedule.isShowing()) {
+            bottomSheetOrderReschedule.dismiss();
+        }
+        Global.selectedPosition = position;
+        Global.selectedRemarksID = getRemarksResponseModel.getId();
+        if (Integer.parseInt(getRemarksResponseModel.getReCallRemarksId()) != 0) {
+            OrderReleaseRemarksController orc = new OrderReleaseRemarksController(this);
+            orc.getRemarks(getRemarksResponseModel.getReCallRemarksId().toString(), 1);
+        } else {
+            callAPIforOrderCancellationsRemarks(getRemarksResponseModel.getId().toString());
+        }
+
+    }
+
+    public void getReasons(ArrayList<GetPECancelRemarksResponseModel> responseModelArrayList, String ID) {
+        ArrayList<GetPECancelRemarksResponseModel> arrayList = new ArrayList<>();
+        arrayList = responseModelArrayList;
+        Intent intent = new Intent(this, NewOrderReleaseActivity.class);
+        intent.putExtra(BundleConstants.RELEASE_REMARKS, arrayList);
+        intent.putExtra(BundleConstants.ORDER, strOrderNo);
+        intent.putExtra(BundleConstants.ORDER_SLOTID, orderDetailsModel.getSlotId());
+        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+        intent.putExtra(BundleConstants.REMARKS_ID, ID);
+//        intent.putExtra(BundleConstants.POS, 3);
+        intent.putExtra(BundleConstants.PINCODE, pincode);
+        startActivity(intent);
+
+    }
+
+    public void onClickposition(GetRemarksResponseModel getRemarksResponseModel) {
+        if (bottomSheetOrderRelease.isShowing()) {
+            bottomSheetOrderRelease.dismiss();
+        }
+        callAPIforOrderCancellationsRemarks(getRemarksResponseModel.getId().toString());
+
+    }
+
+    public void getTestList(GetPETestResponseModel getPETestResponseModel) {
+        peTestArraylist = new ArrayList<>();
+        peTestArraylist = getPETestResponseModel.getData();
+    }
+
+    public void pePatientDetailsUpdated() {
+        BundleConstants.setRefreshStartArriveActivity = 1;
+        startActivity(getIntent());
     }
 
     public class Btech_AsyncLoadBookingFreqApi extends AsyncTask<Void, Void, String> {
@@ -2329,10 +2708,12 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     removebenModel.setIsAdded(orderVisitDetailsModel.getAllOrderdetails().get(0).isAddBen() ? "1" : "0");
                     bottomSheetDialog.dismiss();
                     if (cd.isConnectingToInternet()) {
+                        //fungible
+//                        if (BundleConstants.companyOrderFlag) {
                         if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                             if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
-                                CallRemoveBenAPI(appPreferenceManager.getfetchOrderDetailsResponseModel(), removebenModel, orderVisitDetailsModel.getVisitId(), selectedbeneficiaryDetailsModel.getBenId());
-                                //  CallRemoveBenAPI(removebenModel);
+                                callAPIforOrderEditDelete("Delete", selectedbeneficiaryDetailsModel.getBenId());
+                                //   CallRemoveBenAPI(removebenModel);
                             } else {
                                 CallsendOTPAPIforOrderEdit("Delete", orderVisitDetailsModel, orderVisitDetailsModel.getVisitId(), selectedbeneficiaryDetailsModel.getBenId());
                             }
@@ -2385,6 +2766,94 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 }
             }).show();
 */
+        }
+    }
+
+    private void callAPIforOrderEditDelete(String action, int benId) {
+        /*for (int i = 0; i < orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
+            if (benId == orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getBenId()){
+                orderDetailsModel.getAllOrderdetails()
+            }
+
+        }*/
+
+        ArrayList<PEOrderEditRequestModel.DataDTO.ExtraPayloadDTO.TestsDTO> dtoArrayList = new ArrayList<>();
+        PEOrderEditRequestModel peOrderEditRequestModel = new PEOrderEditRequestModel();
+        PEOrderEditRequestModel.DataDTO dataDTO = new PEOrderEditRequestModel.DataDTO();
+        PEOrderEditRequestModel.DataDTO.ExtraPayloadDTO extraPayloadDTO;
+        dataDTO.setPartner_order_id(orderDetailsModel.getVisitId());
+        dataDTO.setEvent(BundleConstants.EDIT_TEST);
+        dataDTO.setUserId(appPreferenceManager.getLoginResponseModel().getUserID());
+        dataDTO.setChild_order_id("");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy' 'HH:mm:ss", Locale.getDefault());
+        String currentDateandTime = sdf.format(new Date());
+
+        extraPayloadDTO = new PEOrderEditRequestModel.DataDTO.ExtraPayloadDTO();
+        extraPayloadDTO.setEvent_timestamp(currentDateandTime);
+
+        dataDTO.setExtra_payload(extraPayloadDTO);
+
+        for (int i = 0; i < orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
+            if (benId != orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getBenId()) {
+                ArrayList<String> strArr = new ArrayList<>();
+                String strTest = orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestsCode();
+                String[] str = strTest.split(",");
+                for (String s : str) {
+                    String str1 = s.trim();
+                    strArr.add(str1);
+                }
+
+                for (int j = 0; j < strArr.size(); j++) {
+                    for (int k = 0; k < orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().size(); k++) {
+                        if (strArr.get(j).equalsIgnoreCase(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTests())) {
+                            PEOrderEditRequestModel.DataDTO.ExtraPayloadDTO.TestsDTO testsDTO = new PEOrderEditRequestModel.DataDTO.ExtraPayloadDTO.TestsDTO();
+                            if (orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType().equalsIgnoreCase("test") || orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType().equalsIgnoreCase("Profile")) {
+                                testsDTO.setDos_code(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTests());
+                                testsDTO.setLab_dos_name(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTests());
+                            } else if (orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType().equalsIgnoreCase("package")) {
+                                if (!InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getProjId()) ||
+                                        !InputUtils.CheckEqualIgnoreCase(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getProjId(), "")) {
+                                    testsDTO.setDos_code(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getProjId());
+                                    testsDTO.setLab_dos_name(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getProjId());
+                                } else {
+                                    testsDTO.setDos_code(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTests());
+                                    testsDTO.setLab_dos_name(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTests());
+                                }
+                            }
+
+                            for (int l = 0; l < peTestArraylist.size(); l++) {
+                                if (strArr.get(j).equalsIgnoreCase(peTestArraylist.get(l).getName()) || strArr.get(j).equalsIgnoreCase(peTestArraylist.get(l).getPartner_lab_test_id()) || strArr.get(j).equalsIgnoreCase(peTestArraylist.get(l).getDos_code())) {
+                                    testsDTO.setPrice(Integer.parseInt(peTestArraylist.get(l).getPrice()));
+                                }
+                            }
+                            testsDTO.setPartner_patient_id(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getLeadId());
+                            testsDTO.setType(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType());
+                            dtoArrayList.add(testsDTO);
+                            break;
+                        }
+                    }
+
+                }
+            }
+        }
+
+
+        extraPayloadDTO.setTests(dtoArrayList);
+        dataDTO.setExtra_payload(extraPayloadDTO);
+
+        peOrderEditRequestModel.setData(dataDTO);
+
+        callAPIFORPEORDEREDIT(action, peOrderEditRequestModel, 1);
+
+    }
+
+    private void callAPIFORPEORDEREDIT(String action, PEOrderEditRequestModel peOrderEditRequestModel, int i) {
+        if (cd.isConnectingToInternet()) {
+            PEOrderEditController peOrderEditController = new PEOrderEditController(this);
+            peOrderEditController.postPEOrderEdit(action, peOrderEditRequestModel, i);
+        } else {
+            globalclass.showCustomToast(mActivity, CHECK_INTERNET_CONN, Toast.LENGTH_SHORT);
         }
     }
 
@@ -2537,14 +3006,20 @@ public class StartAndArriveActivity extends AppCompatActivity {
         } else if (strButton.equalsIgnoreCase("Arrive")) {
             try {
                 if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
+                    //fungible
+//                    if (BundleConstants.companyOrderFlag) {
                     if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                         btn_floating_add_ben.setVisibility(View.VISIBLE);
                     } else {
                         btn_floating_add_ben.setVisibility(View.GONE);
                     }
+                    //fungible
+//                     }else if(BundleConstants.companyOrderFlag){
                 } else if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     btn_floating_add_ben.setVisibility(View.VISIBLE);
                 } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
+                    //fungible
+//                    if (BundleConstants.companyOrderFlag) {
                     if (orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                         btn_floating_add_ben.setVisibility(View.GONE);
                     } else {
@@ -2555,6 +3030,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                //fungible
+//                if (BundleConstants.companyOrderFlag) {
                 if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     btn_floating_add_ben.setVisibility(View.VISIBLE);
                 } else {
@@ -2636,7 +3113,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void startTrackerService() {
@@ -2654,7 +3130,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
     // TODO ADD and Edit Ben Functionality-------
 
     private void CallsendOTPAPIforOrderEdit(final String Action, final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
@@ -2691,7 +3166,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
     }
 
     private void ShowDialogToVerifyOTP(final String Action, final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
-
 
         CustomDialogforOTPValidation = new Dialog(mActivity);
         CustomDialogforOTPValidation.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -2772,7 +3246,13 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             CustomDialogforOTPValidation.dismiss();
                         }
                         if (Action.equalsIgnoreCase("Delete")) {
-                            CallRemoveBenAPI(appPreferenceManager.getfetchOrderDetailsResponseModel(), removebenModel, orderNo, benId);
+                            //fungible
+//                            if (BundleConstants.companyOrderFlag) {
+                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                callAPIforOrderEditDelete(Action, removebenModel.getBenId());
+                            } else {
+                                CallRemoveBenAPI(appPreferenceManager.getfetchOrderDetailsResponseModel(), removebenModel, orderNo, benId);
+                            }
                         }
                     } else {
                         globalclass.showCustomToast(mActivity, "Invalid OTP.");
@@ -2790,9 +3270,11 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 globalclass.showCustomToast(mActivity, MSG_SERVER_EXCEPTION);
             }
         });
-
     }
 
+    private void displayDelayTimer(OrderVisitDetailsModel orderVisitDetailsModel) {
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -2826,4 +3308,90 @@ public class StartAndArriveActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
+            Call<FetchOrderDetailsResponseModel> fetchOrderDetailsResponseModelCall = getAPIInterface.getOrderDetail(BundleConstants.setSelectedOrder);
+            fetchOrderDetailsResponseModelCall.enqueue(new Callback<FetchOrderDetailsResponseModel>() {
+                @Override
+                public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
+                    FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
+                    if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails() != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
+                        for (OrderVisitDetailsModel orderVisitDetailsModel : fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
+                            if (orderVisitDetailsModel.getVisitId().equalsIgnoreCase(strOrderNo)) {
+                                if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
+                                    if (orderVisitDetailsModel.getAllOrderdetails().get(0).getTimestamp() != null && orderVisitDetailsModel.getAllOrderdetails().get(0).getCancelSMSSentTime() != null) {
+                                        if (!InputUtils.isNull(appPreferenceManager.getOrderNo()) &&
+                                                InputUtils.CheckEqualIgnoreCase(appPreferenceManager.getOrderNo(), orderDetailsModel.getVisitId())) {
+                                            /*if (Global.TimerFlag) {
+                                                reloadActivity();
+                                            } else {*/
+                                            try {
+                                                String TimeStamp = DateUtil.Req_Date_Req(orderVisitDetailsModel.getAllOrderdetails().get(0).getTimestamp(), "yyyy-MM-dd'T'HH:mm:ss.SSS", "yyyy-MM-dd HH:mm:ss");
+                                                String CancelSMS = DateUtil.Req_Date_Req(orderVisitDetailsModel.getAllOrderdetails().get(0).getCancelSMSSentTime(), "yyyy-MM-dd'T'HH:mm:ss.SSS", "yyyy-MM-dd HH:mm:ss");
+                                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                                Date ServerTime = dateFormat.parse(TimeStamp);
+                                                Date SMSCancelTime = dateFormat.parse(CancelSMS);
+                                                long difference = ServerTime.getTime() - SMSCancelTime.getTime();
+                                                long futuerMili = 300000 - difference;
+                                                if (difference < 300000) {
+                                                    ll_timer.setVisibility(View.VISIBLE);
+                                                    if (countDownTimer != null) {
+                                                        countDownTimer.cancel();
+                                                    }
+                                                    countDownTimer = new CountDownTimer(futuerMili, 1000) {
+
+                                                        public void onTick(long millisUntilFinished) {
+                                                            String text = String.format(Locale.getDefault(), "Wait for %02d min: %02d sec", TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) % 60, TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60);
+                                                            tv_timerCount.setText(text);
+                                                            tv_order_release.setTextColor(getResources().getColor(R.color.gray));
+                                                            customSwipeButton2.setEnabled(false);
+                                                            LL_swipe.setBackground(getResources().getDrawable(R.drawable.rounded_background_grey));
+                                                        }
+
+                                                        public void onFinish() {
+                                                            tv_timerCount.setText("Wait for 00:00");
+                                                            tv_order_release.setTextColor(getResources().getColor(R.color.bg_new_color));
+                                                            tv_timerTxt.setText("Release the order if you did not connect with the customer");
+                                                            customSwipeButton2.setEnabled(true);
+                                                            LL_swipe.setBackground(getResources().getDrawable(R.drawable.rounded_background_green_2));
+                                                        }
+                                                    }.start();
+                                                } else {
+                                                    ll_timer.setVisibility(View.GONE);
+                                                    if (countDownTimer != null) {
+                                                        countDownTimer.cancel();
+                                                    }
+                                                }
+
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+//                                            }
+                                        } else {
+                                            ll_timer.setVisibility(View.GONE);
+                                        }
+                                    } else {
+                                        ll_timer.setVisibility(View.GONE);
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<FetchOrderDetailsResponseModel> call, Throwable t) {
+                    globalclass.showCustomToast(mActivity, SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        initTimer();
+    }
 }

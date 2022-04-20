@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.google.gson.Gson;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.AddEditBenificaryActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.CheckoutWoeActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.SplashActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -62,6 +63,8 @@ public class WOEController {
     AppPreferenceManager appPreferenceManager;
     int flag;
     private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels = new ArrayList<>();
+    boolean companyFlag;
+
 
     public WOEController(CheckoutWoeActivity checkoutWoeActivity) {
         this.activity = checkoutWoeActivity;
@@ -82,6 +85,12 @@ public class WOEController {
     }
 
     public void CallWorkOrderEntryAPI(OrderBookingRequestModel orderBookingRequestModel, final OrderVisitDetailsModel orderVisitDetailsModel, final String test, final String newTimeaddTwoHrs, final String newTimeaddTwoHalfHrs, final TextView btn_Pay) {
+
+        try {
+            companyFlag = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             for (int i = 0; i < orderBookingRequestModel.getBendtl().size(); i++) {
@@ -119,12 +128,14 @@ public class WOEController {
                     globalClass.hideProgressDialog(activity);
                     if (res.isSuccessful() && res.body() != null) {
                         if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                            //fungible
+//                        if (BundleConstants.companyOrderFlag) {
                             //TODO local storage for B2B login
-    //                        RemoveOrderFromLocal(orderVisitDetailsModel.getVisitId());
+                            //                        RemoveOrderFromLocal(orderVisitDetailsModel.getVisitId());
                             //    clearOrderFromLocal(orderVisitDetailsModel.getVisitId());
                             toDisplayWOEDialogPE(orderVisitDetailsModel, test, newTimeaddTwoHrs, newTimeaddTwoHalfHrs);
                         } else {
-    //                        RemoveOrderFromLocal(orderVisitDetailsModel.getVisitId());
+                            //                        RemoveOrderFromLocal(orderVisitDetailsModel.getVisitId());
                             toDisplayWOEDialogTC(orderVisitDetailsModel, test, newTimeaddTwoHrs, newTimeaddTwoHalfHrs);
                         }
                     } else {
@@ -214,6 +225,7 @@ public class WOEController {
         tv_msg.setText("Order Served");
         tv_msg1.setText("Work order entry successful.");
 
+
         btn_add_on.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -241,55 +253,22 @@ public class WOEController {
                     dialog_batch.dismiss();
                     String remark = orderVisitDetailsModel.getVisitId();
                     new LogUserActivityTagging(activity, BundleConstants.WOE, remark);
-                    //TODO clear order from local after WOE done
-                    if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
-                            && test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA")
-                            && test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS)) {
-                        Logger.error("should print revisit dialog for both: ");
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS/RBS and INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Constants.Finish_barcodeScanAcitivty = true;
-                                        Constants.isWOEDone = true;
-                                        ResetOTPFlag();
-                                        if (BundleConstants.isKIOSKOrder) {
-                                            activity.finish();
-                                            Intent intent = new Intent(activity, KIOSK_Scanner_Activity.class);
-                                            activity.startActivity(intent);
-                                        } else {
-                                            Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            activity.startActivity(intent);
-//                                            activity.startActivity(new Intent(activity, HomeScreenActivity.class));
-//                                                            mActivity.finish();
-                                        }
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setCancelable(false)
-                                .show();
 
-                    } else if (test.toUpperCase().contains(AppConstants.PPBS)
-                            && test.toUpperCase().contains(AppConstants.RBS)
-                            && test.toUpperCase().contains(AppConstants.FBS)) {
 
+                    if (BundleConstants.setSecondOrderFlag) {
+                        BundleConstants.setSecondOrderFlag = false;
                         Logger.error("should print revisit dialog for ppbs and rbs: ");
 
                         Logger.error("for PPBS and RBS");
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS and RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+//                        builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS and RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                        builder.setMessage("Please note you have to revisit at customer place to collect sample for non-fasting tests/profiles in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         Constants.Finish_barcodeScanAcitivty = true;
                                         Constants.isWOEDone = true;
+                                        BundleConstants.companyOrderFlag = false;
                                         ResetOTPFlag();
                                         if (BundleConstants.isKIOSKOrder) {
                                             activity.finish();
@@ -304,120 +283,21 @@ public class WOEController {
                                         }
                                     }
                                 })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                /*.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                     }
-                                })
-                                .setCancelable(false)
-                                .show();
-
-                    } else if (test.toUpperCase().contains(AppConstants.INSPP) && test.toUpperCase().contains(AppConstants.INSFA)) {
-                        Logger.error("should print revisit dialog for insfa: ");
-                        Logger.error("for INSPP");
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setMessage("Please note you have to revisit at customer place to collect sample for INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Constants.Finish_barcodeScanAcitivty = true;
-                                        Constants.isWOEDone = true;
-                                        ResetOTPFlag();
-                                        if (BundleConstants.isKIOSKOrder) {
-                                            activity.finish();
-                                            Intent intent = new Intent(activity, HomeScreenActivity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            activity.startActivity(intent);
-                                        } else {
-                                            Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            activity.startActivity(intent);
-//                                            activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
-//                                            activity.finish();
-                                        }
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setCancelable(false)
-                                .show();
-
-                    } else if (test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS)) {
-                        Logger.error("should print revisit dialog for rbs: ");
-                        Logger.error("for rbs");
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setMessage("Please note you have to revisit at customer place to collect sample for RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Constants.Finish_barcodeScanAcitivty = true;
-                                        Constants.isWOEDone = true;
-                                        ResetOTPFlag();
-                                        if (BundleConstants.isKIOSKOrder) {
-                                            activity.finish();
-                                            Intent intent = new Intent(activity, HomeScreenActivity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            activity.startActivity(intent);
-                                        } else {
-                                            Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            activity.startActivity(intent);
-//                                            activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
-//                                            activity.finish();
-                                        }
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setCancelable(false)
-                                .show();
-
-                    } else if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)) {
-                        Logger.error("should print revisit dialog for rbs: ");
-                        Logger.error("for ppbs");
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Constants.Finish_barcodeScanAcitivty = true;
-                                        Constants.isWOEDone = true;
-                                        ResetOTPFlag();
-                                        if (BundleConstants.isKIOSKOrder) {
-                                            activity.finish();
-                                            Intent intent = new Intent(activity, HomeScreenActivity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            activity.startActivity(intent);
-                                        } else {
-                                            Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            activity.startActivity(intent);
-//                                            activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
-//                                            activity.finish();
-                                        }
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
+                                })*/
                                 .setCancelable(false)
                                 .show();
                     } else {
+
+
                         Logger.error("testcode in else " + test.toUpperCase());
                         Constants.Finish_barcodeScanAcitivty = true;
                         Constants.isWOEDone = true;
+                        BundleConstants.companyOrderFlag = false;
                         ResetOTPFlag();
                         if (BundleConstants.isKIOSKOrder) {
                             activity.finish();
@@ -431,6 +311,200 @@ public class WOEController {
 //                            activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
 //                            activity.finish();
                         }
+/*
+                        //TODO clear order from local after WOE done
+                        if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
+                                && test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA")
+                                && test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS)) {
+                            Logger.error("should print revisit dialog for both: ");
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS/RBS and INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Constants.Finish_barcodeScanAcitivty = true;
+                                            Constants.isWOEDone = true;
+                                            ResetOTPFlag();
+                                            if (BundleConstants.isKIOSKOrder) {
+                                                activity.finish();
+                                                Intent intent = new Intent(activity, KIOSK_Scanner_Activity.class);
+                                                activity.startActivity(intent);
+                                            } else {
+
+                                                restart(activity);
+                                            *//*Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            activity.startActivity(intent);*//*
+//                                            activity.startActivity(new Intent(activity, HomeScreenActivity.class));
+//                                                            mActivity.finish();
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setCancelable(false)
+                                    .show();
+
+                        } else if (test.toUpperCase().contains(AppConstants.PPBS)
+                                && test.toUpperCase().contains(AppConstants.RBS)
+                                && test.toUpperCase().contains(AppConstants.FBS)) {
+
+                            Logger.error("should print revisit dialog for ppbs and rbs: ");
+
+                            Logger.error("for PPBS and RBS");
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS and RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Constants.Finish_barcodeScanAcitivty = true;
+                                            Constants.isWOEDone = true;
+                                            ResetOTPFlag();
+                                            if (BundleConstants.isKIOSKOrder) {
+                                                activity.finish();
+                                                Intent intent = new Intent(activity, KIOSK_Scanner_Activity.class);
+                                                activity.startActivity(intent);
+                                            } else {
+                                                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                activity.startActivity(intent);
+//                                            activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+                                                //activity.finish();
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setCancelable(false)
+                                    .show();
+
+                        } else if (test.toUpperCase().contains(AppConstants.INSPP) && test.toUpperCase().contains(AppConstants.INSFA)) {
+                            Logger.error("should print revisit dialog for insfa: ");
+                            Logger.error("for INSPP");
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setMessage("Please note you have to revisit at customer place to collect sample for INSPP in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Constants.Finish_barcodeScanAcitivty = true;
+                                            Constants.isWOEDone = true;
+                                            ResetOTPFlag();
+                                            if (BundleConstants.isKIOSKOrder) {
+                                                activity.finish();
+                                                Intent intent = new Intent(activity, HomeScreenActivity.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                activity.startActivity(intent);
+                                            } else {
+                                                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                activity.startActivity(intent);
+//                                            activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+//                                            activity.finish();
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setCancelable(false)
+                                    .show();
+
+                        } else if (test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS)) {
+                            Logger.error("should print revisit dialog for rbs: ");
+                            Logger.error("for rbs");
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setMessage("Please note you have to revisit at customer place to collect sample for RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Constants.Finish_barcodeScanAcitivty = true;
+                                            Constants.isWOEDone = true;
+                                            ResetOTPFlag();
+                                            if (BundleConstants.isKIOSKOrder) {
+                                                activity.finish();
+                                                Intent intent = new Intent(activity, HomeScreenActivity.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                activity.startActivity(intent);
+                                            } else {
+                                                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                activity.startActivity(intent);
+//                                            activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+//                                            activity.finish();
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setCancelable(false)
+                                    .show();
+
+                        } else if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)) {
+                            Logger.error("should print revisit dialog for rbs: ");
+                            Logger.error("for ppbs");
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Constants.Finish_barcodeScanAcitivty = true;
+                                            Constants.isWOEDone = true;
+                                            ResetOTPFlag();
+                                            if (BundleConstants.isKIOSKOrder) {
+                                                activity.finish();
+                                                Intent intent = new Intent(activity, HomeScreenActivity.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                activity.startActivity(intent);
+                                            } else {
+                                                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                activity.startActivity(intent);
+//                                            activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+//                                            activity.finish();
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setCancelable(false)
+                                    .show();
+                        } else {
+                            Logger.error("testcode in else " + test.toUpperCase());
+                            Constants.Finish_barcodeScanAcitivty = true;
+                            Constants.isWOEDone = true;
+                            ResetOTPFlag();
+                            if (BundleConstants.isKIOSKOrder) {
+                                activity.finish();
+                                Intent intent = new Intent(activity, HomeScreenActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                activity.startActivity(intent);
+                            } else {
+                                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                activity.startActivity(intent);
+//                            activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+//                            activity.finish();
+                            }
+                        }*/
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -655,7 +729,64 @@ public class WOEController {
                         public void onClick(DialogInterface dialog, int which) {
                             String remark = orderVisitDetailsModel.getVisitId();
                             new LogUserActivityTagging(activity, BundleConstants.WOE, remark);
-                            if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
+
+                            if (BundleConstants.setSecondOrderFlag) {
+                                BundleConstants.setSecondOrderFlag = false;
+                                Logger.error("should print revisit dialog for ppbs and rbs: ");
+
+                                Logger.error("for PPBS and RBS");
+                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+//                        builder.setMessage("Please note you have to revisit at customer place to collect sample for PPBS and RBS in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                builder.setMessage("Please note you have to revisit at customer place to collect sample for non-fasting tests/profiles in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Constants.Finish_barcodeScanAcitivty = true;
+                                                Constants.isWOEDone = true;
+                                                BundleConstants.companyOrderFlag = false;
+                                                ResetOTPFlag();
+                                                if (BundleConstants.isKIOSKOrder) {
+                                                    activity.finish();
+                                                    Intent intent = new Intent(activity, KIOSK_Scanner_Activity.class);
+                                                    activity.startActivity(intent);
+                                                } else {
+                                                    Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                    activity.startActivity(intent);
+//                                            activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+                                                    //activity.finish();
+                                                }
+                                            }
+                                        })
+                                        /*.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })*/
+                                        .setCancelable(false)
+                                        .show();
+                            } else {
+                                Logger.error("testcode in else " + test.toUpperCase());
+                                Constants.Finish_barcodeScanAcitivty = true;
+                                Constants.isWOEDone = true;
+                                BundleConstants.companyOrderFlag = false;
+                                ResetOTPFlag();
+                                if (BundleConstants.isKIOSKOrder) {
+                                    activity.finish();
+                                    Intent intent = new Intent(activity, HomeScreenActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    activity.startActivity(intent);
+                                } else {
+                                    Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    activity.startActivity(intent);
+//                            activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+//                            activity.finish();
+                                }
+                            }
+
+                            /*if (test.toUpperCase().contains(AppConstants.PPBS) && test.toUpperCase().contains(AppConstants.FBS)
                                     && test.toUpperCase().contains("INSPP") && test.toUpperCase().contains("INSFA")
                                     && test.toUpperCase().contains(AppConstants.RBS) && test.toUpperCase().contains(AppConstants.FBS)) {
                                 Logger.error("should print revisit dialog for both: ");
@@ -668,7 +799,7 @@ public class WOEController {
                                                 Constants.isWOEDone = true;
                                                 ResetOTPFlag();
                                                 if (BundleConstants.isKIOSKOrder) {
-    //                                                activity.finish();
+                                                    //                                                activity.finish();
                                                     Intent intent = new Intent(activity, KIOSK_Scanner_Activity.class);
                                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                     activity.startActivity(intent);
@@ -676,9 +807,9 @@ public class WOEController {
                                                     Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
                                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                     activity.startActivity(intent);
-    //                                                activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
-    //                                                activity.startActivity(new Intent(activity, HomeScreenActivity.class));
-    //                                                            mActivity.finish();
+                                                    //                                                activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+                                                    //                                                activity.startActivity(new Intent(activity, HomeScreenActivity.class));
+                                                    //                                                            mActivity.finish();
                                                 }
                                             }
                                         })
@@ -714,8 +845,8 @@ public class WOEController {
                                                     Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
                                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                     activity.startActivity(intent);
-    //                                                activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
-    //                                                activity.finish();
+                                                    //                                                activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+                                                    //                                                activity.finish();
                                                 }
                                             }
                                         })
@@ -748,8 +879,8 @@ public class WOEController {
                                                     Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
                                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                     activity.startActivity(intent);
-    //                                                activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
-    //                                                activity.finish();
+                                                    //                                                activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+                                                    //                                                activity.finish();
                                                 }
                                             }
                                         })
@@ -782,8 +913,8 @@ public class WOEController {
                                                     Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
                                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                     activity.startActivity(intent);
-    //                                                activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
-    //                                                activity.finish();
+                                                    //                                                activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+                                                    //                                                activity.finish();
                                                 }
                                             }
                                         })
@@ -816,7 +947,7 @@ public class WOEController {
                                                     Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
                                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                     activity.startActivity(intent);
-    //                                                activity.finish();
+                                                    //                                                activity.finish();
                                                 }
                                             }
                                         })
@@ -842,10 +973,10 @@ public class WOEController {
                                     Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     activity.startActivity(intent);
-    //                                activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
-    //                                activity.finish();
+                                    //                                activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+                                    //                                activity.finish();
                                 }
-                            }
+                            }*/
                         }
                     }).create();
 
@@ -859,6 +990,8 @@ public class WOEController {
 
     private void ResetOTPFlag() {
         try {
+            //fungible
+//            if (BundleConstants.companyOrderFlag) {
             if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 if (BundleConstants.callOTPFlag == 1) {
                     BundleConstants.callOTPFlag = 0;
@@ -870,6 +1003,20 @@ public class WOEController {
             e.printStackTrace();
         }
     }
+
+
+    public static void restart(Activity activity) {
+        try {
+            BundleConstants.setVisitOrderScreen = true;
+            Intent intent = new Intent(activity, SplashActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
+            activity.finishAffinity();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
 

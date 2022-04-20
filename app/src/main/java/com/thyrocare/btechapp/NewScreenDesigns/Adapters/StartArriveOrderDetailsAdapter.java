@@ -1,5 +1,6 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.text.Html;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.StartAndArriveActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
@@ -19,6 +21,7 @@ import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
@@ -37,12 +40,18 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
     CharSequence[] items;
     private String cancelVisit;
     private String userChoosenReleaseTask;
+    StartAndArriveActivity startAndArriveActivity;
     private boolean isCancelRequesGenereted = false;
     String str_benProduct;
+    boolean toShowRemainingTime;
+    long minutes;
 
 
-    public StartArriveOrderDetailsAdapter(Activity activity, OrderVisitDetailsModel orderVisitDetailsModel, ArrayList<BeneficiaryDetailsModel> BenMasterArray, String Status) {
+    public StartArriveOrderDetailsAdapter(Activity activity, OrderVisitDetailsModel orderVisitDetailsModel, ArrayList<BeneficiaryDetailsModel> BenMasterArray, String Status, StartAndArriveActivity startAndArriveActivity, boolean toShowRemainingTime, long minutes) {
         this.activity = activity;
+        this.startAndArriveActivity = startAndArriveActivity;
+        this.minutes = minutes;
+        this.toShowRemainingTime = toShowRemainingTime;
         this.orderVisitDetailsModel = orderVisitDetailsModel;
         this.BenMasterArray = BenMasterArray;
         layoutInflater = LayoutInflater.from(activity);
@@ -61,8 +70,8 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
         private final TextView tv_FirstBenName, tv_OrderNo, tv_Address, tv_MobileNo, tv_EmailID, tv_AppointmentDateTime, tv_benName, tv_benProduct, tv_benPrice;
         private final ImageView img_editBenDetails, img_DeleteBen, imgCall;
 
-        LinearLayout ll_kits;
-        TextView tv_str_kits;
+        LinearLayout ll_kits, lin_delay_timer;
+        TextView tv_str_kits, tv_delay_timer, tv_note_res;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -89,6 +98,9 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
             img_DeleteBen = (ImageView) itemView.findViewById(R.id.img_DeleteBen);
             ll_kits = itemView.findViewById(R.id.ll_kits);
             tv_str_kits = itemView.findViewById(R.id.tv_str_kits);
+            lin_delay_timer = itemView.findViewById(R.id.lin_delay_timer);
+            tv_delay_timer = itemView.findViewById(R.id.tv_delay_timer);
+            tv_note_res = itemView.findViewById(R.id.tv_note_res);
         }
     }
 
@@ -98,6 +110,7 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
         return new MyViewHolder(itemView);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
@@ -137,6 +150,8 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
             if (isValidForEditing(BenMasterArray.get(position).getTestsCode())) {
                 holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
             } else if (orderVisitDetailsModel.getAllOrderdetails().get(0).isIsdisabledelete()) {
+                //fungible
+//                if (BundleConstants.companyOrderFlag) {
                 if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (BenMasterArray.size() > 1) {
                         checBenDetails(holder, position, orderVisitDetailsModel.getAllOrderdetails().get(0).isIsdisabledelete());
@@ -148,6 +163,8 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                     editSingleBeneficiary(holder, View.GONE);
                 }
             } else if (orderVisitDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
+                //fungible
+//                if (BundleConstants.companyOrderFlag) {
                 if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (BenMasterArray.size() > 1) {
                         checBenDetails(holder, position, false);
@@ -158,7 +175,11 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                     }
                 } else {
                     if (BenMasterArray.size() > 1) {
-                        editSingleBeneficiary(holder, View.VISIBLE);
+                        if (orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()){
+                            editSingleBeneficiary(holder, View.GONE);
+                        }else{
+                            editSingleBeneficiary(holder, View.VISIBLE);
+                        }
                     } else {
                         editSingleBeneficiary(holder, View.GONE);
                     }
@@ -206,6 +227,28 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
 
         InitListener(holder, position);
 
+        displayDelayTimer(holder);
+    }
+
+    private void displayDelayTimer(MyViewHolder holder) {
+        if (toShowRemainingTime) {
+            holder.tv_delay_timer.setVisibility(View.VISIBLE);
+            if (minutes != 0) {
+                if (minutes <= 30) {
+                    holder.tv_delay_timer.setText("" + minutes + " Mins left*");
+                    holder.tv_delay_timer.setTextColor(activity.getResources().getColor(R.color.red_1));
+                } else if (minutes <= 60) {
+                    holder.tv_delay_timer.setText("" + minutes + " Mins left");
+                    holder.tv_delay_timer.setTextColor(activity.getResources().getColor(R.color.green_1));
+                } else {
+                    holder.tv_delay_timer.setVisibility(View.GONE);
+                }
+            } else {
+                holder.tv_delay_timer.setVisibility(View.GONE);
+            }
+        } else {
+            holder.tv_delay_timer.setVisibility(View.GONE);
+        }
     }
 
     private void editSingleBeneficiary(MyViewHolder holder, int gone) {

@@ -27,7 +27,10 @@ import com.thyrocare.btechapp.models.api.response.DynamicBtechAvaliabilityRespon
 import com.thyrocare.btechapp.models.api.response.FetchLedgerResponseModel;
 import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetOrderDetailsResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetPEBtechSlotResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetPECancelRemarksResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetPETestResponseModel;
+import com.thyrocare.btechapp.models.api.response.GetRemarksResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetTestListResponseModel;
 import com.thyrocare.btechapp.models.api.response.MaterialBtechStockResponseModel;
 import com.thyrocare.btechapp.models.api.response.MaterialINVResponseModel;
@@ -66,6 +69,7 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 
 public interface GetAPIInterface {
@@ -292,8 +296,11 @@ public interface GetAPIInterface {
     @GET("api/integration/v1/auth")
     Call<PEAuthResponseModel> callPEAuthorization(@Header("Content-Type") String content_type, @Header("x-source") String source, @Header("client-id") String client);
 
+    /*@GET("/api/partner-integration/v1/catalog/pincode/{pincode}/items/{orderNo}")
+    Call<GetPETestResponseModel> getPETests(@Header("Content-Type") String content_type, @Header("x-source") String source, @Header("x-api-auth") String authToken, @Path("pincode") String pincode,@Path("OrderNo") String OrderNo);*//*,@Path(value = "value",encoded = true)String value*/
+
     @GET("/api/partner-integration/v1/catalog/pincode/{pincode}/items")
-    Call<GetPETestResponseModel> getPETests(@Header("Content-Type") String content_type, @Header("x-source") String source, @Header("x-api-auth") String authToken, @Path("pincode") String pincode);
+    Call<GetPETestResponseModel> getPETests(@Header("Content-Type") String content_type, @Header("x-source") String source, @Header("x-api-auth") String authToken, @Path("pincode") String pincode,@Query("partner_order_id") String orderno);/*,@Path(value = "value",encoded = true)String value*/
 
     //TODO DSA brandtestmaster
     @GET("api/DSAProducts/Products/{OrderNo}")
@@ -302,6 +309,16 @@ public interface GetAPIInterface {
     @GET("api/OrderVisitDetailsOptimize/GetOrdersdetails/{BtechID}")
     Call<GetOrderDetailsResponseModel> getpendingOrderDetails(@Path("BtechID") String BtechID);
 
+    @GET("api/Masters/GetPECancellationRemarks/{ID}")
+    Call<GetPECancelRemarksResponseModel> getpecancelRemarks(@Path("ID") String ID);
 
+    @GET("api/Masters/DisplaySubSlotMastersForPE/{pincode}/{date}")
+    Call<ArrayList<GetPEBtechSlotResponseModel>> getPEbtechSlot(@Header("Authorization") String token, @Path("pincode") String pincode, @Path("date") String date);
+
+    @GET("api/Masters/OrderRemarks/{ID}")
+    Call<ArrayList<GetRemarksResponseModel>> getRemarks(@Path("ID") String ID);
+
+    @GET("api/Masters/OrderReasons/{ID}")
+    Call<ArrayList<GetPECancelRemarksResponseModel>> getReasons(@Path("ID") String ID);
 }
 

@@ -289,10 +289,10 @@ public class PaymentsActivity extends AbstractActivity {
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(intent);
                                         }else{*/
-                                            Intent intent = new Intent();
-                                            intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
-                                            setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                            finish();
+                                        Intent intent = new Intent();
+                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
+                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                        finish();
 //                                        }
                                     }
                                 }).show();
@@ -500,7 +500,8 @@ public class PaymentsActivity extends AbstractActivity {
 
     private void SetpaymentGateways(ArrayList<PaymentProcessAPIResponseModel> paymentModesArr) {
         try {
-
+           //fungible
+//            if (BundleConstants.companyOrderFlag) {
             if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                 /*ArrayList<PaymentProcessAPIResponseModel> NewPaymentModesArr = new ArrayList<PaymentProcessAPIResponseModel>();
                 for (int i = 0; i <paymentModesArr.size(); i++) {
@@ -884,6 +885,8 @@ public class PaymentsActivity extends AbstractActivity {
                         paymentStartTransactionAPIResponseModel = response.body();
                         if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
                             // mobileflag = 0;
+                            //fungible
+//                            if (BundleConstants.companyOrderFlag) {
                             if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                                 builder.setTitle("Verify Payment")
@@ -990,7 +993,7 @@ public class PaymentsActivity extends AbstractActivity {
                     if (response.isSuccessful()) {
                         paymentStartTransactionAPIResponseModel = response.body();
                         if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
-                            Toast.makeText(activity,""+response.body().getResponseMessage(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "" + response.body().getResponseMessage(), Toast.LENGTH_SHORT).show();
                             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                             builder.setTitle("Verify Payment")
                                     .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
@@ -1019,7 +1022,7 @@ public class PaymentsActivity extends AbstractActivity {
                                 }
                             })*/.show();
                         } else {
-                            Toast.makeText(activity, ""+response.body().getResponseMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "" + response.body().getResponseMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -1251,7 +1254,8 @@ public class PaymentsActivity extends AbstractActivity {
                                             .setPositiveButton("Close", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
-
+                                                    //fungible
+//                                                    if (BundleConstants.companyOrderFlag) {
                                                     if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                                         WOEPEBtech();//TODO For PE-BTech as per GG Sir's remark
                                                     } else {

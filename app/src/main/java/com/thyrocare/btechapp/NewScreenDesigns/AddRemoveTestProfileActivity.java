@@ -75,9 +75,11 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
     String pincode;
     int totalRate = 0;
     int ArraySize;
-    String selectedTest="";
+    String selectedTest = "";
     ArrayList<GetPETestResponseModel.DataDTO> peTestArraylist;
     ArrayList<GetPETestResponseModel.DataDTO> newPETestArray = new ArrayList<>();
+    PEAuthorizationController peAuthorizationController;
+    String productType = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,17 +104,23 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         edit_selectedTestsList = getIntent().getParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST);
         peTestArraylist = getIntent().getParcelableArrayListExtra(BundleConstants.PE_TEST_LIST_MODEL);
         selectedTest = getIntent().getStringExtra(BundleConstants.EDITSELECTEDTEST);
-    //    ArraySize = getIntent().getIntExtra("",0);
+        //    ArraySize = getIntent().getIntExtra("",0);
         FlagADDEditBen = getIntent().getBooleanExtra("IsAddBen", true);
         pincode = orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode();
         System.out.println("mith<<<<<<<<<<" + pincode);
         if (!FlagADDEditBen) {
-           /* if((edit_selectedTestsList.size() ==0 && ArraySize !=0 )){
-
-            }else*/ if (orderVisitDetailsModel == null || edit_selectedTestsList == null || edit_selectedTestsList.size() == 0 ) {
-                finish();
+            //fungible
+//            if (BundleConstants.companyOrderFlag) {
+            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                callPEBrandAPI();
+            } else {
+                if (orderVisitDetailsModel == null || edit_selectedTestsList == null || edit_selectedTestsList.size() == 0) {
+                    finish();
+                }
             }
         } else {
+            //fungible
+//            if (BundleConstants.companyOrderFlag) {
             if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 if (peselectedTestsList == null) {
                     peselectedTestsList = new ArrayList<>();
@@ -127,6 +135,11 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void callPEBrandAPI() {
+        peAuthorizationController = new PEAuthorizationController(this);
+        peAuthorizationController.getAuthorizationToken(2, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode(), orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
     }
 
     private void iniView() {
@@ -145,6 +158,8 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         tvTestName = (TextView) findViewById(R.id.tvTestName);
         tvTestName.setMovementMethod(new ScrollingMovementMethod());
         tvAppRate = (TextView) findViewById(R.id.tvAppRate);
+        //fungible
+//        if (BundleConstants.companyOrderFlag) {
         if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             ed_Search.setHint("Search test..");
             lin_profileCategory.setVisibility(View.GONE);
@@ -159,12 +174,31 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 boolean isTestNotAvailble = false;
+                //fungible
+//                if (BundleConstants.companyOrderFlag) {
                 if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (FlagADDEditBen) {
                         if (peselectedTestsList.size() == 0) {
                             isTestNotAvailble = true;
                         } else {
                             isTestNotAvailble = false;
+                        }
+
+                        if (isTestNotAvailble) {
+                            globalclass.showalert_OK("Please select atleast one test to proceed.", mActivity);
+                        } else {
+                            Intent ResultIntent = new Intent();
+//                            ResultIntent.putParcelableArrayListExtra(BundleConstants.PE_TEST_LIST_MODEL,peTestArraylist);
+                            String Rate = String.valueOf(totalRate);
+                            ResultIntent.putExtra(BundleConstants.PERATES, Rate);
+                            ResultIntent.putParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLISTPE, peselectedTestsList);
+                            ResultIntent.putParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST, edit_selectedTestsList);
+                            setResult(Activity.RESULT_OK, ResultIntent);
+                            finish();
+                        }
+                    } else {
+                        if (peselectedTestsList.size() == 0) {
+                            isTestNotAvailble = true;
                         }
 
                         if (isTestNotAvailble) {
@@ -232,6 +266,8 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 }*/
 
                 if (displayAllTestApdter != null) {
+                    //fungible
+//                    if (BundleConstants.companyOrderFlag) {
                     if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                         if (!StringUtils.isNull(s.toString())) {
                             displayAllTestApdter.filterDataPE(s.toString());
@@ -318,7 +354,27 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
     private void initTestListViewPE() {
         if (FlagADDEditBen && peTestArraylist != null && peTestArraylist.size() > 0) {
-            displayAllTestApdter = new DisplayAllTestApdter(mActivity, peTestArraylist, peselectedTestsList);
+            displayAllTestApdter = new DisplayAllTestApdter(mActivity,orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), peTestArraylist, peselectedTestsList);
+            displayAllTestApdter.setOnItemClickListener(new DisplayAllTestApdter.OnClickListeners() {
+                @Override
+                public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
+
+                }
+
+                @Override
+                public void onPECheckChange(ArrayList<GetPETestResponseModel.DataDTO> peTestList) {
+                    newPETestList = peTestList;
+                    displayAllTestApdter.notifyDataSetChanged();
+                    DisplaySelectedProductsPE(peTestList);
+                }
+            });
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivity);
+            recycle_TestList.setLayoutManager(mLayoutManager);
+            recycle_TestList.setAdapter(displayAllTestApdter);
+            recycle_TestList.setVisibility(View.VISIBLE);
+            tv_noDatafound.setVisibility(View.GONE);
+        } else if (!FlagADDEditBen && peselectedTestsList != null && peselectedTestsList.size() > 0) {
+            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(),peTestArraylist, peselectedTestsList);
             displayAllTestApdter.setOnItemClickListener(new DisplayAllTestApdter.OnClickListeners() {
                 @Override
                 public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
@@ -356,27 +412,32 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
     private void initData() {
 
         if (!FlagADDEditBen) {
-            if (edit_selectedTestsList != null && edit_selectedTestsList.size() > 0) {
-                DisplaySelectedProducts(edit_selectedTestsList);
+            //fungible
+//            if (BundleConstants.companyOrderFlag) {
+            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                if (peselectedTestsList != null && peselectedTestsList.size() > 0) {
+                    DisplaySelectedProductsPE(peselectedTestsList);
+                }
+            } else {
+                if (edit_selectedTestsList != null && edit_selectedTestsList.size() > 0) {
+                    DisplaySelectedProducts(edit_selectedTestsList);
+                }
             }
+
         }
 
+        //fungible
+//            if(FlagADDEditBen && BundleConstants.companyOrderFlag){
         if (FlagADDEditBen && Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             if (cd.isConnectingToInternet()) {
-
-                PEAuthorizationController peAuthorizationController = new PEAuthorizationController(this);
-                peAuthorizationController.getAuthorizationToken(2, appPreferenceManager.getLoginResponseModel(), orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());
-
-                /*PEAuthorizationController peAC = new PEAuthorizationController(this);
-                peAC.getPETests("" + orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode());*/
-
+                peAuthorizationController = new PEAuthorizationController(this);
+                peAuthorizationController.getAuthorizationToken(2, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode(), orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
             } else {
                 globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
             }
-
 //            getTestList();
 //            testList();
-        } else {
+        } else if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             if (!UpdateProduct()) {
                 if (cd.isConnectingToInternet()) {
                     CallGetTechsoProductsAPI();
@@ -385,8 +446,8 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 }
             } else {
                 BrandTestMasterModel brandTestmdel = new Gson().fromJson(appPreferenceManager.getCacheProduct(), BrandTestMasterModel.class);
-              //  brandTestMasterModel = getBrandTestMaster(brandTestmdel);
-                brandTestMasterModel = getBrandTestMaster(brandTestmdel,appPreferenceManager.getDSAProductResponseModel());
+                //  brandTestMasterModel = getBrandTestMaster(brandTestmdel);
+                brandTestMasterModel = getBrandTestMaster(brandTestmdel, appPreferenceManager.getDSAProductResponseModel());
                 CallAfterBranDAPIRes();
             }
         }
@@ -467,31 +528,31 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             }
         }
 
-              if (dsaProductResponseModel != null && dsaProductResponseModel.getTstratemaster() != null && dsaProductResponseModel.getTstratemaster().size() > 0) {
-                  for (int i = 0; i < dsaProductResponseModel.getTstratemaster().size(); i++) {
+        if (dsaProductResponseModel != null && dsaProductResponseModel.getTstratemaster() != null && dsaProductResponseModel.getTstratemaster().size() > 0) {
+            for (int i = 0; i < dsaProductResponseModel.getTstratemaster().size(); i++) {
 //                if (dsaProductResponseModel.getTstratemaster().get(i).getAccessUserCode() != null && dsaProductResponseModel.getTstratemaster().get(i).getAccessUserCode().size() > 0) {
-              //      for (int j = 0; j < dsaProductResponseModel.getTstratemaster().get(i).getAccessUserCode().size(); j++) {
-                        try {
-                         //   if (Integer.parseInt(dsaProductResponseModel.getTstratemaster().get(i).getAccessUserCode().get(j).getAccessCode()) == orderVisitDetailsModel.getAllOrderdetails().get(0).getUserAccessCode()) {
-                                     tstratemaster.add(dsaProductResponseModel.getTstratemaster().get(i));
+                //      for (int j = 0; j < dsaProductResponseModel.getTstratemaster().get(i).getAccessUserCode().size(); j++) {
+                try {
+                    //   if (Integer.parseInt(dsaProductResponseModel.getTstratemaster().get(i).getAccessUserCode().get(j).getAccessCode()) == orderVisitDetailsModel.getAllOrderdetails().get(0).getUserAccessCode()) {
+                    tstratemaster.add(dsaProductResponseModel.getTstratemaster().get(i));
                     //            break;
-                        //    }
-                        } catch (Exception e) {
-                                 e.printStackTrace();
-                             }
-                 //  }
+                    //    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-         }
-    //      }
+                //  }
+            }
+        }
+        //      }
 
-          ArrayList<TestRateMasterModel>tempArr = new ArrayList<>();
-         for (TestRateMasterModel data: tstratemaster) {
-             if(!tempArr.contains(data)){
-                  tempArr.add(data);
-             }
-          }
-         tstratemaster.clear();
-         tstratemaster.addAll(tempArr);
+        ArrayList<TestRateMasterModel> tempArr = new ArrayList<>();
+        for (TestRateMasterModel data : tstratemaster) {
+            if (!tempArr.contains(data)) {
+                tempArr.add(data);
+            }
+        }
+        tstratemaster.clear();
+        tstratemaster.addAll(tempArr);
 
         //brandTestMasterModelFinal.setTstratemaster(tempArr);
         brandTestMasterModelFinal.setTstratemaster(tstratemaster);
@@ -558,9 +619,9 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
         if (CategoryWiseProductList != null && CategoryWiseProductList.size() > 0) {
             if (FlagADDEditBen) {
-                displayAllTestApdter = new DisplayAllTestApdter(mActivity, CategoryWiseProductList, AllProductList, selectedTestsList, isM);
+                displayAllTestApdter = new DisplayAllTestApdter(mActivity,orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), CategoryWiseProductList, AllProductList, selectedTestsList, isM);
             } else {
-                displayAllTestApdter = new DisplayAllTestApdter(mActivity, CategoryWiseProductList, AllProductList, edit_selectedTestsList, isM);
+                displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(),CategoryWiseProductList, AllProductList, edit_selectedTestsList, isM);
             }
             displayAllTestApdter.setOnItemClickListener(new DisplayAllTestApdter.OnClickListeners() {
                 @Override
@@ -607,7 +668,6 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         } else {
             lin_selectedTest.setVisibility(View.GONE);
         }
-
         tvTestName.setText("" + StringUtils.removeFirstCharacter(selected_products));
         tvAppRate.setText(mActivity.getResources().getString(R.string.rupee_symbol) + "" + totalRate + "/-");
     }

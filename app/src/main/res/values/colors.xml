@@ -113,5 +113,10 @@
     <color name="yellow_1">#F9E67B</color>
     <color name="red_1">#E46163</color>
 
+    <color name="brown">#654444</color>
+    <color name="brown_1">#FFF5DA</color>
+    <color name="grey_light">#F0F0F0</color>
+    <color name="grey_dark">#37474F</color>
+
 
 </resources>

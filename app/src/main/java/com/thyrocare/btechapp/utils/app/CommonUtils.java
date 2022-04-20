@@ -26,6 +26,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.dao.DhbDao;
 import com.thyrocare.btechapp.models.api.request.LatLongDataModel;
+import com.thyrocare.btechapp.models.api.request.SevenDaysModel;
 import com.thyrocare.btechapp.models.api.response.MessageModel;
 import com.thyrocare.btechapp.models.data.SampleDropDetailsbyTSPLMEDetailsModel;
 import com.thyrocare.btechapp.utils.api.Logger;
@@ -40,7 +41,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
@@ -448,5 +453,30 @@ public class CommonUtils {
             ex.printStackTrace();
         }
         return "";
+    }
+
+
+    public static ArrayList<SevenDaysModel> getSevenDays() {
+        SimpleDateFormat sdfday = new SimpleDateFormat("EEE");
+        SimpleDateFormat sdfdate = new SimpleDateFormat("dd");
+        SimpleDateFormat sdfmonth = new SimpleDateFormat("MMM");
+        SimpleDateFormat sdffulldate = new SimpleDateFormat("yyyy-MM-dd");
+        String day = "", date = "", month = "", fulldate = "";
+        ArrayList<SevenDaysModel> arrayList = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            Calendar calendar = new GregorianCalendar();
+            calendar.add(Calendar.DATE, i);
+            day = sdfday.format(calendar.getTime());
+            date = sdfdate.format(calendar.getTime());
+            month = sdfmonth.format(calendar.getTime());
+            fulldate = sdffulldate.format(calendar.getTime());
+            SevenDaysModel sevenDaysModel = new SevenDaysModel();
+            sevenDaysModel.setDate(date);
+            sevenDaysModel.setFulldate(fulldate);
+            sevenDaysModel.setDay(day);
+            sevenDaysModel.setMonth(month);
+            arrayList.add(sevenDaysModel);
+        }
+        return arrayList;
     }
 }

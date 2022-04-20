@@ -8,6 +8,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampWisePati
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.CampWoeMISReuestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.EmailVaildationPostModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.FeedbackModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.FixAppointmentDataModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetAccessTokenForOTPRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetBtechCertificateRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetSSLKeyRequestModel;
@@ -54,7 +55,10 @@ import com.thyrocare.btechapp.models.api.request.OrderAllocationTrackLocationReq
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
+import com.thyrocare.btechapp.models.api.request.PECutomerIntimationSMSRequestModel;
+import com.thyrocare.btechapp.models.api.request.PEOrderEditRequestModel;
 import com.thyrocare.btechapp.models.api.request.PEPaymentRequestModel;
+import com.thyrocare.btechapp.models.api.request.PEUpdatePatientRequestModel;
 import com.thyrocare.btechapp.models.api.request.PayTMRequestModel;
 import com.thyrocare.btechapp.models.api.request.PayTMVerifyRequestModel;
 import com.thyrocare.btechapp.models.api.request.PaytypeRequestModel;
@@ -88,7 +92,10 @@ import com.thyrocare.btechapp.models.api.response.LoginDeviceResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginResponseModel;
 import com.thyrocare.btechapp.models.api.response.NewCommonResponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseVisitModel;
+import com.thyrocare.btechapp.models.api.response.PECutomerIntimationSMSResponeModel;
+import com.thyrocare.btechapp.models.api.response.PEOrderEditResponseModel;
 import com.thyrocare.btechapp.models.api.response.PEPaymentResponseModel;
+import com.thyrocare.btechapp.models.api.response.PEUpdatePatientResponseModel;
 import com.thyrocare.btechapp.models.api.response.PayTMResponseModel;
 import com.thyrocare.btechapp.models.api.response.PayTMVerifyResponseModel;
 import com.thyrocare.btechapp.models.api.response.PaymentDoCaptureResponseAPIResponseModel;
@@ -99,6 +106,7 @@ import com.thyrocare.btechapp.models.api.response.PickupOrderResponseModel;
 import com.thyrocare.btechapp.models.api.response.PostPickupOrderResponseModel;
 import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.RemoveUrineSampleRespModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.ResponseModel;
 import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.btechapp.models.api.response.SignInResponseModel;
 import com.thyrocare.btechapp.models.api.response.SignSummaryResponseModel;
@@ -455,4 +463,15 @@ public interface PostAPIInterface {
     @POST("/api/partner-integration/v1/order/{orderID}/add-on-order")
     Call<AddOnResponseModel> getAddOnOrder(@Path("orderID")String OrderID, @Body AddONRequestModel addONRequestModel);
 
+    @POST("api/PEEvents/PEUpdatePatient")
+    Call<PEUpdatePatientResponseModel> postPEUpdatePatient(@Body PEUpdatePatientRequestModel peUpdatePatientRequestModel);
+
+    @POST("api/PEEvents/PEOrderEdit")
+    Call<PEOrderEditResponseModel> postPEOrderEdit(@Body PEOrderEditRequestModel peOrderEditRequestModel);
+
+    @POST("api/PEEvents/PECutomerIntimationSMS")
+    Call<PECutomerIntimationSMSResponeModel> getSMS(@Body PECutomerIntimationSMSRequestModel smsRequestModel);
+
+    @POST("api/YNCStatusChange/PostUpdateOrderHistory")
+    Call<ResponseModel> updateOrderHistory(@Header("Authorization") String token, @Body FixAppointmentDataModel fixAppointmentDataModel);
 }

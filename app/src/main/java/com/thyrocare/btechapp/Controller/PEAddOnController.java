@@ -55,6 +55,7 @@ public class PEAddOnController {
                             boolean peaddON  ;
                             if (peAddben == 1) {
                                 peaddON = true;
+                                BundleConstants.companyOrderFlag =false;
                                 BundleConstants.callOTPFlag = 0;
                                 TastyToast.makeText(mactivity, ConstantsMessages.BenefiaryAdded, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                                 Intent intent = new Intent(mactivity, B2BVisitOrdersDisplayFragment.class);

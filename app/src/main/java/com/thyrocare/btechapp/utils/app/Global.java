@@ -71,12 +71,18 @@ public class Global {
     public String tableOfferCartChilds = "OfferCart_childs";
     public String tableThyronomicOfferCartChilds = "ThyronomicOfferCart_childs";
 
+    public static int selectedPosition;
+    public static int selectedRemarksID;
+    public static boolean todisplaytimerforPosition =false;
 
     public String tableCart = "Cart";
     //Live ---------------------------
 
     ProgressDialog progressDialog;
     public static boolean callAPIEditOrder = false;
+    public static boolean toDisplayTimerFlag = false;
+    public static boolean TimerFlag = true;
+    public static boolean displayedtimer=false;
 
     public Global(Context context) {
         this.context = context;

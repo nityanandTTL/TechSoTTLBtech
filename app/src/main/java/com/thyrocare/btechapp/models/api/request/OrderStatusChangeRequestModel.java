@@ -11,6 +11,8 @@ public class OrderStatusChangeRequestModel implements Parcelable{
     String Remarks;
     String Id;
     int Status;
+    int RemarksId;
+    int ReasonId;
     String AppointmentDate;
 
     public OrderStatusChangeRequestModel() {
@@ -20,6 +22,8 @@ public class OrderStatusChangeRequestModel implements Parcelable{
         Remarks = in.readString();
         Id = in.readString();
         Status = in.readInt();
+        RemarksId = in.readInt();
+        ReasonId = in.readInt();
         AppointmentDate = in.readString();
     }
 
@@ -28,6 +32,8 @@ public class OrderStatusChangeRequestModel implements Parcelable{
         dest.writeString(Remarks);
         dest.writeString(Id);
         dest.writeInt(Status);
+        dest.writeInt(RemarksId);
+        dest.writeInt(ReasonId);
         dest.writeString(AppointmentDate);
     }
 
@@ -78,5 +84,21 @@ public class OrderStatusChangeRequestModel implements Parcelable{
 
     public void setAppointmentDate(String appointmentDate) {
         AppointmentDate = appointmentDate;
+    }
+
+    public int getRemarksId() {
+        return RemarksId;
+    }
+
+    public void setRemarksId(int remarksId) {
+        RemarksId = remarksId;
+    }
+
+    public int getReasonId() {
+        return ReasonId;
+    }
+
+    public void setReasonId(int reasonId) {
+        ReasonId = reasonId;
     }
 }

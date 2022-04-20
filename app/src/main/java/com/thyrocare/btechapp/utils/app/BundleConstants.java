@@ -77,6 +77,14 @@ public class BundleConstants {
     public static final String POSITION = "position";
     public static final String URINE = "URINE";
     public static final String BENPRODUCT = "BENPRODUCT";
+    public static final String RELEASE_REMARKS = "RELEASE_REMARKS";
+    public static final String POS = "POS";
+    public static final String ORDER = "OrderNo";
+    public static final String RES_REMARKS = "RES_REMARKS";
+    public static final String RES_RESPONSE = "RES_RESPONSE";
+    public static final String APPOINTMENT_DATE = "APPOINTMENT_DATE";
+    public static final String REMARKS_ID = "REMARKS_ID";
+    public static String PINCODE="PINCODE";
 
     // neha G --------------------------
     public static int DataInVisitModel = 0;
@@ -134,4 +142,12 @@ public class BundleConstants {
     public static String CheckInternetConnection ="Please check internet connection.";
     public static String Reschedule = "OrderReschedule";
     public static String setSelectedOrder="";
+    public static boolean setVisitOrderScreen = false;
+    public static String EDIT_TEST = "EDIT_TESTS";
+    public static boolean setPEOrderEdit = false;
+    public static boolean setSecondOrderFlag = false;
+    public static String OrderReleaseOptionsID ="58";
+    public static Integer ToDisplayTimerOnSelectedPosition = 381;
+
+    public static boolean companyOrderFlag = false;
 }

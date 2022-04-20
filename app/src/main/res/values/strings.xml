@@ -350,7 +350,7 @@
     <string name="tc_otp_message">Enter OTP send to mobile number linked with this order, to proceed with Order Editing.</string>
     <string name="pe_otp_message">Enter OTP sent to mobile number linked with this order, to proceed with order creation</string>
 
-
+    <string name="note_reschedule_the_collection_if_the_order_is_getting_delayed"><b>Note :</b> Reschedule the collection if the order is getting delayed.</string>
 
 
 </resources>

@@ -2,515 +2,555 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/_5sdp"
-    android:background="@drawable/rounded_background_grey">
+    android:layout_height="wrap_content">
 
-
-    <LinearLayout
-        android:id="@+id/linBenDetails"
+    <RelativeLayout
+        android:id="@+id/rel_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_FirstBenName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:layout_marginBottom="@dimen/_2sdp"
-            android:layout_marginLeft="@dimen/_2sdp"
-            android:layout_marginRight="@dimen/_40sdp"
-            android:text=""
-            android:textStyle="bold"
-            android:textColor="@color/bg_new_color"
-            android:textSize="@dimen/_15sdp" />
+        android:layout_margin="@dimen/_5sdp"
+        android:background="@drawable/rounded_background_grey">
 
         <LinearLayout
-            android:id="@+id/lin_firstBenDetails"
+            android:id="@+id/linBenDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_FirstBenName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginRight="@dimen/_40sdp"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:text=""
+                android:textColor="@color/bg_new_color"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/lin_firstBenDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/lin_OrderNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <ImageView
+                        android:id="@+id/img_OrderNo"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_15sdp"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.5"
+                        android:src="@drawable/order_no_icon"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_weight="0.5"
+                        android:gravity="center"
+                        android:text=" : "
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sdp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_OrderNo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="3.5"
+                        android:gravity="start|center_vertical"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:text=""
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/_10sdp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lin_Address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <ImageView
+                        android:id="@+id/img_Address"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_15sdp"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.5"
+                        android:src="@drawable/address_icon"
+                        android:visibility="gone"
+                        app:tint="@color/bg_new_color" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_weight="0.5"
+                        android:gravity="center"
+                        android:text=" : "
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sdp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_Address"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="3.5"
+                        android:gravity="start|center_vertical"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:text=""
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/_10sdp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lin_MobileNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:weightSum="5">
+
+                    <ImageView
+                        android:id="@+id/img_MobileNo"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_15sdp"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.5"
+                        android:src="@drawable/mobile_no_icon"
+                        app:tint="@color/bg_new_color" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_weight="0.5"
+                        android:gravity="center"
+                        android:text=" : "
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:id="@+id/tv_MobileNo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="3.5"
+                        android:gravity="start|center_vertical"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lin_EmailID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <ImageView
+                        android:id="@+id/img_EmailID"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_13sdp"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.5"
+                        android:src="@drawable/email_id_icon"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_weight="0.5"
+                        android:gravity="center"
+                        android:text=" : "
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sdp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_EmailID"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="3.5"
+                        android:gravity="start|center_vertical"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:text=""
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/_10sdp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lin_AppointmentDateTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:orientation="horizontal"
+                    android:weightSum="5">
+
+                    <ImageView
+                        android:id="@+id/img_AppointmentDateTime"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_15sdp"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.5"
+                        android:src="@drawable/appointment_date_time_icon"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_weight="0.5"
+                        android:gravity="center"
+                        android:text=" : "
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sdp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_AppointmentDateTime"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="3.5"
+                        android:gravity="start|center_vertical"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lin_benName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <ImageView
+                    android:id="@+id/img_benName"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.5"
+                    android:src="@drawable/ben_name_icon"
+                    android:visibility="gone"
+                    app:tint="@color/bg_new_color" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:text=" : "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_11sdp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_benName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="3.5"
+                    android:gravity="start|center_vertical"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:text=""
+                    android:textColor="@color/bg_new_color"
+                    android:textSize="@dimen/_10sdp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_kits"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_str_kits"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/value" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lin_benProduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <ImageView
+                    android:id="@+id/img_benProduct"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.5"
+                    android:src="@drawable/ben_product_icon"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:text=" : "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_11sdp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_benProduct"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="3.5"
+                    android:gravity="start|center_vertical"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lin_benPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="5">
+
+                <ImageView
+                    android:id="@+id/img_benPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.5"
+                    android:src="@drawable/price_icon" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:text=" : "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_11sdp" />
+
+                <TextView
+                    android:id="@+id/tv_benPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="3.5"
+                    android:gravity="start|center_vertical"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lin_delay_timer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tv_delay_timer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight="3.5"
+                    android:gravity="right"
+                    android:paddingRight="@dimen/_10sdp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_BeforeArrive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imgCall"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_margin="@dimen/_3sdp"
+                android:padding="@dimen/_3sdp"
+                android:src="@drawable/ic_call" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_Edit_delete_Ben"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:padding="@dimen/_2sdp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/img_editBenDetails"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_2sdp"
+                app:srcCompat="@drawable/ic_baseline_edit" />
+
+            <ImageView
+                android:id="@+id/img_DeleteBen"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_2sdp"
+                android:src="@drawable/ic_delete_new" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_fastingDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linBenDetails"
             android:orientation="vertical"
             android:visibility="gone">
 
-            <LinearLayout
-                android:id="@+id/lin_OrderNo"
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginRight="@dimen/_20sdp"
                 android:layout_marginBottom="@dimen/_2sdp"
-                android:orientation="horizontal"
-                android:weightSum="5">
-
-                <ImageView
-                    android:visibility="gone"
-                    android:id="@+id/img_OrderNo"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_15sdp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.5"
-                    android:src="@drawable/order_no_icon" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_10sdp"
-                    android:layout_weight="0.5"
-                    android:gravity="center"
-                    android:text=" : "
-                    android:visibility="gone"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_11sdp" />
-
-                <TextView
-                    android:id="@+id/tv_OrderNo"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="3.5"
-                    android:gravity="start|center_vertical"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:text=""
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/_10sdp" />
-
-            </LinearLayout>
+                android:background="@color/gray" />
 
             <LinearLayout
-                android:id="@+id/lin_Address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:layout_marginBottom="@dimen/_2sdp"
-                android:orientation="horizontal"
-                android:weightSum="5">
-
-                <ImageView
-                    android:id="@+id/img_Address"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_15sdp"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:layout_weight="0.5"
-                    android:src="@drawable/address_icon"
-                    app:tint="@color/bg_new_color" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_10sdp"
-                    android:layout_weight="0.5"
-                    android:gravity="center"
-                    android:text=" : "
-                    android:visibility="gone"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_11sdp" />
-
-                <TextView
-                    android:id="@+id/tv_Address"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="3.5"
-                    android:gravity="start|center_vertical"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:text=""
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/_10sdp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/lin_MobileNo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:layout_marginBottom="@dimen/_2sdp"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                android:weightSum="5">
-
-                <ImageView
-                    android:id="@+id/img_MobileNo"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_15sdp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.5"
-                    android:src="@drawable/mobile_no_icon"
-                    app:tint="@color/bg_new_color" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_10sdp"
-                    android:layout_weight="0.5"
-                    android:gravity="center"
-                    android:text=" : "
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_11sdp" />
-
-                <TextView
-                    android:id="@+id/tv_MobileNo"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="3.5"
-                    android:gravity="start|center_vertical"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:text=""
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10sdp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/lin_EmailID"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:layout_marginBottom="@dimen/_2sdp"
-                android:orientation="horizontal"
-                android:weightSum="5">
-
-                <ImageView
-                    android:id="@+id/img_EmailID"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_13sdp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.5"
-                    android:visibility="gone"
-                    android:src="@drawable/email_id_icon" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_10sdp"
-                    android:layout_weight="0.5"
-                    android:gravity="center"
-                    android:text=" : "
-                    android:visibility="gone"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_11sdp" />
-
-                <TextView
-                    android:id="@+id/tv_EmailID"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="3.5"
-                    android:gravity="start|center_vertical"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:text=""
-                    android:textColor="@color/grey"
-                    android:textSize="@dimen/_10sdp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/lin_AppointmentDateTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:layout_marginBottom="@dimen/_2sdp"
-                android:orientation="horizontal"
-                android:weightSum="5">
-
-                <ImageView
-                    android:id="@+id/img_AppointmentDateTime"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_15sdp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.5"
-                    android:visibility="gone"
-                    android:src="@drawable/appointment_date_time_icon" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_10sdp"
-                    android:layout_weight="0.5"
-                    android:gravity="center"
-                    android:text=" : "
-                    android:visibility="gone"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_11sdp" />
-
-                <TextView
-                    android:id="@+id/tv_AppointmentDateTime"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="3.5"
-                    android:gravity="start|center_vertical"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:text=""
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10sdp" />
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/lin_benName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:layout_marginBottom="@dimen/_2sdp"
-            android:orientation="horizontal"
-            android:weightSum="5">
-
-            <ImageView
-                android:visibility="gone"
-                android:id="@+id/img_benName"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
-                android:src="@drawable/ben_name_icon"
-                app:tint="@color/bg_new_color" />
-
-            <TextView
-                android:visibility="gone"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/_10sdp"
                 android:layout_marginRight="@dimen/_10sdp"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:text=" : "
-                android:textColor="@color/black"
-                android:textSize="@dimen/_11sdp" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_benName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="3.5"
-                android:gravity="start|center_vertical"
-                android:paddingRight="@dimen/_10sdp"
-                android:text=""
-                android:textColor="@color/bg_new_color"
-                android:textSize="@dimen/_10sdp" />
+                <ImageView
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/_2sdp"
+                    android:src="@drawable/fasting_icon" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/txt_fasting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/_2sdp"
+                    android:drawablePadding="@dimen/_2sdp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/fasting_requried_Msg"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:id="@+id/ll_kits"
-            android:visibility="gone"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:layout_marginBottom="@dimen/_2sdp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_str_kits"
-                android:textColor="@color/grey"
-                android:text=""
-                android:textSize="@dimen/value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/lin_benProduct"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:layout_marginBottom="@dimen/_2sdp"
-            android:orientation="horizontal"
-            android:weightSum="5">
+    </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/img_benProduct"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
-                android:visibility="gone"
-                android:src="@drawable/ben_product_icon" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:text=" : "
-                android:visibility="gone"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_11sdp" />
-
-            <TextView
-                android:id="@+id/tv_benProduct"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="3.5"
-                android:gravity="start|center_vertical"
-                android:paddingRight="@dimen/_10sdp"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="@dimen/_10sdp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/lin_benPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:layout_marginBottom="@dimen/_2sdp"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            android:weightSum="5">
-
-            <ImageView
-                android:id="@+id/img_benPrice"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_gravity="center"
-                android:layout_weight="0.5"
-                android:src="@drawable/price_icon" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:text=" : "
-                android:textColor="@color/black"
-                android:textSize="@dimen/_11sdp" />
-
-            <TextView
-                android:id="@+id/tv_benPrice"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="3.5"
-                android:gravity="start|center_vertical"
-                android:paddingRight="@dimen/_10sdp"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="@dimen/_10sdp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/lin_BeforeArrive"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/imgCall"
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_margin="@dimen/_3sdp"
-            android:padding="@dimen/_3sdp"
-            android:src="@drawable/ic_call" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/lin_Edit_delete_Ben"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:orientation="vertical"
-        android:padding="@dimen/_2sdp"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/img_editBenDetails"
-            android:layout_width="@dimen/_15sdp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_2sdp"
-            app:srcCompat="@drawable/ic_baseline_edit" />
-
-        <ImageView
-            android:id="@+id/img_DeleteBen"
-            android:layout_width="@dimen/_15sdp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_2sdp"
-            android:src="@drawable/ic_delete_new" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/lin_fastingDetails"
+    <TextView
+        android:id="@+id/tv_note_res"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linBenDetails"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:layout_marginRight="@dimen/_20sdp"
-            android:layout_marginBottom="@dimen/_2sdp"
-            android:background="@color/gray" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_marginRight="@dimen/_10sdp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="@dimen/_2sdp"
-                android:src="@drawable/fasting_icon" />
-
-            <TextView
-                android:id="@+id/txt_fasting"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="@dimen/_2sdp"
-                android:drawablePadding="@dimen/_2sdp"
-                android:gravity="start|center_vertical"
-                android:text="@string/fasting_requried_Msg"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_10sdp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
+        android:layout_below="@+id/rel_main"
+        android:layout_margin="@dimen/_4sdp"
+        android:background="@color/brown_1"
+        android:padding="@dimen/_10sdp"
+        android:text="@string/note_reschedule_the_collection_if_the_order_is_getting_delayed"
+        android:textColor="@color/brown"
+        android:visibility="gone" />
 
 </RelativeLayout>
 

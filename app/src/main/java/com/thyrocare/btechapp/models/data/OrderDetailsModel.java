@@ -14,6 +14,8 @@ import java.util.ArrayList;
 public class OrderDetailsModel extends BaseModel implements Parcelable {
     private int BrandId;//
     private String OrderNo;//
+    private String Timestamp;
+    private String CancelSMSSentTime;
     private String Address;
     private String Pincode;
     private String Mobile;
@@ -209,6 +211,21 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         }
     };
 
+    public String getTimestamp() {
+        return Timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        Timestamp = timestamp;
+    }
+
+    public String getCancelSMSSentTime() {
+        return CancelSMSSentTime;
+    }
+
+    public void setCancelSMSSentTime(String cancelSMSSentTime) {
+        CancelSMSSentTime = cancelSMSSentTime;
+    }
 
     public boolean isKCF() {
         return isKCF;

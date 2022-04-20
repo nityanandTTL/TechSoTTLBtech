@@ -19,7 +19,9 @@ import com.thyrocare.btechapp.delegate.RemoveSelectedTestFromListDelegate_new;
 import com.thyrocare.btechapp.models.api.response.GetPETestResponseModel;
 import com.thyrocare.btechapp.models.data.TestRateMasterModel;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
+import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import java.util.ArrayList;
 
@@ -42,7 +44,7 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
     private LayoutInflater layoutInflater;
     ArrayList<String> newDistest;
     String selectedTest;
-    boolean isAddBen;
+    boolean isAddBen,isPePartner;
     ArrayList<String>DisTest;
     int ArraySize;
     AppPreferenceManager appPreferenceManager;
@@ -82,6 +84,8 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
 
     @Override
     public int getCount() {
+        //fungible
+//        if (BundleConstants.companyOrderFlag) {
         if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             return peselectedTestsList.size();
         }
@@ -96,6 +100,8 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
 
     @Override
     public Object getItem(int position) {
+        //fungible
+//        if (BundleConstants.companyOrderFlag) {
         if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             return peselectedTestsList.get(position);
         }
@@ -118,6 +124,8 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
             holder = (ViewHolder) convertView.getTag();
         }
 
+        //fungible
+//        if (BundleConstants.companyOrderFlag) {
         if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             initPEData(holder, position);
             initPEListeners(holder, position);
@@ -179,13 +187,13 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
                     holder.txtTestName.setText(selectedTestsListArr.get(position).getTestCode());
                 }
             } else {
-                newDistest = new ArrayList<>();
                 String[] strings = selectedTest.split(",");
+                newDistest = new ArrayList<>();
                 for (int i = 0; i < strings.length; i++) {
                     st = strings[i].trim();
                     newDistest.add(st);
                 }
-                holder.txtTestName.setText(newDistest.get(position).toString());
+                holder.txtTestName.setText(newDistest.get(position));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -228,15 +236,29 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
                                         public void onClick(DialogInterface dialog, int id) {
                                             String Tests = "";
                                             System.out.println("<<<<<<<<<<<<<<<<" + holder.txtTestName.getText().toString() + ">>>>>>>>>>>>>>>>>>>" + selectedTestsListArr.get(pos).getDescription());
-                                            if (checkTest(holder.txtTestName.getText().toString(), selectedTestsListArr)) {
-                                                selectedTestsListArr.remove(pos);
-                                                newDistest.remove(pos);
+                                            /*if (checkTest(holder.txtTestName.getText().toString(), selectedTestsListArr)) {
+
                                                 Tests = TextUtils.join(",", newDistest);
                                                 removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr, Tests);
                                             } else {
                                                 newDistest.remove(pos);
                                                 selectedTestsListArr.remove(pos);
                                                 Tests = TextUtils.join(",", newDistest);
+                                                removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr, Tests);
+                                            }*/
+
+                                            if (!InputUtils.isNull(selectedTestsListArr.get(pos).getDescription()) ? holder.txtTestName.getText().toString().trim().equalsIgnoreCase(selectedTestsListArr.get(pos).getDescription())
+                                                    : holder.txtTestName.getText().toString().trim().equalsIgnoreCase(newDistest.get(pos))){
+                                                selectedTestsListArr.remove(pos);
+                                                newDistest.remove(pos);
+                                                Tests = TextUtils.join(",", newDistest);
+                                                selectedTest = Tests;
+                                                removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr, Tests);
+                                            }else {
+                                                newDistest.remove(pos);
+                                                selectedTestsListArr.remove(pos);
+                                                Tests = TextUtils.join(",", newDistest);
+                                                selectedTest = Tests;
                                                 removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr, Tests);
                                             }
                                             dialog.dismiss();
@@ -266,16 +288,39 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
         for (int i = 0; i < selectedTestsListArr.size(); i++) {
             if (!StringUtils.isNull(selectedTestsListArr.get(i).getDescription())){
                 if (s.equalsIgnoreCase(selectedTestsListArr.get(i).getDescription())) {
+                    selectedTestsListArr.remove(i);
+                    newDistest.remove(i);
                     return true;
                 }
             }else{
                 if (s.equalsIgnoreCase(selectedTestsListArr.get(i).getTestCode())) {
+                    selectedTestsListArr.remove(i);
+                    newDistest.remove(i);
                     return true;
                 }
             }
 
         }
         return false;
+    }
+
+    private void removeTest(String s, ArrayList<TestRateMasterModel> selectedTestsListArr){
+        for (int i = 0; i < selectedTestsListArr.size(); i++) {
+            if (!StringUtils.isNull(selectedTestsListArr.get(i).getDescription())){
+                if (s.equalsIgnoreCase(selectedTestsListArr.get(i).getDescription())) {
+                    selectedTestsListArr.remove(i);
+                    newDistest.remove(i);
+                    break;
+                }
+            }else{
+                if (s.equalsIgnoreCase(selectedTestsListArr.get(i).getTestCode())) {
+                    selectedTestsListArr.remove(i);
+                    newDistest.remove(i);
+                    break;
+                }
+            }
+
+        }
     }
 
     private void initData(ViewHolder holder, int pos) {
