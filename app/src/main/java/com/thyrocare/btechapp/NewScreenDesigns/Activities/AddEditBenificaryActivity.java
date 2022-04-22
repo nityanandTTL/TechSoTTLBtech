@@ -2,6 +2,7 @@ package com.thyrocare.btechapp.NewScreenDesigns.Activities;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -58,6 +60,7 @@ import com.thyrocare.btechapp.models.api.request.PEOrderEditRequestModel;
 import com.thyrocare.btechapp.models.api.request.PEUpdatePatientRequestModel;
 import com.thyrocare.btechapp.models.api.request.RemoveBeneficiaryAPIRequestModel;
 import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
+import com.thyrocare.btechapp.models.api.request.SetBtechAvailabilityAPIRequestModel;
 import com.thyrocare.btechapp.models.api.response.CartAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
 import com.thyrocare.btechapp.models.api.response.DSAProductsResponseModel;
@@ -90,6 +93,7 @@ import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -486,40 +490,100 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (FlagADDEditBen) {
                         if (validateforAddbenPE()) {
-                            if (cd.isConnectingToInternet()) {
-                                if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
-                                   /* ArrayList<AddONRequestModel.test> arrTest = new ArrayList<AddONRequestModel.test>();
-                                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                                        addAddOnRequest(arrTest);
-                                    } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                            builder.setTitle("Add Beneficiary");
+                            builder.setMessage("Are you sure you want Add beneficiary?")
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            try {
+                                                if (cd.isConnectingToInternet()) {
+                                                    ArrayList<AddONRequestModel.test> arrTest = new ArrayList<AddONRequestModel.test>();
+                                                    addAddOnRequest(arrTest);
+                                    /*if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
+                                      ArrayList<AddONRequestModel.test> arrTest = new ArrayList<AddONRequestModel.test>();
+                                        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                            addAddOnRequest(arrTest);
+                                        } else {
+                                            CallSubmitAPIforAddBen(orderNo, finalBenId);
+                                        }
                                         CallSubmitAPIforAddBen(orderNo, finalBenId);
+                                    } else {
+                                        CallsendOTPAPIforOrderEdit("Add", orderVisitDetailsModel, orderNo, finalBenId);
                                     }*/
-                                    CallSubmitAPIforAddBen(orderNo, finalBenId);
-                                } else {
-                                    CallsendOTPAPIforOrderEdit("Add", orderVisitDetailsModel, orderNo, finalBenId);
-                                }
-                            } else {
-                                globalclass.showCustomToast(mActivity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
-                            }
+                                                } else {
+                                                    globalclass.showCustomToast(mActivity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            builder.create().
+                                    show();
+
 //                            CallsendOTPAPIforOrderEdit("Add", orderVisitDetailsModel, orderNo, finalBenId);
                         }
                     } else {
-                        if (checkBeneficiaryDtls()) {
-                            if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
-                                if (checkifBeneficiaryDetailsEdited() && callPEOrderAPI) {
-                                    CallSubmitAPIforPEEditBen(0);
-                                    callSubmitAPIforPEOrderEdit(0);
-                                } else {
-                                    if (callPEOrderAPI) {
-                                        callSubmitAPIforPEOrderEdit(1);//TODO for order test edit
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                        builder.setTitle("Edit/Update Beneficiary");
+                        builder.setMessage("Are you sure you want to edit /Update beneficiary?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        try {
+                                            if (cd.isConnectingToInternet()) {
+                                                if (checkBeneficiaryDtls()) {
+                                                    if (checkifBeneficiaryDetailsEdited() && callPEOrderAPI) {
+                                                        CallSubmitAPIforPEEditBen(0);
+                                                        callSubmitAPIforPEOrderEdit(0);
+                                                    } else {
+                                                        if (callPEOrderAPI) {
+                                                            callSubmitAPIforPEOrderEdit(1);//TODO for order test edit
+                                                        } else {
+                                                            CallSubmitAPIforPEEditBen(1); //TODO for only order edit
+                                                        }
+                                                    }
+                                /*if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
+                                    if (checkifBeneficiaryDetailsEdited() && callPEOrderAPI) {
+                                        CallSubmitAPIforPEEditBen(0);
+                                        callSubmitAPIforPEOrderEdit(0);
                                     } else {
-                                        CallSubmitAPIforPEEditBen(1); //TODO for only order edit
+                                        if (callPEOrderAPI) {
+                                            callSubmitAPIforPEOrderEdit(1);//TODO for order test edit
+                                        } else {
+                                            CallSubmitAPIforPEEditBen(1); //TODO for only order edit
+                                        }
                                     }
-                                }
-                            } else {
-                                CallsendOTPAPIforOrderEdit("Edit", orderVisitDetailsModel, orderNo, finalBenId);
-                            }
-                        }
+                                } else {
+                                    CallsendOTPAPIforOrderEdit("Edit", orderVisitDetailsModel, orderNo, finalBenId);
+                                }*/
+                                                }
+                                            } else {
+                                                globalclass.showCustomToast(mActivity, CHECK_INTERNET_CONN, Toast.LENGTH_LONG);
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        builder.create().
+                                show();
+
+
                     }
                 } else {
                     int Bencount = orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size();
@@ -617,8 +681,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 String testlist = txtTestsList.getText().toString().trim();
                 ArrayList<String> stringArrayList = new ArrayList<>();
                 String[] str = testlist.split(",");
-                for (int k = 0; k < str.length; k++) {
-                    String str1 = str[k].trim();
+                for (String s : str) {
+                    String str1 = s.trim();
                     stringArrayList.add(str1);
                 }
                 PEOrderEditRequestModel.DataDTO.ExtraPayloadDTO.TestsDTO testsDTO;
@@ -650,8 +714,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                         ArrayList<String> strArr = new ArrayList<>();
                         String strTest = orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(k).getTestsCode();
                         String[] str = strTest.split(",");
-                        for (int l = 0; l < str.length; l++) {
-                            String str1 = str[l].trim();
+                        for (String s : str) {
+                            String str1 = s.trim();
                             strArr.add(str1);
                         }
                         for (int l = 0; l < strArr.size(); l++) {
@@ -928,11 +992,11 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                             ArrayList<AddONRequestModel.test> arrTest = new ArrayList<AddONRequestModel.test>();
                             //fungible
 //                            if (BundleConstants.companyOrderFlag) {
-                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                           /* if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                 addAddOnRequest(arrTest);
-                            } else {
+                            } else {*/
                                 CallSubmitAPIforAddBen(orderNo, finalBenId);
-                            }
+//                            }
 
                         } else if (Action.equalsIgnoreCase("Edit")) {
                             //fungible
@@ -948,11 +1012,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                         CallSubmitAPIforPEEditBen(1); //TODO for only order edit
                                     }
                                 }
-                              /*  if (callPEOrderAPI) {
-                                    callSubmitAPIforPEOrderEdit();
-                                } else {
-                                    CallSubmitAPIforPEEditBen();
-                                }*/
                             } else {
                                 CallSubmitAPIforEditBen(orderNo);
                             }
@@ -1600,9 +1659,9 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
         if (brandTestMasterModel != null && brandTestMasterModel.getTstratemaster() != null && brandTestMasterModel.getTstratemaster().size() > 0) {
             for (int i = 0; i < brandTestMasterModel.getTstratemaster().size(); i++) {
-                String st ="ADVANCED RENAL PROFILE";
-                String st1 =brandTestMasterModel.getTstratemaster().get(i).getTestCode();
-                String st2 =brandTestMasterModel.getTstratemaster().get(i).getDescription();
+                String st = "ADVANCED RENAL PROFILE";
+                String st1 = brandTestMasterModel.getTstratemaster().get(i).getTestCode();
+                String st2 = brandTestMasterModel.getTstratemaster().get(i).getDescription();
 
                 System.out.println("----");
                 if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode() != null && brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size() > 0) {
@@ -1612,7 +1671,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                             System.out.println(st1);
                             System.out.println(st2);
 
-                            if (st.equalsIgnoreCase(st1)||st.equalsIgnoreCase(st2)){
+                            if (st.equalsIgnoreCase(st1) || st.equalsIgnoreCase(st2)) {
                                 System.out.println(st);
                             }
 
@@ -1803,9 +1862,10 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                         //TODO  if there is a test in offer with same description but different testcode - not to add
                         if (edit_selectedTestsList.size() != 0) {
                             for (int k = 0; k < edit_selectedTestsList.size(); k++) {
-                                if(edit_selectedTestsList.get(k).getDescription().equalsIgnoreCase(result.getTstratemaster().get(j).getDescription())){
+                                if (edit_selectedTestsList.get(k).getDescription().equalsIgnoreCase(result.getTstratemaster().get(j).getDescription())
+                                        || edit_selectedTestsList.get(k).getTestCode().equalsIgnoreCase(result.getTstratemaster().get(j).getDescription())) {
 
-                                }else if (str[i].equalsIgnoreCase(result.getTstratemaster().get(j).getTestCode()) || str[i].trim().equalsIgnoreCase(result.getTstratemaster().get(j).getDescription())){
+                                } else if (str[i].equalsIgnoreCase(result.getTstratemaster().get(j).getTestCode()) || str[i].trim().equalsIgnoreCase(result.getTstratemaster().get(j).getDescription())) {
                                     edit_selectedTestsList.add(result.getTstratemaster().get(j));
                                 }
                             }
@@ -1817,8 +1877,19 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                     }
                 } else {
                     if (str[i].trim().equalsIgnoreCase(result.getTstratemaster().get(j).getTestCode().trim())) {
-                        edit_selectedTestsList.add(result.getTstratemaster().get(j));
-                     //   break;
+                        if (result.getTstratemaster().get(j).getTestType().equalsIgnoreCase("POP")) {
+                            for (int k = 0; k < selectedbeneficiaryDetailsModel.getTestSampleType().size(); k++) {
+                                if (str[i].trim().equalsIgnoreCase(result.getTstratemaster().get(j).getTestCode())) {
+                                    if (selectedbeneficiaryDetailsModel.getTestSampleType().get(k).getTestType().equalsIgnoreCase(result.getTstratemaster().get(j).getTestType())) {
+                                        edit_selectedTestsList.add(result.getTstratemaster().get(j));
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            edit_selectedTestsList.add(result.getTstratemaster().get(j));
+                            break;
+                        }
                     }
                 }
 
@@ -1900,7 +1971,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    displayAdapter = new DisplaySelectedTestsListForCancellationAdapter_new(mActivity,true, selectedTestsList, peselectedTestsList, SelectedTestCode, new RemoveSelectedTestFromListDelegate_new() {
+                    displayAdapter = new DisplaySelectedTestsListForCancellationAdapter_new(mActivity, true, selectedTestsList, peselectedTestsList, SelectedTestCode, new RemoveSelectedTestFromListDelegate_new() {
                         @Override
                         public void onRemoveButtonClicked(ArrayList<TestRateMasterModel> selectedTests, String newDistest) {
                             isTestEdit = true;
@@ -2925,7 +2996,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
     private void CallTestDataPE(ArrayList<GetPETestResponseModel.DataDTO> data) {
         if (data != null) {
-            if (!InputUtils.isNull(SelectedTestCode)){
+            if (!InputUtils.isNull(SelectedTestCode)) {
                 String[] str = SelectedTestCode.split(",");
 
                 //edit_selectedTestsListPE = new ArrayList<>();
