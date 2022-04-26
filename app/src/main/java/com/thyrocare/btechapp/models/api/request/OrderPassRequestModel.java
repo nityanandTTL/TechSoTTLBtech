@@ -13,12 +13,14 @@ public class OrderPassRequestModel implements Parcelable {
     private String VisitId;
     private String Mobile;
     private String OTP;
+    private String OTPStatus;
 
     protected OrderPassRequestModel(Parcel in) {
         BtechId = in.readInt();
         VisitId = in.readString();
         Mobile = in.readString();
         OTP = in.readString();
+        OTPStatus = in.readString();
     }
 
     @Override
@@ -27,6 +29,7 @@ public class OrderPassRequestModel implements Parcelable {
         dest.writeString(VisitId);
         dest.writeString(Mobile);
         dest.writeString(OTP);
+        dest.writeString(OTPStatus);
     }
 
     @Override
@@ -76,6 +79,14 @@ public class OrderPassRequestModel implements Parcelable {
 
     public void setOTP(String OTP) {
         this.OTP = OTP;
+    }
+
+    public String getOTPStatus() {
+        return OTPStatus;
+    }
+
+    public void setOTPStatus(String OTPStatus) {
+        this.OTPStatus = OTPStatus;
     }
 
     public OrderPassRequestModel() {

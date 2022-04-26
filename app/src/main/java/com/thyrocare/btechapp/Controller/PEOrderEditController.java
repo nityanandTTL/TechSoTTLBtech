@@ -98,7 +98,7 @@ public class PEOrderEditController {
                             PEOrderEditResponseModel peOrderEditResponseModel = response.body();
                             if (InputUtils.CheckEqualIgnoreCase(peOrderEditResponseModel.getResponse(), AppConstants.SUCCESS_MSG)){
                                 BundleConstants.setPEOrderEdit = true;
-                                TastyToast.makeText(activity,peOrderEditResponseModel.getResponse().toString()!=null?peOrderEditResponseModel.getResponse().toString().trim():"Beneficiary edited successfully",TastyToast.LENGTH_SHORT,TastyToast.SUCCESS);
+                                TastyToast.makeText(activity,peOrderEditResponseModel.getMessage().toString()!=null?peOrderEditResponseModel.getMessage().toString().trim():"Beneficiary edited successfully",TastyToast.LENGTH_SHORT,TastyToast.SUCCESS);
                                if (action.equalsIgnoreCase("DELETE")){
                                    startAndArriveActivity.pePatientDetailsUpdated();
                                }else{

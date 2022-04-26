@@ -84,6 +84,7 @@ public class BundleConstants {
     public static final String RES_RESPONSE = "RES_RESPONSE";
     public static final String APPOINTMENT_DATE = "APPOINTMENT_DATE";
     public static final String REMARKS_ID = "REMARKS_ID";
+    public static final String PE_OTP_ARRIVED = "OTP ARRIVED VERIFIED";
     public static String PINCODE="PINCODE";
 
     // neha G --------------------------

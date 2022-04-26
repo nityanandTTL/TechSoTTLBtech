@@ -17,6 +17,7 @@ import com.thyrocare.btechapp.models.api.response.RemoveUrineSampleRespModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
+import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,7 +41,8 @@ public class RemoveUrineSampleController {
     public void CallAPI(RemoveUrineReqModel removeUrineReqModel, final BeneficiaryDetailsModel beneficiaryDetailsModel, final int i) {
         try {
             PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-            Call<RemoveUrineSampleRespModel> responseModelCall = apiInterface.removeUrineSample("Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(),removeUrineReqModel);
+//            PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, "https://techsoapis.thyrocare.cloud/").create(PostAPIInterface.class);
+            Call<RemoveUrineSampleRespModel> responseModelCall = apiInterface.removeUrineSample(/*"Bearer " + appPreferenceManager.getLoginResponseModel().getAccess_token(),*/removeUrineReqModel);
             globalClass.showProgressDialog(activity, "Please wait..");
             responseModelCall.enqueue(new Callback<RemoveUrineSampleRespModel>() {
                 @Override
@@ -54,7 +56,7 @@ public class RemoveUrineSampleController {
                                 }
                             }
                         }else{
-                            TastyToast.makeText(activity,response.body().getResponse().toString().trim(),TastyToast.LENGTH_SHORT,TastyToast.ERROR);
+                            TastyToast.makeText(activity, !InputUtils.isNull(response.body().getResponse())?response.body().getResponse().toString().trim(): ConstantsMessages.SomethingWentwrngMsg,TastyToast.LENGTH_SHORT,TastyToast.ERROR);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -485,7 +485,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 //TODO for testing order release.
                 //fungible
 //                if (BundleConstants.companyOrderFlag) {
-                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && !InputUtils.CheckEqualIgnoreCase(orderDetailsModel.getAllOrderdetails().get(0).getStatus(),"PARTIAL SERVICED")) {
                     onOrderRelease();
                 } else {
                     onReleaseButtonClicked();
@@ -966,6 +966,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     model.setMobile(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
                     model.setOTP(strOTP);
                     model.setVisitId(orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
+                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
+                        model.setOTPStatus(BundleConstants.PE_OTP_ARRIVED);
+                    }
                     if (cd.isConnectingToInternet()) {
                         CallValidateOTPAPI(model);
                     } else {
@@ -1612,12 +1615,16 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 && orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().size() > 0) {
             btn_start.setEnabled(true);
             if (orderDetailsModel.getAllOrderdetails().get(0).getAmountDue() == 0) {
-                customSwipeButton2.setVisibility(View.GONE);
                 if (!BundleConstants.isKIOSKOrder) {
                     if (isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
                         customSwipeButton2.setVisibility(View.VISIBLE);
                     } else {
-                        customSwipeButton2.setVisibility(View.GONE);
+                        //fungible
+                        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                            customSwipeButton2.setVisibility(View.VISIBLE);
+                        } else {
+                            customSwipeButton2.setVisibility(View.GONE);
+                        }
                     }
                 } else {
                     customSwipeButton2.setVisibility(View.GONE);
@@ -2525,7 +2532,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    finish();
+                                    Intent intent = new Intent(mActivity,B2BVisitOrdersDisplayFragment.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+//                                    finish();
                                 }
                             });
 

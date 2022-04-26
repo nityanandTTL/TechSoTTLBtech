@@ -278,7 +278,7 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                 } else {
                     if (orderVisitDetailsModel.getAllOrderdetails().get(i).isEditOrder()) {
                         holder.lin_Edit_delete_Ben.setVisibility(View.VISIBLE);
-                        holder.img_DeleteBen.setVisibility(View.GONE);
+//                        holder.img_DeleteBen.setVisibility(View.GONE);//As per Shrishtis logic
                     } else {
                         holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
                         holder.img_DeleteBen.setVisibility(View.GONE);
