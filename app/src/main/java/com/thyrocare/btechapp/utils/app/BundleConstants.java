@@ -150,5 +150,6 @@ public class BundleConstants {
     public static String OrderReleaseOptionsID ="58";
     public static Integer ToDisplayTimerOnSelectedPosition = 381;
 
-    public static boolean companyOrderFlag = false;
+    public static boolean isPEPartner = false;
+    public static boolean PEDSAOrder = false;
 }

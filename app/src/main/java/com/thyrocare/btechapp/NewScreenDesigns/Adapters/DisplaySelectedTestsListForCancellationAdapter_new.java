@@ -44,8 +44,8 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
     private LayoutInflater layoutInflater;
     ArrayList<String> newDistest;
     String selectedTest;
-    boolean isAddBen,isPePartner;
-    ArrayList<String>DisTest;
+    boolean isAddBen, isPePartner;
+    ArrayList<String> DisTest;
     int ArraySize;
     AppPreferenceManager appPreferenceManager;
     ArrayList<String> strArray;
@@ -66,7 +66,7 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
                 DisTest.add(str1);
             }
         }*/
-     //   ArraySize = arraySize;
+        //   ArraySize = arraySize;
         if (this.selectedTestsListArr == null) {
             this.selectedTestsListArr = new ArrayList<>();
         }
@@ -74,7 +74,7 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
         appPreferenceManager = new AppPreferenceManager(activity);
         strArray = new ArrayList<>();
         String str1 = selectedTest.trim();
-        System.out.println(""+str1);
+        System.out.println("" + str1);
         String[] strings = selectedTest.split(",");
         for (int i = 0; i < strings.length; i++) {
             String st = strings[i].trim();
@@ -85,8 +85,8 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
     @Override
     public int getCount() {
         //fungible
-//        if (BundleConstants.companyOrderFlag) {
-        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+        if (BundleConstants.isPEPartner) {
+//        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             return peselectedTestsList.size();
         }
        /* if (selectedTestsListArr.size()==0 && ArraySize!=0){
@@ -101,8 +101,8 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
     @Override
     public Object getItem(int position) {
         //fungible
-//        if (BundleConstants.companyOrderFlag) {
-        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+        if (BundleConstants.isPEPartner) {
+//        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             return peselectedTestsList.get(position);
         }
         return selectedTestsListArr.get(position);
@@ -125,13 +125,13 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
         }
 
         //fungible
-//        if (BundleConstants.companyOrderFlag) {
-        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+        if (BundleConstants.isPEPartner) {
+//        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             initPEData(holder, position);
             initPEListeners(holder, position);
         } else {
-           // initData(holder, position);
-          //  initListeners(holder, position);
+            // initData(holder, position);
+            //  initListeners(holder, position);
             //TODO Did if test not present in the ratemaster
             ininTest(holder, isAddBen, position, selectedTest);
 //        initData(holder, position);
@@ -146,6 +146,7 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
             holder.txtTestName.setText(peselectedTestsList.get(position).getName());
         }
     }
+
     private void initPEListeners(ViewHolder holder, final int pos) {
         holder.imgRemove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,13 +249,13 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
                                             }*/
 
                                             if (!InputUtils.isNull(selectedTestsListArr.get(pos).getDescription()) ? holder.txtTestName.getText().toString().trim().equalsIgnoreCase(selectedTestsListArr.get(pos).getDescription())
-                                                    : holder.txtTestName.getText().toString().trim().equalsIgnoreCase(newDistest.get(pos))){
+                                                    : holder.txtTestName.getText().toString().trim().equalsIgnoreCase(newDistest.get(pos))) {
                                                 selectedTestsListArr.remove(pos);
                                                 newDistest.remove(pos);
                                                 Tests = TextUtils.join(",", newDistest);
                                                 selectedTest = Tests;
                                                 removeSelectedTestFromListDelegate.onRemoveButtonClicked(selectedTestsListArr, Tests);
-                                            }else {
+                                            } else {
                                                 newDistest.remove(pos);
                                                 selectedTestsListArr.remove(pos);
                                                 Tests = TextUtils.join(",", newDistest);
@@ -286,13 +287,13 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
 
     private boolean checkTest(String s, ArrayList<TestRateMasterModel> selectedTestsListArr) {
         for (int i = 0; i < selectedTestsListArr.size(); i++) {
-            if (!StringUtils.isNull(selectedTestsListArr.get(i).getDescription())){
+            if (!StringUtils.isNull(selectedTestsListArr.get(i).getDescription())) {
                 if (s.equalsIgnoreCase(selectedTestsListArr.get(i).getDescription())) {
                     selectedTestsListArr.remove(i);
                     newDistest.remove(i);
                     return true;
                 }
-            }else{
+            } else {
                 if (s.equalsIgnoreCase(selectedTestsListArr.get(i).getTestCode())) {
                     selectedTestsListArr.remove(i);
                     newDistest.remove(i);
@@ -304,15 +305,15 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
         return false;
     }
 
-    private void removeTest(String s, ArrayList<TestRateMasterModel> selectedTestsListArr){
+    private void removeTest(String s, ArrayList<TestRateMasterModel> selectedTestsListArr) {
         for (int i = 0; i < selectedTestsListArr.size(); i++) {
-            if (!StringUtils.isNull(selectedTestsListArr.get(i).getDescription())){
+            if (!StringUtils.isNull(selectedTestsListArr.get(i).getDescription())) {
                 if (s.equalsIgnoreCase(selectedTestsListArr.get(i).getDescription())) {
                     selectedTestsListArr.remove(i);
                     newDistest.remove(i);
                     break;
                 }
-            }else{
+            } else {
                 if (s.equalsIgnoreCase(selectedTestsListArr.get(i).getTestCode())) {
                     selectedTestsListArr.remove(i);
                     newDistest.remove(i);

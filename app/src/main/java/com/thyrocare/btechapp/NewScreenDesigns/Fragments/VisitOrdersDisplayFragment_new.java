@@ -1270,10 +1270,11 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                 try {
                     if (response.isSuccessful() && response.body() != null) {
                         if (response.code() == 200 || response.code() == 204) {
-                            BundleConstants.companyOrderFlag = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner();
+                            BundleConstants.isPEPartner = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner();
+                            BundleConstants.PEDSAOrder = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder();
                             //fungible
-//                            if (BundleConstants.companyOrderFlag) {
-                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                 ProceedToArriveScreen(orderVisitDetailsModel, false);
                             } else {
                                 onOrderStatusChangedResponseReceived(orderVisitDetailsModel);
@@ -1366,7 +1367,8 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             startTrackerService();
             SendinglatlongOrderAllocation(orderVisitDetailsModel, 7);
             String remarks = "Order Started";
-//            BundleConstants.companyOrderFlag = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner();
+            BundleConstants.isPEPartner = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner();
+            BundleConstants.PEDSAOrder = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder();
             new LogUserActivityTagging(activity, BundleConstants.WOE, remarks);
 //            Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
             Intent intentNavigate = new Intent(activity, StartAndArriveActivity.class);

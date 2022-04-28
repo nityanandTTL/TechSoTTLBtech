@@ -39,7 +39,6 @@ import com.thyrocare.btechapp.Controller.PayTMVerifyController;
 import com.thyrocare.btechapp.Controller.WOEController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.CheckoutWoeActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.ScanBarcodeWoeActivity;
-import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
@@ -74,7 +73,6 @@ import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
-import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
@@ -501,8 +499,8 @@ public class PaymentsActivity extends AbstractActivity {
     private void SetpaymentGateways(ArrayList<PaymentProcessAPIResponseModel> paymentModesArr) {
         try {
            //fungible
-//            if (BundleConstants.companyOrderFlag) {
-            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
+            if (BundleConstants.isPEPartner) {
+//            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                 /*ArrayList<PaymentProcessAPIResponseModel> NewPaymentModesArr = new ArrayList<PaymentProcessAPIResponseModel>();
                 for (int i = 0; i <paymentModesArr.size(); i++) {
                     for (int j = 0; j < paymentModesArr.get(i).getNameValueCollection().size(); j++) {
@@ -886,8 +884,8 @@ public class PaymentsActivity extends AbstractActivity {
                         if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
                             // mobileflag = 0;
                             //fungible
-//                            if (BundleConstants.companyOrderFlag) {
-                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
+                            if (BundleConstants.isPEPartner) {
+//                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                                 builder.setTitle("Verify Payment")
                                         .setMessage("Please Click 'Verify Payment' after payment is done by customer!")
@@ -1255,8 +1253,8 @@ public class PaymentsActivity extends AbstractActivity {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     //fungible
-//                                                    if (BundleConstants.companyOrderFlag) {
-                                                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                                    if (BundleConstants.isPEPartner) {
+//                                                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                                         WOEPEBtech();//TODO For PE-BTech as per GG Sir's remark
                                                     } else {
                                                         Intent intent = new Intent();

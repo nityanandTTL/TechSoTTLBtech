@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.sdsmdg.tastytoast.TastyToast;
-import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
@@ -197,8 +196,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             holder.txtCustomerName.setText(Global.toCamelCase(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName()));
 
             //fungible
-//            if (BundleConstants.companyOrderFlag) {
-            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() > 0) {
                     holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId() + "  (₹" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() + ")");
                 } else {
@@ -265,10 +264,12 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             @Override
             public void onClick(View view) {
                 //fungible
-//                if (BundleConstants.companyOrderFlag) {
-                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                if (BundleConstants.isPEPartner && !BundleConstants.PEDSAOrder) {
+//                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     visitOrdersDisplayFragment_new.orderRelease();
-                } else {
+                } else if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder){
+                    onReleaseButtonClicked(pos, holder, holder.txtCustomerName.getText().toString().trim(), holder.txtOrderNo.getText().toString().trim());
+                }else {
                     onReleaseButtonClicked(pos, holder, holder.txtCustomerName.getText().toString().trim(), holder.txtOrderNo.getText().toString().trim());
                 }
             }
@@ -1001,8 +1002,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             } else {
                 if (toShowResheduleOption) {
                     //fungible
-//                    if (BundleConstants.companyOrderFlag) {
-                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                    if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                         tv_ord_pass.setVisibility(View.GONE);
                     } else {
                         tv_ord_pass.setVisibility(View.VISIBLE);
@@ -1015,8 +1016,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                             "Request Release", "Order Pass"};*/
                 } else {
                     //fungible
-//                    if (BundleConstants.companyOrderFlag) {
-                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                    if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                         tv_ord_pass.setVisibility(View.GONE);
                     } else {
                         tv_ord_pass.setVisibility(View.VISIBLE);

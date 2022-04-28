@@ -70,6 +70,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private boolean IsOTP;
     private boolean isdisabledelete;
     private boolean isPEPartner;
+    private boolean isPEDSAOrder;
 
 
 
@@ -130,6 +131,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         IsOTP = in.readByte() != 0;
         isdisabledelete = in.readByte() != 0;
         isPEPartner = in.readByte() != 0;
+        isPEDSAOrder = in.readByte() != 0;
         PPE_AlertMsg = in.readString();
     }
 
@@ -191,6 +193,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeByte((byte) (IsOTP ? 1 : 0));
         dest.writeByte((byte) (isdisabledelete ? 1 : 0));
         dest.writeByte((byte) (isPEPartner ? 1 : 0));
+        dest.writeByte((byte) (isPEDSAOrder ? 1 : 0));
         dest.writeString(PPE_AlertMsg);
     }
 
@@ -261,6 +264,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setPEPartner(boolean PEPartner) {
         isPEPartner = PEPartner;
+    }
+
+    public boolean isPEDSAOrder() {
+        return isPEDSAOrder;
+    }
+
+    public void setPEDSAOrder(boolean PEDSAOrder) {
+        isPEDSAOrder = PEDSAOrder;
     }
 
     public void setKCF(boolean KCF) {

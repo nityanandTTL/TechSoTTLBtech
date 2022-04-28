@@ -21,13 +21,11 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.models.api.response.GetPETestResponseModel;
-import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.ChildTestsModel;
-import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.models.data.TestRateMasterModel;
-import com.thyrocare.btechapp.models.data.TestTypeWiseTestRateMasterModelsList;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 
 import java.util.ArrayList;
@@ -388,7 +386,7 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
             holder.ll_discount.setVisibility(View.VISIBLE);
             holder.imgTestFasting.setVisibility(View.GONE);
             holder.txt_dis_amt.setText(activity.getResources().getString(R.string.rupee_symbol) + peResponseModel.getPrice());
-            holder.dis_percent.setText(peResponseModel.getDiscount_percent()+ " %");
+            holder.dis_percent.setText(peResponseModel.getDiscount_percent() + " %");
             holder.mrp_rate.setText(activity.getResources().getString(R.string.rupee_symbol) + peResponseModel.getMrp());
             holder.mrp_rate.setPaintFlags(holder.mrp_rate.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.txt_test.setText(peResponseModel.getName());
@@ -431,7 +429,7 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
                 @Override
                 public void onClick(View v) {
                     for (int i = 0; i < peSelectedTests.size(); i++) {
-                        if (peSelectedTests.get(i).getName().equalsIgnoreCase(peResponseModel.getName())){
+                        if (peSelectedTests.get(i).getName().equalsIgnoreCase(peResponseModel.getName())) {
                             peSelectedTests.remove(i);
                         }
                     }
@@ -488,7 +486,8 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
 
     @Override
     public int getItemCount() {
-        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+        if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             return peFilteredList.size();
         }
         return filteredList.size();
@@ -538,7 +537,7 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
             ArrayList<GetPETestResponseModel.DataDTO> oldList = peTestRateModelArry;
             ArrayList<GetPETestResponseModel.DataDTO> newList = new ArrayList<GetPETestResponseModel.DataDTO>();
             for (GetPETestResponseModel.DataDTO testModel : oldList) {
-                if (testModel.getName().toLowerCase().contains(query) ||testModel.getName().contains(query)|| testModel.getDos_code().toLowerCase().contains(query) ) {
+                if (testModel.getName().toLowerCase().contains(query) || testModel.getName().contains(query) || testModel.getDos_code().toLowerCase().contains(query)) {
                     newList.add(testModel);
                 }
             }

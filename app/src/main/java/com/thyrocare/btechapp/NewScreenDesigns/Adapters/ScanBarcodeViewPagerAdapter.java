@@ -40,7 +40,6 @@ import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
 import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.RemoveUrineSampleRespModel;
-import com.thyrocare.btechapp.models.data.BeneficiaryBarcodeDetailsModel;
 import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -250,8 +249,8 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
         // TODO if ben has single urine sample
         //fungible
-//        if (BundleConstants.companyOrderFlag) {
-        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+        if (BundleConstants.isPEPartner) {
+//        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             for (int i = 0; i < beneficaryWiseScanbarcodeArylst.size(); i++) {
                 if (beneficaryWiseScanbarcodeArylst.size() == 1) {
                     for (int j = 0; j < beneficaryWiseScanbarcodeArylst.get(i).getBarcodedtl().size(); j++) {
@@ -299,8 +298,8 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 //fungible
-//                if (BundleConstants.companyOrderFlag) {
-                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                if (BundleConstants.isPEPartner) {
+//                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (!isOTP) {
                         CallRemoveSample(beneficaryWiseScanbarcodeArylst.get(position), 1);
                     } else {

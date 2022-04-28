@@ -8,7 +8,6 @@ import com.google.gson.GsonBuilder;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.AddEditBenificaryActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
-import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.R;
@@ -55,7 +54,7 @@ public class PEAddOnController {
                             boolean peaddON  ;
                             if (peAddben == 1) {
                                 peaddON = true;
-                                BundleConstants.companyOrderFlag =false;
+                                BundleConstants.isPEPartner =false;
                                 BundleConstants.callOTPFlag = 0;
                                 TastyToast.makeText(mactivity, ConstantsMessages.BenefiaryAdded, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
                                 Intent intent = new Intent(mactivity, B2BVisitOrdersDisplayFragment.class);

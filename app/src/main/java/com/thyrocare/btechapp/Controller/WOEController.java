@@ -33,14 +33,10 @@ import com.thyrocare.btechapp.activity.KIOSK_Scanner_Activity;
 import com.thyrocare.btechapp.activity.PaymentsActivity;
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
-import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
-import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.utils.api.Logger;
-import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
-import com.thyrocare.btechapp.utils.app.CommonUtils;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
@@ -127,9 +123,10 @@ public class WOEController {
                 public void onResponse(Call<String> call, retrofit2.Response<String> res) {
                     globalClass.hideProgressDialog(activity);
                     if (res.isSuccessful() && res.body() != null) {
-                        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                            //fungible
-//                        if (BundleConstants.companyOrderFlag) {
+                        //fungible
+                        if (BundleConstants.isPEPartner) {
+//                        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+
                             //TODO local storage for B2B login
                             //                        RemoveOrderFromLocal(orderVisitDetailsModel.getVisitId());
                             //    clearOrderFromLocal(orderVisitDetailsModel.getVisitId());
@@ -268,7 +265,8 @@ public class WOEController {
                                     public void onClick(DialogInterface dialog, int which) {
                                         Constants.Finish_barcodeScanAcitivty = true;
                                         Constants.isWOEDone = true;
-                                        BundleConstants.companyOrderFlag = false;
+                                        BundleConstants.isPEPartner = false;
+                                        BundleConstants.PEDSAOrder = false;
                                         ResetOTPFlag();
                                         if (BundleConstants.isKIOSKOrder) {
                                             activity.finish();
@@ -297,7 +295,8 @@ public class WOEController {
                         Logger.error("testcode in else " + test.toUpperCase());
                         Constants.Finish_barcodeScanAcitivty = true;
                         Constants.isWOEDone = true;
-                        BundleConstants.companyOrderFlag = false;
+                        BundleConstants.isPEPartner = false;
+                        BundleConstants.PEDSAOrder = false;
                         ResetOTPFlag();
                         if (BundleConstants.isKIOSKOrder) {
                             activity.finish();
@@ -743,7 +742,8 @@ public class WOEController {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 Constants.Finish_barcodeScanAcitivty = true;
                                                 Constants.isWOEDone = true;
-                                                BundleConstants.companyOrderFlag = false;
+                                                BundleConstants.isPEPartner = false;
+                                                BundleConstants.PEDSAOrder = false;
                                                 ResetOTPFlag();
                                                 if (BundleConstants.isKIOSKOrder) {
                                                     activity.finish();
@@ -770,7 +770,8 @@ public class WOEController {
                                 Logger.error("testcode in else " + test.toUpperCase());
                                 Constants.Finish_barcodeScanAcitivty = true;
                                 Constants.isWOEDone = true;
-                                BundleConstants.companyOrderFlag = false;
+                                BundleConstants.isPEPartner = false;
+                                BundleConstants.PEDSAOrder = false;
                                 ResetOTPFlag();
                                 if (BundleConstants.isKIOSKOrder) {
                                     activity.finish();
@@ -991,8 +992,8 @@ public class WOEController {
     private void ResetOTPFlag() {
         try {
             //fungible
-//            if (BundleConstants.companyOrderFlag) {
-            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+            if (BundleConstants.isPEPartner) {
+//            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 if (BundleConstants.callOTPFlag == 1) {
                     BundleConstants.callOTPFlag = 0;
                 }
