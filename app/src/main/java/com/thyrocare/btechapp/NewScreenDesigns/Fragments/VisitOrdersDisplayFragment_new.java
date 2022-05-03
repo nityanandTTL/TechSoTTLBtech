@@ -267,7 +267,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         tv_RoutineOrders = (TextView) findViewById(R.id.tv_RoutineOrders);
         tv_AayushmanOrders = (TextView) findViewById(R.id.tv_AayushmanOrders);
         recyOrderList = (RecyclerView) findViewById(R.id.recyOrderList);
-     //   swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_visit_orders_display);
+        //   swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_visit_orders_display);
         layoutEarnings = (LinearLayout) findViewById(R.id.layoutEarnings);
         lin_categories = (LinearLayout) findViewById(R.id.lin_categories);
 //        txtEstDistance = (TextView) findViewById(R.id.txtEstDistance);
@@ -288,7 +288,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         }*/
         // orderRescheduleFlag = getIntent().getBooleanExtra(BundleConstants.Reschedule,false);
         peAddON = getIntent().getBooleanExtra(BundleConstants.PEADDON, false);
-        orderPosition = getIntent().getIntExtra(BundleConstants.POSITION,0);
+        orderPosition = getIntent().getIntExtra(BundleConstants.POSITION, 0);
         System.out.println("" + orderRescheduleFlag);
     }
 
@@ -338,7 +338,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                 layoutEarnings.setVisibility(View.VISIBLE);
                 if (orderDetailsResponseModels_RoutineOrders.size() > 0) {
                     prepareRecyclerView(orderDetailsResponseModels_RoutineOrders);
-                 //   swipeRefreshLayout.setRefreshing(false);
+                    //   swipeRefreshLayout.setRefreshing(false);
                 } else {
                     recyOrderList.setVisibility(View.GONE);
                     txtNoRecord.setVisibility(View.VISIBLE);
@@ -361,7 +361,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                 layoutEarnings.setVisibility(View.GONE);
                 if (orderDetailsResponseModels_AayushmanOrders.size() > 0) {
                     prepareRecyclerView(orderDetailsResponseModels_AayushmanOrders);
-               //     swipeRefreshLayout.setRefreshing(false);
+                    //     swipeRefreshLayout.setRefreshing(false);
                 } else {
                     recyOrderList.setVisibility(View.GONE);
                     txtNoRecord.setVisibility(View.VISIBLE);
@@ -484,6 +484,8 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                             orderDetailsResponseModels = null;
                             orderDetailsResponseModels = new ArrayList<>();
                             FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
+                            BundleConstants.isPEPartner = fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).isPEPartner();
+                            BundleConstants.PEDSAOrder = fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).isPEDSAOrder();
                             if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
                                 appPreferenceManager.setfetchOrderDetailsResponseModel(fetchOrderDetailsResponseModel);
                                 for (OrderVisitDetailsModel orderVisitDetailsModel : fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
@@ -737,7 +739,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             lin_categories.setVisibility(View.GONE);
         }
 
-  //      swipeRefreshLayout.setRefreshing(false);
+        //      swipeRefreshLayout.setRefreshing(false);
 
     }
 
@@ -750,7 +752,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                 btech_VisitDisplayAdapter.UpdateList(orderDetailsResponseModels);
                 btech_VisitDisplayAdapter.notifyDataSetChanged();
             } else {
-                btech_VisitDisplayAdapter = new Btech_VisitDisplayAdapter(this, activity, orderDetailsResponseModels,orderPosition);
+                btech_VisitDisplayAdapter = new Btech_VisitDisplayAdapter(this, activity, orderDetailsResponseModels, orderPosition);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
                 recyOrderList.setLayoutManager(mLayoutManager);
                 recyOrderList.setAdapter(btech_VisitDisplayAdapter);
@@ -801,7 +803,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                         @Override
                         public void onRefreshClicked() {
                             fetchData();
-               //             swipeRefreshLayout.setRefreshing(true);
+                            //             swipeRefreshLayout.setRefreshing(true);
 //                            startActivity(new Intent(activity, VisitOrdersDisplayFragment_new.class));
                             startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
 //                            pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
@@ -1162,12 +1164,12 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
     }
 
     public void orderRelease() {
-            if (connectionDetector.isConnectingToInternet()) {
-                OrderReleaseRemarksController orc = new OrderReleaseRemarksController(this);
-                orc.getRemarks(BundleConstants.OrderReleaseOptionsID, 2);
-            } else {
-                global.showCustomToast(activity, activity.getResources().getString(R.string.plz_chk_internet));
-            }
+        if (connectionDetector.isConnectingToInternet()) {
+            OrderReleaseRemarksController orc = new OrderReleaseRemarksController(this);
+            orc.getRemarks(BundleConstants.OrderReleaseOptionsID, 2);
+        } else {
+            global.showCustomToast(activity, activity.getResources().getString(R.string.plz_chk_internet));
+        }
     }
 
     public void remarksArrayList(ArrayList<GetRemarksResponseModel> responseModelArrayList) {
@@ -1202,7 +1204,26 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             OrderReleaseRemarksController orc = new OrderReleaseRemarksController(this);
             orc.getRemarks(getRemarksResponseModel.getReCallRemarksId().toString(), 2);
         } else {
-            callAPIforOrderCancellationsRemarks(getRemarksResponseModel.getId().toString());
+            //Mith CX delay
+
+                if (getRemarksResponseModel.getId() == 001){
+                    Cop = new ConfirmOrderPassDialog(VisitOrdersDisplayFragment_new.this, new refreshDelegate() {
+                        @Override
+                        public void onRefreshClicked() {
+                            fetchData();
+                            //             swipeRefreshLayout.setRefreshing(true);
+//                            startActivity(new Intent(activity, VisitOrdersDisplayFragment_new.class));
+                            startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+//                            pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
+                        }
+                    }, orderDetailsResponseModels.get(0).getAllOrderdetails().get(0).getPincode(), orderDetailsResponseModels.get(0));
+                    Cop.show();
+
+                }else{
+                    callAPIforOrderCancellationsRemarks(getRemarksResponseModel.getId().toString());
+                }
+
+//            callAPIforOrderCancellationsRemarks(getRemarksResponseModel.getId().toString());
         }
 
     }
@@ -1432,7 +1453,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                         fetchData();
                     }*/
                     fetchData();
-                 //   RemoveOrderFromLocal(orderVisitDetailsModel.getVisitId());
+                    //   RemoveOrderFromLocal(orderVisitDetailsModel.getVisitId());
                 } else {
                     try {
                         Toast.makeText(activity, response.errorBody() != null ? response.errorBody().string() : SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
@@ -1475,10 +1496,10 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                         fetchData();
                     }*/
                     fetchData();
-               //     orderStatusUpdate(appPreferenceManager.getfetchOrderDetailsResponseModel(), visitId);
+                    //     orderStatusUpdate(appPreferenceManager.getfetchOrderDetailsResponseModel(), visitId);
 //                    startActivity(new Intent(activity, VisitOrdersDisplayFragment_new.class));
-                    Intent i = new Intent(activity,VisitOrdersDisplayFragment_new.class);
-                    i.putExtra(BundleConstants.POSITION,orderPosition);
+                    Intent i = new Intent(activity, VisitOrdersDisplayFragment_new.class);
+                    i.putExtra(BundleConstants.POSITION, orderPosition);
                     startActivity(i);
 
                 } else {

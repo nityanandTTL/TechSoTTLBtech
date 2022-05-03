@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.btechapp.Controller.BottomSheetController;
 import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
@@ -264,14 +265,16 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             @Override
             public void onClick(View view) {
                 //fungible
-                if (BundleConstants.isPEPartner && !BundleConstants.PEDSAOrder) {
-//                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+               /* if (BundleConstants.isPEPartner && !BundleConstants.PEDSAOrder) {
                     visitOrdersDisplayFragment_new.orderRelease();
                 } else if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder){
                     onReleaseButtonClicked(pos, holder, holder.txtCustomerName.getText().toString().trim(), holder.txtOrderNo.getText().toString().trim());
                 }else {
                     onReleaseButtonClicked(pos, holder, holder.txtCustomerName.getText().toString().trim(), holder.txtOrderNo.getText().toString().trim());
-                }
+                }*/
+
+                //Mith CX delay
+                visitOrdersDisplayFragment_new.orderRelease();
             }
         });
 
@@ -462,8 +465,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             String appointmentDate = orderVisitDetailsModelsArr.get(pos).getAppointmentDate();
             Date ApptTime = DateUtil.dateFromString(appointmentDate + " " + orderVisitDetailsModelsArr.get(pos).getSlot(), "dd-MM-yyyy hh:mm a");
             Date CurrentTime = new Date();
-            //TODO Mith remove when done
-            /*if (ApptTime != null) {
+
+            if (ApptTime != null) {
                 long difference = ApptTime.getTime() - CurrentTime.getTime();
                 int days = (int) (difference / (1000 * 60 * 60 * 24));
                 int hours = (int) ((difference - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
@@ -477,9 +480,9 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                 }
             } else {
                 onStartClicked(pos, holder);
-            }*/
+            }
 
-            onStartClicked(pos, holder);
+//            onStartClicked(pos, holder);
         } else {
             Toast.makeText(activity, "Please accept the order first", Toast.LENGTH_SHORT).show();
         }

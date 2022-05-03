@@ -20,6 +20,7 @@ import com.thyrocare.btechapp.models.api.response.GetPEBtechSlotResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetPECancelRemarksResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetRemarksResponseModel;
 import com.thyrocare.btechapp.models.api.response.PECutomerIntimationSMSResponeModel;
+import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.Global;
 
 import java.util.ArrayList;
@@ -113,9 +114,9 @@ public class OrderReleaseRemarksController {
                     try {
                         if (response.isSuccessful() && response.body() != null) {
                             ResponseModel responseModel = response.body();
-                            if (i==1){
+                            if (i == 1) {
                                 newOrderReleaseActivity.slotSubmitresponse(responseModel);
-                            }else{
+                            } else {
                                 rescheduleSlotActivity.slotSubmitresponse(responseModel);
                             }
 
@@ -184,14 +185,22 @@ public class OrderReleaseRemarksController {
                         if (response.isSuccessful() && response.body() != null) {
                             ArrayList<GetRemarksResponseModel> responseModelArrayList = new ArrayList<>();
                             responseModelArrayList = response.body();
-                            if (i==2){
+                            if (i == 2) {
+                                //Mith CX delay TC
+                                if (!BundleConstants.PEDSAOrder && !BundleConstants.isPEPartner) {
+                                    GetRemarksResponseModel getRemarksResponseModel = new GetRemarksResponseModel();
+                                    getRemarksResponseModel.setId(001);
+                                    getRemarksResponseModel.setReCallRemarksId("0");
+                                    getRemarksResponseModel.setRemarks("Order Pass");
+                                    responseModelArrayList.add(getRemarksResponseModel);
+                                }
                                 for (int j = 0; j < responseModelArrayList.size(); j++) {
-                                    if (responseModelArrayList.get(j).getId() == 109){
+                                    if (responseModelArrayList.get(j).getId() == 109) {
                                         responseModelArrayList.remove(j);
                                     }
                                 }
                                 visitOrdersDisplayFragment_new.remarksArrayList(responseModelArrayList);
-                            }else {
+                            } else {
                                 startAndArriveActivity.remarksArrayList(responseModelArrayList, i);
                             }
                         } else {
@@ -226,10 +235,10 @@ public class OrderReleaseRemarksController {
                         if (response.isSuccessful() && response.body() != null) {
                             ArrayList<GetPECancelRemarksResponseModel> responseModelArrayList = new ArrayList<>();
                             responseModelArrayList = response.body();
-                            if (flag ==1){
-                                startAndArriveActivity.getReasons(responseModelArrayList,ID);
-                            }else{
-                                visitOrdersDisplayFragment_new.getReasons(responseModelArrayList,ID);
+                            if (flag == 1) {
+                                startAndArriveActivity.getReasons(responseModelArrayList, ID);
+                            } else {
+                                visitOrdersDisplayFragment_new.getReasons(responseModelArrayList, ID);
                             }
 
                         } else {

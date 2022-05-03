@@ -427,14 +427,29 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         }
 
         //fungible
-            if((FlagADDEditBen && BundleConstants.isPEPartner) || (FlagADDEditBen ||BundleConstants.PEDSAOrder)){
-//        if (FlagADDEditBen && Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-            if (cd.isConnectingToInternet()) {
-                peAuthorizationController = new PEAuthorizationController(this);
-                peAuthorizationController.getAuthorizationToken(2, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode(), orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
-            } else {
-                globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
-            }
+            if(FlagADDEditBen){
+                if(BundleConstants.isPEPartner || BundleConstants.PEDSAOrder){
+                    if (cd.isConnectingToInternet()) {
+                        peAuthorizationController = new PEAuthorizationController(this);
+                        peAuthorizationController.getAuthorizationToken(2, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode(), orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
+                    } else {
+                        globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+                    }
+                }else{
+                    if (!UpdateProduct()) {
+                        if (cd.isConnectingToInternet()) {
+                            CallGetTechsoProductsAPI();
+                        } else {
+                            globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+                        }
+                    } else {
+                        BrandTestMasterModel brandTestmdel = new Gson().fromJson(appPreferenceManager.getCacheProduct(), BrandTestMasterModel.class);
+                        //  brandTestMasterModel = getBrandTestMaster(brandTestmdel);
+                        brandTestMasterModel = getBrandTestMaster(brandTestmdel, appPreferenceManager.getDSAProductResponseModel());
+                        CallAfterBranDAPIRes();
+                    }
+                }
+
 //            getTestList();
 //            testList();
         } else if (!BundleConstants.isPEPartner) {

@@ -486,14 +486,18 @@ public class StartAndArriveActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //TODO for testing order release.
                 //fungible
-                if (BundleConstants.isPEPartner && !BundleConstants.PEDSAOrder) {
+                //Mith
+                /*if (BundleConstants.isPEPartner && !BundleConstants.PEDSAOrder) {
 //                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     onOrderRelease();
-                }else if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder){
+                } else if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
                     onReleaseButtonClicked();
-                }else {
+                } else {
                     onReleaseButtonClicked();
-                }
+                }*/
+
+                //Mith CX delay
+                 onOrderRelease();
             }
         });
 
@@ -698,10 +702,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
 //                                bottomsheetScanBarcode();
                             }
                         } else {*/
-                            if (checkBeneficiaryDtls()) {
-                                totalAmountPayable = 0;
-                                setpayMentActivity();
-                            }
+                        if (checkBeneficiaryDtls()) {
+                            totalAmountPayable = 0;
+                            setpayMentActivity();
+                        }
 //                        }
                     }
                 } catch (Exception e) {
@@ -1509,6 +1513,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                         globalclass.hideProgressDialog(mActivity);
                         FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
                         if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails() != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
+                            BundleConstants.isPEPartner = fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).isPEPartner();
+                            BundleConstants.PEDSAOrder = fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).isPEDSAOrder();
                             for (OrderVisitDetailsModel orderVisitDetailsModel :
                                     fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
                                 if (orderVisitDetailsModel.getVisitId().equalsIgnoreCase(strOrderNo)) {
@@ -2530,8 +2536,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    Intent intent = new Intent(mActivity,B2BVisitOrdersDisplayFragment.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    Intent intent = new Intent(mActivity, B2BVisitOrdersDisplayFragment.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
 //                                    finish();
                                 }
@@ -2837,7 +2843,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                 }
                             }
                             testsDTO.setPartner_patient_id(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getLeadId());
-                          //  testsDTO.setType(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType());
+                            //  testsDTO.setType(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestSampleType().get(k).getTestType());
                             dtoArrayList.add(testsDTO);
                             break;
                         }
@@ -3331,6 +3337,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
                     FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
                     if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails() != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
+                        BundleConstants.isPEPartner = fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).isPEPartner();
+                        BundleConstants.PEDSAOrder = fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).isPEDSAOrder();
                         for (OrderVisitDetailsModel orderVisitDetailsModel : fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
                             if (orderVisitDetailsModel.getVisitId().equalsIgnoreCase(strOrderNo)) {
                                 if (orderVisitDetailsModel.getAllOrderdetails() != null && orderVisitDetailsModel.getAllOrderdetails().size() > 0) {
