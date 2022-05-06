@@ -527,8 +527,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 isRescan = false;
                 if (BuildConfig.DEBUG) {
 //                       OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
-                    EnterBarocodeManually();
-              //     OpenScanBarcodeScreen();
+//                    EnterBarocodeManually();
+                   OpenScanBarcodeScreen();
                 } else {
                     OpenScanBarcodeScreen();
                 }
@@ -543,8 +543,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 isRescan = true;
                 if (BuildConfig.DEBUG) {
                     //  OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
-                    EnterBarocodeManually();
- //                  OpenScanBarcodeScreen();
+//                    EnterBarocodeManually();
+                   OpenScanBarcodeScreen();
                 } else {
                     OpenScanBarcodeScreen();
                 }
@@ -908,7 +908,10 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 try {
                     imageurl = ImagePicker.Companion.getFile(data).toString();
 //                    imageurl = camera.getCameraBitmapPath();
-                    BenBarcodePicimagefile = new File(imageurl);
+                    BundleConstants.VenepunctureImage_path = imageurl;
+                    BenBarcodePicimagefile = new File(BundleConstants.VenepunctureImage_path);
+//                    BenBarcodePicimagefile = new File(imageurl);
+
                     if (BenBarcodePicimagefile.exists()) {
                         boolean ImageUpdated = false;
                         if (ImageFlag == 1) {
@@ -926,7 +929,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                         } else {
                             for (int i = 0; i < beneficaryWiseArylst.size(); i++) {
                                 if (beneficaryWiseArylst.get(i).getBenId() == BenIDToCaptureVenuPhoto && i == PositionToStoreVenuPhoto) {
-                                    beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BenBarcodePicimagefile.getAbsolutePath());
+                                    beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BundleConstants.VenepunctureImage_path);
+//                                    beneficaryWiseArylst.get(PositionToStoreVenuPhoto).setVenepuncture(BenBarcodePicimagefile.getAbsolutePath());
                                     ImageUpdated = true;
                                 }
                                 //TODO Venupucture Image API

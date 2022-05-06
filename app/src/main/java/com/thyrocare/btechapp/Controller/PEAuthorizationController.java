@@ -11,10 +11,13 @@ import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
+import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
+import com.thyrocare.btechapp.models.api.request.SendEventRequestModel;
 import com.thyrocare.btechapp.models.api.response.GetPETestResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginResponseModel;
 import com.thyrocare.btechapp.models.api.response.PEAuthResponseModel;
+import com.thyrocare.btechapp.models.api.response.SendEventResponeModel;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
@@ -159,6 +162,46 @@ public class PEAuthorizationController {
                 @Override
                 public void onFailure(Call<GetPETestResponseModel> call, Throwable t) {
                     globalClass.showCustomToast(activity, "Something went wrong. Try after sometime");
+                    globalClass.hideProgressDialog(activity);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void sendEventArrived(final SendEventRequestModel sendEventRequestModel) {
+
+        try {
+//
+            PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+            Call<SendEventResponeModel> sendEventResponeModelCall = postAPIInterface.sendEventArrived(sendEventRequestModel);
+            sendEventResponeModelCall.enqueue(new Callback<SendEventResponeModel>() {
+                @Override
+                public void onResponse(Call<SendEventResponeModel> call, retrofit2.Response<SendEventResponeModel> response) {
+                    globalClass.hideProgressDialog(activity);
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            SendEventResponeModel sendEventResponeModel = response.body();
+                            if (InputUtils.CheckEqualIgnoreCase(sendEventResponeModel.getResponse(),"SUCCESS")){
+
+
+                            }else{
+
+                            }
+
+                        }else {
+                            globalClass.showCustomToast(activity, InputUtils.isNull(response.message()) ? response.message() : ConstantsMessages.SOMETHING_WENT_WRONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SendEventResponeModel> call, Throwable t) {
+//                    globalClass.showCustomToast(activity, "Something went wrong. Try after sometime");
                     globalClass.hideProgressDialog(activity);
                 }
             });

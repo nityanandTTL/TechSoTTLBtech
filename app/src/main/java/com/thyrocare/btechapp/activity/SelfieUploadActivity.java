@@ -31,6 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.FaceDetector;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -199,10 +200,16 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         initData();
         setListners();
 
-        if (BundleConstants.b_facedetection) {
-            CallApiOpenImage(appPreferenceManager.getLoginResponseModel().getUserID());
-        } else {
+        try {
+            if (BundleConstants.b_facedetection) {
+                if (!InputUtils.isNull(appPreferenceManager.getLoginResponseModel().getUserID())) {
+                    CallApiOpenImage(appPreferenceManager.getLoginResponseModel().getUserID());
+                }
+            } else {
 
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -507,7 +514,9 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
     }
 
     private void selectImage() {
-        camera = new Camera.Builder()
+
+        Global.cropImageFullScreenActivity(activity, 3);
+        /*camera = new Camera.Builder()
                 .resetToCorrectOrientation(true)// it will rotate the camera bitmap to the correct orientation from meta data
                 .setTakePhotoRequestCode(1)
                 .setDirectory("BtechApp/SelfieUploads")
@@ -520,8 +529,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
             camera.takePicture();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
+        }*/
     }
 
     private void cameraIntent() {
@@ -567,23 +575,40 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CAMERA) {
-                onCaptureImageResult(data);
+//                onCaptureImageResult(data);
             }
 
-            if (requestCode == Camera.REQUEST_TAKE_PHOTO) {
+            /*if (requestCode == Camera.REQUEST_TAKE_PHOTO) {
                 try {
                     onCaptureImageResult();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }*/
+
+            if (requestCode == ImagePicker.REQUEST_CODE && resultCode == RESULT_OK) {
+                try {
+
+                    Uri selectedImageUri = data.getData();
+                    imageurl = selectedImageUri.getPath();
+                    thumbnail = BitmapFactory.decodeFile(imageurl);
+
+//                    imageurl = data.getData().get
+//                    thumbnail = (Bitmap) data.getExtras().get("data");
+                    onCaptureImageResult();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void onCaptureImageResult() {
 
-        thumbnail = camera.getCameraBitmap();
+
+//        thumbnail = camera.getCameraBitmap();
         if (BundleConstants.Flag_facedetection == 1) {
             detect(thumbnail, 1);
         } else if (BundleConstants.Flag_facedetection == 2) {
@@ -593,10 +618,10 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         }
 
 
-        imageurl = camera.getCameraBitmapPath();
+//        imageurl = camera.getCameraBitmapPath();
         imagefile = new File(imageurl);
         if (imagefile != null && imagefile.exists()) {
-            appPreferenceManager.setBtechSelfie(camera.getCameraBitmapPath());
+            appPreferenceManager.setBtechSelfie(imageurl);
             if (BundleConstants.Flag_facedetection == 1) {
             } else {
                 iv_refresh.setVisibility(View.VISIBLE);
@@ -605,10 +630,8 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
                 btn_takePhoto.setVisibility(View.GONE);
                 Uri uri = Uri.fromFile(imagefile);
                 iv_capture.setImageURI(uri);
-                appPreferenceManager.setBtechSelfie(camera.getCameraBitmapPath());
-//                globalClass.DisplayImagewithoutDefaultImage(activity,imagefile.getAbsolutePath(),iv_capture);
-//                globalClass.DisplayImagewithoutDefaultImage(activity,imagefile.getAbsolutePath(),iv_capture);
-//                globalClass.DisplayDeviceImages(activity, camera.getCameraBitmapPath(), iv_capture);
+                appPreferenceManager.setBtechSelfie(imageurl);
+
             }
         } else {
             iv_refresh.setVisibility(View.GONE);
@@ -621,7 +644,7 @@ public class SelfieUploadActivity extends AbstractActivity implements View.OnCli
         Uri uri = Uri.fromFile(imagefile);
         iv_capture.setImageURI(uri);
 //        globalClass.DisplayImagewithoutDefaultImage(activity,imagefile.getAbsolutePath(),iv_capture);
-        globalClass.DisplayDeviceImages(activity, camera.getCameraBitmapPath(), img_user_picture);
+        globalClass.DisplayDeviceImages(activity, imageurl, img_user_picture);
     }
 
     private void onCaptureImageResult(Intent data) {

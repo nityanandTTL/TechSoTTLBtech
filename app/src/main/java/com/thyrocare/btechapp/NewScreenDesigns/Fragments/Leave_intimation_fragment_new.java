@@ -219,7 +219,11 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
                 btn_apply_leaves_id.setBackground(mActivity.getResources().getDrawable(R.drawable.background_btn_orange_));
                 btn_applied_leaved_id.setTextColor(getResources().getColor(R.color.bg_new_color));
                 btn_apply_leaves_id.setTextColor(getResources().getColor(R.color.white));
-                ll_spinner_nbt.setVisibility(View.VISIBLE);
+                if (InputUtils.CheckEqualIgnoreCase(appPreferenceManager.getLoginResponseModel().getRole(),Constants.TSP_ROLE_ID)){
+                    ll_spinner_nbt.setVisibility(View.VISIBLE);
+                }else {
+                    ll_spinner_nbt.setVisibility(View.GONE);
+                }
                 rl_applyforleave_id.setVisibility(View.VISIBLE);
                 ll_showapplied_leaved.setVisibility(View.GONE);
                 NBTSpinnerSelection();
@@ -235,6 +239,7 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
                     NBTSpinnerSelection();
                     ll_showapplied_leaved.setVisibility(View.GONE);
                 } else {
+                    rl_applyforleave_id.setVisibility(View.GONE);
                     callapi_forleaveapplied();
                     ll_showapplied_leaved.setVisibility(View.VISIBLE);
                 }
@@ -395,7 +400,7 @@ public class Leave_intimation_fragment_new extends AppCompatActivity {
     }
 
     private boolean validation() {
-        if (ll_spinner_nbt.getVisibility() == View.VISIBLE && spinner_select_nbt.getSelectedItem().toString().equalsIgnoreCase("--Select Name--")) {
+        if (ll_spinner_nbt.getVisibility() == View.VISIBLE && !InputUtils.isNull(spinner_select_nbt.getSelectedItem().toString()) && spinner_select_nbt.getSelectedItem().toString().equalsIgnoreCase("--Select Name--")) {
             global.showCustomToast(mActivity, "Kindly select b-tech", Toast.LENGTH_LONG);
             return false;
         }

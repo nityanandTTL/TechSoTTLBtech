@@ -87,6 +87,7 @@ import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
 import com.thyrocare.btechapp.models.api.request.PEOrderEditRequestModel;
 import com.thyrocare.btechapp.models.api.request.RemoveBeneficiaryAPIRequestModel;
+import com.thyrocare.btechapp.models.api.request.SendEventRequestModel;
 import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
 import com.thyrocare.btechapp.models.api.request.ServiceUpdateRequestModel;
 import com.thyrocare.btechapp.models.api.request.SetDispositionDataModel;
@@ -488,8 +489,11 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 //fungible
                 //Mith
                 /*if (BundleConstants.isPEPartner && !BundleConstants.PEDSAOrder) {
-//                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                    onOrderRelease();
+                    if (orderDetailsModel.getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("PARTIAL SERVICED") && isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())){
+                        onReleaseButtonClicked();
+                    }else {
+                        onOrderRelease();
+                    }
                 } else if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
                     onReleaseButtonClicked();
                 } else {
@@ -497,7 +501,14 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 }*/
 
                 //Mith CX delay
-                 onOrderRelease();
+                if (orderDetailsModel.getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("PARTIAL SERVICED") && isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())){
+                    onReleaseButtonClicked();
+                }else {
+                    onOrderRelease();
+                }
+
+
+//                 onOrderRelease();
             }
         });
 
@@ -587,6 +598,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                 callOrderStatusChangeApi(3, "Arrive", "", "");
                             } else {
                                 if (BundleConstants.isPEPartner || orderDetailsModel.getAllOrderdetails().get(0).isOTP()){
+
+                                    callAPIforStatusMark(orderDetailsModel);
                                     callAPIforOTP(orderDetailsModel);
                                 }
                             }
@@ -799,6 +812,23 @@ public class StartAndArriveActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void callAPIforStatusMark(OrderVisitDetailsModel orderDetailsModel) {
+        if (cd.isConnectingToInternet()) {
+            SendEventRequestModel snrm = new SendEventRequestModel();
+            snrm.setBtechId(appPreferenceManager.getLoginResponseModel().getUserID());
+            snrm.setId(orderDetailsModel.getSlotId());
+            snrm.setOrderno(orderDetailsModel.getVisitId());
+            snrm.setRemarks("ARRIVED MARKED");
+            snrm.setStatus(BundleConstants.EVENT_STATUS);
+
+            PEAuthorizationController peac = new PEAuthorizationController(this);
+            peac.sendEventArrived(snrm);
+
+        } else {
+            Toast.makeText(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void callAPIforOrderCancellationsRemarks(String s) {
@@ -3256,29 +3286,33 @@ public class StartAndArriveActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 globalclass.hideProgressDialog(mActivity);
-                if (response.isSuccessful() && response.body() != null) {
-                    String strresponse = response.body();
-                    if (!TextUtils.isEmpty(strresponse) && strresponse.toUpperCase().contains("SUCCESS")) {
-                        Toast.makeText(mActivity, "OTP Validated Successfully.", Toast.LENGTH_SHORT).show();
-                        if (!mActivity.isFinishing() && CustomDialogforOTPValidation != null && CustomDialogforOTPValidation.isShowing()) {
-                            CustomDialogforOTPValidation.dismiss();
-                        }
-                        if (Action.equalsIgnoreCase("Delete")) {
-                            //fungible
-                            if (BundleConstants.isPEPartner) {
-//                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                                callAPIforOrderEditDelete(Action, removebenModel.getBenId());
-                            } else {
-                                CallRemoveBenAPI(appPreferenceManager.getfetchOrderDetailsResponseModel(), removebenModel, orderNo, benId);
+                try {
+                    if (response.isSuccessful() && response.body() != null) {
+                        String strresponse = response.body();
+                        if (!InputUtils.isNull(strresponse) && strresponse.toUpperCase().contains("SUCCESS")) {
+                            Toast.makeText(mActivity, "OTP Validated Successfully.", Toast.LENGTH_SHORT).show();
+                            if (!mActivity.isFinishing() && CustomDialogforOTPValidation != null && CustomDialogforOTPValidation.isShowing()) {
+                                CustomDialogforOTPValidation.dismiss();
                             }
+                            if (Action.equalsIgnoreCase("Delete")) {
+                                //fungible
+                                if (BundleConstants.isPEPartner) {
+    //                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                    callAPIforOrderEditDelete(Action, removebenModel.getBenId());
+                                } else {
+                                    CallRemoveBenAPI(appPreferenceManager.getfetchOrderDetailsResponseModel(), removebenModel, orderNo, benId);
+                                }
+                            }
+                        } else {
+                            globalclass.showCustomToast(mActivity, "Invalid OTP.");
                         }
-                    } else {
+                    } else if (response.code() == 401) {
                         globalclass.showCustomToast(mActivity, "Invalid OTP.");
+                    } else {
+                        globalclass.showCustomToast(mActivity, MSG_SERVER_EXCEPTION);
                     }
-                } else if (response.code() == 401) {
-                    globalclass.showCustomToast(mActivity, "Invalid OTP.");
-                } else {
-                    globalclass.showCustomToast(mActivity, MSG_SERVER_EXCEPTION);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

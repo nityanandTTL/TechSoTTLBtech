@@ -61,7 +61,7 @@ public class All_VisitDisplayAdapter extends RecyclerView.Adapter<All_VisitDispl
         }
         holder.txtDate.setText(DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy HH:mm"));
 
-        if (DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy").equals(DateUtils.Req_Date_Req(orderDetailsResponseModel.getCurrentDatetime(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy"))) {
+        if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAppointmentDate()) && !InputUtils.isNull(orderDetailsResponseModel.getCurrentDatetime()) && DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy").equals(DateUtils.Req_Date_Req(orderDetailsResponseModel.getCurrentDatetime(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy"))) {
             holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_green);
         } else {
             holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_yellow);

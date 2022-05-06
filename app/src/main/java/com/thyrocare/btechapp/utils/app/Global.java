@@ -495,6 +495,7 @@ public class Global {
         try {
             Glide.with(activity)
                     .load(Url.replace("\\", "/"))
+                    .load(Url.replace("\n",""))
                     .placeholder(R.drawable.app_logo)
                     .error(R.drawable.app_logo)
                     .into(imageView);
@@ -721,6 +722,9 @@ public class Global {
                     .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
         } else if (flag == 2) {
             ImagePicker.Companion.with(activity).crop().galleryOnly().compress(Constants.MaxImageSize)
+                    .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
+        }else if (flag == 3){
+            ImagePicker.Companion.with(activity).cameraOnly().compress(Constants.MaxImageSize)
                     .maxResultSize(Constants.MaxImageWidth, Constants.MaxImageHeight).start();
         }
     }

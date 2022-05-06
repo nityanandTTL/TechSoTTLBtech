@@ -265,7 +265,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             @Override
             public void onClick(View view) {
                 //fungible
-               /* if (BundleConstants.isPEPartner && !BundleConstants.PEDSAOrder) {
+                /*if (BundleConstants.isPEPartner && !BundleConstants.PEDSAOrder) {
                     visitOrdersDisplayFragment_new.orderRelease();
                 } else if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder){
                     onReleaseButtonClicked(pos, holder, holder.txtCustomerName.getText().toString().trim(), holder.txtOrderNo.getText().toString().trim());

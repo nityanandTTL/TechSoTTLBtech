@@ -14,6 +14,7 @@ public class OrderStatusChangeRequestModel implements Parcelable{
     int RemarksId;
     int ReasonId;
     String AppointmentDate;
+    String phleboStatus;
 
     public OrderStatusChangeRequestModel() {
     }
@@ -25,6 +26,7 @@ public class OrderStatusChangeRequestModel implements Parcelable{
         RemarksId = in.readInt();
         ReasonId = in.readInt();
         AppointmentDate = in.readString();
+        phleboStatus = in.readString();
     }
 
     @Override
@@ -35,6 +37,7 @@ public class OrderStatusChangeRequestModel implements Parcelable{
         dest.writeInt(RemarksId);
         dest.writeInt(ReasonId);
         dest.writeString(AppointmentDate);
+        dest.writeString(phleboStatus);
     }
 
     @Override
@@ -100,5 +103,13 @@ public class OrderStatusChangeRequestModel implements Parcelable{
 
     public void setReasonId(int reasonId) {
         ReasonId = reasonId;
+    }
+
+    public String getPhleboStatus() {
+        return phleboStatus;
+    }
+
+    public void setPhleboStatus(String phleboStatus) {
+        this.phleboStatus = phleboStatus;
     }
 }

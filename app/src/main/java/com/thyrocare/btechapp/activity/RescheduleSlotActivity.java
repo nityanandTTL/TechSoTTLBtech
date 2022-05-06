@@ -336,7 +336,10 @@ public class RescheduleSlotActivity extends AppCompatActivity {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+                                Intent intent = new Intent(activity,B2BVisitOrdersDisplayFragment.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+//                                startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
                             }
                         })
                         .setCancelable(false)

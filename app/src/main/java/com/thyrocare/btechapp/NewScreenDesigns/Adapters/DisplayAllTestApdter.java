@@ -490,6 +490,9 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
 //        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             return peFilteredList.size();
         }
+        if (filteredList.size()==0){
+            return 0;
+        }
         return filteredList.size();
     }
 

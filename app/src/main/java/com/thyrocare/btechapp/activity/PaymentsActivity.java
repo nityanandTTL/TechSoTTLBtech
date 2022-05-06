@@ -272,51 +272,55 @@ public class PaymentsActivity extends AbstractActivity {
         responseCall.enqueue(new Callback<PEPaymentResponseModel>() {
             @Override
             public void onResponse(Call<PEPaymentResponseModel> call, retrofit2.Response<PEPaymentResponseModel> response) {
-                global.hideProgressDialog(activity);
-                if (response.isSuccessful() && response.body() != null) {
-                    if (InputUtils.CheckEqualIgnoreCase(response.body().getResponseCode(), Constants.RES000)) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setTitle("Payment Status")
-                                .setCancelable(false)
-                                .setMessage(response.body().getResponseMessage())
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        /*if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) &&orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()){
-                                            Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-                                        }else{*/
-                                        Intent intent = new Intent();
-                                        intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
-                                        setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                        finish();
-//                                        }
-                                    }
-                                }).show();
+                try {
+                    global.hideProgressDialog(activity);
+                    if (response.isSuccessful() && response.body() != null) {
+                        if (InputUtils.CheckEqualIgnoreCase(response.body().getResponseCode(), Constants.RES000)) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setTitle("Payment Status")
+                                    .setCancelable(false)
+                                    .setMessage(response.body().getResponseMessage())
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            /*if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) &&orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()){
+                                                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(intent);
+                                            }else{*/
+                                            Intent intent = new Intent();
+                                            intent.putExtra(BundleConstants.PAYMENT_STATUS, true);
+                                            setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                            finish();
+    //                                        }
+                                        }
+                                    }).show();
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setTitle("Verify Payment")
+                                    .setMessage(response.body().getResponseMessage())
+                                    .setCancelable(false)
+                                    .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            callPEPaymentModeAPI(pePaymentRequestModel);
+                                        }
+                                    }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    Intent intent = new Intent();
+                                    intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
+                                    setResult(BundleConstants.PAYMENTS_FINISH, intent);
+                                    finish();
+                                }
+                            }).show();
+                        }
                     } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setTitle("Verify Payment")
-                                .setMessage(response.body().getResponseMessage())
-                                .setCancelable(false)
-                                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        callPEPaymentModeAPI(pePaymentRequestModel);
-                                    }
-                                }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent intent = new Intent();
-                                intent.putExtra(BundleConstants.PAYMENT_STATUS, false);
-                                setResult(BundleConstants.PAYMENTS_FINISH, intent);
-                                finish();
-                            }
-                        }).show();
+                        Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(activity, SomethingWentwrngMsg, Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 

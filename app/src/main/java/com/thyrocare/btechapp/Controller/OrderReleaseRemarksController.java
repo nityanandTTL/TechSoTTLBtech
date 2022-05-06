@@ -66,6 +66,42 @@ public class OrderReleaseRemarksController {
         flag = 4;
     }
 
+    public void getPE_SMS(final PECutomerIntimationSMSRequestModel smsRequestModel) {
+        try {
+            globalClass.showProgressDialog(activity, ConstantsMessages.PLEASE_WAIT);
+            PostAPIInterface postAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
+            Call<PECutomerIntimationSMSResponeModel> smsResponeModelCall = postAPIInterface.getPE_SMS(smsRequestModel);
+            smsResponeModelCall.enqueue(new Callback<PECutomerIntimationSMSResponeModel>() {
+                @Override
+                public void onResponse(Call<PECutomerIntimationSMSResponeModel> call, retrofit2.Response<PECutomerIntimationSMSResponeModel> response) {
+                    globalClass.hideProgressDialog(activity);
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            PECutomerIntimationSMSResponeModel smsResponeModel = response.body();
+                            if (smsResponeModel.getResponseId().equalsIgnoreCase(ConstantsMessages.RES0000)) {
+                                newOrderReleaseActivity.smsSent(smsResponeModel);
+                            } else {
+                                TastyToast.makeText(activity, smsResponeModel.getResponse(), TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                            }
+                        } else {
+                            globalClass.showCustomToast(activity, "Something went wrong. Try after sometime");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PECutomerIntimationSMSResponeModel> call, Throwable t) {
+                    globalClass.showCustomToast(activity, "Something went wrong. Try after sometime");
+                    globalClass.hideProgressDialog(activity);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void getSMS(final PECutomerIntimationSMSRequestModel smsRequestModel) {
         try {
             globalClass.showProgressDialog(activity, ConstantsMessages.PLEASE_WAIT);

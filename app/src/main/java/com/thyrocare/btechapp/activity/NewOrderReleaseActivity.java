@@ -366,14 +366,25 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
     }
 
     private void callAPIforTimer() {
-        PECutomerIntimationSMSRequestModel smsRequestModel = new PECutomerIntimationSMSRequestModel();
-        smsRequestModel.setBtechId(0);
-        smsRequestModel.setOrderNo(orderno);
-        smsRequestModel.setUserId(0);
+        PECutomerIntimationSMSRequestModel smsRequestModel = null;
+        try {
+            smsRequestModel = new PECutomerIntimationSMSRequestModel();
+            smsRequestModel.setBtechId(Integer.valueOf(appPreferenceManager.getLoginResponseModel().getUserID()));
+            smsRequestModel.setOrderNo(orderno);
+            smsRequestModel.setUserId(0);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
 
         if (cd.isConnectingToInternet()) {
             OrderReleaseRemarksController orcController = new OrderReleaseRemarksController(this);
-            orcController.getSMS(smsRequestModel);
+            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder){
+                orcController.getPE_SMS(smsRequestModel);
+            }else {
+                orcController.getSMS(smsRequestModel);
+            }
+            /*OrderReleaseRemarksController orcController = new OrderReleaseRemarksController(this);
+            orcController.getPE_SMS(smsRequestModel);*/
         } else {
             Toast.makeText(mActivity, CheckInternetConnectionMsg, Toast.LENGTH_SHORT).show();
         }

@@ -68,6 +68,7 @@ import com.thyrocare.btechapp.models.api.request.Post_DeviceID;
 import com.thyrocare.btechapp.models.api.request.RemoveBeneficiaryAPIRequestModel;
 import com.thyrocare.btechapp.models.api.request.RemoveUrineReqModel;
 import com.thyrocare.btechapp.models.api.request.ResetPasswordRequestModel;
+import com.thyrocare.btechapp.models.api.request.SendEventRequestModel;
 import com.thyrocare.btechapp.models.api.request.SendOTPRequestModel;
 import com.thyrocare.btechapp.models.api.request.SendScannedbarcodeLME;
 import com.thyrocare.btechapp.models.api.request.ServiceUpdateRequestModel;
@@ -108,6 +109,7 @@ import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsRespo
 import com.thyrocare.btechapp.models.api.response.RemoveUrineSampleRespModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.ResponseModel;
 import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
+import com.thyrocare.btechapp.models.api.response.SendEventResponeModel;
 import com.thyrocare.btechapp.models.api.response.SignInResponseModel;
 import com.thyrocare.btechapp.models.api.response.SignSummaryResponseModel;
 import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
@@ -466,10 +468,16 @@ public interface PostAPIInterface {
     @POST("api/PEEvents/PEUpdatePatient")
     Call<PEUpdatePatientResponseModel> postPEUpdatePatient(@Body PEUpdatePatientRequestModel peUpdatePatientRequestModel);
 
+    @POST("api/PEEvents/SendEventsArrivedMarked")
+    Call<SendEventResponeModel> sendEventArrived(@Body SendEventRequestModel SendEventRequestModel);
+
     @POST("api/PEEvents/PEOrderEdit")
     Call<PEOrderEditResponseModel> postPEOrderEdit(@Body PEOrderEditRequestModel peOrderEditRequestModel);
 
     @POST("api/PEEvents/PECutomerIntimationSMS")
+    Call<PECutomerIntimationSMSResponeModel> getPE_SMS(@Body PECutomerIntimationSMSRequestModel smsRequestModel);
+
+    @POST("api/Masters/CutomerIntimationSMS")
     Call<PECutomerIntimationSMSResponeModel> getSMS(@Body PECutomerIntimationSMSRequestModel smsRequestModel);
 
     @POST("api/YNCStatusChange/PostUpdateOrderHistory")

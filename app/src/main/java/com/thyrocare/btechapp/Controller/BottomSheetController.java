@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -278,6 +279,11 @@ public class BottomSheetController {
         });
 
         if (flag == 2) {
+
+            System.out.println("---------------------"+imgUrl);
+            String str_image = imgUrl.replace("\\","/");
+            str_image.replace("\n","");
+            imgUrl = str_image;
             if (isFromURL) {
                 globalclass.DisplayImagewithDefaultImage(mActivity, imgUrl.replace("\\", "/"), imageview);
             } else {
