@@ -692,7 +692,7 @@ public class TSP_OrderDisplayAdapterNew extends RecyclerView.Adapter<TSP_OrderDi
             public void onClick(View v) {
                 fastingFlagInt = 1;
                 holder.txtFastingStatus.setVisibility(View.VISIBLE);
-                holder.imgRelease.setVisibility(View.VISIBLE);//remove 11 validation
+                holder.imgRelease.setVisibility(View.GONE);//remove 11 validation
 
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isDirectVisit()) {
                     holder.imgCall.setVisibility(View.GONE);

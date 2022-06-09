@@ -1764,6 +1764,24 @@ public class CheckoutWoeActivity extends AppCompatActivity {
             Calendar cal2 = Calendar.getInstance();
             cal2.setTime(currentTime);
             cal2.add(Calendar.MINUTE, +150);
+
+            //TODO Logic for rounding-off time for PPBS Sushil-------------
+            int min = 0;
+            if (cal1.get(Calendar.MINUTE) != 0 && cal1.get(Calendar.MINUTE) <= 30) {
+                min = 30 - cal1.get(Calendar.MINUTE);
+            } else if (cal1.get(Calendar.MINUTE) > 30 && cal1.get(Calendar.MINUTE) < 60) {
+                min = 60 - cal1.get(Calendar.MINUTE);
+            }
+            cal1.add(Calendar.MINUTE, min);
+             min = 0;
+            if (cal2.get(Calendar.MINUTE) != 0 && cal2.get(Calendar.MINUTE) <= 30) {
+                min = 30 - cal2.get(Calendar.MINUTE);
+            } else if (cal2.get(Calendar.MINUTE) > 30 && cal2.get(Calendar.MINUTE) < 60) {
+                min = 60 - cal2.get(Calendar.MINUTE);
+            }
+            cal2.add(Calendar.MINUTE, min);
+
+
             newTimeaddTwoHrs = df.format(cal1.getTime());
             newTimeaddTwoHalfHrs = df.format(cal2.getTime());
             Logger.error(">> ....." + newTimeaddTwoHrs);

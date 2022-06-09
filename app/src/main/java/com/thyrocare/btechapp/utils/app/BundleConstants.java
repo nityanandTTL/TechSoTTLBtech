@@ -37,6 +37,7 @@ public class BundleConstants {
     public static final int ADDEDITTESTREQUESTCODE = 3457;
     public static final String PE_TEST_LIST_MODEL = "petestlistmodel";
     public static final String VISIT_ORDER_DETAILS_MODEL = "visitOrderDetailsModel";
+    public static final String VISIT_ORDER_DETAILS_MODEL_ARRAYLIST = "visitOrderDetailsModelArraylist";
     public static final String CAMP_ORDER_DETAILS_MODEL = "campOrderDetailsModel";
     public static final String BENEFICIARY_DETAILS_MODEL = "beneficiaryDetailsModel";
     public static final String ADD_BEN_SELECTED_TESTLIST = "addBenSelectedTestlist";
@@ -86,6 +87,13 @@ public class BundleConstants {
     public static final String REMARKS_ID = "REMARKS_ID";
     public static final String PE_OTP_ARRIVED = "OTP ARRIVED VERIFIED";
     public static final Integer EVENT_STATUS = 60;
+    public static final String YET_TO_ASSIGN = "YET TO ASSIGN";
+    public static final String Y = "Y";
+    public static final String ASSIGNED = "ASSIGNED";
+    public static final String FIX_APPOINTMENT = "fix appointment";
+    public static final String PERSUASION = "PERSUASION";
+    public static final String RESCHEDULED = "RESCHEDULED";
+    public static final String TEST_EDIT_PE = "TEST_EDIT_PE";
     public static String PINCODE="PINCODE";
 
     // neha G --------------------------
@@ -153,6 +161,7 @@ public class BundleConstants {
 
     public static boolean isPEPartner = false;
     public static boolean PEDSAOrder = false;
+    public static boolean PE_HARD_BLOCKING = false;
 
     public static String VenepunctureImage_path ="";
 }

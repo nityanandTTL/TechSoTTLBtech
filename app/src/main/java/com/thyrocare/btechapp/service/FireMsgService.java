@@ -6,13 +6,18 @@ import android.content.SharedPreferences;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.clevertap.android.sdk.CleverTapAPI;
+import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener;
+import com.clevertap.android.sdk.pushnotification.NotificationInfo;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.SplashActivity;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
@@ -21,6 +26,7 @@ import com.thyrocare.btechapp.utils.app.InputUtils;
 import com.thyrocare.btechapp.utils.app.NotificationUtils;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by E4904 on 4/24/2017.
@@ -32,10 +38,13 @@ public class FireMsgService extends FirebaseMessagingService {
     private AppPreferenceManager appPreferenceManager;
     private NotificationUtils notificationUtils;
     private int Screen_category = 0;
+    CleverTapAPI cleverTapAPI;
 
     @Override
     public void onNewToken(@NonNull String tkn) {
         super.onNewToken(tkn);
+        cleverTapAPI = CleverTapAPI.getDefaultInstance(getApplicationContext());
+        cleverTapAPI.pushFcmRegistrationId(tkn, true);
 
         MessageLogger.LogDebug("FireIDServicechat", "Token [" + tkn + "]");
 
@@ -69,12 +78,30 @@ public class FireMsgService extends FirebaseMessagingService {
 // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             MessageLogger.LogError("Error", "Data Payload: " + remoteMessage.getData().toString());
-            try {
-                HashMap<String, String> notificationData = new HashMap<>();
-                notificationData.putAll(remoteMessage.getData());
-                handleDataMessage(notificationData);
-            } catch (Exception e) {
-                MessageLogger.LogError("Error", "Exception: " + e.getMessage());
+            Bundle extras = new Bundle();
+            for (Map.Entry entry : remoteMessage.getData().entrySet()) {
+                extras.putString(entry.getKey().toString(), entry.getValue().toString());
+            }
+            NotificationInfo notificationInfo = CleverTapAPI.getNotificationInfo(extras);
+            if (notificationInfo.fromCleverTap) {
+                CleverTapAPI.createNotification(getApplicationContext(), extras);
+                CleverTapAPI cleverTapAPI = CleverTapAPI.getDefaultInstance(getApplicationContext());
+                cleverTapAPI.setCTPushNotificationListener(new CTPushNotificationListener() {
+                    @Override
+                    public void onNotificationClickedPayloadReceived(HashMap<String, Object> payload) {
+                        Constants.isFromCleverTap = true;
+                       /* Intent resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        getApplication().startActivity(resultIntent);*/
+                    }
+                });
+            } else {
+                try {
+                    HashMap<String, String> notificationData = new HashMap<>();
+                    notificationData.putAll(remoteMessage.getData());
+                    handleDataMessage(notificationData);
+                } catch (Exception e) {
+                    MessageLogger.LogError("Error", "Exception: " + e.getMessage());
+                }
             }
         }
 
@@ -136,9 +163,9 @@ public class FireMsgService extends FirebaseMessagingService {
         resultIntent.putExtra("Screen_URL", ScreenURL);
         if (Screen_category == 0) {
             resultIntent.putExtra("screenCategory", Screen_category);
-        } else if (Screen_category==118){
+        } else if (Screen_category == 118) {
             resultIntent.putExtra("screenCategory", 118);
-        }else {
+        } else {
             resultIntent.putExtra("screenCategory", 0);
         }
 

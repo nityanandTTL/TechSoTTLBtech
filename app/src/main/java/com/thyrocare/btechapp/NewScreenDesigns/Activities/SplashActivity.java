@@ -3,6 +3,7 @@ package com.thyrocare.btechapp.NewScreenDesigns.Activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,11 +15,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.Toast;
 
+import com.clevertap.android.sdk.CleverTapAPI;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.scottyab.rootbeer.RootBeer;
+import com.thyrocare.btechapp.BuildConfig;
+import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.GetSSLKeyRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.LogoutRequestModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.NotificationMappingRequestModel;
@@ -96,9 +100,18 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        Constants.clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+        CleverTapAPI.createNotificationChannelGroup(getApplicationContext(), "BTechNotification", "Notifications");
+        CleverTapAPI.createNotificationChannel(getApplicationContext(), "BTech", "BTech", "YourChannelDescription", NotificationManager.IMPORTANCE_MAX, "BTechNotification", true);
+        CleverTapAPI.createNotificationChannel(getApplicationContext(), "BTechAlert", "BTechAlert", "YourChannelDescription", NotificationManager.IMPORTANCE_MAX, "BTechNotification", true,"sample.mp3");
+        if (BuildConfig.DEBUG) {
+            CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.DEBUG);
+        } else {
+            CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.OFF);
+        }
+
         init();
         initData();
-
     }
 
     private void init() {
@@ -114,10 +127,6 @@ public class SplashActivity extends AppCompatActivity {
 
         isFlebo = getIntent().getStringExtra("isFlebo");
         locationUpdateIntent = new Intent(this, LocationUpdateService.class);
-
-        System.out.println("techsoapisha----------------------------------"+EncryptionUtils.Ecrp_Hex("https://techsoapisha1.azurewebsites.net"));
-
-        System.out.println("Mith<<<<<<<<<<<<"+EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD)));
     }
 
     private void CheckIfDeviceIsRooted() {
@@ -400,12 +409,19 @@ public class SplashActivity extends AppCompatActivity {
                         if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
                             if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
 
-                                Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                                i.putExtra("LEAVEINTIMATION", "0");
-                                i.putExtra("isFromNotification", isFromNotification);
-                                i.putExtra("screenCategory", screenCategory);
-                                startActivity(i);
-                                finish();
+                                if(Constants.isFromCleverTap){
+                                    Constants.isFromCleverTap=false;
+                                    Intent intent = new Intent(SplashActivity.this, B2BVisitOrdersDisplayFragment.class);
+                                    startActivity(intent);
+                                    finish();
+                                }else {
+                                    Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                                    i.putExtra("LEAVEINTIMATION", "0");
+                                    i.putExtra("isFromNotification", isFromNotification);
+                                    i.putExtra("screenCategory", screenCategory);
+                                    startActivity(i);
+                                    finish();
+                                }
                             } else {
                                 GetDynBtechAvailability();
                             }
@@ -617,12 +633,20 @@ public class SplashActivity extends AppCompatActivity {
                 } else {
                     if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
                         // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
-                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                        i.putExtra("LEAVEINTIMATION", "0");
-                        i.putExtra("isFromNotification", isFromNotification);
-                        i.putExtra("screenCategory", screenCategory);
-                        startActivity(i);
-                        finish();
+                      if (Constants.isFromCleverTap){
+                          Constants.isFromCleverTap=false;
+                          Intent intent = new Intent(getApplicationContext(),B2BVisitOrdersDisplayFragment.class);
+                          startActivity(intent);
+                          finish();
+                      }else{
+                          Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                          i.putExtra("LEAVEINTIMATION", "0");
+                          i.putExtra("isFromNotification", isFromNotification);
+                          i.putExtra("screenCategory", screenCategory);
+                          startActivity(i);
+                          finish();
+                      }
+
                     } else {
                         Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
                         startActivity(i);

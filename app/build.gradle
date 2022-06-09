@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion '28.0.3'
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.thyrocare.btechapp"
-        minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 152
-        versionName "2.8.1"
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 157
+        versionName "2.8.6"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -109,7 +109,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
 
 
-    implementation 'com.google.zxing:core:3.2.1'
+    implementation 'com.google.zxing:core:3.5.0'
+//    implementation 'com.google.zxing:core:3.2.1'
     implementation 'com.android.volley:volley:1.1.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.5.0@aar'
     implementation 'androidx.multidex:multidex:2.0.1'
@@ -167,6 +168,12 @@ dependencies {
 
     implementation 'com.github.dhaval2404:imagepicker:1.7.5'
     implementation 'com.cheekiat:slideview:1.6'
+
+    //TODO Clevertap SDK
+    implementation('com.clevertap.android:clevertap-android-sdk:4.2.0') {
+        exclude group: 'com.android.installreferrer'
+    }
+
 }
 
 apply plugin: 'com.google.gms.google-services'

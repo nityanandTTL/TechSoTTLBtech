@@ -212,7 +212,8 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
         holder.tv_Address.setText(!StringUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress().toString().trim()) ? Global.toCamelCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getAddress().toString().trim()) : "");
         holder.tv_MobileNo.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
         holder.tv_EmailID.setText(!StringUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail()) ? orderVisitDetailsModel.getAllOrderdetails().get(0).getEmail() : "");
-        holder.tv_AppointmentDateTime.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAppointmentDate() + ", " + DateUtil.Req_Date_Req(orderVisitDetailsModel.getAllOrderdetails().get(0).getSlot(), "hh:mm a", "HH:mm"));
+//        holder.tv_AppointmentDateTime.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAppointmentDate() + ", " + DateUtil.Req_Date_Req(orderVisitDetailsModel.getAllOrderdetails().get(0).getSlot(), "hh:mm a", "HH:mm"));
+        holder.tv_AppointmentDateTime.setText(orderVisitDetailsModel.getAllOrderdetails().get(0).getAppointmentDate() +", "+ (!StringUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getTimeSlot()) ?orderVisitDetailsModel.getAllOrderdetails().get(0).getTimeSlot() :DateUtil.Req_Date_Req(orderVisitDetailsModel.getAllOrderdetails().get(0).getSlot(), "hh:mm a", "HH:mm")));
         holder.tv_benName.setText(BenMasterArray.get(position).getName() + " (" + BenMasterArray.get(position).getGender() + " | " + BenMasterArray.get(position).getAge() + " years)");
         if (orderVisitDetailsModel.getAllOrderdetails().get(0).isDisplayProduct()) {
             holder.tv_benProduct.setText(Html.fromHtml(!StringUtils.isNull(BenMasterArray.get(position).getTestsCode()) ? "<u>" + BenMasterArray.get(position).getTestsCode() + "</u>" : ""));

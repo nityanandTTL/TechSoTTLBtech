@@ -418,10 +418,19 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
             holder.imgCheck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    peSelectedTests.add(peResponseModel);
-                    if (onClickListeners != null) {
-                        onClickListeners.onPECheckChange(peSelectedTests);
+                    if (peSelectedTests!=null){
+                        peSelectedTests.add(peResponseModel);
+                        if (onClickListeners != null) {
+                            onClickListeners.onPECheckChange(peSelectedTests);
+                        }
+                    }else {
+                        peSelectedTests = new ArrayList<GetPETestResponseModel.DataDTO>();
+                        peSelectedTests.add(peResponseModel);
+                        if (onClickListeners!=null){
+                            onClickListeners.onPECheckChange(peSelectedTests);
+                        }
                     }
+
                 }
             });
 

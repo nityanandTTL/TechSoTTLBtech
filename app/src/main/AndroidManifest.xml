@@ -47,9 +47,25 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon">
-        <activity android:name=".activity.RescheduleSlotActivity"
+
+       <!-- <meta-data
+            android:name="CLEVERTAP_ACCOUNT_ID"
+            android:value="R7W-55K-R56Z" />
+        <meta-data
+            android:name="CLEVERTAP_TOKEN"
+            android:value="355-0a2" /> &lt;!&ndash; IMPORTANT: To force use Google AD ID to uniquely identify  users, use the following meta tag. GDPR mandates that if you are using this tag, there is prominent disclousure to your end customer in their application. Read more about GDPR here - https://clevertap.com/blog/in-preparation-of-gdpr-compliance/ &ndash;&gt;
+        <meta-data
+            android:name="CLEVERTAP_USE_GOOGLE_AD_ID"
+            android:value="1" />
+
+        <meta-data android:name="FCM_SENDER_ID"
+            android:value="534320592236"/>-->
+
+
+        <activity
+            android:name=".activity.RescheduleSlotActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.NewOrderReleaseActivity"
             android:screenOrientation="portrait"
@@ -58,13 +74,11 @@
             android:name=".activity.HCW_Activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
@@ -74,34 +88,27 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".NewScreenDesigns.Fragments.TSP_OrdersDisplayFragment_new"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-
         <activity
             android:name=".NewScreenDesigns.Fragments.Leave_intimation_fragment_new"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".fragment.TSP_HubMasterBarcodeScanFragment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".fragment.ScheduleYourDayFragment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".fragment.TSP_SendFragment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".fragment.BtechwithHub_HubMasterBarcodeScanFragment"
             android:screenOrientation="portrait"
@@ -124,13 +131,11 @@
             android:label="@string/kioskscanner"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.OrderPickUpActivity"
             android:label="Pickup Order"
@@ -171,19 +176,16 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".NewScreenDesigns.Fragments.BtechCertificateFragment"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".fragment.LeadGenerationFragment"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.NotificationClickActivity"
             android:label="@string/app_notificationorders"
@@ -196,7 +198,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".NewScreenDesigns.Fragments.FeedbackFragment_new"
             android:label="@string/app_name"
@@ -213,7 +214,6 @@
             android:label="LME"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".fragment.ChangePasswordFragment"
             android:screenOrientation="portrait"
@@ -223,8 +223,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-
         <activity
             android:name=".activity.ForgetPasswordActivity"
             android:label="@string/app_name"
@@ -271,14 +269,11 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".fragment.HubMasterBarcodeScanFragment"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-
         <activity
             android:name=".NewScreenDesigns.Fragments.ServerdOrderFragment"
             android:label="@string/app_name"
@@ -286,7 +281,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.StockAvailabilityActivity"
-
             android:parentActivityName=".activity.HomeScreenActivity"
             android:screenOrientation="portrait" />
         <activity

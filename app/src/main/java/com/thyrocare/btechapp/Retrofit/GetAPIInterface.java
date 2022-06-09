@@ -165,6 +165,10 @@ public interface GetAPIInterface {
     Call<ArrayList<SlotModel>> CallFetchSlotDetailsApi(@Path("ID")String ID);
 
     @Headers("Content-Type: application/json")
+    @GET("api/ServingSlotDetails/{ID}")
+    Call<ArrayList<SlotModel>> CallFetchSlotDetailsApi(@Header("Authorization")String token, @Path("ID")String ID);
+
+    @Headers("Content-Type: application/json")
     @GET("api/Ledger/CashRegister/{ID}/{fromdate}/{todate}")
     Call<FetchLedgerResponseModel> CallgetFetchDepositDetailsApi(@Path("ID")String ID, @Path("fromdate")String fromdate, @Path("todate")String todate);
 
@@ -312,8 +316,12 @@ public interface GetAPIInterface {
     @GET("api/Masters/GetPECancellationRemarks/{ID}")
     Call<GetPECancelRemarksResponseModel> getpecancelRemarks(@Path("ID") String ID);
 
-    @GET("api/Masters/DisplaySubSlotMastersForPE/{pincode}/{date}")
-    Call<ArrayList<GetPEBtechSlotResponseModel>> getPEbtechSlot(@Header("Authorization") String token, @Path("pincode") String pincode, @Path("date") String date);
+//    @GET("api/Masters/DisplaySubSlotMastersForPE/{pincode}/{date}")
+    @GET("api/Masters/DisplayBenwiseSubSlotMastersFOrPE/{pincode}/{date}/{benCount}")
+    Call<ArrayList<GetPEBtechSlotResponseModel>> getPEbtechSlot(@Header("Authorization") String token, @Path("pincode") String pincode, @Path("date") String date, @Path("benCount") int size);
+
+    @GET("api/Masters/DisplaySubSlotMasters/{pincode}/{date}")
+    Call<ArrayList<GetPEBtechSlotResponseModel>> getbtechSlot(@Header("Authorization") String token, @Path("pincode") String pincode, @Path("date") String date);
 
     @GET("api/Masters/OrderRemarks/{ID}")
     Call<ArrayList<GetRemarksResponseModel>> getRemarks(@Path("ID") String ID);

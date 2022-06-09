@@ -214,8 +214,12 @@ public class HomeScreenActivity extends AppCompatActivity {
 //        }
 //        CallBTechSignINOUTSummaryAPI();
 
-        TImeCheckerIntent = new Intent(this, Timecheckservice.class);
-        startService(TImeCheckerIntent);
+        try {
+            TImeCheckerIntent = new Intent(this, Timecheckservice.class);
+            startService(TImeCheckerIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         /*if (isFromPayment) {
             pushFragments(CreditFragment.newInstance(), false, false,
@@ -1298,6 +1302,9 @@ public class HomeScreenActivity extends AppCompatActivity {
                     if (isNetworkAvailable(activity)) {
                         CallLogoutRequestApi();
                         if (!appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
+                            if (bottomSheetDialog.isShowing()){
+                                bottomSheetDialog.dismiss();
+                            }
                             CallLogOutDevice();
                         }
                     } else {

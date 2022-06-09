@@ -67,7 +67,7 @@
                 android:layout_gravity="center"
                 android:layout_marginRight="@dimen/_4sdp"
                 android:background="@null"
-                android:src="@drawable/pe_logo" />
+                android:src="@drawable/pe_tc_logo_new" />
         </RelativeLayout>
 
 

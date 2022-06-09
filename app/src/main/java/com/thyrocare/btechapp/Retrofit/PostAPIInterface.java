@@ -39,6 +39,7 @@ import com.thyrocare.btechapp.models.api.request.CampStartedRequestModel;
 import com.thyrocare.btechapp.models.api.request.CartAPIRequestModel;
 import com.thyrocare.btechapp.models.api.request.CashDepositEntryRequestModel;
 import com.thyrocare.btechapp.models.api.request.ChangePasswordRequestModel;
+import com.thyrocare.btechapp.models.api.request.GetBenWiseBtechListRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetNBTDetailRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetPatientDetailsRequestModel;
 import com.thyrocare.btechapp.models.api.request.GetTestCodeRequestModel;
@@ -55,6 +56,7 @@ import com.thyrocare.btechapp.models.api.request.OrderAllocationTrackLocationReq
 import com.thyrocare.btechapp.models.api.request.OrderBookingRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderPassRequestModel;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
+import com.thyrocare.btechapp.models.api.request.PEBenWiseApptSlotRequestModel;
 import com.thyrocare.btechapp.models.api.request.PECutomerIntimationSMSRequestModel;
 import com.thyrocare.btechapp.models.api.request.PEOrderEditRequestModel;
 import com.thyrocare.btechapp.models.api.request.PEPaymentRequestModel;
@@ -82,6 +84,7 @@ import com.thyrocare.btechapp.models.api.response.AddOnResponseModel;
 import com.thyrocare.btechapp.models.api.response.CartAPIResponseModel;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel1;
 import com.thyrocare.btechapp.models.api.response.CommonResponseModel2;
+import com.thyrocare.btechapp.models.api.response.GetBenWiseBtechListResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetCollectionReqModel;
 import com.thyrocare.btechapp.models.api.response.GetCollectionRespModel;
 import com.thyrocare.btechapp.models.api.response.GetNBTDetailResponseModel;
@@ -93,6 +96,7 @@ import com.thyrocare.btechapp.models.api.response.LoginDeviceResponseModel;
 import com.thyrocare.btechapp.models.api.response.LoginResponseModel;
 import com.thyrocare.btechapp.models.api.response.NewCommonResponseModel;
 import com.thyrocare.btechapp.models.api.response.OrderBookingResponseVisitModel;
+import com.thyrocare.btechapp.models.api.response.PEBenWiseApptSlotResponseModel;
 import com.thyrocare.btechapp.models.api.response.PECutomerIntimationSMSResponeModel;
 import com.thyrocare.btechapp.models.api.response.PEOrderEditResponseModel;
 import com.thyrocare.btechapp.models.api.response.PEPaymentResponseModel;
@@ -482,4 +486,11 @@ public interface PostAPIInterface {
 
     @POST("api/YNCStatusChange/PostUpdateOrderHistory")
     Call<ResponseModel> updateOrderHistory(@Header("Authorization") String token, @Body FixAppointmentDataModel fixAppointmentDataModel);
+
+    @POST("TechsoApi/GetPEBenwiseAppointmentSlots")
+    Call<PEBenWiseApptSlotResponseModel> getPEBenWiseSlot(@Body PEBenWiseApptSlotRequestModel peBenWiseApptSlotRequestModel);
+
+    @POST("api/TechsoApi/GetBenWiseBtechList")
+    Call<GetBenWiseBtechListResponseModel> getBenWiseBtechList(@Body GetBenWiseBtechListRequestModel getBenWiseBtechListRequestModel);
+
 }

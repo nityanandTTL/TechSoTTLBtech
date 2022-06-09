@@ -11,6 +11,7 @@ public class ConstantsMessages {
     public static final String RPL = "RPL";
     public static final String CPL = "CPL";
     public static final String ZPL = "ZPL";
+    public static final String PLEASE_ADD_TEST = "Please add tests to proceed";
 
     public static String PermissionRequiredMsg = "We need few permission for proper Working of the App.\nPlease press on allow button in next Screen for all permissions. ";
     public static String PermissionRejectedMsg = "If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission ";

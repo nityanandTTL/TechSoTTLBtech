@@ -47,6 +47,15 @@ public class GetOrderDetailsResponseModel {
         private String Name;
         private String AppointmentDate;
         private String Status;
+        private String timeSlot;
+
+        public String getTimeSlot() {
+            return timeSlot;
+        }
+
+        public void setTimeSlot(String timeSlot) {
+            this.timeSlot = timeSlot;
+        }
 
         public String getName() {
             return Name;

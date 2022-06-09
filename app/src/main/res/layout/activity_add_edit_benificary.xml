@@ -195,7 +195,7 @@
                     android:singleLine="true"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
-                    android:text="Click to view or add tests from list"
+                    android:text="@string/add_edit_test_list_message"
                     android:textColor="@color/grey"
                     android:textSize="@dimen/value" />
 

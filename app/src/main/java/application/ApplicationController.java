@@ -9,6 +9,7 @@ import android.os.Handler;
 
 import androidx.multidex.MultiDex;
 
+import com.clevertap.android.sdk.ActivityLifecycleCallback;
 import com.thyrocare.btechapp.Controller.ClientEntryController;
 import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.Controller.GetAvailableStockController;
@@ -62,6 +63,7 @@ public class ApplicationController extends Application {
 
 	@Override
 	public void onCreate() {
+		ActivityLifecycleCallback.register(this);
 
 		super.onCreate();
 

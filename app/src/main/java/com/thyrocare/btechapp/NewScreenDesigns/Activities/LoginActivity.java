@@ -47,6 +47,8 @@ import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 import com.thyrocare.btechapp.utils.app.InstallationID;
 
+import java.util.HashMap;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -243,6 +245,7 @@ public class LoginActivity extends AppCompatActivity {
 
         new LogUserActivityTagging(mActivity, LOGIN, "");
         if (responseModel != null) {
+            setCleverTapLoginDetails(responseModel);
             //btech_hub
             /*if (BuildConfig.DEBUG){
                 responseModel.setB2bLogin(true);
@@ -289,21 +292,23 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void selfieUploadBottomSheet() {
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
-        bottomSheetDialog.setContentView(R.layout.bottomsheet_selfie);
+    private void setCleverTapLoginDetails(LoginResponseModel responseModel) {
+        HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+        profileUpdate.put("Name", responseModel.getName());    // String
+        profileUpdate.put("Identity", responseModel.getMobile());      // String or number
+        profileUpdate.put("Email", responseModel.getEmailId()); // Email address of the user
+        profileUpdate.put("Phone", "+91" + responseModel.getMobile());   // Phone (with the country code, starting with +)
+// optional fields. controls whether the user will be sent email, push etc.
+        profileUpdate.put("MSG-email", false);        // Disable email notifications
+        profileUpdate.put("MSG-push", true);          // Enable push notifications
+        profileUpdate.put("MSG-sms", false);          // Disable SMS notifications
+        profileUpdate.put("MSG-whatsapp", true);      // Enable WhatsApp notifications
 
-        Button btn_takePhoto = findViewById(R.id.btn_takePhoto);
-
-        btn_takePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
+        if (Constants.clevertapDefaultInstance != null) {
+            Constants.clevertapDefaultInstance.onUserLogin(profileUpdate);
+        }
     }
+
 
     private void PostToken() {
         try {

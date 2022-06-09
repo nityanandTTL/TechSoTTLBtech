@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -274,7 +275,18 @@ public class StartAndArriveActivity extends AppCompatActivity {
             BundleConstants.setRefreshStartArriveActivity = 0;
             btn_arrive.setVisibility(View.GONE);
             btn_start.setVisibility(View.GONE);
+
+            //hardblocking
+            /*if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+                if (checkForTest(1)) {
+                    btn_Proceed.setVisibility(View.VISIBLE);
+                }
+            } else {
+                btn_Proceed.setVisibility(View.VISIBLE);
+            }*/
             btn_Proceed.setVisibility(View.VISIBLE);
+
+
             //fungible
             if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
@@ -501,9 +513,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 }*/
 
                 //Mith CX delay
-                if (orderDetailsModel.getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("PARTIAL SERVICED") && isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())){
+                if (orderDetailsModel.getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("PARTIAL SERVICED") && isValidForEditing(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
                     onReleaseButtonClicked();
-                }else {
+                } else {
                     onOrderRelease();
                 }
 
@@ -597,7 +609,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             if (!orderDetailsModel.getAllOrderdetails().get(0).isOTP()) {
                                 callOrderStatusChangeApi(3, "Arrive", "", "");
                             } else {
-                                if (BundleConstants.isPEPartner || orderDetailsModel.getAllOrderdetails().get(0).isOTP()){
+                                if (BundleConstants.isPEPartner || orderDetailsModel.getAllOrderdetails().get(0).isOTP()) {
 
                                     callAPIforStatusMark(orderDetailsModel);
                                     callAPIforOTP(orderDetailsModel);
@@ -620,40 +632,41 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
                     //fungible
                     if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
-//                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                        if (checkBeneficiaryDtls()) {
-                            String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
-                            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+                        //hardblocking
+//                        if (checkForTest(2)) {
+                            if (checkBeneficiaryDtls()) {
+                                String string = "You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?";
+                                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
 
-                            View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
+                                View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.logout_bottomsheet, (ViewGroup) mActivity.findViewById(R.id.bottom_sheet_dialog_parent));
 
-                            TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
-                            tv_text.setText(string);
+                                TextView tv_text = bottomSheet.findViewById(R.id.tv_text);
+                                tv_text.setText(string);
 
-                            Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
-                            btn_yes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    bottomSheetDialog.dismiss();
-                                    Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
-                                    intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
-                                    startActivity(intentOrderBooking);
+                                Button btn_yes = bottomSheet.findViewById(R.id.btn_yes);
+                                btn_yes.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        bottomSheetDialog.dismiss();
+                                        Intent intentOrderBooking = new Intent(mActivity, ScanBarcodeWoeActivity.class);
+                                        intentOrderBooking.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+                                        startActivity(intentOrderBooking);
 //                                    finish();
-                                }
-                            });
+                                    }
+                                });
 
-                            Button btn_no = bottomSheet.findViewById(R.id.btn_no);
-                            btn_no.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    bottomSheetDialog.dismiss();
+                                Button btn_no = bottomSheet.findViewById(R.id.btn_no);
+                                btn_no.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        bottomSheetDialog.dismiss();
 
-                                }
-                            });
+                                    }
+                                });
 
-                            bottomSheetDialog.setContentView(bottomSheet);
-                            bottomSheetDialog.setCancelable(false);
-                            bottomSheetDialog.show();
+                                bottomSheetDialog.setContentView(bottomSheet);
+                                bottomSheetDialog.setCancelable(false);
+                                bottomSheetDialog.show();
                         /*AlertDialog alertDialog = new AlertDialog.Builder(mActivity).create();
                         alertDialog.setMessage("You wont be able to modify the order after proceeding.Please verify all details before proceeding.\nAre you sure you want to proceed ?");
                         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
@@ -673,7 +686,8 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                     }
                                 });
                         alertDialog.show();*/
-                        }
+                            }
+//                        }
                     } else {
                         //fungible
                         /*if (BundleConstants.companyOrderFlag) {
@@ -812,6 +826,30 @@ public class StartAndArriveActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private boolean checkForTest(int value) {
+        if (value == 1) {
+            for (int i = 0; i < orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
+                if (InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestsCode())) {
+                    btn_Proceed.setTextColor(getResources().getColor(R.color.gray));
+                    btn_Proceed.setCompoundDrawableTintList(ColorStateList.valueOf(Color.parseColor("#FF8B8888")));
+                    btn_Proceed.setVisibility(View.VISIBLE);
+                    return false;
+                }
+            }
+        } else if (value == 2){
+            for (int i = 0; i < orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
+                if (InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestsCode())) {
+                    btn_Proceed.setTextColor(getResources().getColor(R.color.gray));
+                    btn_Proceed.setCompoundDrawableTintList(ColorStateList.valueOf(Color.parseColor("#FF8B8888")));
+                    btn_Proceed.setVisibility(View.VISIBLE);
+                    Toast.makeText(mActivity, ConstantsMessages.PLEASE_ADD_TEST, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void callAPIforStatusMark(OrderVisitDetailsModel orderDetailsModel) {
@@ -2126,7 +2164,10 @@ public class StartAndArriveActivity extends AppCompatActivity {
         intent.putExtra(BundleConstants.ORDER, strOrderNo);
         intent.putExtra(BundleConstants.ORDER_SLOTID, orderDetailsModel.getSlotId());
         intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsModel);
+        intent.putExtra(BundleConstants.APPOINTMENT_DATE, orderDetailsModel.getAppointmentDate());
         intent.putExtra(BundleConstants.REMARKS_ID, ID);
+        int count = orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().size();
+        intent.putExtra("Bencount", count);
 //        intent.putExtra(BundleConstants.POS, 3);
         intent.putExtra(BundleConstants.PINCODE, pincode);
         startActivity(intent);
@@ -3087,7 +3128,19 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 }
 
             }
+
+            //hardblocking
+           /* if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+                if (checkForTest(1)) {
+                    btn_Proceed.setEnabled(true);
+                    btn_Proceed.setVisibility(View.VISIBLE);
+                }
+            } else {
+                btn_Proceed.setVisibility(View.VISIBLE);
+            }*/
             btn_Proceed.setVisibility(View.VISIBLE);
+
+
             btn_arrive.setVisibility(View.GONE);
             if (startArriveOrderDetailsAdapter != null) {
                 startArriveOrderDetailsAdapter.updateStatus("Arrive");
@@ -3297,7 +3350,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                             if (Action.equalsIgnoreCase("Delete")) {
                                 //fungible
                                 if (BundleConstants.isPEPartner) {
-    //                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                                    //                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                     callAPIforOrderEditDelete(Action, removebenModel.getBenId());
                                 } else {
                                     CallRemoveBenAPI(appPreferenceManager.getfetchOrderDetailsResponseModel(), removebenModel, orderNo, benId);

@@ -97,23 +97,34 @@ public class DeviceUtils {
     public static String getDeviceId(Context activity) {
 
         String device_id = "";
-        try {
-            TelephonyManager tm = (TelephonyManager) activity
-                    .getSystemService(Activity.TELEPHONY_SERVICE);
 
-            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                return device_id;
-            }
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.Q){
+            try {
 
-            if (tm != null && tm.getDeviceId() != null) {
-                device_id = tm.getDeviceId();
-                MessageLogger.PrintMsg("<<device imei>>:  " + device_id);
-            } else {
                 device_id = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
-                MessageLogger.PrintMsg("<<device androidID>>:  " + device_id);
+                System.out.println("Mith000000000000000000000"+device_id);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }else{
+            try {
+                TelephonyManager tm = (TelephonyManager) activity
+                        .getSystemService(Activity.TELEPHONY_SERVICE);
+
+                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    return device_id;
+                }
+
+                if (tm != null && tm.getDeviceId() != null) {
+                    device_id = tm.getDeviceId();
+                    MessageLogger.PrintMsg("<<device imei>>:  " + device_id);
+                } else {
+                    device_id = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
+                    MessageLogger.PrintMsg("<<device androidID>>:  " + device_id);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return device_id;

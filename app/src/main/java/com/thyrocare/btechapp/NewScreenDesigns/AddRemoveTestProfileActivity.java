@@ -76,6 +76,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
     int totalRate = 0;
     int ArraySize;
     String selectedTest = "";
+    private boolean test_edit_PE;
     ArrayList<GetPETestResponseModel.DataDTO> peTestArraylist;
     ArrayList<GetPETestResponseModel.DataDTO> newPETestArray = new ArrayList<>();
     PEAuthorizationController peAuthorizationController;
@@ -106,6 +107,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         selectedTest = getIntent().getStringExtra(BundleConstants.EDITSELECTEDTEST);
         //    ArraySize = getIntent().getIntExtra("",0);
         FlagADDEditBen = getIntent().getBooleanExtra("IsAddBen", true);
+        test_edit_PE = getIntent().getBooleanExtra(BundleConstants.TEST_EDIT_PE,false);
         pincode = orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode();
         System.out.println("mith<<<<<<<<<<" + pincode);
         if (!FlagADDEditBen) {
@@ -393,6 +395,27 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             recycle_TestList.setAdapter(displayAllTestApdter);
             recycle_TestList.setVisibility(View.VISIBLE);
             tv_noDatafound.setVisibility(View.GONE);
+        }else if(test_edit_PE){
+            peselectedTestsList = new ArrayList<>();
+            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(),peTestArraylist, peselectedTestsList);
+            displayAllTestApdter.setOnItemClickListener(new DisplayAllTestApdter.OnClickListeners() {
+                @Override
+                public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
+
+                }
+
+                @Override
+                public void onPECheckChange(ArrayList<GetPETestResponseModel.DataDTO> peTestList) {
+                    newPETestList = peTestList;
+                    displayAllTestApdter.notifyDataSetChanged();
+                    DisplaySelectedProductsPE(peTestList);
+                }
+            });
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivity);
+            recycle_TestList.setLayoutManager(mLayoutManager);
+            recycle_TestList.setAdapter(displayAllTestApdter);
+            recycle_TestList.setVisibility(View.VISIBLE);
+            tv_noDatafound.setVisibility(View.GONE);
         } else {
             tv_noDatafound.setVisibility(View.VISIBLE);
             recycle_TestList.setVisibility(View.GONE);
@@ -417,6 +440,8 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 if (peselectedTestsList != null && peselectedTestsList.size() > 0) {
                     DisplaySelectedProductsPE(peselectedTestsList);
+                }else{
+                    callPEBrandAPI();
                 }
             } else {
                 if (edit_selectedTestsList != null && edit_selectedTestsList.size() > 0) {

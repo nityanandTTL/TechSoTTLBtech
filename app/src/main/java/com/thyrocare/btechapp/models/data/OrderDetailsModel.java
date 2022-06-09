@@ -65,13 +65,13 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private boolean displayProduct;
     private boolean IsPPE;
     private String PPE_AlertMsg;
+    private String timeSlot;
     private boolean isKCF;
     private boolean ISHclOrder;
     private boolean IsOTP;
     private boolean isdisabledelete;
     private boolean isPEPartner;
     private boolean isPEDSAOrder;
-
 
 
     protected OrderDetailsModel(Parcel in) {
@@ -133,6 +133,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         isPEPartner = in.readByte() != 0;
         isPEDSAOrder = in.readByte() != 0;
         PPE_AlertMsg = in.readString();
+        timeSlot = in.readString();
     }
 
     @Override
@@ -195,6 +196,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeByte((byte) (isPEPartner ? 1 : 0));
         dest.writeByte((byte) (isPEDSAOrder ? 1 : 0));
         dest.writeString(PPE_AlertMsg);
+        dest.writeString(timeSlot);
     }
 
     @Override
@@ -569,6 +571,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setEditOrder(boolean editOrder) {
         EditOrder = editOrder;
+    }
+
+    public String getTimeSlot() {
+        return timeSlot;
+    }
+
+    public void setTimeSlot(String timeSlot) {
+        this.timeSlot = timeSlot;
     }
 
     public boolean isEuOrders() {

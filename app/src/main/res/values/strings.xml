@@ -341,7 +341,6 @@
     <string name="ViewImage"><u>ViewImage</u></string>
 
 
-
     <string name="PaymentGateway"><b><u>PAYMENT GATEWAYS</u></b></string>
     <string name="PayWithCash"><b><u>PAY WITH CASH</u></b></string>
     <string name="forgot_password"><u>Forgot Password ?</u></string>
@@ -351,6 +350,7 @@
     <string name="pe_otp_message">Enter OTP sent to mobile number linked with this order, to proceed with order creation</string>
 
     <string name="note_reschedule_the_collection_if_the_order_is_getting_delayed"><b>Note :</b> Reschedule the collection if the order is getting delayed.</string>
+    <string name="add_edit_test_list_message">Click to view or add tests from list</string>
 
 
 </resources>

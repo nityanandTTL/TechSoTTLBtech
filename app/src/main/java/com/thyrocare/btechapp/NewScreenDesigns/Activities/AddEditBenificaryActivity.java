@@ -138,6 +138,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     private ExpandableTestMasterListDisplayAdapter_new expAdapter;
     private DisplaySelectedTestsListForCancellationAdapter_new displayAdapter;
     private boolean isTestEdit = false;
+    private boolean test_edit_PE = false;
     private Dialog CustomDialogforOTPValidation;
     private RemoveBeneficiaryAPIRequestModel removebenModel;
     private OrderVisitDetailsModel orderVisitDetailsModel;
@@ -334,15 +335,29 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
 //            ll_amt.setVisibility(View.VISIBLE);
             txtAmountPayable.setVisibility(View.VISIBLE);
-            txtAmountPayable.setText(mActivity.getResources().getString(R.string.rupee_symbol) + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
 
 
             SelectedTestCode = selectedbeneficiaryDetailsModel.getTestsCode();
-            txtTestsList.setError(null);
-            txtTestsList.setText(SelectedTestCode.toString().trim());
-            txtTestsList.setSelected(true);
-            txtTestsList.setError(null);
 
+            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+                if (InputUtils.isNull(SelectedTestCode)) {
+                    txtAmountPayable.setVisibility(View.VISIBLE);
+                    txtAmountPayable.setText(mActivity.getResources().getString(R.string.rupee_symbol) + "0" + "/-");
+                    txtTestsList.setText(getResources().getString(R.string.add_edit_test_list_message));
+                } else {
+                    txtAmountPayable.setText(mActivity.getResources().getString(R.string.rupee_symbol) + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
+                    txtTestsList.setError(null);
+                    txtTestsList.setText(SelectedTestCode.toString().trim());
+                    txtTestsList.setSelected(true);
+                    txtTestsList.setError(null);
+                }
+            } else {
+                txtAmountPayable.setText(mActivity.getResources().getString(R.string.rupee_symbol) + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue() + "/-");
+                txtTestsList.setError(null);
+                txtTestsList.setText(SelectedTestCode.toString().trim());
+                txtTestsList.setSelected(true);
+                txtTestsList.setError(null);
+            }
 
             edtBenAge.setEnabled(true);
             edtBenAge.setError(null);
@@ -718,10 +733,11 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                for (int k = 0; k < orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); k++) {
-                    if (PSelected_position != k) {
-                        ArrayList<String> strArr = new ArrayList<>();
-                        String strTest = orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(k).getTestsCode();
+//                for (int k = 0; k < orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); k++) {
+                if (PSelected_position != j) {
+                    ArrayList<String> strArr = new ArrayList<>();
+                    String strTest = orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(j).getTestsCode();
+                    if (!InputUtils.isNull(strTest)) {
                         String[] str = strTest.split(",");
                         for (String s : str) {
                             String str1 = s.trim();
@@ -741,15 +757,26 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                         testsDTO.setLab_dos_name(peTestArraylist.get(m).getName());
                                     }
                                     testsDTO.setPrice(Integer.parseInt(peTestArraylist.get(m).getPrice()));
-                                    testsDTO.setPartner_patient_id(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(k).getLeadId());
+                                    testsDTO.setPartner_patient_id(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(j).getLeadId());
                                     testsDTO.setType(peTestArraylist.get(m).getType());
                                     dtoArrayList.add(testsDTO);
                                     break;
                                 }
                             }
                         }
+                    } else {
+                        //TODO for HardBlocking
+                        PEOrderEditRequestModel.DataDTO.ExtraPayloadDTO.TestsDTO testsDTO = new PEOrderEditRequestModel.DataDTO.ExtraPayloadDTO.TestsDTO();
+                        testsDTO.setDos_code("");
+                        testsDTO.setLab_dos_name("");
+                        testsDTO.setPrice(0);
+                        testsDTO.setPartner_patient_id(orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(j).getLeadId());
+                        testsDTO.setType("");
+                        dtoArrayList.add(testsDTO);
+//                        break;
                     }
                 }
+//                }
             }
         }
 
@@ -1932,6 +1959,16 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 //        } else if (!isAddBen && Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             if (peselectedTestsList != null && peselectedTestsList.size() > 0) {
                 addEditTest(isAddBen);
+            } else {
+                test_edit_PE = true;
+                Intent intent = new Intent(mActivity, AddRemoveTestProfileActivity.class);
+                intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+                intent.putParcelableArrayListExtra(BundleConstants.PE_TEST_LIST_MODEL, peTestArraylist);
+                /*intent.putParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLIST, selectedTestsList);
+                intent.putParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST, edit_selectedTestsList);*/
+                intent.putExtra("IsAddBen", FlagADDEditBen);
+                intent.putExtra(BundleConstants.TEST_EDIT_PE, test_edit_PE);
+                startActivityForResult(intent, BundleConstants.ADDEDITTESTREQUESTCODE);
             }
         } else if (isAddBen && InputUtils.isNull(selectedTestsList)) {
             Intent intent = new Intent(mActivity, AddRemoveTestProfileActivity.class);

@@ -72,7 +72,8 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
     AppPreferenceManager appPreferenceManager;
     Global globalclass;
     EditText edt_other;
-    int slotID;
+    int slotID,count;
+    ArrayList<OrderVisitDetailsModel> orderVisitDetailsModelArrayList = new ArrayList<>();
     OrderVisitDetailsModel orderDetailsModel;
 
     @Override
@@ -89,6 +90,8 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
         appoinmentdate = getIntent().getStringExtra(BundleConstants.APPOINTMENT_DATE);
         slotID = getIntent().getIntExtra(BundleConstants.ORDER_SLOTID, 0);
         orderDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
+        count = getIntent().getIntExtra("Bencount",0);
+        orderVisitDetailsModelArrayList = getIntent().getExtras().getParcelableArrayList(BundleConstants.VISIT_ORDER_DETAILS_MODEL_ARRAYLIST);
         remarksID = getIntent().getStringExtra(BundleConstants.REMARKS_ID);
         inITUI();
         onClickListener();
@@ -142,6 +145,8 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
                         intent.putExtra(BundleConstants.APPOINTMENT_DATE,appoinmentdate);
                         intent.putExtra(BundleConstants.RES_RESPONSE, remarksResponseModel.getReason() + "-" + edt_other.getText().toString().trim());
                         intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL,orderDetailsModel);
+                        intent.putExtra("Bencount",count);
+                        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL_ARRAYLIST,orderVisitDetailsModelArrayList);
                         startActivity(intent);
                     } else if (Global.selectedPosition == 1) {
                         dialogToCancelOrder("Do you want to cancel this order.", 2);
@@ -284,7 +289,10 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
                                     Global.todisplaytimerforPosition = false;
                                     Global.toDisplayTimerFlag = false;
                                     dialog.dismiss();
-                                    startActivity(new Intent(mActivity, B2BVisitOrdersDisplayFragment.class));
+                                    Intent intent = new Intent(mActivity,B2BVisitOrdersDisplayFragment.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+//                                    startActivity(new Intent(mActivity, B2BVisitOrdersDisplayFragment.class));
                                 }
                             }).show();
 
@@ -475,7 +483,10 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    startActivity(new Intent(mActivity, B2BVisitOrdersDisplayFragment.class));
+//                                    startActivity(new Intent(mActivity, B2BVisitOrdersDisplayFragment.class));
+                                    Intent intent = new Intent(mActivity, B2BVisitOrdersDisplayFragment.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
                                 }
                             });
                     alertDialog.show();
@@ -519,7 +530,10 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(mActivity, B2BVisitOrdersDisplayFragment.class));
+//                                startActivity(new Intent(mActivity, B2BVisitOrdersDisplayFragment.class));
+                                Intent intent = new Intent(mActivity, B2BVisitOrdersDisplayFragment.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
                             }
                         })
                         .setCancelable(false)

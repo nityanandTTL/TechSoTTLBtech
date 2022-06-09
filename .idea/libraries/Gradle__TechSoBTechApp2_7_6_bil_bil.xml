@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: TechSoBTechApp2.7.6.bil.bil">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/bil/build/libs/bil.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

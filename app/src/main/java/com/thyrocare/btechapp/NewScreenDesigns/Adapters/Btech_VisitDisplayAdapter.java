@@ -31,6 +31,7 @@ import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -205,7 +206,12 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                     holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
                 }
             } else {
-                holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId() + "  (₹" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() + ")");
+                if (appPreferenceManager.getLoginResponseModel().getRole().equalsIgnoreCase(Constants.BTECH_ROLE_ID)) {
+                    holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId() + "  (₹" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() + ")");
+                } else {
+                    holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId());
+                }
+
             }
 
             /*if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() > 0) {
@@ -223,6 +229,7 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             // TODO logic needs to be set for sample count
             DisplayDayWiselayoutColor(pos, holder);
             DisplayDirectVisit(pos, holder);
+            DisplaySlotTime(pos, holder);
             holder.view_seperater.setVisibility(View.GONE);
             CheckPPBSisPresent(pos, holder);
             CheckRBSisPresent(pos, holder);
@@ -232,6 +239,20 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             dateCheck(pos); // To Check Time for PPBS and RBS orders
             DisplayKitData(holder, pos);
             initLIsteners(pos, holder);
+        }
+    }
+
+    private void DisplaySlotTime(int pos, MyViewHolder holder) {
+        if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getTimeSlot())) {
+            if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPEPartner() ||
+                    orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPEDSAOrder()) {
+                holder.ll_slotTime.setVisibility(View.VISIBLE);
+                holder.tv_slotTime.setText(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getTimeSlot());
+            } else {
+                holder.ll_slotTime.setVisibility(View.GONE);
+            }
+        } else {
+            holder.ll_slotTime.setVisibility(View.GONE);
         }
     }
 
@@ -645,10 +666,12 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
 
     private void ShowAndHideAcceptOption(int pos, MyViewHolder holder) {
 
-        if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase("fix appointment")
-                || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("ASSIGNED")
-                || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("Y")
-                || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase("PERSUASION")) {
+        if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().trim().equalsIgnoreCase(BundleConstants.FIX_APPOINTMENT)
+                || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase(BundleConstants.ASSIGNED)
+                || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase(BundleConstants.Y)
+                || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase(BundleConstants.YET_TO_ASSIGN)
+                || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase(BundleConstants.RESCHEDULED)
+                || orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getStatus().equalsIgnoreCase(BundleConstants.PERSUASION)) {
             fastingFlagInt = 0;
             holder.img_accept.setVisibility(View.VISIBLE);
 //            holder.txtFastingStatus.setVisibility(View.GONE);
@@ -1217,7 +1240,10 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
 //                                    activity.startActivity(new Intent(activity, VisitOrdersDisplayFragment_new.class));
-                                    activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+//                                    activity.startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+                                    Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    activity.startActivity(intent);
 //                                    homeScreenActivity.pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
                                     dialog.dismiss();
 
@@ -1774,11 +1800,11 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView txtCustomerName, txtOrderNo, txtDate, txtSlot, txtBeneficiary, txtSamples, txtAddress, txtPPBSStatus, txtFastingStatus, txtRBSStatus, direct_visit, txtKits, txt_visit_day, tv_order_rel;
+        TextView txtCustomerName, txtOrderNo, txtDate, txtSlot, txtBeneficiary, txtSamples, txtAddress, txtPPBSStatus, txtFastingStatus, txtRBSStatus, direct_visit, txtKits, txt_visit_day, tv_order_rel, tv_slotTime;
         ImageView imgRelease, imgCall, img_accept, imgStart;
         LinearLayout layoutAccept_Release_Ord, layoutMain, lin_bencount, lin_kits, layoutFasingStatus, ll_accept, ll_start;
         View view_seperater;
-        LinearLayout LL_swipe;
+        LinearLayout LL_swipe, ll_slotTime;
         RelativeLayout rel_imgRelease;
         SlideView slide_view;
 //        SwipeableButton swipe_button;
@@ -1795,6 +1821,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             txtSamples = (TextView) view.findViewById(R.id.txtSamples);
             txtCustomerName = (TextView) view.findViewById(R.id.txtCustomerName);
             txtAddress = (TextView) view.findViewById(R.id.txtAddress);
+            tv_slotTime = (TextView) view.findViewById(R.id.tv_slotTime);
+            ll_slotTime = (LinearLayout) view.findViewById(R.id.ll_slotTime);
             layoutAccept_Release_Ord = (LinearLayout) view.findViewById(R.id.layoutAccept_Release_Ord);
             layoutMain = (LinearLayout) view.findViewById(R.id.layoutMain);
             lin_bencount = (LinearLayout) view.findViewById(R.id.lin_bencount);

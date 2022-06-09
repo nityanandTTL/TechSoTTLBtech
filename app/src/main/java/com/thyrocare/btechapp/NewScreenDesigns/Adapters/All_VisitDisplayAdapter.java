@@ -59,12 +59,17 @@ public class All_VisitDisplayAdapter extends RecyclerView.Adapter<All_VisitDispl
         } else {
             holder.txtStatus.setVisibility(View.GONE);
         }
-        holder.txtDate.setText(DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy HH:mm"));
 
-        if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAppointmentDate()) && !InputUtils.isNull(orderDetailsResponseModel.getCurrentDatetime()) && DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy").equals(DateUtils.Req_Date_Req(orderDetailsResponseModel.getCurrentDatetime(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy"))) {
-            holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_green);
-        } else {
-            holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_yellow);
+        holder.txtDate.setText(DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy") + " "+ (!InputUtils.isNull(orderDetailsResponseModel.getGetVisitcount().get(pos).getTimeSlot())?orderDetailsResponseModel.getGetVisitcount().get(pos).getTimeSlot():DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "HH:mm")) );
+
+        try {
+            if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(pos).getAppointmentDate()) && !InputUtils.isNull(orderDetailsResponseModel.getCurrentDatetime()) && DateUtils.Req_Date_Req(orderVisitDetailsModelsArr.get(pos).getAppointmentDate(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy").equals(DateUtils.Req_Date_Req(orderDetailsResponseModel.getCurrentDatetime(), "dd-MM-yyyy hh:mm a", "dd-MM-yyyy"))) {
+                holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_green);
+            } else {
+                holder.layoutMain.setBackgroundResource(R.drawable.rounded_background_yellow);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         holder.layoutMain.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1206,22 +1206,22 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         } else {
             //Mith CX delay
 
-                if (getRemarksResponseModel.getId() == 001){
-                    Cop = new ConfirmOrderPassDialog(VisitOrdersDisplayFragment_new.this, new refreshDelegate() {
-                        @Override
-                        public void onRefreshClicked() {
-                            fetchData();
-                            //             swipeRefreshLayout.setRefreshing(true);
+            if (getRemarksResponseModel.getId() == 001) {
+                Cop = new ConfirmOrderPassDialog(VisitOrdersDisplayFragment_new.this, new refreshDelegate() {
+                    @Override
+                    public void onRefreshClicked() {
+                        fetchData();
+                        //             swipeRefreshLayout.setRefreshing(true);
 //                            startActivity(new Intent(activity, VisitOrdersDisplayFragment_new.class));
-                            startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
+                        startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
 //                            pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, VisitOrdersDisplayFragment_new.TAG_FRAGMENT);
-                        }
-                    }, orderDetailsResponseModels.get(0).getAllOrderdetails().get(0).getPincode(), orderDetailsResponseModels.get(0));
-                    Cop.show();
+                    }
+                }, orderDetailsResponseModels.get(0).getAllOrderdetails().get(0).getPincode(), orderDetailsResponseModels.get(0));
+                Cop.show();
 
-                }else{
-                    callAPIforOrderCancellationsRemarks(getRemarksResponseModel.getId().toString());
-                }
+            } else {
+                callAPIforOrderCancellationsRemarks(getRemarksResponseModel.getId().toString());
+            }
 
 //            callAPIforOrderCancellationsRemarks(getRemarksResponseModel.getId().toString());
         }
@@ -1247,7 +1247,9 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         intent.putExtra(BundleConstants.APPOINTMENT_DATE, orderDetailsResponseModels.get(0).getAppointmentDate());
         int slot = orderDetailsResponseModels.get(0).getSlotId();
         System.out.println(slot);
-        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsResponseModels);
+        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL,orderDetailsResponseModels);
+        int count = orderDetailsResponseModels.get(0).getAllOrderdetails().get(0).getBenMaster().size();
+        intent.putExtra("Bencount",count);
 //        intent.putExtra(BundleConstants.POS, 3);
         intent.putExtra(BundleConstants.PINCODE, orderDetailsResponseModels.get(0).getAllOrderdetails().get(0).getPincode());
         startActivity(intent);

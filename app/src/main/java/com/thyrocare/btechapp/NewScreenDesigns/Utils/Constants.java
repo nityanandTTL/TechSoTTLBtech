@@ -1,5 +1,6 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Utils;
 
+import com.clevertap.android.sdk.CleverTapAPI;
 import com.thyrocare.btechapp.models.api.response.DynamicBtechAvaliabilityResponseModel;
 
 public class Constants {
@@ -65,4 +66,8 @@ public class Constants {
     public static String content_type = "application/json";
     public static String PEAddBen ="PEAddBen";
     public static String Success="SUCCESS";
+
+    public static CleverTapAPI clevertapDefaultInstance;
+
+    public static boolean isFromCleverTap= false;
 }

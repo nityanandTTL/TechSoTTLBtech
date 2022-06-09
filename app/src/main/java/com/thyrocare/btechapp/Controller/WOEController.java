@@ -227,16 +227,58 @@ public class WOEController {
             @Override
             public void onClick(View v) {
                 try {
-                    boolean FlagADDEditBen = true;
-                    int peAddben = 1;
-                    Intent intent = new Intent(checkoutWoeActivity, AddEditBenificaryActivity.class);
-                    intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
-                    intent.putExtra(Constants.PEAddBen, peAddben);
-                    intent.putExtra("IsAddBen", FlagADDEditBen);
-                    activity.startActivity(intent);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    dialog_batch.dismiss();
-                    activity.finish();
+                    if (BundleConstants.setSecondOrderFlag) {
+                        try {
+                            if (dialog_batch.isShowing()){
+                                dialog_batch.dismiss();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        BundleConstants.setSecondOrderFlag = false;
+                        Logger.error("should print revisit dialog for ppbs and rbs: ");
+
+                        Logger.error("for PPBS and RBS");
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setMessage("Please note you have to revisit at customer place to collect sample for non-fasting tests/profiles in between " + newTimeaddTwoHrs + " to " + newTimeaddTwoHalfHrs)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        try {
+                                            Constants.Finish_barcodeScanAcitivty = true;
+                                            Constants.isWOEDone = true;
+                                            ResetOTPFlag();
+                                            BundleConstants.isPEPartner= true;
+                                            System.out.println(BundleConstants.PEDSAOrder);
+//                                            BundleConstants.PEDSAOrder = true;
+                                            boolean FlagADDEditBen = true;
+                                            int peAddben = 1;
+                                            Intent intent = new Intent(checkoutWoeActivity, AddEditBenificaryActivity.class);
+                                            intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+                                            intent.putExtra(Constants.PEAddBen, peAddben);
+                                            intent.putExtra("IsAddBen", FlagADDEditBen);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            activity.startActivity(intent);
+                                            activity.finish();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                })
+                                .setCancelable(false)
+                                .show();
+
+                    } else {
+                        boolean FlagADDEditBen = true;
+                        int peAddben = 1;
+                        Intent intent = new Intent(checkoutWoeActivity, AddEditBenificaryActivity.class);
+                        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
+                        intent.putExtra(Constants.PEAddBen, peAddben);
+                        intent.putExtra("IsAddBen", FlagADDEditBen);
+                        activity.startActivity(intent);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        activity.finish();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

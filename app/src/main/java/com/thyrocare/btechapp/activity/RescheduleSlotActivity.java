@@ -30,6 +30,7 @@ import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.adapter.SlotAppointmentTimeAdapter;
 import com.thyrocare.btechapp.adapter.SlotsDateAdapter;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
+import com.thyrocare.btechapp.models.api.request.PEBenWiseApptSlotRequestModel;
 import com.thyrocare.btechapp.models.api.request.SevenDaysModel;
 import com.thyrocare.btechapp.models.api.response.GetPEBtechSlotResponseModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
@@ -62,14 +63,15 @@ public class RescheduleSlotActivity extends AppCompatActivity {
     ConnectionDetector cd;
     Activity activity;
     AppPreferenceManager appPreferenceManager;
-    String orderno, pincode, token, date, slot2,appoinmentdate;
+    String orderno, pincode, token, date, slot2, appoinmentdate;
     String slot1, response;
-    int SlotID, remarks,slotID,remarksID;
+    int SlotID, remarks, slotID, remarksID,count;
     Button btn_submit, btn_back;
     CheckBox chk_slot;
     Global globalClass;
     LinearLayout ll_slotList;
     TextView tv_toolbar;
+    ArrayList<OrderVisitDetailsModel> orderVisitDetailsModelArrayList = new ArrayList<>();
     OrderVisitDetailsModel orderDetailsModel;
 
     @Override
@@ -110,7 +112,7 @@ public class RescheduleSlotActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(checkDetails()){
+                if (checkDetails()) {
                     androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder;
                     alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(activity);
                     alertDialogBuilder
@@ -140,14 +142,14 @@ public class RescheduleSlotActivity extends AppCompatActivity {
     }
 
     private boolean checkDetails() {
-        if (chk_slot.isChecked()){
+        if (chk_slot.isChecked()) {
             return true;
         }
-        if (InputUtils.isNull(date)){
+        if (InputUtils.isNull(date)) {
             Toast.makeText(activity, "Kindly select appointment date", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(InputUtils.isNull(slot1)){
+        if (InputUtils.isNull(slot1)) {
             Toast.makeText(activity, "Kindly select appointment slot", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -258,7 +260,9 @@ public class RescheduleSlotActivity extends AppCompatActivity {
         response = getIntent().getStringExtra(BundleConstants.RES_RESPONSE);
         appoinmentdate = getIntent().getStringExtra(BundleConstants.APPOINTMENT_DATE);
         slotID = getIntent().getIntExtra(BundleConstants.ORDER_SLOTID, 0);
+        orderVisitDetailsModelArrayList = getIntent().getExtras().getParcelableArrayList(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
         orderDetailsModel = getIntent().getExtras().getParcelable(BundleConstants.VISIT_ORDER_DETAILS_MODEL);
+        count = getIntent().getIntExtra("Bencount",0);
         SlotsDateAdapter sdadapter = new SlotsDateAdapter(this, arrayList);
         rec_dateList.setAdapter(sdadapter);
         chk_slot.setChecked(false);
@@ -268,8 +272,29 @@ public class RescheduleSlotActivity extends AppCompatActivity {
     public void dateforappointmentSlot(String fulldate) {
         if (cd.isConnectingToInternet()) {
             date = fulldate;
+
+            //New PE Slot API Mith
+            /*PEBenWiseApptSlotRequestModel peBenWiseApptSlotRequestModel = new PEBenWiseApptSlotRequestModel();
+            int benCount = orderVisitDetailsModelArrayList.get(0).getAllOrderdetails().get(0).getBenMaster().size();
+            String product = orderVisitDetailsModelArrayList.get(0).getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode();
+            peBenWiseApptSlotRequestModel.setBenCount(benCount);
+            peBenWiseApptSlotRequestModel.setDate(fulldate);
+            peBenWiseApptSlotRequestModel.setPincode(pincode);
+            peBenWiseApptSlotRequestModel.setProjectId("NA");
+            peBenWiseApptSlotRequestModel.setApp("BTECH");
+            peBenWiseApptSlotRequestModel.setProduct(product);
+
+            OrderReleaseRemarksController or = new OrderReleaseRemarksController(this);
+            or.getPEBenWiseSlot(peBenWiseApptSlotRequestModel);*/
+
+//            int count = orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().size();
+//            int bencount = orderVisitDetailsModelArrayList.get(0).getAllOrderdetails().get(0).getBenMaster().size();
+
+//            System.out.println(count);
             OrderReleaseRemarksController orc = new OrderReleaseRemarksController(this);
-            orc.getPEbtechSlot(token, pincode, fulldate);
+            orc.getPEbtechSlot(token, pincode, fulldate, count);
+
+
         } else {
             Toast.makeText(activity, CheckInternetConnectionMsg, Toast.LENGTH_SHORT).show();
         }
@@ -336,7 +361,7 @@ public class RescheduleSlotActivity extends AppCompatActivity {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(activity,B2BVisitOrdersDisplayFragment.class);
+                                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
 //                                startActivity(new Intent(activity, B2BVisitOrdersDisplayFragment.class));
@@ -350,5 +375,16 @@ public class RescheduleSlotActivity extends AppCompatActivity {
         } else {
             Toast.makeText(activity, "Something went wrong", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void getPEBenWiseSlot(ArrayList<GetPEBtechSlotResponseModel> slotResponseModelArrayList) {
+
+        try {
+            SlotAppointmentTimeAdapter timeAdapter = new SlotAppointmentTimeAdapter(this, slotResponseModelArrayList);
+            rec_slotList.setAdapter(timeAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
