@@ -21,12 +21,14 @@ public class SlotAppointmentTimeAdapter extends RecyclerView.Adapter<SlotAppoint
     RescheduleSlotActivity rescheduleSlotActivity;
     Context mContext;
     int selectedPosition = -1;
+    int flag;
 
 
-    public SlotAppointmentTimeAdapter(RescheduleSlotActivity activity, ArrayList<GetPEBtechSlotResponseModel> arrayList) {
+    public SlotAppointmentTimeAdapter(RescheduleSlotActivity activity, ArrayList<GetPEBtechSlotResponseModel> arrayList, int i) {
         this.rescheduleSlotActivity = activity;
         this.mContext = activity;
         this.slotResponseModels = arrayList;
+        flag = i;
     }
 
     @NonNull
@@ -39,18 +41,34 @@ public class SlotAppointmentTimeAdapter extends RecyclerView.Adapter<SlotAppoint
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
+        if (flag==1){
+            holder.tv_textNew.setText(slotResponseModels.get(position).getNewSlot());
+            holder.rd_txt_order.setChecked(position == selectedPosition);
+            holder.rd_txt_order.setTag(position);
+            holder.rd_txt_order.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectedPosition = (Integer)v.getTag();
+                    rescheduleSlotActivity.appointmentslotChecked(slotResponseModels.get(position));
+                    notifyDataSetChanged();
+                }
+            });
+        }else{
+            holder.tv_textNew.setText(slotResponseModels.get(position).getSlot());
+            holder.rd_txt_order.setChecked(position == selectedPosition);
+            holder.rd_txt_order.setTag(position);
+            holder.rd_txt_order.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectedPosition = (Integer)v.getTag();
+                    rescheduleSlotActivity.appointmentslotChecked(slotResponseModels.get(position));
+                    notifyDataSetChanged();
+                }
+            });
+        }
+
 //        holder.tv_textNew.setText(slotResponseModels.get(position).getSlot());
-        holder.tv_textNew.setText(slotResponseModels.get(position).getNewSlot());
-        holder.rd_txt_order.setChecked(position == selectedPosition);
-        holder.rd_txt_order.setTag(position);
-        holder.rd_txt_order.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedPosition = (Integer)v.getTag();
-                rescheduleSlotActivity.appointmentslotChecked(slotResponseModels.get(position));
-                notifyDataSetChanged();
-            }
-        });
+
     }
 
     @Override

@@ -30,7 +30,6 @@ import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.adapter.SlotAppointmentTimeAdapter;
 import com.thyrocare.btechapp.adapter.SlotsDateAdapter;
 import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
-import com.thyrocare.btechapp.models.api.request.PEBenWiseApptSlotRequestModel;
 import com.thyrocare.btechapp.models.api.request.SevenDaysModel;
 import com.thyrocare.btechapp.models.api.response.GetPEBtechSlotResponseModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
@@ -340,7 +339,7 @@ public class RescheduleSlotActivity extends AppCompatActivity {
         slotResponseModels.clear();
         slotResponseModels = tempArraylist;
 
-        SlotAppointmentTimeAdapter timeAdapter = new SlotAppointmentTimeAdapter(this, slotResponseModels);
+        SlotAppointmentTimeAdapter timeAdapter = new SlotAppointmentTimeAdapter(this, slotResponseModels,1);
         rec_slotList.setAdapter(timeAdapter);
 
     }
@@ -380,7 +379,7 @@ public class RescheduleSlotActivity extends AppCompatActivity {
     public void getPEBenWiseSlot(ArrayList<GetPEBtechSlotResponseModel> slotResponseModelArrayList) {
 
         try {
-            SlotAppointmentTimeAdapter timeAdapter = new SlotAppointmentTimeAdapter(this, slotResponseModelArrayList);
+            SlotAppointmentTimeAdapter timeAdapter = new SlotAppointmentTimeAdapter(this, slotResponseModelArrayList, 1);
             rec_slotList.setAdapter(timeAdapter);
         } catch (Exception e) {
             e.printStackTrace();
@@ -389,7 +388,7 @@ public class RescheduleSlotActivity extends AppCompatActivity {
     }
 
     public void TCslotResponse(ArrayList<GetPEBtechSlotResponseModel> slotResponseModelArrayList) {
-        SlotAppointmentTimeAdapter timeAdapter = new SlotAppointmentTimeAdapter(this, slotResponseModelArrayList);
+        SlotAppointmentTimeAdapter timeAdapter = new SlotAppointmentTimeAdapter(this, slotResponseModelArrayList,2);
         rec_slotList.setAdapter(timeAdapter);
 
     }

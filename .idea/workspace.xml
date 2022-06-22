@@ -20,7 +20,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[Pixel_C_API_30]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[Pixel_2_XL_API_30]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -75,8 +75,8 @@
     <property name="DEBUGGABLE_DEVICE" value="emulator-5554" />
     <property name="DEBUGGABLE_PROCESS" value="com.thyrocare.btechapp" />
     <property name="DEBUGGER_ID" value="Auto" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Pixel_2_XL_API_30" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2022-06-21T10:28:00.708Z" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Pixel_C_API_30" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2022-06-22T09:13:26.672Z" />
     <property name="ExportApk.ApkPath" value="D:\Android projects\AndroidProjects\TechSoBTechApp\app\release" />
     <property name="ExportApk.BuildVariants" value="release" />
     <property name="ExportApk.SignV1" value="true" />
@@ -460,19 +460,19 @@
     </state>
     <state x="339" y="100" width="1272" height="940" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1655813697201" />
     <state x="339" y="89" width="1272" height="840" key="find.popup/0.0.1920.929@0.0.1920.929" timestamp="1652708751368" />
-    <state x="509" y="278" key="refactoring.ChangeSignatureDialog" timestamp="1654062630250">
+    <state x="509" y="278" key="refactoring.ChangeSignatureDialog" timestamp="1655877660998">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="509" y="278" key="refactoring.ChangeSignatureDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1654062630250" />
+    <state x="509" y="278" key="refactoring.ChangeSignatureDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1655877660998" />
     <state x="410" y="244" key="run.anything.popup" timestamp="1653998969250">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="410" y="244" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1653998969250" />
-    <state x="635" y="215" width="672" height="704" key="search.everywhere.popup" timestamp="1655817957403">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="452" y="151" width="672" height="493" key="search.everywhere.popup" timestamp="1655881918935">
+      <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="452" y="151" width="672" height="493" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1655722007855" />
-    <state x="635" y="215" width="672" height="704" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1655817957403" />
+    <state x="452" y="151" width="672" height="493" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1655881918935" />
+    <state x="635" y="215" width="672" height="704" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1655878423755" />
     <state x="400" y="204" width="672" height="629" key="search.everywhere.popup/0.0.1920.929@0.0.1920.929" timestamp="1652816682187" />
   </component>
   <component name="XDebuggerManager">
@@ -505,12 +505,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/RescheduleSlotActivity.java</url>
-          <line>262</line>
+          <line>261</line>
           <option name="timeStamp" value="1558" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/RescheduleSlotActivity.java</url>
-          <line>261</line>
+          <line>260</line>
           <option name="timeStamp" value="1559" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
@@ -545,7 +545,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/com/thyrocare/btechapp/activity/RescheduleSlotActivity.java</url>
-          <line>289</line>
+          <line>288</line>
           <option name="timeStamp" value="1571" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
