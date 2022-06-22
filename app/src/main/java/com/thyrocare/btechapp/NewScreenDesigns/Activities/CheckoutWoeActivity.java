@@ -197,7 +197,8 @@ public class CheckoutWoeActivity extends AppCompatActivity {
 
 
         //fungible
-        if (BundleConstants.isPEPartner) {
+//        if (BundleConstants.isPEPartner) {
+        if (appPreferenceManager.isPEPartner()) {
 //        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             if (BundleConstants.setPEOrderEdit) {
                 fetchData();
@@ -605,7 +606,8 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                 }
             } else {
                 //fungible
-                if (BundleConstants.isPEPartner && InputUtils.CheckEqualIgnoreCase(btn_Pay.getText().toString(), "PAY")) {
+//                if (BundleConstants.isPEPartner && InputUtils.CheckEqualIgnoreCase(btn_Pay.getText().toString(), "PAY")) {
+                if (appPreferenceManager.isPEPartner() && InputUtils.CheckEqualIgnoreCase(btn_Pay.getText().toString(), "PAY")) {
                     CallPayTypeAPI();
                 } else {
                     WOE();
@@ -776,7 +778,8 @@ public class CheckoutWoeActivity extends AppCompatActivity {
         }
 
         //fungible
-        if (BundleConstants.isPEPartner && InputUtils.CheckEqualIgnoreCase(btn_Pay.getText().toString(), "PAY")) {
+//        if (BundleConstants.isPEPartner && InputUtils.CheckEqualIgnoreCase(btn_Pay.getText().toString(), "PAY")) {
+        if (appPreferenceManager.isPEPartner() && InputUtils.CheckEqualIgnoreCase(btn_Pay.getText().toString(), "PAY")) {
 //        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && btn_Pay.getText().toString().equalsIgnoreCase("Pay")) {
             for (int i = 0; i < ordtl.size(); i++) {
                 ordtl.get(i).setPayType(strPaytype);
@@ -900,7 +903,8 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                     }
                     if (!btn_Pay.getText().equals("Submit")) {
                         if (btn_Pay.getText().equals("PAY")) {
-                            if (isOnlyDigital && BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
+//                            if (isOnlyDigital && BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) {
+                            if (isOnlyDigital && appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) {
 //fungible
 //                                if (BundleConstants.companyOrderFlag) {
 //                                    if (orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
@@ -933,7 +937,8 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                     /*} else {
                                         redirectToPaymentScreen();
                                     }*/
-                            } else if (BundleConstants.isPEPartner) {
+//                            } else if (BundleConstants.isPEPartner) {
+                            } else if (appPreferenceManager.isPEPartner()) {
                                 if (strPaytype.equalsIgnoreCase(Global.Prepaid)) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                                     builder.setMessage("Payment already received. Please proceed")
@@ -967,7 +972,8 @@ public class CheckoutWoeActivity extends AppCompatActivity {
                                         Toast.makeText(mActivity, mActivity.getResources().getString(R.string.internet_connetion_error), Toast.LENGTH_SHORT).show();
                                     }*/
                                 } else {
-                                    if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && BundleConstants.isPEPartner) {
+//                                    if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && BundleConstants.isPEPartner) {
+                                    if (!Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) && appPreferenceManager.isPEPartner()) {
                                         redirectToPaymentScreen();
                                     } else {
                                         if (OrderMode.equalsIgnoreCase("LTD-BLD") || OrderMode.equalsIgnoreCase("LTD-NBLD")) {

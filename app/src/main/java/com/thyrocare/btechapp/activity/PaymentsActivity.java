@@ -503,7 +503,8 @@ public class PaymentsActivity extends AbstractActivity {
     private void SetpaymentGateways(ArrayList<PaymentProcessAPIResponseModel> paymentModesArr) {
         try {
             //fungible
-            if (BundleConstants.isPEPartner) {
+            if (appPreferenceManager.isPEPartner()) {
+//            if (BundleConstants.isPEPartner) {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                 /*ArrayList<PaymentProcessAPIResponseModel> NewPaymentModesArr = new ArrayList<PaymentProcessAPIResponseModel>();
                 for (int i = 0; i <paymentModesArr.size(); i++) {
@@ -888,7 +889,8 @@ public class PaymentsActivity extends AbstractActivity {
                         if (paymentStartTransactionAPIResponseModel.getResponseCode().equals("RES000")) {
                             // mobileflag = 0;
                             //fungible
-                            if (BundleConstants.isPEPartner) {
+//                            if (BundleConstants.isPEPartner) {
+                            if (appPreferenceManager.isPEPartner()) {
 //                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                                 builder.setTitle("Verify Payment")
@@ -1257,7 +1259,8 @@ public class PaymentsActivity extends AbstractActivity {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     //fungible
-                                                    if (BundleConstants.isPEPartner) {
+//                                                    if (BundleConstants.isPEPartner) {
+                                                    if (appPreferenceManager.isPEPartner()) {
 //                                                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                                         WOEPEBtech();//TODO For PE-BTech as per GG Sir's remark
                                                     } else {

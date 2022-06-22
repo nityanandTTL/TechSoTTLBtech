@@ -112,7 +112,8 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         System.out.println("mith<<<<<<<<<<" + pincode);
         if (!FlagADDEditBen) {
             //fungible
-            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+            if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 callPEBrandAPI();
             } else {
@@ -122,7 +123,8 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             }
         } else {
             //fungible
-            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+            if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 if (peselectedTestsList == null) {
                     peselectedTestsList = new ArrayList<>();
@@ -161,7 +163,8 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         tvTestName.setMovementMethod(new ScrollingMovementMethod());
         tvAppRate = (TextView) findViewById(R.id.tvAppRate);
         //fungible
-        if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//        if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+        if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
 //        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             ed_Search.setHint("Search test..");
             lin_profileCategory.setVisibility(View.GONE);
@@ -177,7 +180,8 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 boolean isTestNotAvailble = false;
                 //fungible
-                if (BundleConstants.isPEPartner) {
+//                if (BundleConstants.isPEPartner) {
+                if (appPreferenceManager.isPEPartner()) {
 //                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (FlagADDEditBen) {
                         if (peselectedTestsList.size() == 0) {
@@ -269,7 +273,8 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
                 if (displayAllTestApdter != null) {
                     //fungible
-                    if (BundleConstants.isPEPartner) {
+//                    if (BundleConstants.isPEPartner) {
+                    if (appPreferenceManager.isPEPartner()) {
 //                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                         if (!StringUtils.isNull(s.toString())) {
                             displayAllTestApdter.filterDataPE(s.toString());
@@ -436,7 +441,8 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
         if (!FlagADDEditBen) {
             //fungible
-            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+            if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 if (peselectedTestsList != null && peselectedTestsList.size() > 0) {
                     DisplaySelectedProductsPE(peselectedTestsList);
@@ -453,7 +459,8 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
         //fungible
             if(FlagADDEditBen){
-                if(BundleConstants.isPEPartner || BundleConstants.PEDSAOrder){
+//                if(BundleConstants.isPEPartner || BundleConstants.PEDSAOrder){
+                if(appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()){
                     if (cd.isConnectingToInternet()) {
                         peAuthorizationController = new PEAuthorizationController(this);
                         peAuthorizationController.getAuthorizationToken(2, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode(), orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
@@ -477,7 +484,8 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
 //            getTestList();
 //            testList();
-        } else if (!BundleConstants.isPEPartner) {
+//        } else if (!BundleConstants.isPEPartner) {
+        } else if (!appPreferenceManager.isPEPartner()) {
             if (!UpdateProduct()) {
                 if (cd.isConnectingToInternet()) {
                     CallGetTechsoProductsAPI();

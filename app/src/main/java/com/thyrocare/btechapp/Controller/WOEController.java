@@ -124,7 +124,8 @@ public class WOEController {
                     globalClass.hideProgressDialog(activity);
                     if (res.isSuccessful() && res.body() != null) {
                         //fungible
-                        if (BundleConstants.isPEPartner) {
+//                        if (BundleConstants.isPEPartner) {
+                        if (appPreferenceManager.isPEPartner()) {
 //                        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
 
                             //TODO local storage for B2B login
@@ -248,7 +249,9 @@ public class WOEController {
                                             Constants.Finish_barcodeScanAcitivty = true;
                                             Constants.isWOEDone = true;
                                             ResetOTPFlag();
-                                            BundleConstants.isPEPartner= true;
+                                            appPreferenceManager.setPE_Partner(true);
+//                                            BundleConstants.isPEPartner= true;
+                                            BundleConstants.PE_HARD_BLOCKING= false;
                                             System.out.println(BundleConstants.PEDSAOrder);
 //                                            BundleConstants.PEDSAOrder = true;
                                             boolean FlagADDEditBen = true;
@@ -271,6 +274,7 @@ public class WOEController {
                     } else {
                         boolean FlagADDEditBen = true;
                         int peAddben = 1;
+                        BundleConstants.PE_HARD_BLOCKING =false;
                         Intent intent = new Intent(checkoutWoeActivity, AddEditBenificaryActivity.class);
                         intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
                         intent.putExtra(Constants.PEAddBen, peAddben);
@@ -307,8 +311,11 @@ public class WOEController {
                                     public void onClick(DialogInterface dialog, int which) {
                                         Constants.Finish_barcodeScanAcitivty = true;
                                         Constants.isWOEDone = true;
-                                        BundleConstants.isPEPartner = false;
-                                        BundleConstants.PEDSAOrder = false;
+                                        appPreferenceManager.setPE_Partner(false);
+//                                        BundleConstants.isPEPartner = false;
+                                        appPreferenceManager.setPE_DSA(false);
+//                                        BundleConstants.PEDSAOrder = false;
+                                        BundleConstants.PE_HARD_BLOCKING=false;
                                         ResetOTPFlag();
                                         if (BundleConstants.isKIOSKOrder) {
                                             activity.finish();
@@ -337,8 +344,11 @@ public class WOEController {
                         Logger.error("testcode in else " + test.toUpperCase());
                         Constants.Finish_barcodeScanAcitivty = true;
                         Constants.isWOEDone = true;
-                        BundleConstants.isPEPartner = false;
-                        BundleConstants.PEDSAOrder = false;
+//                        BundleConstants.isPEPartner = false;
+                        appPreferenceManager.setPE_Partner(false);
+//                        BundleConstants.PEDSAOrder = false;
+                        appPreferenceManager.setPE_DSA(false);
+                        BundleConstants.PE_HARD_BLOCKING=false;
                         ResetOTPFlag();
                         if (BundleConstants.isKIOSKOrder) {
                             activity.finish();
@@ -784,8 +794,10 @@ public class WOEController {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 Constants.Finish_barcodeScanAcitivty = true;
                                                 Constants.isWOEDone = true;
-                                                BundleConstants.isPEPartner = false;
-                                                BundleConstants.PEDSAOrder = false;
+//                                                BundleConstants.isPEPartner = false;
+                                                appPreferenceManager.setPE_Partner(false);
+//                                                BundleConstants.PEDSAOrder = false;
+                                                appPreferenceManager.setPE_DSA(false);
                                                 ResetOTPFlag();
                                                 if (BundleConstants.isKIOSKOrder) {
                                                     activity.finish();
@@ -812,8 +824,10 @@ public class WOEController {
                                 Logger.error("testcode in else " + test.toUpperCase());
                                 Constants.Finish_barcodeScanAcitivty = true;
                                 Constants.isWOEDone = true;
-                                BundleConstants.isPEPartner = false;
-                                BundleConstants.PEDSAOrder = false;
+//                                BundleConstants.isPEPartner = false;
+                                appPreferenceManager.setPE_Partner(false);
+//                                BundleConstants.PEDSAOrder = false;
+                                appPreferenceManager.setPE_DSA(false);
                                 ResetOTPFlag();
                                 if (BundleConstants.isKIOSKOrder) {
                                     activity.finish();
@@ -1034,7 +1048,8 @@ public class WOEController {
     private void ResetOTPFlag() {
         try {
             //fungible
-            if (BundleConstants.isPEPartner) {
+//            if (BundleConstants.isPEPartner) {
+            if (appPreferenceManager.isPEPartner()) {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 if (BundleConstants.callOTPFlag == 1) {
                     BundleConstants.callOTPFlag = 0;

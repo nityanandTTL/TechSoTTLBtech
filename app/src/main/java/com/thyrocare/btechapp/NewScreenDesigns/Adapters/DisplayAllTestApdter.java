@@ -495,7 +495,8 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
 
     @Override
     public int getItemCount() {
-        if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//        if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+        if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
 //        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             return peFilteredList.size();
         }

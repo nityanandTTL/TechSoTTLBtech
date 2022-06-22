@@ -151,7 +151,8 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                 holder.lin_Edit_delete_Ben.setVisibility(View.GONE);
             } else if (orderVisitDetailsModel.getAllOrderdetails().get(0).isIsdisabledelete()) {
                 //fungible
-                if (BundleConstants.isPEPartner) {
+//                if (BundleConstants.isPEPartner) {
+                if (appPreferenceManager.isPEPartner()) {
 //                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (BenMasterArray.size() > 1) {
                         checBenDetails(holder, position, orderVisitDetailsModel.getAllOrderdetails().get(0).isIsdisabledelete());
@@ -164,7 +165,8 @@ public class StartArriveOrderDetailsAdapter extends RecyclerView.Adapter<StartAr
                 }
             } else if (orderVisitDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
                 //fungible
-                if (BundleConstants.isPEPartner) {
+//                if (BundleConstants.isPEPartner) {
+                if (appPreferenceManager.isPEPartner()) {
 //                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (BenMasterArray.size() > 1) {
                         checBenDetails(holder, position, false);

@@ -300,7 +300,7 @@ public class RescheduleSlotActivity extends AppCompatActivity {
         }
     }
 
-    public void slotresponse(ArrayList<GetPEBtechSlotResponseModel> slotResponseModels) {
+    public void PEslotresponse(ArrayList<GetPEBtechSlotResponseModel> slotResponseModels) {
 
         ArrayList<GetPEBtechSlotResponseModel> tempArraylist = new ArrayList<>();
         int minsToAdd = 30;
@@ -385,6 +385,12 @@ public class RescheduleSlotActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void TCslotResponse(ArrayList<GetPEBtechSlotResponseModel> slotResponseModelArrayList) {
+        SlotAppointmentTimeAdapter timeAdapter = new SlotAppointmentTimeAdapter(this, slotResponseModelArrayList);
+        rec_slotList.setAdapter(timeAdapter);
 
     }
 }

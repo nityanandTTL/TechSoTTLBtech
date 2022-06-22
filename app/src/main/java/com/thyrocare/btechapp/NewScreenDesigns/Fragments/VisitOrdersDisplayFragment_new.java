@@ -484,8 +484,10 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                             orderDetailsResponseModels = null;
                             orderDetailsResponseModels = new ArrayList<>();
                             FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
-                            BundleConstants.isPEPartner = fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).isPEPartner();
-                            BundleConstants.PEDSAOrder = fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).isPEDSAOrder();
+//                            BundleConstants.isPEPartner = fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).isPEPartner();
+                            appPreferenceManager.setPE_Partner(fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).isPEPartner());
+//                            BundleConstants.PEDSAOrder = fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).isPEDSAOrder();
+                            appPreferenceManager.setPE_DSA(fetchOrderDetailsResponseModel.getOrderVisitDetails().get(0).getAllOrderdetails().get(0).isPEDSAOrder());
                             if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
                                 appPreferenceManager.setfetchOrderDetailsResponseModel(fetchOrderDetailsResponseModel);
                                 for (OrderVisitDetailsModel orderVisitDetailsModel : fetchOrderDetailsResponseModel.getOrderVisitDetails()) {
@@ -1293,10 +1295,13 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                 try {
                     if (response.isSuccessful() && response.body() != null) {
                         if (response.code() == 200 || response.code() == 204) {
-                            BundleConstants.isPEPartner = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner();
-                            BundleConstants.PEDSAOrder = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder();
+//                            BundleConstants.isPEPartner = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner();
+                            appPreferenceManager.setPE_Partner(orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner());
+//                            BundleConstants.PEDSAOrder = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder();
+                            appPreferenceManager.setPE_DSA(orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder());
                             //fungible
-                            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+                            if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
+//                            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
 //                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                 ProceedToArriveScreen(orderVisitDetailsModel, false);
                             } else {
@@ -1390,8 +1395,10 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             startTrackerService();
             SendinglatlongOrderAllocation(orderVisitDetailsModel, 7);
             String remarks = "Order Started";
-            BundleConstants.isPEPartner = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner();
-            BundleConstants.PEDSAOrder = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder();
+//            BundleConstants.isPEPartner = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner();
+            appPreferenceManager.setPE_Partner(orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner());
+//            BundleConstants.PEDSAOrder = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder();
+            appPreferenceManager.setPE_DSA( orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder());
             new LogUserActivityTagging(activity, BundleConstants.WOE, remarks);
 //            Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
             Intent intentNavigate = new Intent(activity, StartAndArriveActivity.class);

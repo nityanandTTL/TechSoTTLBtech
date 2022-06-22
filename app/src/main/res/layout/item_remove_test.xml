@@ -20,7 +20,6 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:padding="@dimen/dp_5"
         android:textColor="@color/bg_new_color"
-        android:text="item"
         android:textSize="@dimen/value" />
 
     <ImageView

@@ -22,7 +22,7 @@ import com.thyrocare.btechapp.models.api.response.GetPECancelRemarksResponseMode
 import com.thyrocare.btechapp.models.api.response.GetRemarksResponseModel;
 import com.thyrocare.btechapp.models.api.response.PEBenWiseApptSlotResponseModel;
 import com.thyrocare.btechapp.models.api.response.PECutomerIntimationSMSResponeModel;
-import com.thyrocare.btechapp.utils.app.BundleConstants;
+import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.Global;
 
 import java.text.ParseException;
@@ -43,11 +43,13 @@ public class OrderReleaseRemarksController {
     VisitOrdersDisplayFragment_new visitOrdersDisplayFragment_new;
     Global globalClass;
     int flag;
+    AppPreferenceManager appPreferenceManager;
 
     public OrderReleaseRemarksController(StartAndArriveActivity startAndArriveActivity) {
         this.activity = startAndArriveActivity;
         this.startAndArriveActivity = startAndArriveActivity;
         globalClass = new Global(activity);
+        appPreferenceManager = new AppPreferenceManager(activity);
         flag = 1;
     }
 
@@ -55,12 +57,14 @@ public class OrderReleaseRemarksController {
         this.activity = visitOrdersDisplayFragment_new;
         this.visitOrdersDisplayFragment_new = visitOrdersDisplayFragment_new;
         globalClass = new Global(activity);
+        appPreferenceManager = new AppPreferenceManager(activity);
         flag = 2;
     }
 
     public OrderReleaseRemarksController(NewOrderReleaseActivity newOrderReleaseActivity) {
         this.activity = newOrderReleaseActivity;
         this.newOrderReleaseActivity = newOrderReleaseActivity;
+        appPreferenceManager = new AppPreferenceManager(activity);
         globalClass = new Global(activity);
         flag = 3;
     }
@@ -68,6 +72,7 @@ public class OrderReleaseRemarksController {
     public OrderReleaseRemarksController(RescheduleSlotActivity rescheduleSlotActivity) {
         this.activity = rescheduleSlotActivity;
         this.rescheduleSlotActivity = rescheduleSlotActivity;
+        appPreferenceManager = new AppPreferenceManager(activity);
         globalClass = new Global(activity);
         flag = 4;
     }
@@ -186,7 +191,10 @@ public class OrderReleaseRemarksController {
             globalClass.showProgressDialog(activity, ConstantsMessages.PLEASE_WAIT);
             GetAPIInterface getAPIInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(activity.getString(R.string.SERVER_BASE_API_URL_PROD))).create(GetAPIInterface.class);
             Call<ArrayList<GetPEBtechSlotResponseModel>> smsResponeModelCall;
-            if (BundleConstants.isPEPartner && !BundleConstants.PEDSAOrder) {
+//            if (BundleConstants.isPEPartner && !BundleConstants.PEDSAOrder) {
+            String  str = "---------------------------"+appPreferenceManager.isPEPartner()+"-----------------"+appPreferenceManager.PEDSAOrder();
+            System.out.println(str);
+            if (appPreferenceManager.isPEPartner() && !appPreferenceManager.PEDSAOrder()) {
                 //Mith
                 smsResponeModelCall = getAPIInterface.getPEbtechSlot(token, pincode, date,size);
 //                smsResponeModelCall = getAPIInterface.getPEbtechSlot(token, pincode, date);
@@ -202,7 +210,11 @@ public class OrderReleaseRemarksController {
                         if (response.isSuccessful() && response.body() != null) {
                             ArrayList<GetPEBtechSlotResponseModel> slotResponseModelArrayList = new ArrayList<>();
                             slotResponseModelArrayList = response.body();
-                            rescheduleSlotActivity.slotresponse(slotResponseModelArrayList);
+                            if (appPreferenceManager.isPEPartner() && !appPreferenceManager.PEDSAOrder()){
+                                rescheduleSlotActivity.PEslotresponse(slotResponseModelArrayList);
+                            }else{
+                                rescheduleSlotActivity.TCslotResponse(slotResponseModelArrayList);
+                            }
                         } else {
                             globalClass.showCustomToast(activity, "Something went wrong. Try after sometime");
                         }
@@ -237,7 +249,8 @@ public class OrderReleaseRemarksController {
                             responseModelArrayList = response.body();
                             if (i == 2) {
                                 //Mith CX delay TC
-                                if (!BundleConstants.PEDSAOrder && !BundleConstants.isPEPartner) {
+//                                if (!BundleConstants.PEDSAOrder && !BundleConstants.isPEPartner) {
+                                if (!appPreferenceManager.PEDSAOrder() && !appPreferenceManager.isPEPartner()) {
                                     GetRemarksResponseModel getRemarksResponseModel = new GetRemarksResponseModel();
                                     getRemarksResponseModel.setId(001);
                                     getRemarksResponseModel.setReCallRemarksId("0");

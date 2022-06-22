@@ -386,7 +386,8 @@ public class NewOrderReleaseActivity extends AppCompatActivity {
 
         if (cd.isConnectingToInternet()) {
             OrderReleaseRemarksController orcController = new OrderReleaseRemarksController(this);
-            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder){
+//            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder){
+            if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()){
                 orcController.getPE_SMS(smsRequestModel);
             }else {
                 orcController.getSMS(smsRequestModel);

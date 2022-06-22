@@ -249,7 +249,8 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
 
         // TODO if ben has single urine sample
         //fungible
-        if (BundleConstants.isPEPartner) {
+//        if (BundleConstants.isPEPartner) {
+        if (appPreferenceManager.isPEPartner()) {
 //        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             for (int i = 0; i < beneficaryWiseScanbarcodeArylst.size(); i++) {
                 if (beneficaryWiseScanbarcodeArylst.size() == 1) {
@@ -298,7 +299,8 @@ public class ScanBarcodeViewPagerAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 //fungible
-                if (BundleConstants.isPEPartner) {
+//                if (BundleConstants.isPEPartner) {
+                if (appPreferenceManager.isPEPartner()) {
 //                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (!isOTP) {
                         CallRemoveSample(beneficaryWiseScanbarcodeArylst.get(position), 1);

@@ -198,7 +198,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             holder.txtCustomerName.setText(Global.toCamelCase(orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getBenMaster().get(0).getName()));
 
             //fungible
-            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+            if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() > 0) {
                     holder.txtOrderNo.setText(orderVisitDetailsModelsArr.get(pos).getVisitId() + "  (₹" + orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).getCHC() + ")");
@@ -358,7 +359,22 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                                     }
                                 }
                             } else {
-                                Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
+                                if (!InputUtils.isNull(orderVisitDetailsModelsArr.get(0).getAllOrderdetails().get(0).IsPEDSATCPhlebo()) && orderVisitDetailsModelsArr.get(0).getAllOrderdetails().get(0).IsPEDSATCPhlebo()){
+                                      if (orderVisitDetailsModelsArr.get(pos).getAllOrderdetails() != null && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().size() > 0 && orderVisitDetailsModelsArr.get(pos).getAllOrderdetails().get(0).isPPE()) {
+                                            final AlertDialog.Builder builder1 = new AlertDialog.Builder(activity);
+                                            builder1.setMessage(ConstantsMessages.EnsureToWearPPE).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    PerformStartFunction(pos, holder);
+                                                }
+                                            });
+                                            builder1.show();
+                                        } else {
+                                            PerformStartFunction(pos, holder);
+                                        }
+                                }else{
+                                    Toast.makeText(activity, "Please service the earlier orders first", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     }
@@ -1028,7 +1044,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
             } else {
                 if (toShowResheduleOption) {
                     //fungible
-                    if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//                    if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+                    if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
 //                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                         tv_ord_pass.setVisibility(View.GONE);
                     } else {
@@ -1042,7 +1059,8 @@ public class Btech_VisitDisplayAdapter extends RecyclerView.Adapter<Btech_VisitD
                             "Request Release", "Order Pass"};*/
                 } else {
                     //fungible
-                    if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//                    if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+                    if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
 //                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                         tv_ord_pass.setVisibility(View.GONE);
                     } else {

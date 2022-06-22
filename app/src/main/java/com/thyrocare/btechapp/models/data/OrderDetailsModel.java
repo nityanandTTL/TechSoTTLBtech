@@ -72,6 +72,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
     private boolean isdisabledelete;
     private boolean isPEPartner;
     private boolean isPEDSAOrder;
+    private boolean IsPEDSATCPhlebo;
 
 
     protected OrderDetailsModel(Parcel in) {
@@ -132,6 +133,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         isdisabledelete = in.readByte() != 0;
         isPEPartner = in.readByte() != 0;
         isPEDSAOrder = in.readByte() != 0;
+        IsPEDSATCPhlebo = in.readByte() != 0;
         PPE_AlertMsg = in.readString();
         timeSlot = in.readString();
     }
@@ -195,6 +197,7 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
         dest.writeByte((byte) (isdisabledelete ? 1 : 0));
         dest.writeByte((byte) (isPEPartner ? 1 : 0));
         dest.writeByte((byte) (isPEDSAOrder ? 1 : 0));
+        dest.writeByte((byte) (IsPEDSATCPhlebo ? 1 : 0));
         dest.writeString(PPE_AlertMsg);
         dest.writeString(timeSlot);
     }
@@ -274,6 +277,14 @@ public class OrderDetailsModel extends BaseModel implements Parcelable {
 
     public void setPEDSAOrder(boolean PEDSAOrder) {
         isPEDSAOrder = PEDSAOrder;
+    }
+
+    public boolean IsPEDSATCPhlebo() {
+        return IsPEDSATCPhlebo;
+    }
+
+    public void setTCB2BOrder(boolean IsPEDSATCPhlebo) {
+        IsPEDSATCPhlebo = IsPEDSATCPhlebo;
     }
 
     public void setKCF(boolean KCF) {

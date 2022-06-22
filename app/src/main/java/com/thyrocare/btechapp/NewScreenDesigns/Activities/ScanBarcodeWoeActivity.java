@@ -527,8 +527,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 isRescan = false;
                 if (BuildConfig.DEBUG) {
 //                       OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
-//                    EnterBarocodeManually();
-                   OpenScanBarcodeScreen();
+                    EnterBarocodeManually();
+//                   OpenScanBarcodeScreen();
                 } else {
                     OpenScanBarcodeScreen();
                 }
@@ -543,8 +543,8 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                 isRescan = true;
                 if (BuildConfig.DEBUG) {
                     //  OpenBarcodeConfirnationDialog(DeviceUtils.randomBarcodeString(8)); // Testing in simulator
-//                    EnterBarocodeManually();
-                   OpenScanBarcodeScreen();
+                    EnterBarocodeManually();
+//                   OpenScanBarcodeScreen();
                 } else {
                     OpenScanBarcodeScreen();
                 }

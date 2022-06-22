@@ -32,6 +32,7 @@ import androidx.cardview.widget.CardView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.Controller.GetDSAProductsController;
 import com.thyrocare.btechapp.Controller.PEAddOnController;
 import com.thyrocare.btechapp.Controller.PEAuthorizationController;
@@ -210,7 +211,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         }*/
 
         //fungible
-        if (BundleConstants.isPEPartner) {
+//        if (BundleConstants.isPEPartner) {
+        if (appPreferenceManager.isPEPartner()) {
             if (cd.isConnectingToInternet()) {
                 PEAuthorizationController peAuthorizationController = new PEAuthorizationController(this);
                 peAuthorizationController.getAuthorizationToken(1, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode(), orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
@@ -244,7 +246,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         cv_mob_no = findViewById(R.id.cv_mob_no);
 
 //fungible
-        if (BundleConstants.isPEPartner) {
+//        if (BundleConstants.isPEPartner) {
+        if (appPreferenceManager.isPEPartner()) {
 //        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName()) || orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner()) {
             cv_RHC.setVisibility(View.GONE);
             tv_rhcMessage.setVisibility(View.GONE);
@@ -259,9 +262,11 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 //        ll_amt = (LinearLayout) findViewById(R.id.ll_amt);
 
         //fungible
-        if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) { //to check PEDSA order
+//        if (BundleConstants.isPEPartner && BundleConstants.PEDSAOrder) { //to check PEDSA order
+        if (appPreferenceManager.isPEPartner() && appPreferenceManager.PEDSAOrder()) { //to check PEDSA order
             imgBenAddTests.setVisibility(View.GONE);
-        } else if (BundleConstants.isPEPartner) {//to check pe order
+//        } else if (BundleConstants.isPEPartner) {//to check pe order
+        } else if (appPreferenceManager.isPEPartner()) {//to check pe order
             imgBenAddTests.setVisibility(View.VISIBLE);
         } else {//for tc order
             imgBenAddTests.setVisibility(View.VISIBLE);
@@ -339,7 +344,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
             SelectedTestCode = selectedbeneficiaryDetailsModel.getTestsCode();
 
-            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+//            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
+            if (appPreferenceManager.isPEPartner() ||appPreferenceManager.PEDSAOrder()) {
                 if (InputUtils.isNull(SelectedTestCode)) {
                     txtAmountPayable.setVisibility(View.VISIBLE);
                     txtAmountPayable.setText(mActivity.getResources().getString(R.string.rupee_symbol) + "0" + "/-");
@@ -510,7 +516,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //fungible
-                if (BundleConstants.isPEPartner) {
+//                if (BundleConstants.isPEPartner) {
+                if (appPreferenceManager.isPEPartner()) {
 //                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     if (FlagADDEditBen) {
                         if (validateforAddbenPE()) {
@@ -616,7 +623,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                             if (validateforAddben()) {
                                 if (cd.isConnectingToInternet()) {
                                     //fungible
-                                    if (BundleConstants.isPEPartner) {
+//                                    if (BundleConstants.isPEPartner) {
+                                    if (appPreferenceManager.isPEPartner()) {
 //                                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                         if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
                                             CallSubmitAPIforAddBen(orderNo, finalBenId);
@@ -640,7 +648,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                             } else {
                                 if (cd.isConnectingToInternet()) {
                                     //fungible
-                                    if (BundleConstants.isPEPartner) {
+//                                    if (BundleConstants.isPEPartner) {
+                                    if (appPreferenceManager.isPEPartner()) {
 //                                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                         if (checkBeneficiaryDtls()) {
                                             if (!orderVisitDetailsModel.getAllOrderdetails().get(0).isOTP()) {
@@ -946,7 +955,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         final EditText edt_OTP = (EditText) CustomDialogforOTPValidation.findViewById(R.id.edt_OTP);
 
         //fungible
-        if (BundleConstants.isPEPartner) {
+//        if (BundleConstants.isPEPartner) {
+        if (appPreferenceManager.isPEPartner()) {
 //        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             tv_header.setText(R.string.pe_otp_message);
         } else {
@@ -1027,7 +1037,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                         if (Action.equalsIgnoreCase("Add")) {
                             ArrayList<AddONRequestModel.test> arrTest = new ArrayList<AddONRequestModel.test>();
                             //fungible
-                            if (BundleConstants.isPEPartner) {
+//                            if (BundleConstants.isPEPartner) {
+                            if (appPreferenceManager.isPEPartner()) {
 //                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                 addAddOnRequest(arrTest);
                             } else {
@@ -1036,7 +1047,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
                         } else if (Action.equalsIgnoreCase("Edit")) {
                             //fungible
-                            if (BundleConstants.isPEPartner) {
+//                            if (BundleConstants.isPEPartner) {
+                            if (appPreferenceManager.isPEPartner()) {
 //                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                 if (callPEOrderAPI && checkifBeneficiaryDetailsEdited()) {
                                     CallSubmitAPIforPEEditBen(0);
@@ -1943,7 +1955,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         if (!InputUtils.isNull(edit_selectedTestsList)) {
             addEditTest(isAddBen);
             //fungible
-        } else if (isAddBen && BundleConstants.isPEPartner) {
+//        } else if (isAddBen && BundleConstants.isPEPartner) {
+        } else if (isAddBen && appPreferenceManager.isPEPartner()) {
 //        } else if (isAddBen && Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             if (peselectedTestsList != null && peselectedTestsList.size() > 0) {
                 addEditTest(isAddBen);
@@ -1955,7 +1968,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 startActivityForResult(intent, BundleConstants.ADDEDITTESTREQUESTCODE);
             }
 //fungible
-        } else if (!isAddBen && BundleConstants.isPEPartner) {
+//        } else if (!isAddBen && BundleConstants.isPEPartner) {
+        } else if (!isAddBen && appPreferenceManager.isPEPartner()) {
 //        } else if (!isAddBen && Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             if (peselectedTestsList != null && peselectedTestsList.size() > 0) {
                 addEditTest(isAddBen);
@@ -2007,7 +2021,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         try {
             if (isAddBen) {
                 //fungible
-                if (BundleConstants.isPEPartner) {
+//                if (BundleConstants.isPEPartner) {
+                if (appPreferenceManager.isPEPartner()) {
 //                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     displayAdapter = new DisplaySelectedTestsListForCancellationAdapter_new(mActivity, true, selectedTestsList, peselectedTestsList, SelectedTestCode, new RemoveSelectedTestFromListDelegate_new() {
                         @Override
@@ -2041,7 +2056,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
             } else {
                 //fungible
-                if (BundleConstants.isPEPartner) {
+//                if (BundleConstants.isPEPartner) {
+                if (appPreferenceManager.isPEPartner()) {
 //                if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                     displayAdapter = new DisplaySelectedTestsListForCancellationAdapter_new(mActivity, false, edit_selectedTestsList, peselectedTestsList, SelectedTestCode, new RemoveSelectedTestFromListDelegate_new() {
                         @Override
@@ -2095,7 +2111,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             }
             Button btn_Save = (Button) bottomSheet.findViewById(R.id.btn_save);
             //fungible
-            if (BundleConstants.isPEPartner) {
+//            if (BundleConstants.isPEPartner) {
+            if (appPreferenceManager.isPEPartner()) {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 if (isAddBen) {
                     if (peselectedTestsList.size() != 0) {
@@ -2125,7 +2142,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 public void onClick(View v) {
 //                    editdialog.dismiss();
                     //fungible
-                    if (BundleConstants.isPEPartner) {
+                    if (appPreferenceManager.isPEPartner()) {
+//                    if (BundleConstants.isPEPartner) {
 //                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                         if (isAddBen) {
                             ToDisplayTest(bottomSheetDialog);
@@ -2381,7 +2399,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //fungible
-                    if (BundleConstants.isPEPartner) {
+//                    if (BundleConstants.isPEPartner) {
+                    if (appPreferenceManager.isPEPartner()) {
 //                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                         bottomSheetDialog.dismiss();
                         Intent intent = new Intent(mActivity, AddRemoveTestProfileActivity.class);
@@ -2424,7 +2443,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             bottomSheetDialog.dismiss();
             String str = "";
             for (int i = 0; i < peselectedTestsList.size(); i++) {
-                str = str + peselectedTestsList.get(i).getName() + ",";
+                str = str + peselectedTestsList.get(i).getPartner_lab_test_id() + ",";
             }
             str = str.substring(0, str.length() - 1);
             txtTestsList.setError(null);
@@ -3032,13 +3051,29 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     }
 
     public void getTestList(GetPETestResponseModel getPETestResponseModel) {
-        peTestArraylist = new ArrayList<GetPETestResponseModel.DataDTO>();
-        if (getPETestResponseModel != null) {
+
+        if (getPETestResponseModel!=null){
+            ArrayList<GetPETestResponseModel.DataDTO> test = new ArrayList<>();
+            peTestArraylist = new ArrayList<GetPETestResponseModel.DataDTO>();
+            test = getPETestResponseModel.getData();
+            for (int i = 0; i < test.size(); i++) {
+                if (InputUtils.isNull(test.get(i).getPartner_lab_test_id())){
+                    test.remove(i);
+                }
+            }
+            peTestArraylist = test;
+        }else{
+            TastyToast.makeText(mActivity,!InputUtils.isNull(getPETestResponseModel.getError())?getPETestResponseModel.getError(): SomethingWentwrngMsg,TastyToast.LENGTH_SHORT,TastyToast.ERROR);
+        }
+
+
+
+        /*if (getPETestResponseModel != null) {
             if (getPETestResponseModel.getStatus() == 1) {
                 peTestArraylist = getPETestResponseModel.getData();
             }
         }
-
+*/
         CallTestDataPE(peTestArraylist);
         /*if (FlagADDEditBen && peselectedTestsList!=null || peselectedTestsList!=null){
 
@@ -3075,6 +3110,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     }
 
     public void pePatientDetailsUpdated() {
+        BundleConstants.PE_HARD_BLOCKING = true;
         setResult(Activity.RESULT_OK);
         finish();
     }

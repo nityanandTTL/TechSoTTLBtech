@@ -85,7 +85,8 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
     @Override
     public int getCount() {
         //fungible
-        if (BundleConstants.isPEPartner) {
+//        if (BundleConstants.isPEPartner) {
+        if (appPreferenceManager.isPEPartner()) {
 //        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             return peselectedTestsList.size();
         }
@@ -101,7 +102,8 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
     @Override
     public Object getItem(int position) {
         //fungible
-        if (BundleConstants.isPEPartner) {
+//        if (BundleConstants.isPEPartner) {
+        if (appPreferenceManager.isPEPartner()) {
 //        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             return peselectedTestsList.get(position);
         }
@@ -125,7 +127,8 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
         }
 
         //fungible
-        if (BundleConstants.isPEPartner) {
+//        if (BundleConstants.isPEPartner) {
+        if (appPreferenceManager.isPEPartner()) {
 //        if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
             initPEData(holder, position);
             initPEListeners(holder, position);
@@ -142,9 +145,18 @@ public class DisplaySelectedTestsListForCancellationAdapter_new extends BaseAdap
     }
 
     private void initPEData(ViewHolder holder, int position) {
+        /*if (!StringUtils.isNull(peselectedTestsList.get(position).getLab_dos_name())&& peselectedTestsList.get(position).getLab_dos_name().equalsIgnoreCase(peselectedTestsList.get(position).getLab_dos_name())){
+            holder.txtTestName.setText(peselectedTestsList.get(position).getName());
+        } else if(!StringUtils.isNull(peselectedTestsList.get(position).getPartner_lab_test_id())&& peselectedTestsList.get(position).getPartner_lab_test_id().equalsIgnoreCase(peselectedTestsList.get(position).getPartner_lab_test_id())){
+            holder.txtTestName.setText(peselectedTestsList.get(position).getName());
+        }else{
+            holder.txtTestName.setText(peselectedTestsList.get(position).getName());
+        }*/
+
         if (!StringUtils.isNull(peselectedTestsList.get(position).getName())) {
             holder.txtTestName.setText(peselectedTestsList.get(position).getName());
         }
+
     }
 
     private void initPEListeners(ViewHolder holder, final int pos) {

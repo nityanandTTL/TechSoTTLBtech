@@ -74,6 +74,9 @@ public class AppPreferenceManager {
     public String OTPFlagOneTime = "OTPFlag";
     public String Access_Token = "access_token";
 
+    public String PE_Partner = "PE_Partner";
+    public String PE_DSA = "PE_DSA";
+
     //Neha G---------------------------------
     private String ShowTimeInNotificatn = "";
     private int not_avail_tom;
@@ -127,6 +130,22 @@ public class AppPreferenceManager {
         appPreference.putString(this.selfieURl, selfieURl);
     }
 
+
+    public boolean isPEPartner() {
+        return appPreference.getBoolean(PE_Partner,false);
+    }
+
+    public void setPE_Partner(boolean PE_Partner) {
+        appPreference.putBoolean(this.PE_Partner,PE_Partner);
+    }
+
+    public boolean PEDSAOrder() {
+        return appPreference.getBoolean(PE_DSA,false);
+    }
+
+    public void setPE_DSA(boolean PE_DSA) {
+        appPreference.putBoolean(this.PE_DSA,PE_DSA);
+    }
 
     public String get7days() {
         return appPreference.getString(date, "");
