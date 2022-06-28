@@ -1,13 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.gms:play-services-vision-common:19.0.2@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/449ade4bcf48ce6745c26252b62b643e/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/449ade4bcf48ce6745c26252b62b643e/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/449ade4bcf48ce6745c26252b62b643e/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e61731bbcf58accbcf1e040d9ce2f19f/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e61731bbcf58accbcf1e040d9ce2f19f/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e61731bbcf58accbcf1e040d9ce2f19f/AndroidManifest.xml" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.gms/play-services-vision-common/19.0.2/286ff90fb2ba93f9a8efffa053999ea7d0598204/play-services-vision-common-19.0.2-javadoc.jar!/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES />
   </library>
 </component>

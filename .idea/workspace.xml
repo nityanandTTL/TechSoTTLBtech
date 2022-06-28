@@ -20,7 +20,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[Pixel_2_XL_API_30]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\T0763\.android\avd\Pixel_3a_XL_API_28_2.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -75,14 +75,15 @@
     <property name="DEBUGGABLE_DEVICE" value="emulator-5554" />
     <property name="DEBUGGABLE_PROCESS" value="com.thyrocare.btechapp" />
     <property name="DEBUGGER_ID" value="Auto" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Pixel_C_API_30" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2022-06-22T09:13:26.672Z" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Pixel_2_XL_API_30" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2022-06-23T12:22:12.877Z" />
     <property name="ExportApk.ApkPath" value="D:\Android projects\AndroidProjects\TechSoBTechApp\app\release" />
     <property name="ExportApk.BuildVariants" value="release" />
     <property name="ExportApk.SignV1" value="true" />
     <property name="ExportApk.SignV2" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="SHOW_ALL_PROCESSES" value="false" />
     <property name="ScreenshotViewer.SavePath" value="$USER_HOME$/Desktop/PE_logo" />
     <property name="android-custom-viewC:/Users/2122E/.gradle/caches/modules-2/files-2.1/androidx.appcompat/appcompat/1.2.0-alpha03/361eb1fc1c5442a19c7bd5ea4ba214d08c60dac3/appcompat-1.2.0-alpha03-sources.jar!/androidx/appcompat/widget/Toolbar.java_SELECTED" value="Toolbar" />
@@ -103,11 +104,12 @@
     <property name="android.project.structure.last.selected" value="SDK Location" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="android.sdk.path" value="$USER_HOME$/Android/Sdk" />
+    <property name="cidr.known.project.marker" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="device.picker.selection" value="Pixel_2_XL_API_27" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/res/drawable" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/res/drawable" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="multi-representation-previewC:/Users/2122E/.gradle/caches/modules-2/files-2.1/androidx.appcompat/appcompat/1.2.0-alpha03/361eb1fc1c5442a19c7bd5ea4ba214d08c60dac3/appcompat-1.2.0-alpha03-sources.jar!/androidx/appcompat/widget/Toolbar.java_selected" value="Custom views" />
     <property name="multi-representation-previewC:/Users/2122E/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.0.0/2151d26c3b241f0a887f2dadb9ab091649fcf020/recyclerview-1.0.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_selected" value="Custom views" />
     <property name="multi-representation-previewC:/Users/2122E/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_selected" value="Custom views" />
@@ -182,21 +184,21 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
-      <module name="TechSoBTechApp2.7.6.app" />
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="TechSoBTechApp.app" />
       <option name="DEPLOY" value="true" />
       <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
       <option name="DEPLOY_AS_INSTANT" value="false" />
       <option name="ARTIFACT_NAME" value="" />
       <option name="PM_INSTALL_OPTIONS" value="" />
       <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
       <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
       <option name="ACTIVITY_EXTRA_FLAGS" value="" />
       <option name="MODE" value="default_activity" />
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
       <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
       <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
       <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
@@ -227,7 +229,7 @@
         <option name="ADVANCED_PROFILING_ENABLED" value="false" />
         <option name="STARTUP_PROFILING_ENABLED" value="false" />
         <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
-        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sample Java Methods" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
         <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
         <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
       </Profilers>
@@ -268,7 +270,9 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -278,7 +282,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -313,6 +317,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="421" y="178" width="966" height="491" key="#PSD/0.0.1920.1040@0.0.1920.1040" timestamp="1652077729706" />
+    <state x="736" y="322" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1655989052707">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="736" y="322" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1655989052707" />
     <state x="765" y="226" width="374" height="592" key="#com.intellij.ide.util.MemberChooser" timestamp="1655355368784">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -358,33 +366,33 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="383" y="143" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1655463958690" />
-    <state width="1877" height="599" key="GridCell.Tab.0.bottom" timestamp="1655817567845">
+    <state width="1877" height="157" key="GridCell.Tab.0.bottom" timestamp="1656008174431">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="926" height="346" key="GridCell.Tab.0.bottom/0.0.1364.585@0.0.1364.585" timestamp="1652898947306" />
     <state width="1323" height="352" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1655721996277" />
-    <state width="1877" height="599" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1655817567845" />
+    <state width="1877" height="157" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1656008174431" />
     <state width="1448" height="215" key="GridCell.Tab.0.bottom/0.0.1920.929@0.0.1920.929" timestamp="1654345686293" />
-    <state width="1877" height="599" key="GridCell.Tab.0.center" timestamp="1655817567844">
+    <state width="1877" height="157" key="GridCell.Tab.0.center" timestamp="1656008174430">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="926" height="346" key="GridCell.Tab.0.center/0.0.1364.585@0.0.1364.585" timestamp="1652898947306" />
     <state width="1323" height="352" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1655721996277" />
-    <state width="1877" height="599" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1655817567844" />
+    <state width="1877" height="157" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1656008174430" />
     <state width="1448" height="215" key="GridCell.Tab.0.center/0.0.1920.929@0.0.1920.929" timestamp="1654345686293" />
-    <state width="1877" height="599" key="GridCell.Tab.0.left" timestamp="1655817567844">
+    <state width="1877" height="157" key="GridCell.Tab.0.left" timestamp="1656008174430">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="926" height="346" key="GridCell.Tab.0.left/0.0.1364.585@0.0.1364.585" timestamp="1652898947306" />
     <state width="1323" height="352" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1655721996277" />
-    <state width="1877" height="599" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1655817567844" />
+    <state width="1877" height="157" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1656008174430" />
     <state width="1448" height="215" key="GridCell.Tab.0.left/0.0.1920.929@0.0.1920.929" timestamp="1654345686293" />
-    <state width="1877" height="599" key="GridCell.Tab.0.right" timestamp="1655817567845">
+    <state width="1877" height="157" key="GridCell.Tab.0.right" timestamp="1656008174431">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="926" height="346" key="GridCell.Tab.0.right/0.0.1364.585@0.0.1364.585" timestamp="1652898947306" />
     <state width="1323" height="352" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1655721996277" />
-    <state width="1877" height="599" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1655817567845" />
+    <state width="1877" height="157" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1656008174431" />
     <state width="1448" height="215" key="GridCell.Tab.0.right/0.0.1920.929@0.0.1920.929" timestamp="1654345686293" />
     <state width="1877" height="396" key="GridCell.Tab.1.bottom" timestamp="1655719913399">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -414,10 +422,11 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="691" y="395" key="ScreenshotRecorder.Options.Dimensions/0.0.1920.1040@0.0.1920.1040" timestamp="1648876033439" />
-    <state x="122" y="0" width="976" height="1040" key="ScreenshotViewer.Dimensions" timestamp="1655294310124">
+    <state x="122" y="0" width="960" height="1040" key="ScreenshotViewer.Dimensions" timestamp="1656054379833">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="122" y="0" width="976" height="1040" key="ScreenshotViewer.Dimensions/0.0.1920.1040@0.0.1920.1040" timestamp="1655294310124" />
+    <state x="102" y="0" width="976" height="860" key="ScreenshotViewer.Dimensions/0.0.1600.860@0.0.1600.860" timestamp="1656049912913" />
+    <state x="122" y="0" width="960" height="1040" key="ScreenshotViewer.Dimensions/0.0.1920.1040@0.0.1920.1040" timestamp="1656054379833" />
     <state x="461" y="165" key="SettingsEditor" timestamp="1650262309676">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -434,10 +443,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1653281287154" />
-    <state x="115" y="58" width="1680" height="867" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1655816045868">
+    <state x="115" y="58" width="1680" height="867" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1656073027243">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="115" y="58" width="1680" height="867" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1655816045868" />
+    <state x="115" y="58" width="1680" height="867" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1656073027243" />
     <state x="115" y="52" width="1680" height="777" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.929@0.0.1920.929" timestamp="1653577282725" />
     <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.SelectionHistoryDialog" timestamp="1655807855774">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -455,10 +464,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="693" y="297" width="540" height="496" key="extract.method.dialog/0.0.1920.1040@0.0.1920.1040" timestamp="1649117809786" />
-    <state x="339" y="100" width="1272" height="940" key="find.popup" timestamp="1655813697201">
+    <state x="339" y="100" width="1272" height="940" key="find.popup" timestamp="1656058573129">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="339" y="100" width="1272" height="940" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1655813697201" />
+    <state x="339" y="100" width="1272" height="940" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1656058573129" />
     <state x="339" y="89" width="1272" height="840" key="find.popup/0.0.1920.929@0.0.1920.929" timestamp="1652708751368" />
     <state x="509" y="278" key="refactoring.ChangeSignatureDialog" timestamp="1655877660998">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -468,11 +477,11 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="410" y="244" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1653998969250" />
-    <state x="452" y="151" width="672" height="493" key="search.everywhere.popup" timestamp="1655881918935">
-      <screen x="0" y="0" width="1366" height="728" />
+    <state x="635" y="215" width="672" height="704" key="search.everywhere.popup" timestamp="1656391666370">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="452" y="151" width="672" height="493" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1655881918935" />
-    <state x="635" y="215" width="672" height="704" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1655878423755" />
+    <state x="635" y="215" width="672" height="704" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1656391666370" />
     <state x="400" y="204" width="672" height="629" key="search.everywhere.popup/0.0.1920.929@0.0.1920.929" timestamp="1652816682187" />
   </component>
   <component name="XDebuggerManager">
@@ -915,7 +924,7 @@
     </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
-        <PinnedItemInfo typeName="com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel" fieldName="testSampleType" />
+        <PinnedItemInfo />
       </pinned-members>
     </pin-to-top-manager>
     <watches-manager>

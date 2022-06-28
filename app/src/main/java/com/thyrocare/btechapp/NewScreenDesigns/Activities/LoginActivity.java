@@ -246,7 +246,7 @@ public class LoginActivity extends AppCompatActivity {
         new LogUserActivityTagging(mActivity, LOGIN, "");
         if (responseModel != null) {
             //Btech Clevertap Mith
-           // setCleverTapLoginDetails(responseModel);
+            setCleverTapLoginDetails(responseModel);
             //btech_hub
             /*if (BuildConfig.DEBUG){
                 responseModel.setB2bLogin(true);

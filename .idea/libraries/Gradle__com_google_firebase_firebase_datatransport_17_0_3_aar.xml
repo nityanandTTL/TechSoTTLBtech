@@ -4,6 +4,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ab6b23ef026282e4904b562cd4c45226/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ab6b23ef026282e4904b562cd4c45226/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ab6b23ef026282e4904b562cd4c45226/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b18451cc3f916b203e962f740985e6bf/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b18451cc3f916b203e962f740985e6bf/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b18451cc3f916b203e962f740985e6bf/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-datatransport/17.0.3/8c8c8d5417add6218ebf9f99cbf6ae6d4a3b827/firebase-datatransport-17.0.3-javadoc.jar!/" />

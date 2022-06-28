@@ -48,34 +48,34 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon">
 
-<!--        for live clevertap-->
-       <!-- <meta-data
+        <!--for live clevertap-->
+        <meta-data
             android:name="CLEVERTAP_ACCOUNT_ID"
             android:value="R7W-55K-R56Z" />
         <meta-data
             android:name="CLEVERTAP_TOKEN"
-            android:value="355-0a2" /> &lt;!&ndash; IMPORTANT: To force use Google AD ID to uniquely identify  users, use the following meta tag. GDPR mandates that if you are using this tag, there is prominent disclousure to your end customer in their application. Read more about GDPR here - https://clevertap.com/blog/in-preparation-of-gdpr-compliance/ &ndash;&gt;
+            android:value="355-0a2" /> <!-- IMPORTANT: To force use Google AD ID to uniquely identify  users, use the following meta tag. GDPR mandates that if you are using this tag, there is prominent disclousure to your end customer in their application. Read more about GDPR here - https://clevertap.com/blog/in-preparation-of-gdpr-compliance/ -->
         <meta-data
             android:name="CLEVERTAP_USE_GOOGLE_AD_ID"
             android:value="1" />
 
         <meta-data android:name="FCM_SENDER_ID"
-            android:value="534320592236"/>-->
+            android:value="534320592236"/>
 
 
 <!--        for stag clevertap-->
-         <meta-data
+         <!--<meta-data
                     android:name="CLEVERTAP_ACCOUNT_ID"
                     android:value="TEST-K7W-55K-R56Z" />
                 <meta-data
                     android:name="CLEVERTAP_TOKEN"
-                    android:value="TEST-355-0a3" /> <!-- IMPORTANT: To force use Google AD ID to uniquely identify  users, use the following meta tag. GDPR mandates that if you are using this tag, there is prominent disclousure to your end customer in their application. Read more about GDPR here - https://clevertap.com/blog/in-preparation-of-gdpr-compliance/ -->
+                    android:value="TEST-355-0a3" /> &lt;!&ndash; IMPORTANT: To force use Google AD ID to uniquely identify  users, use the following meta tag. GDPR mandates that if you are using this tag, there is prominent disclousure to your end customer in their application. Read more about GDPR here - https://clevertap.com/blog/in-preparation-of-gdpr-compliance/ &ndash;&gt;
                 <meta-data
                     android:name="CLEVERTAP_USE_GOOGLE_AD_ID"
                     android:value="1" />
 
                 <meta-data android:name="FCM_SENDER_ID"
-                    android:value="534320592236"/>
+                    android:value="534320592236"/>-->
 
         <activity
             android:name=".activity.RescheduleSlotActivity"

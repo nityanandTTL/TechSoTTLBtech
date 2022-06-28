@@ -2,11 +2,15 @@
   <library name="Gradle: com.clevertap.android:clevertap-android-sdk:4.2.0@aar">
     <ANNOTATIONS>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f5147a9777904a9aa74c051446818d69/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/bb0bd122cce6de1fb600f0dfc667e635/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f5147a9777904a9aa74c051446818d69/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f5147a9777904a9aa74c051446818d69/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f5147a9777904a9aa74c051446818d69/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/bb0bd122cce6de1fb600f0dfc667e635/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/bb0bd122cce6de1fb600f0dfc667e635/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/bb0bd122cce6de1fb600f0dfc667e635/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
