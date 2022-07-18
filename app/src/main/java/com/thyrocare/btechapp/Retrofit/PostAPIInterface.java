@@ -450,6 +450,13 @@ public interface PostAPIInterface {
                                    @Part("APPID") RequestBody appID,
                                    @Part MultipartBody.Part vialFileMultiBody);
 
+    @Multipart
+    @POST("api/OrderAllocation/Uploadblob")
+    Call<String> CallUploadSelfieHubAPI(
+            @Part("BENID") RequestBody benID,
+            @Part("TYPE") RequestBody type,
+            @Part MultipartBody.Part vialFileMultiBody);
+
     @POST("api/PayThyrocare/PEVerifyPayment")
     Call<PEPaymentResponseModel> PEVerifyPayment(@Body PEPaymentRequestModel pePaymentRequestModel);
 
@@ -467,7 +474,7 @@ public interface PostAPIInterface {
             "x-api-auth: 9551825306485694"
     })
     @POST("/api/partner-integration/v1/order/{orderID}/add-on-order")
-    Call<AddOnResponseModel> getAddOnOrder(@Path("orderID")String OrderID, @Body AddONRequestModel addONRequestModel);
+    Call<AddOnResponseModel> getAddOnOrder(@Path("orderID") String OrderID, @Body AddONRequestModel addONRequestModel);
 
     @POST("api/PEEvents/PEUpdatePatient")
     Call<PEUpdatePatientResponseModel> postPEUpdatePatient(@Body PEUpdatePatientRequestModel peUpdatePatientRequestModel);

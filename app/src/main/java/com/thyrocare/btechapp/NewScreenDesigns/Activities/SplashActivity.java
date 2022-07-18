@@ -351,7 +351,6 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void GoAhead() {
-
         DbHelper.init(mActivity.getApplicationContext());
         new CreateOrUpgradeDbTask(new DhbDbDelegate(), getApplicationContext()).execute();
         Logger.error("locationUpdateIntent Executed 3");
