@@ -16,10 +16,12 @@ import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener;
 import com.clevertap.android.sdk.pushnotification.NotificationInfo;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.SplashActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
+import com.thyrocare.btechapp.dao.DhbDao;
 import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.InputUtils;
@@ -109,6 +111,7 @@ public class FireMsgService extends FirebaseMessagingService {
     }
 
     private void handleDataMessage(HashMap<String, String> json) {
+        appPreferenceManager  = new AppPreferenceManager(getApplicationContext());
         MessageLogger.PrintMsg("push json: " + json.toString());
 
         try {
@@ -141,6 +144,9 @@ public class FireMsgService extends FirebaseMessagingService {
             MessageLogger.PrintMsg("Order_ID: " + Order_ID);
 
             if (InputUtils.CheckEqualIgnoreCase(AppID, Constants.StrAppID)) {
+                if (Screen_category==Constants.LogoutID){
+                    LogUserOut();
+                }
                 InitaiteDataForNotification(notifyID, title, message, onGoing, autoCancel, bigText, imageUrl, timestamp, NotificationID, Product_name, Order_ID, mobile, ScreenURL);
             } else {
                 MessageLogger.PrintMsg("This Notification is not for ThyroApp");
@@ -150,6 +156,24 @@ public class FireMsgService extends FirebaseMessagingService {
         } catch (Exception e) {
             MessageLogger.PrintMsg("Exception: " + e.getMessage());
         }
+    }
+    private void LogUserOut() {
+        try {
+            appPreferenceManager.clearAllPreferences();
+            try {
+                new DhbDao(getApplicationContext()).deleteTablesonLogout();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Intent n = new Intent(getApplicationContext(), LoginActivity.class);
+            n.setAction(Intent.ACTION_MAIN);
+            n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            n.putExtra("ScreenCategory",100);
+            startActivity(n);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void InitaiteDataForNotification(String notifyID, String title, String message, String onGoing, String autoCancel, String bigText, String imageUrl, String timestamp, String notificationID, String product_name, String order_ID, String mobile, String ScreenURL) {

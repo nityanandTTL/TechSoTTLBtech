@@ -70,4 +70,6 @@ public class Constants {
     public static CleverTapAPI clevertapDefaultInstance;
 
     public static boolean isFromCleverTap= false;
+    public static int LogoutID=100;
+    public static String Logout_Topic = "BTech_ALLDEVICES";
 }

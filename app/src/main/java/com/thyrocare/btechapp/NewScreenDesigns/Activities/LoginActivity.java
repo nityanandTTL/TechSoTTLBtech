@@ -1,14 +1,17 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Activities;
 
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CheckInternetConnectionMsg;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.INVALID_LOG;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.VALID_BTECH_CREDENTIAL_ALERT;
+import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGIN;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,8 +20,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.Controller.PostTokenController;
@@ -53,17 +58,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CheckInternetConnectionMsg;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.INVALID_LOG;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SUCCESS_LOGIN;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.VALID_BTECH_CREDENTIAL_ALERT;
-import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGIN;
-
 
 public class LoginActivity extends AppCompatActivity {
 
     Activity mActivity;
+    Global globalclass;
+    ConnectionDetector cd;
     private EditText edtUserID, edtPassword;
     private Button btn_login;
     private AlertDialog.Builder alertDialogBuilder;
@@ -71,9 +71,7 @@ public class LoginActivity extends AppCompatActivity {
     private Cursor c1;
     private String PasswordtoVerify = "";
     private SharedPreferences prefs_user;
-    Global globalclass;
     private TextView forget_password;
-    ConnectionDetector cd;
     private AppPreferenceManager appPreferenceManager;
     private ImageView img_password_toggle_id;
     private boolean showpassword = false;
@@ -90,6 +88,11 @@ public class LoginActivity extends AppCompatActivity {
         globalclass = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
 
+        if (getIntent().hasExtra("ScreenCategory")) {
+            int category = getIntent().getExtras().getInt("ScreenCategory");
+            if (category == Constants.LogoutID)
+                new LogUserActivityTagging(mActivity, "LOGOUT", "");
+        }
         initview();
         initlistener();
 
@@ -245,6 +248,8 @@ public class LoginActivity extends AppCompatActivity {
 
         new LogUserActivityTagging(mActivity, LOGIN, "");
         if (responseModel != null) {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(Constants.Logout_Topic);
+            FirebaseMessaging.getInstance().subscribeToTopic(Constants.Logout_Topic);
             //Btech Clevertap Mith
             setCleverTapLoginDetails(responseModel);
             //btech_hub
@@ -256,9 +261,10 @@ public class LoginActivity extends AppCompatActivity {
             appPreferenceManager.setAPISessionKey(responseModel.getAccess_token());
             appPreferenceManager.setLoginResponseModel(responseModel);
             appPreferenceManager.setAccess_Token(responseModel.getAccess_token());
-            System.out.println("fsfsfsfsfsffdsfffffffffffffffffffff"+appPreferenceManager.getLoginResponseModel().getAccess_token());
+            System.out.println("fsfsfsfsfsffdsfffffffffffffffffffff" + appPreferenceManager.getLoginResponseModel().getAccess_token());
             CallBtechWiseVersionTrackerAPI();
             PostToken();
+
             if (appPreferenceManager.getLoginResponseModel().getRole().equals(Constants.BTECH_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(Constants.HUB_ROLE_ID) || appPreferenceManager.getLoginResponseModel().getRole().equals(Constants.NBT_ROLE_ID)) {//4 is for btech login & 6 is for hub 13 is for NBT
 //                globalclass.showCustomToast(mActivity, SUCCESS_LOGIN, Toast.LENGTH_LONG);
                 notificationMapping();
