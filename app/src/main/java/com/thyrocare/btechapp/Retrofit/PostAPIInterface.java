@@ -32,6 +32,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetBtechCert
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.MainMaterialModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.NotificationMappingResponseModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.ResponseModel;
 import com.thyrocare.btechapp.models.api.request.AddONRequestModel;
 import com.thyrocare.btechapp.models.api.request.BtechsRequestModel;
 import com.thyrocare.btechapp.models.api.request.BtechwithHub_MasterBarcodeMappingRequestModel;
@@ -111,7 +112,6 @@ import com.thyrocare.btechapp.models.api.response.PickupOrderResponseModel;
 import com.thyrocare.btechapp.models.api.response.PostPickupOrderResponseModel;
 import com.thyrocare.btechapp.models.api.response.QrcodeBasedPatientDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.RemoveUrineSampleRespModel;
-import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.ResponseModel;
 import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.btechapp.models.api.response.SendEventResponeModel;
 import com.thyrocare.btechapp.models.api.response.SignInResponseModel;
@@ -468,7 +468,7 @@ public interface PostAPIInterface {
             "x-api-auth: 9551825306485694"
     })
     @POST("/api/partner-integration/v1/order/{orderID}/add-on-order")
-    Call<AddOnResponseModel> getAddOnOrder(@Path("orderID")String OrderID, @Body AddONRequestModel addONRequestModel);
+    Call<AddOnResponseModel> getAddOnOrder(@Path("orderID") String OrderID, @Body AddONRequestModel addONRequestModel);
 
     @POST("api/PEEvents/PEUpdatePatient")
     Call<PEUpdatePatientResponseModel> postPEUpdatePatient(@Body PEUpdatePatientRequestModel peUpdatePatientRequestModel);
@@ -500,5 +500,12 @@ public interface PostAPIInterface {
             "Content-Type:application/json"
     })
     @POST("/api/partner-integration/v1/order/{orderID}/coupon")
-    Call<VerifyCouponResponseModel> verifySelectedCoupon(@Path("orderID")String OrderID, @Body AddONRequestModel addONRequestModel);
+    Call<VerifyCouponResponseModel> verifySelectedCoupon(@Path("orderID") String OrderID, @Body AddONRequestModel addONRequestModel);
+
+    @Multipart
+    @POST("api/OrderAllocation/Uploadblob")
+    Call<String> CallUploadSelfieHubAPI(
+            @Part("BENID") RequestBody benID,
+            @Part("TYPE") RequestBody type,
+            @Part MultipartBody.Part vialFileMultiBody);
 }

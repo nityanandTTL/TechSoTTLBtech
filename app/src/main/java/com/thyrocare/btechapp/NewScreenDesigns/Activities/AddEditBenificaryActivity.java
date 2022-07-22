@@ -1222,7 +1222,9 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             for (int i = 0; i < peselectedTestsList.size(); i++) {
                 AddONRequestModel.test test = new AddONRequestModel.test();
                 test.setId(peselectedTestsList.get(i).getId());
+                test.setTest_id(peselectedTestsList.get(i).getTest_dos_id());
                 test.setType(peselectedTestsList.get(i).getType());
+                arrTest.add(test);
                 arrTest.add(test);
             }
             AddONRequestModel addONRequestModel = new AddONRequestModel();

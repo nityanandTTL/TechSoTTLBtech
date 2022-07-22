@@ -4,6 +4,7 @@
     <bytecodeTargetLevel target="1.7">
       <module name="TechSoBTechApp.app" target="11" />
       <module name="TechSoBTechApp2.7.6.app" target="1.8" />
+      <module name="TechSoWenBTech_GIT.app" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

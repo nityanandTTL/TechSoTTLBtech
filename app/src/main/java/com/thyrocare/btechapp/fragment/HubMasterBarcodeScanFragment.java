@@ -1,8 +1,10 @@
 package com.thyrocare.btechapp.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -13,18 +15,20 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.sdsmdg.tastytoast.TastyToast;
+import com.thyrocare.btechapp.Controller.VenupunctureAPIController;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
@@ -36,24 +40,28 @@ import com.thyrocare.btechapp.activity.HomeScreenActivity;
 import com.thyrocare.btechapp.adapter.HubScanBarcodeListAdapter;
 import com.thyrocare.btechapp.dao.DhbDao;
 import com.thyrocare.btechapp.models.api.request.MasterBarcodeMappingRequestModel;
+import com.thyrocare.btechapp.models.api.request.VenupunctureUploadRequestModel;
 import com.thyrocare.btechapp.models.api.response.BtechCollectionsResponseModel;
 import com.thyrocare.btechapp.models.data.HUBBTechModel;
 import com.thyrocare.btechapp.models.data.HubBarcodeModel;
 
 
-import com.thyrocare.btechapp.uiutils.AbstractFragment;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
+import com.thyrocare.btechapp.utils.app.InputUtils;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
 import static android.view.View.VISIBLE;
+import static android.widget.Toast.LENGTH_SHORT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
@@ -86,6 +94,8 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
     TextView tv_toolbar;
     ImageView iv_back, iv_home;
     TextView txt_master_barcode;
+    private File selfie_photo;
+    private Uri selfieUri;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,7 +136,7 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
 
     private void initUI() {
 
-        if (HubListDisplayFragment.flowDecider == 1) {//for btech_hub flow
+        if (HubListDisplayFragment.flowDecider == 1) {          //for btech_hub flow
             tv_centrifuge = (TextView) findViewById(R.id.tv_centrifuge);
             tv_centrifuge.setText("Scan Barcode");
         }
@@ -141,12 +151,13 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
         tv_collection_sample.setVisibility(VISIBLE);
         btnDispatch = (Button) findViewById(R.id.btn_dispatch);
         txt_master_barcode = findViewById(R.id.txt_master_barcode);
-        tv_toolbar =findViewById(R.id.tv_toolbar);
-        iv_home =findViewById(R.id.iv_home);
-        iv_back =findViewById(R.id.iv_back);
+        tv_toolbar = findViewById(R.id.tv_toolbar);
+        iv_home = findViewById(R.id.iv_home);
+        iv_back = findViewById(R.id.iv_back);
         tv_toolbar.setText("Hub Scan");
         iv_home.setVisibility(View.GONE);
         tv_toolbar.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        btnDispatch.setText(activity.getString(R.string.upload_selfie));
     }
 
     @Override
@@ -167,14 +178,44 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
             }
 
         } else if (v.getId() == R.id.btn_dispatch) {
-            if (validate()) {
-                callMasterBarcodeMapApi();
-            }
+            onClickDispatchBtn();
         } else if (v.getId() == R.id.iv_back) {
             finish();
         } else if (v.getId() == R.id.iv_home) {
-           startActivity(new Intent(activity,HomeScreenActivity.class));
+            startActivity(new Intent(activity, HomeScreenActivity.class));
         }
+    }
+
+    private void onClickDispatchBtn() {
+
+        if (InputUtils.CheckEqualIgnoreCase(btnDispatch.getText().toString(), activity.getString(R.string.dispatch))) {
+            if (validate()) {
+                callMasterBarcodeMapApi();
+            }
+        } else if (InputUtils.CheckEqualIgnoreCase(btnDispatch.getText().toString(), activity.getString(R.string.upload_selfie))) {
+            if (validate()) {
+                uploadSelfie();
+            }
+        }
+    }
+
+    private void uploadSelfie() {
+        TedPermission.with(activity)
+                .setPermissions(Manifest.permission.CAMERA)
+                .setRationaleMessage("We need permission to capture photo from your camera to Upload Vail Photo.")
+                .setRationaleConfirmText("OK")
+                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > Permission > Camera")
+                .setPermissionListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted() {
+                        Global.cropImageFullScreenActivity(activity, 3);
+                    }
+
+                    @Override
+                    public void onPermissionDenied(List<String> deniedPermissions) {
+                        Toast.makeText(activity, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }).check();
     }
 
     private void callMasterBarcodeMapApi() {
@@ -203,6 +244,7 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
     }
 
     private boolean validate() {
+
         if (barcodeModels == null) {
             Toast.makeText(activity, "you cannot dispatch", Toast.LENGTH_SHORT).show();
             return false;
@@ -339,7 +381,7 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
                         Toast.makeText(activity, "Invalid master barcode", Toast.LENGTH_SHORT).show();
                     } else {
                         txt_master_barcode.setVisibility(VISIBLE);
-                        txt_master_barcode.setText("Master Barcode:"+master_scanned_barcode);
+                        txt_master_barcode.setText("Master Barcode:" + master_scanned_barcode);
                         Toast.makeText(activity, "Master barcode scanned successfully", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -348,9 +390,45 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
             // });
 
 
+        }
+        //Handle Upload selfie image picked
+        else if (requestCode == ImagePicker.REQUEST_CODE && resultCode == RESULT_OK) {
+            try {
+                String imageurl = null;
+                Uri selectedImageUri = data.getData();
+                imageurl = selectedImageUri.getPath();
+
+                selfie_photo = new File(imageurl);
+                selfieUri = Uri.fromFile(selfie_photo);
+                if (selfieUri == null) {
+                    Toast.makeText(activity, "Failed to capture selfie", LENGTH_SHORT).show();
+                    return;
+                }
+                CallUploadSelfieAPI();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(activity, "Something went wrong", LENGTH_SHORT).show();
+            }
         } else {
             Logger.error("Cancelled from fragment");
         }
+    }
+
+    private void CallUploadSelfieAPI() {
+        VenupunctureUploadRequestModel vrm = new VenupunctureUploadRequestModel();
+        vrm.setBENID(appPreferenceManager.getLoginResponseModel().getUserID());
+        vrm.setFile(selfie_photo);
+        vrm.setTYPE("HUB_DROP");
+        vrm.setAPPID("");
+        vrm.setTEST("");
+        vrm.setORDERNO("");
+        VenupunctureAPIController vc = new VenupunctureAPIController(activity, HubMasterBarcodeScanFragment.this, vrm);
+        vc.CallAPI(vrm);
+    }
+
+    public void UpdateDispatchBtn() {
+        btnDispatch.setText(R.string.dispatch);
     }
 
 
@@ -430,5 +508,6 @@ public class HubMasterBarcodeScanFragment extends AppCompatActivity implements V
             }
         });
     }
+
 
 }

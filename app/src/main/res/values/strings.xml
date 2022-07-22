@@ -353,5 +353,7 @@
     <string name="add_edit_test_list_message">Click to view or add tests from list</string>
     <string name="Apply_coupon">Apply Coupon</string>
 
+    <string name="upload_selfie">Upload Selfie</string>
+
 
 </resources>
