@@ -1,19 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.ncorti:slidetoact:0.9.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b6c3878aee441c2fcea5bbbc4adf43cd/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b6c3878aee441c2fcea5bbbc4adf43cd/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b6c3878aee441c2fcea5bbbc4adf43cd/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1974257190b1c38f101199f6d8d50540/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1974257190b1c38f101199f6d8d50540/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1974257190b1c38f101199f6d8d50540/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fed28f70540fff748cc6e830d3231d03/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fed28f70540fff748cc6e830d3231d03/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fed28f70540fff748cc6e830d3231d03/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aa88145ba17b642c7ac38c33be31713d/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aa88145ba17b642c7ac38c33be31713d/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aa88145ba17b642c7ac38c33be31713d/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ncorti/slidetoact/0.9.0/c52bcc023e27188765c66ccf8c4d69751118449d/slidetoact-0.9.0-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

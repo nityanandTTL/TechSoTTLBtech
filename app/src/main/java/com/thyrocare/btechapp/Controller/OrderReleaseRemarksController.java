@@ -101,6 +101,7 @@ public class OrderReleaseRemarksController {
                         e.printStackTrace();
                     }
                 }
+
                 @Override
                 public void onFailure(Call<PECutomerIntimationSMSResponeModel> call, Throwable t) {
                     globalClass.showCustomToast(activity, "Something went wrong. Try after sometime");

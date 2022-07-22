@@ -6,6 +6,17 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 public class GetPETestResponseModel implements Parcelable {
+    public static final Creator<GetPETestResponseModel> CREATOR = new Creator<GetPETestResponseModel>() {
+        @Override
+        public GetPETestResponseModel createFromParcel(Parcel in) {
+            return new GetPETestResponseModel(in);
+        }
+
+        @Override
+        public GetPETestResponseModel[] newArray(int size) {
+            return new GetPETestResponseModel[size];
+        }
+    };
     /**
      * error : null
      * status : 1
@@ -24,18 +35,6 @@ public class GetPETestResponseModel implements Parcelable {
             status = in.readInt();
         }
     }
-
-    public static final Creator<GetPETestResponseModel> CREATOR = new Creator<GetPETestResponseModel>() {
-        @Override
-        public GetPETestResponseModel createFromParcel(Parcel in) {
-            return new GetPETestResponseModel(in);
-        }
-
-        @Override
-        public GetPETestResponseModel[] newArray(int size) {
-            return new GetPETestResponseModel[size];
-        }
-    };
 
     public String getError() {
         return error;
@@ -77,7 +76,18 @@ public class GetPETestResponseModel implements Parcelable {
         }
     }
 
-    public static class DataDTO implements Parcelable{
+    public static class DataDTO implements Parcelable {
+        public static final Creator<DataDTO> CREATOR = new Creator<DataDTO>() {
+            @Override
+            public DataDTO createFromParcel(Parcel in) {
+                return new DataDTO(in);
+            }
+
+            @Override
+            public DataDTO[] newArray(int size) {
+                return new DataDTO[size];
+            }
+        };
         /**
          * id : 44
          * type : test
@@ -105,6 +115,7 @@ public class GetPETestResponseModel implements Parcelable {
         private String mrp;
         private String discount_percent;
         private String partner_master_test_id;
+        private Integer test_dos_id;
 
         protected DataDTO(Parcel in) {
             if (in.readByte() == 0) {
@@ -123,19 +134,8 @@ public class GetPETestResponseModel implements Parcelable {
             mrp = in.readString();
             discount_percent = in.readString();
             partner_master_test_id = in.readString();
+            test_dos_id = in.readInt();
         }
-
-        public static final Creator<DataDTO> CREATOR = new Creator<DataDTO>() {
-            @Override
-            public DataDTO createFromParcel(Parcel in) {
-                return new DataDTO(in);
-            }
-
-            @Override
-            public DataDTO[] newArray(int size) {
-                return new DataDTO[size];
-            }
-        };
 
         public Integer getId() {
             return id;
@@ -257,6 +257,15 @@ public class GetPETestResponseModel implements Parcelable {
             dest.writeString(mrp);
             dest.writeString(discount_percent);
             dest.writeString(partner_master_test_id);
+            dest.writeInt(test_dos_id);
+        }
+
+        public Integer getTest_dos_id() {
+            return test_dos_id;
+        }
+
+        public void setTest_dos_id(Integer test_dos_id) {
+            this.test_dos_id = test_dos_id;
         }
     }
 }

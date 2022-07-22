@@ -1,18 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.firebase:firebase-crash:16.2.1@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0d2fb85801467f8856e07ab34436d167/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0d2fb85801467f8856e07ab34436d167/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0d2fb85801467f8856e07ab34436d167/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b649934f9ebf96ce34ea8e1c1cfa8ef9/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b649934f9ebf96ce34ea8e1c1cfa8ef9/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b649934f9ebf96ce34ea8e1c1cfa8ef9/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ea8f5b2390ca93e9963c74b37cbed77c/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ea8f5b2390ca93e9963c74b37cbed77c/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ea8f5b2390ca93e9963c74b37cbed77c/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d4c4436f4ded79cdf0d617df46b78a28/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d4c4436f4ded79cdf0d617df46b78a28/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d4c4436f4ded79cdf0d617df46b78a28/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2aa88e9b81d747ae20efe866d3056b01/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2aa88e9b81d747ae20efe866d3056b01/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2aa88e9b81d747ae20efe866d3056b01/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

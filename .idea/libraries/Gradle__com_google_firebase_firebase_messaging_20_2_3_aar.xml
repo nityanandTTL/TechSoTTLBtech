@@ -1,22 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.firebase:firebase-messaging:20.2.3@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a270573df255598e092e9039fbdb477e/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a270573df255598e092e9039fbdb477e/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a270573df255598e092e9039fbdb477e/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/784caaa421843e6d801c112102f52105/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/784caaa421843e6d801c112102f52105/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/784caaa421843e6d801c112102f52105/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/896c7600df3f78bbb3bd59a56d739b17/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/896c7600df3f78bbb3bd59a56d739b17/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/896c7600df3f78bbb3bd59a56d739b17/jars/classes.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/47fc83b9b92a7b19af6d4241afe0a15e/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/47fc83b9b92a7b19af6d4241afe0a15e/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/47fc83b9b92a7b19af6d4241afe0a15e/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b89452fe7870f819d7f5fcdea1fd3a11/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b89452fe7870f819d7f5fcdea1fd3a11/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b89452fe7870f819d7f5fcdea1fd3a11/AndroidManifest.xml" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-messaging/20.2.3/d69e2cd752be4f9cc37760860994fd94db3069dc/firebase-messaging-20.2.3-javadoc.jar!/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES />
   </library>
 </component>

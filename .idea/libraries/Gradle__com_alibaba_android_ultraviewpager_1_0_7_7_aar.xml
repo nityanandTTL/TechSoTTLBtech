@@ -1,22 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.alibaba.android:ultraviewpager:1.0.7.7@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1fd479f620908c2f7d715fe221b5bed4/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1fd479f620908c2f7d715fe221b5bed4/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1fd479f620908c2f7d715fe221b5bed4/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aca45a94d6c5723f6c77e260a8f0fada/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aca45a94d6c5723f6c77e260a8f0fada/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aca45a94d6c5723f6c77e260a8f0fada/jars/classes.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/64d91d8756c64789891502c30ce34e16/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/64d91d8756c64789891502c30ce34e16/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/64d91d8756c64789891502c30ce34e16/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aabd39d2bfb676f350603213cf1a8fe0/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aabd39d2bfb676f350603213cf1a8fe0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aabd39d2bfb676f350603213cf1a8fe0/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c34749a418af451f210ebe26eae2d5ab/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c34749a418af451f210ebe26eae2d5ab/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c34749a418af451f210ebe26eae2d5ab/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.alibaba.android/ultraviewpager/1.0.7.7/bc076f8cd057f51696c0cc4a14a7a36b021aeecd/ultraviewpager-1.0.7.7-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

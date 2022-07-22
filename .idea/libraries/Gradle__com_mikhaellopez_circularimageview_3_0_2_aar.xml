@@ -1,19 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.mikhaellopez:circularimageview:3.0.2@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/59aced94b81b77998839990c08b5cc90/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/59aced94b81b77998839990c08b5cc90/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/59aced94b81b77998839990c08b5cc90/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2b5aab3643a93582f8802e15af416d30/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2b5aab3643a93582f8802e15af416d30/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2b5aab3643a93582f8802e15af416d30/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/62ef16fb469781331dd1189fb0ccbe19/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/62ef16fb469781331dd1189fb0ccbe19/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/62ef16fb469781331dd1189fb0ccbe19/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/71fb697cbde2ab5f80a5f4c9e5bccdf8/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/71fb697cbde2ab5f80a5f4c9e5bccdf8/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/71fb697cbde2ab5f80a5f4c9e5bccdf8/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mikhaellopez/circularimageview/3.0.2/e767c8be31dacdf19852b5928119d0d8cac1d1b6/circularimageview-3.0.2-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TechSoWenBTech_GIT.iml" filepath="$PROJECT_DIR$/.idea/modules/TechSoWenBTech_GIT.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.unitTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoWenBTech_GIT.bil.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoWenBTech_GIT.bil.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoWenBTech_GIT.bil.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoWenBTech_GIT.bil.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoWenBTech_GIT.bil.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoWenBTech_GIT.bil.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TechSoBTechApp.iml" filepath="$PROJECT_DIR$/.idea/modules/TechSoBTechApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp.bil.test.iml" />
     </modules>
   </component>
 </project>

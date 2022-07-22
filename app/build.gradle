@@ -9,8 +9,8 @@ android {
         applicationId "com.thyrocare.btechapp"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 162
-        versionName "2.9.1"
+        versionCode 163
+        versionName "2.9.2"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -78,6 +78,7 @@ android {
         resValue "string", "VELSO_URL", SERVER_BASE_API_URL_PROD.equals(BASE_URL_TOCHECK) ? VELSO_URL_LIVE : VELSO_URL_STNG
         resValue "string", "Thyrocare", SERVER_BASE_API_URL_PROD.equals(BASE_URL_TOCHECK) ? Thyrocare_LIVE : Thyrocare_STNG
         resValue "string", "Cliso", SERVER_BASE_API_URL_PROD.equals(BASE_URL_TOCHECK) ? Cliso_LIVE : Cliso_STNG
+
         resValue "string", "firebase_path", firebase_path
         resValue "string", "firebase_email", firebase_email
         resValue "string", "firebase_password", firebase_password
@@ -89,6 +90,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.google.firebase:firebase-firestore:21.4.0'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -122,6 +124,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth-api-phone:17.4.0'
     implementation 'com.google.android.gms:play-services-vision:20.0.0'
     implementation 'com.google.android.libraries.places:places:2.2.0'
+    implementation "io.grpc:grpc-okhttp:1.32.2"
+
 
     implementation 'com.google.firebase:firebase-analytics:17.4.4'
     implementation 'com.google.firebase:firebase-crash:16.2.1'

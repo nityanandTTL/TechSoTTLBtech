@@ -3,38 +3,32 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/layout/activity_add_edit_benificary.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/activity_add_new_beneficiary_order.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/activity_add_remove_test_profile.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/activity_barcode_scan_woe_main.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/activity_camp_order_booking.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/activity_chat.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/activity_checkout_wow.xml" value="0.196875" />
-        <entry key="app/src/main/res/layout/activity_edit_test_list.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/activity_leave_intimation.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/activity_navigation_map_display.xml" value="0.19010416666666666" />
-        <entry key="app/src/main/res/layout/activity_new_camp_module.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/activity_new_order_release.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/activity_selfie_upload.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/activity_start_and_arrive.xml" value="0.20092592592592592" />
-        <entry key="app/src/main/res/layout/all_visit_item.xml" value="0.20092592592592592" />
-        <entry key="app/src/main/res/layout/app_bar_home_screen.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/barcode_scan_viewpager_item.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/btech_visit_item.xml" value="0.20092592592592592" />
-        <entry key="app/src/main/res/layout/btechwithhub_fragment_btech_collections_list.xml" value="0.22395833333333334" />
-        <entry key="app/src/main/res/layout/default_toolbar.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/fragment_btech_collections_list.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/fragment_visit_orders_display.xml" value="0.20092592592592592" />
-        <entry key="app/src/main/res/layout/fragment_visit_orders_display_new.xml" value="0.20092592592592592" />
-        <entry key="app/src/main/res/layout/item_leave_applied.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/item_test_list_display.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/item_view_test.xml" value="0.23958333333333334" />
-        <entry key="app/src/main/res/layout/layout_bottomsheet_pe_release.xml" value="0.20092592592592592" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/drawable/bottom_sheet_design.xml" value="0.139" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/drawable/layout_couponn_bg.xml" value="0.1365" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_add_edit_benificary.xml" value="0.25" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_add_new_beneficiary_order.xml" value="0.1570945945945946" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_checkout_wow.xml" value="0.5" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_home_screen.xml" value="0.2304054054054054" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_selfie_upload.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_start_and_arrive.xml" value="0.2" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/addtestbottomsheet.xml" value="0.3546875" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/bottom_sheet.xml" value="0.35520833333333335" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/btech_visit_item.xml" value="0.23006756756756758" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/custom_toast.xml" value="0.3546875" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/custom_update_dailog.xml" value="0.3546875" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/dailog_viewbentests.xml" value="0.22401315789473683" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/dialog_confirm_order_release.xml" value="0.1" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/dialog_desposition.xml" value="0.23006756756756758" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/fragment_schedule_your_day1.xml" value="0.22401315789473683" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/item_barcode_list.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/layout_btms_coupon.xml" value="0.5557206537890045" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/layout_coupon_item.xml" value="0.67" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/logout_bottomsheet.xml" value="0.35520833333333335" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/start_arive_adpater_item_view.xml" value="0.22401315789473683" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

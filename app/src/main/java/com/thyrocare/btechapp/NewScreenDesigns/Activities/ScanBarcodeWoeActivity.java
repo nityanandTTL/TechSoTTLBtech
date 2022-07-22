@@ -1066,6 +1066,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                                 break;
                             }
                         }
+
                     }
                     InitViewpager(BenPositionForScan);
                 }
@@ -1120,6 +1121,7 @@ public class ScanBarcodeWoeActivity extends AppCompatActivity {
                                             beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).setBarcode(scanned_barcode);
                                         }
                                         beneficaryWiseArylst.get(BenPositionForScan).getBarcodedtl().get(i).setBenId(BenIDToScan);
+
                                         break;
                                     }
                                 }

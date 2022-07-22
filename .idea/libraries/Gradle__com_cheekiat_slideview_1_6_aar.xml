@@ -1,22 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.cheekiat:slideview:1.6@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5b91c4ea049b78c1ebd3665abf3d8f05/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5b91c4ea049b78c1ebd3665abf3d8f05/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/5b91c4ea049b78c1ebd3665abf3d8f05/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/81559ca97eca9d7f0589bdf896b600cc/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/81559ca97eca9d7f0589bdf896b600cc/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/81559ca97eca9d7f0589bdf896b600cc/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2409efefe3db5f8440a51c0bdd3d0024/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2409efefe3db5f8440a51c0bdd3d0024/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2409efefe3db5f8440a51c0bdd3d0024/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ce324fc3c369f7fe0e741517512711e9/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ce324fc3c369f7fe0e741517512711e9/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ce324fc3c369f7fe0e741517512711e9/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/13ef81337823f787a6678ac3da4ba225/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/13ef81337823f787a6678ac3da4ba225/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/13ef81337823f787a6678ac3da4ba225/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.cheekiat/slideview/1.6/13ee2da75956f6146894c5a387906f9a31d80ab3/slideview-1.6-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

@@ -1,5 +1,9 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Activities;
 
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.UnableToConnectMsg;
+import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,10 +14,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.widget.Toast;
 
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -29,7 +32,6 @@ import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.Notification
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.CommonResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.GetSSLKeyResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.NotificationMappingResponseModel;
-
 import com.thyrocare.btechapp.NewScreenDesigns.Models.ResponseModel.VersionControlResponseModel;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
@@ -57,9 +59,8 @@ import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.delegate.CustomUpdateDialogOkButtonOnClickedDelegate;
 import com.thyrocare.btechapp.models.api.response.DynamicBtechAvaliabilityResponseModel;
 import com.thyrocare.btechapp.models.api.response.NewBtechAvaliabilityResponseModel;
+import com.thyrocare.btechapp.models.data.SlotModel;
 import com.thyrocare.btechapp.models.data.TSPNBT_AvilModel;
-
-
 import com.thyrocare.btechapp.service.LocationUpdateService;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppConstants;
@@ -77,21 +78,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.UnableToConnectMsg;
-
-
-import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
-
 public class SplashActivity extends AppCompatActivity {
 
     Activity mActivity;
-    private AppPreferenceManager appPreferenceManager;
     ConnectionDetector cd;
     Global global;
     Boolean isFromNotification = false;
     int screenCategory = 0;
     String isFlebo;
+    private AppPreferenceManager appPreferenceManager;
     private VersionControlResponseModel versionAPIResponseModel;
     private Intent locationUpdateIntent;
 
@@ -112,6 +107,7 @@ public class SplashActivity extends AppCompatActivity {
 
         init();
         initData();
+
     }
 
     private void init() {
@@ -121,8 +117,13 @@ public class SplashActivity extends AppCompatActivity {
         global = new Global(mActivity);
         cd = new ConnectionDetector(mActivity);
         if (getIntent().hasExtra("isFromNotification") && getIntent().hasExtra("screenCategory")) {
+
             isFromNotification = getIntent().getBooleanExtra("isFromNotification", false);
             screenCategory = getIntent().getIntExtra("screenCategory", 0);
+
+         /*   if (screenCategory==Constants.LogoutID){
+                CallLogOutFromDevice();
+            }*/
         }
 
         isFlebo = getIntent().getStringExtra("isFlebo");
@@ -351,97 +352,11 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void GoAhead() {
+
         DbHelper.init(mActivity.getApplicationContext());
         new CreateOrUpgradeDbTask(new DhbDbDelegate(), getApplicationContext()).execute();
         Logger.error("locationUpdateIntent Executed 3");
 
-    }
-
-    private class DhbDbDelegate implements CreateOrUpgradeDbTask.DbTaskDelegate {
-        @Override
-        public void dbTaskCompletedWithResult(Boolean result) {
-
-            if (DeviceUtils.isMyServiceRunning(LocationUpdateService.class, mActivity)) {
-            } else {
-                if (!DeviceUtils.isAppIsInBackground(mActivity)) {
-                    startService(locationUpdateIntent);
-                }
-            }
-            if (InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
-                Intent n = new Intent(mActivity, LoginActivity.class);
-                startActivity(n);
-                finish();
-            } else {
-                notificationMapping();
-                if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)) {
-                    fetchDataForTsp();
-                } else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
-                    Logger.error("role1: " + AppConstants.NBTTSP_ROLE_ID);
-
-                    Calendar c = Calendar.getInstance();
-                    c.set(Calendar.MILLISECOND, 0);
-                    c.set(Calendar.SECOND, 0);
-                    c.set(Calendar.MINUTE, 0);
-                    c.set(Calendar.HOUR_OF_DAY, 0);
-
-                    if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
-
-
-                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                        i.putExtra("LEAVEINTIMATION", "0");
-                        i.putExtra("isFromNotification", isFromNotification);
-                        i.putExtra("screenCategory", screenCategory);
-                        startActivity(i);
-                        finish();
-                    } else {
-                        Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
-                        i.putExtra("LEAVEINTIMATION", "0");
-                        startActivity(i);
-                    }
-                } else {
-                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-                        Calendar c = Calendar.getInstance();
-                        c.set(Calendar.MILLISECOND, 0);
-                        c.set(Calendar.SECOND, 0);
-                        c.set(Calendar.MINUTE, 0);
-                        c.set(Calendar.HOUR_OF_DAY, 0);
-                        if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
-                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
-
-                                if(Constants.isFromCleverTap){
-                                    Constants.isFromCleverTap=false;
-                                    Intent intent = new Intent(SplashActivity.this, B2BVisitOrdersDisplayFragment.class);
-                                    startActivity(intent);
-                                    finish();
-                                }else {
-                                    Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                                    i.putExtra("LEAVEINTIMATION", "0");
-                                    i.putExtra("isFromNotification", isFromNotification);
-                                    i.putExtra("screenCategory", screenCategory);
-                                    startActivity(i);
-                                    finish();
-                                }
-                            } else {
-                                GetDynBtechAvailability();
-                            }
-                        } else {
-                            Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
-                            i.putExtra("LEAVEINTIMATION", "0");
-                            startActivity(i);
-                        }
-                    } else {
-                        GetDynBtechAvailability();
-                    }
-
-
-
-                    //                    GetBtechAvailability();
-                    //Added to make it dynamic availability
-//                    GetDynBtechAvailability();
-                }
-
-            }
-        }
     }
 
     private void GetBtechAvailability() {
@@ -632,19 +547,19 @@ public class SplashActivity extends AppCompatActivity {
                 } else {
                     if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
                         // switchToActivity(activity, ScheduleYourDayActivity.class, new Bundle());
-                      if (Constants.isFromCleverTap){
-                          Constants.isFromCleverTap=false;
-                          Intent intent = new Intent(getApplicationContext(),B2BVisitOrdersDisplayFragment.class);
-                          startActivity(intent);
-                          finish();
-                      }else{
-                          Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                          i.putExtra("LEAVEINTIMATION", "0");
-                          i.putExtra("isFromNotification", isFromNotification);
-                          i.putExtra("screenCategory", screenCategory);
-                          startActivity(i);
-                          finish();
-                      }
+                        if (Constants.isFromCleverTap) {
+                            Constants.isFromCleverTap = false;
+                            Intent intent = new Intent(getApplicationContext(), B2BVisitOrdersDisplayFragment.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                            i.putExtra("LEAVEINTIMATION", "0");
+                            i.putExtra("isFromNotification", isFromNotification);
+                            i.putExtra("screenCategory", screenCategory);
+                            startActivity(i);
+                            finish();
+                        }
 
                     } else {
                         Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
@@ -713,7 +628,7 @@ public class SplashActivity extends AppCompatActivity {
     private void notificationMapping() {
         // Get new Instance ID token
         String token = FirebaseInstanceId.getInstance().getToken();
-        System.out.println("Firebase>>>>>>>>>>>>>>>>"+token);
+        System.out.println("Firebase>>>>>>>>>>>>>>>>" + token);
         NotificationMappingRequestModel model = new NotificationMappingRequestModel();
         model.setAppName("BTech");
         model.setClient_Id(appPreferenceManager.getLoginResponseModel().getUserID());
@@ -787,7 +702,6 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-
     public void CallLogOutFromDevice() {
         try {
             global.showCustomToast(mActivity, "Authorization failed, need to Login again...", Toast.LENGTH_SHORT);
@@ -813,6 +727,92 @@ public class SplashActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    private class DhbDbDelegate implements CreateOrUpgradeDbTask.DbTaskDelegate {
+        @Override
+        public void dbTaskCompletedWithResult(Boolean result) {
+
+            if (DeviceUtils.isMyServiceRunning(LocationUpdateService.class, mActivity)) {
+            } else {
+                if (!DeviceUtils.isAppIsInBackground(mActivity)) {
+                    startService(locationUpdateIntent);
+                }
+            }
+            if (InputUtils.isNull(appPreferenceManager.getAPISessionKey())) {
+                Intent n = new Intent(mActivity, LoginActivity.class);
+                startActivity(n);
+                finish();
+            } else {
+                notificationMapping();
+                if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.TSP_ROLE_ID)) {
+                    fetchDataForTsp();
+                } else if (appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.NBTTSP_ROLE_ID)) {
+                    Logger.error("role1: " + AppConstants.NBTTSP_ROLE_ID);
+
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.MILLISECOND, 0);
+                    c.set(Calendar.SECOND, 0);
+                    c.set(Calendar.MINUTE, 0);
+                    c.set(Calendar.HOUR_OF_DAY, 0);
+
+                    if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+
+
+                        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        i.putExtra("isFromNotification", isFromNotification);
+                        i.putExtra("screenCategory", screenCategory);
+                        startActivity(i);
+                        finish();
+                    } else {
+                        Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
+                        i.putExtra("LEAVEINTIMATION", "0");
+                        startActivity(i);
+                    }
+                } else {
+                    if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+                        Calendar c = Calendar.getInstance();
+                        c.set(Calendar.MILLISECOND, 0);
+                        c.set(Calendar.SECOND, 0);
+                        c.set(Calendar.MINUTE, 0);
+                        c.set(Calendar.HOUR_OF_DAY, 0);
+                        if (appPreferenceManager.getSelfieResponseModel() != null && c.getTimeInMillis() < appPreferenceManager.getSelfieResponseModel().getTimeUploaded()) {
+                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
+
+                                if (Constants.isFromCleverTap) {
+                                    Constants.isFromCleverTap = false;
+                                    Intent intent = new Intent(SplashActivity.this, B2BVisitOrdersDisplayFragment.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                                    i.putExtra("LEAVEINTIMATION", "0");
+                                    i.putExtra("isFromNotification", isFromNotification);
+                                    i.putExtra("screenCategory", screenCategory);
+                                    startActivity(i);
+                                    finish();
+                                }
+                            } else {
+                                GetDynBtechAvailability();
+                            }
+                        } else {
+                            Intent i = new Intent(getApplicationContext(), SelfieUploadActivity.class);
+                            i.putExtra("LEAVEINTIMATION", "0");
+                            startActivity(i);
+                        }
+                    } else {
+                        GetDynBtechAvailability();
+                    }
+
+
+                    //                    GetBtechAvailability();
+                    //Added to make it dynamic availability
+//                    GetDynBtechAvailability();
+                }
+
+            }
+        }
     }
 }
 

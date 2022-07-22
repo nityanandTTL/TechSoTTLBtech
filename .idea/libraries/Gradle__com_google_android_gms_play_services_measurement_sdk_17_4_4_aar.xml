@@ -1,19 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.gms:play-services-measurement-sdk:17.4.4@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1dcdb5af71241b07fabb81b420abb907/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1dcdb5af71241b07fabb81b420abb907/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1dcdb5af71241b07fabb81b420abb907/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dd944a2cc58dd8f59f7d756cea23f43e/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dd944a2cc58dd8f59f7d756cea23f43e/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dd944a2cc58dd8f59f7d756cea23f43e/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/15c75beae4908b83987a587eff78ef86/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/15c75beae4908b83987a587eff78ef86/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/15c75beae4908b83987a587eff78ef86/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/85666ab3c5e79eb5552922d41db855a2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/85666ab3c5e79eb5552922d41db855a2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/85666ab3c5e79eb5552922d41db855a2/AndroidManifest.xml" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.gms/play-services-measurement-sdk/17.4.4/3595118ed0ead1cee5178fbd6258f9199eb969a5/play-services-measurement-sdk-17.4.4-javadoc.jar!/" />
-    </JAVADOC>
+    <JAVADOC />
     <SOURCES />
   </library>
 </component>

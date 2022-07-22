@@ -79,7 +79,6 @@
     <string name="my_orders">My orders</string>
     <string name="schedule_your_day">Schedule your Day</string>
     <string name="dispatch">Dispatch</string>
-    <string name="upload_selfie">Upload Selfie</string>
     <string name="start_pick_up"> Start pick up </string>
     <string name="reset_password">SUBMIT</string>
     <string name="password_changed_successfully">Password changed successfully.\nPlease re- login.</string>
@@ -352,6 +351,7 @@
 
     <string name="note_reschedule_the_collection_if_the_order_is_getting_delayed"><b>Note :</b> Reschedule the collection if the order is getting delayed.</string>
     <string name="add_edit_test_list_message">Click to view or add tests from list</string>
+    <string name="Apply_coupon">Apply Coupon</string>
 
 
 </resources>

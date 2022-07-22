@@ -1,19 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.tcking:viewquery:1.6@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/01dda35095e2b58ed8038814ff891734/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/01dda35095e2b58ed8038814ff891734/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/01dda35095e2b58ed8038814ff891734/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/42635be8a8fd6f2ffe7a5f09f4c792d4/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/42635be8a8fd6f2ffe7a5f09f4c792d4/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/42635be8a8fd6f2ffe7a5f09f4c792d4/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/069be496539929ae7be1829993b8417f/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/069be496539929ae7be1829993b8417f/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/069be496539929ae7be1829993b8417f/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1d1ddcd5c24139f4340dc3c565bb89f8/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1d1ddcd5c24139f4340dc3c565bb89f8/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1d1ddcd5c24139f4340dc3c565bb89f8/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.tcking/viewquery/1.6/bfbed4accc999ef4d80efa16bc210565050df760/viewquery-1.6-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

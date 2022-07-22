@@ -1,24 +1,14 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.print:print:1.0.0@aar">
     <ANNOTATIONS>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4f44cbaff25ded494fd2caa431a76f2f/annotations.zip!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/885e66a3c1c29ab11e564116a467bc05/annotations.zip!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ff9bc6af4cc6eee5a34e4fbb1f3eaef9/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6d49fceb0812a45cb6d6773821a38f15/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4f44cbaff25ded494fd2caa431a76f2f/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4f44cbaff25ded494fd2caa431a76f2f/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4f44cbaff25ded494fd2caa431a76f2f/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/885e66a3c1c29ab11e564116a467bc05/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/885e66a3c1c29ab11e564116a467bc05/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/885e66a3c1c29ab11e564116a467bc05/jars/classes.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ff9bc6af4cc6eee5a34e4fbb1f3eaef9/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ff9bc6af4cc6eee5a34e4fbb1f3eaef9/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ff9bc6af4cc6eee5a34e4fbb1f3eaef9/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6d49fceb0812a45cb6d6773821a38f15/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6d49fceb0812a45cb6d6773821a38f15/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6d49fceb0812a45cb6d6773821a38f15/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.print/print/1.0.0/71fc2d9acf7cce6b96230c5af263268b1664914a/print-1.0.0-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

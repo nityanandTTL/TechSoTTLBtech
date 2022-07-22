@@ -1,19 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.firebase:geofire-android:2.3.1@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f10a7d9aa0a392d8f4eebc231c807920/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f10a7d9aa0a392d8f4eebc231c807920/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f10a7d9aa0a392d8f4eebc231c807920/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1e16174a10d6656cbbc51e18dd4ceed0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1e16174a10d6656cbbc51e18dd4ceed0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1e16174a10d6656cbbc51e18dd4ceed0/jars/classes.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a6807ba13b0daddb092d055d89166f6b/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a6807ba13b0daddb092d055d89166f6b/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a6807ba13b0daddb092d055d89166f6b/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aac51c39de787d7421e97d15386cb6ea/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aac51c39de787d7421e97d15386cb6ea/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aac51c39de787d7421e97d15386cb6ea/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.firebase/geofire-android/2.3.1/d9b3955cb551e681ddbe6be8725221c8386399c3/geofire-android-2.3.1-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

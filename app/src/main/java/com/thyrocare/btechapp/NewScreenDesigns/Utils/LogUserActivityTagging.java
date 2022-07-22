@@ -1,43 +1,37 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Utils;
 
+import static android.content.Context.MODE_PRIVATE;
+import static android.content.Context.TELEPHONY_SERVICE;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-
 import android.os.Build;
 import android.provider.Settings;
-import androidx.core.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import androidx.core.app.ActivityCompat;
 
 import com.thyrocare.btechapp.NewScreenDesigns.Controllers.TrackUserActivityController;
-import com.thyrocare.btechapp.R;
-import application.ApplicationController;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.TrackUserActivityRequestModel;
+import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.utils.api.NetworkUtils;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
 import com.thyrocare.btechapp.utils.app.CommonUtils;
-import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import static android.content.Context.MODE_PRIVATE;
-import static android.content.Context.TELEPHONY_SERVICE;
+import application.ApplicationController;
 
 public class LogUserActivityTagging {
 
+    public static final String TAG = LogUserActivityTagging.class.getSimpleName();
     String str_modType;
 
-    public static final String TAG = LogUserActivityTagging.class.getSimpleName();
-
-    public LogUserActivityTagging(Activity activity, String screen,String remark) {
+    public LogUserActivityTagging(Activity activity, String screen, String remark) {
         try {
             String appversion = CommonUtils.getAppVersion(activity);
             String os = "ANDROID " + Build.VERSION.RELEASE;
@@ -71,12 +65,12 @@ public class LogUserActivityTagging {
             if (!TextUtils.isEmpty(screen) && screen.equalsIgnoreCase(BundleConstants.LOGIN)) {
                 editorUserActivity.putString("ModType", "LOGIN");
                 editorUserActivity.putString("IsLogin", "Y");
-            }else if (!TextUtils.isEmpty(screen) && screen.equalsIgnoreCase(BundleConstants.LOGOUT)){
+            } else if (!TextUtils.isEmpty(screen) && screen.equalsIgnoreCase(BundleConstants.LOGOUT)) {
                 editorUserActivity.putString("ModType", "LOGOUT");
                 editorUserActivity.putString("IsLogin", "N");
-            }else if(!TextUtils.isEmpty(screen) && screen.equalsIgnoreCase(BundleConstants.WOE)){
+            } else if (!TextUtils.isEmpty(screen) && screen.equalsIgnoreCase(BundleConstants.WOE)) {
                 str_modType = BundleConstants.WOE;
-            }else if(!TextUtils.isEmpty(screen) && screen.equalsIgnoreCase(Constants.LEAD)){
+            } else if (!TextUtils.isEmpty(screen) && screen.equalsIgnoreCase(Constants.LEAD)) {
                 str_modType = Constants.LEAD;
             }
             editorUserActivity.apply();
@@ -110,9 +104,9 @@ public class LogUserActivityTagging {
             trackUserActivityRequestModel.setAppId(BundleConstants.APPID_TRACKACTIVITY);
             trackUserActivityRequestModel.setIMIENo(imeiNo);
             trackUserActivityRequestModel.setIslogin(sharedPreferencesUserActivity.getString("IsLogin", ""));
-            if(!InputUtils.isNull(str_modType)){
+            if (!InputUtils.isNull(str_modType)) {
                 trackUserActivityRequestModel.setModType(str_modType);
-            }else{
+            } else {
                 trackUserActivityRequestModel.setModType(sharedPreferencesUserActivity.getString("ModType", ""));
             }
             trackUserActivityRequestModel.setOS(sharedPreferencesUserActivity.getString("OS", ""));
@@ -123,9 +117,9 @@ public class LogUserActivityTagging {
             trackUserActivityRequestModel.setLongi(CommonUtils.getCurrentLatLong(activity).getmLongitude());
             trackUserActivityRequestModel.setIpadd(CommonUtils.getIPAddress(true));
             trackUserActivityRequestModel.setMacadd(CommonUtils.getMACAddress());
-            if(!InputUtils.isNull(str_modType) && !InputUtils.isNull(remark)){
+            if (!InputUtils.isNull(str_modType) && !InputUtils.isNull(remark)) {
                 trackUserActivityRequestModel.setRemark(remark);
-            }else{
+            } else {
                 trackUserActivityRequestModel.setRemark("");
             }
 

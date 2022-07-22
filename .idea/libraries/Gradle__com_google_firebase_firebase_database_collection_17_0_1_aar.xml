@@ -1,21 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.firebase:firebase-database-collection:17.0.1@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7fdb88ae34dcae63eec2eae0a31dc87a/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7fdb88ae34dcae63eec2eae0a31dc87a/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7fdb88ae34dcae63eec2eae0a31dc87a/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/771ab7e3315cb9bde02fd78e18bc11d7/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/771ab7e3315cb9bde02fd78e18bc11d7/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/771ab7e3315cb9bde02fd78e18bc11d7/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0646f30ee4b861de2eec8a8f43182c07/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0646f30ee4b861de2eec8a8f43182c07/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0646f30ee4b861de2eec8a8f43182c07/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/faa3431000144d9a8ea2238fafc3d7ba/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/faa3431000144d9a8ea2238fafc3d7ba/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/faa3431000144d9a8ea2238fafc3d7ba/AndroidManifest.xml" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-database-collection/17.0.1/8fc7b0f5eabfe38190af79a49480075517519ceb/firebase-database-collection-17.0.1-javadoc.jar!/" />
-    </JAVADOC>
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-database-collection/17.0.1/c24559266b9d2917cee5b26444aa5b37a268111f/firebase-database-collection-17.0.1-sources.jar!/" />
-    </SOURCES>
+    <JAVADOC />
+    <SOURCES />
   </library>
 </component>

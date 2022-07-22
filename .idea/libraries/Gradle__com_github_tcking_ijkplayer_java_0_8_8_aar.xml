@@ -1,19 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.tcking:ijkplayer-java:0.8.8@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/53dcba3698563103060ac275cf48cfe7/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/53dcba3698563103060ac275cf48cfe7/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/53dcba3698563103060ac275cf48cfe7/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/89738521213e918041ef4153255cb1b7/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/89738521213e918041ef4153255cb1b7/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/89738521213e918041ef4153255cb1b7/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/08cd86bf110738e691571ec4da3faac7/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/08cd86bf110738e691571ec4da3faac7/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/08cd86bf110738e691571ec4da3faac7/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/617d93b7f66aa780f699d26ab592dc05/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/617d93b7f66aa780f699d26ab592dc05/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/617d93b7f66aa780f699d26ab592dc05/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.tcking/ijkplayer-java/0.8.8/11f4c937ff5dba0f4824e91a684e7a8eee9c8bf9/ijkplayer-java-0.8.8-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

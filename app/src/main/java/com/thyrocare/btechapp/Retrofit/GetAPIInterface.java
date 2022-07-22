@@ -21,6 +21,7 @@ import com.thyrocare.btechapp.models.api.response.BtechImageResponseModel;
 import com.thyrocare.btechapp.models.api.response.BtechwithHubResponseModel;
 import com.thyrocare.btechapp.models.api.response.CampListDisplayResponseModel;
 import com.thyrocare.btechapp.models.api.response.CampScanQRResponseModel;
+import com.thyrocare.btechapp.models.api.response.CouponCodeResponseModel;
 import com.thyrocare.btechapp.models.api.response.DSAProductsResponseModel;
 import com.thyrocare.btechapp.models.api.response.DispatchHubDisplayDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.DynamicBtechAvaliabilityResponseModel;
@@ -328,5 +329,8 @@ public interface GetAPIInterface {
 
     @GET("api/Masters/OrderReasons/{ID}")
     Call<ArrayList<GetPECancelRemarksResponseModel>> getReasons(@Path("ID") String ID);
+
+    @GET("PEEvents/PECouponAPI/{OrderID}")
+    Call<CouponCodeResponseModel> getCouponCodes(@Path("OrderID") String orderid);
 }
 

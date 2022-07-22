@@ -1,18 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.wooplr:Spotlight:1.2.3@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c3efdde6742ec57f563f084dcdbb7e18/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c3efdde6742ec57f563f084dcdbb7e18/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/c3efdde6742ec57f563f084dcdbb7e18/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/94c4c497e4e5823336c1beb02bb60a8b/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/94c4c497e4e5823336c1beb02bb60a8b/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/94c4c497e4e5823336c1beb02bb60a8b/jars/classes.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d5cfbd195499914afe2b866985b0bf97/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d5cfbd195499914afe2b866985b0bf97/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d5cfbd195499914afe2b866985b0bf97/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ce8876fa00627f132102ac03a9ae0f3d/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ce8876fa00627f132102ac03a9ae0f3d/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ce8876fa00627f132102ac03a9ae0f3d/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ca0f9adcfe41ef38c95a25c22022eda/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ca0f9adcfe41ef38c95a25c22022eda/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ca0f9adcfe41ef38c95a25c22022eda/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

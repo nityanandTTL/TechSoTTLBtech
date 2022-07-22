@@ -22,7 +22,8 @@ import com.thyrocare.btechapp.utils.app.InputUtils;
 
 import java.util.ArrayList;
 
-public class All_VisitDisplayAdapter extends RecyclerView.Adapter<All_VisitDisplayAdapter.MyViewHolder> {
+public class
+All_VisitDisplayAdapter extends RecyclerView.Adapter<All_VisitDisplayAdapter.MyViewHolder> {
     private static final String TAG = All_VisitDisplayAdapter.class.getSimpleName();
     private Activity activity;
     private final String current_date;

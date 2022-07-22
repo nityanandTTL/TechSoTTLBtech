@@ -1,15 +1,17 @@
 package com.thyrocare.btechapp.service;
 
+import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
+
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener;
@@ -18,12 +20,12 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.SplashActivity;
-import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.dao.DhbDao;
-import com.thyrocare.btechapp.utils.app.AppConstants;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
+import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 import com.thyrocare.btechapp.utils.app.NotificationUtils;
 
@@ -37,10 +39,10 @@ import java.util.Map;
 public class FireMsgService extends FirebaseMessagingService {
 
     private static final String TAG = "FireMsgService";
+    CleverTapAPI cleverTapAPI;
     private AppPreferenceManager appPreferenceManager;
     private NotificationUtils notificationUtils;
     private int Screen_category = 0;
-    CleverTapAPI cleverTapAPI;
 
     @Override
     public void onNewToken(@NonNull String tkn) {
@@ -111,7 +113,7 @@ public class FireMsgService extends FirebaseMessagingService {
     }
 
     private void handleDataMessage(HashMap<String, String> json) {
-        appPreferenceManager  = new AppPreferenceManager(getApplicationContext());
+        appPreferenceManager = new AppPreferenceManager(getApplicationContext());
         MessageLogger.PrintMsg("push json: " + json.toString());
 
         try {
@@ -143,6 +145,7 @@ public class FireMsgService extends FirebaseMessagingService {
             MessageLogger.PrintMsg("Product_name: " + Product_name);
             MessageLogger.PrintMsg("Order_ID: " + Order_ID);
 
+
             if (InputUtils.CheckEqualIgnoreCase(AppID, Constants.StrAppID)) {
                 if (Screen_category==Constants.LogoutID){
                     LogUserOut();
@@ -157,6 +160,7 @@ public class FireMsgService extends FirebaseMessagingService {
             MessageLogger.PrintMsg("Exception: " + e.getMessage());
         }
     }
+
     private void LogUserOut() {
         try {
             appPreferenceManager.clearAllPreferences();
@@ -189,29 +193,33 @@ public class FireMsgService extends FirebaseMessagingService {
             resultIntent.putExtra("screenCategory", Screen_category);
         } else if (Screen_category == 118) {
             resultIntent.putExtra("screenCategory", 118);
+        } else if (Screen_category == Constants.LogoutID) {
+            resultIntent.putExtra("screenCategory", Screen_category);
         } else {
             resultIntent.putExtra("screenCategory", 0);
         }
 
         AppPreferenceManager appPreferenceManager = new AppPreferenceManager(getApplicationContext());
         String loginMobileNumber = "" + appPreferenceManager.getLoginResponseModel().getUserID();
-
-        if (!InputUtils.isNull(mobile)) {
-            if (InputUtils.CheckEqualIgnoreCase(mobile, loginMobileNumber)) {
+        if (Screen_category != Constants.LogoutID) {
+            if (!InputUtils.isNull(mobile)) {
+                if (InputUtils.CheckEqualIgnoreCase(mobile, loginMobileNumber)) {
+                    if (TextUtils.isEmpty(imageUrl)) {
+                        showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent, notificationID, onGoing, autoCancel, bigText, Screen_category, product_name);
+                    } else {
+                        showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl, notificationID, onGoing, autoCancel, bigText, Screen_category, product_name);
+                    }
+                }
+            } else {
                 if (TextUtils.isEmpty(imageUrl)) {
                     showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent, notificationID, onGoing, autoCancel, bigText, Screen_category, product_name);
                 } else {
                     showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl, notificationID, onGoing, autoCancel, bigText, Screen_category, product_name);
                 }
-            }
-        } else {
-            if (TextUtils.isEmpty(imageUrl)) {
-                showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent, notificationID, onGoing, autoCancel, bigText, Screen_category, product_name);
-            } else {
-                showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl, notificationID, onGoing, autoCancel, bigText, Screen_category, product_name);
-            }
 
+            }
         }
+
     }
 
 
