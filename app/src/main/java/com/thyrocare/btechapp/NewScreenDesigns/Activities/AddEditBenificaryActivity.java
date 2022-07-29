@@ -743,7 +743,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         txt_ViewRemove_switch.setText("View Offers");
         txt_coupons.setText("Apply Coupon");
         SelectedCoupon = null;
-        txtAmountPayable.setText(mActivity.getString(R.string.rupee_symbol)+peTestRates+"/-");
+        txtAmountPayable.setText(mActivity.getString(R.string.rupee_symbol) + peTestRates + "/-");
         rl_priceView.setVisibility(View.GONE);
         cv_couponmain.setClickable(true);
     }
@@ -1224,7 +1224,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 test.setId(peselectedTestsList.get(i).getId());
                 test.setTest_id(peselectedTestsList.get(i).getTest_dos_id());
                 test.setType(peselectedTestsList.get(i).getType());
-                arrTest.add(test);
                 arrTest.add(test);
             }
             AddONRequestModel addONRequestModel = new AddONRequestModel();
@@ -3141,7 +3140,9 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                             selectedTestsList = data.getParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLIST);
                             edit_selectedTestsList = data.getParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST);
 
-                            if (appPreferenceManager.isPEPartner() && (peselectedTestsList.size() > 0 && peselectedTestsList != null)) {
+                            if (appPreferenceManager.isPEPartner() && (peselectedTestsList.size() > 0 && peselectedTestsList != null)
+                                    && FlagADDEditBen //TODO checks if we are editing order..
+                            ) {
                                 cv_couponmain.setVisibility(View.VISIBLE);
                             } else {
                                 cv_couponmain.setVisibility(View.GONE);
@@ -3284,11 +3285,10 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
         for (int i = 0; i < peselectedTestsList.size(); i++) {
             AddONRequestModel.test test = new AddONRequestModel.test();
-            test.setId(peselectedTestsList.get(i).getId());
+            test.setId(peselectedTestsList.get(i).getTest_dos_id());
             test.setType(peselectedTestsList.get(i).getType());
             //TODO added as per PE request for coupon task.
-            test.setTest_id(peselectedTestsList.get(i).getTest_dos_id());
-
+            test.setTest_id(peselectedTestsList.get(i).getId());
             arrTest.add(test);
         }
         AddONRequestModel addONRequestModel = new AddONRequestModel();
@@ -3315,7 +3315,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             double finalprice = response.getData().getTests_pe_selling_price() - response.getData().getTests_discount();
 
             tv_couponDiscounttoshow.setText(mActivity.getResources().getString(R.string.rupee_symbol) + response.getData().getTests_discount().toString() + "/-");
-            tv_orderTotaltoshow.setText(mActivity.getResources().getString(R.string.rupee_symbol) +finalprice + "/-");
+            tv_orderTotaltoshow.setText(mActivity.getResources().getString(R.string.rupee_symbol) + finalprice + "/-");
             tv_cartPricetoshow.setText(mActivity.getResources().getString(R.string.rupee_symbol) + response.getData().getTests_pe_selling_price().toString() + "/-");
             txtAmountPayable.setText("");
             TastyToast.makeText(mActivity, response.getMessage() + SelectedCoupon, TastyToast.LENGTH_SHORT, TastyToast.SUCCESS).show();
@@ -3325,7 +3325,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             txt_ViewRemove_switch.setText("View Offers");
             rl_priceView.setVisibility(View.GONE);
             SelectedCoupon = null;
-            txtAmountPayable.setText(mActivity.getString(R.string.rupee_symbol)+peTestRates+"/-");
+            txtAmountPayable.setText(mActivity.getString(R.string.rupee_symbol) + peTestRates + "/-");
             TastyToast.makeText(mActivity, response.getError(), TastyToast.LENGTH_SHORT, TastyToast.INFO).show();
         }
 

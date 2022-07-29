@@ -1,14 +1,10 @@
 package com.thyrocare.btechapp.service;
 
-import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
-
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -21,11 +17,9 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.LoginActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.SplashActivity;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
 import com.thyrocare.btechapp.dao.DhbDao;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
-import com.thyrocare.btechapp.utils.app.Global;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 import com.thyrocare.btechapp.utils.app.NotificationUtils;
 
@@ -147,7 +141,7 @@ public class FireMsgService extends FirebaseMessagingService {
 
 
             if (InputUtils.CheckEqualIgnoreCase(AppID, Constants.StrAppID)) {
-                if (Screen_category==Constants.LogoutID){
+                if (Screen_category == Constants.LogoutID) {
                     LogUserOut();
                 }
                 InitaiteDataForNotification(notifyID, title, message, onGoing, autoCancel, bigText, imageUrl, timestamp, NotificationID, Product_name, Order_ID, mobile, ScreenURL);
@@ -172,7 +166,7 @@ public class FireMsgService extends FirebaseMessagingService {
             Intent n = new Intent(getApplicationContext(), LoginActivity.class);
             n.setAction(Intent.ACTION_MAIN);
             n.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            n.putExtra("ScreenCategory",100);
+            n.putExtra("ScreenCategory", 100);
             startActivity(n);
         } catch (Exception e) {
             e.printStackTrace();

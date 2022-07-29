@@ -93,7 +93,11 @@ public class LoginActivity extends AppCompatActivity {
             if (category==Constants.LogoutID)
                 new LogUserActivityTagging(mActivity, "LOGOUT", "");
         }
-
+        if (getIntent().hasExtra("ScreenCategory")) {
+            int category = getIntent().getExtras().getInt("ScreenCategory");
+            if (category == Constants.LogoutID)
+                new LogUserActivityTagging(mActivity, "LOGOUT", "");
+        }
         initview();
         initlistener();
 
@@ -249,6 +253,10 @@ public class LoginActivity extends AppCompatActivity {
 
         new LogUserActivityTagging(mActivity, LOGIN, "");
         if (responseModel != null) {
+
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(Constants.Logout_Topic);
+            FirebaseMessaging.getInstance().subscribeToTopic(Constants.Logout_Topic);
+
             //Btech Clevertap Mith
             setCleverTapLoginDetails(responseModel);
             //btech_hub

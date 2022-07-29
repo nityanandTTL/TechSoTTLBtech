@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TechSoWenBTech_GIT.iml" filepath="$PROJECT_DIR$/.idea/modules/TechSoWenBTech_GIT.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoWenBTech_GIT.app.unitTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoWenBTech_GIT.bil.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoWenBTech_GIT.bil.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoWenBTech_GIT.bil.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoWenBTech_GIT.bil.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoWenBTech_GIT.bil.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoWenBTech_GIT.bil.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TechSoBTechApp_hub_drop.iml" filepath="$PROJECT_DIR$/.idea/modules/TechSoBTechApp_hub_drop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_hub_drop.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_hub_drop.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_hub_drop.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_hub_drop.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_hub_drop.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_hub_drop.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_hub_drop.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_hub_drop.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp_hub_drop.bil.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp_hub_drop.bil.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp_hub_drop.bil.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp_hub_drop.bil.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp_hub_drop.bil.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp_hub_drop.bil.test.iml" />
     </modules>
   </component>
 </project>
