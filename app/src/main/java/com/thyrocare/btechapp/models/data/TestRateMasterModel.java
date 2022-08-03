@@ -26,6 +26,7 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
     private ArrayList<TestSkillsModel> tstSkills;
     private ArrayList<TestClinicalHistoryModel> tstClinicalHistory;
     private ArrayList<AccessUserCodeModel> accessUserCode;
+    private int Recommend;
 
     public TestRateMasterModel() {
         super();
@@ -98,6 +99,14 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
 
     public void setTestId(int testId) {
         TestId = testId;
+    }
+
+    public boolean isRecommend() {
+        return Recommend == 1;
+    }
+
+    public void setRecommend(int recommend) {
+        Recommend = recommend;
     }
 
     public int getBrandId() {
@@ -222,27 +231,27 @@ public class TestRateMasterModel extends BaseModel implements Parcelable {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof TestRateMasterModel){
-            if(((TestRateMasterModel) obj).getTestCode().equals(getTestCode())){
+        if (obj instanceof TestRateMasterModel) {
+            if (((TestRateMasterModel) obj).getTestCode().equals(getTestCode())) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean checkIfChildsContained(TestRateMasterModel tt){
+    public boolean checkIfChildsContained(TestRateMasterModel tt) {
         boolean isChilds = false;
-        if(getChldtests()!=null && getChldtests().size()>0) {
+        if (getChldtests() != null && getChldtests().size() > 0) {
             int ttChildSize = tt.getChldtests().size();
             int commonChildsSize = 0;
             for (ChildTestsModel tc : tt.getChldtests()) {
                 for (ChildTestsModel tChild : getChldtests()) {
-                    if (tc.getChildTestCode()!=null && tc.getChildTestCode().equalsIgnoreCase(tChild.getChildTestCode())) {
+                    if (tc.getChildTestCode() != null && tc.getChildTestCode().equalsIgnoreCase(tChild.getChildTestCode())) {
                         commonChildsSize++;
                     }
                 }
             }
-            if (commonChildsSize>0 && commonChildsSize == ttChildSize) {
+            if (commonChildsSize > 0 && commonChildsSize == ttChildSize) {
                 isChilds = true;
             }
         }

@@ -30,6 +30,7 @@ import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.dao.utils.ConnectionDetector;
 import com.thyrocare.btechapp.models.api.response.DSAProductsResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetPETestResponseModel;
+import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
 import com.thyrocare.btechapp.models.data.BrandTestMasterModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
 import com.thyrocare.btechapp.models.data.TestRateMasterModel;
@@ -42,6 +43,7 @@ import com.thyrocare.btechapp.utils.app.Global;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,7 +59,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
     private GPSTracker gpsTracker;
     private AppPreferenceManager appPreferenceManager;
     private SearchManager searchManager;
-    private TextView btnClose, tv_Test, tv_Profile, tv_POP, tv_offers, tvTestName, tvAppRate, tv_noDatafound;
+    private TextView btnClose, tv_Test, tv_Profile, tv_POP, tv_offers, tvTestName, tvAppRate, tv_noDatafound, tv_recommanded;;
     private Button btnSave;
     private OrderVisitDetailsModel orderVisitDetailsModel;
     private boolean FlagADDEditBen = true;
@@ -72,6 +74,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
     private RecyclerView recycle_TestList;
     private DisplayAllTestApdter displayAllTestApdter;
     private BrandTestMasterModel brandTestMasterModel;
+    private ArrayList<BeneficiaryDetailsModel> benMastersArray;
     String pincode;
     int totalRate = 0;
     int ArraySize;
@@ -109,6 +112,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         FlagADDEditBen = getIntent().getBooleanExtra("IsAddBen", true);
         test_edit_PE = getIntent().getBooleanExtra(BundleConstants.TEST_EDIT_PE,false);
         pincode = orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode();
+        benMastersArray = orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster();
         System.out.println("mith<<<<<<<<<<" + pincode);
         if (!FlagADDEditBen) {
             //fungible
@@ -162,6 +166,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         tvTestName = (TextView) findViewById(R.id.tvTestName);
         tvTestName.setMovementMethod(new ScrollingMovementMethod());
         tvAppRate = (TextView) findViewById(R.id.tvAppRate);
+        tv_recommanded = (TextView) findViewById(R.id.tv_recommended);
         //fungible
 //        if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
         if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
@@ -289,11 +294,13 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                             displayAllTestApdter.filterData(s.toString());
                             lin_profileCategory.setVisibility(View.GONE);
                         } else {
-                            SetSelectedCategory(tv_Test);
+                            SetSelectedCategory(tv_recommanded);
+                            SetUnSelectedCategory(tv_Test);
                             SetUnSelectedCategory(tv_offers);
                             SetUnSelectedCategory(tv_POP);
                             SetUnSelectedCategory(tv_Profile);
-                            InitTestListView(brandTestMasterModel, "Test");
+//                            InitTestListView(brandTestMasterModel, "Test");
+                            initRecommendedTestListView(brandTestMasterModel);
                             lin_profileCategory.setVisibility(View.VISIBLE);
                         }
                     }
@@ -313,6 +320,18 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 }
             }
         });
+        tv_recommanded.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View view) {
+                                                  SetSelectedCategory(tv_recommanded);
+                                                  SetUnSelectedCategory(tv_offers);
+                                                  SetUnSelectedCategory(tv_POP);
+                                                  SetUnSelectedCategory(tv_Profile);
+                                                  SetUnSelectedCategory(tv_Test);
+                                                  initRecommendedTestListView(brandTestMasterModel);
+                                              }
+                                          }
+        );
 
         tv_Test.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -321,9 +340,11 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 SetUnSelectedCategory(tv_offers);
                 SetUnSelectedCategory(tv_POP);
                 SetUnSelectedCategory(tv_Profile);
+                SetUnSelectedCategory(tv_recommanded);
                 InitTestListView(brandTestMasterModel, "Test");
             }
         });
+
 
         tv_Profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -332,6 +353,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 SetUnSelectedCategory(tv_Test);
                 SetUnSelectedCategory(tv_POP);
                 SetUnSelectedCategory(tv_offers);
+                SetUnSelectedCategory(tv_recommanded);
                 InitTestListView(brandTestMasterModel, "Profile");
             }
         });
@@ -343,6 +365,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 SetUnSelectedCategory(tv_Test);
                 SetUnSelectedCategory(tv_Profile);
                 SetUnSelectedCategory(tv_offers);
+                SetUnSelectedCategory(tv_recommanded);
                 InitTestListView(brandTestMasterModel, "Pop");
             }
         });
@@ -354,6 +377,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 SetUnSelectedCategory(tv_Test);
                 SetUnSelectedCategory(tv_Profile);
                 SetUnSelectedCategory(tv_POP);
+                SetUnSelectedCategory(tv_recommanded);
                 InitTestListView(brandTestMasterModel, "Offer");
             }
         });
@@ -545,8 +569,10 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
     }
 
     private void CallAfterBranDAPIRes() {
-        InitTestListView(brandTestMasterModel, "Test");
-        SetSelectedCategory(tv_Test);
+        //        InitTestListView(brandTestMasterModel, "Test");
+        initRecommendedTestListView(brandTestMasterModel);
+        SetSelectedCategory(tv_recommanded);
+        SetUnSelectedCategory(tv_Test);
         SetUnSelectedCategory(tv_offers);
         SetUnSelectedCategory(tv_POP);
         SetUnSelectedCategory(tv_Profile);
@@ -561,7 +587,11 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
         if (brandTestMasterModel != null && brandTestMasterModel.getTstratemaster() != null && brandTestMasterModel.getTstratemaster().size() > 0) {
             for (int i = 0; i < brandTestMasterModel.getTstratemaster().size(); i++) {
-                if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode() != null && brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size() > 0) {
+                if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode() != null) {
+                    //add test to tstratemaster if access list is empty
+                    if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().isEmpty()) {
+                        tstratemaster.add(brandTestMasterModel.getTstratemaster().get(i));
+                    }
                     for (int j = 0; j < brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size(); j++) {
                         try {
                             if (Integer.parseInt(brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().get(j).getAccessCode()) == orderVisitDetailsModel.getAllOrderdetails().get(0).getUserAccessCode()) {
@@ -592,7 +622,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             }
         }
         //      }
-
+        //TODO: removing duplicate tests.
         ArrayList<TestRateMasterModel> tempArr = new ArrayList<>();
         for (TestRateMasterModel data : tstratemaster) {
             if (!tempArr.contains(data)) {
@@ -608,6 +638,79 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         brandTestMasterModelFinal.setBrandName(brandTestMasterModel.getBrandName());
 
         return brandTestMasterModelFinal;
+    }
+
+    private void initRecommendedTestListView(BrandTestMasterModel result) {
+
+        ArrayList<TestRateMasterModel> recommendedProductList = new ArrayList<>();
+        ArrayList<TestRateMasterModel> recommendedParentBenProductList = new ArrayList<>();
+        ArrayList<TestRateMasterModel> allProductList = result.getTstratemaster();
+        ArrayList<TestRateMasterModel> tstRateMaster = result.getTstratemaster();
+
+        for (int i = 0; i < benMastersArray.get(0).getTestSampleType().size(); i++) {
+            //beneficiary Tests
+            String test = benMastersArray.get(0).getTestSampleType().get(i).getTests();
+            for (int k = 0; k < tstRateMaster.size(); k++) {
+                //Test Rate Master Tests
+                TestRateMasterModel tmaster = tstRateMaster.get(k);
+                if (test.trim().equalsIgnoreCase(tmaster.getTestCode().trim())) {
+                    recommendedParentBenProductList.add(tmaster);
+                }
+                if (tmaster.isRecommend() && !test.trim().equalsIgnoreCase(tmaster.getTestCode().trim()) && i ==0) {
+                    recommendedProductList.add(tmaster);
+                }
+            }
+        }
+
+        recommendedParentBenProductList.addAll(recommendedProductList);
+//        removeDuplicateTest(recommendedProductList);
+
+
+        if (!recommendedParentBenProductList.isEmpty()) {
+            if (FlagADDEditBen) {
+                displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), recommendedParentBenProductList, allProductList, selectedTestsList, isM);
+            } else {
+                displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), recommendedParentBenProductList, allProductList, edit_selectedTestsList, isM);
+            }
+
+            displayAllTestApdter.setOnItemClickListener(new DisplayAllTestApdter.OnClickListeners() {
+                @Override
+                public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
+                    if (FlagADDEditBen) {
+                        selectedTestsList = selectedTests;
+                        displayAllTestApdter.notifyDataSetChanged();
+                        DisplaySelectedProducts(selectedTestsList);
+                    } else {
+                        edit_selectedTestsList = selectedTests;
+                        displayAllTestApdter.notifyDataSetChanged();
+                        DisplaySelectedProducts(edit_selectedTestsList);
+                    }
+                }
+
+                @Override
+                public void onPECheckChange(ArrayList<GetPETestResponseModel.DataDTO> peTestList) {
+
+                }
+
+            });
+
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivity);
+            recycle_TestList.setLayoutManager(mLayoutManager);
+            recycle_TestList.setAdapter(displayAllTestApdter);
+            recycle_TestList.setVisibility(View.VISIBLE);
+            tv_noDatafound.setVisibility(View.GONE);
+        } else {
+            tv_noDatafound.setVisibility(View.VISIBLE);
+            recycle_TestList.setVisibility(View.GONE);
+        }
+    }
+
+    private ArrayList<TestRateMasterModel> removeDuplicateTest(ArrayList<TestRateMasterModel> categoryWiseProductList) {
+
+        Set<TestRateMasterModel> set = new HashSet<>(categoryWiseProductList);
+        categoryWiseProductList.clear();
+        categoryWiseProductList.addAll(set);
+        return categoryWiseProductList;
     }
 
     private void InitTestListView(BrandTestMasterModel result, String Category) {

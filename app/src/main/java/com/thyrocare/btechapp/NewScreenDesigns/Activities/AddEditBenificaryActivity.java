@@ -169,6 +169,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     private String orderNo;
     private RelativeLayout relHardCopyCharge;
     private String SelectedCoupon;
+    private ArrayList<BeneficiaryDetailsModel> benMaster;
 
     static ArrayList<String> removeDuplicates(ArrayList<String> list) {
 
@@ -1839,7 +1840,10 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 String st2 = brandTestMasterModel.getTstratemaster().get(i).getDescription();
 
                 System.out.println("----");
-                if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode() != null && brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size() > 0) {
+                if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode() != null) {
+                    if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().isEmpty()) {
+                        testRateMasterModels.add(brandTestMasterModel.getTstratemaster().get(i));
+                    }
                     for (int j = 0; j < brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size(); j++) {
                         try {
                             System.out.println(st);

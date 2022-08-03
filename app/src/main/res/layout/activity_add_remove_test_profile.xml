@@ -41,7 +41,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rel_header"
-        android:layout_margin="@dimen/_2sdp"
+        android:layout_marginStart="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginEnd="@dimen/_2sdp"
+        android:layout_marginBottom="@dimen/_2sdp"
         android:background="@drawable/rounded_background_grey">
 
         <EditText
@@ -51,8 +54,8 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/img_searchIcon"
             android:background="@color/transparent"
-            android:textSize="@dimen/value"
-            android:hint="Search profile, test or offer .." />
+            android:hint="Search profile, test or offer .."
+            android:textSize="@dimen/value" />
 
         <ImageView
             android:id="@+id/img_searchIcon"
@@ -155,21 +158,47 @@
 
     </LinearLayout>
 
+    <!--    <HorizontalScrollView-->
+    <!--        android:id="@+id/sc_products_types"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@+id/lin_selectedTest">-->
+
     <LinearLayout
         android:id="@+id/lin_profileCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/lin_selectedTest"
-        android:layout_margin="@dimen/_2sdp"
+
+        android:layout_marginStart="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginEnd="@dimen/_2sdp"
+        android:layout_marginBottom="@dimen/_2sdp"
         android:background="@color/blue_shadow"
         android:orientation="horizontal"
-        android:weightSum="4">
+        android:weightSum="5">
+
+        <TextView
+            android:id="@+id/tv_recommended"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:padding="@dimen/_6sdp"
+            android:text="Recommended"
+            android:textColor="@color/bg_new_color"
+            android:textSize="@dimen/value"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_Test"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_2sdp"
+            android:layout_gravity="center"
+
             android:layout_weight="1"
             android:background="@color/white"
             android:gravity="center"
@@ -177,13 +206,13 @@
             android:text="Tests"
             android:textColor="@color/bg_new_color"
             android:textSize="@dimen/value"
-            android:layout_gravity="center"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_Profile"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/_2sdp"
             android:layout_weight="1"
             android:background="@color/white"
@@ -192,14 +221,14 @@
             android:text="Profiles"
             android:textColor="@color/bg_new_color"
             android:textSize="@dimen/value"
-            android:layout_gravity="center"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_POP"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_2sdp"
+            android:layout_gravity="center"
+
             android:layout_weight="1"
             android:background="@color/white"
             android:gravity="center"
@@ -207,13 +236,13 @@
             android:text="POP"
             android:textColor="@color/bg_new_color"
             android:textSize="@dimen/value"
-            android:layout_gravity="center"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_offers"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/_2sdp"
             android:layout_weight="1"
             android:background="@color/white"
@@ -222,11 +251,12 @@
             android:text="Offers"
             android:textColor="@color/bg_new_color"
             android:textSize="@dimen/value"
-            android:layout_gravity="center"
             android:textStyle="bold" />
 
 
     </LinearLayout>
+
+    <!--    </HorizontalScrollView>-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -237,7 +267,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycle_TestList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_select_test_list_view_new" />
 
 
         <TextView

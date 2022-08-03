@@ -37,6 +37,7 @@
         <entry key="app/src/main/res/layout/barcode_scan_viewpager_item.xml" value="0.335" />
         <entry key="app/src/main/res/layout/btech_visit_item.xml" value="0.20092592592592592" />
         <entry key="app/src/main/res/layout/btechwithhub_fragment_btech_collections_list.xml" value="0.22395833333333334" />
+        <entry key="app/src/main/res/layout/custom_toast.xml" value="0.23958333333333334" />
         <entry key="app/src/main/res/layout/default_toolbar.xml" value="0.23958333333333334" />
         <entry key="app/src/main/res/layout/fragment_btech_collections_list.xml" value="0.23958333333333334" />
         <entry key="app/src/main/res/layout/fragment_visit_orders_display.xml" value="0.20092592592592592" />
