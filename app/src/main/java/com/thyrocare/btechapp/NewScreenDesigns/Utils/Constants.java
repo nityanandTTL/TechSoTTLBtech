@@ -59,4 +59,13 @@ public class Constants {
 
     public static boolean isFromCleverTap = false;
     public static int LogoutID=100;
+
+    //TODO firebase firestore Coupon Constants--------------------------------------------------------------------------------------------
+    public static String PE_CouponCollection = "PE_AllCoupons";
+    public static String PE_AllCouponsDocument = "FhOl4tnTN0tjWCAZpMwv";
+    public static String TC_CouponCollection = "TC_AllCoupons";
+    public static String TC_AllCouponsDocument = "rV3Hdd5bT0AHG5zK9nYe";
+
+
+    //TODO firebase firestore Coupon Constants--------------------------------------------------------------------------------------------
 }

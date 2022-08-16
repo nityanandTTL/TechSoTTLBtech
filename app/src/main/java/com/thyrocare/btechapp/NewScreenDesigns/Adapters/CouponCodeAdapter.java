@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStructure;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,21 +16,25 @@ import com.thyrocare.btechapp.BtechInterfaces.AppInterfaces;
 import com.thyrocare.btechapp.NewScreenDesigns.Activities.AddEditBenificaryActivity;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.models.api.response.CouponCodeResponseModel;
+import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.InputUtils;
 
 public class CouponCodeAdapter extends RecyclerView.Adapter<CouponCodeAdapter.viewHolder> {
     Activity activity;
     Boolean subtextVisibilityFlag = false;
     CouponCodeResponseModel couponCodeResponseModel;
+
     AddEditBenificaryActivity addEditBenificaryActivity;
-    AppInterfaces.getClickedCoupon getClickedCoupon;
+    AppInterfaces.getClickedPECoupon getClickedPECoupon;
+    AppPreferenceManager appPreferenceManager;
 
 
-    public CouponCodeAdapter(AddEditBenificaryActivity addEditBenificaryActivityClass, CouponCodeResponseModel couponCodeResponseModel, AppInterfaces.getClickedCoupon getClickedCoupon) {
+    public CouponCodeAdapter(AddEditBenificaryActivity addEditBenificaryActivityClass, CouponCodeResponseModel couponCodeResponseModel, AppInterfaces.getClickedPECoupon getClickedPECoupon) {
         this.activity = addEditBenificaryActivityClass;
         this.couponCodeResponseModel = couponCodeResponseModel;
         this.addEditBenificaryActivity = addEditBenificaryActivityClass;
-        this.getClickedCoupon = getClickedCoupon;
+        this.getClickedPECoupon = getClickedPECoupon;
+        appPreferenceManager = new AppPreferenceManager(activity);
 
     }
 
@@ -62,12 +68,21 @@ public class CouponCodeAdapter extends RecyclerView.Adapter<CouponCodeAdapter.vi
                 }
             }
         });
+        if (!appPreferenceManager.isPEPartner()){
+            holder.img_couponimage.setImageResource(R.drawable.tc_coupon_icon);
+        }else{
+            holder.img_couponimage.setImageResource(R.drawable.default_coupon);
+        }
         holder.tv_show_moreless.setVisibility(InputUtils.isNull(couponCodeResponseModel.getData().get(position).getCouponSubHead()) ? View.GONE : View.VISIBLE);
 
         holder.tv_ApplycouponCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getClickedCoupon.onApplyClick(couponCodeResponseModel.getData().get(position).getCouponCode());
+                if (appPreferenceManager.isPEPartner()){
+                    getClickedPECoupon.onApplyClick(couponCodeResponseModel.getData().get(position).getCouponCode());
+                }else{
+                    getClickedPECoupon.onTCCouponVerification(couponCodeResponseModel.getData().get(position));
+                }
 
             }
         });
@@ -81,6 +96,7 @@ public class CouponCodeAdapter extends RecyclerView.Adapter<CouponCodeAdapter.vi
     public class viewHolder extends RecyclerView.ViewHolder {
         ImageView img_couponimage;
         TextView tv_couponHead, tv_couponSubtext, tv_show_moreless, tv_couponCode, tv_ApplycouponCode;
+        LinearLayout ll_couponMain;
 
         public viewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,6 +106,7 @@ public class CouponCodeAdapter extends RecyclerView.Adapter<CouponCodeAdapter.vi
             tv_show_moreless = itemView.findViewById(R.id.tv_show_moreless);
             tv_couponCode = itemView.findViewById(R.id.tv_couponCode);
             tv_ApplycouponCode = itemView.findViewById(R.id.tv_ApplycouponCode);
+            ll_couponMain = itemView.findViewById(R.id.ll_couponMain);
 
             tv_couponSubtext.setVisibility(View.GONE);
         }

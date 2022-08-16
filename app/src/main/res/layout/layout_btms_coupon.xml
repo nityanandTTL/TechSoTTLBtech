@@ -45,10 +45,12 @@
         android:orientation="vertical">
         <!--enter coupon view-->
         <LinearLayout
+            android:id="@+id/ll_enterCoupon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/layout_couponn_bg"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <EditText
                 android:id="@+id/edt_couponcode"
@@ -79,8 +81,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/_5sdp"
-            android:visibility="visible"
+            android:visibility="gone"
             tools:listitem="@layout/layout_coupon_item" />
+        <TextView
+            android:id="@+id/tv_nocoupon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No coupon found"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="25dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_20sdp"
+            />
 
     </LinearLayout>
 

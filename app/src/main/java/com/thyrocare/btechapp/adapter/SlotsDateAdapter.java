@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -69,12 +70,13 @@ public class SlotsDateAdapter extends RecyclerView.Adapter<SlotsDateAdapter.MyVi
         holder.ll_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < sevenDaysModels.size(); i++) {
+                Toast.makeText(mContext, mContext.getResources().getString(R.string.rescheduleOrderBlockMsg), Toast.LENGTH_SHORT).show();
+                /*for (int i = 0; i < sevenDaysModels.size(); i++) {
                     sevenDaysModels.get(i).setSelected(false);
                 }
                 sevenDaysModels.get(position).setSelected(true);
                 notifyDataSetChanged();
-                rescheduleSlotActivity.dateforappointmentSlot(sevenDaysModels.get(position).getFulldate());
+                rescheduleSlotActivity.dateforappointmentSlot(sevenDaysModels.get(position).getFulldate());*/
             }
         });
 

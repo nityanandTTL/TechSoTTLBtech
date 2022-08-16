@@ -15,6 +15,43 @@ public class CouponCodeResponseModel {
 
     public static class Coupons {
         String CouponCode, CouponSubHead, CouponHead;
+        Boolean Status;
+        int MinRate;
+        int MaxRate;
+
+        public int getDiscount() {
+            return Discount;
+        }
+
+        public void setDiscount(int discount) {
+            Discount = discount;
+        }
+
+        int Discount;
+
+        public int getMinRate() {
+            return MinRate;
+        }
+
+        public void setMinRate(int minRate) {
+            MinRate = minRate;
+        }
+
+        public int getMaxRate() {
+            return MaxRate;
+        }
+
+        public void setMaxRate(int maxRate) {
+            MaxRate = maxRate;
+        }
+
+        public Boolean getStatus() {
+            return Status;
+        }
+
+        public void setStatus(Boolean status) {
+            Status = status;
+        }
 
         public String getCouponCode() {
             return CouponCode;

@@ -79,6 +79,7 @@ import com.thyrocare.btechapp.models.api.request.SetBtechAvailabilityAPIRequestM
 import com.thyrocare.btechapp.models.api.request.SignINSummaryRequestModel;
 import com.thyrocare.btechapp.models.api.request.SignInRequestModel;
 import com.thyrocare.btechapp.models.api.request.StockAvailabilityRequestModel;
+import com.thyrocare.btechapp.models.api.request.TCVerifyCouponRequestModel;
 import com.thyrocare.btechapp.models.api.request.Tsp_Send_RequestModel;
 import com.thyrocare.btechapp.models.api.request.UpdateMaterial;
 import com.thyrocare.btechapp.models.api.response.AddOnResponseModel;
@@ -116,6 +117,7 @@ import com.thyrocare.btechapp.models.api.response.SelfieUploadResponseModel;
 import com.thyrocare.btechapp.models.api.response.SendEventResponeModel;
 import com.thyrocare.btechapp.models.api.response.SignInResponseModel;
 import com.thyrocare.btechapp.models.api.response.SignSummaryResponseModel;
+import com.thyrocare.btechapp.models.api.response.TCVerifyCouponResponseModel;
 import com.thyrocare.btechapp.models.api.response.TestBookingResponseModel;
 import com.thyrocare.btechapp.models.api.response.VerifyCouponResponseModel;
 import com.thyrocare.btechapp.models.api.response.VideosResponseModel;
@@ -500,7 +502,10 @@ public interface PostAPIInterface {
             "Content-Type:application/json"
     })
     @POST("/api/partner-integration/v1/order/{orderID}/coupon")
-    Call<VerifyCouponResponseModel> verifySelectedCoupon(@Path("orderID") String OrderID, @Body AddONRequestModel addONRequestModel);
+    Call<VerifyCouponResponseModel> verifySelectedPECoupon(@Path("orderID") String OrderID, @Body AddONRequestModel addONRequestModel);
+
+    @POST("api/OrderAllocation/VerifyTCCoupon")
+    Call<TCVerifyCouponResponseModel> verifySelectedTCCoupon(@Body TCVerifyCouponRequestModel tcVerifyCouponRequestModel);
 
     @Multipart
     @POST("api/OrderAllocation/Uploadblob")

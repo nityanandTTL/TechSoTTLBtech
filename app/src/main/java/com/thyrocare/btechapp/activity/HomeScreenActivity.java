@@ -1,5 +1,10 @@
 package com.thyrocare.btechapp.activity;
 
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
+import static com.thyrocare.btechapp.utils.app.AppConstants.ORDERS;
+import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -35,6 +40,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.thyrocare.btechapp.BuildConfig;
 import com.thyrocare.btechapp.Controller.DeviceLogOutController;
 import com.thyrocare.btechapp.Controller.SignINOUTController;
 import com.thyrocare.btechapp.Controller.SignSummaryController;
@@ -90,34 +96,16 @@ import application.ApplicationController;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
-import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
-import static com.thyrocare.btechapp.utils.app.AppConstants.ORDERS;
-import static com.thyrocare.btechapp.utils.app.AppConstants.PickupOrder;
-import static com.thyrocare.btechapp.utils.app.BundleConstants.LOGOUT;
-
 public class HomeScreenActivity extends AppCompatActivity {
     public static final String TAG_ACTIVITY = "HOME_SCREEN_ACTIVITY";
-    private FloatingActionButton fabBtn;
-    private DrawerLayout drawer;
-    private NavigationView navigationView;
-    public Toolbar toolbarHome, nbt_toolbar, tsp_toolbar;
-    private CircularImageView rivSelfie;
-    private TextView txtUserName, txt_version_code, txt_no_of_camps;
-    private LinearLayout llNavHeader;
-    private Activity activity;
-    private AppPreferenceManager appPreferenceManager;
-    private DhbDao dhbDao;
-    private int camefrom = 0;
-    private boolean doubleBackToExitPressedOnce = false;
-    public boolean isOnHome = false;
-    ActionBarDrawerToggle toggle;
-    private String value = "";
-    private Object mCurrentFragment;
     public static boolean isFromPayment = false;
-    private static Intent TImeCheckerIntent;
-    String y = "";
     public static String mCurrentFragmentName = "";//jai
+    private static Intent TImeCheckerIntent;
+    public Toolbar toolbarHome, nbt_toolbar, tsp_toolbar;
+    public boolean isOnHome = false;
+    public AppBarLayout appbarLayout;
+    ActionBarDrawerToggle toggle;
+    String y = "";
     CharSequence[] items;
     Global globalclass;
     String s;
@@ -127,17 +115,28 @@ public class HomeScreenActivity extends AppCompatActivity {
     int flag_sign = 0;
     CircleImageView civ_profile, civ_tsp_profile, civ_nbt_profile;
     TextView txt_username, txt_nbt_username;
-    public AppBarLayout appbarLayout;
     ImageView iv_gqc;
     //for B-Tech
     LinearLayout ll_schedule, ll_orders, ll_served, ll_hub, ll_lead, ll_pick_orders, ll_leaves, ll_hcw, ll_password, ll_feedback, ll_video, ll_certificate, ll_logout, ll_gqc;
-    private Dialog MainDailog;
     //for TSP
     LinearLayout ll_tsp_certificate, ll_tsp_logout, ll_tsp_hub, ll_tsp_orders, ll_tsp_served, ll_tsp_earning, ll_tsp_send, ll_tsp_receive, ll_tsp_lead, ll_tsp_pick_orders, ll_tsp_hcw, ll_tsp_password, ll_tsp_feedback, ll_tsp_video, ll_tsp_leaves;
     //    public ImageView toolbar_image;
     ImageView iv_tsp_gqc, iv_nbt_gqc;
-
     LinearLayout ll_nbt_served, ll_nbt_certificate, ll_nbt_logout, ll_nbt_hub, ll_nbt_orders, ll_nbt_leaves, ll_nbt_send, ll_nbt_receive, ll_nbt_lead, ll_nbt_pick_orders, ll_nbt_hcw, ll_nbt_password, ll_nbt_feedback, ll_nbt_video;
+    private FloatingActionButton fabBtn;
+    private DrawerLayout drawer;
+    private NavigationView navigationView;
+    private CircularImageView rivSelfie;
+    private TextView txtUserName, txt_version_code, txt_no_of_camps;
+    private LinearLayout llNavHeader;
+    private Activity activity;
+    private AppPreferenceManager appPreferenceManager;
+    private DhbDao dhbDao;
+    private int camefrom = 0;
+    private boolean doubleBackToExitPressedOnce = false;
+    private String value = "";
+    private Object mCurrentFragment;
+    private Dialog MainDailog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -283,7 +282,8 @@ public class HomeScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 /*Intent intent = new Intent(activity, VisitOrdersDisplayFragment_new.class);
                 startActivity(intent);*/
-                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);startActivity(intent);
+                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                startActivity(intent);
             }
         });
 
@@ -695,15 +695,15 @@ public class HomeScreenActivity extends AppCompatActivity {
 //        toolbar_image = (ImageView) findViewById(R.id.toolbar_image);
         txtUserName = (TextView) findViewById(R.id.txt_username);
         toolbarHome.setTitle("");
-      //  String str1 = ""+appPreferenceManager.getSelfieResponseModel().getPic();
-        String str2 = ""+appPreferenceManager.getBtechSelfie();
-   //     System.out.println(str1);
+        //  String str1 = ""+appPreferenceManager.getSelfieResponseModel().getPic();
+        String str2 = "" + appPreferenceManager.getBtechSelfie();
+        //     System.out.println(str1);
         System.out.println(str2);
 
        /* if (appPreferenceManager.getSelfieResponseModel().getPic()!=null){
             globalclass.DisplayDeviceImages(activity, appPreferenceManager.getSelfieResponseModel().getPic(), civ_profile);
         }else{*/
-            globalclass.DisplayDeviceImages(activity, appPreferenceManager.getBtechSelfie(), civ_profile);
+        globalclass.DisplayDeviceImages(activity, appPreferenceManager.getBtechSelfie(), civ_profile);
         //}
         setSupportActionBar(toolbarHome);
 
@@ -748,7 +748,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         /*if (!InputUtils.isNull(appPreferenceManager.getSelfieResponseModel().getPic())){
             globalclass.DisplayDeviceImages(activity, appPreferenceManager.getSelfieResponseModel().getPic(), civ_profile);
         }else{*/
-            globalclass.DisplayDeviceImages(activity, appPreferenceManager.getBtechSelfie(), civ_profile);
+        globalclass.DisplayDeviceImages(activity, appPreferenceManager.getBtechSelfie(), civ_profile);
         //}
 //        stopService(TImeCheckerIntent);
     }
@@ -766,7 +766,7 @@ public class HomeScreenActivity extends AppCompatActivity {
             super.onBackPressed();
             dialogtoExit();
             return;
-        }else{
+        } else {
             dialogtoExit();
         }
 
@@ -942,7 +942,8 @@ public class HomeScreenActivity extends AppCompatActivity {
             navigationView.getMenu().performIdentifierAction(R.id.nav_feedback, 0);
         } else if (screenCategory == SCHEDULE) {
             pushFragments(ScheduleYourDayFragment.newInstance(), false, false, ScheduleYourDayFragment.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
-        } else*/ if (screenCategory == ORDERS) {
+        } else*/
+        if (screenCategory == ORDERS) {
 //            pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
 
             Intent intent = new Intent(activity, VisitOrdersDisplayFragment_new.class);
@@ -1153,14 +1154,15 @@ public class HomeScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 /*Intent intent = new Intent(activity, VisitOrdersDisplayFragment_new.class);
                 startActivity(intent);*/
-                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);startActivity(intent);
+                Intent intent = new Intent(activity, B2BVisitOrdersDisplayFragment.class);
+                startActivity(intent);
 
 //                pushFragments(VisitOrdersDisplayFragment_new.newInstance(), false, false, VisitOrdersDisplayFragment_new.TAG_FRAGMENT, R.id.fl_homeScreen, TAG_ACTIVITY);
             }
         });
 
         try {
-            if (BundleConstants.setVisitOrderScreen){
+            if (BundleConstants.setVisitOrderScreen) {
                 BundleConstants.setVisitOrderScreen = false;
                 ll_orders.performClick();
             }
@@ -1302,7 +1304,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                     if (isNetworkAvailable(activity)) {
                         CallLogoutRequestApi();
                         if (!appPreferenceManager.getLoginRole().equalsIgnoreCase(AppConstants.LME_ROLE_ID)) {
-                            if (bottomSheetDialog.isShowing()){
+                            if (bottomSheetDialog.isShowing()) {
                                 bottomSheetDialog.dismiss();
                             }
                             CallLogOutDevice();
@@ -1363,7 +1365,10 @@ public class HomeScreenActivity extends AppCompatActivity {
 
                                 if (!device_id.toString().trim().equalsIgnoreCase("")) {
                                     if (!device_id.toString().trim().equalsIgnoreCase(materialDetailsModels.get(0).getDeviceId())) {
-                                        CallDeviceNotMatchedDialog();
+                                        if (!BuildConfig.DEBUG) {
+                                            CallDeviceNotMatchedDialog();
+                                        }
+
                                     } else {
                                         CheckSTechLoginandShowPopUp(materialDetailsModels.get(0));
                                     }

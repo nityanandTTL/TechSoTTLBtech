@@ -1,6 +1,12 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Fragments;
 
 
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CheckInternetConnectionMsg;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PLEASE_WAIT;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,14 +20,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ActionMode;
@@ -43,6 +41,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.clevertap.android.sdk.CleverTapAPI;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -83,8 +89,6 @@ import com.thyrocare.btechapp.models.data.DispositionDetailsModel;
 import com.thyrocare.btechapp.models.data.KitsCountModel;
 import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
-
-
 import com.thyrocare.btechapp.service.TrackerService;
 import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
@@ -117,12 +121,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CheckInternetConnectionMsg;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PLEASE_WAIT;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
-import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
-
 
 /**
  * http://bts.dxscloud.com/btsapi/api/OrderVisitDetails/884543107
@@ -130,7 +128,18 @@ import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 
     public static final String TAG_FRAGMENT = "VISIT_ORDERS_FRAGMENT";
-
+    public static boolean edit;
+    Dialog dialog_ready;
+    int statusCode;
+    TextView tv_toolbar;
+    Activity activity;
+    ImageView iv_home, iv_back;
+    LinearLayout ll_tab;
+    Button btn_today, btn_tommorrow;
+    int dayflag = 0;
+    ArrayList<GetOrderDetailsResponseModel.GetVisitcountDTO> getVisit;
+    boolean orderRescheduleFlag, orderAccepted, peAddON;
+    int orderPosition;
     private AppPreferenceManager appPreferenceManager;
     private View rootView;
     private RecyclerView recyOrderList;
@@ -150,14 +159,11 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
     private RescheduleOrderDialog rod;
     private String MaskedPhoneNumber = "";
     private boolean isFetchingOrders = false;
-    public static boolean edit;
     private ArrayList<DispositionDetailsModel> remarksDataModelsarr;
     private ArrayList<String> remarksarr;
     private ArrayList<String> remarks_notc_arr;
     private DispositionDetailsModel remarksDataModel;
     private String remarks_notc_str = "";
-    Dialog dialog_ready;
-    int statusCode;
     private ProgressDialog progressDialog;
     private TextView tv_RoutineOrders, tv_AayushmanOrders;
     private LinearLayout layoutEarnings, lin_categories;
@@ -168,16 +174,6 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
     private GPSTracker gpsTracker;
     private Intent FirebaselocationUpdateIntent;
     private boolean isphonecallstarted = false;
-    TextView tv_toolbar;
-    Activity activity;
-    ImageView iv_home, iv_back;
-    LinearLayout ll_tab;
-    Button btn_today, btn_tommorrow;
-    int dayflag = 0;
-    ArrayList<GetOrderDetailsResponseModel.GetVisitcountDTO> getVisit;
-    boolean orderRescheduleFlag, orderAccepted, peAddON;
-    int orderPosition;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -290,6 +286,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         peAddON = getIntent().getBooleanExtra(BundleConstants.PEADDON, false);
         orderPosition = getIntent().getIntExtra(BundleConstants.POSITION, 0);
         System.out.println("" + orderRescheduleFlag);
+        Constants.clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
     }
 
     private void setListener() {
@@ -511,7 +508,9 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                                                 }
                                             }
                                         }
+
                                         orderDetailsResponseModels.add(orderVisitDetailsModel);
+                                        //setCleverTapEventForSelectedOrder(orderDetailsResponseModels);
                                         MessageLogger.LogError(TAG_FRAGMENT, "onResponse: " + orderDetailsResponseModels.size());
                                     }
                                 }
@@ -566,6 +565,17 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             initData(orderDetailsResponseModels);
             RemoveOrderFromLocal("");
         }
+    }
+
+    private void setCleverTapEventForSelectedOrder(ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels) {
+        HashMap<String, Object> selectedOrderDetailsPEevent = new HashMap<>();
+        selectedOrderDetailsPEevent.put("Order ID", orderDetailsResponseModels.get(0).getVisitId());
+        selectedOrderDetailsPEevent.put("Phlebo Phone No", appPreferenceManager.getLoginResponseModel().getMobile());
+        selectedOrderDetailsPEevent.put("Order date and slot time", orderDetailsResponseModels.get(0).getAppointmentDate());
+        selectedOrderDetailsPEevent.put("slot interval", orderDetailsResponseModels.get(0).getSlot());
+        selectedOrderDetailsPEevent.put("timestamp of event trigger", Global.getCurrentDateandTime());
+        selectedOrderDetailsPEevent.put("order status", orderDetailsResponseModels.get(0).getAllOrderdetails().get(0).getStatus());
+        Constants.clevertapDefaultInstance.pushEvent("order_view_order_slot", selectedOrderDetailsPEevent);
     }
 
     private void RemoveOrderFromLocal(String orderVisitID) {
@@ -1249,33 +1259,12 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         intent.putExtra(BundleConstants.APPOINTMENT_DATE, orderDetailsResponseModels.get(0).getAppointmentDate());
         int slot = orderDetailsResponseModels.get(0).getSlotId();
         System.out.println(slot);
-        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL,orderDetailsResponseModels);
+        intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderDetailsResponseModels);
         int count = orderDetailsResponseModels.get(0).getAllOrderdetails().get(0).getBenMaster().size();
-        intent.putExtra("Bencount",count);
+        intent.putExtra("Bencount", count);
 //        intent.putExtra(BundleConstants.POS, 3);
         intent.putExtra(BundleConstants.PINCODE, orderDetailsResponseModels.get(0).getAllOrderdetails().get(0).getPincode());
         startActivity(intent);
-    }
-
-
-    public class CConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
-        @Override
-        public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
-            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
-            orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId() + "");
-            orderStatusChangeRequestModel.setRemarks(remarks);
-            orderStatusChangeRequestModel.setStatus(27);
-            if (isNetworkAvailable(activity)) {
-                callOrderStatusChangeApi(orderStatusChangeRequestModel, orderVisitDetailsModel);
-            } else {
-                TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-            }
-        }
-
-        @Override
-        public void onCancelButtonClicked() {
-
-        }
     }
 
     private void callOrderStatusChangeStartApi(final OrderVisitDetailsModel orderVisitDetailsModel, int status) {
@@ -1300,7 +1289,10 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 //                            BundleConstants.PEDSAOrder = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder();
                             appPreferenceManager.setPE_DSA(orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder());
                             //fungible
-                            if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
+                            if ((appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()))
+                           /* (InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()) || InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude())
+                                    || (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude(), "0.00000000") || (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude(), "0.00000000")))
+                            )*/ {
 //                            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
 //                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                 ProceedToArriveScreen(orderVisitDetailsModel, false);
@@ -1398,7 +1390,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 //            BundleConstants.isPEPartner = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner();
             appPreferenceManager.setPE_Partner(orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner());
 //            BundleConstants.PEDSAOrder = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder();
-            appPreferenceManager.setPE_DSA( orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder());
+            appPreferenceManager.setPE_DSA(orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder());
             new LogUserActivityTagging(activity, BundleConstants.WOE, remarks);
 //            Toast.makeText(activity, "Started Successfully", Toast.LENGTH_SHORT).show();
             Intent intentNavigate = new Intent(activity, StartAndArriveActivity.class);
@@ -1443,7 +1435,6 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         }
     }
 
-
     private void callOrderStatusChangeApi(OrderStatusChangeRequestModel orderStatusChangeRequestModel, final OrderVisitDetailsModel orderVisitDetailsModel) {
 
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
@@ -1480,7 +1471,6 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             }
         });
     }
-
 
     private void CallOrderStatusChangeAPIAfterAcceptButtonClicked(OrderStatusChangeRequestModel orderStatusChangeRequestModel, final String visitId) {
 
@@ -1623,6 +1613,68 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         });
     }
 
+    private void CallInitialiseProgressDialog() {
+        if (activity != null) {
+            progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("");
+            progressDialog.setMessage("Please wait...");
+            progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            progressDialog.setCancelable(true);
+            progressDialog.setCanceledOnTouchOutside(false);
+            try {
+                progressDialog.show();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void CallCloseProgressDialog() {
+        try {
+
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
+            startActivity(intent);
+        } else {
+            // Permission denied, Disable the functionality that depends on activity permission.
+            TastyToast.makeText(activity, "permission denied", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+            // Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public class CConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
+        @Override
+        public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
+            OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
+            orderStatusChangeRequestModel.setId(orderVisitDetailsModel.getSlotId() + "");
+            orderStatusChangeRequestModel.setRemarks(remarks);
+            orderStatusChangeRequestModel.setStatus(27);
+            if (isNetworkAvailable(activity)) {
+                callOrderStatusChangeApi(orderStatusChangeRequestModel, orderVisitDetailsModel);
+            } else {
+                TastyToast.makeText(activity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            }
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
+    }
 
     public class Btech_AsyncLoadBookingFreqApi extends AsyncTask<Void, Void, String> {
 
@@ -1722,49 +1774,6 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
             } else {
                 TastyToast.makeText(activity, "" + res, TastyToast.LENGTH_LONG, TastyToast.ERROR);
             }
-        }
-    }
-
-    private void CallInitialiseProgressDialog() {
-        if (activity != null) {
-            progressDialog = new ProgressDialog(activity);
-            progressDialog.setTitle("");
-            progressDialog.setMessage("Please wait...");
-            progressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            progressDialog.setCancelable(true);
-            progressDialog.setCanceledOnTouchOutside(false);
-            try {
-                progressDialog.show();
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void CallCloseProgressDialog() {
-        try {
-
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        if (grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:" + MaskedPhoneNumber));
-            startActivity(intent);
-        } else {
-            // Permission denied, Disable the functionality that depends on activity permission.
-            TastyToast.makeText(activity, "permission denied", TastyToast.LENGTH_LONG, TastyToast.WARNING);
-            // Toast.makeText(activity, "permission denied", Toast.LENGTH_LONG).show();
         }
     }
 }

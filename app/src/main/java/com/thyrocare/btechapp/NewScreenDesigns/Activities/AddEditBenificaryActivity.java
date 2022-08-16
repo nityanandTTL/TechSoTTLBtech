@@ -137,9 +137,12 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     String str_benProduct;
     boolean callPEOrderAPI = false;
     CouponCodeResponseModel couponCodeResponseModel;
-    BottomSheetDialog bottomSheetDialog;
+    BottomSheetDialog bottomSheet_Coupon_Dialog;
     TextView tv_cartPricetoshow, tv_couponDiscounttoshow, tv_orderTotaltoshow;
     RelativeLayout rl_priceView;
+    int SelectedTest_TCPrice = 0;
+    int testCouponDiscountedRate = 0;
+    int orderAmountDue = 0;
     private Activity mActivity;
     private Global globalclass;
     private ConnectionDetector cd;
@@ -169,7 +172,8 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     private String orderNo;
     private RelativeLayout relHardCopyCharge;
     private String SelectedCoupon;
-    private ArrayList<BeneficiaryDetailsModel> benMaster;
+    private int finalOrderAmount = 0;
+    private int discountAmount = 0;
 
     static ArrayList<String> removeDuplicates(ArrayList<String> list) {
 
@@ -486,7 +490,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         imgBenAddTests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+//                if (validateforAddTest())
                 if (FlagADDEditBen) {
                     CallEditTestList(true);
                 } else {
@@ -531,6 +535,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
                     if (selectedTestsList != null) {
                         if (selectedTestsList.size() != 0) {
+                            onRemoveCoupon();
                             CallCartAPIForAdd(selectedTestsList);
                         }
                     }
@@ -731,8 +736,6 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                     cv_couponmain.setClickable(true);
                 } else {
                     onRemoveCoupon();
-
-
                 }
             }
         });
@@ -740,11 +743,36 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
     }
 
+    private boolean validateforAddTest() {
+        if (StringUtils.isNull(edtBenName.getText().toString().trim())) {
+            edtBenName.setError("Name is Required");
+            return false;
+        } else if (!StringUtils.isNull(edtBenName.getText().toString().trim()) && edtBenName.getText().toString().trim().length() < 2) {
+            edtBenName.setError("Name should have minimum 2 characters");
+            return false;
+        } else if (StringUtils.isNull(edtBenAge.getText().toString().trim())) {
+            edtBenAge.setError("Age is Required");
+            return false;
+        } else if (Integer.parseInt(edtBenAge.getText().toString().trim()) < 1 || Integer.parseInt(edtBenAge.getText().toString().trim()) > 120) {
+            edtBenAge.setError("Age should be between 1 to 120");
+            return false;
+        } else if (spn_purpose.getSelectedItemPosition() == 0) {
+            Toast.makeText(mActivity, "Kindly select gender", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     private void onRemoveCoupon() {
         txt_ViewRemove_switch.setText("View Offers");
         txt_coupons.setText("Apply Coupon");
         SelectedCoupon = null;
-        txtAmountPayable.setText(mActivity.getString(R.string.rupee_symbol) + peTestRates + "/-");
+        if (appPreferenceManager.isPEPartner()) {
+            txtAmountPayable.setText(mActivity.getString(R.string.rupee_symbol) + peTestRates + "/-");
+        } else {
+            txtAmountPayable.setText(mActivity.getString(R.string.rupee_symbol) + SelectedTest_TCPrice + "/-");
+
+        }
         rl_priceView.setVisibility(View.GONE);
         cv_couponmain.setClickable(true);
     }
@@ -753,16 +781,15 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
         //TODO API CALL----------
         if (cd.isConnectingToInternet()) {
-           /* AddEditBenificaryController controller = new AddEditBenificaryController(AddEditBenificaryActivity.this, appPreferenceManager.isPEPartner(), orderNo);
-            controller.callCouponCodeAPI();*/
-
             //TODO firebase firestore data receiver as per changes from PE ashok yogi
-            if (validateforAddbenPE()) {
-                BtechFirebaseController firebaseController = new BtechFirebaseController(AddEditBenificaryActivity.this, "PE_AllCoupons");
-                firebaseController.getAlCoupons();
+
+            if (appPreferenceManager.isPEPartner() && validateforAddbenPE()) {
+                BtechFirebaseController firebaseController = new BtechFirebaseController(AddEditBenificaryActivity.this, Constants.PE_CouponCollection);
+                firebaseController.getAllCoupons(Constants.PE_AllCouponsDocument, appPreferenceManager.isPEPartner());
+            } else if (selectedTestsList != null) {
+                BtechFirebaseController firebaseController = new BtechFirebaseController(AddEditBenificaryActivity.this, Constants.TC_CouponCollection);
+                firebaseController.getAllCoupons(Constants.TC_AllCouponsDocument, appPreferenceManager.isPEPartner());
             }
-
-
             //TODO firebase firestore data receiver as per changes from PE ashok yogi
 
         }
@@ -787,14 +814,47 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     }
 
     private void bindCouponCodeAdapter(RecyclerView rcl_coupons, CouponCodeResponseModel couponCodeResponseModel) {
-        CouponCodeAdapter couponCodeAdapter = new CouponCodeAdapter(AddEditBenificaryActivity.this, couponCodeResponseModel, new AppInterfaces.getClickedCoupon() {
+        CouponCodeAdapter couponCodeAdapter = new CouponCodeAdapter(AddEditBenificaryActivity.this, couponCodeResponseModel, new AppInterfaces.getClickedPECoupon() {
             @Override
             public void onApplyClick(String coupon) {
-                getClickedCoupon(coupon);
+                if (cd.isConnectingToInternet()) {
+                    if (appPreferenceManager.isPEPartner()) {
+                        getClickedCoupon(coupon);
+                    }
+                }
+            }
+
+            @Override
+            public void onTCCouponVerification(CouponCodeResponseModel.Coupons verifyTcCoupon) {
+                if (SelectedTest_TCPrice <= verifyTcCoupon.getMaxRate() && SelectedTest_TCPrice > verifyTcCoupon.getMinRate()) {
+                    if (bottomSheet_Coupon_Dialog.isShowing())
+                        bottomSheet_Coupon_Dialog.dismiss();
+                    int discountedPrice = 0;
+                    discountAmount = verifyTcCoupon.getDiscount();
+                    testCouponDiscountedRate = finalOrderAmount;
+                    discountedPrice = SelectedTest_TCPrice - verifyTcCoupon.getDiscount();
+                    rl_priceView.setVisibility(View.VISIBLE);
+                    txt_coupons.setText(verifyTcCoupon.getCouponCode());
+                    txt_ViewRemove_switch.setText("Remove");
+                    SelectedCoupon = verifyTcCoupon.getCouponCode();
+                    txtAmountPayable.setText(mActivity.getString(R.string.rupee_symbol) + discountedPrice + "/-");
+                    tv_cartPricetoshow.setText(mActivity.getResources().getString(R.string.rupee_symbol) + SelectedTest_TCPrice + "/-");
+                    tv_couponDiscounttoshow.setText(mActivity.getResources().getString(R.string.rupee_symbol) + verifyTcCoupon.getDiscount() + "/-");
+                    tv_orderTotaltoshow.setText(mActivity.getResources().getString(R.string.rupee_symbol) + discountedPrice + "/-");
+                } else {
+                    Global.showCustomStaticToast(mActivity, "Coupon code is not applicable");
+                    resetCouponView();
+                }
+
             }
         });
         rcl_coupons.setAdapter(couponCodeAdapter);
     }
+
+    private void resetCouponView() {
+        txtAmountPayable.setText(mActivity.getString(R.string.rupee_symbol) + SelectedTest_TCPrice + "/-");
+    }
+
 
     private boolean checkifBeneficiaryDetailsEdited() {
         String Gender = "";
@@ -1425,6 +1485,9 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         OrderBookingDetailsModel ordbooking = new OrderBookingDetailsModel();
         ordbooking.setVisitId(orderNo);
         ordbooking.setOrddtl(orddtl);
+        //TODO set the discount here to resolve the remove and edit ben issue-----------------------------------
+        ordbooking.setCoupon(InputUtils.isNull(SelectedCoupon) ? 0 : discountAmount);
+        //TODO set the discount here to resolve the remove and edit ben issue------------------------------------
         ordbooking.setBtechId(Integer.parseInt(appPreferenceManager.getLoginResponseModel().getUserID()));
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>Mith" + ordbooking.getBtechId());
         nm.setSmpldtl(benSTArr);
@@ -1494,7 +1557,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         } else if (StringUtils.isNull(txtTestsList.getText().toString().trim())) {
             txtTestsList.setError("Tests List is Required");
             return false;
-        } else if (peselectedTestsList.size() == 0) {
+        } else if ((peselectedTestsList.size() == 0)) {
             Toast.makeText(mActivity, "Kindly select test to add", Toast.LENGTH_SHORT).show();
             return false;
         } else if (spn_purpose.getSelectedItemPosition() == 0) {
@@ -1840,7 +1903,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 String st2 = brandTestMasterModel.getTstratemaster().get(i).getDescription();
 
                 System.out.println("----");
-                if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode() != null) {
+                if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode() != null && brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().size() > 0) {
                     if (brandTestMasterModel.getTstratemaster().get(i).getAccessUserCode().isEmpty()) {
                         testRateMasterModels.add(brandTestMasterModel.getTstratemaster().get(i));
                     }
@@ -2076,6 +2139,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
     }
 
     private void CallEditTestList(final boolean isAddBen) {
+        isM = spn_purpose.getSelectedItemPosition() == 1;
 
         if (!InputUtils.isNull(edit_selectedTestsList)) {
             addEditTest(isAddBen);
@@ -2107,6 +2171,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 intent.putParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST, edit_selectedTestsList);*/
                 intent.putExtra("IsAddBen", FlagADDEditBen);
                 intent.putExtra(BundleConstants.TEST_EDIT_PE, test_edit_PE);
+                intent.putExtra("IS_MALE", isM);
                 startActivityForResult(intent, BundleConstants.ADDEDITTESTREQUESTCODE);
             }
         } else if (isAddBen && InputUtils.isNull(selectedTestsList)) {
@@ -2115,6 +2180,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
             intent.putParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLIST, selectedTestsList);
             intent.putParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST, edit_selectedTestsList);
             intent.putExtra("IsAddBen", FlagADDEditBen);
+            intent.putExtra("IS_MALE", isM);
             startActivityForResult(intent, BundleConstants.ADDEDITTESTREQUESTCODE);
         } else {
             addEditTest(isAddBen);
@@ -2289,9 +2355,13 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                 boolean isINSPPpresent = false;
                                 if (selectedTestsList != null && selectedTestsList.size() > 0) {
                                     ArrayList<TestRateMasterModel> trmmArr = new ArrayList<TestRateMasterModel>();
+                                    SelectedTest_TCPrice = 0;
                                     for (TestRateMasterModel btdm :
                                             selectedTestsList) {
                                         MessageLogger.PrintMsg("test:" + btdm.getTestCode());
+
+                                        SelectedTest_TCPrice += btdm.getRate();
+                                        txtAmountPayable.setText(mActivity.getString(R.string.rupee_symbol) + SelectedTest_TCPrice + "/-");
 
                                         if (btdm.getTestCode().equalsIgnoreCase(Constants.FBS)) {
                                             isFBSpresent = true;
@@ -2334,6 +2404,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                     }
                                     MessageLogger.PrintMsg("isFBSpresent: " + isFBSpresent);
                                     MessageLogger.PrintMsg("FastingCount: " + FastingCount);
+                                    System.out.println("Price to check>>>>>>>>>>: " + SelectedTest_TCPrice);
 
                                     //TODO Remove logic
                                 /*if (isFBSpresent == true && FastingCount == 1 && !isFBSpresentInSuperSet) {
@@ -2365,6 +2436,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                                         txtTestsList.setSelected(true);
                                         txtTestsList.setError(null);
                                         CallCartAPIForAdd(selectedTestsList);
+                                        cv_couponmain.setVisibility(View.VISIBLE);
                                     }
 
                                 } else {
@@ -2533,6 +2605,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                         intent.putParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLISTPE, peselectedTestsList);
 //                        intent.putParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST, edit_selectedTestsList);
                         intent.putExtra("IsAddBen", FlagADDEditBen);
+                        intent.putExtra("IS_MALE", isM);
                         startActivityForResult(intent, BundleConstants.ADDEDITTESTREQUESTCODE);
                     } else {
                         bottomSheetDialog.dismiss();
@@ -2543,6 +2616,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                         intent.putExtra(BundleConstants.EDITSELECTEDTEST, SelectedTestCode);
                         //  intent.putExtra("ArraySize", ArraySize);
                         intent.putExtra("IsAddBen", FlagADDEditBen);
+                        intent.putExtra("IS_MALE", isM);
                         startActivityForResult(intent, BundleConstants.ADDEDITTESTREQUESTCODE);
                     }
                 }
@@ -2587,7 +2661,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
     private void showAmount(ArrayList<GetPETestResponseModel.DataDTO> peselectedTestsList) {
         int orderAmountPayable = 0;
-        int orderAmountDue = 0;
+        orderAmountDue = 0;
         int tempAmount = 0;
         orderAmountPayable = orderAmountPayable + orderVisitDetailsModel.getAllOrderdetails().get(0).getAmountDue();
 
@@ -2696,6 +2770,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         ArrayList<CartRequestOrderModel> ordersArr = new ArrayList<>();
         ArrayList<CartRequestBeneficiaryModel> beneficiariesArr = new ArrayList<>();
         cartAPIRequestModel.setVisitId(selectedTestsList.getOrdbooking().getVisitId());
+        cartAPIRequestModel.setDisAmtDue(InputUtils.isNull(SelectedCoupon) ? 0 : discountAmount);
 
 
         CartRequestOrderModel crom = new CartRequestOrderModel();
@@ -2852,13 +2927,16 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
 
             int orderAmountPayable = 0;
             int orderAmountDue = 0;
+
             for (int j = 0; j < cartAPIResponseModel.getOrders().size(); j++) {
                 orderAmountPayable = orderAmountPayable + cartAPIResponseModel.getOrders().get(j).getAmountDue();
                 orderAmountDue = orderAmountDue + cartAPIResponseModel.getOrders().get(j).getTestCharges() + cartAPIResponseModel.getOrders().get(j).getServiceCharge();
             }
+            finalOrderAmount = orderAmountDue;
 //            ll_amt.setVisibility(View.VISIBLE);
             txtAmountPayable.setVisibility(View.VISIBLE);
-            txtAmountPayable.setText(mActivity.getResources().getString(R.string.rupee_symbol) + orderAmountDue + "/-");
+
+            txtAmountPayable.setText(FlagADDEditBen ? mActivity.getResources().getString(R.string.rupee_symbol) + SelectedTest_TCPrice + "/-" : mActivity.getResources().getString(R.string.rupee_symbol) + orderAmountDue + "/-");
             if (cartAPIResponseModel.getOrders() != null && cartAPIResponseModel.getOrders().size() > 0 && cartAPIResponseModel.getOrders().get(0).isHC()) {
 //                relHardCopyCharge.setVisibility(View.VISIBLE);
                 int PriceWithoutHardCopy = orderAmountDue - HARDCOPY_CHARGES;
@@ -3144,7 +3222,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                             selectedTestsList = data.getParcelableArrayListExtra(BundleConstants.ADD_BEN_SELECTED_TESTLIST);
                             edit_selectedTestsList = data.getParcelableArrayListExtra(BundleConstants.EDIT_BEN_SELECTED_TESTLIST);
 
-                            if (appPreferenceManager.isPEPartner() && (peselectedTestsList.size() > 0 && peselectedTestsList != null)
+                            if ((peselectedTestsList.size() > 0 && peselectedTestsList != null)
                                     && FlagADDEditBen //TODO checks if we are editing order..
                             ) {
                                 cv_couponmain.setVisibility(View.VISIBLE);
@@ -3238,26 +3316,39 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         } else {
             couponCodeResponseModel = null;
         }
-        bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
+        bottomSheet_Coupon_Dialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
         final View bottomSheet = LayoutInflater.from(mActivity).inflate(R.layout.layout_btms_coupon, null);
-        bottomSheetDialog.setContentView(bottomSheet);
-        bottomSheetDialog.setCancelable(false);
+        bottomSheet_Coupon_Dialog.setContentView(bottomSheet);
+        bottomSheet_Coupon_Dialog.setCancelable(false);
 
         ImageView img_close = bottomSheet.findViewById(R.id.img_close);
         final EditText edt_couponcode = bottomSheet.findViewById(R.id.edt_couponcode);
         TextView tv_applycoupon = bottomSheet.findViewById(R.id.tv_applycoupon);
+        TextView tv_nocoupon = bottomSheet.findViewById(R.id.tv_nocoupon);
         RecyclerView rcl_coupons = bottomSheet.findViewById(R.id.rcl_coupons);
+        LinearLayout ll_enterCoupon = bottomSheet.findViewById(R.id.ll_enterCoupon);
         edt_couponcode.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
-
+        if (!appPreferenceManager.isPEPartner()) {
+            ll_enterCoupon.setVisibility(View.GONE);
+        }
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(RecyclerView.VERTICAL);
         rcl_coupons.setLayoutManager(manager);
 
-        bindCouponCodeAdapter(rcl_coupons, couponCodeResponseModel);
+        if (couponCodeResponseModel.getData().size() > 0) {
+            rcl_coupons.setVisibility(View.VISIBLE);
+            tv_nocoupon.setVisibility(View.GONE);
+            bindCouponCodeAdapter(rcl_coupons, couponCodeResponseModel);
+        } else {
+            rcl_coupons.setVisibility(View.GONE);
+            tv_nocoupon.setVisibility(View.VISIBLE);
+        }
+
+
         img_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetDialog.dismiss();
+                bottomSheet_Coupon_Dialog.dismiss();
             }
         });
 
@@ -3274,43 +3365,47 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 }
             }
         });
-        bottomSheetDialog.show();
+
+        bottomSheet_Coupon_Dialog.show();
 
     }
 
     public void getClickedCoupon(String selectedCouponCode) {
         //TODO validate couponcode api call
-        ArrayList<AddONRequestModel.test> arrTest = new ArrayList<>();
-        AddONRequestModel.patient patient = new AddONRequestModel.patient();
-        patient.setId(0);
-        patient.setName(edtBenName.getText().toString());
-        patient.setAge(Integer.parseInt("" + edtBenAge.getText().toString()));
-        patient.setGender(isM ? "Male" : "Female");
+        if (appPreferenceManager.isPEPartner()) {
 
-        for (int i = 0; i < peselectedTestsList.size(); i++) {
-            AddONRequestModel.test test = new AddONRequestModel.test();
-            test.setId(peselectedTestsList.get(i).getTest_dos_id());
-            test.setType(peselectedTestsList.get(i).getType());
-            //TODO added as per PE request for coupon task.
-            test.setTest_id(peselectedTestsList.get(i).getId());
-            arrTest.add(test);
+            ArrayList<AddONRequestModel.test> arrTest = new ArrayList<>();
+            AddONRequestModel.patient patient = new AddONRequestModel.patient();
+            patient.setId(0);
+            patient.setName(edtBenName.getText().toString());
+            patient.setAge(Integer.parseInt("" + edtBenAge.getText().toString()));
+            patient.setGender(isM ? "Male" : "Female");
+
+            for (int i = 0; i < peselectedTestsList.size(); i++) {
+                AddONRequestModel.test test = new AddONRequestModel.test();
+                test.setId(peselectedTestsList.get(i).getTest_dos_id());
+                test.setType(peselectedTestsList.get(i).getType());
+                //TODO added as per PE request for coupon task.
+                test.setTest_id(peselectedTestsList.get(i).getId());
+                arrTest.add(test);
+            }
+            AddONRequestModel addONRequestModel = new AddONRequestModel();
+            addONRequestModel.setPatient(patient);
+            addONRequestModel.setTest(arrTest);
+            addONRequestModel.setPromocode(selectedCouponCode);
+            addONRequestModel.setDos_order_id(orderNo);
+
+            AddEditBenificaryController controller = new AddEditBenificaryController(AddEditBenificaryActivity.this, appPreferenceManager.isPEPartner(), addONRequestModel, orderNo);
+            controller.callValidatePECouponCodeApi();
         }
-        AddONRequestModel addONRequestModel = new AddONRequestModel();
-        addONRequestModel.setPatient(patient);
-        addONRequestModel.setTest(arrTest);
-        addONRequestModel.setPromocode(selectedCouponCode);
-        addONRequestModel.setDos_order_id(orderNo);
-
-        AddEditBenificaryController controller = new AddEditBenificaryController(AddEditBenificaryActivity.this, appPreferenceManager.isPEPartner(), addONRequestModel, orderNo);
-        controller.callValidateCouponCodeApi();
 
     }
 
     public void getCouponValidateResponse(VerifyCouponResponseModel response) {
 
         if (response.getIs_coupon_applied()) {
-            if (bottomSheetDialog.isShowing())
-                bottomSheetDialog.dismiss();
+            if (bottomSheet_Coupon_Dialog.isShowing())
+                bottomSheet_Coupon_Dialog.dismiss();
             SelectedCoupon = response.getCode();
             txt_coupons.setText(response.getCode());
             rl_priceView.setVisibility(View.VISIBLE);

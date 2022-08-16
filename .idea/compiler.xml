@@ -6,6 +6,7 @@
       <module name="TechSoBTechApp.app" target="11" />
       <module name="TechSoBTechApp2.7.6.app" target="1.8" />
       <module name="TechSoBTechApp_hub_drop.app" target="11" />
+      <module name="TechSoBTechApp_TC_coupon_and_map_PE_events.app" target="11" />
       <module name="TechSoWenBTech_GIT.app" target="11" />
     </bytecodeTargetLevel>
   </component>

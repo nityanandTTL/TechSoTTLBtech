@@ -176,6 +176,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         } else {
             lin_profileCategory.setVisibility(View.VISIBLE);
         }
+//        isM = getIntent().getBooleanExtra("IS_MALE",false);
     }
 
     private void initListener() {
@@ -482,29 +483,29 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         }
 
         //fungible
-            if(FlagADDEditBen){
+        if(FlagADDEditBen){
 //                if(BundleConstants.isPEPartner || BundleConstants.PEDSAOrder){
-                if(appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()){
+            if(appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()){
+                if (cd.isConnectingToInternet()) {
+                    peAuthorizationController = new PEAuthorizationController(this);
+                    peAuthorizationController.getAuthorizationToken(2, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode(), orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
+                } else {
+                    globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
+                }
+            }else{
+                if (!UpdateProduct()) {
                     if (cd.isConnectingToInternet()) {
-                        peAuthorizationController = new PEAuthorizationController(this);
-                        peAuthorizationController.getAuthorizationToken(2, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode(), orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
+                        CallGetTechsoProductsAPI();
                     } else {
                         globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
                     }
-                }else{
-                    if (!UpdateProduct()) {
-                        if (cd.isConnectingToInternet()) {
-                            CallGetTechsoProductsAPI();
-                        } else {
-                            globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
-                        }
-                    } else {
-                        BrandTestMasterModel brandTestmdel = new Gson().fromJson(appPreferenceManager.getCacheProduct(), BrandTestMasterModel.class);
-                        //  brandTestMasterModel = getBrandTestMaster(brandTestmdel);
-                        brandTestMasterModel = getBrandTestMaster(brandTestmdel, appPreferenceManager.getDSAProductResponseModel());
-                        CallAfterBranDAPIRes();
-                    }
+                } else {
+                    BrandTestMasterModel brandTestmdel = new Gson().fromJson(appPreferenceManager.getCacheProduct(), BrandTestMasterModel.class);
+                    //  brandTestMasterModel = getBrandTestMaster(brandTestmdel);
+                    brandTestMasterModel = getBrandTestMaster(brandTestmdel, appPreferenceManager.getDSAProductResponseModel());
+                    CallAfterBranDAPIRes();
                 }
+            }
 
 //            getTestList();
 //            testList();

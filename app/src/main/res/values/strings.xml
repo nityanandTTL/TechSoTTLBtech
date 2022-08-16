@@ -354,6 +354,7 @@
     <string name="Apply_coupon">Apply Coupon</string>
 
     <string name="upload_selfie">Upload Selfie</string>
+    <string name="rescheduleOrderBlockMsg">This action is restricted. Please contact your L1 to reschedule</string>
 
 
 </resources>

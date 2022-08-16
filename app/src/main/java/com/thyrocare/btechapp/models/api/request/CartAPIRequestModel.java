@@ -13,34 +13,6 @@ import java.util.ArrayList;
  */
 
 public class CartAPIRequestModel implements Parcelable {
-    String VisitId;
-    String Distance;
-    ArrayList<CartRequestOrderModel> orders;
-    ArrayList<CartRequestBeneficiaryModel> beneficiaries;
-
-    public CartAPIRequestModel() {
-    }
-
-    protected CartAPIRequestModel(Parcel in) {
-        VisitId = in.readString();
-        Distance = in.readString();
-        orders = in.createTypedArrayList(CartRequestOrderModel.CREATOR);
-        beneficiaries = in.createTypedArrayList(CartRequestBeneficiaryModel.CREATOR);
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(VisitId);
-        dest.writeString(Distance);
-        dest.writeTypedList(orders);
-        dest.writeTypedList(beneficiaries);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
     public static final Creator<CartAPIRequestModel> CREATOR = new Creator<CartAPIRequestModel>() {
         @Override
         public CartAPIRequestModel createFromParcel(Parcel in) {
@@ -52,6 +24,45 @@ public class CartAPIRequestModel implements Parcelable {
             return new CartAPIRequestModel[size];
         }
     };
+    String VisitId;
+    String Distance;
+
+    public int getDisAmtDue() {
+        return DisAmtDue;
+    }
+
+    public void setDisAmtDue(int disAmtDue) {
+        DisAmtDue = disAmtDue;
+    }
+
+    int DisAmtDue;
+    ArrayList<CartRequestOrderModel> orders;
+    ArrayList<CartRequestBeneficiaryModel> beneficiaries;
+
+    public CartAPIRequestModel() {
+    }
+
+    protected CartAPIRequestModel(Parcel in) {
+        VisitId = in.readString();
+        Distance = in.readString();
+        DisAmtDue = in.readInt();
+        orders = in.createTypedArrayList(CartRequestOrderModel.CREATOR);
+        beneficiaries = in.createTypedArrayList(CartRequestBeneficiaryModel.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(VisitId);
+        dest.writeString(Distance);
+        dest.writeInt(DisAmtDue);
+        dest.writeTypedList(orders);
+        dest.writeTypedList(beneficiaries);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
     public String getVisitId() {
         return VisitId;

@@ -13,9 +13,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyle_OrderDetail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@id/tv_note_res"
-        android:layout_below="@+id/appbarLayout" />
+        android:layout_below="@+id/appbarLayout"
+        tools:listitem="@layout/start_arive_adpater_item_view" />
 
     <TextView
         android:id="@+id/txtNoRecord"

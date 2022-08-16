@@ -124,6 +124,9 @@ public class Global {
     public static String getCurrentDate() {
         return new SimpleDateFormat("dd-MM-yyyy").format(new Date());
     }
+    public static String getCurrentDateandTime() {
+        return new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
+    }
 
 
     public static void Storecurrenttime(Activity activity) {

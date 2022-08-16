@@ -158,6 +158,12 @@ public class InputUtils {
         }
         return false;
     }
+    public static boolean isNull(int number) {
+        if (number == 0){
+            return true;
+        }
+        return false;
+    }
 
     public static int parseInt(String strnumber) {
         int finalNumber = 0 ;

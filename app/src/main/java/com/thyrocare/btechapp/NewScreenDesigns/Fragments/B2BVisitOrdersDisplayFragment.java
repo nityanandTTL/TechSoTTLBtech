@@ -1,116 +1,39 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Fragments;
 
 
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PLEASE_WAIT;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
-import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
-import com.sdsmdg.tastytoast.TastyToast;
-import com.thyrocare.btechapp.Controller.GetOrderDetailsController;
-import com.thyrocare.btechapp.Controller.SendLatLongforOrderController;
-import com.thyrocare.btechapp.NewScreenDesigns.Activities.StartAndArriveActivity;
+import com.clevertap.android.sdk.CleverTapAPI;
 import com.thyrocare.btechapp.NewScreenDesigns.Adapters.All_VisitDisplayAdapter;
-import com.thyrocare.btechapp.NewScreenDesigns.Adapters.Btech_VisitDisplayAdapter;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConnectionDetector;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.LogUserActivityTagging;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.MessageLogger;
-import com.thyrocare.btechapp.NewScreenDesigns.Utils.StringUtils;
 import com.thyrocare.btechapp.R;
 import com.thyrocare.btechapp.Retrofit.GetAPIInterface;
-import com.thyrocare.btechapp.Retrofit.PostAPIInterface;
 import com.thyrocare.btechapp.Retrofit.RetroFit_APIClient;
 import com.thyrocare.btechapp.activity.HomeScreenActivity;
-import com.thyrocare.btechapp.delegate.ConfirmOrderReleaseDialogButtonClickedDelegate;
-import com.thyrocare.btechapp.delegate.refreshDelegate;
-import com.thyrocare.btechapp.dialog.ConfirmOrderPassDialog;
-import com.thyrocare.btechapp.dialog.ConfirmOrderReleaseDialog;
-import com.thyrocare.btechapp.dialog.ConfirmRequestReleaseDialog;
-import com.thyrocare.btechapp.dialog.RescheduleOrderDialog;
-import com.thyrocare.btechapp.models.api.request.OrderStatusChangeRequestModel;
-import com.thyrocare.btechapp.models.api.request.SetDispositionDataModel;
-import com.thyrocare.btechapp.models.api.response.BtechEstEarningsResponseModel;
-import com.thyrocare.btechapp.models.api.response.FetchOrderDetailsResponseModel;
 import com.thyrocare.btechapp.models.api.response.GetOrderDetailsResponseModel;
-import com.thyrocare.btechapp.models.data.BeneficiaryDetailsModel;
-import com.thyrocare.btechapp.models.data.DispositionDataModel;
-import com.thyrocare.btechapp.models.data.DispositionDetailsModel;
-import com.thyrocare.btechapp.models.data.KitsCountModel;
-import com.thyrocare.btechapp.models.data.OrderDetailsModel;
 import com.thyrocare.btechapp.models.data.OrderVisitDetailsModel;
-import com.thyrocare.btechapp.service.TrackerService;
-import com.thyrocare.btechapp.utils.api.Logger;
 import com.thyrocare.btechapp.utils.app.AppPreferenceManager;
 import com.thyrocare.btechapp.utils.app.BundleConstants;
-import com.thyrocare.btechapp.utils.app.GPSTracker;
 import com.thyrocare.btechapp.utils.app.Global;
-import com.thyrocare.btechapp.utils.app.InputUtils;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
-import application.ApplicationController;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -122,19 +45,17 @@ import retrofit2.Response;
 public class B2BVisitOrdersDisplayFragment extends AppCompatActivity {
 
     public static final String TAG_FRAGMENT = "VISIT_ORDERS_FRAGMENT";
-
+    TextView tv_toolbar;
+    Activity activity;
+    ImageView iv_home, iv_back;
+    LinearLayout ll_tab;
     private AppPreferenceManager appPreferenceManager;
     private RecyclerView recyOrderList;
     private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels = new ArrayList<>();
     private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels_RoutineOrders = new ArrayList<>();
     private ArrayList<OrderVisitDetailsModel> orderDetailsResponseModels_AayushmanOrders = new ArrayList<>();
     private TextView txtNoRecord;
-
     private Global global;
-    TextView tv_toolbar;
-    Activity activity;
-    ImageView iv_home, iv_back;
-    LinearLayout ll_tab;
     private ConnectionDetector connectionDetector;
 
 
@@ -168,6 +89,8 @@ public class B2BVisitOrdersDisplayFragment extends AppCompatActivity {
         iv_home = findViewById(R.id.iv_home);
         iv_back = findViewById(R.id.iv_back);
         tv_toolbar.setText("Visit Orders");
+        Constants.clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+
 
     }
 
@@ -229,6 +152,7 @@ public class B2BVisitOrdersDisplayFragment extends AppCompatActivity {
 
     private void setDataOnUI(GetOrderDetailsResponseModel allOrders) {
         if (allOrders.getGetVisitcount() != null && allOrders.getGetVisitcount().size() > 0) {
+            //setCleverTapEventForAllOrders(allOrders);
             All_VisitDisplayAdapter btech_VisitDisplayAdapter = new All_VisitDisplayAdapter(this, allOrders, activity);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(activity);
             recyOrderList.setLayoutManager(mLayoutManager);
@@ -236,6 +160,18 @@ public class B2BVisitOrdersDisplayFragment extends AppCompatActivity {
         } else {
             recyOrderList.setVisibility(View.GONE);
             txtNoRecord.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setCleverTapEventForAllOrders(GetOrderDetailsResponseModel allOrders) {
+        for (int i = 0; i < allOrders.getGetVisitcount().size(); i++) {
+            HashMap<String, Object> PeAllOrderEventMap = new HashMap<>();
+            PeAllOrderEventMap.put("Order ID", allOrders.getGetVisitcount().get(i).getVisitId());
+            PeAllOrderEventMap.put("Phlebo Phone No", appPreferenceManager.getLoginResponseModel().getMobile());
+            PeAllOrderEventMap.put("Order date and slot time", allOrders.getGetVisitcount().get(i).getAppointmentDate());
+            PeAllOrderEventMap.put("timestamp of event trigger", Global.getCurrentDateandTime());
+            PeAllOrderEventMap.put("order status", allOrders.getGetVisitcount().get(i).getStatus());
+            Constants.clevertapDefaultInstance.pushEvent("order_summary_order_slot", PeAllOrderEventMap);
         }
     }
 

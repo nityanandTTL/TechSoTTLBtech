@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Btech.iml" filepath="$PROJECT_DIR$/.idea/modules/Btech.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Btech.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Btech.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Btech.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Btech.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Btech.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Btech.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Btech.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Btech.app.unitTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/Btech.bil.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/Btech.bil.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/Btech.bil.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/Btech.bil.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/Btech.bil.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/Btech.bil.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TechSoBTechApp_TC_coupon_and_map_PE_events.iml" filepath="$PROJECT_DIR$/.idea/modules/TechSoBTechApp_TC_coupon_and_map_PE_events.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_TC_coupon_and_map_PE_events.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_TC_coupon_and_map_PE_events.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_TC_coupon_and_map_PE_events.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_TC_coupon_and_map_PE_events.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_TC_coupon_and_map_PE_events.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_TC_coupon_and_map_PE_events.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_TC_coupon_and_map_PE_events.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TechSoBTechApp_TC_coupon_and_map_PE_events.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp_TC_coupon_and_map_PE_events.bil.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp_TC_coupon_and_map_PE_events.bil.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp_TC_coupon_and_map_PE_events.bil.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp_TC_coupon_and_map_PE_events.bil.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp_TC_coupon_and_map_PE_events.bil.test.iml" filepath="$PROJECT_DIR$/.idea/modules/bil/TechSoBTechApp_TC_coupon_and_map_PE_events.bil.test.iml" />
     </modules>
   </component>
 </project>

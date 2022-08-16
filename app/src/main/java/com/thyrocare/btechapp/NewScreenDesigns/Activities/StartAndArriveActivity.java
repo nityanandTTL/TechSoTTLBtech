@@ -1,5 +1,15 @@
 package com.thyrocare.btechapp.NewScreenDesigns.Activities;
 
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CHECK_INTERNET_CONN;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CheckInternetConnectionMsg;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.NO_DATA_FOUND;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.OrdercontainonlyOneBeneficaryCannotremovedMsg;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
+import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
+import static com.thyrocare.btechapp.utils.app.AppConstants.MSG_SERVER_EXCEPTION;
+import static com.thyrocare.btechapp.utils.app.CommonUtils.isValidForEditing;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -49,6 +59,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.clevertap.android.sdk.CleverTapAPI;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -63,6 +74,7 @@ import com.thyrocare.btechapp.NewScreenDesigns.Adapters.StartArriveOrderDetailsA
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.B2BVisitOrdersDisplayFragment;
 import com.thyrocare.btechapp.NewScreenDesigns.Fragments.VisitOrdersDisplayFragment_new;
 import com.thyrocare.btechapp.NewScreenDesigns.Models.RequestModels.SendSMSAfterBenRemovedRequestModel;
+import com.thyrocare.btechapp.NewScreenDesigns.Utils.Constants;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.DateUtil;
 import com.thyrocare.btechapp.NewScreenDesigns.Utils.EncryptionUtils;
@@ -132,6 +144,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -141,16 +154,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CHECK_INTERNET_CONN;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CheckInternetConnectionMsg;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.NO_DATA_FOUND;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.OrdercontainonlyOneBeneficaryCannotremovedMsg;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
-import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
-import static com.thyrocare.btechapp.utils.app.AppConstants.MSG_SERVER_EXCEPTION;
-import static com.thyrocare.btechapp.utils.app.CommonUtils.isValidForEditing;
-
 
 public class StartAndArriveActivity extends AppCompatActivity {
 
@@ -158,12 +161,26 @@ public class StartAndArriveActivity extends AppCompatActivity {
     Global globalclass;
     ConnectionDetector cd;
     AppPreferenceManager appPreferenceManager;
-    private OrderVisitDetailsModel orderDetailsModel;
     TextView txt_amount;
     Button btn_start, btn_arrive, btn_Proceed;
     CardView lin_bottom;
     RecyclerView recyle_OrderDetail;
     TextView txtNoRecord;
+    LinearLayout ll_amt;
+    TextView txtAmountPayable, btnclose, txtTestsList;
+    Button btnOrderSubmit;
+    ArrayList<TestRateMasterModel> selectedTestsList = new ArrayList<>();
+    ArrayList<TestRateMasterModel> edit_selectedTestsList = new ArrayList<>();
+    RelativeLayout customSwipeButton2;
+    TextView tv_toolbar, tv_timerCount, tv_timerTxt, tv_order_release;
+    ImageView iv_back, iv_home;
+    String productType;
+    ArrayList<GetPETestResponseModel.DataDTO> peTestArraylist;
+    LinearLayout ll_timer, LL_swipe;
+    ArrayList<GetRemarksResponseModel> remarksArray;
+    CountDownTimer countDownTimer;
+    BottomSheetDialog bottomSheetOrderReschedule, bottomSheetOrderRelease;
+    private OrderVisitDetailsModel orderDetailsModel;
     private Intent FirebaselocationUpdateIntent;
     private GPSTracker gpsTracker;
     private StartArriveOrderDetailsAdapter startArriveOrderDetailsAdapter;
@@ -173,18 +190,13 @@ public class StartAndArriveActivity extends AppCompatActivity {
     // add edit ben dialog
     private Dialog bendialog;
     private boolean FlagADDEditBen = false;
-    LinearLayout ll_amt;
-    TextView txtAmountPayable, btnclose, txtTestsList;
-    Button btnOrderSubmit;
     private EditText edtBenAge, edtBenName;
     private ImageView imgBenGenderF, imgBenGenderM, imgReportHC, imgBenAddTests;
     private boolean isM = false;
     private boolean isRHC = false;
-    ArrayList<TestRateMasterModel> selectedTestsList = new ArrayList<>();
     private String SelectedTestCode = "";
     private int CallCartAPIFlag = 0;
     private boolean testListFlag;
-    ArrayList<TestRateMasterModel> edit_selectedTestsList = new ArrayList<>();
     private int PSelected_position;
     private OrderBookingRequestModel FinalSubmitDataModel;
     private int AddBenCartFlag = 0;
@@ -206,15 +218,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
     private int totalAmountPayable = 0;
     private String[] paymentItems;
     private int PaymentMode;
-    RelativeLayout customSwipeButton2;
-    TextView tv_toolbar, tv_timerCount, tv_timerTxt, tv_order_release;
-    ImageView iv_back, iv_home;
-    String productType;
-    ArrayList<GetPETestResponseModel.DataDTO> peTestArraylist;
-    LinearLayout ll_timer, LL_swipe;
-    ArrayList<GetRemarksResponseModel> remarksArray;
-    CountDownTimer countDownTimer;
-    BottomSheetDialog bottomSheetOrderReschedule, bottomSheetOrderRelease;
 
     @Override
     public void onBackPressed() {
@@ -251,7 +254,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
-        if (BundleConstants.PE_HARD_BLOCKING){
+        if (BundleConstants.PE_HARD_BLOCKING) {
             btn_Proceed.setEnabled(true);
             btn_Proceed.setVisibility(View.VISIBLE);
         }
@@ -460,6 +463,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
         } else {
             customSwipeButton2.setVisibility(View.VISIBLE);
         }
+        Constants.clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
 
         //Mith
         //fungible
@@ -858,7 +862,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     return false;
                 }
             }
-        } else if (value == 2 && !BundleConstants.PE_HARD_BLOCKING){
+        } else if (value == 2 && !BundleConstants.PE_HARD_BLOCKING) {
             for (int i = 0; i < orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().size(); i++) {
                 if (InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(i).getTestsCode())) {
                     btn_Proceed.setTextColor(getResources().getColor(R.color.gray));
@@ -1603,7 +1607,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                         globalclass.hideProgressDialog(mActivity);
                         FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
                         if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails() != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
-                            if (BundleConstants.PE_HARD_BLOCKING){
+                            if (BundleConstants.PE_HARD_BLOCKING) {
                                 btn_Proceed.setEnabled(true);
                                 btn_Proceed.setTextColor(getResources().getColor(R.color.bg_new_color));
                                 btn_Proceed.setVisibility(View.VISIBLE);
@@ -1698,7 +1702,23 @@ public class StartAndArriveActivity extends AppCompatActivity {
             }*/
             //   initData(Status);
         }
+        //TODO clevertao event-----------------------------
+       /* if (orderDetailsModel != null) {
+            setArriveOrderCleverTapEvent(orderDetailsModel);
+        }*/
     }
+
+    private void setArriveOrderCleverTapEvent(OrderVisitDetailsModel orderDetailsModel) {
+        HashMap<String, Object> arriveOrderCleverTapEvent = new HashMap<>();
+        arriveOrderCleverTapEvent.put("Order ID", orderDetailsModel.getVisitId());
+        arriveOrderCleverTapEvent.put("Phlebo Phone No", appPreferenceManager.getLoginResponseModel().getMobile());
+        arriveOrderCleverTapEvent.put("Order date and slot time", orderDetailsModel.getAppointmentDate());
+        arriveOrderCleverTapEvent.put("slot interval", orderDetailsModel.getSlot());
+        arriveOrderCleverTapEvent.put("timestamp of event trigger", Global.getCurrentDateandTime());
+        arriveOrderCleverTapEvent.put("order status", orderDetailsModel.getAllOrderdetails().get(0).getStatus());
+        Constants.clevertapDefaultInstance.pushEvent("order_arrive_order_slot", arriveOrderCleverTapEvent);
+    }
+    //TODO clevertao event-----------------------------
 
     private void setRefreshActivity() {
         Intent intentNavigate = new Intent(mActivity, StartAndArriveActivity.class);
@@ -1732,9 +1752,9 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     customSwipeButton2.setVisibility(View.GONE);
                 }
 
-                if (InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())){
+                if (InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getBenMaster().get(0).getTestsCode())) {
                     txt_amount.setText(mActivity.getResources().getString(R.string.rupee_symbol) + " " + "0" + "/-");
-                }else{
+                } else {
                     txt_amount.setText("Paid");
                 }
             } else {
@@ -1814,6 +1834,17 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
                 @Override
                 public void onCallCustomer() {
+                   /* if (isNetworkAvailable(mActivity) && cd.isConnectingToInternet()) {
+                        if (!InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getPhone())) {
+                            openTwoContactNoDialog(orderDetailsModel);
+                        } else {
+                            CallgetDispositionApi(orderDetailsModel);
+                            CallPatchRequestAPI(orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+                        }
+                    } else {
+                        TastyToast.makeText(mActivity, CheckInternetConnectionMsg, TastyToast.LENGTH_LONG, TastyToast.INFO);
+                    }*/
+
                     if (isNetworkAvailable(mActivity)) {
                         CallgetDispositionApi(orderDetailsModel);
                     } else {
@@ -1821,10 +1852,11 @@ public class StartAndArriveActivity extends AppCompatActivity {
                     }
 
                     if (cd.isConnectingToInternet()) {
-                        CallPatchRequestAPI(orderDetailsModel);
+                        CallPatchRequestAPI(orderDetailsModel,orderDetailsModel.getAllOrderdetails().get(0).getMobile());
                     } else {
                         Toast.makeText(mActivity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
                     }
+
                 }
             });
 
@@ -1842,9 +1874,42 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     }
 
-    private void CallPatchRequestAPI(OrderVisitDetailsModel orderVisitDetailsModels) {
+    private void openTwoContactNoDialog(OrderVisitDetailsModel orderDetailsModel) {
+        Dialog dialog = new Dialog(mActivity);
+        dialog.setContentView(R.layout.dialog_twocontacts);
+        dialog.setCancelable(true);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        TextView tv_defaultphone, tv_optionalMobile;
+        tv_defaultphone = dialog.findViewById(R.id.tv_defaultMobile);
+        tv_optionalMobile = dialog.findViewById(R.id.tv_optionalMobile);
+
+        InputUtils.setTextToTextView(tv_defaultphone, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+        InputUtils.setTextToTextView(tv_optionalMobile, orderDetailsModel.getAllOrderdetails().get(0).getPhone());
+
+        tv_defaultphone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                CallgetDispositionApi(orderDetailsModel);
+                CallPatchRequestAPI(orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+            }
+        });
+        tv_optionalMobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                CallgetDispositionApi(orderDetailsModel);
+                CallPatchRequestAPI(orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getPhone());
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void CallPatchRequestAPI(OrderVisitDetailsModel orderVisitDetailsModels, String str_SelectedMobileNumber) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(mActivity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallpatchRequestAPI(appPreferenceManager.getLoginResponseModel().getUserID(), orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile(), orderVisitDetailsModels.getVisitId());
+        Call<String> responseCall = apiInterface.CallpatchRequestAPI(appPreferenceManager.getLoginResponseModel().getUserID(), str_SelectedMobileNumber, orderVisitDetailsModels.getVisitId());
         globalclass.showProgressDialog(mActivity, mActivity.getResources().getString(R.string.loading));
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -2227,103 +2292,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
         startActivity(getIntent());
     }
 
-    public class Btech_AsyncLoadBookingFreqApi extends AsyncTask<Void, Void, String> {
-
-        SetDispositionDataModel setDispositionDataModel;
-        private int statusCode;
-
-        public Btech_AsyncLoadBookingFreqApi(SetDispositionDataModel nm) {
-            this.setDispositionDataModel = nm;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            globalclass.showProgressDialog(mActivity, ConstantsMessages.PLEASE_WAIT);
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-
-            HttpClient httpClient = new DefaultHttpClient();
-            StringBuilder builder = new StringBuilder();
-            String json = "";
-            try {
-                HttpPost request = new HttpPost(EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD)) + "/api/OrderAllocation/MediaUpload");
-
-                MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-                entity.addPart("AppId", new StringBody("" + setDispositionDataModel.getAppId()));
-                entity.addPart("DispId", new StringBody("" + setDispositionDataModel.getDispId()));
-                entity.addPart("FrmNo", new StringBody("" + setDispositionDataModel.getFrmNo()));
-                entity.addPart("OrderNo", new StringBody("" + setDispositionDataModel.getOrderNo()));
-                entity.addPart("Remarks", new StringBody("" + setDispositionDataModel.getRemarks()));
-                entity.addPart("ToNo", new StringBody("" + setDispositionDataModel.getToNo()));
-                entity.addPart("UserId", new StringBody("" + setDispositionDataModel.getUserId()));
-
-                request.setEntity(entity);
-                HttpResponse response = httpClient.execute(request);
-                StatusLine statusLine = response.getStatusLine();
-                statusCode = statusLine.getStatusCode();
-                if (statusCode == 200) {
-                    HttpEntity responseEntity = response.getEntity();
-                    InputStream content = responseEntity.getContent();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
-                    json = builder.toString();
-                    MessageLogger.PrintMsg("Nitya >> " + json);
-
-                } else {
-                    HttpEntity responseEntity = response.getEntity();
-                    InputStream content = responseEntity.getContent();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
-                    json = builder.toString();
-                    MessageLogger.PrintMsg("Nitya >> " + json);
-                }
-
-            } catch (IllegalStateException e) {
-                MessageLogger.LogError("FileUpload Illegal", e.getMessage());
-            } catch (IOException e) {
-                MessageLogger.LogError("FileUpload IOException ", e.getMessage());
-            } catch (Exception e) {
-                MessageLogger.LogError("Exception ", e.getMessage());
-            } finally {
-                // close connections
-                httpClient.getConnectionManager().shutdown();
-            }
-
-            return json;
-        }
-
-        @Override
-        protected void onPostExecute(String res) {
-            super.onPostExecute(res);
-            try {
-                globalclass.hideProgressDialog(mActivity);
-                if (statusCode == 200) {
-                    if (dialog_ready != null) {
-                        if (dialog_ready.isShowing()) {
-                            dialog_ready.dismiss();
-                        }
-                    }
-                    TastyToast.makeText(mActivity, "" + res, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-                } else {
-                    TastyToast.makeText(mActivity, "" + res, TastyToast.LENGTH_LONG, TastyToast.ERROR);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private void onReleaseButtonClicked() {
 
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mActivity, R.style.BottomSheetTheme);
@@ -2588,40 +2556,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
     }
 
-    private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
-
-        @Override
-        public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark, String date) {
-
-            if (cd.isConnectingToInternet()) {
-                callOrderStatusChangeApi(11, "Reschedule", remark, date);
-            } else {
-                Toast.makeText(mActivity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onCancelButtonClicked() {
-
-        }
-    }
-
-    public class CConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
-        @Override
-        public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
-            if (cd.isConnectingToInternet()) {
-                callOrderStatusChangeApi(27, "Manipulation", remarks, "");
-            } else {
-                TastyToast.makeText(mActivity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
-            }
-        }
-
-        @Override
-        public void onCancelButtonClicked() {
-
-        }
-    }
-
     private void CallServiceUpdateAPI() {
 
         ServiceUpdateRequestModel serviceUpdateRequestModel = new ServiceUpdateRequestModel();
@@ -2693,40 +2627,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
     private void DisplayTestListDialog(GetTestListResponseModel testListResponseModel) {
         CustomDialogClass cdd = new CustomDialogClass(mActivity, testListResponseModel);
         cdd.show();
-    }
-
-    private class CustomDialogClass extends Dialog {
-
-        private Activity c;
-        private Dialog d;
-        private Button yes, no;
-        private TextView tv_test;
-        private LinearLayout ll_tests;
-        private GetTestListResponseModel testListResponseModel;
-
-        public CustomDialogClass(Activity mActivity, GetTestListResponseModel testListResponseModel) {
-            super(mActivity);
-            this.c = mActivity;
-            this.testListResponseModel = testListResponseModel;
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.item_test_list_display);
-            ll_tests = (LinearLayout) findViewById(R.id.ll_tests);
-            iflateTestGroupName(ll_tests, testListResponseModel);
-            ImageView img_close = (ImageView) findViewById(R.id.img_close);
-            img_close.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
-
-        }
-
     }
 
     private void iflateTestGroupName(LinearLayout ll_tests, GetTestListResponseModel testListResponseModel) {
@@ -3066,7 +2966,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
         });
     }
 
-
     private void callOrderStatusChangeApi(int status, final String strButton, String remarks, String date) {
 
         OrderStatusChangeRequestModel orderStatusChangeRequestModel = new OrderStatusChangeRequestModel();
@@ -3274,7 +3173,6 @@ public class StartAndArriveActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    // TODO ADD and Edit Ben Functionality-------
 
     private void CallsendOTPAPIforOrderEdit(final String Action, final OrderVisitDetailsModel orderVisitDetailsModel, final String orderNo, final int finalBenId) {
 
@@ -3424,6 +3322,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
     private void displayDelayTimer(OrderVisitDetailsModel orderVisitDetailsModel) {
 
     }
+    // TODO ADD and Edit Ben Functionality-------
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -3468,7 +3367,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                 public void onResponse(Call<FetchOrderDetailsResponseModel> call, Response<FetchOrderDetailsResponseModel> response) {
                     FetchOrderDetailsResponseModel fetchOrderDetailsResponseModel = response.body();
                     if (fetchOrderDetailsResponseModel != null && fetchOrderDetailsResponseModel.getOrderVisitDetails() != null && fetchOrderDetailsResponseModel.getOrderVisitDetails().size() > 0) {
-                        if (BundleConstants.PE_HARD_BLOCKING){
+                        if (BundleConstants.PE_HARD_BLOCKING) {
                             btn_Proceed.setEnabled(true);
                             btn_Proceed.setTextColor(getResources().getColor(R.color.bg_new_color));
                             btn_Proceed.setVisibility(View.VISIBLE);
@@ -3531,7 +3430,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                         } else {
                                             ll_timer.setVisibility(View.GONE);
                                         }
-                                    }else {
+                                    } else {
                                         ll_timer.setVisibility(View.GONE);
                                     }
                                 }
@@ -3551,5 +3450,170 @@ public class StartAndArriveActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 //        initTimer();
+    }
+
+    public class Btech_AsyncLoadBookingFreqApi extends AsyncTask<Void, Void, String> {
+
+        SetDispositionDataModel setDispositionDataModel;
+        private int statusCode;
+
+        public Btech_AsyncLoadBookingFreqApi(SetDispositionDataModel nm) {
+            this.setDispositionDataModel = nm;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            globalclass.showProgressDialog(mActivity, ConstantsMessages.PLEASE_WAIT);
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            HttpClient httpClient = new DefaultHttpClient();
+            StringBuilder builder = new StringBuilder();
+            String json = "";
+            try {
+                HttpPost request = new HttpPost(EncryptionUtils.Dcrp_Hex(mActivity.getString(R.string.SERVER_BASE_API_URL_PROD)) + "/api/OrderAllocation/MediaUpload");
+
+                MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+                entity.addPart("AppId", new StringBody("" + setDispositionDataModel.getAppId()));
+                entity.addPart("DispId", new StringBody("" + setDispositionDataModel.getDispId()));
+                entity.addPart("FrmNo", new StringBody("" + setDispositionDataModel.getFrmNo()));
+                entity.addPart("OrderNo", new StringBody("" + setDispositionDataModel.getOrderNo()));
+                entity.addPart("Remarks", new StringBody("" + setDispositionDataModel.getRemarks()));
+                entity.addPart("ToNo", new StringBody("" + setDispositionDataModel.getToNo()));
+                entity.addPart("UserId", new StringBody("" + setDispositionDataModel.getUserId()));
+
+                request.setEntity(entity);
+                HttpResponse response = httpClient.execute(request);
+                StatusLine statusLine = response.getStatusLine();
+                statusCode = statusLine.getStatusCode();
+                if (statusCode == 200) {
+                    HttpEntity responseEntity = response.getEntity();
+                    InputStream content = responseEntity.getContent();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    json = builder.toString();
+                    MessageLogger.PrintMsg("Nitya >> " + json);
+
+                } else {
+                    HttpEntity responseEntity = response.getEntity();
+                    InputStream content = responseEntity.getContent();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    json = builder.toString();
+                    MessageLogger.PrintMsg("Nitya >> " + json);
+                }
+
+            } catch (IllegalStateException e) {
+                MessageLogger.LogError("FileUpload Illegal", e.getMessage());
+            } catch (IOException e) {
+                MessageLogger.LogError("FileUpload IOException ", e.getMessage());
+            } catch (Exception e) {
+                MessageLogger.LogError("Exception ", e.getMessage());
+            } finally {
+                // close connections
+                httpClient.getConnectionManager().shutdown();
+            }
+
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(String res) {
+            super.onPostExecute(res);
+            try {
+                globalclass.hideProgressDialog(mActivity);
+                if (statusCode == 200) {
+                    if (dialog_ready != null) {
+                        if (dialog_ready.isShowing()) {
+                            dialog_ready.dismiss();
+                        }
+                    }
+                    TastyToast.makeText(mActivity, "" + res, TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                } else {
+                    TastyToast.makeText(mActivity, "" + res, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class OrderRescheduleDialogButtonClickedDelegateResult implements OrderRescheduleDialogButtonClickedDelegate {
+
+        @Override
+        public void onOkButtonClicked(OrderDetailsModel orderDetailsModel, String remark, String date) {
+
+            if (cd.isConnectingToInternet()) {
+                callOrderStatusChangeApi(11, "Reschedule", remark, date);
+            } else {
+                Toast.makeText(mActivity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
+    }
+
+    public class CConfirmOrderReleaseDialogButtonClickedDelegateResult implements ConfirmOrderReleaseDialogButtonClickedDelegate {
+        @Override
+        public void onOkButtonClicked(OrderVisitDetailsModel orderVisitDetailsModel, String remarks) {
+            if (cd.isConnectingToInternet()) {
+                callOrderStatusChangeApi(27, "Manipulation", remarks, "");
+            } else {
+                TastyToast.makeText(mActivity, getString(R.string.internet_connetion_error), TastyToast.LENGTH_LONG, TastyToast.ERROR);
+            }
+        }
+
+        @Override
+        public void onCancelButtonClicked() {
+
+        }
+    }
+
+    private class CustomDialogClass extends Dialog {
+
+        private Activity c;
+        private Dialog d;
+        private Button yes, no;
+        private TextView tv_test;
+        private LinearLayout ll_tests;
+        private GetTestListResponseModel testListResponseModel;
+
+        public CustomDialogClass(Activity mActivity, GetTestListResponseModel testListResponseModel) {
+            super(mActivity);
+            this.c = mActivity;
+            this.testListResponseModel = testListResponseModel;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.item_test_list_display);
+            ll_tests = (LinearLayout) findViewById(R.id.ll_tests);
+            iflateTestGroupName(ll_tests, testListResponseModel);
+            ImageView img_close = (ImageView) findViewById(R.id.img_close);
+            img_close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+
+        }
+
     }
 }

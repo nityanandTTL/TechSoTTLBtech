@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_margin="@dimen/_8sdp"
+    android:background="@drawable/rounded_background_green"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="@dimen/_5sdp"
+    app:cardCornerRadius="@dimen/_20sdp"
+    app:layout_anchorGravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Please select customer number"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15sdp" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_8sdp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:id="@+id/ll_maincall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background_green"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_primaryNumber"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_twonumbers" />
+
+            <TextView
+                android:id="@+id/tv_defaultMobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@+id/iv_primaryNumber"
+                android:text="8451079482"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_maincall"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/rounded_background_green"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_secondaryNumber"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_below="@+id/iv_primaryNumber"
+                android:src="@drawable/ic_twonumbers" />
+
+            <TextView
+                android:id="@+id/tv_optionalMobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@+id/iv_primaryNumber"
+                android:text="8451079482"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

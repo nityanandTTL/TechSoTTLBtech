@@ -3,6 +3,36 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/drawable/drawable_line.xml" value="0.302" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/a.xml" value="0.17447916666666666" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/activity_add_edit_benificary.xml" value="0.1" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/activity_add_new_beneficiary_order.xml" value="0.1" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/activity_home_screen.xml" value="0.35520833333333335" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/activity_start_and_arrive.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/custom_deviceid_dailog.xml" value="0.22401315789473683" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/dialog_batchonebatchtwo_d.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/dialog_two_contact.xml" value="0.35" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/dialog_two_contacts.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/dialog_twocontacts.xml" value="0.18" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/imagepopup_dialog.xml" value="0.22401315789473683" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/layout_btms_coupon.xml" value="0.22401315789473683" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/layout_coupon_item.xml" value="0.15296052631578946" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp TC coupon and map PE events/app/src/main/res/layout/start_arive_adpater_item_view.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/activity_add_edit_benificary.xml" value="0.33" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/activity_add_remove_test_profile.xml" value="0.3421875" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/activity_home_screen.xml" value="0.20729166666666668" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/activity_navigation_map_display.xml" value="0.3546875" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/activity_start_and_arrive.xml" value="0.3546875" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/btech_visit_item.xml" value="0.3546875" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/fragment_tsp__orders_display_new.xml" value="0.33" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/fragment_visit_orders_display.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/fragment_visit_orders_display_new.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/layout_btms_coupon.xml" value="0.35520833333333335" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/layout_coupon_item.xml" value="0.35520833333333335" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/layout_new_order_release_item.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/layout_slot_date_item.xml" value="0.35104166666666664" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/logout_bottomsheet.xml" value="0.5" />
+        <entry key="..\:/Users/T0763/Desktop/TechSoBTechApp hub drop/app/src/main/res/layout/start_arive_adpater_item_view.xml" value="0.3546875" />
         <entry key="..\:/Users/T0763/GIT/TechSoWenBTech GIT/app/src/main/res/layout/activity_add_edit_benificary.xml" value="0.35104166666666664" />
         <entry key="..\:/Users/T0763/GIT/TechSoWenBTech GIT/app/src/main/res/layout/activity_add_new_beneficiary_order.xml" value="0.35104166666666664" />
         <entry key="..\:/Users/T0763/GIT/TechSoWenBTech GIT/app/src/main/res/layout/barcode_scan_viewpager_item.xml" value="0.35104166666666664" />
@@ -15,6 +45,7 @@
         <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/activity_start_and_arrive.xml" value="0.25" />
         <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/fragment_schedule_your_day1.xml" value="0.35520833333333335" />
         <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/fragment_visit_orders_display.xml" value="0.3546875" />
+        <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/logout_bottomsheet.xml" value="0.19895833333333332" />
         <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/start_arive_adpater_item_view.xml" value="0.2421875" />
         <entry key="..\:/Users/T0763/StudioProjects/TechSoBTechApp/app/src/main/res/layout/validate_otp_dialog.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/activity_add_edit_benificary.xml" value="0.23958333333333334" />
@@ -37,7 +68,6 @@
         <entry key="app/src/main/res/layout/barcode_scan_viewpager_item.xml" value="0.335" />
         <entry key="app/src/main/res/layout/btech_visit_item.xml" value="0.20092592592592592" />
         <entry key="app/src/main/res/layout/btechwithhub_fragment_btech_collections_list.xml" value="0.22395833333333334" />
-        <entry key="app/src/main/res/layout/custom_toast.xml" value="0.23958333333333334" />
         <entry key="app/src/main/res/layout/default_toolbar.xml" value="0.23958333333333334" />
         <entry key="app/src/main/res/layout/fragment_btech_collections_list.xml" value="0.23958333333333334" />
         <entry key="app/src/main/res/layout/fragment_visit_orders_display.xml" value="0.20092592592592592" />

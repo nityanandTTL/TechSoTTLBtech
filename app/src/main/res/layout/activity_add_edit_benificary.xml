@@ -191,10 +191,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_weight="2"
                     android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:gravity="start"
-                    android:layout_weight="2"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:padding="@dimen/_2sdp"
                     android:text="@string/add_edit_test_list_message"
@@ -205,8 +205,8 @@
                     android:id="@+id/img_beneficiary_action_edit_tests"
                     android:layout_width="48dp"
                     android:layout_height="27dp"
-                    android:layout_weight="0.5"
                     android:layout_gravity="center|right"
+                    android:layout_weight="0.5"
 
                     app:srcCompat="@drawable/ic_baseline_edit" />
             </LinearLayout>
@@ -335,11 +335,12 @@
                 <ImageView
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
+                    android:layout_gravity="center|center_vertical"
                     android:src="@drawable/discount_icon" />
 
                 <TextView
                     android:id="@+id/txt_coupons"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/_4sdp"
@@ -353,10 +354,11 @@
 
                 <TextView
                     android:id="@+id/txt_ViewRemove_switch"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="end|center"
                     android:layout_weight="0.6"
+                    android:gravity="end"
                     android:text="View Offers"
                     android:textColor="@color/black"
                     android:textStyle="bold" />

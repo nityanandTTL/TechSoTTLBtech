@@ -93,11 +93,7 @@ public class LoginActivity extends AppCompatActivity {
             if (category==Constants.LogoutID)
                 new LogUserActivityTagging(mActivity, "LOGOUT", "");
         }
-        if (getIntent().hasExtra("ScreenCategory")) {
-            int category = getIntent().getExtras().getInt("ScreenCategory");
-            if (category == Constants.LogoutID)
-                new LogUserActivityTagging(mActivity, "LOGOUT", "");
-        }
+
         initview();
         initlistener();
 
@@ -253,10 +249,8 @@ public class LoginActivity extends AppCompatActivity {
 
         new LogUserActivityTagging(mActivity, LOGIN, "");
         if (responseModel != null) {
-
             FirebaseMessaging.getInstance().unsubscribeFromTopic(Constants.Logout_Topic);
             FirebaseMessaging.getInstance().subscribeToTopic(Constants.Logout_Topic);
-
             //Btech Clevertap Mith
             setCleverTapLoginDetails(responseModel);
             //btech_hub
@@ -312,7 +306,8 @@ public class LoginActivity extends AppCompatActivity {
     private void setCleverTapLoginDetails(LoginResponseModel responseModel) {
         HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
         profileUpdate.put("Name", responseModel.getName());    // String
-        profileUpdate.put("Identity", responseModel.getMobile());      // String or number
+/*        profileUpdate.put("Identity", responseModel.getMobile());    */  // String or number
+        profileUpdate.put("Identity", "8451079482");      // String or number
         profileUpdate.put("Email", responseModel.getEmailId()); // Email address of the user
         profileUpdate.put("Phone", "+91" + responseModel.getMobile());   // Phone (with the country code, starting with +)
 // optional fields. controls whether the user will be sent email, push etc.
@@ -323,6 +318,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (Constants.clevertapDefaultInstance != null) {
             Constants.clevertapDefaultInstance.onUserLogin(profileUpdate);
+            System.out.println("CLEVERTAP ID>>>>>>>>>>>"+Constants.clevertapDefaultInstance.getCleverTapID());
         }
     }
 
