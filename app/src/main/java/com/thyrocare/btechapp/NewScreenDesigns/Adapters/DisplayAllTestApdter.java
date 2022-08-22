@@ -72,7 +72,7 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
 
     }
 
-    public DisplayAllTestApdter(Activity activity, boolean pePartner, ArrayList<GetPETestResponseModel.DataDTO> peTestRateModelArry, ArrayList<GetPETestResponseModel.DataDTO> peSelectedTests) {
+    public DisplayAllTestApdter(Activity activity, boolean pePartner, ArrayList<GetPETestResponseModel.DataDTO> peTestRateModelArry, ArrayList<GetPETestResponseModel.DataDTO> peSelectedTests, boolean isM) {
         this.activity = activity;
         appPreferenceManager = new AppPreferenceManager(activity);
         globalClass = new Global(activity);
@@ -80,6 +80,7 @@ public class DisplayAllTestApdter extends RecyclerView.Adapter<DisplayAllTestApd
         this.peFilteredList = peTestRateModelArry;
         this.peSelectedTests = peSelectedTests;
         flag = 2;
+        this.isM=isM;
         isPEpartner = pePartner;
     }
 

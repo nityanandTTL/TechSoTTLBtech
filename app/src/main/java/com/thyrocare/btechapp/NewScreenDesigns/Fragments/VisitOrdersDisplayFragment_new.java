@@ -6,6 +6,7 @@ import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.PL
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SOMETHING_WENT_WRONG;
 import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 import static com.thyrocare.btechapp.utils.api.NetworkUtils.isNetworkAvailable;
+import static com.thyrocare.btechapp.utils.app.OtpListenerUtil.mActivity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -286,7 +287,7 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         peAddON = getIntent().getBooleanExtra(BundleConstants.PEADDON, false);
         orderPosition = getIntent().getIntExtra(BundleConstants.POSITION, 0);
         System.out.println("" + orderRescheduleFlag);
-        Constants.clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+        Constants.clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(activity);
     }
 
     private void setListener() {
@@ -794,10 +795,15 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    if (connectionDetector.isConnectingToInternet()) {
-                        CallPatchRequestAPI(orderVisitDetailsModels);
+                    if (isNetworkAvailable(activity) && connectionDetector.isConnectingToInternet()) {
+                        if (!InputUtils.isNull(orderVisitDetailsModels.getAllOrderdetails().get(0).getPhone())) {
+                            openTwoContactNoDialog(orderVisitDetailsModels);
+                        } else {
+                            CallPatchRequestAPI(orderVisitDetailsModels, orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile());
+                            CallgetDispositionApi(orderVisitDetailsModels);
+                        }
                     } else {
-                        Toast.makeText(activity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
+                        TastyToast.makeText(mActivity, CheckInternetConnectionMsg, TastyToast.LENGTH_LONG, TastyToast.INFO);
                     }
 
                 }
@@ -861,9 +867,40 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
         }
     }
 
-    private void CallPatchRequestAPI(OrderVisitDetailsModel orderVisitDetailsModels) {
+    private void openTwoContactNoDialog(OrderVisitDetailsModel orderDetailsModel) {
+        Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.dialog_twocontacts);
+        dialog.setCancelable(true);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        TextView tv_defaultphone, tv_optionalMobile;
+        tv_defaultphone = dialog.findViewById(R.id.tv_defaultMobile);
+        tv_optionalMobile = dialog.findViewById(R.id.tv_optionalMobile);
+
+        tv_defaultphone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                CallPatchRequestAPI(orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+                CallgetDispositionApi(orderDetailsModel);
+
+            }
+        });
+        tv_optionalMobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                CallPatchRequestAPI(orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getPhone());
+                CallgetDispositionApi(orderDetailsModel);
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void CallPatchRequestAPI(OrderVisitDetailsModel orderVisitDetailsModels, String mobile) {
         PostAPIInterface apiInterface = RetroFit_APIClient.getInstance().getClient(activity, EncryptionUtils.Dcrp_Hex(getString(R.string.SERVER_BASE_API_URL_PROD))).create(PostAPIInterface.class);
-        Call<String> responseCall = apiInterface.CallpatchRequestAPI(appPreferenceManager.getLoginResponseModel().getUserID(), orderVisitDetailsModels.getAllOrderdetails().get(0).getMobile(), orderVisitDetailsModels.getVisitId());
+        Call<String> responseCall = apiInterface.CallpatchRequestAPI(appPreferenceManager.getLoginResponseModel().getUserID(), mobile, orderVisitDetailsModels.getVisitId());
         global.showProgressDialog(activity, activity.getResources().getString(R.string.loading));
         responseCall.enqueue(new Callback<String>() {
             @Override
@@ -911,10 +948,15 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
     }
 
     public void callgetDispositionData(OrderVisitDetailsModel orderVisitDetailsModel) {
-        if (isNetworkAvailable(activity)) {
-            CallgetDispositionApi(orderVisitDetailsModel);
+        if (isNetworkAvailable(activity) && connectionDetector.isConnectingToInternet()) {
+            if (!InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getPhone())) {
+                openTwoContactNoDialog(orderVisitDetailsModel);
+            } else {
+                CallPatchRequestAPI(orderVisitDetailsModel, orderVisitDetailsModel.getAllOrderdetails().get(0).getMobile());
+                CallgetDispositionApi(orderVisitDetailsModel);
+            }
         } else {
-            TastyToast.makeText(activity, "Check Internet Connection..", TastyToast.LENGTH_LONG, TastyToast.INFO);
+            TastyToast.makeText(mActivity, CheckInternetConnectionMsg, TastyToast.LENGTH_LONG, TastyToast.INFO);
         }
     }
 
@@ -1289,10 +1331,10 @@ public class VisitOrdersDisplayFragment_new extends AppCompatActivity {
 //                            BundleConstants.PEDSAOrder = orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder();
                             appPreferenceManager.setPE_DSA(orderVisitDetailsModel.getAllOrderdetails().get(0).isPEDSAOrder());
                             //fungible
-                            if ((appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()))
-                           /* (InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()) || InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude())
+                            if /*((appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()))*/
+                            (InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude()) || InputUtils.isNull(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude())
                                     || (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getLatitude(), "0.00000000") || (InputUtils.CheckEqualIgnoreCase(orderVisitDetailsModel.getAllOrderdetails().get(0).getLongitude(), "0.00000000")))
-                            )*/ {
+                            ) {
 //                            if (BundleConstants.isPEPartner || BundleConstants.PEDSAOrder) {
 //                            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                                 ProceedToArriveScreen(orderVisitDetailsModel, false);

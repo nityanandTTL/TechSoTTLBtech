@@ -490,12 +490,12 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
         imgBenAddTests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (validateforAddTest())
-                if (FlagADDEditBen) {
-                    CallEditTestList(true);
-                } else {
-                    CallEditTestList(false);
-                }
+                if (validateforAddTest())
+                    if (FlagADDEditBen) {
+                        CallEditTestList(true);
+                    } else {
+                        CallEditTestList(false);
+                    }
             }
         });
 
@@ -2154,6 +2154,7 @@ public class AddEditBenificaryActivity extends AppCompatActivity {
                 intent.putExtra(BundleConstants.VISIT_ORDER_DETAILS_MODEL, orderVisitDetailsModel);
                 intent.putParcelableArrayListExtra(BundleConstants.PE_TEST_LIST_MODEL, peTestArraylist);
                 intent.putExtra("IsAddBen", FlagADDEditBen);
+                intent.putExtra("IS_MALE", isM);
                 startActivityForResult(intent, BundleConstants.ADDEDITTESTREQUESTCODE);
             }
 //fungible

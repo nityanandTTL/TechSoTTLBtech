@@ -1,8 +1,7 @@
 package com.thyrocare.btechapp.NewScreenDesigns;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CheckInternetConnectionMsg;
+import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -18,6 +17,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.thyrocare.btechapp.Controller.PEAuthorizationController;
@@ -48,42 +51,60 @@ import java.util.Set;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.CheckInternetConnectionMsg;
-import static com.thyrocare.btechapp.NewScreenDesigns.Utils.ConstantsMessages.SomethingWentwrngMsg;
-
 public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
+    ArrayList<TestRateMasterModel> selectedTestsList = new ArrayList<>();
+    ArrayList<GetPETestResponseModel.DataDTO> peselectedTestsList = new ArrayList<>();
+    ArrayList<TestRateMasterModel> edit_selectedTestsList = new ArrayList<>();
+    ArrayList<GetPETestResponseModel.DataDTO> newPETestList = new ArrayList<>();
+    String pincode;
+    int totalRate = 0;
+    int ArraySize;
+    ;
+    String selectedTest = "";
+    ArrayList<GetPETestResponseModel.DataDTO> peTestArraylist;
+    ArrayList<GetPETestResponseModel.DataDTO> newPETestArray = new ArrayList<>();
+    PEAuthorizationController peAuthorizationController;
+    String productType = "";
     private Activity mActivity;
     private Global globalclass;
     private ConnectionDetector cd;
     private GPSTracker gpsTracker;
     private AppPreferenceManager appPreferenceManager;
     private SearchManager searchManager;
-    private TextView btnClose, tv_Test, tv_Profile, tv_POP, tv_offers, tvTestName, tvAppRate, tv_noDatafound, tv_recommanded;;
+    private TextView btnClose, tv_Test, tv_Profile, tv_POP, tv_offers, tvTestName, tvAppRate, tv_noDatafound, tv_recommanded;
     private Button btnSave;
     private OrderVisitDetailsModel orderVisitDetailsModel;
     private boolean FlagADDEditBen = true;
     private boolean isM = false;
     private boolean isRHC = false;
-    ArrayList<TestRateMasterModel> selectedTestsList = new ArrayList<>();
-    ArrayList<GetPETestResponseModel.DataDTO> peselectedTestsList = new ArrayList<>();
-    ArrayList<TestRateMasterModel> edit_selectedTestsList = new ArrayList<>();
-    ArrayList<GetPETestResponseModel.DataDTO> newPETestList = new ArrayList<>();
     private EditText ed_Search;
     private LinearLayout lin_profileCategory, lin_selectedTest;
     private RecyclerView recycle_TestList;
     private DisplayAllTestApdter displayAllTestApdter;
     private BrandTestMasterModel brandTestMasterModel;
     private ArrayList<BeneficiaryDetailsModel> benMastersArray;
-    String pincode;
-    int totalRate = 0;
-    int ArraySize;
-    String selectedTest = "";
     private boolean test_edit_PE;
-    ArrayList<GetPETestResponseModel.DataDTO> peTestArraylist;
-    ArrayList<GetPETestResponseModel.DataDTO> newPETestArray = new ArrayList<>();
-    PEAuthorizationController peAuthorizationController;
-    String productType = "";
+
+    static ArrayList<String> removeDuplicates(ArrayList<String> list) {
+
+        // Store unique items in result.
+        ArrayList<String> result = new ArrayList<>();
+
+        // Record encountered Strings in HashSet.
+        HashSet<String> set = new HashSet<>();
+
+        // Loop over argument list.
+        for (String item : list) {
+
+            // If String is not in set, add it to the list and the set.
+            if (!set.contains(item)) {
+                result.add(item);
+                set.add(item);
+            }
+        }
+        return result;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +131,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         selectedTest = getIntent().getStringExtra(BundleConstants.EDITSELECTEDTEST);
         //    ArraySize = getIntent().getIntExtra("",0);
         FlagADDEditBen = getIntent().getBooleanExtra("IsAddBen", true);
-        test_edit_PE = getIntent().getBooleanExtra(BundleConstants.TEST_EDIT_PE,false);
+        test_edit_PE = getIntent().getBooleanExtra(BundleConstants.TEST_EDIT_PE, false);
         pincode = orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode();
         benMastersArray = orderVisitDetailsModel.getAllOrderdetails().get(0).getBenMaster();
         System.out.println("mith<<<<<<<<<<" + pincode);
@@ -176,7 +197,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         } else {
             lin_profileCategory.setVisibility(View.VISIBLE);
         }
-//        isM = getIntent().getBooleanExtra("IS_MALE",false);
+        isM = getIntent().getBooleanExtra("IS_MALE", false);
     }
 
     private void initListener() {
@@ -386,7 +407,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
     private void initTestListViewPE() {
         if (FlagADDEditBen && peTestArraylist != null && peTestArraylist.size() > 0) {
-            displayAllTestApdter = new DisplayAllTestApdter(mActivity,orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), peTestArraylist, peselectedTestsList);
+            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), peTestArraylist, peselectedTestsList,isM);
             displayAllTestApdter.setOnItemClickListener(new DisplayAllTestApdter.OnClickListeners() {
                 @Override
                 public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
@@ -406,7 +427,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             recycle_TestList.setVisibility(View.VISIBLE);
             tv_noDatafound.setVisibility(View.GONE);
         } else if (!FlagADDEditBen && peselectedTestsList != null && peselectedTestsList.size() > 0) {
-            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(),peTestArraylist, peselectedTestsList);
+            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), peTestArraylist, peselectedTestsList,isM);
             displayAllTestApdter.setOnItemClickListener(new DisplayAllTestApdter.OnClickListeners() {
                 @Override
                 public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
@@ -425,9 +446,9 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
             recycle_TestList.setAdapter(displayAllTestApdter);
             recycle_TestList.setVisibility(View.VISIBLE);
             tv_noDatafound.setVisibility(View.GONE);
-        }else if(test_edit_PE){
+        } else if (test_edit_PE) {
             peselectedTestsList = new ArrayList<>();
-            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(),peTestArraylist, peselectedTestsList);
+            displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), peTestArraylist, peselectedTestsList,isM);
             displayAllTestApdter.setOnItemClickListener(new DisplayAllTestApdter.OnClickListeners() {
                 @Override
                 public void onCheckChange(ArrayList<TestRateMasterModel> selectedTests) {
@@ -471,7 +492,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 //            if (Global.checkLogin(appPreferenceManager.getLoginResponseModel().getCompanyName())) {
                 if (peselectedTestsList != null && peselectedTestsList.size() > 0) {
                     DisplaySelectedProductsPE(peselectedTestsList);
-                }else{
+                } else {
                     callPEBrandAPI();
                 }
             } else {
@@ -483,16 +504,16 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         }
 
         //fungible
-        if(FlagADDEditBen){
+        if (FlagADDEditBen) {
 //                if(BundleConstants.isPEPartner || BundleConstants.PEDSAOrder){
-            if(appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()){
+            if (appPreferenceManager.isPEPartner() || appPreferenceManager.PEDSAOrder()) {
                 if (cd.isConnectingToInternet()) {
                     peAuthorizationController = new PEAuthorizationController(this);
                     peAuthorizationController.getAuthorizationToken(2, orderVisitDetailsModel.getAllOrderdetails().get(0).getPincode(), orderVisitDetailsModel.getAllOrderdetails().get(0).getVisitId());
                 } else {
                     globalclass.showCustomToast(mActivity, CheckInternetConnectionMsg);
                 }
-            }else{
+            } else {
                 if (!UpdateProduct()) {
                     if (cd.isConnectingToInternet()) {
                         CallGetTechsoProductsAPI();
@@ -579,7 +600,6 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         SetUnSelectedCategory(tv_Profile);
     }
 
-
     public BrandTestMasterModel getBrandTestMaster(BrandTestMasterModel brandTestMasterModel, DSAProductsResponseModel dsaProductResponseModel) {
         Gson gson = new Gson();
 
@@ -657,7 +677,7 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
                 if (test.trim().equalsIgnoreCase(tmaster.getTestCode().trim())) {
                     recommendedParentBenProductList.add(tmaster);
                 }
-                if (tmaster.isRecommend() && !test.trim().equalsIgnoreCase(tmaster.getTestCode().trim()) && i ==0) {
+                if (tmaster.isRecommend() && !test.trim().equalsIgnoreCase(tmaster.getTestCode().trim()) && i == 0) {
                     recommendedProductList.add(tmaster);
                 }
             }
@@ -771,9 +791,9 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
 
         if (CategoryWiseProductList != null && CategoryWiseProductList.size() > 0) {
             if (FlagADDEditBen) {
-                displayAllTestApdter = new DisplayAllTestApdter(mActivity,orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), CategoryWiseProductList, AllProductList, selectedTestsList, isM);
+                displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), CategoryWiseProductList, AllProductList, selectedTestsList, isM);
             } else {
-                displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(),CategoryWiseProductList, AllProductList, edit_selectedTestsList, isM);
+                displayAllTestApdter = new DisplayAllTestApdter(mActivity, orderVisitDetailsModel.getAllOrderdetails().get(0).isPEPartner(), CategoryWiseProductList, AllProductList, edit_selectedTestsList, isM);
             }
             displayAllTestApdter.setOnItemClickListener(new DisplayAllTestApdter.OnClickListeners() {
                 @Override
@@ -846,26 +866,6 @@ public class AddRemoveTestProfileActivity extends AppCompatActivity {
         }
         tvTestName.setText("" + StringUtils.removeFirstCharacter(selected_products));
         tvAppRate.setText(mActivity.getResources().getString(R.string.rupee_symbol) + "" + totalRate + "/-");
-    }
-
-    static ArrayList<String> removeDuplicates(ArrayList<String> list) {
-
-        // Store unique items in result.
-        ArrayList<String> result = new ArrayList<>();
-
-        // Record encountered Strings in HashSet.
-        HashSet<String> set = new HashSet<>();
-
-        // Loop over argument list.
-        for (String item : list) {
-
-            // If String is not in set, add it to the list and the set.
-            if (!set.contains(item)) {
-                result.add(item);
-                set.add(item);
-            }
-        }
-        return result;
     }
 
     public void getTestList(ArrayList<GetPETestResponseModel.DataDTO> dataDTOS) {

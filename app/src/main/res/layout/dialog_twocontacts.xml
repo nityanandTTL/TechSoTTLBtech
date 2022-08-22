@@ -50,7 +50,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="20dp"
                 android:layout_toEndOf="@+id/iv_primaryNumber"
-                android:text="8451079482"
+                android:text="Phone 1"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp"
                 android:textStyle="bold" />
@@ -79,7 +79,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="20dp"
                 android:layout_toEndOf="@+id/iv_primaryNumber"
-                android:text="8451079482"
+                android:text="Phone 2"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp"
                 android:textStyle="bold" />

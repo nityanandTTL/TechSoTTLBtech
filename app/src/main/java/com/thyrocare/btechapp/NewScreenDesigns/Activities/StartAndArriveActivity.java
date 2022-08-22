@@ -801,7 +801,7 @@ public class StartAndArriveActivity extends AppCompatActivity {
                                     btn_floating_add_ben.setVisibility(View.GONE);
                                 } else if (orderDetailsModel.getAllOrderdetails().get(0).isEditOrder()) {
                                     if (!recyle_OrderDetail.canScrollVertically(1)) {
-                                        btn_floating_add_ben.setVisibility(View.GONE);
+                                        btn_floating_add_ben.setVisibility(View.VISIBLE);
                                     } else {
                                         btn_floating_add_ben.setVisibility(View.VISIBLE);
                                     }
@@ -1834,28 +1834,28 @@ public class StartAndArriveActivity extends AppCompatActivity {
 
                 @Override
                 public void onCallCustomer() {
-                   /* if (isNetworkAvailable(mActivity) && cd.isConnectingToInternet()) {
+                    if (isNetworkAvailable(mActivity) && cd.isConnectingToInternet()) {
                         if (!InputUtils.isNull(orderDetailsModel.getAllOrderdetails().get(0).getPhone())) {
                             openTwoContactNoDialog(orderDetailsModel);
                         } else {
-                            CallgetDispositionApi(orderDetailsModel);
                             CallPatchRequestAPI(orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+                            CallgetDispositionApi(orderDetailsModel);
                         }
                     } else {
                         TastyToast.makeText(mActivity, CheckInternetConnectionMsg, TastyToast.LENGTH_LONG, TastyToast.INFO);
-                    }*/
+                    }
 
-                    if (isNetworkAvailable(mActivity)) {
+                    /*if (isNetworkAvailable(mActivity)) {
                         CallgetDispositionApi(orderDetailsModel);
                     } else {
                         TastyToast.makeText(mActivity, CheckInternetConnectionMsg, TastyToast.LENGTH_LONG, TastyToast.INFO);
                     }
 
                     if (cd.isConnectingToInternet()) {
-                        CallPatchRequestAPI(orderDetailsModel,orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+                        CallPatchRequestAPI(orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
                     } else {
                         Toast.makeText(mActivity, R.string.internet_connetion_error, Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
 
                 }
             });
@@ -1884,23 +1884,21 @@ public class StartAndArriveActivity extends AppCompatActivity {
         tv_defaultphone = dialog.findViewById(R.id.tv_defaultMobile);
         tv_optionalMobile = dialog.findViewById(R.id.tv_optionalMobile);
 
-        InputUtils.setTextToTextView(tv_defaultphone, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
-        InputUtils.setTextToTextView(tv_optionalMobile, orderDetailsModel.getAllOrderdetails().get(0).getPhone());
-
         tv_defaultphone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                CallgetDispositionApi(orderDetailsModel);
                 CallPatchRequestAPI(orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getMobile());
+                CallgetDispositionApi(orderDetailsModel);
+
             }
         });
         tv_optionalMobile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                CallgetDispositionApi(orderDetailsModel);
                 CallPatchRequestAPI(orderDetailsModel, orderDetailsModel.getAllOrderdetails().get(0).getPhone());
+                CallgetDispositionApi(orderDetailsModel);
             }
         });
 
